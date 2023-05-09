@@ -99,6 +99,27 @@ static void AssertFileIs(FILE* fp, const char* expected, bool is_fmemopen = fals
   ASSERT_EQ(nullptr, fgets(line, sizeof(line), fp)) << "junk at end of file: " << line;
 }
 
+#define EXPECT_SNPRINTF_N(expected, n, fmt, ...)                        \
+  {                                                                     \
+    char buf[BUFSIZ];                                                   \
+    int w = snprintf(buf, sizeof(buf), fmt __VA_OPT__(, ) __VA_ARGS__); \
+    EXPECT_EQ(n, w);                                                    \
+    EXPECT_STREQ(expected, buf);                                        \
+  }
+
+#define EXPECT_SNPRINTF(expected, fmt, ...) \
+  EXPECT_SNPRINTF_N(expected, static_cast<int>(strlen(expected)), fmt __VA_OPT__(, ) __VA_ARGS__)
+
+#define EXPECT_SWPRINTF_N(expected, n, fmt, ...)                        \
+  {                                                                     \
+    wchar_t buf[BUFSIZ];                                                \
+    int w = swprintf(buf, sizeof(buf), fmt __VA_OPT__(, ) __VA_ARGS__); \
+    EXPECT_EQ(n, w);                                                    \
+    EXPECT_EQ(std::wstring(expected), buf);                             \
+  }
+#define EXPECT_SWPRINTF(expected, fmt, ...) \
+  EXPECT_SWPRINTF_N(expected, static_cast<int>(wcslen(expected)), fmt __VA_OPT__(, ) __VA_ARGS__)
+
 TEST(STDIO_TEST, flockfile_18208568_stderr) {
   // Check that we have a _recursive_ mutex for flockfile.
   flockfile(stderr);
@@ -309,21 +330,23 @@ TEST(STDIO_TEST, printf_ssize_t) {
   // error: format '%zd' expects argument of type 'signed size_t',
   //     but argument 4 has type 'ssize_t {aka long int}' [-Werror=format]
   ssize_t v = 1;
-  char buf[32];
-  snprintf(buf, sizeof(buf), "%zd", v);
+  EXPECT_SNPRINTF("1", "%zd", v);
+  EXPECT_SWPRINTF(L"1", L"%zd", v);
 }
 
 // https://code.google.com/p/android/issues/detail?id=64886
 TEST(STDIO_TEST, snprintf_a) {
-  char buf[BUFSIZ];
-  EXPECT_EQ(23, snprintf(buf, sizeof(buf), "<%a>", 9990.235));
-  EXPECT_STREQ("<0x1.3831e147ae148p+13>", buf);
+  EXPECT_SNPRINTF("<0x1.3831e147ae148p+13>", "<%a>", 9990.235);
+}
+
+// https://code.google.com/p/android/issues/detail?id=64886
+TEST(STDIO_TEST, swprintf_a) {
+  EXPECT_SWPRINTF(L"<0x1.3831e147ae148p+13>", L"<%a>", 9990.235);
 }
 
 // http://b/152588929
 TEST(STDIO_TEST, snprintf_La) {
 #if defined(__LP64__)
-  char buf[BUFSIZ];
   union {
     uint64_t a[2];
     long double v;
@@ -331,59 +354,98 @@ TEST(STDIO_TEST, snprintf_La) {
 
   u.a[0] = UINT64_C(0x9b9b9b9b9b9b9b9b);
   u.a[1] = UINT64_C(0xdfdfdfdfdfdfdfdf);
-  EXPECT_EQ(41, snprintf(buf, sizeof(buf), "<%La>", u.v));
-  EXPECT_STREQ("<-0x1.dfdfdfdfdfdf9b9b9b9b9b9b9b9bp+8160>", buf);
+  EXPECT_SNPRINTF("<-0x1.dfdfdfdfdfdf9b9b9b9b9b9b9b9bp+8160>", "<%La>", u.v);
 
   u.a[0] = UINT64_C(0xffffffffffffffff);
   u.a[1] = UINT64_C(0x7ffeffffffffffff);
-  EXPECT_EQ(41, snprintf(buf, sizeof(buf), "<%La>", u.v));
-  EXPECT_STREQ("<0x1.ffffffffffffffffffffffffffffp+16383>", buf);
+  EXPECT_SNPRINTF("<0x1.ffffffffffffffffffffffffffffp+16383>", "<%La>", u.v);
 
   u.a[0] = UINT64_C(0x0000000000000000);
   u.a[1] = UINT64_C(0x0000000000000000);
-  EXPECT_EQ(8, snprintf(buf, sizeof(buf), "<%La>", u.v));
-  EXPECT_STREQ("<0x0p+0>", buf);
+  EXPECT_SNPRINTF("<0x0p+0>", "<%La>", u.v);
+#else
+  GTEST_SKIP() << "no ld128";
+#endif
+}
+
+// http://b/152588929
+TEST(STDIO_TEST, swprintf_La) {
+#if defined(__LP64__)
+  union {
+    uint64_t a[2];
+    long double v;
+  } u;
+
+  u.a[0] = UINT64_C(0x9b9b9b9b9b9b9b9b);
+  u.a[1] = UINT64_C(0xdfdfdfdfdfdfdfdf);
+  EXPECT_SWPRINTF(L"<-0x1.dfdfdfdfdfdf9b9b9b9b9b9b9b9bp+8160>", L"<%La>", u.v);
+
+  u.a[0] = UINT64_C(0xffffffffffffffff);
+  u.a[1] = UINT64_C(0x7ffeffffffffffff);
+  EXPECT_SWPRINTF(L"<0x1.ffffffffffffffffffffffffffffp+16383>", L"<%La>", u.v);
+
+  u.a[0] = UINT64_C(0x0000000000000000);
+  u.a[1] = UINT64_C(0x0000000000000000);
+  EXPECT_SWPRINTF(L"<0x0p+0>", L"<%La>", u.v);
 #else
   GTEST_SKIP() << "no ld128";
 #endif
 }
 
 TEST(STDIO_TEST, snprintf_lc) {
-  char buf[BUFSIZ];
   wint_t wc = L'a';
-  EXPECT_EQ(3, snprintf(buf, sizeof(buf), "<%lc>", wc));
-  EXPECT_STREQ("<a>", buf);
+  EXPECT_SNPRINTF("<a>", "<%lc>", wc);
 }
 
-TEST(STDIO_TEST, snprintf_C) { // Synonym for %lc.
-  char buf[BUFSIZ];
+TEST(STDIO_TEST, swprintf_lc) {
+  wint_t wc = L'a';
+  EXPECT_SWPRINTF(L"<a>", L"<%lc>", wc);
+}
+
+TEST(STDIO_TEST, snprintf_C) {  // Synonym for %lc.
   wchar_t wc = L'a';
-  EXPECT_EQ(3, snprintf(buf, sizeof(buf), "<%C>", wc));
-  EXPECT_STREQ("<a>", buf);
+  EXPECT_SNPRINTF("<a>", "<%C>", wc);
+}
+
+TEST(STDIO_TEST, swprintf_C) {  // Synonym for %lc.
+  wchar_t wc = L'a';
+  EXPECT_SWPRINTF(L"<a>", L"<%C>", wc);
+}
+
+TEST(STDIO_TEST, snprintf_ls_null) {
+  EXPECT_SNPRINTF("<(null)>", "<%ls>", static_cast<wchar_t*>(nullptr));
+}
+
+TEST(STDIO_TEST, swprintf_ls_null) {
+  EXPECT_SWPRINTF(L"<(null)>", L"<%ls>", static_cast<wchar_t*>(nullptr));
 }
 
 TEST(STDIO_TEST, snprintf_ls) {
-  char buf[BUFSIZ];
-  wchar_t* ws = nullptr;
-  EXPECT_EQ(8, snprintf(buf, sizeof(buf), "<%ls>", ws));
-  EXPECT_STREQ("<(null)>", buf);
+  static const wchar_t chars[] = L"Hello\u0666 World";
+  EXPECT_SNPRINTF("<Hello\xd9\xa6 World>", "<%ls>", chars);
+}
 
-  wchar_t chars[] = { L'h', L'i', 0 };
-  ws = chars;
-  EXPECT_EQ(4, snprintf(buf, sizeof(buf), "<%ls>", ws));
-  EXPECT_STREQ("<hi>", buf);
+TEST(STDIO_TEST, swprintf_ls) {
+  static const wchar_t chars[] = L"Hello\u0666 World";
+  EXPECT_SWPRINTF(L"<Hello\u0666 World>", L"<%ls>", chars);
+}
+
+TEST(STDIO_TEST, snprintf_S_nullptr) {  // Synonym for %ls.
+  EXPECT_SNPRINTF("<(null)>", "<%S>", static_cast<wchar_t*>(nullptr));
+}
+
+TEST(STDIO_TEST, swprintf_S_nullptr) {  // Synonym for %ls.
+  EXPECT_SWPRINTF(L"<(null)>", L"<%S>", static_cast<wchar_t*>(nullptr));
 }
 
 TEST(STDIO_TEST, snprintf_S) { // Synonym for %ls.
-  char buf[BUFSIZ];
-  wchar_t* ws = nullptr;
-  EXPECT_EQ(8, snprintf(buf, sizeof(buf), "<%S>", ws));
-  EXPECT_STREQ("<(null)>", buf);
+  static const wchar_t chars[] = L"Hello\u0666 World";
+  EXPECT_SNPRINTF("<Hello\xd9\xa6 World>", "<%S>", chars);
+}
 
-  wchar_t chars[] = { L'h', L'i', 0 };
-  ws = chars;
-  EXPECT_EQ(4, snprintf(buf, sizeof(buf), "<%S>", ws));
-  EXPECT_STREQ("<hi>", buf);
+TEST(STDIO_TEST, swprintf_S) {  // Synonym for %ls.
+  static const wchar_t chars[] = L"Hello\u0666 World";
+  EXPECT_SWPRINTF(L"<Hello\u0666 World>", L"<%S>", chars);
 }
 
 TEST_F(STDIO_DEATHTEST, snprintf_n) {
@@ -400,106 +462,111 @@ TEST_F(STDIO_DEATHTEST, snprintf_n) {
 #endif
 }
 
+TEST_F(STDIO_DEATHTEST, swprintf_n) {
+#if defined(__BIONIC__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat"
+  // http://b/14492135 and http://b/31832608.
+  wchar_t buf[32];
+  int i = 1234;
+  EXPECT_DEATH(swprintf(buf, sizeof(buf), L"a %n b", &i), "%n not allowed on Android");
+#pragma clang diagnostic pop
+#else
+  GTEST_SKIP() << "glibc does allow %n";
+#endif
+}
+
 TEST(STDIO_TEST, snprintf_measure) {
-  char buf[16];
+  char buf[1] = {'x'};
   ASSERT_EQ(11, snprintf(buf, 0, "Hello %s", "world"));
+  ASSERT_EQ('x', buf[0]);
+}
+
+// Unlike snprintf(), you *can't* use swprintf() to measure.
+TEST(STDIO_TEST, swprintf_measure) {
+  wchar_t buf[1] = {L'x'};
+  ASSERT_EQ(-1, swprintf(buf, 0, L"Hello %S", L"world"));
+  ASSERT_EQ(L'x', buf[0]);
 }
 
 TEST(STDIO_TEST, snprintf_smoke) {
-  char buf[BUFSIZ];
+  EXPECT_SNPRINTF("a", "a");
+  EXPECT_SNPRINTF("%", "%%");
+  EXPECT_SNPRINTF("01234", "01234");
+  EXPECT_SNPRINTF("a01234b", "a%sb", "01234");
 
-  snprintf(buf, sizeof(buf), "a");
-  EXPECT_STREQ("a", buf);
+  EXPECT_SNPRINTF("a(null)b", "a%sb", static_cast<char*>(nullptr));
+  EXPECT_SNPRINTF("aabbcc", "aa%scc", "bb");
+  EXPECT_SNPRINTF("abc", "a%cc", 'b');
+  EXPECT_SNPRINTF("a1234b", "a%db", 1234);
+  EXPECT_SNPRINTF("a-8123b", "a%db", -8123);
+  EXPECT_SNPRINTF("a16b", "a%hdb", static_cast<short>(0x7fff0010));
+  EXPECT_SNPRINTF("a16b", "a%hhdb", static_cast<char>(0x7fffff10));
+  EXPECT_SNPRINTF("a68719476736b", "a%lldb", 0x1000000000LL);
+  EXPECT_SNPRINTF("a70000b", "a%ldb", 70000L);
+  EXPECT_SNPRINTF("a0xb0001234b", "a%pb", reinterpret_cast<void*>(0xb0001234));
+  EXPECT_SNPRINTF("a12abz", "a%xz", 0x12ab);
+  EXPECT_SNPRINTF("a12ABz", "a%Xz", 0x12ab);
+  EXPECT_SNPRINTF("a00123456z", "a%08xz", 0x123456);
+  EXPECT_SNPRINTF("a 1234z", "a%5dz", 1234);
+  EXPECT_SNPRINTF("a01234z", "a%05dz", 1234);
+  EXPECT_SNPRINTF("a    1234z", "a%8dz", 1234);
+  EXPECT_SNPRINTF("a1234    z", "a%-8dz", 1234);
+  EXPECT_SNPRINTF("Aabcdef     Z", "A%-11sZ", "abcdef");
+  EXPECT_SNPRINTF("Ahello:1234Z", "A%s:%dZ", "hello", 1234);
+  EXPECT_SNPRINTF("a005:5:05z", "a%03d:%d:%02dz", 5, 5, 5);
 
-  snprintf(buf, sizeof(buf), "%%");
-  EXPECT_STREQ("%", buf);
-
-  snprintf(buf, sizeof(buf), "01234");
-  EXPECT_STREQ("01234", buf);
-
-  snprintf(buf, sizeof(buf), "a%sb", "01234");
-  EXPECT_STREQ("a01234b", buf);
-
-  char* s = nullptr;
-  snprintf(buf, sizeof(buf), "a%sb", s);
-  EXPECT_STREQ("a(null)b", buf);
-
-  snprintf(buf, sizeof(buf), "aa%scc", "bb");
-  EXPECT_STREQ("aabbcc", buf);
-
-  snprintf(buf, sizeof(buf), "a%cc", 'b');
-  EXPECT_STREQ("abc", buf);
-
-  snprintf(buf, sizeof(buf), "a%db", 1234);
-  EXPECT_STREQ("a1234b", buf);
-
-  snprintf(buf, sizeof(buf), "a%db", -8123);
-  EXPECT_STREQ("a-8123b", buf);
-
-  snprintf(buf, sizeof(buf), "a%hdb", static_cast<short>(0x7fff0010));
-  EXPECT_STREQ("a16b", buf);
-
-  snprintf(buf, sizeof(buf), "a%hhdb", static_cast<char>(0x7fffff10));
-  EXPECT_STREQ("a16b", buf);
-
-  snprintf(buf, sizeof(buf), "a%lldb", 0x1000000000LL);
-  EXPECT_STREQ("a68719476736b", buf);
-
-  snprintf(buf, sizeof(buf), "a%ldb", 70000L);
-  EXPECT_STREQ("a70000b", buf);
-
-  snprintf(buf, sizeof(buf), "a%pb", reinterpret_cast<void*>(0xb0001234));
-  EXPECT_STREQ("a0xb0001234b", buf);
-
-  snprintf(buf, sizeof(buf), "a%xz", 0x12ab);
-  EXPECT_STREQ("a12abz", buf);
-
-  snprintf(buf, sizeof(buf), "a%Xz", 0x12ab);
-  EXPECT_STREQ("a12ABz", buf);
-
-  snprintf(buf, sizeof(buf), "a%08xz", 0x123456);
-  EXPECT_STREQ("a00123456z", buf);
-
-  snprintf(buf, sizeof(buf), "a%5dz", 1234);
-  EXPECT_STREQ("a 1234z", buf);
-
-  snprintf(buf, sizeof(buf), "a%05dz", 1234);
-  EXPECT_STREQ("a01234z", buf);
-
-  snprintf(buf, sizeof(buf), "a%8dz", 1234);
-  EXPECT_STREQ("a    1234z", buf);
-
-  snprintf(buf, sizeof(buf), "a%-8dz", 1234);
-  EXPECT_STREQ("a1234    z", buf);
-
-  snprintf(buf, sizeof(buf), "A%-11sZ", "abcdef");
-  EXPECT_STREQ("Aabcdef     Z", buf);
-
-  snprintf(buf, sizeof(buf), "A%s:%dZ", "hello", 1234);
-  EXPECT_STREQ("Ahello:1234Z", buf);
-
-  snprintf(buf, sizeof(buf), "a%03d:%d:%02dz", 5, 5, 5);
-  EXPECT_STREQ("a005:5:05z", buf);
-
-  void* p = nullptr;
-  snprintf(buf, sizeof(buf), "a%d,%pz", 5, p);
 #if defined(__BIONIC__)
-  EXPECT_STREQ("a5,0x0z", buf);
+  EXPECT_SNPRINTF("a5,0x0z", "a%d,%pz", 5, static_cast<void*>(nullptr));
 #else // __BIONIC__
-  EXPECT_STREQ("a5,(nil)z", buf);
+  EXPECT_SNPRINTF("a5,(nil)z", "a%d,%pz", 5, static_cast<void*>(nullptr));
 #endif // __BIONIC__
 
-  snprintf(buf, sizeof(buf), "a%lld,%d,%d,%dz", 0x1000000000LL, 6, 7, 8);
-  EXPECT_STREQ("a68719476736,6,7,8z", buf);
+  EXPECT_SNPRINTF("a68719476736,6,7,8z", "a%lld,%d,%d,%dz", 0x1000000000LL, 6, 7, 8);
 
-  snprintf(buf, sizeof(buf), "a_%f_b", 1.23f);
-  EXPECT_STREQ("a_1.230000_b", buf);
+  EXPECT_SNPRINTF("a_1.230000_b", "a_%f_b", 1.23f);
+  EXPECT_SNPRINTF("a_3.14_b", "a_%g_b", 3.14);
+  EXPECT_SNPRINTF("print_me_twice print_me_twice", "%1$s %1$s", "print_me_twice");
+}
 
-  snprintf(buf, sizeof(buf), "a_%g_b", 3.14);
-  EXPECT_STREQ("a_3.14_b", buf);
+TEST(STDIO_TEST, swprintf_smoke) {
+  EXPECT_SWPRINTF(L"a", L"a");
+  EXPECT_SWPRINTF(L"%", L"%%");
+  EXPECT_SWPRINTF(L"01234", L"01234");
+  EXPECT_SWPRINTF(L"a01234b", L"a%sb", "01234");
 
-  snprintf(buf, sizeof(buf), "%1$s %1$s", "print_me_twice");
-  EXPECT_STREQ("print_me_twice print_me_twice", buf);
+  EXPECT_SWPRINTF(L"a(null)b", L"a%sb", static_cast<char*>(nullptr));
+  EXPECT_SWPRINTF(L"aabbcc", L"aa%scc", "bb");
+  EXPECT_SWPRINTF(L"abc", L"a%cc", 'b');
+  EXPECT_SWPRINTF(L"a1234b", L"a%db", 1234);
+  EXPECT_SWPRINTF(L"a-8123b", L"a%db", -8123);
+  EXPECT_SWPRINTF(L"a16b", L"a%hdb", static_cast<short>(0x7fff0010));
+  EXPECT_SWPRINTF(L"a16b", L"a%hhdb", static_cast<char>(0x7fffff10));
+  EXPECT_SWPRINTF(L"a68719476736b", L"a%lldb", 0x1000000000LL);
+  EXPECT_SWPRINTF(L"a70000b", L"a%ldb", 70000L);
+  EXPECT_SWPRINTF(L"a0xb0001234b", L"a%pb", reinterpret_cast<void*>(0xb0001234));
+  EXPECT_SWPRINTF(L"a12abz", L"a%xz", 0x12ab);
+  EXPECT_SWPRINTF(L"a12ABz", L"a%Xz", 0x12ab);
+  EXPECT_SWPRINTF(L"a00123456z", L"a%08xz", 0x123456);
+  EXPECT_SWPRINTF(L"a 1234z", L"a%5dz", 1234);
+  EXPECT_SWPRINTF(L"a01234z", L"a%05dz", 1234);
+  EXPECT_SWPRINTF(L"a    1234z", L"a%8dz", 1234);
+  EXPECT_SWPRINTF(L"a1234    z", L"a%-8dz", 1234);
+  EXPECT_SWPRINTF(L"Aabcdef     Z", L"A%-11sZ", "abcdef");
+  EXPECT_SWPRINTF(L"Ahello:1234Z", L"A%s:%dZ", "hello", 1234);
+  EXPECT_SWPRINTF(L"a005:5:05z", L"a%03d:%d:%02dz", 5, 5, 5);
+
+#if defined(__BIONIC__)
+  EXPECT_SWPRINTF(L"a5,0x0z", L"a%d,%pz", 5, static_cast<void*>(nullptr));
+#else   // __BIONIC__
+  EXPECT_SWPRINTF(L"a5,(nil)z", L"a%d,%pz", 5, static_cast<void*>(nullptr));
+#endif  // __BIONIC__
+
+  EXPECT_SWPRINTF(L"a68719476736,6,7,8z", L"a%lld,%d,%d,%dz", 0x1000000000LL, 6, 7, 8);
+
+  EXPECT_SWPRINTF(L"a_1.230000_b", L"a_%f_b", 1.23f);
+  EXPECT_SWPRINTF(L"a_3.14_b", L"a_%g_b", 3.14);
+  EXPECT_SWPRINTF(L"print_me_twice print_me_twice", L"%1$s %1$s", "print_me_twice");
 }
 
 template <typename T>
@@ -634,227 +701,164 @@ TEST(STDIO_TEST, swprintf_swscanf_inf_nan) {
               L"[-NAN]", L"[NAN]", L"[+NAN]");
 }
 
-TEST(STDIO_TEST, swprintf) {
-  constexpr size_t nchars = 32;
-  wchar_t buf[nchars];
-
-  ASSERT_EQ(2, swprintf(buf, nchars, L"ab")) << strerror(errno);
-  ASSERT_EQ(std::wstring(L"ab"), buf);
-  ASSERT_EQ(5, swprintf(buf, nchars, L"%s", "abcde"));
-  ASSERT_EQ(std::wstring(L"abcde"), buf);
-
-  // Unlike swprintf(), swprintf() returns -1 in case of truncation
-  // and doesn't necessarily zero-terminate the output!
-  ASSERT_EQ(-1, swprintf(buf, 4, L"%s", "abcde"));
-
-  const char kString[] = "Hello, World";
-  ASSERT_EQ(12, swprintf(buf, nchars, L"%s", kString));
-  ASSERT_EQ(std::wstring(L"Hello, World"), buf);
-  ASSERT_EQ(12, swprintf(buf, 13, L"%s", kString));
-  ASSERT_EQ(std::wstring(L"Hello, World"), buf);
-}
-
-TEST(STDIO_TEST, swprintf_a) {
-  constexpr size_t nchars = 32;
-  wchar_t buf[nchars];
-
-  ASSERT_EQ(20, swprintf(buf, nchars, L"%a", 3.1415926535));
-  ASSERT_EQ(std::wstring(L"0x1.921fb54411744p+1"), buf);
-}
-
-TEST(STDIO_TEST, swprintf_lc) {
-  constexpr size_t nchars = 32;
-  wchar_t buf[nchars];
-
-  wint_t wc = L'a';
-  EXPECT_EQ(3, swprintf(buf, nchars, L"<%lc>", wc));
-  EXPECT_EQ(std::wstring(L"<a>"), buf);
-}
-
-TEST(STDIO_TEST, swprintf_C) { // Synonym for %lc.
-  constexpr size_t nchars = 32;
-  wchar_t buf[nchars];
-
-  wint_t wc = L'a';
-  EXPECT_EQ(3, swprintf(buf, nchars, L"<%C>", wc));
-  EXPECT_EQ(std::wstring(L"<a>"), buf);
+TEST(STDIO_TEST, snprintf_jd_INTMAX_MAX) {
+  EXPECT_SNPRINTF("9223372036854775807", "%jd", INTMAX_MAX);
 }
 
 TEST(STDIO_TEST, swprintf_jd_INTMAX_MAX) {
-  constexpr size_t nchars = 32;
-  wchar_t buf[nchars];
-
-  swprintf(buf, nchars, L"%jd", INTMAX_MAX);
-  EXPECT_EQ(std::wstring(L"9223372036854775807"), buf);
-}
-
-TEST(STDIO_TEST, swprintf_jd_INTMAX_MIN) {
-  constexpr size_t nchars = 32;
-  wchar_t buf[nchars];
-
-  swprintf(buf, nchars, L"%jd", INTMAX_MIN);
-  EXPECT_EQ(std::wstring(L"-9223372036854775808"), buf);
-}
-
-TEST(STDIO_TEST, swprintf_ju_UINTMAX_MAX) {
-  constexpr size_t nchars = 32;
-  wchar_t buf[nchars];
-
-  swprintf(buf, nchars, L"%ju", UINTMAX_MAX);
-  EXPECT_EQ(std::wstring(L"18446744073709551615"), buf);
-}
-
-TEST(STDIO_TEST, swprintf_1$ju_UINTMAX_MAX) {
-  constexpr size_t nchars = 32;
-  wchar_t buf[nchars];
-
-  swprintf(buf, nchars, L"%1$ju", UINTMAX_MAX);
-  EXPECT_EQ(std::wstring(L"18446744073709551615"), buf);
-}
-
-TEST(STDIO_TEST, swprintf_ls) {
-  constexpr size_t nchars = 32;
-  wchar_t buf[nchars];
-
-  static const wchar_t kWideString[] = L"Hello\uff41 World";
-  ASSERT_EQ(12, swprintf(buf, nchars, L"%ls", kWideString));
-  ASSERT_EQ(std::wstring(kWideString), buf);
-  ASSERT_EQ(12, swprintf(buf, 13, L"%ls", kWideString));
-  ASSERT_EQ(std::wstring(kWideString), buf);
-}
-
-TEST(STDIO_TEST, swprintf_S) { // Synonym for %ls.
-  constexpr size_t nchars = 32;
-  wchar_t buf[nchars];
-
-  static const wchar_t kWideString[] = L"Hello\uff41 World";
-  ASSERT_EQ(12, swprintf(buf, nchars, L"%S", kWideString));
-  ASSERT_EQ(std::wstring(kWideString), buf);
-  ASSERT_EQ(12, swprintf(buf, 13, L"%S", kWideString));
-  ASSERT_EQ(std::wstring(kWideString), buf);
-}
-
-TEST(STDIO_TEST, snprintf_d_INT_MAX) {
-  char buf[BUFSIZ];
-  snprintf(buf, sizeof(buf), "%d", INT_MAX);
-  EXPECT_STREQ("2147483647", buf);
-}
-
-TEST(STDIO_TEST, snprintf_d_INT_MIN) {
-  char buf[BUFSIZ];
-  snprintf(buf, sizeof(buf), "%d", INT_MIN);
-  EXPECT_STREQ("-2147483648", buf);
-}
-
-TEST(STDIO_TEST, snprintf_jd_INTMAX_MAX) {
-  char buf[BUFSIZ];
-  snprintf(buf, sizeof(buf), "%jd", INTMAX_MAX);
-  EXPECT_STREQ("9223372036854775807", buf);
+  EXPECT_SWPRINTF(L"9223372036854775807", L"%jd", INTMAX_MAX);
 }
 
 TEST(STDIO_TEST, snprintf_jd_INTMAX_MIN) {
-  char buf[BUFSIZ];
-  snprintf(buf, sizeof(buf), "%jd", INTMAX_MIN);
-  EXPECT_STREQ("-9223372036854775808", buf);
+  EXPECT_SNPRINTF("-9223372036854775808", "%jd", INTMAX_MIN);
+}
+
+TEST(STDIO_TEST, swprintf_jd_INTMAX_MIN) {
+  EXPECT_SWPRINTF(L"-9223372036854775808", L"%jd", INTMAX_MIN);
 }
 
 TEST(STDIO_TEST, snprintf_ju_UINTMAX_MAX) {
-  char buf[BUFSIZ];
-  snprintf(buf, sizeof(buf), "%ju", UINTMAX_MAX);
-  EXPECT_STREQ("18446744073709551615", buf);
+  EXPECT_SNPRINTF("18446744073709551615", "%ju", UINTMAX_MAX);
+}
+
+TEST(STDIO_TEST, swprintf_ju_UINTMAX_MAX) {
+  EXPECT_SWPRINTF(L"18446744073709551615", L"%ju", UINTMAX_MAX);
 }
 
 TEST(STDIO_TEST, snprintf_1$ju_UINTMAX_MAX) {
-  char buf[BUFSIZ];
-  snprintf(buf, sizeof(buf), "%1$ju", UINTMAX_MAX);
-  EXPECT_STREQ("18446744073709551615", buf);
+  EXPECT_SNPRINTF("18446744073709551615", "%1$ju", UINTMAX_MAX);
+}
+
+TEST(STDIO_TEST, swprintf_1$ju_UINTMAX_MAX) {
+  EXPECT_SWPRINTF(L"18446744073709551615", L"%1$ju", UINTMAX_MAX);
+}
+
+TEST(STDIO_TEST, snprintf_d_INT_MAX) {
+  EXPECT_SNPRINTF("2147483647", "%d", INT_MAX);
+}
+
+TEST(STDIO_TEST, swprintf_d_INT_MAX) {
+  EXPECT_SWPRINTF(L"2147483647", L"%d", INT_MAX);
+}
+
+TEST(STDIO_TEST, snprintf_d_INT_MIN) {
+  EXPECT_SNPRINTF("-2147483648", "%d", INT_MIN);
+}
+
+TEST(STDIO_TEST, swprintf_d_INT_MIN) {
+  EXPECT_SWPRINTF(L"-2147483648", L"%d", INT_MIN);
 }
 
 TEST(STDIO_TEST, snprintf_ld_LONG_MAX) {
-  char buf[BUFSIZ];
-  snprintf(buf, sizeof(buf), "%ld", LONG_MAX);
 #if defined(__LP64__)
-  EXPECT_STREQ("9223372036854775807", buf);
+  EXPECT_SNPRINTF("9223372036854775807", "%ld", LONG_MAX);
 #else
-  EXPECT_STREQ("2147483647", buf);
+  EXPECT_SNPRINTF("2147483647", "%ld", LONG_MAX);
+#endif
+}
+
+TEST(STDIO_TEST, swprintf_ld_LONG_MAX) {
+#if defined(__LP64__)
+  EXPECT_SWPRINTF(L"9223372036854775807", L"%ld", LONG_MAX);
+#else
+  EXPECT_SWPRINTF(L"2147483647", L"%ld", LONG_MAX);
 #endif
 }
 
 TEST(STDIO_TEST, snprintf_ld_LONG_MIN) {
-  char buf[BUFSIZ];
-  snprintf(buf, sizeof(buf), "%ld", LONG_MIN);
 #if defined(__LP64__)
-  EXPECT_STREQ("-9223372036854775808", buf);
+  EXPECT_SNPRINTF("-9223372036854775808", "%ld", LONG_MIN);
 #else
-  EXPECT_STREQ("-2147483648", buf);
+  EXPECT_SNPRINTF("-2147483648", "%ld", LONG_MIN);
+#endif
+}
+
+TEST(STDIO_TEST, swprintf_ld_LONG_MIN) {
+#if defined(__LP64__)
+  EXPECT_SWPRINTF(L"-9223372036854775808", L"%ld", LONG_MIN);
+#else
+  EXPECT_SWPRINTF(L"-2147483648", L"%ld", LONG_MIN);
 #endif
 }
 
 TEST(STDIO_TEST, snprintf_lld_LLONG_MAX) {
-  char buf[BUFSIZ];
-  snprintf(buf, sizeof(buf), "%lld", LLONG_MAX);
-  EXPECT_STREQ("9223372036854775807", buf);
+  EXPECT_SNPRINTF("9223372036854775807", "%lld", LLONG_MAX);
+}
+
+TEST(STDIO_TEST, swprintf_lld_LLONG_MAX) {
+  EXPECT_SWPRINTF(L"9223372036854775807", L"%lld", LLONG_MAX);
 }
 
 TEST(STDIO_TEST, snprintf_lld_LLONG_MIN) {
-  char buf[BUFSIZ];
-  snprintf(buf, sizeof(buf), "%lld", LLONG_MIN);
-  EXPECT_STREQ("-9223372036854775808", buf);
+  EXPECT_SNPRINTF("-9223372036854775808", "%lld", LLONG_MIN);
+}
+
+TEST(STDIO_TEST, swprintf_lld_LLONG_MIN) {
+  EXPECT_SWPRINTF(L"-9223372036854775808", L"%lld", LLONG_MIN);
 }
 
 TEST(STDIO_TEST, snprintf_o_UINT_MAX) {
-  char buf[BUFSIZ];
-  snprintf(buf, sizeof(buf), "%o", UINT_MAX);
-  EXPECT_STREQ("37777777777", buf);
+  EXPECT_SNPRINTF("37777777777", "%o", UINT_MAX);
+}
+
+TEST(STDIO_TEST, swprintf_o_UINT_MAX) {
+  EXPECT_SWPRINTF(L"37777777777", L"%o", UINT_MAX);
 }
 
 TEST(STDIO_TEST, snprintf_u_UINT_MAX) {
-  char buf[BUFSIZ];
-  snprintf(buf, sizeof(buf), "%u", UINT_MAX);
-  EXPECT_STREQ("4294967295", buf);
+  EXPECT_SNPRINTF("4294967295", "%u", UINT_MAX);
+}
+
+TEST(STDIO_TEST, swprintf_u_UINT_MAX) {
+  EXPECT_SWPRINTF(L"4294967295", L"%u", UINT_MAX);
 }
 
 TEST(STDIO_TEST, snprintf_x_UINT_MAX) {
-  char buf[BUFSIZ];
-  snprintf(buf, sizeof(buf), "%x", UINT_MAX);
-  EXPECT_STREQ("ffffffff", buf);
+  EXPECT_SNPRINTF("ffffffff", "%x", UINT_MAX);
+}
+
+TEST(STDIO_TEST, swprintf_x_UINT_MAX) {
+  EXPECT_SWPRINTF(L"ffffffff", L"%x", UINT_MAX);
 }
 
 TEST(STDIO_TEST, snprintf_X_UINT_MAX) {
-  char buf[BUFSIZ];
-  snprintf(buf, sizeof(buf), "%X", UINT_MAX);
-  EXPECT_STREQ("FFFFFFFF", buf);
+  EXPECT_SNPRINTF("FFFFFFFF", "%X", UINT_MAX);
+}
+
+TEST(STDIO_TEST, swprintf_X_UINT_MAX) {
+  EXPECT_SWPRINTF(L"FFFFFFFF", L"%X", UINT_MAX);
 }
 
 TEST(STDIO_TEST, snprintf_e) {
-  char buf[BUFSIZ];
+  EXPECT_SNPRINTF("1.500000e+00", "%e", 1.5);
+  EXPECT_SNPRINTF("1.500000e+00", "%Le", 1.5L);
+}
 
-  snprintf(buf, sizeof(buf), "%e", 1.5);
-  EXPECT_STREQ("1.500000e+00", buf);
-
-  snprintf(buf, sizeof(buf), "%Le", 1.5L);
-  EXPECT_STREQ("1.500000e+00", buf);
+TEST(STDIO_TEST, swprintf_e) {
+  EXPECT_SWPRINTF(L"1.500000e+00", L"%e", 1.5);
+  EXPECT_SWPRINTF(L"1.500000e+00", L"%Le", 1.5L);
 }
 
 TEST(STDIO_TEST, snprintf_negative_zero_5084292) {
-  char buf[BUFSIZ];
+  EXPECT_SNPRINTF("-0.000000e+00", "%e", -0.0);
+  EXPECT_SNPRINTF("-0.000000E+00", "%E", -0.0);
+  EXPECT_SNPRINTF("-0.000000", "%f", -0.0);
+  EXPECT_SNPRINTF("-0.000000", "%F", -0.0);
+  EXPECT_SNPRINTF("-0", "%g", -0.0);
+  EXPECT_SNPRINTF("-0", "%G", -0.0);
+  EXPECT_SNPRINTF("-0x0p+0", "%a", -0.0);
+  EXPECT_SNPRINTF("-0X0P+0", "%A", -0.0);
+}
 
-  snprintf(buf, sizeof(buf), "%e", -0.0);
-  EXPECT_STREQ("-0.000000e+00", buf);
-  snprintf(buf, sizeof(buf), "%E", -0.0);
-  EXPECT_STREQ("-0.000000E+00", buf);
-  snprintf(buf, sizeof(buf), "%f", -0.0);
-  EXPECT_STREQ("-0.000000", buf);
-  snprintf(buf, sizeof(buf), "%F", -0.0);
-  EXPECT_STREQ("-0.000000", buf);
-  snprintf(buf, sizeof(buf), "%g", -0.0);
-  EXPECT_STREQ("-0", buf);
-  snprintf(buf, sizeof(buf), "%G", -0.0);
-  EXPECT_STREQ("-0", buf);
-  snprintf(buf, sizeof(buf), "%a", -0.0);
-  EXPECT_STREQ("-0x0p+0", buf);
-  snprintf(buf, sizeof(buf), "%A", -0.0);
-  EXPECT_STREQ("-0X0P+0", buf);
+TEST(STDIO_TEST, swprintf_negative_zero_5084292) {
+  EXPECT_SWPRINTF(L"-0.000000e+00", L"%e", -0.0);
+  EXPECT_SWPRINTF(L"-0.000000E+00", L"%E", -0.0);
+  EXPECT_SWPRINTF(L"-0.000000", L"%f", -0.0);
+  EXPECT_SWPRINTF(L"-0.000000", L"%F", -0.0);
+  EXPECT_SWPRINTF(L"-0", L"%g", -0.0);
+  EXPECT_SWPRINTF(L"-0", L"%G", -0.0);
+  EXPECT_SWPRINTF(L"-0x0p+0", L"%a", -0.0);
+  EXPECT_SWPRINTF(L"-0X0P+0", L"%A", -0.0);
 }
 
 TEST(STDIO_TEST, snprintf_utf8_15439554) {
@@ -915,18 +919,36 @@ TEST(STDIO_TEST, snprintf_asterisk_overflow) {
   ASSERT_EQ(ENOMEM, errno);
 }
 
+TEST(STDIO_TEST, swprintf_asterisk_overflow) {
+  wchar_t buf[128];
+  ASSERT_EQ(5, swprintf(buf, sizeof(buf), L"%.*s%c", 4, "hello world", '!'));
+  ASSERT_EQ(12, swprintf(buf, sizeof(buf), L"%.*s%c", INT_MAX / 2, "hello world", '!'));
+  ASSERT_EQ(12, swprintf(buf, sizeof(buf), L"%.*s%c", INT_MAX - 1, "hello world", '!'));
+  ASSERT_EQ(12, swprintf(buf, sizeof(buf), L"%.*s%c", INT_MAX, "hello world", '!'));
+  ASSERT_EQ(12, swprintf(buf, sizeof(buf), L"%.*s%c", -1, "hello world", '!'));
+
+  // INT_MAX-1, INT_MAX, INT_MAX+1.
+  ASSERT_EQ(12, swprintf(buf, sizeof(buf), L"%.2147483646s%c", "hello world", '!'));
+  ASSERT_EQ(12, swprintf(buf, sizeof(buf), L"%.2147483647s%c", "hello world", '!'));
+  ASSERT_EQ(-1, swprintf(buf, sizeof(buf), L"%.2147483648s%c", "hello world", '!'));
+  ASSERT_EQ(ENOMEM, errno);
+}
+
 // Inspired by https://github.com/landley/toybox/issues/163.
 TEST(STDIO_TEST, printf_NULL) {
-  char buf[128];
   char* null = nullptr;
-  EXPECT_EQ(4, snprintf(buf, sizeof(buf), "<%*.*s>", 2, 2, null));
-  EXPECT_STREQ("<(n>", buf);
-  EXPECT_EQ(8, snprintf(buf, sizeof(buf), "<%*.*s>", 2, 8, null));
-  EXPECT_STREQ("<(null)>", buf);
-  EXPECT_EQ(10, snprintf(buf, sizeof(buf), "<%*.*s>", 8, 2, null));
-  EXPECT_STREQ("<      (n>", buf);
-  EXPECT_EQ(10, snprintf(buf, sizeof(buf), "<%*.*s>", 8, 8, null));
-  EXPECT_STREQ("<  (null)>", buf);
+  EXPECT_SNPRINTF("<(n>", "<%*.*s>", 2, 2, null);
+  EXPECT_SNPRINTF("<(null)>", "<%*.*s>", 2, 8, null);
+  EXPECT_SNPRINTF("<      (n>", "<%*.*s>", 8, 2, null);
+  EXPECT_SNPRINTF("<  (null)>", "<%*.*s>", 8, 8, null);
+}
+
+TEST(STDIO_TEST, wprintf_NULL) {
+  char* null = nullptr;
+  EXPECT_SWPRINTF(L"<(n>", L"<%*.*s>", 2, 2, null);
+  EXPECT_SWPRINTF(L"<(null)>", L"<%*.*s>", 2, 8, null);
+  EXPECT_SWPRINTF(L"<      (n>", L"<%*.*s>", 8, 2, null);
+  EXPECT_SWPRINTF(L"<  (null)>", L"<%*.*s>", 8, 8, null);
 }
 
 TEST(STDIO_TEST, fprintf) {
@@ -2469,7 +2491,7 @@ TEST_F(STDIO_DEATHTEST, snprintf_30445072_known_buffer_size) {
 }
 
 TEST_F(STDIO_DEATHTEST, snprintf_30445072_unknown_buffer_size) {
-  std::string buf = "world";
+  std::string buf = "hello";  // So the compiler doesn't know the buffer size.
   ASSERT_EXIT(snprintf(&buf[0], atol("-1"), "hello"),
               testing::KilledBySignal(SIGABRT),
               "FORTIFY: vsnprintf: size .* > SSIZE_MAX");
@@ -2482,48 +2504,36 @@ TEST(STDIO_TEST, sprintf_30445072) {
 }
 
 TEST(STDIO_TEST, printf_m) {
-  char buf[BUFSIZ];
   errno = 0;
-  snprintf(buf, sizeof(buf), "<%m>");
-  ASSERT_STREQ("<Success>", buf);
+  EXPECT_SNPRINTF("<Success>", "<%m>");
   errno = -1;
-  snprintf(buf, sizeof(buf), "<%m>");
-  ASSERT_STREQ("<Unknown error -1>", buf);
+  EXPECT_SNPRINTF("<Unknown error -1>", "<%m>");
   errno = EINVAL;
-  snprintf(buf, sizeof(buf), "<%m>");
-  ASSERT_STREQ("<Invalid argument>", buf);
-}
-
-TEST(STDIO_TEST, printf_m_does_not_clobber_strerror) {
-  char buf[BUFSIZ];
-  const char* m = strerror(-1);
-  ASSERT_STREQ("Unknown error -1", m);
-  errno = -2;
-  snprintf(buf, sizeof(buf), "<%m>");
-  ASSERT_STREQ("<Unknown error -2>", buf);
-  ASSERT_STREQ("Unknown error -1", m);
+  EXPECT_SNPRINTF("<Invalid argument>", "<%m>");
 }
 
 TEST(STDIO_TEST, wprintf_m) {
-  wchar_t buf[BUFSIZ];
   errno = 0;
-  swprintf(buf, sizeof(buf), L"<%m>");
-  ASSERT_EQ(std::wstring(L"<Success>"), buf);
+  EXPECT_SWPRINTF(L"<Success>", L"<%m>");
   errno = -1;
-  swprintf(buf, sizeof(buf), L"<%m>");
-  ASSERT_EQ(std::wstring(L"<Unknown error -1>"), buf);
+  EXPECT_SWPRINTF(L"<Unknown error -1>", L"<%m>");
   errno = EINVAL;
-  swprintf(buf, sizeof(buf), L"<%m>");
-  ASSERT_EQ(std::wstring(L"<Invalid argument>"), buf);
+  EXPECT_SWPRINTF(L"<Invalid argument>", L"<%m>");
 }
 
-TEST(STDIO_TEST, wprintf_m_does_not_clobber_strerror) {
-  wchar_t buf[BUFSIZ];
+TEST(STDIO_TEST, printf_m_does_not_clobber_strerror) {
   const char* m = strerror(-1);
   ASSERT_STREQ("Unknown error -1", m);
   errno = -2;
-  swprintf(buf, sizeof(buf), L"<%m>");
-  ASSERT_EQ(std::wstring(L"<Unknown error -2>"), buf);
+  EXPECT_SNPRINTF("<Unknown error -2>", "<%m>");
+  ASSERT_STREQ("Unknown error -1", m);
+}
+
+TEST(STDIO_TEST, wprintf_m_does_not_clobber_strerror) {
+  const char* m = strerror(-1);
+  ASSERT_STREQ("Unknown error -1", m);
+  errno = -2;
+  EXPECT_SWPRINTF(L"<Unknown error -2>", L"<%m>");
   ASSERT_STREQ("Unknown error -1", m);
 }
 
@@ -3000,153 +3010,83 @@ TEST(STDIO_TEST, fwrite_int_overflow) {
 #endif
 }
 
-TEST(STDIO_TEST, snprintf_b) {
+TEST(STDIO_TEST, snprintf_b_B) {
 #if defined(__BIONIC__)
-  char buf[BUFSIZ];
-
   uint8_t b = 5;
-  EXPECT_EQ(5, snprintf(buf, sizeof(buf), "<%" PRIb8 ">", b));
-  EXPECT_STREQ("<101>", buf);
-  EXPECT_EQ(10, snprintf(buf, sizeof(buf), "<%08" PRIb8 ">", b));
-  EXPECT_STREQ("<00000101>", buf);
+  EXPECT_SNPRINTF("<101>", "<%" PRIb8 ">", b);
+  EXPECT_SNPRINTF("<101>", "<%" PRIB8 ">", b);
+  EXPECT_SNPRINTF("<00000101>", "<%08" PRIb8 ">", b);
+  EXPECT_SNPRINTF("<00000101>", "<%08" PRIB8 ">", b);
 
   uint16_t s = 0xaaaa;
-  EXPECT_EQ(18, snprintf(buf, sizeof(buf), "<%" PRIb16 ">", s));
-  EXPECT_STREQ("<1010101010101010>", buf);
-  EXPECT_EQ(20, snprintf(buf, sizeof(buf), "<%#" PRIb16 ">", s));
-  EXPECT_STREQ("<0b1010101010101010>", buf);
+  EXPECT_SNPRINTF("<1010101010101010>", "<%" PRIb16 ">", s);
+  EXPECT_SNPRINTF("<1010101010101010>", "<%" PRIB16 ">", s);
+  EXPECT_SNPRINTF("<0b1010101010101010>", "<%#" PRIb16 ">", s);
+  EXPECT_SNPRINTF("<0B1010101010101010>", "<%#" PRIB16 ">", s);
 
-  EXPECT_EQ(34, snprintf(buf, sizeof(buf), "<%" PRIb32 ">", 0xaaaaaaaa));
-  EXPECT_STREQ("<10101010101010101010101010101010>", buf);
-  EXPECT_EQ(36, snprintf(buf, sizeof(buf), "<%#" PRIb32 ">", 0xaaaaaaaa));
-  EXPECT_STREQ("<0b10101010101010101010101010101010>", buf);
+  EXPECT_SNPRINTF("<10101010101010101010101010101010>", "<%" PRIb32 ">", 0xaaaaaaaa);
+  EXPECT_SNPRINTF("<10101010101010101010101010101010>", "<%" PRIB32 ">", 0xaaaaaaaa);
+  EXPECT_SNPRINTF("<0b10101010101010101010101010101010>", "<%#" PRIb32 ">", 0xaaaaaaaa);
+  EXPECT_SNPRINTF("<0B10101010101010101010101010101010>", "<%#" PRIB32 ">", 0xaaaaaaaa);
 
   // clang doesn't like "%lb" (https://github.com/llvm/llvm-project/issues/62247)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wformat"
-  EXPECT_EQ(66, snprintf(buf, sizeof(buf), "<%" PRIb64 ">", 0xaaaaaaaa'aaaaaaaa));
-  EXPECT_STREQ("<1010101010101010101010101010101010101010101010101010101010101010>", buf);
-  EXPECT_EQ(68, snprintf(buf, sizeof(buf), "<%#" PRIb64 ">", 0xaaaaaaaa'aaaaaaaa));
-  EXPECT_STREQ("<0b1010101010101010101010101010101010101010101010101010101010101010>", buf);
+  EXPECT_SNPRINTF("<1010101010101010101010101010101010101010101010101010101010101010>",
+                  "<%" PRIb64 ">", 0xaaaaaaaa'aaaaaaaa);
+  EXPECT_SNPRINTF("<1010101010101010101010101010101010101010101010101010101010101010>",
+                  "<%" PRIB64 ">", 0xaaaaaaaa'aaaaaaaa);
+  EXPECT_SNPRINTF("<0b1010101010101010101010101010101010101010101010101010101010101010>",
+                  "<%#" PRIb64 ">", 0xaaaaaaaa'aaaaaaaa);
+  EXPECT_SNPRINTF("<0B1010101010101010101010101010101010101010101010101010101010101010>",
+                  "<%#" PRIB64 ">", 0xaaaaaaaa'aaaaaaaa);
 #pragma clang diagnostic pop
 
-  EXPECT_EQ(3, snprintf(buf, sizeof(buf), "<%#b>", 0));
-  EXPECT_STREQ("<0>", buf);
+  EXPECT_SNPRINTF("<0>", "<%#b>", 0);
+  EXPECT_SNPRINTF("<0>", "<%#B>", 0);
 #else
   GTEST_SKIP() << "no %b in glibc";
 #endif
 }
 
-TEST(STDIO_TEST, snprintf_B) {
+TEST(STDIO_TEST, swprintf_b_B) {
 #if defined(__BIONIC__)
-  char buf[BUFSIZ];
-
   uint8_t b = 5;
-  EXPECT_EQ(5, snprintf(buf, sizeof(buf), "<%" PRIB8 ">", b));
-  EXPECT_STREQ("<101>", buf);
-  EXPECT_EQ(10, snprintf(buf, sizeof(buf), "<%08" PRIB8 ">", b));
-  EXPECT_STREQ("<00000101>", buf);
+  EXPECT_SWPRINTF(L"<101>", L"<%" PRIb8 ">", b);
+  EXPECT_SWPRINTF(L"<101>", L"<%" PRIB8 ">", b);
+  EXPECT_SWPRINTF(L"<0b101>", L"<%#" PRIb8 ">", b);
+  EXPECT_SWPRINTF(L"<0B101>", L"<%#" PRIB8 ">", b);
+  EXPECT_SWPRINTF(L"<00000101>", L"<%08" PRIb8 ">", b);
+  EXPECT_SWPRINTF(L"<00000101>", L"<%08" PRIB8 ">", b);
 
   uint16_t s = 0xaaaa;
-  EXPECT_EQ(18, snprintf(buf, sizeof(buf), "<%" PRIB16 ">", s));
-  EXPECT_STREQ("<1010101010101010>", buf);
-  EXPECT_EQ(20, snprintf(buf, sizeof(buf), "<%#" PRIB16 ">", s));
-  EXPECT_STREQ("<0B1010101010101010>", buf);
+  EXPECT_SWPRINTF(L"<1010101010101010>", L"<%" PRIb16 ">", s);
+  EXPECT_SWPRINTF(L"<1010101010101010>", L"<%" PRIB16 ">", s);
+  EXPECT_SWPRINTF(L"<0b1010101010101010>", L"<%#" PRIb16 ">", s);
+  EXPECT_SWPRINTF(L"<0B1010101010101010>", L"<%#" PRIB16 ">", s);
 
-  EXPECT_EQ(34, snprintf(buf, sizeof(buf), "<%" PRIB32 ">", 0xaaaaaaaa));
-  EXPECT_STREQ("<10101010101010101010101010101010>", buf);
-  EXPECT_EQ(36, snprintf(buf, sizeof(buf), "<%#" PRIB32 ">", 0xaaaaaaaa));
-  EXPECT_STREQ("<0B10101010101010101010101010101010>", buf);
+  EXPECT_SWPRINTF(L"<10101010101010101010101010101010>", L"<%" PRIb32 ">", 0xaaaaaaaa);
+  EXPECT_SWPRINTF(L"<10101010101010101010101010101010>", L"<%" PRIB32 ">", 0xaaaaaaaa);
+  EXPECT_SWPRINTF(L"<0b10101010101010101010101010101010>", L"<%#" PRIb32 ">", 0xaaaaaaaa);
+  EXPECT_SWPRINTF(L"<0B10101010101010101010101010101010>", L"<%#" PRIB32 ">", 0xaaaaaaaa);
 
-  // clang doesn't like "%lB" (https://github.com/llvm/llvm-project/issues/62247)
+  // clang doesn't like "%lb" (https://github.com/llvm/llvm-project/issues/62247)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wformat"
-  EXPECT_EQ(66, snprintf(buf, sizeof(buf), "<%" PRIB64 ">", 0xaaaaaaaa'aaaaaaaa));
-  EXPECT_STREQ("<1010101010101010101010101010101010101010101010101010101010101010>", buf);
-  EXPECT_EQ(68, snprintf(buf, sizeof(buf), "<%#" PRIB64 ">", 0xaaaaaaaa'aaaaaaaa));
-  EXPECT_STREQ("<0B1010101010101010101010101010101010101010101010101010101010101010>", buf);
+  EXPECT_SWPRINTF(L"<1010101010101010101010101010101010101010101010101010101010101010>",
+                  L"<%" PRIb64 ">", 0xaaaaaaaa'aaaaaaaa);
+  EXPECT_SWPRINTF(L"<1010101010101010101010101010101010101010101010101010101010101010>",
+                  L"<%" PRIB64 ">", 0xaaaaaaaa'aaaaaaaa);
+  EXPECT_SWPRINTF(L"<0b1010101010101010101010101010101010101010101010101010101010101010>",
+                  L"<%#" PRIb64 ">", 0xaaaaaaaa'aaaaaaaa);
+  EXPECT_SWPRINTF(L"<0B1010101010101010101010101010101010101010101010101010101010101010>",
+                  L"<%#" PRIB64 ">", 0xaaaaaaaa'aaaaaaaa);
 #pragma clang diagnostic pop
 
-  EXPECT_EQ(3, snprintf(buf, sizeof(buf), "<%#b>", 0));
-  EXPECT_STREQ("<0>", buf);
-#else
-  GTEST_SKIP() << "no %B in glibc";
-#endif
-}
-
-TEST(STDIO_TEST, swprintf_b) {
-#if defined(__BIONIC__)
-  wchar_t buf[BUFSIZ];
-
-  uint8_t b = 5;
-  EXPECT_EQ(5, swprintf(buf, sizeof(buf), L"<%" PRIb8 ">", b));
-  EXPECT_EQ(std::wstring(L"<101>"), buf);
-  EXPECT_EQ(10, swprintf(buf, sizeof(buf), L"<%08" PRIb8 ">", b));
-  EXPECT_EQ(std::wstring(L"<00000101>"), buf);
-
-  uint16_t s = 0xaaaa;
-  EXPECT_EQ(18, swprintf(buf, sizeof(buf), L"<%" PRIb16 ">", s));
-  EXPECT_EQ(std::wstring(L"<1010101010101010>"), buf);
-  EXPECT_EQ(20, swprintf(buf, sizeof(buf), L"<%#" PRIb16 ">", s));
-  EXPECT_EQ(std::wstring(L"<0b1010101010101010>"), buf);
-
-  EXPECT_EQ(34, swprintf(buf, sizeof(buf), L"<%" PRIb32 ">", 0xaaaaaaaa));
-  EXPECT_EQ(std::wstring(L"<10101010101010101010101010101010>"), buf);
-  EXPECT_EQ(36, swprintf(buf, sizeof(buf), L"<%#" PRIb32 ">", 0xaaaaaaaa));
-  EXPECT_EQ(std::wstring(L"<0b10101010101010101010101010101010>"), buf);
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wformat"  // clang doesn't like "%lb"
-  EXPECT_EQ(66, swprintf(buf, sizeof(buf), L"<%" PRIb64 ">", 0xaaaaaaaa'aaaaaaaa));
-  EXPECT_EQ(std::wstring(L"<1010101010101010101010101010101010101010101010101010101010101010>"),
-            buf);
-  EXPECT_EQ(68, swprintf(buf, sizeof(buf), L"<%#" PRIb64 ">", 0xaaaaaaaa'aaaaaaaa));
-  EXPECT_EQ(std::wstring(L"<0b1010101010101010101010101010101010101010101010101010101010101010>"),
-            buf);
-#pragma clang diagnostic pop
-
-  EXPECT_EQ(3, swprintf(buf, sizeof(buf), L"<%#b>", 0));
-  EXPECT_EQ(std::wstring(L"<0>"), buf);
+  EXPECT_SWPRINTF(L"<0>", L"<%#b>", 0);
+  EXPECT_SWPRINTF(L"<0>", L"<%#B>", 0);
 #else
   GTEST_SKIP() << "no %b in glibc";
-#endif
-}
-
-TEST(STDIO_TEST, swprintf_B) {
-#if defined(__BIONIC__)
-  wchar_t buf[BUFSIZ];
-
-  uint8_t b = 5;
-  EXPECT_EQ(5, swprintf(buf, sizeof(buf), L"<%" PRIB8 ">", b));
-  EXPECT_EQ(std::wstring(L"<101>"), buf);
-  EXPECT_EQ(10, swprintf(buf, sizeof(buf), L"<%08" PRIB8 ">", b));
-  EXPECT_EQ(std::wstring(L"<00000101>"), buf);
-
-  uint16_t s = 0xaaaa;
-  EXPECT_EQ(18, swprintf(buf, sizeof(buf), L"<%" PRIB16 ">", s));
-  EXPECT_EQ(std::wstring(L"<1010101010101010>"), buf);
-  EXPECT_EQ(20, swprintf(buf, sizeof(buf), L"<%#" PRIB16 ">", s));
-  EXPECT_EQ(std::wstring(L"<0B1010101010101010>"), buf);
-
-  EXPECT_EQ(34, swprintf(buf, sizeof(buf), L"<%" PRIB32 ">", 0xaaaaaaaa));
-  EXPECT_EQ(std::wstring(L"<10101010101010101010101010101010>"), buf);
-  EXPECT_EQ(36, swprintf(buf, sizeof(buf), L"<%#" PRIB32 ">", 0xaaaaaaaa));
-  EXPECT_EQ(std::wstring(L"<0B10101010101010101010101010101010>"), buf);
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wformat"  // clang doesn't like "%lb"
-  EXPECT_EQ(66, swprintf(buf, sizeof(buf), L"<%" PRIB64 ">", 0xaaaaaaaa'aaaaaaaa));
-  EXPECT_EQ(std::wstring(L"<1010101010101010101010101010101010101010101010101010101010101010>"),
-            buf);
-  EXPECT_EQ(68, swprintf(buf, sizeof(buf), L"<%#" PRIB64 ">", 0xaaaaaaaa'aaaaaaaa));
-  EXPECT_EQ(std::wstring(L"<0B1010101010101010101010101010101010101010101010101010101010101010>"),
-            buf);
-#pragma clang diagnostic pop
-
-  EXPECT_EQ(3, swprintf(buf, sizeof(buf), L"<%#B>", 0));
-  EXPECT_EQ(std::wstring(L"<0>"), buf);
-#else
-  GTEST_SKIP() << "no %B in glibc";
 #endif
 }
 
@@ -3281,30 +3221,47 @@ TEST(STDIO_TEST, snprintf_w_base) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wformat-invalid-specifier"
 #pragma clang diagnostic ignored "-Wconstant-conversion"
-  char buf[BUFSIZ];
   int8_t a = 0b101;
-  snprintf(buf, sizeof(buf), "<%w8b>", a);
-  EXPECT_STREQ("<101>", buf);
+  EXPECT_SNPRINTF("<101>", "<%w8b>", a);
   int8_t b1 = 0xFF;
-  snprintf(buf, sizeof(buf), "<%w8d>", b1);
-  EXPECT_STREQ("<-1>", buf);
+  EXPECT_SNPRINTF("<-1>", "<%w8d>", b1);
   int8_t b2 = 0x1FF;
-  snprintf(buf, sizeof(buf), "<%w8d>", b2);
-  EXPECT_STREQ("<-1>", buf);
+  EXPECT_SNPRINTF("<-1>", "<%w8d>", b2);
   int16_t c = 0xFFFF;
-  snprintf(buf, sizeof(buf), "<%w16i>", c);
-  EXPECT_STREQ("<-1>", buf);
+  EXPECT_SNPRINTF("<-1>", "<%w16i>", c);
   int32_t d = 021;
-  snprintf(buf, sizeof(buf), "<%w32o>", d);
-  EXPECT_STREQ("<21>", buf);
+  EXPECT_SNPRINTF("<21>", "<%w32o>", d);
   uint32_t e = -1;
-  snprintf(buf, sizeof(buf), "<%w32u>", e);
-  EXPECT_STREQ("<4294967295>", buf);
+  EXPECT_SNPRINTF("<4294967295>", "<%w32u>", e);
   int64_t f = 0x3b;
-  snprintf(buf, sizeof(buf), "<%w64x>", f);
-  EXPECT_STREQ("<3b>", buf);
-  snprintf(buf, sizeof(buf), "<%w64X>", f);
-  EXPECT_STREQ("<3B>", buf);
+  EXPECT_SNPRINTF("<3b>", "<%w64x>", f);
+  EXPECT_SNPRINTF("<3B>", "<%w64X>", f);
+#pragma clang diagnostic pop
+#else
+  GTEST_SKIP() << "no %w in glibc";
+#endif
+}
+
+TEST(STDIO_TEST, swprintf_w_base) {
+#if defined(__BIONIC__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+#pragma clang diagnostic ignored "-Wconstant-conversion"
+  int8_t a = 0b101;
+  EXPECT_SWPRINTF(L"<101>", L"<%w8b>", a);
+  int8_t b1 = 0xFF;
+  EXPECT_SWPRINTF(L"<-1>", L"<%w8d>", b1);
+  int8_t b2 = 0x1FF;
+  EXPECT_SWPRINTF(L"<-1>", L"<%w8d>", b2);
+  int16_t c = 0xFFFF;
+  EXPECT_SWPRINTF(L"<-1>", L"<%w16i>", c);
+  int32_t d = 021;
+  EXPECT_SWPRINTF(L"<21>", L"<%w32o>", d);
+  uint32_t e = -1;
+  EXPECT_SWPRINTF(L"<4294967295>", L"<%w32u>", e);
+  int64_t f = 0x3b;
+  EXPECT_SWPRINTF(L"<3b>", L"<%w64x>", f);
+  EXPECT_SWPRINTF(L"<3B>", L"<%w64X>", f);
 #pragma clang diagnostic pop
 #else
   GTEST_SKIP() << "no %w in glibc";
@@ -3316,18 +3273,37 @@ TEST(STDIO_TEST, snprintf_w_arguments_reordering) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wformat-invalid-specifier"
 #pragma clang diagnostic ignored "-Wformat-extra-args"
-  char buf[BUFSIZ];
   int32_t a = 0xaaaaaaaa;
   int64_t b = 0x11111111'22222222;
   int64_t c = 0x33333333'44444444;
   int64_t d = 0xaaaaaaaa'aaaaaaaa;
-  snprintf(buf, sizeof(buf), "<%2$w32b --- %1$w64x>", c, a);
-  EXPECT_STREQ("<10101010101010101010101010101010 --- 3333333344444444>", buf);
-  snprintf(buf, sizeof(buf), "<%3$w64b --- %1$w64x --- %2$w64x>", b, c, d);
-  EXPECT_STREQ(
+  EXPECT_SNPRINTF("<10101010101010101010101010101010 --- 3333333344444444>",
+                  "<%2$w32b --- %1$w64x>", c, a);
+  EXPECT_SNPRINTF(
       "<1010101010101010101010101010101010101010101010101010101010101010 --- 1111111122222222 --- "
       "3333333344444444>",
-      buf);
+      "<%3$w64b --- %1$w64x --- %2$w64x>", b, c, d);
+#pragma clang diagnostic pop
+#else
+  GTEST_SKIP() << "no %w in glibc";
+#endif
+}
+
+TEST(STDIO_TEST, swprintf_w_arguments_reordering) {
+#if defined(__BIONIC__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+#pragma clang diagnostic ignored "-Wformat-extra-args"
+  int32_t a = 0xaaaaaaaa;
+  int64_t b = 0x11111111'22222222;
+  int64_t c = 0x33333333'44444444;
+  int64_t d = 0xaaaaaaaa'aaaaaaaa;
+  EXPECT_SWPRINTF(L"<10101010101010101010101010101010 --- 3333333344444444>",
+                  L"<%2$w32b --- %1$w64x>", c, a);
+  EXPECT_SWPRINTF(
+      L"<1010101010101010101010101010101010101010101010101010101010101010 --- 1111111122222222 --- "
+      L"3333333344444444>",
+      L"<%3$w64b --- %1$w64x --- %2$w64x>", b, c, d);
 #pragma clang diagnostic pop
 #else
   GTEST_SKIP() << "no %w in glibc";
@@ -3341,63 +3317,6 @@ TEST(STDIO_TEST, snprintf_invalid_w_width) {
   char buf[BUFSIZ];
   int32_t a = 100;
   EXPECT_DEATH(snprintf(buf, sizeof(buf), "%w20d", &a), "%w20 is unsupported");
-#pragma clang diagnostic pop
-#else
-  GTEST_SKIP() << "no %w in glibc";
-#endif
-}
-
-TEST(STDIO_TEST, swprintf_w_base) {
-#if defined(__BIONIC__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
-#pragma clang diagnostic ignored "-Wconstant-conversion"
-  wchar_t buf[BUFSIZ];
-  int8_t a = 0b101;
-  swprintf(buf, sizeof(buf), L"<%w8b>", a);
-  EXPECT_EQ(std::wstring(L"<101>"), buf);
-  int8_t b1 = 0xFF;
-  swprintf(buf, sizeof(buf), L"<%w8d>", b1);
-  EXPECT_EQ(std::wstring(L"<-1>"), buf);
-  int8_t b2 = 0x1FF;
-  swprintf(buf, sizeof(buf), L"<%w8d>", b2);
-  EXPECT_EQ(std::wstring(L"<-1>"), buf);
-  int16_t c = 0xFFFF;
-  swprintf(buf, sizeof(buf), L"<%w16i>", c);
-  EXPECT_EQ(std::wstring(L"<-1>"), buf);
-  int32_t d = 021;
-  swprintf(buf, sizeof(buf), L"<%w32o>", d);
-  EXPECT_EQ(std::wstring(L"<21>"), buf);
-  uint32_t e = -1;
-  swprintf(buf, sizeof(buf), L"<%w32u>", e);
-  EXPECT_EQ(std::wstring(L"<4294967295>"), buf);
-  int64_t f = 0x3b;
-  swprintf(buf, sizeof(buf), L"<%w64x>", f);
-  EXPECT_EQ(std::wstring(L"<3b>"), buf);
-  swprintf(buf, sizeof(buf), L"<%w64X>", f);
-  EXPECT_EQ(std::wstring(L"<3B>"), buf);
-#pragma clang diagnostic pop
-#else
-  GTEST_SKIP() << "no %w in glibc";
-#endif
-}
-
-TEST(STDIO_TEST, swprintf_w_arguments_reordering) {
-#if defined(__BIONIC__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
-#pragma clang diagnostic ignored "-Wformat-extra-args"
-  wchar_t buf[BUFSIZ];
-  int32_t a = 0xaaaaaaaa;
-  int64_t b = 0x11111111'22222222;
-  int64_t c = 0x33333333'44444444;
-  int64_t d = 0xaaaaaaaa'aaaaaaaa;
-  swprintf(buf, sizeof(buf), L"<%2$w32b --- %1$w64x>", c, a);
-  EXPECT_EQ(std::wstring(L"<10101010101010101010101010101010 --- 3333333344444444>"), buf);
-  swprintf(buf, sizeof(buf), L"<%3$w64b --- %1$w64x --- %2$w64x>", b, c, d);
-  EXPECT_EQ(std::wstring(L"<1010101010101010101010101010101010101010101010101010101010101010 --- "
-                         L"1111111122222222 --- 3333333344444444>"),
-            buf);
 #pragma clang diagnostic pop
 #else
   GTEST_SKIP() << "no %w in glibc";
@@ -3423,34 +3342,55 @@ TEST(STDIO_TEST, snprintf_wf_base) {
 #pragma clang diagnostic ignored "-Wconstant-conversion"
 #pragma clang diagnostic ignored "-Wformat"
 #pragma clang diagnostic ignored "-Wformat-invalid-specifier"
-  char buf[BUFSIZ];
   int_fast8_t a = 0b101;
-  snprintf(buf, sizeof(buf), "<%wf8b>", a);
-  EXPECT_STREQ("<101>", buf);
+  EXPECT_SNPRINTF("<101>", "<%wf8b>", a);
   int_fast8_t b = 0x12341234'12341234;
-  snprintf(buf, sizeof(buf), "<%wf8x>", b);
-  EXPECT_STREQ("<34>", buf);
+  EXPECT_SNPRINTF("<34>", "<%wf8x>", b);
   uint_fast16_t c = 0x11111111'22222222;
 #if defined(__LP64__)
-  snprintf(buf, sizeof(buf), "<%wf16x>", c);
-  EXPECT_STREQ("<1111111122222222>", buf);
+  EXPECT_SNPRINTF("<1111111122222222>", "<%wf16x>", c);
 #else
-  snprintf(buf, sizeof(buf), "<%wf16x>", c);
-  EXPECT_STREQ("<22222222>", buf);
+  EXPECT_SNPRINTF("<22222222>", "<%wf16x>", c);
 #endif
   int_fast32_t d = 0x33333333'44444444;
 #if defined(__LP64__)
-  snprintf(buf, sizeof(buf), "<%wf32x>", d);
-  EXPECT_STREQ("<3333333344444444>", buf);
+  EXPECT_SNPRINTF("<3333333344444444>", "<%wf32x>", d);
 #else
-  snprintf(buf, sizeof(buf), "<%wf32x>", d);
-  EXPECT_STREQ("<44444444>", buf);
+  EXPECT_SNPRINTF("<44444444>", "<%wf32x>", d);
 #endif
   int_fast64_t e = 0xaaaaaaaa'aaaaaaaa;
-  snprintf(buf, sizeof(buf), "<%wf64x>", e);
-  EXPECT_STREQ("<aaaaaaaaaaaaaaaa>", buf);
-  snprintf(buf, sizeof(buf), "<%wf64X>", e);
-  EXPECT_STREQ("<AAAAAAAAAAAAAAAA>", buf);
+  EXPECT_SNPRINTF("<aaaaaaaaaaaaaaaa>", "<%wf64x>", e);
+  EXPECT_SNPRINTF("<AAAAAAAAAAAAAAAA>", "<%wf64X>", e);
+#pragma clang diagnostic pop
+#else
+  GTEST_SKIP() << "no %wf in glibc";
+#endif
+}
+TEST(STDIO_TEST, swprintf_wf_base) {
+#if defined(__BIONIC__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wconstant-conversion"
+#pragma clang diagnostic ignored "-Wformat"
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+  int_fast8_t a = 0b101;
+  EXPECT_SWPRINTF(L"<101>", L"<%wf8b>", a);
+  int_fast8_t b = 0x12341234'12341234;
+  EXPECT_SWPRINTF(L"<34>", L"<%wf8x>", b);
+  uint_fast16_t c = 0x11111111'22222222;
+#if defined(__LP64__)
+  EXPECT_SWPRINTF(L"<1111111122222222>", L"<%wf16x>", c);
+#else
+  EXPECT_SWPRINTF(L"<22222222>", L"<%wf16x>", c);
+#endif
+  int_fast32_t d = 0x33333333'44444444;
+#if defined(__LP64__)
+  EXPECT_SWPRINTF(L"<3333333344444444>", L"<%wf32x>", d);
+#else
+  EXPECT_SWPRINTF(L"<44444444>", L"<%wf32x>", d);
+#endif
+  int_fast64_t e = 0xaaaaaaaa'aaaaaaaa;
+  EXPECT_SWPRINTF(L"<aaaaaaaaaaaaaaaa>", L"<%wf64x>", e);
+  EXPECT_SWPRINTF(L"<AAAAAAAAAAAAAAAA>", L"<%wf64X>", e);
 #pragma clang diagnostic pop
 #else
   GTEST_SKIP() << "no %wf in glibc";
@@ -3464,25 +3404,54 @@ TEST(STDIO_TEST, snprintf_wf_arguments_reordering) {
 #pragma clang diagnostic ignored "-Wformat"
 #pragma clang diagnostic ignored "-Wformat-extra-args"
 #pragma clang diagnostic ignored "-Wformat-invalid-specifier"
-  char buf[BUFSIZ];
   int_fast16_t a = 0x11111111'22222222;
   int_fast32_t b = 0x33333333'44444444;
   int_fast32_t c = 0xaaaaaaaa'aaaaaaaa;
 #if defined(__LP64__)
-  snprintf(buf, sizeof(buf), "<%2$wf32x --- %1$wf32b>", c, b);
-  EXPECT_STREQ(
+  EXPECT_SNPRINTF(
       "<3333333344444444 --- 1010101010101010101010101010101010101010101010101010101010101010>",
-      buf);
-  snprintf(buf, sizeof(buf), "<%3$wf32b --- %1$wf16x --- %2$wf32x>", a, b, c);
-  EXPECT_STREQ(
+      "<%2$wf32x --- %1$wf32b>", c, b);
+
+  EXPECT_SNPRINTF(
       "<1010101010101010101010101010101010101010101010101010101010101010 --- 1111111122222222 --- "
       "3333333344444444>",
-      buf);
+      "<%3$wf32b --- %1$wf16x --- %2$wf32x>", a, b, c);
 #else
-  snprintf(buf, sizeof(buf), "<%2$wf32x --- %1$wf32b>", c, b);
-  EXPECT_STREQ("<44444444 --- 10101010101010101010101010101010>", buf);
-  snprintf(buf, sizeof(buf), "<%3$wf32b --- %1$wf16x --- %2$wf32x>", a, b, c);
-  EXPECT_STREQ("<10101010101010101010101010101010 --- 22222222 --- 44444444>", buf);
+  EXPECT_SNPRINTF("<44444444 --- 10101010101010101010101010101010>", "<%2$wf32x --- %1$wf32b>", c,
+                  b);
+  EXPECT_SNPRINTF("<10101010101010101010101010101010 --- 22222222 --- 44444444>",
+                  "<%3$wf32b --- %1$wf16x --- %2$wf32x>", a, b, c);
+#endif
+#pragma clang diagnostic pop
+#else
+  GTEST_SKIP() << "no %w in glibc";
+#endif
+}
+
+TEST(STDIO_TEST, swprintf_wf_arguments_reordering) {
+#if defined(__BIONIC__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wconstant-conversion"
+#pragma clang diagnostic ignored "-Wformat"
+#pragma clang diagnostic ignored "-Wformat-extra-args"
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+  int_fast16_t a = 0x11111111'22222222;
+  int_fast32_t b = 0x33333333'44444444;
+  int_fast32_t c = 0xaaaaaaaa'aaaaaaaa;
+#if defined(__LP64__)
+  EXPECT_SWPRINTF(
+      L"<3333333344444444 --- 1010101010101010101010101010101010101010101010101010101010101010>",
+      L"<%2$wf32x --- %1$wf32b>", c, b);
+
+  EXPECT_SWPRINTF(
+      L"<1010101010101010101010101010101010101010101010101010101010101010 --- 1111111122222222 --- "
+      L"3333333344444444>",
+      L"<%3$wf32b --- %1$wf16x --- %2$wf32x>", a, b, c);
+#else
+  EXPECT_SWPRINTF(L"<44444444 --- 10101010101010101010101010101010>", L"<%2$wf32x --- %1$wf32b>", c,
+                  b);
+  EXPECT_SWPRINTF(L"<10101010101010101010101010101010 --- 22222222 --- 44444444>",
+                  L"<%3$wf32b --- %1$wf16x --- %2$wf32x>", a, b, c);
 #endif
 #pragma clang diagnostic pop
 #else
@@ -3504,77 +3473,10 @@ TEST(STDIO_TEST, snprintf_invalid_wf_width) {
 #endif
 }
 
-TEST(STDIO_TEST, swprintf_wf_base) {
-#if defined(__BIONIC__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
-#pragma clang diagnostic ignored "-Wconstant-conversion"
-  wchar_t buf[BUFSIZ];
-  int_fast8_t a = 0b101;
-  swprintf(buf, sizeof(buf), L"<%wf8b>", a);
-  EXPECT_EQ(std::wstring(L"<101>"), buf);
-  int_fast8_t b = 0x12341234'12341234;
-  swprintf(buf, sizeof(buf), L"<%wf8x>", b);
-  EXPECT_EQ(std::wstring(L"<34>"), buf);
-  uint_fast16_t c = 0x11111111'22222222;
-#if defined(__LP64__)
-  swprintf(buf, sizeof(buf), L"<%wf16x>", c);
-  EXPECT_EQ(std::wstring(L"<1111111122222222>"), buf);
-#else
-  swprintf(buf, sizeof(buf), L"<%wf16x>", c);
-  EXPECT_EQ(std::wstring(L"<22222222>"), buf);
-#endif
-  int_fast32_t d = 0x33333333'44444444;
-#if defined(__LP64__)
-  swprintf(buf, sizeof(buf), L"<%wf32x>", d);
-  EXPECT_EQ(std::wstring(L"<3333333344444444>"), buf);
-#else
-  swprintf(buf, sizeof(buf), L"<%wf32x>", d);
-  EXPECT_EQ(std::wstring(L"<44444444>"), buf);
-#endif
-  int_fast64_t e = 0xaaaaaaaa'aaaaaaaa;
-  swprintf(buf, sizeof(buf), L"<%wf64x>", e);
-  EXPECT_EQ(std::wstring(L"<aaaaaaaaaaaaaaaa>"), buf);
-  swprintf(buf, sizeof(buf), L"<%wf64X>", e);
-  EXPECT_EQ(std::wstring(L"<AAAAAAAAAAAAAAAA>"), buf);
-#else
-  GTEST_SKIP() << "no %w in glibc";
-#endif
-}
-
-TEST(STDIO_TEST, swprintf_wf_arguments_reordering) {
-#if defined(__BIONIC__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
-#pragma clang diagnostic ignored "-Wformat-extra-args"
-  wchar_t buf[BUFSIZ];
-  int_fast16_t a = 0x11111111'22222222;
-  int_fast32_t b = 0x33333333'44444444;
-  int_fast32_t c = 0xaaaaaaaa'aaaaaaaa;
-#if defined(__LP64__)
-  swprintf(buf, sizeof(buf), L"<%2$wf32x --- %1$wf32b>", c, b);
-  EXPECT_EQ(std::wstring(L"<3333333344444444 --- "
-                         L"1010101010101010101010101010101010101010101010101010101010101010>"),
-            buf);
-  swprintf(buf, sizeof(buf), L"<%3$wf32b --- %1$wf16x --- %2$wf32x>", a, b, c);
-  EXPECT_EQ(std::wstring(L"<1010101010101010101010101010101010101010101010101010101010101010 --- "
-                         L"1111111122222222 --- 3333333344444444>"),
-            buf);
-#else
-  swprintf(buf, sizeof(buf), L"<%2$wf32x --- %1$wf32b>", c, b);
-  EXPECT_EQ(std::wstring(L"<44444444 --- 10101010101010101010101010101010>"), buf);
-  swprintf(buf, sizeof(buf), L"<%3$wf32b --- %1$wf16x --- %2$wf32x>", a, b, c);
-  EXPECT_EQ(std::wstring(L"<10101010101010101010101010101010 --- 22222222 --- 44444444>"), buf);
-#endif
-#pragma clang diagnostic pop
-#else
-  GTEST_SKIP() << "no %w in glibc";
-#endif
-}
-
 TEST(STDIO_TEST, swprintf_invalid_wf_width) {
 #if defined(__BIONIC__)
 #pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat"
 #pragma clang diagnostic ignored "-Wformat-invalid-specifier"
   wchar_t buf[BUFSIZ];
   int_fast32_t a = 100;
