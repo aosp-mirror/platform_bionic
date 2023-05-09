@@ -275,6 +275,7 @@ enum bpf_link_type {
 #define BPF_F_TEST_STATE_FREQ (1U << 3)
 #define BPF_F_SLEEPABLE (1U << 4)
 #define BPF_F_XDP_HAS_FRAGS (1U << 5)
+#define BPF_F_XDP_DEV_BOUND_ONLY (1U << 6)
 #define BPF_F_KPROBE_MULTI_RETURN (1U << 0)
 #define BPF_PSEUDO_MAP_FD 1
 #define BPF_PSEUDO_MAP_IDX 5
@@ -557,6 +558,7 @@ enum {
   BPF_F_ZERO_CSUM_TX = (1ULL << 1),
   BPF_F_DONT_FRAGMENT = (1ULL << 2),
   BPF_F_SEQ_NUMBER = (1ULL << 3),
+  BPF_F_NO_TUNNEL_KEY = (1ULL << 4),
 };
 enum {
   BPF_F_TUNINFO_FLAGS = (1ULL << 4),
@@ -583,6 +585,8 @@ enum {
   BPF_F_ADJ_ROOM_ENCAP_L4_UDP = (1ULL << 4),
   BPF_F_ADJ_ROOM_NO_CSUM_RESET = (1ULL << 5),
   BPF_F_ADJ_ROOM_ENCAP_L2_ETH = (1ULL << 6),
+  BPF_F_ADJ_ROOM_DECAP_L3_IPV4 = (1ULL << 7),
+  BPF_F_ADJ_ROOM_DECAP_L3_IPV6 = (1ULL << 8),
 };
 enum {
   BPF_ADJ_ROOM_ENCAP_L2_MASK = 0xff,
@@ -1095,6 +1099,7 @@ struct bpf_raw_tracepoint_args {
 enum {
   BPF_FIB_LOOKUP_DIRECT = (1U << 0),
   BPF_FIB_LOOKUP_OUTPUT = (1U << 1),
+  BPF_FIB_LOOKUP_SKIP_NEIGH = (1U << 2),
 };
 enum {
   BPF_FIB_LKUP_RET_SUCCESS,
@@ -1215,6 +1220,15 @@ struct bpf_list_head {
   __u64 : 64;
 } __attribute__((aligned(8)));
 struct bpf_list_node {
+  __u64 : 64;
+  __u64 : 64;
+} __attribute__((aligned(8)));
+struct bpf_rb_root {
+  __u64 : 64;
+  __u64 : 64;
+} __attribute__((aligned(8)));
+struct bpf_rb_node {
+  __u64 : 64;
   __u64 : 64;
   __u64 : 64;
 } __attribute__((aligned(8)));

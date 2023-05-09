@@ -20,6 +20,7 @@
 #define _ASM_X86_KVM_H
 #include <linux/types.h>
 #include <linux/ioctl.h>
+#include <linux/stddef.h>
 #define KVM_PIO_PAGE_OFFSET 1
 #define KVM_COALESCED_MMIO_PAGE_OFFSET 2
 #define KVM_DIRTY_LOG_PAGE_OFFSET 64
@@ -395,8 +396,8 @@ struct kvm_nested_state {
     __u8 pad[120];
   } hdr;
   union {
-    struct kvm_vmx_nested_state_data vmx[0];
-    struct kvm_svm_nested_state_data svm[0];
+    __DECLARE_FLEX_ARRAY(struct kvm_vmx_nested_state_data, vmx);
+    __DECLARE_FLEX_ARRAY(struct kvm_svm_nested_state_data, svm);
   } data;
 };
 struct kvm_pmu_event_filter {
@@ -409,6 +410,14 @@ struct kvm_pmu_event_filter {
 };
 #define KVM_PMU_EVENT_ALLOW 0
 #define KVM_PMU_EVENT_DENY 1
+#define KVM_PMU_EVENT_FLAG_MASKED_EVENTS BIT(0)
+#define KVM_PMU_EVENT_FLAGS_VALID_MASK (KVM_PMU_EVENT_FLAG_MASKED_EVENTS)
+#define KVM_PMU_ENCODE_MASKED_ENTRY(event_select,mask,match,exclude) (((event_select) & 0xFFULL) | (((event_select) & 0XF00ULL) << 24) | (((mask) & 0xFFULL) << 56) | (((match) & 0xFFULL) << 8) | ((__u64) (! ! (exclude)) << 55))
+#define KVM_PMU_MASKED_ENTRY_EVENT_SELECT (GENMASK_ULL(7, 0) | GENMASK_ULL(35, 32))
+#define KVM_PMU_MASKED_ENTRY_UMASK_MASK (GENMASK_ULL(63, 56))
+#define KVM_PMU_MASKED_ENTRY_UMASK_MATCH (GENMASK_ULL(15, 8))
+#define KVM_PMU_MASKED_ENTRY_EXCLUDE (BIT_ULL(55))
+#define KVM_PMU_MASKED_ENTRY_UMASK_MASK_SHIFT (56)
 #define KVM_VCPU_TSC_CTRL 0
 #define KVM_VCPU_TSC_OFFSET 0
 #endif

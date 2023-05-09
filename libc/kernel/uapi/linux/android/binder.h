@@ -221,6 +221,7 @@ enum binder_driver_return_protocol {
   BR_FAILED_REPLY = _IO('r', 17),
   BR_FROZEN_REPLY = _IO('r', 18),
   BR_ONEWAY_SPAM_SUSPECT = _IO('r', 19),
+  BR_TRANSACTION_PENDING_FROZEN = _IO('r', 20),
 };
 enum binder_driver_command_protocol {
   BC_TRANSACTION = _IOW('c', 0, struct binder_transaction_data),
