@@ -366,9 +366,9 @@ typedef struct mcontext_t {
 
 /* This matches the kernel <asm/ucontext.h> but using mcontext_t. */
 
-typedef struct ucontext_t {
+typedef struct ucontext {
   unsigned long uc_flags;
-  struct ucontext_t* uc_link;
+  struct ucontext* uc_link;
   stack_t uc_stack;
   union {
     sigset_t uc_sigmask;

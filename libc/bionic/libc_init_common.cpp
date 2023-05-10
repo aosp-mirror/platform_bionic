@@ -289,6 +289,7 @@ static bool __is_unsafe_environment_variable(const char* name) {
       "LD_DEBUG",
       "LD_DEBUG_OUTPUT",
       "LD_DYNAMIC_WEAK",
+      "LD_HWASAN",
       "LD_LIBRARY_PATH",
       "LD_ORIGIN_PATH",
       "LD_PRELOAD",

@@ -132,7 +132,7 @@ struct ip6t_replace {
   unsigned int hook_entry[NF_INET_NUMHOOKS];
   unsigned int underflow[NF_INET_NUMHOOKS];
   unsigned int num_counters;
-  struct xt_counters __user * counters;
+  struct xt_counters  * counters;
   struct ip6t_entry entries[];
 };
 struct ip6t_get_entries {
