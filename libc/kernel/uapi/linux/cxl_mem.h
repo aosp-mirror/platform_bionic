@@ -37,7 +37,9 @@ static const struct {
 struct cxl_command_info {
   __u32 id;
   __u32 flags;
-#define CXL_MEM_COMMAND_FLAG_MASK GENMASK(0, 0)
+#define CXL_MEM_COMMAND_FLAG_MASK GENMASK(1, 0)
+#define CXL_MEM_COMMAND_FLAG_ENABLED BIT(0)
+#define CXL_MEM_COMMAND_FLAG_EXCLUSIVE BIT(1)
   __u32 size_in;
   __u32 size_out;
 };

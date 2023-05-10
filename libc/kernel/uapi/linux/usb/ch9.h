@@ -417,6 +417,16 @@ struct usb_ss_container_id_descriptor {
   __u8 ContainerID[16];
 } __attribute__((packed));
 #define USB_DT_USB_SS_CONTN_ID_SIZE 20
+#define USB_PLAT_DEV_CAP_TYPE 5
+struct usb_plat_dev_cap_descriptor {
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bDevCapabilityType;
+  __u8 bReserved;
+  __u8 UUID[16];
+  __u8 CapabilityData[];
+} __attribute__((packed));
+#define USB_DT_USB_PLAT_DEV_CAP_SIZE(capability_data_size) (20 + capability_data_size)
 #define USB_SSP_CAP_TYPE 0xa
 struct usb_ssp_cap_descriptor {
   __u8 bLength;
