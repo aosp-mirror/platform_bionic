@@ -40,6 +40,26 @@
 #define CHAR_TYPE_NAN "NAN"
 #define CHAR_TYPE_nan "nan"
 #define CHAR_TYPE_ORIENTATION -1
+
+#define PRINT(ptr, len)                          \
+  do {                                           \
+    iovp->iov_base = (ptr);                      \
+    iovp->iov_len = (len);                       \
+    uio.uio_resid += (len);                      \
+    iovp++;                                      \
+    if (++uio.uio_iovcnt >= NIOV) {              \
+      if (helpers::sprint(fp, &uio)) goto error; \
+      iovp = iov;                                \
+    }                                            \
+  } while (0)
+
+#define FLUSH()                                                 \
+  do {                                                          \
+    if (uio.uio_resid && helpers::sprint(fp, &uio)) goto error; \
+    uio.uio_iovcnt = 0;                                         \
+    iovp = iov;                                                 \
+  } while (0)
+
 #include "printf_common.h"
 
 int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
@@ -114,24 +134,6 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
 
   static const char xdigs_lower[] = "0123456789abcdef";
   static const char xdigs_upper[] = "0123456789ABCDEF";
-
-#define PRINT(ptr, len)                   \
-  do {                                    \
-    iovp->iov_base = (ptr);               \
-    iovp->iov_len = (len);                \
-    uio.uio_resid += (len);               \
-    iovp++;                               \
-    if (++uio.uio_iovcnt >= NIOV) {       \
-      if (helpers::sprint(fp, &uio)) goto error; \
-      iovp = iov;                         \
-    }                                     \
-  } while (0)
-#define FLUSH()                                          \
-  do {                                                   \
-    if (uio.uio_resid && helpers::sprint(fp, &uio)) goto error; \
-    uio.uio_iovcnt = 0;                                  \
-    iovp = iov;                                          \
-  } while (0)
 
   _SET_ORIENTATION(fp, CHAR_TYPE_ORIENTATION);
 

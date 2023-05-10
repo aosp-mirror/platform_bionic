@@ -40,6 +40,16 @@
 #define CHAR_TYPE_NAN L"NAN"
 #define CHAR_TYPE_nan L"nan"
 #define CHAR_TYPE_ORIENTATION 1
+
+#define PRINT(ptr, len)                                          \
+  do {                                                           \
+    for (int n3 = 0; n3 < (len); n3++) {                         \
+      if ((helpers::xfputwc((ptr)[n3], fp)) == WEOF) goto error; \
+    }                                                            \
+  } while (0)
+
+#define FLUSH()
+
 #include "printf_common.h"
 
 int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
@@ -114,13 +124,6 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
 
   static const char xdigs_lower[] = "0123456789abcdef";
   static const char xdigs_upper[] = "0123456789ABCDEF";
-
-#define PRINT(ptr, len)                                   \
-  do {                                                    \
-    for (int n3 = 0; n3 < (len); n3++) {                      \
-      if ((helpers::xfputwc((ptr)[n3], fp)) == WEOF) goto error; \
-    }                                                     \
-  } while (0)
 
   _SET_ORIENTATION(fp, CHAR_TYPE_ORIENTATION);
 
@@ -681,8 +684,11 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
     if (width < realsz) width = realsz;
     if (width > INT_MAX - ret) goto overflow;
     ret += width;
+
+    FLUSH(); /* copy out the I/O vectors */
   }
 done:
+  FLUSH();
 error:
   va_end(orgap);
   if (__sferror(fp)) ret = -1;
