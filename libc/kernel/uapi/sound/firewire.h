@@ -27,6 +27,7 @@
 #define SNDRV_FIREWIRE_EVENT_MOTU_NOTIFICATION 0x64776479
 #define SNDRV_FIREWIRE_EVENT_TASCAM_CONTROL 0x7473636d
 #define SNDRV_FIREWIRE_EVENT_MOTU_REGISTER_DSP_CHANGE 0x4d545244
+#define SNDRV_FIREWIRE_EVENT_FF400_MESSAGE 0x4f6c6761
 struct snd_firewire_event_common {
   unsigned int type;
 };
@@ -74,6 +75,14 @@ struct snd_firewire_event_motu_register_dsp_change {
   __u32 count;
   __u32 changes[];
 };
+struct snd_firewire_event_ff400_message {
+  unsigned int type;
+  unsigned int message_count;
+  struct {
+    __u32 message;
+    __u32 tstamp;
+  } messages[];
+};
 union snd_firewire_event {
   struct snd_firewire_event_common common;
   struct snd_firewire_event_lock_status lock_status;
@@ -83,6 +92,7 @@ union snd_firewire_event {
   struct snd_firewire_event_tascam_control tascam_control;
   struct snd_firewire_event_motu_notification motu_notification;
   struct snd_firewire_event_motu_register_dsp_change motu_register_dsp_change;
+  struct snd_firewire_event_ff400_message ff400_message;
 };
 #define SNDRV_FIREWIRE_IOCTL_GET_INFO _IOR('H', 0xf8, struct snd_firewire_get_info)
 #define SNDRV_FIREWIRE_IOCTL_LOCK _IO('H', 0xf9)

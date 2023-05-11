@@ -184,6 +184,9 @@ struct prctl_mm_map {
 #define PR_SME_GET_VL 64
 #define PR_SME_VL_LEN_MASK 0xffff
 #define PR_SME_VL_INHERIT (1 << 17)
+#define PR_SET_MDWE 65
+#define PR_MDWE_REFUSE_EXEC_GAIN 1
+#define PR_GET_MDWE 66
 #define PR_SET_VMA 0x53564d41
 #define PR_SET_VMA_ANON_NAME 0
 #endif

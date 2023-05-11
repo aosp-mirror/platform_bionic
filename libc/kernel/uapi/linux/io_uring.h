@@ -200,6 +200,7 @@ enum {
   IORING_MSG_SEND_FD,
 };
 #define IORING_MSG_RING_CQE_SKIP (1U << 0)
+#define IORING_MSG_RING_FLAGS_PASS (1U << 1)
 struct io_uring_cqe {
   __u64 user_data;
   __s32 res;
@@ -272,6 +273,7 @@ struct io_uring_params {
 #define IORING_FEAT_RSRC_TAGS (1U << 10)
 #define IORING_FEAT_CQE_SKIP (1U << 11)
 #define IORING_FEAT_LINKED_FILE (1U << 12)
+#define IORING_FEAT_REG_REG_RING (1U << 13)
 enum {
   IORING_REGISTER_BUFFERS = 0,
   IORING_UNREGISTER_BUFFERS = 1,
@@ -299,7 +301,8 @@ enum {
   IORING_UNREGISTER_PBUF_RING = 23,
   IORING_REGISTER_SYNC_CANCEL = 24,
   IORING_REGISTER_FILE_ALLOC_RANGE = 25,
-  IORING_REGISTER_LAST
+  IORING_REGISTER_LAST,
+  IORING_REGISTER_USE_REGISTERED_RING = 1U << 31
 };
 enum {
   IO_WQ_BOUND,
@@ -381,7 +384,7 @@ struct io_uring_buf_ring {
       __u16 resv3;
       __u16 tail;
     };
-    struct io_uring_buf bufs[0];
+    __DECLARE_FLEX_ARRAY(struct io_uring_buf, bufs);
   };
 };
 struct io_uring_buf_reg {

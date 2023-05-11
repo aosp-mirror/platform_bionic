@@ -428,6 +428,7 @@ struct drm_amdgpu_cs_chunk_data {
 #define AMDGPU_IDS_FLAGS_FUSION 0x1
 #define AMDGPU_IDS_FLAGS_PREEMPTION 0x2
 #define AMDGPU_IDS_FLAGS_TMZ 0x4
+#define AMDGPU_IDS_FLAGS_CONFORMANT_TRUNC_COORD 0x8
 #define AMDGPU_INFO_ACCEL_WORKING 0x00
 #define AMDGPU_INFO_CRTC_FROM_ID 0x01
 #define AMDGPU_INFO_HW_IP_INFO 0x02
@@ -486,6 +487,8 @@ struct drm_amdgpu_cs_chunk_data {
 #define AMDGPU_INFO_SENSOR_VDDGFX 0x7
 #define AMDGPU_INFO_SENSOR_STABLE_PSTATE_GFX_SCLK 0x8
 #define AMDGPU_INFO_SENSOR_STABLE_PSTATE_GFX_MCLK 0x9
+#define AMDGPU_INFO_SENSOR_PEAK_PSTATE_GFX_SCLK 0xa
+#define AMDGPU_INFO_SENSOR_PEAK_PSTATE_GFX_MCLK 0xb
 #define AMDGPU_INFO_NUM_VRAM_CPU_PAGE_FAULTS 0x1E
 #define AMDGPU_INFO_VRAM_LOST_COUNTER 0x1F
 #define AMDGPU_INFO_RAS_ENABLED_FEATURES 0x20
@@ -616,7 +619,7 @@ struct drm_amdgpu_info_device {
   __u32 enabled_rb_pipes_mask;
   __u32 num_rb_pipes;
   __u32 num_hw_gfx_contexts;
-  __u32 _pad;
+  __u32 pcie_gen;
   __u64 ids_flags;
   __u64 virtual_address_offset;
   __u64 virtual_address_max;
@@ -643,12 +646,22 @@ struct drm_amdgpu_info_device {
   __u32 gs_vgt_table_depth;
   __u32 gs_prim_buffer_depth;
   __u32 max_gs_waves_per_vgt;
-  __u32 _pad1;
+  __u32 pcie_num_lanes;
   __u32 cu_ao_bitmap[4][4];
   __u64 high_va_offset;
   __u64 high_va_max;
   __u32 pa_sc_tile_steering_override;
   __u64 tcc_disabled_mask;
+  __u64 min_engine_clock;
+  __u64 min_memory_clock;
+  __u32 tcp_cache_size;
+  __u32 num_sqc_per_wgp;
+  __u32 sqc_data_cache_size;
+  __u32 sqc_inst_cache_size;
+  __u32 gl1c_cache_size;
+  __u32 gl2c_cache_size;
+  __u64 mall_size;
+  __u32 enabled_rb_pipes_mask_hi;
 };
 struct drm_amdgpu_info_hw_ip {
   __u32 hw_ip_version_major;
