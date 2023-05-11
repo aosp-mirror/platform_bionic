@@ -58,6 +58,6 @@ struct ioam6_trace_hdr {
 #error "Please fix <asm/byteorder.h>"
 #endif
 #define IOAM6_TRACE_DATA_SIZE_MAX 244
-  __u8 data[0];
+  __u8 data[];
 } __attribute__((packed));
 #endif

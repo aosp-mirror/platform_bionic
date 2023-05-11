@@ -662,6 +662,7 @@ enum hl_server_type {
 #define HL_INFO_ENGINE_STATUS 32
 #define HL_INFO_PAGE_FAULT_EVENT 33
 #define HL_INFO_USER_MAPPINGS 34
+#define HL_INFO_FW_GENERIC_REQ 35
 #define HL_INFO_VERSION_MAX_LEN 128
 #define HL_INFO_CARD_NAME_MAX_LEN 16
 #define HL_ENGINES_DATA_MAX_SIZE SZ_1M
@@ -872,6 +873,7 @@ struct hl_info_args {
     __u32 user_buffer_actual_size;
     __u32 sec_attest_nonce;
     __u32 array_size;
+    __u32 fw_sub_opcode;
   };
   __u32 pad;
 };
@@ -935,6 +937,7 @@ struct hl_cs_chunk {
 #define HL_CS_FLAGS_RESERVE_SIGNALS_ONLY 0x1000
 #define HL_CS_FLAGS_UNRESERVE_SIGNALS_ONLY 0x2000
 #define HL_CS_FLAGS_ENGINE_CORE_COMMAND 0x4000
+#define HL_CS_FLAGS_FLUSH_PCI_HBW_WRITES 0x8000
 #define HL_CS_STATUS_SUCCESS 0
 #define HL_MAX_JOBS_PER_CS 512
 #define HL_ENGINE_CORE_HALT (1 << 0)
@@ -1072,8 +1075,9 @@ struct hl_mem_in {
       __u64 device_virt_addr;
     } unmap;
     struct {
-      __u64 handle;
+      __u64 addr;
       __u64 mem_size;
+      __u64 offset;
     } export_dmabuf_fd;
   };
   __u32 op;
