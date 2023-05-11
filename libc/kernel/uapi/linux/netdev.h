@@ -16,23 +16,34 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _MEYE_H_
-#define _MEYE_H_
-struct meye_params {
-  unsigned char subsample;
-  unsigned char quality;
-  unsigned char sharpness;
-  unsigned char agc;
-  unsigned char picture;
-  unsigned char framerate;
+#ifndef _UAPI_LINUX_NETDEV_H
+#define _UAPI_LINUX_NETDEV_H
+#define NETDEV_FAMILY_NAME "netdev"
+#define NETDEV_FAMILY_VERSION 1
+enum netdev_xdp_act {
+  NETDEV_XDP_ACT_BASIC = 1,
+  NETDEV_XDP_ACT_REDIRECT = 2,
+  NETDEV_XDP_ACT_NDO_XMIT = 4,
+  NETDEV_XDP_ACT_XSK_ZEROCOPY = 8,
+  NETDEV_XDP_ACT_HW_OFFLOAD = 16,
+  NETDEV_XDP_ACT_RX_SG = 32,
+  NETDEV_XDP_ACT_NDO_XMIT_SG = 64,
+  NETDEV_XDP_ACT_MASK = 127,
 };
-#define MEYEIOC_G_PARAMS _IOR('v', BASE_VIDIOC_PRIVATE + 0, struct meye_params)
-#define MEYEIOC_S_PARAMS _IOW('v', BASE_VIDIOC_PRIVATE + 1, struct meye_params)
-#define MEYEIOC_QBUF_CAPT _IOW('v', BASE_VIDIOC_PRIVATE + 2, int)
-#define MEYEIOC_SYNC _IOWR('v', BASE_VIDIOC_PRIVATE + 3, int)
-#define MEYEIOC_STILLCAPT _IO('v', BASE_VIDIOC_PRIVATE + 4)
-#define MEYEIOC_STILLJCAPT _IOR('v', BASE_VIDIOC_PRIVATE + 5, int)
-#define V4L2_CID_MEYE_AGC (V4L2_CID_USER_MEYE_BASE + 0)
-#define V4L2_CID_MEYE_PICTURE (V4L2_CID_USER_MEYE_BASE + 1)
-#define V4L2_CID_MEYE_FRAMERATE (V4L2_CID_USER_MEYE_BASE + 2)
+enum {
+  NETDEV_A_DEV_IFINDEX = 1,
+  NETDEV_A_DEV_PAD,
+  NETDEV_A_DEV_XDP_FEATURES,
+  __NETDEV_A_DEV_MAX,
+  NETDEV_A_DEV_MAX = (__NETDEV_A_DEV_MAX - 1)
+};
+enum {
+  NETDEV_CMD_DEV_GET = 1,
+  NETDEV_CMD_DEV_ADD_NTF,
+  NETDEV_CMD_DEV_DEL_NTF,
+  NETDEV_CMD_DEV_CHANGE_NTF,
+  __NETDEV_CMD_MAX,
+  NETDEV_CMD_MAX = (__NETDEV_CMD_MAX - 1)
+};
+#define NETDEV_MCGRP_MGMT "mgmt"
 #endif
