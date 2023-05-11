@@ -32,6 +32,7 @@
 #define VIRTIO_BLK_F_DISCARD 13
 #define VIRTIO_BLK_F_WRITE_ZEROES 14
 #define VIRTIO_BLK_F_SECURE_ERASE 16
+#define VIRTIO_BLK_F_ZONED 17
 #ifndef VIRTIO_BLK_NO_LEGACY
 #define VIRTIO_BLK_F_BARRIER 0
 #define VIRTIO_BLK_F_SCSI 7
@@ -67,6 +68,15 @@ struct virtio_blk_config {
   __virtio32 max_secure_erase_sectors;
   __virtio32 max_secure_erase_seg;
   __virtio32 secure_erase_sector_alignment;
+  struct virtio_blk_zoned_characteristics {
+    __virtio32 zone_sectors;
+    __virtio32 max_open_zones;
+    __virtio32 max_active_zones;
+    __virtio32 max_append_sectors;
+    __virtio32 write_granularity;
+    __u8 model;
+    __u8 unused2[3];
+  } zoned;
 } __attribute__((packed));
 #define VIRTIO_BLK_T_IN 0
 #define VIRTIO_BLK_T_OUT 1
@@ -78,6 +88,13 @@ struct virtio_blk_config {
 #define VIRTIO_BLK_T_DISCARD 11
 #define VIRTIO_BLK_T_WRITE_ZEROES 13
 #define VIRTIO_BLK_T_SECURE_ERASE 14
+#define VIRTIO_BLK_T_ZONE_APPEND 15
+#define VIRTIO_BLK_T_ZONE_REPORT 16
+#define VIRTIO_BLK_T_ZONE_OPEN 18
+#define VIRTIO_BLK_T_ZONE_CLOSE 20
+#define VIRTIO_BLK_T_ZONE_FINISH 22
+#define VIRTIO_BLK_T_ZONE_RESET 24
+#define VIRTIO_BLK_T_ZONE_RESET_ALL 26
 #ifndef VIRTIO_BLK_NO_LEGACY
 #define VIRTIO_BLK_T_BARRIER 0x80000000
 #endif
@@ -86,6 +103,33 @@ struct virtio_blk_outhdr {
   __virtio32 ioprio;
   __virtio64 sector;
 };
+#define VIRTIO_BLK_Z_NONE 0
+#define VIRTIO_BLK_Z_HM 1
+#define VIRTIO_BLK_Z_HA 2
+struct virtio_blk_zone_descriptor {
+  __virtio64 z_cap;
+  __virtio64 z_start;
+  __virtio64 z_wp;
+  __u8 z_type;
+  __u8 z_state;
+  __u8 reserved[38];
+};
+struct virtio_blk_zone_report {
+  __virtio64 nr_zones;
+  __u8 reserved[56];
+  struct virtio_blk_zone_descriptor zones[];
+};
+#define VIRTIO_BLK_ZT_CONV 1
+#define VIRTIO_BLK_ZT_SWR 2
+#define VIRTIO_BLK_ZT_SWP 3
+#define VIRTIO_BLK_ZS_NOT_WP 0
+#define VIRTIO_BLK_ZS_EMPTY 1
+#define VIRTIO_BLK_ZS_IOPEN 2
+#define VIRTIO_BLK_ZS_EOPEN 3
+#define VIRTIO_BLK_ZS_CLOSED 4
+#define VIRTIO_BLK_ZS_RDONLY 13
+#define VIRTIO_BLK_ZS_FULL 14
+#define VIRTIO_BLK_ZS_OFFLINE 15
 #define VIRTIO_BLK_WRITE_ZEROES_FLAG_UNMAP 0x00000001
 struct virtio_blk_discard_write_zeroes {
   __le64 sector;
@@ -103,4 +147,8 @@ struct virtio_scsi_inhdr {
 #define VIRTIO_BLK_S_OK 0
 #define VIRTIO_BLK_S_IOERR 1
 #define VIRTIO_BLK_S_UNSUPP 2
+#define VIRTIO_BLK_S_ZONE_INVALID_CMD 3
+#define VIRTIO_BLK_S_ZONE_UNALIGNED_WP 4
+#define VIRTIO_BLK_S_ZONE_OPEN_RESOURCE 5
+#define VIRTIO_BLK_S_ZONE_ACTIVE_RESOURCE 6
 #endif
