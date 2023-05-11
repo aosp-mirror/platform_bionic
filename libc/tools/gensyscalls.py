@@ -88,7 +88,7 @@ riscv64_call = syscall_stub_header + """\
     ecall
 
     li      a7, -MAX_ERRNO
-    bgtu    a0, a7, 1f
+    bgeu    a0, a7, 1f
 
     ret
 1:
