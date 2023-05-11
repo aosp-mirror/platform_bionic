@@ -158,5 +158,7 @@ struct console_font {
 #define KD_FONT_OP_GET 1
 #define KD_FONT_OP_SET_DEFAULT 2
 #define KD_FONT_OP_COPY 3
+#define KD_FONT_OP_SET_TALL 4
+#define KD_FONT_OP_GET_TALL 5
 #define KD_FONT_FLAG_DONT_RECALC 1
 #endif
