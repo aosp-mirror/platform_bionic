@@ -47,4 +47,10 @@ struct gsm_netconfig {
 #define GSMIOC_ENABLE_NET _IOW('G', 2, struct gsm_netconfig)
 #define GSMIOC_DISABLE_NET _IO('G', 3)
 #define GSMIOC_GETFIRST _IOR('G', 4, __u32)
+struct gsm_config_ext {
+  __u32 keep_alive;
+  __u32 reserved[7];
+};
+#define GSMIOC_GETCONF_EXT _IOR('G', 5, struct gsm_config_ext)
+#define GSMIOC_SETCONF_EXT _IOW('G', 6, struct gsm_config_ext)
 #endif

@@ -74,6 +74,7 @@ struct kvm_regs {
 #define KVM_ARM_VCPU_SVE 4
 #define KVM_ARM_VCPU_PTRAUTH_ADDRESS 5
 #define KVM_ARM_VCPU_PTRAUTH_GENERIC 6
+#define KVM_ARM_VCPU_HAS_EL2 7
 struct kvm_vcpu_init {
   __u32 target;
   __u32 features[7];

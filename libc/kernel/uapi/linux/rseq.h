@@ -49,5 +49,8 @@ struct rseq {
   __u32 cpu_id;
   __u64 rseq_cs;
   __u32 flags;
+  __u32 node_id;
+  __u32 mm_cid;
+  char end[];
 } __attribute__((aligned(4 * sizeof(__u64))));
 #endif

@@ -69,7 +69,7 @@ struct fc_bsg_host_vendor {
   __u32 vendor_cmd[];
 };
 struct fc_bsg_host_vendor_reply {
-  __u32 vendor_rsp[0];
+  __DECLARE_FLEX_ARRAY(__u32, vendor_rsp);
 };
 struct fc_bsg_rport_els {
   __u8 els_code;
