@@ -150,7 +150,7 @@ int __vfwscanf(FILE* __restrict fp, const wchar_t* __restrict fmt, __va_list ap)
   char mbbuf[MB_LEN_MAX]; /* temporary mb. character buffer */
   mbstate_t mbs;
 
-  _SET_ORIENTATION(fp, 1);
+  _SET_ORIENTATION(fp, ORIENT_CHARS);
 
   nassigned = 0;
   nconversions = 0;
