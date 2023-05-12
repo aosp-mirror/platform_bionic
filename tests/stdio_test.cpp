@@ -115,7 +115,7 @@ static void AssertFileIs(FILE* fp, const char* expected, bool is_fmemopen = fals
     wchar_t buf[BUFSIZ];                                                \
     int w = swprintf(buf, sizeof(buf), fmt __VA_OPT__(, ) __VA_ARGS__); \
     EXPECT_EQ(n, w);                                                    \
-    EXPECT_EQ(std::wstring(expected), buf);                             \
+    EXPECT_EQ(std::wstring(expected), std::wstring(buf, w));            \
   }
 #define EXPECT_SWPRINTF(expected, fmt, ...) \
   EXPECT_SWPRINTF_N(expected, static_cast<int>(wcslen(expected)), fmt __VA_OPT__(, ) __VA_ARGS__)
