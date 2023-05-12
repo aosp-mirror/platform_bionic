@@ -290,17 +290,21 @@ char* __ldtoa(long double*, int, int, int*, int*, char**);
 
 #define WCIO_GET(fp) (_EXT(fp) ? &(_EXT(fp)->_wcio) : (struct wchar_io_data*)0)
 
-#define _SET_ORIENTATION(fp, mode)                                 \
-  do {                                                             \
-    struct wchar_io_data* _wcio = WCIO_GET(fp);                    \
-    if (_wcio && _wcio->wcio_mode == 0) _wcio->wcio_mode = (mode); \
+#define ORIENT_BYTES (-1)
+#define ORIENT_UNKNOWN 0
+#define ORIENT_CHARS 1
+
+#define _SET_ORIENTATION(fp, mode)                                              \
+  do {                                                                          \
+    struct wchar_io_data* _wcio = WCIO_GET(fp);                                 \
+    if (_wcio && _wcio->wcio_mode == ORIENT_UNKNOWN) _wcio->wcio_mode = (mode); \
   } while (0)
 
 #define WCIO_FREE(fp)                           \
   do {                                          \
     struct wchar_io_data* _wcio = WCIO_GET(fp); \
     if (_wcio) {                                \
-      _wcio->wcio_mode = 0;                     \
+      _wcio->wcio_mode = ORIENT_UNKNOWN;        \
       _wcio->wcio_ungetwc_inbuf = 0;            \
     }                                           \
   } while (0)
