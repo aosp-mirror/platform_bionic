@@ -33,7 +33,7 @@ ENTRY(_start)
   .cfi_undefined ra
 
   mv a0, sp
-  jal __linker_init
+  call __linker_init
 
   // __linker_init returns the address of the entry point in the main image.
   jr a0
