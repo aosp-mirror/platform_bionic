@@ -140,7 +140,7 @@ static void __init_shadow_call_stack(pthread_internal_t* thread __unused) {
 #if defined(__aarch64__)
   __asm__ __volatile__("mov x18, %0" ::"r"(scs));
 #elif defined(__riscv)
-  __asm__ __volatile__("mv gp, %0" ::"r"(scs));
+  __asm__ __volatile__("mv x3, %0" ::"r"(scs));
 #endif
 #endif
 }
