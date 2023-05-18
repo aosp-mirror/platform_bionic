@@ -22,10 +22,16 @@ cc_library_shared {
     static_libs: [
         "libasync_safe",
         "libbase",
+        "libdexfile_support",
         "libunwindstack",
         "liblzma",
         "liblog",
     ],
+    target: {
+        recovery: {
+            exclude_static_libs: ["libdexfile_support"],
+        },
+    },
     version_script: "libfdtrack.map.txt",
 
     allow_undefined_symbols: true,
