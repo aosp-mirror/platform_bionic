@@ -168,6 +168,8 @@ TEST(time, mktime_10310929) {
 }
 
 TEST(time, mktime_EOVERFLOW) {
+  setenv("TZ", "UTC", 1);
+
   struct tm t;
   memset(&t, 0, sizeof(tm));
 
