@@ -98,7 +98,8 @@ static DeclarationAvailability calculateRequiredGuard(const Declaration& declara
   }
 
   for (Arch arch : supported_archs) {
-    if (result.arch_availability[arch].introduced <= arch_visibility[arch]) {
+    if (result.arch_availability[arch].introduced <= arch_visibility[arch] ||
+        result.arch_availability[arch].introduced <= arch_min_api[arch]) {
       result.arch_availability[arch].introduced = 0;
     }
   }
@@ -139,9 +140,8 @@ static std::string generateGuardCondition(const DeclarationAvailability& avail) 
   // Logically orred expressions that constitute the macro guard.
   std::vector<std::string> expressions;
   static const std::vector<std::pair<std::string, std::set<Arch>>> arch_sets = {
-    { "", supported_archs },
-    { "!defined(__LP64__)", { Arch::arm, Arch::x86 } },
-    { "defined(__LP64__)", { Arch::arm64, Arch::riscv64, Arch::x86_64 } },
+      {"!defined(__LP64__)", {Arch::arm, Arch::x86}},
+      {"defined(__LP64__)", {Arch::arm64, Arch::riscv64, Arch::x86_64}},
   };
   std::map<Arch, std::string> individual_archs = {
     { Arch::arm, "defined(__arm__)" },
@@ -168,6 +168,9 @@ static std::string generateGuardCondition(const DeclarationAvailability& avail) 
     }
 
     if (avail.global_availability.introduced == 0) {
+      // We currently get here for the "__sF" symbol because it's marked __REMOVED_IN(23). This
+      // symbol is the only use of __REMOVED_IN, and it's already guarded manually, so there's no
+      // need to do anything.
       fprintf(stderr, "warning: attempted to generate guard with empty availability: %s\n",
               to_string(avail).c_str());
       return "";
@@ -186,25 +189,35 @@ static std::string generateGuardCondition(const DeclarationAvailability& avail) 
 
     D("  Checking arch set '%s'\n", arch_expr.c_str());
 
-    int version = avail.arch_availability[*it.second.begin()].introduced;
+    int version = 0;
 
-    // The maximum min_version of the set.
-    int max_min_version = 0;
+    // Find the architectures that need to check __ANDROID_API__ and verify that they check against
+    // the same API level.
     for (Arch arch : archs) {
-      if (arch_min_api[arch] > max_min_version) {
-        max_min_version = arch_min_api[arch];
-      }
-
-      if (avail.arch_availability[arch].introduced != version) {
+      const int arch_version = avail.arch_availability[arch].introduced;
+      if (arch_version == 0) {
+        continue;
+      } else if (version == 0) {
+        version = arch_version;
+      } else if (version != arch_version) {
         D("    Skipping arch set, availability for %s doesn't match %s\n",
           to_string(*it.second.begin()).c_str(), to_string(arch).c_str());
         goto skip;
       }
     }
 
-    // If all of the archs in the set have a min_api that satifies version, elide the check.
-    if (max_min_version >= version) {
-      version = 0;
+    // Verify that a non-zero version is acceptable to reuse for other archs with a higher minimum
+    // API, like riscv64. (e.g. It's OK to reuse an (__ANDROID_API__ >= 24) check if the arch's
+    // minimum API is 35.)
+    if (version != 0) {
+      for (Arch arch : archs) {
+        const int arch_version = avail.arch_availability[arch].introduced;
+        if (arch_version == 0 && version > arch_min_api[arch]) {
+          D("    Skipping arch set, availability for %s doesn't match %s\n",
+            to_string(*it.second.begin()).c_str(), to_string(arch).c_str());
+          goto skip;
+        }
+      }
     }
 
     expressions.emplace_back(generate_guard(arch_expr, version));
@@ -222,11 +235,7 @@ static std::string generateGuardCondition(const DeclarationAvailability& avail) 
   for (const auto& it : individual_archs) {
     const std::string& arch_expr = it.second;
     int introduced = avail.arch_availability[it.first].introduced;
-    if (introduced == 0) {
-      expressions.emplace_back(arch_expr);
-    } else {
-      expressions.emplace_back(generate_guard(arch_expr, introduced));
-    }
+    expressions.emplace_back(generate_guard(arch_expr, introduced));
   }
 
   if (expressions.size() == 0) {
