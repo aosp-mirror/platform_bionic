@@ -36,13 +36,10 @@
 //   2. System properties, in the order they're specified in sys_prop_names.
 // If neither of these options are specified (or they're both an empty string),
 // this function returns false. Otherwise, it returns true, and the presiding
-// options string is written to the `options` buffer of size `size`. It will
-// store a pointer to either env_var_name, or into the relevant entry of
-// sys_prop_names into choicen_source, indiciating which value was used. If
-// this function returns true, `options` is guaranteed to be null-terminated.
+// options string is written to the `options` buffer of size `size`. If this
+// function returns true, `options` is guaranteed to be null-terminated.
 // `options_size` should be at least PROP_VALUE_MAX.
 __LIBC_HIDDEN__ bool get_config_from_env_or_sysprops(const char* env_var_name,
                                                      const char* const* sys_prop_names,
                                                      size_t sys_prop_names_size, char* options,
-                                                     size_t options_size,
-                                                     const char** chosen_source);
+                                                     size_t options_size);

@@ -307,10 +307,8 @@ bool GetGwpAsanOptionImpl(char* value_out,
     sysprop_names[3] = persist_default_sysprop;
   }
 
-  // TODO(mitchp): Log overrides using this.
-  const char* source;
   return get_config_from_env_or_sysprops(env_var, sysprop_names, arraysize(sysprop_names),
-                                         value_out, PROP_VALUE_MAX, &source);
+                                         value_out, PROP_VALUE_MAX);
 }
 
 bool GetGwpAsanIntegerOption(unsigned long long* result,
