@@ -102,7 +102,7 @@ int __svfscanf(FILE* fp, const char* fmt0, va_list ap) {
   void* allocation = nullptr; // Allocated but unassigned result for %mc/%ms/%m[.
   size_t capacity = 0; // Number of char/wchar_t units allocated in `allocation`.
 
-  _SET_ORIENTATION(fp, -1);
+  _SET_ORIENTATION(fp, ORIENT_BYTES);
 
   nassigned = 0;
   nread = 0;

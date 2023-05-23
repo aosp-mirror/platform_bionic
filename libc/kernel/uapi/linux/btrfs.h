@@ -157,7 +157,8 @@ struct btrfs_ioctl_dev_info_args {
   __u8 uuid[BTRFS_UUID_SIZE];
   __u64 bytes_used;
   __u64 total_bytes;
-  __u64 unused[379];
+  __u8 fsid[BTRFS_UUID_SIZE];
+  __u64 unused[377];
   __u8 path[BTRFS_DEVICE_PATH_NAME_MAX];
 };
 #define BTRFS_FS_INFO_FLAG_CSUM_INFO (1 << 0)

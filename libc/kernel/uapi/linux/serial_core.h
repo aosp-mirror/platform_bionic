@@ -99,6 +99,7 @@
 #define PORT_VT8500 97
 #define PORT_XUARTPS 98
 #define PORT_AR933X 99
+#define PORT_MCHP16550A 100
 #define PORT_ARC 101
 #define PORT_RP2 102
 #define PORT_LPUART 103
