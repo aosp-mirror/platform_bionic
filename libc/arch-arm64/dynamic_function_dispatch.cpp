@@ -41,7 +41,7 @@ DEFINE_IFUNC_FOR(memchr) {
     }
 }
 
-typedef void* memcmp_func(const void*, const void*, size_t);
+typedef int memcmp_func(const void*, const void*, size_t);
 DEFINE_IFUNC_FOR(memcmp) {
     // TODO: enable the SVE version.
     RETURN_FUNC(memcmp_func, __memcmp_aarch64);
@@ -65,7 +65,7 @@ DEFINE_IFUNC_FOR(memmove) {
     }
 }
 
-typedef int stpcpy_func(char*, const char*, size_t);
+typedef char* stpcpy_func(char*, const char*, size_t);
 DEFINE_IFUNC_FOR(stpcpy) {
     // TODO: enable the SVE version.
     RETURN_FUNC(stpcpy_func, __stpcpy_aarch64);
@@ -95,7 +95,7 @@ DEFINE_IFUNC_FOR(strcmp) {
     RETURN_FUNC(strcmp_func, __strcmp_aarch64);
 }
 
-typedef int strcpy_func(char*, const char*);
+typedef char* strcpy_func(char*, const char*);
 DEFINE_IFUNC_FOR(strcpy) {
     // TODO: enable the SVE version.
     RETURN_FUNC(strcpy_func, __strcpy_aarch64);
