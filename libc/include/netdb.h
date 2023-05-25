@@ -78,32 +78,34 @@
  * supplied in host order, and returned in network order (suitable for
  * use in system calls).
  */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnullability-completeness"
 struct hostent {
-	char	* _Nullable h_name;	/* official name of host */
-	char	* _Nullable * _Nullable h_aliases;	/* alias list */
+	char	*h_name;	/* official name of host */
+	char	**h_aliases;	/* alias list */
 	int	h_addrtype;	/* host address type */
 	int	h_length;	/* length of address */
-	char	* _Nullable * _Nullable h_addr_list;	/* list of addresses from name server */
+	char	**h_addr_list;	/* list of addresses from name server */
 #define	h_addr	h_addr_list[0]	/* address, for backward compatibility */
 };
 
 struct netent {
-	char		* _Nullable n_name;	/* official name of net */
-	char		* _Nullable * _Nullable n_aliases;	/* alias list */
+	char		*n_name;	/* official name of net */
+	char		**n_aliases;	/* alias list */
 	int		n_addrtype;	/* net address type */
 	uint32_t	n_net;		/* network # */
 };
 
 struct servent {
-	char	* _Nullable s_name;	/* official service name */
-	char	* _Nullable * _Nullable s_aliases;	/* alias list */
+	char	*s_name;	/* official service name */
+	char	**s_aliases;	/* alias list */
 	int	s_port;		/* port # */
 	char	* _Nullable s_proto;	/* protocol to use */
 };
 
 struct protoent {
-	char	* _Nullable p_name;	/* official protocol name */
-	char	* _Nullable * _Nullable p_aliases;	/* alias list */
+	char	*p_name;	/* official protocol name */
+	char	**p_aliases;	/* alias list */
 	int	p_proto;	/* protocol # */
 };
 
@@ -113,10 +115,11 @@ struct addrinfo {
 	int	ai_socktype;	/* SOCK_xxx */
 	int	ai_protocol;	/* 0 or IPPROTO_xxx for IPv4 and IPv6 */
 	socklen_t ai_addrlen;	/* length of ai_addr */
-	char	* _Nullable ai_canonname;	/* canonical name for hostname */
-	struct	sockaddr * _Nullable ai_addr;	/* binary address */
-	struct	addrinfo * _Nullable ai_next;	/* next structure in linked list */
+	char	*ai_canonname;	/* canonical name for hostname */
+	struct	sockaddr *ai_addr;	/* binary address */
+	struct	addrinfo *ai_next;	/* next structure in linked list */
 };
+#pragma clang diagnostic pop
 
 /*
  * Error return codes from gethostbyname() and gethostbyaddr()
