@@ -79,7 +79,7 @@ struct btrfs_ioctl_vol_args_v2 {
   union {
     struct {
       __u64 size;
-      struct btrfs_qgroup_inherit __user * qgroup_inherit;
+      struct btrfs_qgroup_inherit  * qgroup_inherit;
     };
     __u64 unused[4];
   };
@@ -432,7 +432,7 @@ struct btrfs_ioctl_received_subvol_args {
 struct btrfs_ioctl_send_args {
   __s64 send_fd;
   __u64 clone_sources_count;
-  __u64 __user * clone_sources;
+  __u64  * clone_sources;
   __u64 parent_root;
   __u64 flags;
   __u32 version;
@@ -469,7 +469,7 @@ struct btrfs_ioctl_get_subvol_rootref_args {
   __u8 align[7];
 };
 struct btrfs_ioctl_encoded_io_args {
-  const struct iovec __user * iov;
+  const struct iovec  * iov;
   unsigned long iovcnt;
   __s64 offset;
   __u64 flags;

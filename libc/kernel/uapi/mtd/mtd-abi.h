@@ -30,7 +30,7 @@ struct erase_info_user64 {
 struct mtd_oob_buf {
   __u32 start;
   __u32 length;
-  unsigned char __user * ptr;
+  unsigned char  * ptr;
 };
 struct mtd_oob_buf64 {
   __u64 start;

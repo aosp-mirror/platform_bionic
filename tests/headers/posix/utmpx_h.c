@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2023 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,33 +26,38 @@
  * SUCH DAMAGE.
  */
 
-#include <errno.h>
-#include <stdio.h>
+#include <utmpx.h>
 
-#include "local.h"
+#include "header_checks.h"
 
-// We can't use the OpenBSD implementation which uses kernel-specific
-// APIs not available on Linux. Instead we use a pthread_mutex_t within
-// struct __sfileext (see fileext.h).
+static void utmpx_h() {
+  TYPE(struct utmpx);
+  STRUCT_MEMBER_ARRAY(struct utmpx, char/*[]*/, ut_user);
+  STRUCT_MEMBER_ARRAY(struct utmpx, char/*[]*/, ut_id);
+  STRUCT_MEMBER_ARRAY(struct utmpx, char/*[]*/, ut_line);
+  STRUCT_MEMBER(struct utmpx, pid_t, ut_pid);
+  STRUCT_MEMBER(struct utmpx, short, ut_type);
+#if !defined(__GLIBC__)
+  // POSIX says struct timeval, but glibc has an anonymous struct.
+  STRUCT_MEMBER(struct utmpx, struct timeval, ut_tv);
+#endif
 
-void flockfile(FILE* fp) {
-  if (fp != nullptr) {
-    pthread_mutex_lock(&_FLOCK(fp));
-  }
-}
+  TYPE(pid_t);
+  TYPE(struct timeval);
 
-int ftrylockfile(FILE* fp) {
-  // The specification for ftrylockfile() says it returns 0 on success,
-  // or non-zero on error. So return an errno code directly on error.
-  if (fp == nullptr) {
-    return EINVAL;
-  }
+  MACRO(EMPTY);
+  MACRO(BOOT_TIME);
+  MACRO(OLD_TIME);
+  MACRO(NEW_TIME);
+  MACRO(USER_PROCESS);
+  MACRO(INIT_PROCESS);
+  MACRO(LOGIN_PROCESS);
+  MACRO(DEAD_PROCESS);
 
-  return pthread_mutex_trylock(&_FLOCK(fp));
-}
-
-void funlockfile(FILE* fp) {
-  if (fp != nullptr) {
-    pthread_mutex_unlock(&_FLOCK(fp));
-  }
+  FUNCTION(endutxent, void (*f)(void));
+  FUNCTION(getutxent, struct utmpx* (*f)(void));
+  FUNCTION(getutxid, struct utmpx* (*f)(const struct utmpx*));
+  FUNCTION(getutxline, struct utmpx* (*f)(const struct utmpx*));
+  FUNCTION(pututxline, struct utmpx* (*f)(const struct utmpx*));
+  FUNCTION(setutxent, void (*f)(void));
 }

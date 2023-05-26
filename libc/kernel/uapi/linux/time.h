@@ -18,14 +18,11 @@
  ****************************************************************************/
 #ifndef _UAPI_LINUX_TIME_H
 #define _UAPI_LINUX_TIME_H
+#include <bits/timespec.h>
 #include <linux/types.h>
 #include <linux/time_types.h>
 #ifndef _STRUCT_TIMESPEC
 #define _STRUCT_TIMESPEC
-struct timespec {
-  __kernel_old_time_t tv_sec;
-  long tv_nsec;
-};
 #endif
 struct timeval {
   __kernel_old_time_t tv_sec;

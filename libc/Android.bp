@@ -672,7 +672,6 @@ cc_library_static {
         },
         riscv64: {
             srcs: [
-                "arch-riscv64/string/memset_chk.c",
                 "upstream-freebsd/lib/libc/string/memcmp.c",
                 "upstream-freebsd/lib/libc/string/memcpy.c",
                 "upstream-freebsd/lib/libc/string/memmove.c",
@@ -823,6 +822,12 @@ cc_library_static {
             srcs: [
                 "arch-arm64/string/__memcpy_chk.S",
                 "arch-arm64/string/__memset_chk.S",
+            ],
+        },
+        riscv64: {
+            srcs: [
+               "arch-riscv64/string/__memset_chk.S",
+               "arch-riscv64/string/__memcpy_chk.S",
             ],
         },
     },
@@ -1088,7 +1093,6 @@ cc_library_static {
         "bionic/ffs.cpp",
         "bionic/fgetxattr.cpp",
         "bionic/flistxattr.cpp",
-        "bionic/flockfile.cpp",
         "bionic/fpclassify.cpp",
         "bionic/fsetxattr.cpp",
         "bionic/ftruncate.cpp",
@@ -1314,7 +1318,7 @@ cc_library_static {
 // ========================================================
 
 genrule {
-    name: "syscalls-arm.S",
+    name: "syscalls-arm",
     out: ["syscalls-arm.S"],
     srcs: ["SYSCALLS.TXT"],
     tools: ["gensyscalls"],
@@ -1322,7 +1326,7 @@ genrule {
 }
 
 genrule {
-    name: "syscalls-arm64.S",
+    name: "syscalls-arm64",
     out: ["syscalls-arm64.S"],
     srcs: ["SYSCALLS.TXT"],
     tools: ["gensyscalls"],
@@ -1330,7 +1334,7 @@ genrule {
 }
 
 genrule {
-    name: "syscalls-riscv64.S",
+    name: "syscalls-riscv64",
     out: ["syscalls-riscv64.S"],
     srcs: ["SYSCALLS.TXT"],
     tools: ["gensyscalls"],
@@ -1338,7 +1342,7 @@ genrule {
 }
 
 genrule {
-    name: "syscalls-x86.S",
+    name: "syscalls-x86",
     out: ["syscalls-x86.S"],
     srcs: ["SYSCALLS.TXT"],
     tools: ["gensyscalls"],
@@ -1346,7 +1350,7 @@ genrule {
 }
 
 genrule {
-    name: "syscalls-x86_64.S",
+    name: "syscalls-x86_64",
     out: ["syscalls-x86_64.S"],
     srcs: ["SYSCALLS.TXT"],
     tools: ["gensyscalls"],
@@ -1358,19 +1362,19 @@ cc_library_static {
     srcs: ["bionic/__set_errno.cpp"],
     arch: {
         arm: {
-            srcs: [":syscalls-arm.S"],
+            srcs: [":syscalls-arm"],
         },
         arm64: {
-            srcs: [":syscalls-arm64.S"],
+            srcs: [":syscalls-arm64"],
         },
         riscv64: {
-            srcs: [":syscalls-riscv64.S"],
+            srcs: [":syscalls-riscv64"],
         },
         x86: {
-            srcs: [":syscalls-x86.S"],
+            srcs: [":syscalls-x86"],
         },
         x86_64: {
-            srcs: [":syscalls-x86_64.S"],
+            srcs: [":syscalls-x86_64"],
         },
     },
     name: "libc_syscalls",
@@ -1670,13 +1674,12 @@ filegroup {
 // ========================================================
 // libc.a + libc.so
 // ========================================================
-cc_library {
+cc_defaults {
     defaults: [
         "libc_defaults",
         "libc_native_allocator_defaults",
     ],
-    name: "libc",
-    static_ndk_lib: true,
+    name: "libc_library_defaults",
     product_variables: {
         platform_sdk_version: {
             asflags: ["-DPLATFORM_SDK_VERSION=%d"],
@@ -1803,20 +1806,7 @@ cc_library {
         },
     },
 
-    stubs: {
-        symbol_file: "libc.map.txt",
-        versions: [
-            "29",
-            "R",
-            "current",
-        ],
-    },
-    llndk: {
-        symbol_file: "libc.map.txt",
-        export_headers_as_system: true,
-        export_preprocessed_headers: ["include"],
-        export_llndk_headers: ["libc_llndk_headers"],
-    },
+
     apex_available: [
         "//apex_available:platform",
         "com.android.runtime",
@@ -1831,9 +1821,58 @@ cc_library {
     },
 }
 
+cc_library {
+    name: "libc",
+      defaults: [
+        "libc_library_defaults",
+    ],
+    stubs: {
+        symbol_file: "libc.map.txt",
+        versions: [
+            "29",
+            "R",
+            "current",
+        ],
+    },
+    static_ndk_lib: true,
+    llndk: {
+        symbol_file: "libc.map.txt",
+        export_headers_as_system: true,
+        export_preprocessed_headers: ["include"],
+        export_llndk_headers: ["libc_llndk_headers"],
+    },
+}
+
+cc_library {
+    name: "libc_hwasan",
+      defaults: [
+        "libc_library_defaults",
+    ],
+    sanitize: {
+        hwaddress: true,
+    },
+    enabled: false,
+    target: {
+        android_arm64: {
+            enabled: true,
+        },
+    },
+    stem: "libc",
+    relative_install_path: "hwasan",
+    // We don't really need the stubs, but this needs to stay to trigger the
+    // symlink logic in soong.
+    stubs: {
+        symbol_file: "libc.map.txt",
+    },
+    native_bridge_supported: false,
+    // It is never correct to depend on this directly. This is only
+    // needed for the runtime apex, and in base_system.mk.
+    visibility: ["//bionic/apex"],
+}
+
 genrule {
     name: "libc.arm.map",
-    out: ["libc.arm.map"],
+    out: ["libc.arm.map.txt"],
     srcs: ["libc.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) arm $(in) $(out)",
@@ -1841,7 +1880,7 @@ genrule {
 
 genrule {
     name: "libc.arm64.map",
-    out: ["libc.arm64.map"],
+    out: ["libc.arm64.map.txt"],
     srcs: ["libc.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) arm64 $(in) $(out)",
@@ -1849,7 +1888,7 @@ genrule {
 
 genrule {
     name: "libc.riscv64.map",
-    out: ["libc.riscv64.map"],
+    out: ["libc.riscv64.map.txt"],
     srcs: ["libc.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) riscv64 $(in) $(out)",
@@ -1857,7 +1896,7 @@ genrule {
 
 genrule {
     name: "libc.x86.map",
-    out: ["libc.x86.map"],
+    out: ["libc.x86.map.txt"],
     srcs: ["libc.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) x86 $(in) $(out)",
@@ -1865,7 +1904,7 @@ genrule {
 
 genrule {
     name: "libc.x86_64.map",
-    out: ["libc.x86_64.map"],
+    out: ["libc.x86_64.map.txt"],
     srcs: ["libc.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) x86_64 $(in) $(out)",
@@ -2070,7 +2109,7 @@ cc_library {
 
 genrule {
     name: "libstdc++.arm.map",
-    out: ["libstdc++.arm.map"],
+    out: ["libstdc++.arm.map.txt"],
     srcs: ["libstdc++.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) arm $(in) $(out)",
@@ -2078,7 +2117,7 @@ genrule {
 
 genrule {
     name: "libstdc++.arm64.map",
-    out: ["libstdc++.arm64.map"],
+    out: ["libstdc++.arm64.map.txt"],
     srcs: ["libstdc++.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) arm64 $(in) $(out)",
@@ -2086,7 +2125,7 @@ genrule {
 
 genrule {
     name: "libstdc++.riscv64.map",
-    out: ["libstdc++.riscv64.map"],
+    out: ["libstdc++.riscv64.map.txt"],
     srcs: ["libstdc++.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) riscv64 $(in) $(out)",
@@ -2094,7 +2133,7 @@ genrule {
 
 genrule {
     name: "libstdc++.x86.map",
-    out: ["libstdc++.x86.map"],
+    out: ["libstdc++.x86.map.txt"],
     srcs: ["libstdc++.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) x86 $(in) $(out)",
@@ -2102,7 +2141,7 @@ genrule {
 
 genrule {
     name: "libstdc++.x86_64.map",
-    out: ["libstdc++.x86_64.map"],
+    out: ["libstdc++.x86_64.map.txt"],
     srcs: ["libstdc++.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) x86_64 $(in) $(out)",
@@ -2175,6 +2214,8 @@ cc_object {
     srcs: ["arch-common/bionic/crtbrand.S"],
 
     defaults: ["crt_so_defaults"],
+    // crtbrand is an intermediate artifact, not a final CRT object.
+    exclude_from_ndk_sysroot: true,
 }
 
 cc_object {
@@ -2302,6 +2343,11 @@ cc_library_static {
         arm64: {
             srcs: [
                 "arch-arm64/string/__memcpy_chk.S",
+            ],
+        },
+        riscv64: {
+            srcs: [
+               "arch-riscv64/string/__memcpy_chk.S",
             ],
         },
     },
