@@ -46,7 +46,7 @@ __BEGIN_DECLS
  *
  * Available since API level 24.
  */
-int adjtimex(struct timex* __buf) __INTRODUCED_IN(24);
+int adjtimex(struct timex* _Nonnull __buf) __INTRODUCED_IN(24);
 
 /**
  * clock_adjtime adjusts a specific kernel clock.
@@ -55,6 +55,6 @@ int adjtimex(struct timex* __buf) __INTRODUCED_IN(24);
  *
  * Available since API level 24.
  */
-int clock_adjtime(clockid_t __clock, struct timex* __tx) __INTRODUCED_IN(24);
+int clock_adjtime(clockid_t __clock, struct timex* _Nonnull __tx) __INTRODUCED_IN(24);
 
 __END_DECLS

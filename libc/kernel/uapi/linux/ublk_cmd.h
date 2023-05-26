@@ -29,6 +29,7 @@
 #define UBLK_CMD_GET_PARAMS 0x09
 #define UBLK_CMD_START_USER_RECOVERY 0x10
 #define UBLK_CMD_END_USER_RECOVERY 0x11
+#define UBLK_CMD_GET_DEV_INFO2 0x12
 #define UBLK_IO_FETCH_REQ 0x20
 #define UBLK_IO_COMMIT_AND_FETCH_REQ 0x21
 #define UBLK_IO_NEED_GET_DATA 0x22
@@ -43,6 +44,7 @@
 #define UBLK_F_NEED_GET_DATA (1UL << 2)
 #define UBLK_F_USER_RECOVERY (1UL << 3)
 #define UBLK_F_USER_RECOVERY_REISSUE (1UL << 4)
+#define UBLK_F_UNPRIVILEGED_DEV (1UL << 5)
 #define UBLK_S_DEV_DEAD 0
 #define UBLK_S_DEV_LIVE 1
 #define UBLK_S_DEV_QUIESCED 2
@@ -51,7 +53,10 @@ struct ublksrv_ctrl_cmd {
   __u16 queue_id;
   __u16 len;
   __u64 addr;
-  __u64 data[2];
+  __u64 data[1];
+  __u16 dev_path_len;
+  __u16 pad;
+  __u32 reserved;
 };
 struct ublksrv_ctrl_dev_info {
   __u16 nr_hw_queues;
@@ -64,7 +69,8 @@ struct ublksrv_ctrl_dev_info {
   __u32 pad1;
   __u64 flags;
   __u64 ublksrv_flags;
-  __u64 reserved0;
+  __u32 owner_uid;
+  __u32 owner_gid;
   __u64 reserved1;
   __u64 reserved2;
 };
@@ -116,12 +122,20 @@ struct ublk_param_discard {
   __u16 max_discard_segments;
   __u16 reserved0;
 };
+struct ublk_param_devt {
+  __u32 char_major;
+  __u32 char_minor;
+  __u32 disk_major;
+  __u32 disk_minor;
+};
 struct ublk_params {
   __u32 len;
 #define UBLK_PARAM_TYPE_BASIC (1 << 0)
 #define UBLK_PARAM_TYPE_DISCARD (1 << 1)
+#define UBLK_PARAM_TYPE_DEVT (1 << 2)
   __u32 types;
   struct ublk_param_basic basic;
   struct ublk_param_discard discard;
+  struct ublk_param_devt devt;
 };
 #endif

@@ -27,21 +27,9 @@ TEST(sys_timex, adjtimex_smoke) {
   ASSERT_NE(-1, adjtimex(&t));
 }
 
-TEST(sys_timex, adjtimex_EFAULT) {
-  errno = 0;
-  ASSERT_EQ(-1, adjtimex(nullptr));
-  ASSERT_EQ(EFAULT, errno);
-}
-
 TEST(sys_timex, clock_adjtime_smoke) {
   timex t;
   memset(&t, 0, sizeof(t));
   // adjtimex/clock_adjtime return the clock state on success, -1 on failure.
   ASSERT_NE(-1, clock_adjtime(CLOCK_REALTIME, &t));
-}
-
-TEST(sys_timex, clock_adjtime_EFAULT) {
-  errno = 0;
-  ASSERT_EQ(-1, clock_adjtime(CLOCK_REALTIME, nullptr));
-  ASSERT_EQ(EFAULT, errno);
 }

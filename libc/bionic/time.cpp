@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 The Android Open Source Project
+ * Copyright (C) 2018 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,25 +26,12 @@
  * SUCH DAMAGE.
  */
 
-#include <stdlib.h>
-#include <unistd.h>
+#include <time.h>
 
-#include "private/bionic_defs.h"
-#include "pthread_internal.h"
-
-extern "C" void __cxa_finalize(void* dso_handle);
-extern "C" void __cxa_thread_finalize();
-extern "C" __noreturn void __exit_group(int status);
-
-__attribute__((no_sanitize("memtag"))) void _exit(int status) {
-  __exit_group(status);
+int timespec_get(timespec* ts, int base) {
+  return (clock_gettime(base - 1, ts) != -1) ? base : 0;
 }
 
-__strong_alias(_Exit, _exit);
-
-__BIONIC_WEAK_FOR_NATIVE_BRIDGE
-void exit(int status) {
-  __cxa_thread_finalize();
-  __cxa_finalize(nullptr);
-  _exit(status);
+int timespec_getres(timespec* ts, int base) {
+  return (clock_getres(base - 1, ts) != -1) ? base : 0;
 }

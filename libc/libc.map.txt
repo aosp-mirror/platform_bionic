@@ -1584,6 +1584,11 @@ LIBC_U { # introduced=UpsideDownCake
     posix_spawn_file_actions_addfchdir_np;
 } LIBC_T;
 
+LIBC_V { # introduced=VanillaIceCream
+  global:
+    timespec_getres;
+} LIBC_U;
+
 LIBC_PRIVATE {
   global:
     __accept4; # arm x86

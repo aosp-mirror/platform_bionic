@@ -38,6 +38,7 @@
 
 #include "private/WriteProtected.h"
 #include "private/bionic_allocator.h"
+#include "private/bionic_asm_offsets.h"
 #include "private/bionic_elf_tls.h"
 #include "private/bionic_fdsan.h"
 #include "private/bionic_malloc_dispatch.h"
@@ -64,6 +65,10 @@ struct libc_globals {
   _Atomic(const MallocDispatch*) default_dispatch_table;
   MallocDispatch malloc_dispatch_table;
 };
+
+#ifdef __aarch64__
+static_assert(OFFSETOF_libc_globals_memtag_stack == offsetof(libc_globals, memtag_stack));
+#endif
 
 __LIBC_HIDDEN__ extern WriteProtected<libc_globals> __libc_globals;
 
