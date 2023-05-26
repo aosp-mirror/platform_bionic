@@ -154,7 +154,13 @@ cc_test {
         "libbase",
         "libBionicBenchmarksUtils",
     ],
-    data: ["test_suites/*"],
+    data: [
+        "test_suites/*",
+        "suites/*",
+        ":bionic-benchmarks",
+    ],
+    test_suites: ["device-tests"],
+    require_root: true,
 }
 
 cc_binary {
