@@ -28,81 +28,321 @@
 
 #pragma once
 
+/**
+ * @file time.h
+ * @brief Clock and timer functionality.
+ */
+
 #include <sys/cdefs.h>
 #include <sys/time.h>
 #include <xlocale.h>
 
 __BEGIN_DECLS
 
+/** Divisor to compute seconds from the result of a call to clock(). */
 #define CLOCKS_PER_SEC 1000000
 
+/**
+ * The name of the current time zone's non-daylight savings (`tzname[0]`) and
+ * daylight savings (`tzname[1]`) variants. See tzset().
+ */
 extern char* _Nonnull tzname[];
+
+/** Whether the current time zone ever uses daylight savings time. See tzset(). */
 extern int daylight;
+
+/** The difference in seconds between UTC and the current time zone. See tzset(). */
 extern long int timezone;
 
 struct sigevent;
 
+/**
+ * A "broken-down" time, useful for parsing/formatting times for human consumption.
+ */
 struct tm {
+  /** Seconds, 0-60. (60 is a leap second.) */
   int tm_sec;
+  /** Minutes, 0-59. */
   int tm_min;
+  /** Hours, 0-23. */
   int tm_hour;
+  /** Day of month, 1-31. */
   int tm_mday;
+  /** Month of year, 0-11. (Not 1-12!) */
   int tm_mon;
+  /** Years since 1900. (So 2023 is 123, not 2023!) */
   int tm_year;
+  /** Day of week, 0-6. (Sunday is 0, Saturday is 6.) */
   int tm_wday;
+  /** Day of year, 0-365. */
   int tm_yday;
+  /** Daylight savings flag, positive for DST in effect, 0 for DST not in effect, and -1 for unknown. */
   int tm_isdst;
+  /** Offset from UTC (GMT) in seconds for this time. */
   long int tm_gmtoff;
+  /** Name of the time zone for this time. */
   const char* _Nullable tm_zone;
 };
 
+/** Alternative name for `tm_zone` in `struct tm`. */
 #define TM_ZONE tm_zone
 
+/**
+ * [time(2)](http://man7.org/linux/man-pages/man2/time.2.html) returns
+ * the number of seconds since the Unix epoch (1970-01-01 00:00:00 +0000).
+ *
+ * Returns the time in seconds on success, and returns -1 and sets `errno` on failure.
+ */
 time_t time(time_t* _Nullable __t);
+
+/**
+ * [nanosleep(2)](http://man7.org/linux/man-pages/man2/nanosleep.2.html) sleeps
+ * for at least the given time (or until a signal arrives).
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure. If the sleep
+ * was interrupted by a signal, `errno` will be `EINTR` and `remainder` will be
+ * the amount of time remaining.
+ */
 int nanosleep(const struct timespec* _Nonnull __request, struct timespec* _Nullable __remainder);
 
+/**
+ * [asctime(3)](http://man7.org/linux/man-pages/man3/asctime.3p.html) formats
+ * the time `tm` as a string.
+ *
+ * Returns a pointer to a string on success, and returns NULL on failure.
+ *
+ * That string will be overwritten by later calls to this function.
+ *
+ * New code should prefer strftime().
+ */
 char* _Nullable asctime(const struct tm* _Nonnull __tm);
+
+/**
+ * [asctime_r(3)](http://man7.org/linux/man-pages/man3/asctime_r.3p.html) formats
+ * the time `tm` as a string in the given buffer `buf`.
+ *
+ * Returns a pointer to a string on success, and returns NULL on failure.
+ *
+ * New code should prefer strftime().
+ */
 char* _Nullable asctime_r(const struct tm* _Nonnull __tm, char* _Nonnull __buf);
 
+/**
+ * [difftime(3)](http://man7.org/linux/man-pages/man3/difftime.3.html) returns
+ * the difference between two times.
+ *
+ * Returns the difference in seconds.
+ */
 double difftime(time_t __lhs, time_t __rhs);
+
+/**
+ * [mktime(3)](http://man7.org/linux/man-pages/man3/mktime.3p.html) converts
+ * broken-down time `tm` into the number of seconds since the Unix epoch.
+ *
+ * Returns the time in seconds on success, and returns -1 and sets `errno` on failure.
+ */
 time_t mktime(struct tm* _Nonnull __tm);
 
+/**
+ * [localtime(3)](http://man7.org/linux/man-pages/man3/localtime.3p.html) converts
+ * the number of seconds since the Unix epoch in `t` to a broken-down time, taking
+ * the device's timezone into account.
+ *
+ * That broken-down time will be overwritten by later calls to this function.
+ *
+ * Returns a pointer to a broken-down time on success, and returns null and sets `errno` on failure.
+ */
 struct tm* _Nullable localtime(const time_t* _Nonnull __t);
+
+/**
+ * [localtime_r(3)](http://man7.org/linux/man-pages/man3/localtime_r.3p.html) converts
+ * the number of seconds since the Unix epoch in `t` to a broken-down time.
+ * That broken-down time will be written to the given struct `tm`.
+ *
+ * Returns a pointer to a broken-down time on success, and returns null and sets `errno` on failure.
+ */
 struct tm* _Nullable localtime_r(const time_t* _Nonnull __t, struct tm* _Nonnull __tm);
 
+/**
+ * Inverse of localtime().
+ */
+time_t timelocal(struct tm* _Nonnull __tm);
+
+/**
+ * [gmtime(3)](http://man7.org/linux/man-pages/man3/gmtime.3p.html) converts
+ * the number of seconds since the Unix epoch in `t` to a broken-down time, using
+ * UTC (historically also known as GMT).
+ *
+ * That broken-down time will be overwritten by later calls to this function.
+ *
+ * Returns a pointer to a broken-down time on success, and returns null and sets `errno` on failure.
+ */
 struct tm* _Nullable gmtime(const time_t* _Nonnull __t);
+
+/**
+ * [gmtime_r(3)](http://man7.org/linux/man-pages/man3/gmtime_r.3p.html) converts
+ * the number of seconds since the Unix epoch in `t` to a broken-down time, using
+ * UTC (historically also known as GMT).
+ *
+ * That broken-down time will be written to the provided struct `tm`.
+ *
+ * Returns a pointer to a broken-down time on success, and returns null and sets `errno` on failure.
+ */
 struct tm* _Nullable gmtime_r(const time_t* _Nonnull __t, struct tm* _Nonnull __tm);
 
+/**
+ * Inverse of gmtime().
+ */
+time_t timegm(struct tm* _Nonnull __tm);
+
+/**
+ * [strptime(3)](http://man7.org/linux/man-pages/man3/strptime.3.html) parses
+ * a string `s` assuming format `fmt` into broken-down time `tm`.
+ *
+ * Returns a pointer to the first character _not_ parsed, or null if no characters were parsed.
+ */
 char* _Nullable strptime(const char* _Nonnull __s, const char* _Nonnull __fmt, struct tm* _Nonnull __tm) __strftimelike(2);
+
+/**
+ * Equivalent to strptime() on Android where only C/POSIX locales are available.
+ */
 char* _Nullable strptime_l(const char* _Nonnull __s, const char* _Nonnull __fmt, struct tm* _Nonnull __tm, locale_t _Nonnull __l) __strftimelike(2) __INTRODUCED_IN(28);
 
+/**
+ * [strftime(3)](http://man7.org/linux/man-pages/man3/strftime.3.html) formats
+ * a broken-down time `tm` into the buffer `buf` using format `fmt`.
+ *
+ * Returns a pointer to the first character _not_ parsed, or null if no characters were parsed.
+ */
 size_t strftime(char* _Nonnull __buf, size_t __n, const char* _Nonnull __fmt, const struct tm* _Nullable __tm) __strftimelike(3);
+
+/**
+ * Equivalent to strftime() on Android where only C/POSIX locales are available.
+ */
 size_t strftime_l(char* _Nonnull __buf, size_t __n, const char* _Nonnull __fmt, const struct tm* _Nullable __tm, locale_t _Nonnull __l) __strftimelike(3) __INTRODUCED_IN(21);
 
+/**
+ * [ctime(3)](http://man7.org/linux/man-pages/man3/ctime.3p.html) formats
+ * the time `tm` as a string.
+ *
+ * Returns a pointer to a string on success, and returns NULL on failure.
+ *
+ * That string will be overwritten by later calls to this function.
+ *
+ * New code should prefer strftime().
+ */
 char* _Nullable ctime(const time_t* _Nonnull __t);
+
+/**
+ * [ctime_r(3)](http://man7.org/linux/man-pages/man3/ctime.3p.html) formats
+ * the time `tm` as a string in the given buffer `buf`.
+ *
+ * Returns a pointer to a string on success, and returns NULL on failure.
+ *
+ * New code should prefer strftime().
+ */
 char* _Nullable ctime_r(const time_t* _Nonnull __t, char* _Nonnull __buf);
 
+/**
+ * [tzset(3)](http://man7.org/linux/man-pages/man3/tzset.3.html) tells
+ * libc that the time zone has changed.
+ */
 void tzset(void);
 
+/**
+ * [clock(3)](http://man7.org/linux/man-pages/man3/clock.3.html)
+ * returns an approximation of CPU time used, equivalent to
+ * `clock_gettime(CLOCK_PROCESS_CPUTIME_ID)` but with more confusing
+ * units. Use `CLOCKS_PER_SEC` to convert the result to seconds.
+ *
+ * Returns the time in seconds on success, and returns -1 and sets `errno` on failure.
+ *
+ * New code should prefer `clock_gettime(CLOCK_PROCESS_CPUTIME_ID)`.
+ */
 clock_t clock(void);
 
+/**
+ * [clock_getcpuclockid(3)](http://man7.org/linux/man-pages/man3/clock_getcpuclockid.3.html)
+ * gets the clock id of the cpu-time clock for the given `pid`.
+ *
+ * Returns 0 on success, and returns -1 and returns an error number on failure.
+ */
 int clock_getcpuclockid(pid_t __pid, clockid_t* _Nonnull __clock) __INTRODUCED_IN(23);
 
-
+/**
+ * [clock_getres(2)](http://man7.org/linux/man-pages/man2/clock_getres.2.html)
+ * gets the resolution of the given clock.
+ *
+ * Returns 0 on success, and returns -1 and returns an error number on failure.
+ */
 int clock_getres(clockid_t __clock, struct timespec* _Nullable __resolution);
+
+/**
+ * [clock_gettime(2)](http://man7.org/linux/man-pages/man2/clock_gettime.2.html)
+ * gets the time according to the given clock.
+ *
+ * Returns 0 on success, and returns -1 and returns an error number on failure.
+ */
 int clock_gettime(clockid_t __clock, struct timespec* _Nonnull __ts);
+
+/**
+ * [clock_nanosleep(2)](http://man7.org/linux/man-pages/man2/clock_nanosleep.2.html)
+ * sleeps for the given time as measured by the given clock.
+ *
+ * Returns 0 on success, and returns -1 and returns an error number on failure.
+ * If the sleep was interrupted by a signal, the return value will be `EINTR`
+ * and `remainder` will be the amount of time remaining.
+ */
 int clock_nanosleep(clockid_t __clock, int __flags, const struct timespec* _Nonnull __request, struct timespec* _Nullable __remainder);
+
+/**
+ * [clock_settime(2)](http://man7.org/linux/man-pages/man2/clock_settime.2.html)
+ * sets the time for the given clock.
+ *
+ * Returns 0 on success, and returns -1 and returns an error number on failure.
+ */
 int clock_settime(clockid_t __clock, const struct timespec* _Nonnull __ts);
 
+/**
+ * [timer_create(2)](http://man7.org/linux/man-pages/man2/timer_create.2.html)
+ * creates a POSIX timer.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
 int timer_create(clockid_t __clock, struct sigevent* _Nullable __event, timer_t _Nonnull * _Nonnull __timer_ptr);
-int timer_delete(timer_t _Nonnull __timer);
-int timer_settime(timer_t _Nonnull __timer, int __flags, const struct itimerspec* _Nonnull __new_value, struct itimerspec* _Nullable __old_value);
-int timer_gettime(timer_t _Nonnull _timer, struct itimerspec* _Nonnull __ts);
-int timer_getoverrun(timer_t _Nonnull __timer);
 
-/* Non-standard extensions that are in the BSDs and glibc. */
-time_t timelocal(struct tm* _Nonnull __tm);
-time_t timegm(struct tm* _Nonnull __tm);
+/**
+ * [timer_delete(2)](http://man7.org/linux/man-pages/man2/timer_delete.2.html)
+ * destroys a POSIX timer.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
+int timer_delete(timer_t _Nonnull __timer);
+
+/**
+ * [timer_settime(2)](http://man7.org/linux/man-pages/man2/timer_settime.2.html)
+ * starts or stops a POSIX timer.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
+int timer_settime(timer_t _Nonnull __timer, int __flags, const struct itimerspec* _Nonnull __new_value, struct itimerspec* _Nullable __old_value);
+
+/**
+ * [timer_gettime(2)](http://man7.org/linux/man-pages/man2/timer_gettime.2.html)
+ * gets the time until the given timer next fires.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
+int timer_gettime(timer_t _Nonnull _timer, struct itimerspec* _Nonnull __ts);
+
+/**
+ * [timer_getoverrun(2)](http://man7.org/linux/man-pages/man2/timer_getoverrun.2.html)
+ * gets the overrun count (the number of times the timer should have fired, but
+ * didn't) for the last time the timer fired.
+ *
+ * Returns the overrun count on success, and returns -1 and sets `errno` on failure.
+ */
+int timer_getoverrun(timer_t _Nonnull __timer);
 
 /**
  * The timebase for timespec_get() and timespec_getres() corresponding to CLOCK_REALTIME.
