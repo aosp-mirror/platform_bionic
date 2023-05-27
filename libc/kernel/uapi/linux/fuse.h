@@ -111,6 +111,7 @@ struct fuse_file_lock {
 #define FUSE_INIT_RESERVED (1 << 31)
 #define FUSE_SECURITY_CTX (1ULL << 32)
 #define FUSE_HAS_INODE_DAX (1ULL << 33)
+#define FUSE_CREATE_SUPP_GROUP (1ULL << 34)
 #if FUSE_KERNEL_VERSION > 7 || FUSE_KERNEL_VERSION == 7 && FUSE_KERNEL_MINOR_VERSION >= 36
 #define FUSE_PASSTHROUGH (1ULL << 63)
 #else
@@ -140,6 +141,10 @@ struct fuse_file_lock {
 #define FUSE_OPEN_KILL_SUIDGID (1 << 0)
 #define FUSE_SETXATTR_ACL_KILL_SGID (1 << 0)
 #define FUSE_EXPIRE_ONLY (1 << 0)
+enum fuse_ext_type {
+  FUSE_MAX_NR_SECCTX = 31,
+  FUSE_EXT_GROUPS = 32,
+};
 enum fuse_opcode {
   FUSE_LOOKUP = 1,
   FUSE_FORGET = 2,
@@ -465,7 +470,8 @@ struct fuse_in_header {
   uint32_t uid;
   uint32_t gid;
   uint32_t pid;
-  uint32_t padding;
+  uint16_t total_extlen;
+  uint16_t padding;
 };
 struct fuse_out_header {
   uint32_t len;
@@ -574,5 +580,13 @@ struct fuse_secctx {
 struct fuse_secctx_header {
   uint32_t size;
   uint32_t nr_secctx;
+};
+struct fuse_ext_header {
+  uint32_t size;
+  uint32_t type;
+};
+struct fuse_supp_groups {
+  uint32_t nr_groups;
+  uint32_t groups[];
 };
 #endif

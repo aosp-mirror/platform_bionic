@@ -36,9 +36,10 @@
 #define UVC_CTRL_FLAG_AUTO_UPDATE (1 << 7)
 #define UVC_CTRL_FLAG_ASYNCHRONOUS (1 << 8)
 #define UVC_CTRL_FLAG_GET_RANGE (UVC_CTRL_FLAG_GET_CUR | UVC_CTRL_FLAG_GET_MIN | UVC_CTRL_FLAG_GET_MAX | UVC_CTRL_FLAG_GET_RES | UVC_CTRL_FLAG_GET_DEF)
+#define UVC_MENU_NAME_LEN 32
 struct uvc_menu_info {
   __u32 value;
-  __u8 name[32];
+  __u8 name[UVC_MENU_NAME_LEN];
 };
 struct uvc_xu_control_mapping {
   __u32 id;

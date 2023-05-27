@@ -68,7 +68,7 @@ int timerfd_create(clockid_t __clock, int __flags) __INTRODUCED_IN(19);
  *
  * Available since API level 19.
  */
-int timerfd_settime(int __fd, int __flags, const struct itimerspec* __new_value, struct itimerspec* __old_value) __INTRODUCED_IN(19);
+int timerfd_settime(int __fd, int __flags, const struct itimerspec* _Nonnull __new_value, struct itimerspec* _Nullable __old_value) __INTRODUCED_IN(19);
 
 /**
  * [timerfd_gettime(2)](http://man7.org/linux/man-pages/man2/timerfd_gettime.2.html) queries the
@@ -78,6 +78,6 @@ int timerfd_settime(int __fd, int __flags, const struct itimerspec* __new_value,
  *
  * Available since API level 19.
  */
-int timerfd_gettime(int __fd, struct itimerspec* __current_value) __INTRODUCED_IN(19);
+int timerfd_gettime(int __fd, struct itimerspec* _Nonnull __current_value) __INTRODUCED_IN(19);
 
 __END_DECLS

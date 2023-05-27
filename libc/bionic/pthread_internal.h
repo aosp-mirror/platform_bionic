@@ -137,7 +137,7 @@ class pthread_internal_t {
   //    clobber x18 on arm64, therefore each process must declare early during
   //    process startup whether it might load legacy code.
   //    TODO: riscv64 has no legacy code, so we can actually go this route
-  //    there, but hopefully we'll actually get the Zsslpcfi extension instead.
+  //    there, but hopefully we'll actually get the Zisslpcfi extension instead.
   // 2) Mark the guard region as such using prctl(PR_SET_VMA_ANON_NAME) and
   //    discover its address by reading /proc/self/maps. One issue with this is
   //    that reading /proc/self/maps can race with allocations, so we may need
@@ -176,13 +176,6 @@ class pthread_internal_t {
   bionic_tls* bionic_tls;
 
   int errno_value;
-
-  // The last observed value of SP in a vfork child process.
-  // The part of the stack between this address and the value of SP when the vfork parent process
-  // regains control may have stale MTE tags and needs cleanup. This field is only meaningful while
-  // the parent is waiting for the vfork child to return control by calling either exec*() or
-  // exit().
-  void* vfork_child_stack_bottom;
 };
 
 struct ThreadMapping {

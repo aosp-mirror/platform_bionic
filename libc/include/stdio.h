@@ -143,9 +143,9 @@ int vdprintf(int __fd, const char* _Nonnull __fmt, va_list __args) __printflike(
     (defined(__cplusplus) && __cplusplus <= 201103L)
 char* _Nullable gets(char* _Nonnull __buf) __attribute__((deprecated("gets is unsafe, use fgets instead")));
 #endif
-int sprintf(char* _Nonnull __s, const char* _Nonnull __fmt, ...)
+int sprintf(char* __BIONIC_COMPLICATED_NULLNESS __s, const char* _Nonnull __fmt, ...)
     __printflike(2, 3) __warnattr_strict("sprintf is often misused; please use snprintf");
-int vsprintf(char* _Nonnull __s, const char* _Nonnull __fmt, va_list __args)
+int vsprintf(char* __BIONIC_COMPLICATED_NULLNESS __s, const char* _Nonnull __fmt, va_list __args)
     __printflike(2, 0) __warnattr_strict("vsprintf is often misused; please use vsnprintf");
 char* _Nullable tmpnam(char* _Nullable __s)
     __warnattr("tmpnam is unsafe, use mkstemp or tmpfile instead");
@@ -251,10 +251,10 @@ FILE* _Nullable freopen64(const char* _Nullable __path, const char* _Nonnull __m
 FILE* _Nullable tmpfile(void);
 FILE* _Nullable tmpfile64(void) __INTRODUCED_IN(24);
 
-int snprintf(char* _Nullable __buf, size_t __size, const char* _Nonnull __fmt, ...) __printflike(3, 4);
+int snprintf(char* __BIONIC_COMPLICATED_NULLNESS __buf, size_t __size, const char* _Nonnull __fmt, ...) __printflike(3, 4);
 int vfscanf(FILE* _Nonnull __fp, const char* _Nonnull __fmt, va_list __args) __scanflike(2, 0);
 int vscanf(const char* _Nonnull __fmt , va_list __args) __scanflike(1, 0);
-int vsnprintf(char* _Nullable __buf, size_t __size, const char* _Nonnull __fmt, va_list __args) __printflike(3, 0);
+int vsnprintf(char* __BIONIC_COMPLICATED_NULLNESS __buf, size_t __size, const char* _Nonnull __fmt, va_list __args) __printflike(3, 0);
 int vsscanf(const char* _Nonnull __s, const char* _Nonnull __fmt, va_list __args) __scanflike(2, 0);
 
 #define L_ctermid 1024 /* size for ctermid() */

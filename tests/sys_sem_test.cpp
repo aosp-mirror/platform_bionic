@@ -87,15 +87,21 @@ TEST(sys_sem, semctl_failure) {
 }
 
 TEST(sys_sem, semop_failure) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
   errno = 0;
   ASSERT_EQ(-1, semop(-1, nullptr, 0));
   ASSERT_TRUE(errno == EINVAL || errno == ENOSYS);
+#pragma clang diagnostic pop
 }
 
 TEST(sys_sem, semtimedop_failure) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
   errno = 0;
   ASSERT_EQ(-1, semtimedop(-1, nullptr, 0, nullptr));
   ASSERT_TRUE(errno == EINVAL || errno == ENOSYS);
+#pragma clang diagnostic pop
 }
 
 TEST(sys_sem, union_semun) {

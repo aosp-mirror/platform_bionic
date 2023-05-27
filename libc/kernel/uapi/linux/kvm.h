@@ -436,6 +436,8 @@ struct kvm_s390_mem_op {
     struct {
       __u8 ar;
       __u8 key;
+      __u8 pad1[6];
+      __u64 old_addr;
     };
     __u32 sida_offset;
     __u8 reserved[32];
@@ -447,9 +449,12 @@ struct kvm_s390_mem_op {
 #define KVM_S390_MEMOP_SIDA_WRITE 3
 #define KVM_S390_MEMOP_ABSOLUTE_READ 4
 #define KVM_S390_MEMOP_ABSOLUTE_WRITE 5
+#define KVM_S390_MEMOP_ABSOLUTE_CMPXCHG 6
 #define KVM_S390_MEMOP_F_CHECK_ONLY (1ULL << 0)
 #define KVM_S390_MEMOP_F_INJECT_EXCEPTION (1ULL << 1)
 #define KVM_S390_MEMOP_F_SKEY_PROTECTION (1ULL << 2)
+#define KVM_S390_MEMOP_EXTENSION_CAP_BASE (1 << 0)
+#define KVM_S390_MEMOP_EXTENSION_CAP_CMPXCHG (1 << 1)
 struct kvm_interrupt {
   __u32 irq;
 };
@@ -926,6 +931,7 @@ struct kvm_ppc_resize_hpt {
 #define KVM_CAP_DIRTY_LOG_RING_ACQ_REL 223
 #define KVM_CAP_S390_PROTECTED_ASYNC_DISABLE 224
 #define KVM_CAP_DIRTY_LOG_RING_WITH_BITMAP 225
+#define KVM_CAP_PMU_EVENT_MASKED_EVENTS 226
 #ifdef KVM_CAP_IRQ_ROUTING
 struct kvm_irq_routing_irqchip {
   __u32 irqchip;

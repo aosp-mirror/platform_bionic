@@ -503,6 +503,7 @@ cc_test_library {
         "sys_vfs_test.cpp",
         "sys_wait_test.cpp",
         "sys_xattr_test.cpp",
+        "syslog_test.cpp",
         "system_properties_test.cpp",
         "system_properties_test2.cpp",
         "termios_test.cpp",
