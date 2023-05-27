@@ -192,9 +192,11 @@ TEST_F(SystemTests, all_benchmarks) {
 
 TEST_F(SystemTests, small) {
   std::string expected =
-    "BM_string_memcmp/8/8/8/iterations:1\n"
-    "BM_math_sqrt/iterations:1\n"
-    "BM_property_get/1/iterations:1\n";
+      "BM_string_memcmp/8/8/8/iterations:1\n"
+      "BM_math_sqrt/iterations:1\n"
+      "BM_property_get/1/iterations:1\n"
+      "BM_property_get/2/iterations:1\n"
+      "BM_property_get/3/iterations:1\n";
   Verify(expected, 0, std::vector<const char*>{GetBionicXmlArg("test_small.xml").c_str(),
                                                "--bionic_iterations=1"});
 }
@@ -238,17 +240,18 @@ TEST_F(SystemTests, cmd_args) {
   std::string expected =
     "BM_string_memcpy/8/8/8/iterations:1\n"
     "BM_math_log10/iterations:1\n";
-  Verify(expected, 0, std::vector<const char*>{"--bionic_extra=BM_string_memcpy 8 8 8",
-                                               "--bionic_extra=BM_math_log10",
-                                               "--bionic_iterations=1"});
+  Verify(expected, 0,
+         std::vector<const char*>{"--bionic_extra=BM_string_memcpy 8/8/8",
+                                  "--bionic_extra=BM_math_log10", "--bionic_iterations=1"});
 }
 
 TEST_F(SystemTests, cmd_args_no_iter) {
   std::string expected =
     "BM_string_memcpy/8/8/8\n"
     "BM_math_log10\n";
-  Verify(expected, 0, std::vector<const char*>{"--bionic_extra=BM_string_memcpy 8 8 8",
-                                               "--bionic_extra=BM_math_log10"});
+  Verify(expected, 0,
+         std::vector<const char*>{"--bionic_extra=BM_string_memcpy 8/8/8",
+                                  "--bionic_extra=BM_math_log10"});
 }
 
 TEST_F(SystemTests, xml_and_args) {
