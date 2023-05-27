@@ -8,7 +8,7 @@
 <fn>
   <name>BM_string_memcpy</name>
   <iterations>25</iterations>
-  <args>512 4 4</args>
+  <args>512/4/4</args>
 </fn>
 <fn>
   <name>BM_property_get</name>
