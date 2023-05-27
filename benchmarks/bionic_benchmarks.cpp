@@ -336,16 +336,36 @@ args_vector_t* ResolveArgs(args_vector_t* to_populate, std::string args,
     return to_populate;
   }
 
-  to_populate->push_back(std::vector<int64_t>());
-  std::stringstream sstream(args);
-  std::string argstr;
-  while (sstream >> argstr) {
-    char* check_null;
-    int converted = static_cast<int>(strtol(argstr.c_str(), &check_null, 10));
-    if (*check_null) {
-      errx(1, "ERROR: Args str %s contains an invalid macro or int.", args.c_str());
+  std::string trimmed_args = android::base::Trim(args);
+  if (!trimmed_args.empty()) {
+    std::stringstream sstream(trimmed_args);
+    std::string argstr;
+    while (sstream >> argstr) {
+      char* check_null;
+      int converted = static_cast<int>(strtol(argstr.c_str(), &check_null, 10));
+      if (*check_null == '\0') {
+        to_populate->emplace_back(std::vector<int64_t>{converted});
+        continue;
+      } else if (*check_null == '/') {
+        // The only supported format with a / is \d+(/\d+)\s*. Example 8/8/8 or 16/23.
+        std::vector<int64_t> test_args{converted};
+        while (true) {
+          converted = static_cast<int>(strtol(check_null + 1, &check_null, 10));
+          test_args.push_back(converted);
+          if (*check_null == '\0') {
+            to_populate->emplace_back(std::move(test_args));
+            break;
+          } else if (*check_null != '/') {
+            errx(1, "ERROR: Args str %s contains an invalid macro or int.", args.c_str());
+          }
+        }
+      } else {
+        errx(1, "ERROR: Args str %s contains an invalid macro or int.", args.c_str());
+      }
     }
-    (*to_populate)[0].push_back(converted);
+  } else {
+    // No arguments, only the base benchmark.
+    to_populate->emplace_back(std::vector<int64_t>{});
   }
   return to_populate;
 }
