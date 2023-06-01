@@ -113,6 +113,7 @@ struct tpacket_auxdata {
 #define TP_STATUS_BLK_TMO (1 << 5)
 #define TP_STATUS_VLAN_TPID_VALID (1 << 6)
 #define TP_STATUS_CSUM_VALID (1 << 7)
+#define TP_STATUS_GSO_TCP (1 << 8)
 #define TP_STATUS_AVAILABLE 0
 #define TP_STATUS_SEND_REQUEST (1 << 0)
 #define TP_STATUS_SENDING (1 << 1)

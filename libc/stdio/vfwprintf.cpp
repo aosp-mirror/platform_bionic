@@ -39,7 +39,17 @@
 #define CHAR_TYPE_inf L"inf"
 #define CHAR_TYPE_NAN L"NAN"
 #define CHAR_TYPE_nan L"nan"
-#define CHAR_TYPE_ORIENTATION 1
+#define CHAR_TYPE_ORIENTATION ORIENT_CHARS
+
+#define PRINT(ptr, len)                                          \
+  do {                                                           \
+    for (int n3 = 0; n3 < (len); n3++) {                         \
+      if ((helpers::xfputwc((ptr)[n3], fp)) == WEOF) goto error; \
+    }                                                            \
+  } while (0)
+
+#define FLUSH()
+
 #include "printf_common.h"
 
 int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
@@ -114,13 +124,6 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
 
   static const char xdigs_lower[] = "0123456789abcdef";
   static const char xdigs_upper[] = "0123456789ABCDEF";
-
-#define PRINT(ptr, len)                                   \
-  do {                                                    \
-    for (int n3 = 0; n3 < (len); n3++) {                      \
-      if ((helpers::xfputwc((ptr)[n3], fp)) == WEOF) goto error; \
-    }                                                     \
-  } while (0)
 
   _SET_ORIENTATION(fp, CHAR_TYPE_ORIENTATION);
 
@@ -352,10 +355,6 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
         }
         if (prec < 0) prec = dtoaend - dtoaresult;
         if (expt == INT_MAX) ox[1] = '\0';
-        free(convbuf);
-        cp = convbuf = helpers::mbsconv(dtoaresult, -1);
-        if (cp == nullptr) goto error;
-        ndig = dtoaend - dtoaresult;
         goto fp_common;
       case 'e':
       case 'E':
@@ -392,11 +391,14 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
           }
           if (expt == 9999) expt = INT_MAX;
         }
+      fp_common:
+#if CHAR_TYPE_ORIENTATION == ORIENT_BYTES
+        cp = dtoaresult;
+#else
         free(convbuf);
         cp = convbuf = helpers::mbsconv(dtoaresult, -1);
         if (cp == nullptr) goto error;
-        ndig = dtoaend - dtoaresult;
-      fp_common:
+#endif
         if (signflag) sign = '-';
         if (expt == INT_MAX) { /* inf or nan */
           if (*cp == 'N') {
@@ -409,6 +411,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
           break;
         }
         flags |= FPT;
+        ndig = dtoaend - dtoaresult;
         if (ch == 'g' || ch == 'G') {
           if (expt > -4 && expt <= prec) {
             /* Make %[gG] smell like %[fF] */
@@ -510,6 +513,21 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
         _umax = UARG();
         base = DEC;
         goto nosign;
+      case 'w': {
+        n = 0;
+        bool fast = false;
+        ch = *fmt++;
+        if (ch == 'f') {
+          fast = true;
+          ch = *fmt++;
+        }
+        while (is_digit(ch)) {
+          APPEND_DIGIT(n, ch);
+          ch = *fmt++;
+        }
+        flags |= helpers::w_to_flag(n, fast);
+        goto reswitch;
+      }
       case 'X':
         xdigs = xdigs_upper;
         goto hex;
@@ -634,6 +652,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
     } else { /* glue together f_p fragments */
       if (decimal_point == nullptr) decimal_point = nl_langinfo(RADIXCHAR);
       if (!expchar) { /* %[fF] or sufficiently short %[gG] */
+        CHAR_TYPE* end = cp + ndig;
         if (expt <= 0) {
           PRINT(zeroes, 1);
           if (prec || flags & ALT) PRINT(decimal_point, 1);
@@ -641,11 +660,11 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
           /* already handled initial 0's */
           prec += expt;
         } else {
-          PRINTANDPAD(cp, convbuf + ndig, lead, zeroes);
+          PRINTANDPAD(cp, end, lead, zeroes);
           cp += lead;
           if (prec || flags & ALT) PRINT(decimal_point, 1);
         }
-        PRINTANDPAD(cp, convbuf + ndig, prec, zeroes);
+        PRINTANDPAD(cp, end, prec, zeroes);
       } else { /* %[eE] or sufficiently long %[gG] */
         if (prec > 1 || flags & ALT) {
           buf[0] = *cp++;
@@ -666,8 +685,11 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
     if (width < realsz) width = realsz;
     if (width > INT_MAX - ret) goto overflow;
     ret += width;
+
+    FLUSH(); /* copy out the I/O vectors */
   }
 done:
+  FLUSH();
 error:
   va_end(orgap);
   if (__sferror(fp)) ret = -1;

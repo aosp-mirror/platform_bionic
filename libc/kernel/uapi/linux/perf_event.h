@@ -237,6 +237,7 @@ enum perf_event_read_format {
 #define PERF_ATTR_SIZE_VER5 112
 #define PERF_ATTR_SIZE_VER6 120
 #define PERF_ATTR_SIZE_VER7 128
+#define PERF_ATTR_SIZE_VER8 136
 struct perf_event_attr {
   __u32 type;
   __u32 size;
@@ -276,6 +277,7 @@ struct perf_event_attr {
   __u32 aux_sample_size;
   __u32 __reserved_3;
   __u64 sig_data;
+  __u64 config3;
 };
 struct perf_event_query_bpf {
   __u32 ids_len;

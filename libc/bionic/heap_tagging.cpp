@@ -212,29 +212,3 @@ extern "C" __LIBC_HIDDEN__ __attribute__((no_sanitize("memtag"))) void memtag_ha
   __hwasan_handle_longjmp(sp_dst);
 #endif  // __has_feature(hwaddress_sanitizer)
 }
-
-extern "C" __LIBC_HIDDEN__ __attribute__((no_sanitize("memtag"), no_sanitize("hwaddress"))) void
-memtag_handle_vfork(void* sp __unused) {
-#ifdef __aarch64__
-  if (__libc_globals->memtag_stack) {
-    void* child_sp = __get_thread()->vfork_child_stack_bottom;
-    __get_thread()->vfork_child_stack_bottom = nullptr;
-    if (child_sp) {
-      size_t distance = reinterpret_cast<uintptr_t>(sp) - reinterpret_cast<uintptr_t>(child_sp);
-      if (distance > kUntagLimit) {
-        async_safe_fatal(
-            "memtag_handle_vfork: stack adjustment too large! %p -> %p, distance %zx > %zx\n",
-            child_sp, sp, distance, kUntagLimit);
-      } else {
-        untag_memory(child_sp, sp);
-      }
-    } else {
-      async_safe_fatal("memtag_handle_vfork: child SP unknown\n");
-    }
-  }
-#endif  // __aarch64__
-
-#if __has_feature(hwaddress_sanitizer)
-  __hwasan_handle_vfork(sp);
-#endif  // __has_feature(hwaddress_sanitizer)
-}

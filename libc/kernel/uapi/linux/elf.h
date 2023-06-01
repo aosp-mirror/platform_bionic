@@ -366,6 +366,7 @@ typedef struct elf64_shdr {
 #define NT_ARM_PAC_ENABLED_KEYS 0x40a
 #define NT_ARM_SSVE 0x40b
 #define NT_ARM_ZA 0x40c
+#define NT_ARM_ZT 0x40d
 #define NT_ARC_V2 0x600
 #define NT_VMCOREDD 0x700
 #define NT_MIPS_DSP 0x800
@@ -376,6 +377,8 @@ typedef struct elf64_shdr {
 #define NT_LOONGARCH_LSX 0xa02
 #define NT_LOONGARCH_LASX 0xa03
 #define NT_LOONGARCH_LBT 0xa04
+#define NT_LOONGARCH_HW_BREAK 0xa05
+#define NT_LOONGARCH_HW_WATCH 0xa06
 #define NT_GNU_PROPERTY_TYPE_0 5
 typedef struct elf32_note {
   Elf32_Word n_namesz;

@@ -4,7 +4,7 @@ function run_test {
   SRC=$1
   DST=$2
   rm -rf $2
-  versioner -a 9 -a 12 -a 13 -a 14 -a 15 $1 -i -o $2
+  versioner -a 9 -a 12 -a 13 -a 14 -a 15 -a 21 -a 23 $1 -i -o $2
   diff -q -w -B $2 expected
 }
 

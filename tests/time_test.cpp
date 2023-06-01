@@ -168,6 +168,8 @@ TEST(time, mktime_10310929) {
 }
 
 TEST(time, mktime_EOVERFLOW) {
+  setenv("TZ", "UTC", 1);
+
   struct tm t;
   memset(&t, 0, sizeof(tm));
 
@@ -181,8 +183,23 @@ TEST(time, mktime_EOVERFLOW) {
   ASSERT_NE(static_cast<time_t>(-1), mktime(&t));
   ASSERT_EQ(0, errno);
 
-  // This will overflow for LP32 or LP64.
+  // This will overflow for LP32.
   t.tm_year = INT_MAX;
+
+  errno = 0;
+#if !defined(__LP64__)
+  ASSERT_EQ(static_cast<time_t>(-1), mktime(&t));
+  ASSERT_EQ(EOVERFLOW, errno);
+#else
+  ASSERT_EQ(static_cast<time_t>(67768036166016000U), mktime(&t));
+  ASSERT_EQ(0, errno);
+#endif
+
+  // This will overflow for LP32 or LP64.
+  // tm_year is int, this t struct points to INT_MAX + 1 no matter what TZ is.
+  t.tm_year = INT_MAX;
+  t.tm_mon = 11;
+  t.tm_mday = 45;
 
   errno = 0;
   ASSERT_EQ(static_cast<time_t>(-1), mktime(&t));
@@ -1254,8 +1271,39 @@ TEST(time, strptime_s_nothing) {
 TEST(time, timespec_get) {
 #if __BIONIC__
   timespec ts = {};
-  ASSERT_EQ(0, timespec_get(&ts, 123));
   ASSERT_EQ(TIME_UTC, timespec_get(&ts, TIME_UTC));
+  ASSERT_EQ(TIME_MONOTONIC, timespec_get(&ts, TIME_MONOTONIC));
+  ASSERT_EQ(TIME_ACTIVE, timespec_get(&ts, TIME_ACTIVE));
+  ASSERT_EQ(TIME_THREAD_ACTIVE, timespec_get(&ts, TIME_THREAD_ACTIVE));
+#else
+  GTEST_SKIP() << "glibc doesn't have timespec_get until 2.21";
+#endif
+}
+
+TEST(time, timespec_get_invalid) {
+#if __BIONIC__
+  timespec ts = {};
+  ASSERT_EQ(0, timespec_get(&ts, 123));
+#else
+  GTEST_SKIP() << "glibc doesn't have timespec_get until 2.21";
+#endif
+}
+
+TEST(time, timespec_getres) {
+#if __BIONIC__
+  timespec ts = {};
+  ASSERT_EQ(TIME_UTC, timespec_getres(&ts, TIME_UTC));
+  ASSERT_EQ(1, ts.tv_nsec);
+  ASSERT_EQ(0, ts.tv_sec);
+#else
+  GTEST_SKIP() << "glibc doesn't have timespec_get until 2.21";
+#endif
+}
+
+TEST(time, timespec_getres_invalid) {
+#if __BIONIC__
+  timespec ts = {};
+  ASSERT_EQ(0, timespec_getres(&ts, 123));
 #else
   GTEST_SKIP() << "glibc doesn't have timespec_get until 2.21";
 #endif

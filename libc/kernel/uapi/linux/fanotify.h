@@ -113,13 +113,27 @@ struct fanotify_event_info_error {
   __s32 error;
   __u32 error_count;
 };
+#define FAN_RESPONSE_INFO_NONE 0
+#define FAN_RESPONSE_INFO_AUDIT_RULE 1
 struct fanotify_response {
   __s32 fd;
   __u32 response;
 };
+struct fanotify_response_info_header {
+  __u8 type;
+  __u8 pad;
+  __u16 len;
+};
+struct fanotify_response_info_audit_rule {
+  struct fanotify_response_info_header hdr;
+  __u32 rule_number;
+  __u32 subj_trust;
+  __u32 obj_trust;
+};
 #define FAN_ALLOW 0x01
 #define FAN_DENY 0x02
 #define FAN_AUDIT 0x10
+#define FAN_INFO 0x20
 #define FAN_NOFD - 1
 #define FAN_NOPIDFD FAN_NOFD
 #define FAN_EPIDFD - 2
