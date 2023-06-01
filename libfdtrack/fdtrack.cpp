@@ -45,10 +45,8 @@
 #include <android-base/thread_annotations.h>
 #include <async_safe/log.h>
 #include <bionic/reserved_signals.h>
-#include <unwindstack/Maps.h>
-#include <unwindstack/Regs.h>
-#include <unwindstack/RegsGetLocal.h>
-#include <unwindstack/Unwinder.h>
+
+#include <unwindstack/AndroidUnwinder.h>
 
 struct FdEntry {
   std::mutex mutex;
@@ -70,22 +68,16 @@ static constexpr size_t kFdTableSize = 4096;
 // Only unwind up to 32 frames outside of libfdtrack.so.
 static constexpr size_t kStackDepth = 32;
 
-// Skip any initial frames from libfdtrack.so.
-// Also ignore frames from ART (http://b/236197847) because we'd rather spend
-// our precious few frames on the actual Java calling code rather than the
-// implementation of JNI!
-static std::vector<std::string> kSkipFdtrackLib
-    [[clang::no_destroy]] = {"libfdtrack.so", "libart.so"};
-
 static bool installed = false;
 static std::array<FdEntry, kFdTableSize> stack_traces [[clang::no_destroy]];
-static unwindstack::LocalUpdatableMaps& Maps() {
-  static android::base::NoDestructor<unwindstack::LocalUpdatableMaps> maps;
-  return *maps.get();
-}
-static std::shared_ptr<unwindstack::Memory>& ProcessMemory() {
-  static android::base::NoDestructor<std::shared_ptr<unwindstack::Memory>> process_memory;
-  return *process_memory.get();
+static unwindstack::AndroidLocalUnwinder& Unwinder() {
+  // Skip any initial frames from libfdtrack.so.
+  // Also ignore frames from ART (http://b/236197847) because we'd rather spend
+  // our precious few frames on the actual Java calling code rather than the
+  // implementation of JNI!
+  static android::base::NoDestructor<unwindstack::AndroidLocalUnwinder> unwinder(
+      std::vector<std::string>{"libfdtrack.so", "libart.so"});
+  return *unwinder.get();
 }
 
 __attribute__((constructor)) static void ctor() {
@@ -104,8 +96,8 @@ __attribute__((constructor)) static void ctor() {
   sa.sa_flags = SA_SIGINFO | SA_ONSTACK;
   sigaction(BIONIC_SIGNAL_FDTRACK, &sa, nullptr);
 
-  if (Maps().Parse()) {
-    ProcessMemory() = unwindstack::Memory::CreateProcessMemoryThreadCached(getpid());
+  unwindstack::ErrorData error;
+  if (Unwinder().Initialize(error)) {
     android_fdtrack_hook_t expected = nullptr;
     installed = android_fdtrack_compare_exchange_hook(&expected, &fd_hook);
   }
@@ -133,11 +125,10 @@ static void fd_hook(android_fdtrack_event* event) {
       std::lock_guard<std::mutex> lock(entry->mutex);
       entry->backtrace.clear();
 
-      std::unique_ptr<unwindstack::Regs> regs(unwindstack::Regs::CreateFromLocal());
-      unwindstack::RegsGetLocal(regs.get());
-      unwindstack::Unwinder unwinder(kStackDepth, &Maps(), regs.get(), ProcessMemory());
-      unwinder.Unwind(&kSkipFdtrackLib);
-      entry->backtrace = unwinder.ConsumeFrames();
+      unwindstack::AndroidUnwinderData data(kStackDepth);
+      if (Unwinder().Unwind(data)) {
+        entry->backtrace = std::move(data.frames);
+      }
     }
   } else if (event->type == ANDROID_FDTRACK_EVENT_TYPE_CLOSE) {
     if (FdEntry* entry = GetFdEntry(event->fd); entry) {
