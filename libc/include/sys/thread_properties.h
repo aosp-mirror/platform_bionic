@@ -50,8 +50,8 @@ __BEGIN_DECLS
  *
  * Available since API level 31.
  */
-void __libc_get_static_tls_bounds(void** __static_tls_begin,
-                                  void** __static_tls_end) __INTRODUCED_IN(31);
+void __libc_get_static_tls_bounds(void* _Nonnull * _Nonnull __static_tls_begin,
+                                  void* _Nonnull * _Nonnull __static_tls_end) __INTRODUCED_IN(31);
 
 
 /**
@@ -66,7 +66,7 @@ void __libc_get_static_tls_bounds(void** __static_tls_begin,
  *
  * Available since API level 31.
  */
-void __libc_register_thread_exit_callback(void (*__cb)(void)) __INTRODUCED_IN(31);
+void __libc_register_thread_exit_callback(void (* _Nonnull __cb)(void)) __INTRODUCED_IN(31);
 
 /**
  * Iterates over all dynamic TLS chunks for the given thread.
@@ -76,11 +76,11 @@ void __libc_register_thread_exit_callback(void (*__cb)(void)) __INTRODUCED_IN(31
  * Available since API level 31.
  */
 void __libc_iterate_dynamic_tls(pid_t __tid,
-                                void (*__cb)(void* __dynamic_tls_begin,
-                                             void* __dynamic_tls_end,
+                                void (* _Nonnull __cb)(void* _Nonnull __dynamic_tls_begin,
+                                             void* _Nonnull __dynamic_tls_end,
                                              size_t __dso_id,
-                                             void* __arg),
-                                void* __arg) __INTRODUCED_IN(31);
+                                             void* _Nullable __arg),
+                                void* _Nullable __arg) __INTRODUCED_IN(31);
 
 /**
  * Register on_creation and on_destruction callbacks, which will be called after a dynamic
@@ -89,9 +89,9 @@ void __libc_iterate_dynamic_tls(pid_t __tid,
  * Available since API level 31.
  */
 void __libc_register_dynamic_tls_listeners(
-    void (*__on_creation)(void* __dynamic_tls_begin,
-                          void* __dynamic_tls_end),
-    void (*__on_destruction)(void* __dynamic_tls_begin,
-                             void* __dynamic_tls_end)) __INTRODUCED_IN(31);
+    void (* _Nonnull __on_creation)(void* _Nonnull __dynamic_tls_begin,
+                          void* _Nonnull __dynamic_tls_end),
+    void (* _Nonnull __on_destruction)(void* _Nonnull __dynamic_tls_begin,
+                             void* _Nonnull __dynamic_tls_end)) __INTRODUCED_IN(31);
 
 __END_DECLS
