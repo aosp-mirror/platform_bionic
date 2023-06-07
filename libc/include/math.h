@@ -177,10 +177,9 @@ double scalbn(double __x, int __exponent);
 float scalbnf(float __x, int __exponent);
 long double scalbnl(long double __x, int __exponent) __RENAME_LDBL(scalbn, 3, 3);
 
-/* TODO: once the NDK only supports >= 18, use __RENAME_LDBL here too. */
-double scalbln(double __x, long __exponent) __INTRODUCED_IN_X86_NO_GUARD_FOR_NDK(18);
-float scalblnf(float __x, long __exponent) __INTRODUCED_IN_X86_NO_GUARD_FOR_NDK(18);
-long double scalblnl(long double __x, long __exponent) __INTRODUCED_IN_X86_NO_GUARD_FOR_NDK(18);
+double scalbln(double __x, long __exponent);
+float scalblnf(float __x, long __exponent);
+long double scalblnl(long double __x, long __exponent) __RENAME_LDBL(scalbln, 9, 18);
 
 double cbrt(double __x);
 float cbrtf(float __x);
@@ -282,7 +281,7 @@ double nextafter(double __x, double __y);
 float nextafterf(float __x, float __y);
 long double nextafterl(long double __x, long double __y) __RENAME_LDBL_NO_GUARD_FOR_NDK(nextafter, 3, 21);
 
-double nexttoward(double __x, long double __y) __INTRODUCED_IN_NO_GUARD_FOR_NDK(18);
+double nexttoward(double __x, long double __y);
 float nexttowardf(float __x, long double __y);
 long double nexttowardl(long double __x, long double __y) __RENAME_LDBL_NO_GUARD_FOR_NDK(nexttoward, 18, 18);
 
