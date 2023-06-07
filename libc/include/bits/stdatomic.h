@@ -269,18 +269,18 @@ typedef struct {
 
 #define	ATOMIC_FLAG_INIT		{ ATOMIC_VAR_INIT(false) }
 
-static __inline bool atomic_flag_test_and_set_explicit(volatile atomic_flag *__object, memory_order __order) {
+static __inline bool atomic_flag_test_and_set_explicit(volatile atomic_flag * _Nonnull __object, memory_order __order) {
 	return (atomic_exchange_explicit(&__object->__flag, 1, __order));
 }
 
-static __inline void atomic_flag_clear_explicit(volatile atomic_flag *__object, memory_order __order) {
+static __inline void atomic_flag_clear_explicit(volatile atomic_flag * _Nonnull __object, memory_order __order) {
 	atomic_store_explicit(&__object->__flag, 0, __order);
 }
 
-static __inline bool atomic_flag_test_and_set(volatile atomic_flag *__object) {
+static __inline bool atomic_flag_test_and_set(volatile atomic_flag * _Nonnull __object) {
 	return (atomic_flag_test_and_set_explicit(__object, memory_order_seq_cst));
 }
 
-static __inline void atomic_flag_clear(volatile atomic_flag *__object) {
+static __inline void atomic_flag_clear(volatile atomic_flag * _Nonnull __object) {
 	atomic_flag_clear_explicit(__object, memory_order_seq_cst);
 }
