@@ -31,62 +31,7 @@
  * SUCH DAMAGE.
  */
 
-#include <inttypes.h>
-#include <limits.h>
-#include <locale.h>
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <wctype.h>
-#include "local.h"
-
-#include <platform/bionic/macros.h>
-
-#define BUF 513 /* Maximum length of numeric string. */
-
-/*
- * Flags used during conversion.
- */
-#define LONG 0x00001       /* l: long or double */
-#define LONGDBL 0x00002    /* L: long double */
-#define SHORT 0x00004      /* h: short */
-#define SHORTSHORT 0x00008 /* hh: 8 bit integer */
-#define LLONG 0x00010      /* ll: long long (+ deprecated q: quad) */
-#define POINTER 0x00020    /* p: void * (as hex) */
-#define SIZEINT 0x00040    /* z: (signed) size_t */
-#define MAXINT 0x00080     /* j: intmax_t */
-#define PTRINT 0x00100     /* t: ptrdiff_t */
-#define NOSKIP 0x00200     /* [ or c: do not skip blanks */
-#define SUPPRESS 0x00400   /* *: suppress assignment */
-#define UNSIGNED 0x00800   /* %[oupxX] conversions */
-
-/*
- * The following are used in numeric conversions only:
- * SIGNOK, HAVESIGN, NDIGITS, DPTOK, and EXPOK are for floating point;
- * SIGNOK, HAVESIGN, NDIGITS, PFXOK, and NZDIGITS are for integral.
- */
-#define SIGNOK   0x01000  /* +/- is (still) legal */
-#define HAVESIGN 0x02000 /* sign detected */
-#define NDIGITS  0x04000 /* no digits detected */
-
-#define DPTOK    0x08000 /* (float) decimal point is still legal */
-#define EXPOK    0x10000 /* (float) exponent (e+3, etc) still legal */
-
-#define PFBOK    0x20000 /* 0x prefix is (still) legal */
-#define PFXOK    0x40000 /* 0x prefix is (still) legal */
-#define NZDIGITS 0x80000 /* no zero digits detected */
-
-/*
- * Conversion types.
- */
-#define CT_CHAR 0   /* %c conversion */
-#define CT_CCL 1    /* %[...] conversion */
-#define CT_STRING 2 /* %s conversion */
-#define CT_INT 3    /* integer, i.e., strtoimax or strtoumax */
-#define CT_FLOAT 4  /* floating, i.e., strtod */
-
+#include "scanf_common.h"
 // An interpretive version of __sccl from vfscanf.c --- a table of all wchar_t values would
 // be a little too expensive, and some kind of compressed version isn't worth the trouble.
 static inline bool in_ccl(wchar_t wc, const wchar_t* ccl) {
@@ -176,6 +121,7 @@ int __vfwscanf(FILE* __restrict fp, const wchar_t* __restrict fmt, __va_list ap)
      */
   again:
     c = *fmt++;
+  reswitch:
     switch (c) {
       case '%':
       literal:
@@ -272,6 +218,18 @@ int __vfwscanf(FILE* __restrict fp, const wchar_t* __restrict fmt, __va_list ap)
         flags |= UNSIGNED;
         base = 10;
         break;
+
+      case 'w': {
+        int size = 0;
+        bool fast = false;
+        c = *fmt++;
+        while (is_digit(c)) {
+          APPEND_DIGIT(size, c);
+          c = *fmt++;
+        }
+        flags |= w_to_flag(size, fast);
+        goto reswitch;
+      }
 
       case 'X':
       case 'x':
