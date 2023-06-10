@@ -201,16 +201,6 @@
 #  define __RENAME_IF_FILE_OFFSET64(func)
 #endif
 
-/*
- * On all architectures, `struct stat` == `struct stat64`, but LP32 didn't gain the *64 functions
- * until API level 21.
- */
-#if defined(__LP64__) || defined(__BIONIC_LP32_USE_STAT64)
-#define __RENAME_STAT64(rewrite,rewrite_api_level,regular_api_level) __INTRODUCED_IN(regular_api_level)
-#else
-#define __RENAME_STAT64(rewrite,rewrite_api_level,regular_api_level) __RENAME(rewrite) __INTRODUCED_IN(rewrite_api_level)
-#endif
-
 /* glibc compatibility. */
 #if defined(__LP64__)
 #define __WORDSIZE 64
