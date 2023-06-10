@@ -141,13 +141,13 @@ int fchmod(int __fd, mode_t __mode);
 int mkdir(const char* _Nonnull __path, mode_t __mode);
 
 int fstat(int __fd, struct stat* _Nonnull __buf);
-int fstat64(int __fd, struct stat64* _Nonnull __buf) __RENAME_STAT64(fstat, 3, 21);
+int fstat64(int __fd, struct stat64* _Nonnull __buf) __INTRODUCED_IN(21);
 int fstatat(int __dir_fd, const char* _Nonnull __path, struct stat* _Nonnull __buf, int __flags);
-int fstatat64(int __dir_fd, const char* _Nonnull __path, struct stat64* _Nonnull __buf, int __flags) __RENAME_STAT64(fstatat, 3, 21);
+int fstatat64(int __dir_fd, const char* _Nonnull __path, struct stat64* _Nonnull __buf, int __flags) __INTRODUCED_IN(21);
 int lstat(const char* _Nonnull __path, struct stat* _Nonnull __buf);
-int lstat64(const char* _Nonnull __path, struct stat64* _Nonnull __buf) __RENAME_STAT64(lstat, 3, 21);
+int lstat64(const char* _Nonnull __path, struct stat64* _Nonnull __buf) __INTRODUCED_IN(21);
 int stat(const char* _Nonnull __path, struct stat* _Nonnull __buf);
-int stat64(const char* _Nonnull __path, struct stat64* _Nonnull __buf) __RENAME_STAT64(stat, 3, 21);
+int stat64(const char* _Nonnull __path, struct stat64* _Nonnull __buf) __INTRODUCED_IN(21);
 
 int mknod(const char* _Nonnull __path, mode_t __mode, dev_t __dev);
 mode_t umask(mode_t __mask);
