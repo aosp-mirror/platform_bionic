@@ -932,6 +932,21 @@ cc_library_static {
                 "arch-riscv64/bionic/setjmp.S",
                 "arch-riscv64/bionic/syscall.S",
                 "arch-riscv64/bionic/vfork.S",
+
+                "arch-riscv64/string/memchr_vext.S",
+                "arch-riscv64/string/memcmp_vext.S",
+                "arch-riscv64/string/memcpy_vext.S",
+                "arch-riscv64/string/memmove_vext.S",
+                "arch-riscv64/string/memset_vext.S",
+                "arch-riscv64/string/strcat_vext.S",
+                "arch-riscv64/string/strchr_vext.S",
+                "arch-riscv64/string/strcmp_vext.S",
+                "arch-riscv64/string/strcpy_vext.S",
+                "arch-riscv64/string/strlen_vext.S",
+                "arch-riscv64/string/strncat_vext.S",
+                "arch-riscv64/string/strncmp_vext.S",
+                "arch-riscv64/string/strncpy_vext.S",
+                "arch-riscv64/string/strnlen_vext.S",
             ],
         },
 
@@ -1541,6 +1556,9 @@ cc_library_static {
         arm64: {
             srcs: ["arch-arm64/static_function_dispatch.S"],
         },
+        riscv64: {
+            srcs: ["arch-riscv64/static_function_dispatch.S"]
+        },
     },
 }
 
@@ -1568,6 +1586,9 @@ cc_library_static {
         },
         arm64: {
             srcs: ["arch-arm64/dynamic_function_dispatch.cpp"],
+        },
+        riscv64: {
+            srcs: ["arch-riscv64/dynamic_function_dispatch.cpp"]
         },
     },
 }
