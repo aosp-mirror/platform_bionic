@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
+ * Copyright (C) 2023 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,36 +26,30 @@
  * SUCH DAMAGE.
  */
 
-#if defined(__BIONIC_FORTIFY)
+#include <private/bionic_asm.h>
 
-__BIONIC_FORTIFY_INLINE
-void __bionic_bcopy(const void * _Nonnull src, void* _Nonnull const dst __pass_object_size0, size_t len)
-        __overloadable
-        __clang_error_if(__bos_unevaluated_lt(__bos0(dst), len),
-                         "'bcopy' called with size bigger than buffer") {
-#if __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
-    size_t bos = __bos0(dst);
-    if (!__bos_trivially_ge(bos, len)) {
-        __builtin___memmove_chk(dst, src, len, bos);
-        return;
-    }
+#define FUNCTION_DELEGATE(name, impl) \
+ENTRY(name); \
+    j impl; \
+END(name)
+
+#if defined(__riscv_v)
+
+FUNCTION_DELEGATE(memchr, memchr_vext)
+FUNCTION_DELEGATE(memcmp, memcmp_vext)
+FUNCTION_DELEGATE(memcpy, memcpy_vext)
+FUNCTION_DELEGATE(memmove, memmove_vext)
+FUNCTION_DELEGATE(memset, memset_vext)
+FUNCTION_DELEGATE(strcat, strcat_vext)
+FUNCTION_DELEGATE(strchr, strchr_vext)
+FUNCTION_DELEGATE(strcmp, strcmp_vext)
+FUNCTION_DELEGATE(strcpy, strcpy_vext)
+FUNCTION_DELEGATE(strlen, strlen_vext)
+FUNCTION_DELEGATE(strncat, strncat_vext)
+FUNCTION_DELEGATE(strncmp, strncmp_vext)
+FUNCTION_DELEGATE(strncpy, strncpy_vext)
+FUNCTION_DELEGATE(strnlen, strnlen_vext)
+
 #endif
-    __builtin_memmove(dst, src, len);
-}
 
-__BIONIC_FORTIFY_INLINE
-void __bionic_bzero(void* _Nonnull const b __pass_object_size0, size_t len)
-        __overloadable
-        __clang_error_if(__bos_unevaluated_lt(__bos0(b), len),
-                         "'bzero' called with size bigger than buffer") {
-#if __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
-    size_t bos = __bos0(b);
-    if (!__bos_trivially_ge(bos, len)) {
-        __builtin___memset_chk(b, 0, len, bos);
-        return;
-    }
-#endif
-    __builtin_memset(b, 0, len);
-}
-
-#endif /* defined(__BIONIC_FORTIFY) */
+NOTE_GNU_PROPERTY()

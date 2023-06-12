@@ -3486,3 +3486,141 @@ TEST(STDIO_TEST, swprintf_invalid_wf_width) {
   GTEST_SKIP() << "no %w in glibc";
 #endif
 }
+
+TEST(STDIO_TEST, sscanf_w_base) {
+#if defined(__BIONIC__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+  int8_t a;
+  EXPECT_EQ(1, sscanf("<0b101>", "<%w8b>", &a));
+  EXPECT_EQ(0b101, a);
+  int8_t b1;
+  EXPECT_EQ(1, sscanf("<0xFF>", "<%w8i>", &b1));
+  EXPECT_EQ(-1, b1);
+  int8_t b2;
+  EXPECT_EQ(1, sscanf("<0x1FF>", "<%w8i>", &b2));
+  EXPECT_EQ(-1, b2);
+  int16_t c1;
+  EXPECT_EQ(1, sscanf("<0xFFFF>", "<%w16i>", &c1));
+  EXPECT_EQ(-1, c1);
+  uint16_t c2;
+  EXPECT_EQ(1, sscanf("<64>", "<%w16d>", &c2));
+  EXPECT_EQ(64, c2);
+  int32_t d;
+  EXPECT_EQ(1, sscanf("<021>", "<%w32o>", &d));
+  EXPECT_EQ(021, d);
+  uint32_t e;
+  EXPECT_EQ(1, sscanf("<-1>", "<%w32u>", &e));
+  EXPECT_EQ(4294967295, e);
+  int64_t f;
+  EXPECT_EQ(1, sscanf("<0x3b>", "<%w64x>", &f));
+  EXPECT_EQ(0x3b, f);
+  EXPECT_EQ(1, sscanf("<0x3b>", "<%w64X>", &f));
+  EXPECT_EQ(0x3B, f);
+#pragma clang diagnostic pop
+#else
+  GTEST_SKIP() << "no %w in glibc";
+#endif
+}
+
+TEST(STDIO_TEST, sscanf_w_combination) {
+#if defined(__BIONIC__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat"
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+#pragma clang diagnostic ignored "-Wformat-extra-args"
+  uint32_t a;
+  int64_t b;
+  char c;
+
+  EXPECT_EQ(3, sscanf("<0b10101010101010101010101010101010 0x3333333344444444 1>",
+                      "<%w32b %w64x %c>", &a, &b, &c));
+  EXPECT_EQ(0xaaaaaaaa, a);
+  EXPECT_EQ(0x3333333344444444, b);
+  EXPECT_EQ('1', c);
+#pragma clang diagnostic pop
+#else
+  GTEST_SKIP() << "no %w in glibc";
+#endif
+}
+
+TEST(STDIO_TEST, sscanf_invalid_w_width) {
+#if defined(__BIONIC__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+  int32_t a;
+  EXPECT_DEATH(sscanf("<100>", "<%w20d>", &a), "%w20 is unsupported");
+#pragma clang diagnostic pop
+#else
+  GTEST_SKIP() << "no %w in glibc";
+#endif
+}
+
+TEST(STDIO_TEST, swscanf_w_base) {
+#if defined(__BIONIC__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+  int8_t a;
+  EXPECT_EQ(1, swscanf(L"<0b101>", L"<%w8b>", &a));
+  EXPECT_EQ(0b101, a);
+  int8_t b1;
+  EXPECT_EQ(1, swscanf(L"<0xFF>", L"<%w8i>", &b1));
+  EXPECT_EQ(-1, b1);
+  int8_t b2;
+  EXPECT_EQ(1, swscanf(L"<0x1FF>", L"<%w8i>", &b2));
+  EXPECT_EQ(-1, b2);
+  int16_t c1;
+  EXPECT_EQ(1, swscanf(L"<0xFFFF>", L"<%w16i>", &c1));
+  EXPECT_EQ(-1, c1);
+  uint16_t c2;
+  EXPECT_EQ(1, swscanf(L"<64>", L"<%w16d>", &c2));
+  EXPECT_EQ(64, c2);
+  int32_t d;
+  EXPECT_EQ(1, swscanf(L"<021>", L"<%w32o>", &d));
+  EXPECT_EQ(021, d);
+  uint32_t e;
+  EXPECT_EQ(1, swscanf(L"<-1>", L"<%w32u>", &e));
+  EXPECT_EQ(4294967295, e);
+  int64_t f;
+  EXPECT_EQ(1, swscanf(L"<0x3b>", L"<%w64x>", &f));
+  EXPECT_EQ(0x3b, f);
+  EXPECT_EQ(1, swscanf(L"<0x3b>", L"<%w64X>", &f));
+  EXPECT_EQ(0x3B, f);
+#pragma clang diagnostic pop
+#else
+  GTEST_SKIP() << "no %w in glibc";
+#endif
+}
+
+TEST(STDIO_TEST, swscanf_w_combination) {
+#if defined(__BIONIC__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat"
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+#pragma clang diagnostic ignored "-Wformat-extra-args"
+  uint32_t a;
+  int64_t b;
+  char c;
+
+  EXPECT_EQ(3, swscanf(L"<0b10101010101010101010101010101010 0x3333333344444444 1>",
+                       L"<%w32b %w64x %c>", &a, &b, &c));
+  EXPECT_EQ(0xaaaaaaaa, a);
+  EXPECT_EQ(0x3333333344444444, b);
+  EXPECT_EQ('1', c);
+#pragma clang diagnostic pop
+#else
+  GTEST_SKIP() << "no %w in glibc";
+#endif
+}
+
+TEST(STDIO_TEST, swscanf_invalid_w_width) {
+#if defined(__BIONIC__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+  int32_t a;
+  EXPECT_DEATH(swscanf(L"<100>", L"<%w20d>", &a), "%w20 is unsupported");
+#pragma clang diagnostic pop
+#else
+  GTEST_SKIP() << "no %w in glibc";
+#endif
+}
