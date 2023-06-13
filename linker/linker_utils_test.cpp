@@ -33,6 +33,7 @@
 #include <gtest/gtest.h>
 
 #include "linker_utils.h"
+#include "platform/bionic/page.h"
 
 TEST(linker_utils, format_string) {
   std::vector<std::pair<std::string, std::string>> params = {{ "LIB", "lib32"}, { "SDKVER", "42"}};
@@ -104,9 +105,9 @@ TEST(linker_utils, parse_zip_path_smoke) {
 }
 
 TEST(linker_utils, page_start) {
-  ASSERT_EQ(0x0001000, page_start(0x0001000));
-  ASSERT_EQ(0x3002000, page_start(0x300222f));
-  ASSERT_EQ(0x6001000, page_start(0x6001fff));
+  ASSERT_EQ(0x0001000U, page_start(0x0001000));
+  ASSERT_EQ(0x3002000U, page_start(0x300222f));
+  ASSERT_EQ(0x6001000U, page_start(0x6001fff));
 }
 
 TEST(linker_utils, page_offset) {

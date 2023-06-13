@@ -40,6 +40,7 @@
 #include <unistd.h>
 
 #include <async_safe/log.h>
+#include <platform/bionic/page.h>
 #include <platform/bionic/reserved_signals.h>
 #include <sys/system_properties.h>
 
@@ -80,7 +81,7 @@ FdEntry* FdTableImpl<inline_fds>::at(size_t idx) {
 
     size_t required_count = max - inline_fds;
     size_t required_size = sizeof(FdTableOverflow) + required_count * sizeof(FdEntry);
-    size_t aligned_size = __BIONIC_ALIGN(required_size, PAGE_SIZE);
+    size_t aligned_size = __BIONIC_ALIGN(required_size, page_size());
     size_t aligned_count = (aligned_size - sizeof(FdTableOverflow)) / sizeof(FdEntry);
 
     void* allocation =
