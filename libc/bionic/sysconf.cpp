@@ -38,6 +38,7 @@
 #include <time.h>
 #include <unistd.h>
 
+#include "platform/bionic/page.h"
 #include "private/bionic_tls.h"
 
 static long __sysconf_rlimit(int resource) {
