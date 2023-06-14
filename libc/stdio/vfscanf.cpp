@@ -179,6 +179,10 @@ literal:
         int size = 0;
         bool fast = false;
         c = *fmt++;
+        if (c == 'f') {
+          fast = true;
+          c = *fmt++;
+        }
         while (is_digit(c)) {
           APPEND_DIGIT(size, c);
           c = *fmt++;
