@@ -43,6 +43,8 @@ enum android_fdtrack_event_type {
   ANDROID_FDTRACK_EVENT_TYPE_CLOSE,
 };
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnullability-completeness"
 struct android_fdtrack_event {
   // File descriptor for which this event occurred.
   int fd;
@@ -57,12 +59,15 @@ struct android_fdtrack_event {
     } create;
   } data;
 };
+#pragma clang diagnostic pop
 
 // Callback invoked upon file descriptor creation/closure.
-typedef void (*android_fdtrack_hook_t)(struct android_fdtrack_event*);
+typedef void (*_Nullable android_fdtrack_hook_t)(struct android_fdtrack_event* _Nullable);
 
 // Register a hook which is called to track fd lifecycle events.
-bool android_fdtrack_compare_exchange_hook(android_fdtrack_hook_t* expected, android_fdtrack_hook_t value) __INTRODUCED_IN(30);
+// Set value to null to disable tracking.
+bool android_fdtrack_compare_exchange_hook(android_fdtrack_hook_t* _Nonnull expected,
+                                           android_fdtrack_hook_t value) __INTRODUCED_IN(30);
 
 // Enable/disable fdtrack *on the current thread*.
 // This is primarily useful when performing operations which you don't want to track
