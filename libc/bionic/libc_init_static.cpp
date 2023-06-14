@@ -129,8 +129,8 @@ static void apply_gnu_relro() {
       continue;
     }
 
-    ElfW(Addr) seg_page_start = PAGE_START(phdr->p_vaddr);
-    ElfW(Addr) seg_page_end = PAGE_END(phdr->p_vaddr + phdr->p_memsz);
+    ElfW(Addr) seg_page_start = page_start(phdr->p_vaddr);
+    ElfW(Addr) seg_page_end = page_end(phdr->p_vaddr + phdr->p_memsz);
 
     // Check return value here? What do we do if we fail?
     mprotect(reinterpret_cast<void*>(seg_page_start), seg_page_end - seg_page_start, PROT_READ);
@@ -354,9 +354,9 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const v
       __libc_shared_globals()->initial_memtag_stack = memtag_stack;
 
       if (memtag_stack) {
-        void* page_start =
-            reinterpret_cast<void*>(PAGE_START(reinterpret_cast<uintptr_t>(stack_top)));
-        if (mprotect(page_start, PAGE_SIZE, PROT_READ | PROT_WRITE | PROT_MTE | PROT_GROWSDOWN)) {
+        void* pg_start =
+            reinterpret_cast<void*>(page_start(reinterpret_cast<uintptr_t>(stack_top)));
+        if (mprotect(pg_start, PAGE_SIZE, PROT_READ | PROT_WRITE | PROT_MTE | PROT_GROWSDOWN)) {
           async_safe_fatal("error: failed to set PROT_MTE on main thread stack: %s\n",
                            strerror(errno));
         }
