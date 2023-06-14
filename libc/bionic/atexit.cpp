@@ -73,8 +73,8 @@ class AtexitArray {
   // restart concurrent __cxa_finalize passes.
   uint64_t total_appends_;
 
-  static size_t page_start_of_index(size_t idx) { return PAGE_START(idx * sizeof(AtexitEntry)); }
-  static size_t page_end_of_index(size_t idx) { return PAGE_END(idx * sizeof(AtexitEntry)); }
+  static size_t page_start_of_index(size_t idx) { return page_start(idx * sizeof(AtexitEntry)); }
+  static size_t page_end_of_index(size_t idx) { return page_end(idx * sizeof(AtexitEntry)); }
 
   // Recompact the array if it will save at least one page of memory at the end.
   bool needs_recompaction() const {
@@ -167,7 +167,7 @@ void AtexitArray::set_writable(bool writable, size_t start_idx, size_t num_entri
 // than one.
 bool AtexitArray::next_capacity(size_t capacity, size_t* result) {
   if (capacity == 0) {
-    *result = PAGE_END(sizeof(AtexitEntry)) / sizeof(AtexitEntry);
+    *result = page_end(sizeof(AtexitEntry)) / sizeof(AtexitEntry);
     return true;
   }
   size_t num_bytes;

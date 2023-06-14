@@ -116,7 +116,7 @@ static int GetTargetElfMachine() {
   can only memory-map at page boundaries, this means that the bias is
   computed as:
 
-       load_bias = phdr0_load_address - PAGE_START(phdr0->p_vaddr)
+       load_bias = phdr0_load_address - page_start(phdr0->p_vaddr)
 
   (NOTE: The value must be used as a 32-bit unsigned integer, to deal with
           possible wrap around UINT32_MAX for possible large p_vaddr values).
@@ -124,11 +124,11 @@ static int GetTargetElfMachine() {
   And that the phdr0_load_address must start at a page boundary, with
   the segment's real content starting at:
 
-       phdr0_load_address + PAGE_OFFSET(phdr0->p_vaddr)
+       phdr0_load_address + page_offset(phdr0->p_vaddr)
 
   Note that ELF requires the following condition to make the mmap()-ing work:
 
-      PAGE_OFFSET(phdr0->p_vaddr) == PAGE_OFFSET(phdr0->p_offset)
+      page_offset(phdr0->p_vaddr) == page_offset(phdr0->p_offset)
 
   The load_bias must be added to any p_vaddr value read from the ELF file to
   determine the corresponding memory address.
@@ -529,8 +529,8 @@ size_t phdr_table_get_load_size(const ElfW(Phdr)* phdr_table, size_t phdr_count,
     min_vaddr = 0;
   }
 
-  min_vaddr = PAGE_START(min_vaddr);
-  max_vaddr = PAGE_END(max_vaddr);
+  min_vaddr = page_start(min_vaddr);
+  max_vaddr = page_end(max_vaddr);
 
   if (out_min_vaddr != nullptr) {
     *out_min_vaddr = min_vaddr;
@@ -545,7 +545,7 @@ size_t phdr_table_get_load_size(const ElfW(Phdr)* phdr_table, size_t phdr_count,
 // program header table. Used to determine whether the file should be loaded at
 // a specific virtual address alignment for use with huge pages.
 size_t phdr_table_get_maximum_alignment(const ElfW(Phdr)* phdr_table, size_t phdr_count) {
-  size_t maximum_alignment = PAGE_SIZE;
+  size_t maximum_alignment = page_size();
 
   for (size_t i = 0; i < phdr_count; ++i) {
     const ElfW(Phdr)* phdr = &phdr_table[i];
@@ -563,7 +563,7 @@ size_t phdr_table_get_maximum_alignment(const ElfW(Phdr)* phdr_table, size_t phd
 #if defined(__LP64__)
   return maximum_alignment;
 #else
-  return PAGE_SIZE;
+  return page_size();
 #endif
 }
 
@@ -574,7 +574,7 @@ static void* ReserveWithAlignmentPadding(size_t size, size_t mapping_align, size
   int mmap_flags = MAP_PRIVATE | MAP_ANONYMOUS;
   // Reserve enough space to properly align the library's start address.
   mapping_align = std::max(mapping_align, start_align);
-  if (mapping_align == PAGE_SIZE) {
+  if (mapping_align == page_size()) {
     void* mmap_ptr = mmap(nullptr, size, PROT_NONE, mmap_flags, -1, 0);
     if (mmap_ptr == MAP_FAILED) {
       return nullptr;
@@ -593,7 +593,7 @@ static void* ReserveWithAlignmentPadding(size_t size, size_t mapping_align, size
   constexpr size_t kMaxGapUnits = 32;
   // Allocate enough space so that the end of the desired region aligned up is still inside the
   // mapping.
-  size_t mmap_size = align_up(size, mapping_align) + mapping_align - PAGE_SIZE;
+  size_t mmap_size = align_up(size, mapping_align) + mapping_align - page_size();
   uint8_t* mmap_ptr =
       reinterpret_cast<uint8_t*>(mmap(nullptr, mmap_size, PROT_NONE, mmap_flags, -1, 0));
   if (mmap_ptr == MAP_FAILED) {
@@ -610,7 +610,7 @@ static void* ReserveWithAlignmentPadding(size_t size, size_t mapping_align, size
     mapping_align = std::max(mapping_align, kGapAlignment);
     gap_size =
         kGapAlignment * (is_first_stage_init() ? 1 : arc4random_uniform(kMaxGapUnits - 1) + 1);
-    mmap_size = align_up(size + gap_size, mapping_align) + mapping_align - PAGE_SIZE;
+    mmap_size = align_up(size + gap_size, mapping_align) + mapping_align - page_size();
     mmap_ptr = reinterpret_cast<uint8_t*>(mmap(nullptr, mmap_size, PROT_NONE, mmap_flags, -1, 0));
     if (mmap_ptr == MAP_FAILED) {
       return nullptr;
@@ -665,12 +665,12 @@ bool ElfReader::ReserveAddressSpace(address_space_params* address_space) {
              load_size_ - address_space->reserved_size, load_size_, name_.c_str());
       return false;
     }
-    size_t start_alignment = PAGE_SIZE;
+    size_t start_alignment = page_size();
     if (get_transparent_hugepages_supported() && get_application_target_sdk_version() >= 31) {
       size_t maximum_alignment = phdr_table_get_maximum_alignment(phdr_table_, phdr_num_);
       // Limit alignment to PMD size as other alignments reduce the number of
       // bits available for ASLR for no benefit.
-      start_alignment = maximum_alignment == kPmdSize ? kPmdSize : PAGE_SIZE;
+      start_alignment = maximum_alignment == kPmdSize ? kPmdSize : page_size();
     }
     start = ReserveWithAlignmentPadding(load_size_, kLibraryAlignment, start_alignment, &gap_start_,
                                         &gap_size_);
@@ -706,8 +706,8 @@ bool ElfReader::LoadSegments() {
     ElfW(Addr) seg_start = phdr->p_vaddr + load_bias_;
     ElfW(Addr) seg_end   = seg_start + phdr->p_memsz;
 
-    ElfW(Addr) seg_page_start = PAGE_START(seg_start);
-    ElfW(Addr) seg_page_end   = PAGE_END(seg_end);
+    ElfW(Addr) seg_page_start = page_start(seg_start);
+    ElfW(Addr) seg_page_end = page_end(seg_end);
 
     ElfW(Addr) seg_file_end   = seg_start + phdr->p_filesz;
 
@@ -715,7 +715,7 @@ bool ElfReader::LoadSegments() {
     ElfW(Addr) file_start = phdr->p_offset;
     ElfW(Addr) file_end   = file_start + phdr->p_filesz;
 
-    ElfW(Addr) file_page_start = PAGE_START(file_start);
+    ElfW(Addr) file_page_start = page_start(file_start);
     ElfW(Addr) file_length = file_end - file_page_start;
 
     if (file_size_ <= 0) {
@@ -768,11 +768,11 @@ bool ElfReader::LoadSegments() {
 
     // if the segment is writable, and does not end on a page boundary,
     // zero-fill it until the page limit.
-    if ((phdr->p_flags & PF_W) != 0 && PAGE_OFFSET(seg_file_end) > 0) {
-      memset(reinterpret_cast<void*>(seg_file_end), 0, PAGE_SIZE - PAGE_OFFSET(seg_file_end));
+    if ((phdr->p_flags & PF_W) != 0 && page_offset(seg_file_end) > 0) {
+      memset(reinterpret_cast<void*>(seg_file_end), 0, page_size() - page_offset(seg_file_end));
     }
 
-    seg_file_end = PAGE_END(seg_file_end);
+    seg_file_end = page_end(seg_file_end);
 
     // seg_file_end is now the first page address after the file
     // content. If seg_end is larger, we need to zero anything
@@ -811,8 +811,8 @@ static int _phdr_table_set_load_prot(const ElfW(Phdr)* phdr_table, size_t phdr_c
       continue;
     }
 
-    ElfW(Addr) seg_page_start = PAGE_START(phdr->p_vaddr) + load_bias;
-    ElfW(Addr) seg_page_end   = PAGE_END(phdr->p_vaddr + phdr->p_memsz) + load_bias;
+    ElfW(Addr) seg_page_start = page_start(phdr->p_vaddr) + load_bias;
+    ElfW(Addr) seg_page_end = page_end(phdr->p_vaddr + phdr->p_memsz) + load_bias;
 
     int prot = PFLAGS_TO_PROT(phdr->p_flags) | extra_prot_flags;
     if ((prot & PROT_WRITE) != 0) {
@@ -912,8 +912,8 @@ static int _phdr_table_set_gnu_relro_prot(const ElfW(Phdr)* phdr_table, size_t p
     //       the program is likely to fail at runtime. So in effect the
     //       linker must only emit a PT_GNU_RELRO segment if it ensures
     //       that it starts on a page boundary.
-    ElfW(Addr) seg_page_start = PAGE_START(phdr->p_vaddr) + load_bias;
-    ElfW(Addr) seg_page_end   = PAGE_END(phdr->p_vaddr + phdr->p_memsz) + load_bias;
+    ElfW(Addr) seg_page_start = page_start(phdr->p_vaddr) + load_bias;
+    ElfW(Addr) seg_page_end = page_end(phdr->p_vaddr + phdr->p_memsz) + load_bias;
 
     int ret = mprotect(reinterpret_cast<void*>(seg_page_start),
                        seg_page_end - seg_page_start,
@@ -972,8 +972,8 @@ int phdr_table_serialize_gnu_relro(const ElfW(Phdr)* phdr_table,
       continue;
     }
 
-    ElfW(Addr) seg_page_start = PAGE_START(phdr->p_vaddr) + load_bias;
-    ElfW(Addr) seg_page_end   = PAGE_END(phdr->p_vaddr + phdr->p_memsz) + load_bias;
+    ElfW(Addr) seg_page_start = page_start(phdr->p_vaddr) + load_bias;
+    ElfW(Addr) seg_page_end = page_end(phdr->p_vaddr + phdr->p_memsz) + load_bias;
     ssize_t size = seg_page_end - seg_page_start;
 
     ssize_t written = TEMP_FAILURE_RETRY(write(fd, reinterpret_cast<void*>(seg_page_start), size));
@@ -1035,8 +1035,8 @@ int phdr_table_map_gnu_relro(const ElfW(Phdr)* phdr_table,
       continue;
     }
 
-    ElfW(Addr) seg_page_start = PAGE_START(phdr->p_vaddr) + load_bias;
-    ElfW(Addr) seg_page_end   = PAGE_END(phdr->p_vaddr + phdr->p_memsz) + load_bias;
+    ElfW(Addr) seg_page_start = page_start(phdr->p_vaddr) + load_bias;
+    ElfW(Addr) seg_page_end = page_end(phdr->p_vaddr + phdr->p_memsz) + load_bias;
 
     char* file_base = static_cast<char*>(temp_mapping) + *file_offset;
     char* mem_base = reinterpret_cast<char*>(seg_page_start);
@@ -1053,15 +1053,15 @@ int phdr_table_map_gnu_relro(const ElfW(Phdr)* phdr_table,
     while (match_offset < size) {
       // Skip over dissimilar pages.
       while (match_offset < size &&
-             memcmp(mem_base + match_offset, file_base + match_offset, PAGE_SIZE) != 0) {
-        match_offset += PAGE_SIZE;
+             memcmp(mem_base + match_offset, file_base + match_offset, page_size()) != 0) {
+        match_offset += page_size();
       }
 
       // Count similar pages.
       size_t mismatch_offset = match_offset;
       while (mismatch_offset < size &&
-             memcmp(mem_base + mismatch_offset, file_base + mismatch_offset, PAGE_SIZE) == 0) {
-        mismatch_offset += PAGE_SIZE;
+             memcmp(mem_base + mismatch_offset, file_base + mismatch_offset, page_size()) == 0) {
+        mismatch_offset += page_size();
       }
 
       // Map over similar pages.
