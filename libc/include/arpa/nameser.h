@@ -595,29 +595,29 @@ int ns_samename(const char* _Nonnull __lhs, const char* _Nonnull __rhs);
 /* The names of these symbols were accidentally prefixed with __ in L. */
 /* The duplication here is intentional to avoid declaring different symbols with the same
  * declaration. */
-int ns_msg_getflag(ns_msg __handle, int __flag) __INTRODUCED_IN_64(22);
-uint16_t ns_get16(const u_char* _Nonnull __src) __INTRODUCED_IN_64(22);
-uint32_t ns_get32(const u_char* _Nonnull __src) __INTRODUCED_IN_64(22);
-void ns_put16(uint16_t __src, u_char* _Nonnull __dst) __INTRODUCED_IN_64(22);
-void ns_put32(uint32_t __src, u_char* _Nonnull __dst) __INTRODUCED_IN_64(22);
-int ns_initparse(const u_char* _Nonnull __msg, int __msg_size, ns_msg* _Nonnull __handle) __INTRODUCED_IN_64(22);
-int ns_skiprr(const u_char* _Nonnull __ptr, const u_char* _Nonnull __eom, ns_sect __section, int __count) __INTRODUCED_IN_64(22);
-int ns_parserr(ns_msg* _Nonnull __handle, ns_sect __section, int __rr_number, ns_rr* _Nonnull __rr) __INTRODUCED_IN_64(22);
-int ns_sprintrr(const ns_msg* _Nonnull  __handle, const ns_rr* _Nonnull __rr, const char* _Nullable __name_ctx, const char* _Nullable __origin, char* _Nonnull __buf, size_t __buf_size) __INTRODUCED_IN_64(22);
-int ns_sprintrrf(const u_char* _Nonnull __msg, size_t __msg_size, const char* _Nonnull __name, ns_class __class, ns_type __type, u_long __ttl, const u_char* _Nonnull __rdata, size_t __rdata_size, const char* _Nullable __name_ctx, const char* _Nullable __origin, char* _Nonnull __buf, size_t __buf_size) __INTRODUCED_IN_64(22);
-int ns_format_ttl(u_long __ttl, char* _Nonnull __dst, size_t __dst_size) __INTRODUCED_IN_64(22);
-int ns_name_ntol(const u_char* _Nonnull __src, u_char* _Nonnull __dst, size_t __dst_size) __INTRODUCED_IN_64(22);
-int ns_name_ntop(const u_char* _Nonnull __src, char* _Nonnull __dst, size_t __dst_size) __INTRODUCED_IN_64(22);
-int ns_name_pton(const char* _Nonnull __src, u_char* _Nonnull __dst, size_t __dst_size) __INTRODUCED_IN_64(22);
-int ns_name_unpack(const u_char* _Nonnull __msg, const u_char* _Nonnull __eom, const u_char* _Nonnull __src, u_char* _Nonnull __dst, size_t __dst_size) __INTRODUCED_IN_64(22);
-int ns_name_pack(const u_char* _Nonnull __src, u_char* _Nonnull __dst, int __dst_size, const u_char* _Nullable * _Nullable __dn_ptrs, const u_char* _Nullable * _Nullable __last_dn_ptr) __INTRODUCED_IN_64(22);
-int ns_name_uncompress(const u_char* _Nonnull __msg, const u_char* _Nonnull __eom, const u_char* _Nonnull __src, char* _Nonnull __dst, size_t __dst_size) __INTRODUCED_IN_64(22);
-int ns_name_compress(const char* _Nonnull __src, u_char* _Nonnull __dst, size_t __dst_size, const u_char* _Nullable * _Nullable __dn_ptrs, const u_char* _Nullable * _Nullable __last_dn_ptr) __INTRODUCED_IN_64(22);
-int ns_name_skip(const u_char* _Nullable * _Nonnull __ptr_ptr, const u_char* _Nonnull __eom) __INTRODUCED_IN_64(22);
-void ns_name_rollback(const u_char* _Nonnull __src, const u_char* _Nullable * _Nonnull __dn_ptrs, const u_char* _Nullable * _Nonnull __last_dn_ptr) __INTRODUCED_IN_64(22);
+int ns_msg_getflag(ns_msg __handle, int __flag) __INTRODUCED_IN(22);
+uint16_t ns_get16(const u_char* _Nonnull __src) __INTRODUCED_IN(22);
+uint32_t ns_get32(const u_char* _Nonnull __src) __INTRODUCED_IN(22);
+void ns_put16(uint16_t __src, u_char* _Nonnull __dst) __INTRODUCED_IN(22);
+void ns_put32(uint32_t __src, u_char* _Nonnull __dst) __INTRODUCED_IN(22);
+int ns_initparse(const u_char* _Nonnull __msg, int __msg_size, ns_msg* _Nonnull __handle) __INTRODUCED_IN(22);
+int ns_skiprr(const u_char* _Nonnull __ptr, const u_char* _Nonnull __eom, ns_sect __section, int __count) __INTRODUCED_IN(22);
+int ns_parserr(ns_msg* _Nonnull __handle, ns_sect __section, int __rr_number, ns_rr* _Nonnull __rr) __INTRODUCED_IN(22);
+int ns_sprintrr(const ns_msg* _Nonnull  __handle, const ns_rr* _Nonnull __rr, const char* _Nullable __name_ctx, const char* _Nullable __origin, char* _Nonnull __buf, size_t __buf_size) __INTRODUCED_IN(22);
+int ns_sprintrrf(const u_char* _Nonnull __msg, size_t __msg_size, const char* _Nonnull __name, ns_class __class, ns_type __type, u_long __ttl, const u_char* _Nonnull __rdata, size_t __rdata_size, const char* _Nullable __name_ctx, const char* _Nullable __origin, char* _Nonnull __buf, size_t __buf_size) __INTRODUCED_IN(22);
+int ns_format_ttl(u_long __ttl, char* _Nonnull __dst, size_t __dst_size) __INTRODUCED_IN(22);
+int ns_name_ntol(const u_char* _Nonnull __src, u_char* _Nonnull __dst, size_t __dst_size) __INTRODUCED_IN(22);
+int ns_name_ntop(const u_char* _Nonnull __src, char* _Nonnull __dst, size_t __dst_size) __INTRODUCED_IN(22);
+int ns_name_pton(const char* _Nonnull __src, u_char* _Nonnull __dst, size_t __dst_size) __INTRODUCED_IN(22);
+int ns_name_unpack(const u_char* _Nonnull __msg, const u_char* _Nonnull __eom, const u_char* _Nonnull __src, u_char* _Nonnull __dst, size_t __dst_size) __INTRODUCED_IN(22);
+int ns_name_pack(const u_char* _Nonnull __src, u_char* _Nonnull __dst, int __dst_size, const u_char* _Nullable * _Nullable __dn_ptrs, const u_char* _Nullable * _Nullable __last_dn_ptr) __INTRODUCED_IN(22);
+int ns_name_uncompress(const u_char* _Nonnull __msg, const u_char* _Nonnull __eom, const u_char* _Nonnull __src, char* _Nonnull __dst, size_t __dst_size) __INTRODUCED_IN(22);
+int ns_name_compress(const char* _Nonnull __src, u_char* _Nonnull __dst, size_t __dst_size, const u_char* _Nullable * _Nullable __dn_ptrs, const u_char* _Nullable * _Nullable __last_dn_ptr) __INTRODUCED_IN(22);
+int ns_name_skip(const u_char* _Nullable * _Nonnull __ptr_ptr, const u_char* _Nonnull __eom) __INTRODUCED_IN(22);
+void ns_name_rollback(const u_char* _Nonnull __src, const u_char* _Nullable * _Nonnull __dn_ptrs, const u_char* _Nullable * _Nonnull __last_dn_ptr) __INTRODUCED_IN(22);
 
-int ns_makecanon(const char* _Nonnull __src, char* _Nonnull __dst, size_t __dst_size) __INTRODUCED_IN_64(22);
-int ns_samename(const char* _Nonnull __lhs, const char* _Nonnull __rhs) __INTRODUCED_IN_64(22);
+int ns_makecanon(const char* _Nonnull __src, char* _Nonnull __dst, size_t __dst_size) __INTRODUCED_IN(22);
+int ns_samename(const char* _Nonnull __lhs, const char* _Nonnull __rhs) __INTRODUCED_IN(22);
 #endif /* !defined(__LP64__) */
 
 __END_DECLS
