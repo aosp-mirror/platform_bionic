@@ -44,4 +44,4 @@
  * take stack traces efficiently. Normal applications should use APIs such as libunwindstack or
  * _Unwind_Backtrace.
  */
-extern "C" size_t android_unsafe_frame_pointer_chase(uintptr_t* buf, size_t num_entries);
+extern "C" size_t android_unsafe_frame_pointer_chase(uintptr_t* _Nonnull buf, size_t num_entries);
