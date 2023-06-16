@@ -39,6 +39,12 @@
 
 __BEGIN_DECLS
 
+/* If we just use void* in the typedef, the compiler exposes that in error messages. */
+struct __timezone_t;
+
+/** The `timezone_t` type that represents a time zone. */
+typedef struct __timezone_t* timezone_t;
+
 /** Divisor to compute seconds from the result of a call to clock(). */
 #define CLOCKS_PER_SEC 1000000
 
@@ -139,9 +145,22 @@ double difftime(time_t __lhs, time_t __rhs);
  * [mktime(3)](http://man7.org/linux/man-pages/man3/mktime.3p.html) converts
  * broken-down time `tm` into the number of seconds since the Unix epoch.
  *
+ * See tzset() for details of how the time zone is set, and mktime_rz()
+ * for an alternative.
+ *
  * Returns the time in seconds on success, and returns -1 and sets `errno` on failure.
  */
 time_t mktime(struct tm* _Nonnull __tm);
+
+/**
+ * mktime_z(3) converts broken-down time `tm` into the number of seconds
+ * since the Unix epoch, assuming the given time zone.
+ *
+ * Returns the time in seconds on success, and returns -1 and sets `errno` on failure.
+ *
+ * Available since API level 35.
+ */
+time_t mktime_z(timezone_t _Nonnull __tz, struct tm* _Nonnull __tm) __INTRODUCED_IN(35);
 
 /**
  * [localtime(3)](http://man7.org/linux/man-pages/man3/localtime.3p.html) converts
@@ -159,9 +178,23 @@ struct tm* _Nullable localtime(const time_t* _Nonnull __t);
  * the number of seconds since the Unix epoch in `t` to a broken-down time.
  * That broken-down time will be written to the given struct `tm`.
  *
+ * See tzset() for details of how the time zone is set, and localtime_rz()
+ * for an alternative.
+ *
  * Returns a pointer to a broken-down time on success, and returns null and sets `errno` on failure.
  */
 struct tm* _Nullable localtime_r(const time_t* _Nonnull __t, struct tm* _Nonnull __tm);
+
+/**
+ * localtime_rz(3) converts the number of seconds since the Unix epoch in
+ * `t` to a broken-down time, assuming the given time zone. That broken-down
+ * time will be written to the given struct `tm`.
+ *
+ * Returns a pointer to a broken-down time on success, and returns null and sets `errno` on failure.
+ *
+ * Available since API level 35.
+ */
+struct tm* _Nullable localtime_rz(timezone_t _Nonnull __tz, const time_t* _Nonnull __t, struct tm* _Nonnull __tm) __INTRODUCED_IN(35);
 
 /**
  * Inverse of localtime().
@@ -246,8 +279,32 @@ char* _Nullable ctime_r(const time_t* _Nonnull __t, char* _Nonnull __buf);
 /**
  * [tzset(3)](http://man7.org/linux/man-pages/man3/tzset.3.html) tells
  * libc that the time zone has changed.
+ *
+ * Android looks at both the system property `persist.sys.timezone` and the
+ * environment variable `TZ`. The former is the device's current time zone
+ * as shown in Settings, while the latter is usually unset but can be used
+ * to override the global setting. This is a bad idea outside of unit tests
+ * or single-threaded programs because it's inherently thread-unsafe.
+ * See tzalloc(), localtime_rz(), mktime_z(), and tzfree() for an
+ * alternative.
  */
 void tzset(void);
+
+/**
+ * tzalloc(3) allocates a time zone corresponding to the given Olson id.
+ *
+ * Returns a time zone object on success, and returns NULL and sets `errno` on failure.
+ *
+ * Available since API level 35.
+ */
+timezone_t _Nullable tzalloc(const char* _Nullable __id) __INTRODUCED_IN(35);
+
+/**
+ * tzfree(3) frees a time zone object returned by tzalloc().
+ *
+ * Available since API level 35.
+ */
+void tzfree(timezone_t _Nullable __tz) __INTRODUCED_IN(35);
 
 /**
  * [clock(3)](http://man7.org/linux/man-pages/man3/clock.3.html)
