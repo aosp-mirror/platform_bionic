@@ -28,6 +28,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "private.h"
+
 #include <ctype.h>
 #include <errno.h>
 #include <limits.h>
@@ -37,7 +39,6 @@
 #include <time.h>
 
 #include "localedef.h"
-#include "private.h"
 #include "tzfile.h"
 
 // Android: ignore OpenBSD's DEF_WEAK() stuff.
