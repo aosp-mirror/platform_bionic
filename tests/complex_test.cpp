@@ -14,20 +14,11 @@
  * limitations under the License.
  */
 
-#if defined(__BIONIC_LP32_USE_LONG_DOUBLE)
-#define COMPLEX_TEST complex_h_force_long_double
-#else
-#define COMPLEX_TEST complex_h
-#endif
-
 // This file is compiled against both glibc and bionic, and our complex.h
 // depends on bionic-specific macros, so hack around that.
 #include <sys/cdefs.h>
 #if !defined(__INTRODUCED_IN)
 #define __INTRODUCED_IN(x)
-#define __INTRODUCED_IN_32(x)
-#define __INTRODUCED_IN_64(x)
-#define __RENAME_LDBL(a,b,c)
 #endif
 
 // libc++ actively gets in the way of including <complex.h> from C++, so we
@@ -62,259 +53,259 @@ inline void PrintTo(const long double _Complex& c, std::ostream* os) {
 #include <gtest/gtest.h>
 #pragma pop_macro("I")
 
-TEST(COMPLEX_TEST, cabs) {
+TEST(complex_h, cabs) {
   ASSERT_EQ(0.0, cabs(0));
 }
 
-TEST(COMPLEX_TEST, cabsf) {
+TEST(complex_h, cabsf) {
   ASSERT_EQ(0.0, cabsf(0));
 }
 
-TEST(COMPLEX_TEST, cabsl) {
+TEST(complex_h, cabsl) {
   ASSERT_EQ(0.0, cabsl(0));
 }
 
-TEST(COMPLEX_TEST, cacos) {
+TEST(complex_h, cacos) {
   ASSERT_EQ(M_PI_2, cacos(0.0));
 }
 
-TEST(COMPLEX_TEST, cacosf) {
+TEST(complex_h, cacosf) {
   ASSERT_EQ(static_cast<float>(M_PI_2), cacosf(0.0));
 }
 
-TEST(COMPLEX_TEST, cacosl) {
+TEST(complex_h, cacosl) {
   ASSERT_EQ(M_PI_2l, cacosl(0.0));
 }
 
-TEST(COMPLEX_TEST, cacosh) {
+TEST(complex_h, cacosh) {
   ASSERT_EQ(0.0, cacosh(1.0));
 }
 
-TEST(COMPLEX_TEST, cacoshl) {
+TEST(complex_h, cacoshl) {
   ASSERT_EQ(0.0, cacoshl(1.0));
 }
 
-TEST(COMPLEX_TEST, cacoshf) {
+TEST(complex_h, cacoshf) {
   ASSERT_EQ(0.0, cacoshf(1.0));
 }
 
-TEST(COMPLEX_TEST, carg) {
+TEST(complex_h, carg) {
   ASSERT_EQ(0.0, carg(0));
 }
 
-TEST(COMPLEX_TEST, cargf) {
+TEST(complex_h, cargf) {
   ASSERT_EQ(0.0, cargf(0));
 }
 
-TEST(COMPLEX_TEST, cargl) {
+TEST(complex_h, cargl) {
   ASSERT_EQ(0.0, cargl(0));
 }
 
-TEST(COMPLEX_TEST, casin) {
+TEST(complex_h, casin) {
   ASSERT_EQ(0.0, casin(0));
 }
 
-TEST(COMPLEX_TEST, casinf) {
+TEST(complex_h, casinf) {
   ASSERT_EQ(0.0, casinf(0));
 }
 
-TEST(COMPLEX_TEST, casinl) {
+TEST(complex_h, casinl) {
   ASSERT_EQ(0.0, casinl(0));
 }
 
-TEST(COMPLEX_TEST, casinh) {
+TEST(complex_h, casinh) {
   ASSERT_EQ(0.0, casinh(0));
 }
 
-TEST(COMPLEX_TEST, casinhf) {
+TEST(complex_h, casinhf) {
   ASSERT_EQ(0.0, casinhf(0));
 }
 
-TEST(COMPLEX_TEST, casinhl) {
+TEST(complex_h, casinhl) {
   ASSERT_EQ(0.0, casinhl(0));
 }
 
-TEST(COMPLEX_TEST, catan) {
+TEST(complex_h, catan) {
   ASSERT_EQ(0.0, catan(0));
 }
 
-TEST(COMPLEX_TEST, catanf) {
+TEST(complex_h, catanf) {
   ASSERT_EQ(0.0, catanf(0));
 }
 
-TEST(COMPLEX_TEST, catanl) {
+TEST(complex_h, catanl) {
   ASSERT_EQ(0.0, catanl(0));
 }
 
-TEST(COMPLEX_TEST, catanh) {
+TEST(complex_h, catanh) {
   ASSERT_EQ(0.0, catanh(0));
 }
 
-TEST(COMPLEX_TEST, catanhf) {
+TEST(complex_h, catanhf) {
   ASSERT_EQ(0.0, catanhf(0));
 }
 
-TEST(COMPLEX_TEST, catanhl) {
+TEST(complex_h, catanhl) {
   ASSERT_EQ(0.0, catanhl(0));
 }
 
-TEST(COMPLEX_TEST, ccos) {
+TEST(complex_h, ccos) {
   ASSERT_EQ(1.0, ccos(0));
 }
 
-TEST(COMPLEX_TEST, ccosf) {
+TEST(complex_h, ccosf) {
   ASSERT_EQ(1.0, ccosf(0));
 }
 
-TEST(COMPLEX_TEST, ccosl) {
+TEST(complex_h, ccosl) {
   ASSERT_EQ(1.0, ccosl(0));
 }
 
-TEST(COMPLEX_TEST, ccosh) {
+TEST(complex_h, ccosh) {
   ASSERT_EQ(1.0, ccosh(0));
 }
 
-TEST(COMPLEX_TEST, ccoshf) {
+TEST(complex_h, ccoshf) {
   ASSERT_EQ(1.0, ccoshf(0));
 }
 
-TEST(COMPLEX_TEST, ccoshl) {
+TEST(complex_h, ccoshl) {
   ASSERT_EQ(1.0, ccoshl(0));
 }
 
-TEST(COMPLEX_TEST, cexp) {
+TEST(complex_h, cexp) {
   ASSERT_EQ(1.0, cexp(0));
 }
 
-TEST(COMPLEX_TEST, cexpf) {
+TEST(complex_h, cexpf) {
   ASSERT_EQ(1.0, cexpf(0));
 }
 
-TEST(COMPLEX_TEST, cexpl) {
+TEST(complex_h, cexpl) {
   ASSERT_EQ(1.0, cexpl(0));
 }
 
-TEST(COMPLEX_TEST, cimag) {
+TEST(complex_h, cimag) {
   ASSERT_EQ(0.0, cimag(0));
 }
 
-TEST(COMPLEX_TEST, cimagf) {
+TEST(complex_h, cimagf) {
   ASSERT_EQ(0.0f, cimagf(0));
 }
 
-TEST(COMPLEX_TEST, cimagl) {
+TEST(complex_h, cimagl) {
   ASSERT_EQ(0.0, cimagl(0));
 }
 
-TEST(COMPLEX_TEST, clog) {
+TEST(complex_h, clog) {
   ASSERT_EQ(0.0, clog(1.0));
 }
 
-TEST(COMPLEX_TEST, clogf) {
+TEST(complex_h, clogf) {
   ASSERT_EQ(0.0f, clogf(1.0f));
 }
 
-TEST(COMPLEX_TEST, clogl) {
+TEST(complex_h, clogl) {
   ASSERT_EQ(0.0L, clogl(1.0L));
 }
 
-TEST(COMPLEX_TEST, conj) {
+TEST(complex_h, conj) {
   ASSERT_EQ(0.0, conj(0));
 }
 
-TEST(COMPLEX_TEST, conjf) {
+TEST(complex_h, conjf) {
   ASSERT_EQ(0.0f, conjf(0));
 }
 
-TEST(COMPLEX_TEST, conjl) {
+TEST(complex_h, conjl) {
   ASSERT_EQ(0.0, conjl(0));
 }
 
-TEST(COMPLEX_TEST, cpow) {
+TEST(complex_h, cpow) {
   ASSERT_EQ(8.0, cpow(2.0, 3.0));
 }
 
-TEST(COMPLEX_TEST, cpowf) {
+TEST(complex_h, cpowf) {
   ASSERT_EQ(8.0f, cpowf(2.0f, 3.0f));
 }
 
-TEST(COMPLEX_TEST, cpowl) {
+TEST(complex_h, cpowl) {
   ASSERT_EQ(8.0L, cpowl(2.0L, 3.0L));
 }
 
-TEST(COMPLEX_TEST, cproj) {
+TEST(complex_h, cproj) {
   ASSERT_EQ(0.0, cproj(0));
 }
 
-TEST(COMPLEX_TEST, cprojf) {
+TEST(complex_h, cprojf) {
   ASSERT_EQ(0.0f, cprojf(0));
 }
 
-TEST(COMPLEX_TEST, cprojl) {
+TEST(complex_h, cprojl) {
   ASSERT_EQ(0.0, cprojl(0));
 }
 
-TEST(COMPLEX_TEST, creal) {
+TEST(complex_h, creal) {
   ASSERT_EQ(2.0, creal(2.0 + 3.0I));
 }
 
-TEST(COMPLEX_TEST, crealf) {
+TEST(complex_h, crealf) {
   ASSERT_EQ(2.0f, crealf(2.0f + 3.0fI));
 }
 
-TEST(COMPLEX_TEST, creall) {
+TEST(complex_h, creall) {
   ASSERT_EQ(2.0, creall(2.0L + 3.0LI));
 }
 
-TEST(COMPLEX_TEST, csin) {
+TEST(complex_h, csin) {
   ASSERT_EQ(0.0, csin(0));
 }
 
-TEST(COMPLEX_TEST, csinf) {
+TEST(complex_h, csinf) {
   ASSERT_EQ(0.0, csinf(0));
 }
 
-TEST(COMPLEX_TEST, csinl) {
+TEST(complex_h, csinl) {
   ASSERT_EQ(0.0, csinl(0));
 }
 
-TEST(COMPLEX_TEST, csinh) {
+TEST(complex_h, csinh) {
   ASSERT_EQ(0.0, csinh(0));
 }
 
-TEST(COMPLEX_TEST, csinhf) {
+TEST(complex_h, csinhf) {
   ASSERT_EQ(0.0, csinhf(0));
 }
 
-TEST(COMPLEX_TEST, csinhl) {
+TEST(complex_h, csinhl) {
   ASSERT_EQ(0.0, csinhl(0));
 }
 
-TEST(COMPLEX_TEST, csqrt) {
+TEST(complex_h, csqrt) {
   ASSERT_EQ(0.0, csqrt(0));
 }
 
-TEST(COMPLEX_TEST, csqrtf) {
+TEST(complex_h, csqrtf) {
   ASSERT_EQ(0.0f, csqrtf(0));
 }
 
-TEST(COMPLEX_TEST, csqrtl) {
+TEST(complex_h, csqrtl) {
   ASSERT_EQ(0.0, csqrtl(0));
 }
 
-TEST(COMPLEX_TEST, ctan) {
+TEST(complex_h, ctan) {
   ASSERT_EQ(0.0, ctan(0));
 }
 
-TEST(COMPLEX_TEST, ctanf) {
+TEST(complex_h, ctanf) {
   ASSERT_EQ(0.0, ctanf(0));
 }
 
-TEST(COMPLEX_TEST, ctanl) {
+TEST(complex_h, ctanl) {
   ASSERT_EQ(0.0, ctanl(0));
 }
 
-TEST(COMPLEX_TEST, ctanh) {
+TEST(complex_h, ctanh) {
   ASSERT_EQ(0.0, ctanh(0));
 
   double complex z;
@@ -335,7 +326,7 @@ TEST(COMPLEX_TEST, ctanh) {
   ASSERT_TRUE(isnan(cimag(z)));
 }
 
-TEST(COMPLEX_TEST, ctanhf) {
+TEST(complex_h, ctanhf) {
   ASSERT_EQ(0.0f, ctanhf(0.0f));
 
   float complex z;
@@ -356,7 +347,7 @@ TEST(COMPLEX_TEST, ctanhf) {
   ASSERT_TRUE(isnan(cimagf(z)));
 }
 
-TEST(COMPLEX_TEST, ctanhl) {
+TEST(complex_h, ctanhl) {
   ASSERT_EQ(0.0L, ctanhl(0.0L));
 
   long double complex z;

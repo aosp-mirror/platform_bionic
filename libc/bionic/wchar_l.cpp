@@ -41,14 +41,6 @@ int wcscoll_l(const wchar_t* ws1, const wchar_t* ws2, locale_t) {
   return wcscoll(ws1, ws2);
 }
 
-size_t wcsftime_l(wchar_t* buf, size_t n, const wchar_t* fmt, const struct tm* tm, locale_t) {
-  return wcsftime(buf, n, fmt, tm);
-}
-
-size_t wcsxfrm_l(wchar_t* dst, const wchar_t* src, size_t n, locale_t) {
-  return wcsxfrm(dst, src, n);
-}
-
 double wcstod_l(const wchar_t* s, wchar_t** end_ptr, locale_t) {
   return wcstod(s, end_ptr);
 }
@@ -75,4 +67,8 @@ unsigned long long wcstoull_l(const wchar_t* s, wchar_t** end_ptr, int base, loc
 
 long double wcstold_l(const wchar_t* s, wchar_t** end_ptr, locale_t) {
   return wcstold(s, end_ptr);
+}
+
+size_t wcsxfrm_l(wchar_t* dst, const wchar_t* src, size_t n, locale_t) {
+  return wcsxfrm(dst, src, n);
 }
