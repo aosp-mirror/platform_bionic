@@ -73,9 +73,12 @@ TEST(sys_shm, shmctl_failure) {
 }
 
 TEST(sys_shm, shmdt_failure) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
   errno = 0;
   ASSERT_EQ(-1, shmdt(nullptr));
   ASSERT_TRUE(errno == EINVAL || errno == ENOSYS);
+#pragma clang diagnostic pop
 }
 
 TEST(sys_shm, shmget_failure) {

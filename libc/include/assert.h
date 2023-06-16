@@ -64,7 +64,8 @@
 # endif
 #endif
 
-#if !defined(__cplusplus) && __STDC_VERSION__ >= 201112L
+/* `static_assert` is a keyword in C++11 and C23; C11 had `_Static_assert` instead. */
+#if !defined(__cplusplus) && (__STDC_VERSION__ >= 201112L && __STDC_VERSION__ < 202311L)
 # undef static_assert
 # define static_assert _Static_assert
 #endif

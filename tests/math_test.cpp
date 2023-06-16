@@ -48,12 +48,6 @@ template<typename T> inline int test_capture_isinf(const T in) {
 }
 }
 
-#if defined(__BIONIC_LP32_USE_LONG_DOUBLE)
-#define MATH_TEST math_h_force_long_double
-#else
-#define MATH_TEST math_h
-#endif
-
 #include "math_data_test.h"
 
 #include <gtest/gtest.h>
@@ -103,7 +97,7 @@ static long double ldouble_subnormal() {
   return u.e;
 }
 
-TEST(MATH_TEST, fpclassify) {
+TEST(math_h, fpclassify) {
   ASSERT_EQ(FP_INFINITE, fpclassify(INFINITY));
   ASSERT_EQ(FP_INFINITE, fpclassify(HUGE_VALF));
   ASSERT_EQ(FP_INFINITE, fpclassify(-HUGE_VALF));
@@ -129,7 +123,7 @@ TEST(MATH_TEST, fpclassify) {
   ASSERT_EQ(FP_ZERO, fpclassify(0.0L));
 }
 
-TEST(MATH_TEST, isfinite) {
+TEST(math_h, isfinite) {
   ASSERT_TRUE(test_capture_isfinite(123.0f));
   ASSERT_TRUE(test_capture_isfinite(123.0));
   ASSERT_TRUE(test_capture_isfinite(123.0L));
@@ -141,7 +135,7 @@ TEST(MATH_TEST, isfinite) {
   ASSERT_FALSE(test_capture_isfinite(-HUGE_VALL));
 }
 
-TEST(MATH_TEST, isinf) {
+TEST(math_h, isinf) {
   ASSERT_FALSE(test_capture_isinf(123.0f));
   ASSERT_FALSE(test_capture_isinf(123.0));
   ASSERT_FALSE(test_capture_isinf(123.0L));
@@ -153,7 +147,7 @@ TEST(MATH_TEST, isinf) {
   ASSERT_TRUE(test_capture_isinf(-HUGE_VALL));
 }
 
-TEST(MATH_TEST, isnan) {
+TEST(math_h, isnan) {
   ASSERT_FALSE(test_capture_isnan(123.0f));
   ASSERT_FALSE(test_capture_isnan(123.0));
   ASSERT_FALSE(test_capture_isnan(123.0L));
@@ -162,7 +156,7 @@ TEST(MATH_TEST, isnan) {
   ASSERT_TRUE(test_capture_isnan(nanl("")));
 }
 
-TEST(MATH_TEST, isnormal) {
+TEST(math_h, isnormal) {
   ASSERT_TRUE(isnormal(123.0f));
   ASSERT_TRUE(isnormal(123.0));
   ASSERT_TRUE(isnormal(123.0L));
@@ -172,7 +166,7 @@ TEST(MATH_TEST, isnormal) {
 }
 
 // TODO: isgreater, isgreaterequals, isless, islessequal, islessgreater, isunordered
-TEST(MATH_TEST, signbit) {
+TEST(math_h, signbit) {
   ASSERT_EQ(0, test_capture_signbit(0.0f));
   ASSERT_EQ(0, test_capture_signbit(0.0));
   ASSERT_EQ(0, test_capture_signbit(0.0L));
@@ -192,7 +186,7 @@ extern "C" int __fpclassifyd(double);
 extern "C" int __fpclassifyf(float);
 extern "C" int __fpclassifyl(long double);
 
-TEST(MATH_TEST, __fpclassify) {
+TEST(math_h, __fpclassify) {
   ASSERT_EQ(FP_INFINITE, __fpclassify(HUGE_VAL));
   ASSERT_EQ(FP_INFINITE, __fpclassify(-HUGE_VAL));
   ASSERT_EQ(FP_NAN, __fpclassify(nan("")));
@@ -201,7 +195,7 @@ TEST(MATH_TEST, __fpclassify) {
   ASSERT_EQ(FP_ZERO, __fpclassify(0.0));
 }
 
-TEST(MATH_TEST, __fpclassifyd) {
+TEST(math_h, __fpclassifyd) {
 #if defined(__GLIBC__) || defined(ANDROID_HOST_MUSL)
 #define __fpclassifyd __fpclassify
 #endif
@@ -213,7 +207,7 @@ TEST(MATH_TEST, __fpclassifyd) {
   ASSERT_EQ(FP_ZERO, __fpclassifyd(0.0));
 }
 
-TEST(MATH_TEST, __fpclassifyf) {
+TEST(math_h, __fpclassifyf) {
   ASSERT_EQ(FP_INFINITE, __fpclassifyf(HUGE_VALF));
   ASSERT_EQ(FP_INFINITE, __fpclassifyf(-HUGE_VALF));
   ASSERT_EQ(FP_NAN, __fpclassifyf(nanf("")));
@@ -222,7 +216,7 @@ TEST(MATH_TEST, __fpclassifyf) {
   ASSERT_EQ(FP_ZERO, __fpclassifyf(0.0f));
 }
 
-TEST(MATH_TEST, __fpclassifyl) {
+TEST(math_h, __fpclassifyl) {
   EXPECT_EQ(FP_INFINITE, __fpclassifyl(HUGE_VALL));
   EXPECT_EQ(FP_INFINITE, __fpclassifyl(-HUGE_VALL));
   EXPECT_EQ(FP_NAN, __fpclassifyl(nanl("")));
@@ -231,7 +225,7 @@ TEST(MATH_TEST, __fpclassifyl) {
   EXPECT_EQ(FP_ZERO, __fpclassifyl(0.0L));
 }
 
-TEST(MATH_TEST, finitef) {
+TEST(math_h, finitef) {
   ASSERT_TRUE(finitef(123.0f));
   ASSERT_FALSE(finitef(HUGE_VALF));
   ASSERT_FALSE(finitef(-HUGE_VALF));
@@ -244,7 +238,7 @@ extern "C" int isfinitef(float);
 extern "C" int __isfinitel(long double);
 extern "C" int isfinitel(long double);
 
-TEST(MATH_TEST, __isfinite) {
+TEST(math_h, __isfinite) {
 #if defined(__GLIBC__)
 #define __isfinite __finite
 #elif defined(ANDROID_HOST_MUSL)
@@ -255,7 +249,7 @@ TEST(MATH_TEST, __isfinite) {
   ASSERT_FALSE(__isfinite(-HUGE_VAL));
 }
 
-TEST(MATH_TEST, __isfinitef) {
+TEST(math_h, __isfinitef) {
 #if defined(__GLIBC__)
 #define __isfinitef __finitef
 #elif defined(ANDROID_HOST_MUSL)
@@ -266,7 +260,7 @@ TEST(MATH_TEST, __isfinitef) {
   ASSERT_FALSE(__isfinitef(-HUGE_VALF));
 }
 
-TEST(MATH_TEST, isfinitef) {
+TEST(math_h, isfinitef) {
 #if defined(__GLIBC__)
 #define isfinitef __finitef
 #elif defined(ANDROID_HOST_MUSL)
@@ -277,7 +271,7 @@ TEST(MATH_TEST, isfinitef) {
   ASSERT_FALSE(isfinitef(-HUGE_VALF));
 }
 
-TEST(MATH_TEST, __isfinitel) {
+TEST(math_h, __isfinitel) {
 #if defined(__GLIBC__)
 #define __isfinitel __finitel
 #elif defined(ANDROID_HOST_MUSL)
@@ -288,7 +282,7 @@ TEST(MATH_TEST, __isfinitel) {
   ASSERT_FALSE(__isfinitel(-HUGE_VALL));
 }
 
-TEST(MATH_TEST, isfinitel) {
+TEST(math_h, isfinitel) {
 #if defined(__GLIBC__)
 #define isfinitel __finitel
 #elif defined(ANDROID_HOST_MUSL)
@@ -299,13 +293,13 @@ TEST(MATH_TEST, isfinitel) {
   ASSERT_FALSE(isfinitel(-HUGE_VALL));
 }
 
-TEST(MATH_TEST, finite) {
+TEST(math_h, finite) {
   ASSERT_TRUE(finite(123.0));
   ASSERT_FALSE(finite(HUGE_VAL));
   ASSERT_FALSE(finite(-HUGE_VAL));
 }
 
-TEST(MATH_TEST, isinf_function) {
+TEST(math_h, isinf_function) {
   // The isinf macro deals with all three types; the isinf function is for doubles.
   ASSERT_FALSE((isinf)(123.0));
   ASSERT_TRUE((isinf)(HUGE_VAL));
@@ -319,7 +313,7 @@ extern "C" int isinff(float);
 extern "C" int __isinfl(long double);
 extern "C" int isinfl(long double);
 
-TEST(MATH_TEST, __isinf) {
+TEST(math_h, __isinf) {
 #if defined(ANDROID_HOST_MUSL)
 #define __isinf isinf
 #endif
@@ -328,7 +322,7 @@ TEST(MATH_TEST, __isinf) {
   ASSERT_TRUE(__isinf(-HUGE_VAL));
 }
 
-TEST(MATH_TEST, __isinff) {
+TEST(math_h, __isinff) {
 #if defined(ANDROID_HOST_MUSL)
 #define __isinff isinf
 #endif
@@ -337,7 +331,7 @@ TEST(MATH_TEST, __isinff) {
   ASSERT_TRUE(__isinff(-HUGE_VALF));
 }
 
-TEST(MATH_TEST, isinff) {
+TEST(math_h, isinff) {
 #if defined(ANDROID_HOST_MUSL)
 #define isinff isinf
 #endif
@@ -346,7 +340,7 @@ TEST(MATH_TEST, isinff) {
   ASSERT_TRUE(isinff(-HUGE_VALF));
 }
 
-TEST(MATH_TEST, __isinfl) {
+TEST(math_h, __isinfl) {
 #if defined(ANDROID_HOST_MUSL)
 #define __isinfl isinf
 #endif
@@ -355,7 +349,7 @@ TEST(MATH_TEST, __isinfl) {
   ASSERT_TRUE(__isinfl(-HUGE_VALL));
 }
 
-TEST(MATH_TEST, isinfl) {
+TEST(math_h, isinfl) {
 #if defined(ANDROID_HOST_MUSL)
 #define isinfl isinf
 #endif
@@ -364,7 +358,7 @@ TEST(MATH_TEST, isinfl) {
   ASSERT_TRUE(isinfl(-HUGE_VALL));
 }
 
-TEST(MATH_TEST, isnan_function) {
+TEST(math_h, isnan_function) {
   // The isnan macro deals with all three types; the isnan function is for doubles.
   ASSERT_FALSE((isnan)(123.0));
   ASSERT_TRUE((isnan)(nan("")));
@@ -377,7 +371,7 @@ extern "C" int isnanf(float);
 extern "C" int __isnanl(long double);
 extern "C" int isnanl(long double);
 
-TEST(MATH_TEST, __isnan) {
+TEST(math_h, __isnan) {
 #if defined(ANDROID_HOST_MUSL)
 #define __isnan isnan
 #endif
@@ -385,7 +379,7 @@ TEST(MATH_TEST, __isnan) {
   ASSERT_TRUE(__isnan(nan("")));
 }
 
-TEST(MATH_TEST, __isnanf) {
+TEST(math_h, __isnanf) {
 #if defined(ANDROID_HOST_MUSL)
 #define __isnanf isnan
 #endif
@@ -393,7 +387,7 @@ TEST(MATH_TEST, __isnanf) {
   ASSERT_TRUE(__isnanf(nanf("")));
 }
 
-TEST(MATH_TEST, isnanf) {
+TEST(math_h, isnanf) {
 #if defined(ANDROID_HOST_MUSL)
 #define isnanf isnan
 #endif
@@ -401,7 +395,7 @@ TEST(MATH_TEST, isnanf) {
   ASSERT_TRUE(isnanf(nanf("")));
 }
 
-TEST(MATH_TEST, __isnanl) {
+TEST(math_h, __isnanl) {
 #if defined(ANDROID_HOST_MUSL)
 #define __isnanl isnan
 #endif
@@ -409,7 +403,7 @@ TEST(MATH_TEST, __isnanl) {
   ASSERT_TRUE(__isnanl(nanl("")));
 }
 
-TEST(MATH_TEST, isnanl) {
+TEST(math_h, isnanl) {
 #if defined(ANDROID_HOST_MUSL)
 #define isnanl isnan
 #endif
@@ -424,7 +418,7 @@ extern "C" int isnormalf(float);
 extern "C" int __isnormall(long double);
 extern "C" int isnormall(long double);
 
-TEST(MATH_TEST, __isnormal) {
+TEST(math_h, __isnormal) {
 #if defined(__BIONIC__)
   ASSERT_TRUE(__isnormal(123.0));
   ASSERT_FALSE(__isnormal(double_subnormal()));
@@ -433,7 +427,7 @@ TEST(MATH_TEST, __isnormal) {
 #endif // __BIONIC__
 }
 
-TEST(MATH_TEST, __isnormalf) {
+TEST(math_h, __isnormalf) {
 #if defined(__BIONIC__)
   ASSERT_TRUE(__isnormalf(123.0f));
   ASSERT_FALSE(__isnormalf(float_subnormal()));
@@ -442,7 +436,7 @@ TEST(MATH_TEST, __isnormalf) {
 #endif // __BIONIC__
 }
 
-TEST(MATH_TEST, isnormalf) {
+TEST(math_h, isnormalf) {
 #if defined(__BIONIC__)
   ASSERT_TRUE(isnormalf(123.0f));
   ASSERT_FALSE(isnormalf(float_subnormal()));
@@ -451,7 +445,7 @@ TEST(MATH_TEST, isnormalf) {
 #endif // __BIONIC__
 }
 
-TEST(MATH_TEST, __isnormall) {
+TEST(math_h, __isnormall) {
 #if defined(__BIONIC__)
   ASSERT_TRUE(__isnormall(123.0L));
   ASSERT_FALSE(__isnormall(ldouble_subnormal()));
@@ -460,7 +454,7 @@ TEST(MATH_TEST, __isnormall) {
 #endif // __BIONIC__
 }
 
-TEST(MATH_TEST, isnormall) {
+TEST(math_h, isnormall) {
 #if defined(__BIONIC__)
   ASSERT_TRUE(isnormall(123.0L));
   ASSERT_FALSE(isnormall(ldouble_subnormal()));
@@ -474,370 +468,370 @@ extern "C" int __signbit(double);
 extern "C" int __signbitf(float);
 extern "C" int __signbitl(long double);
 
-TEST(MATH_TEST, __signbit) {
+TEST(math_h, __signbit) {
   ASSERT_EQ(0, __signbit(0.0));
   ASSERT_EQ(0, __signbit(1.0));
   ASSERT_NE(0, __signbit(-1.0));
 }
 
-TEST(MATH_TEST, __signbitf) {
+TEST(math_h, __signbitf) {
   ASSERT_EQ(0, __signbitf(0.0f));
   ASSERT_EQ(0, __signbitf(1.0f));
   ASSERT_NE(0, __signbitf(-1.0f));
 }
 
-TEST(MATH_TEST, __signbitl) {
+TEST(math_h, __signbitl) {
   ASSERT_EQ(0L, __signbitl(0.0L));
   ASSERT_EQ(0L, __signbitl(1.0L));
   ASSERT_NE(0L, __signbitl(-1.0L));
 }
 
-TEST(MATH_TEST, acos) {
+TEST(math_h, acos) {
   ASSERT_DOUBLE_EQ(M_PI/2.0, acos(0.0));
 }
 
-TEST(MATH_TEST, acosf) {
+TEST(math_h, acosf) {
   ASSERT_FLOAT_EQ(static_cast<float>(M_PI)/2.0f, acosf(0.0f));
 }
 
-TEST(MATH_TEST, acosl) {
+TEST(math_h, acosl) {
   ASSERT_DOUBLE_EQ(M_PI/2.0L, acosl(0.0L));
 }
 
-TEST(MATH_TEST, asin) {
+TEST(math_h, asin) {
   ASSERT_DOUBLE_EQ(0.0, asin(0.0));
 }
 
-TEST(MATH_TEST, asinf) {
+TEST(math_h, asinf) {
   ASSERT_FLOAT_EQ(0.0f, asinf(0.0f));
 }
 
-TEST(MATH_TEST, asinl) {
+TEST(math_h, asinl) {
   ASSERT_DOUBLE_EQ(0.0L, asinl(0.0L));
 }
 
-TEST(MATH_TEST, atan) {
+TEST(math_h, atan) {
   ASSERT_DOUBLE_EQ(0.0, atan(0.0));
 }
 
-TEST(MATH_TEST, atanf) {
+TEST(math_h, atanf) {
   ASSERT_FLOAT_EQ(0.0f, atanf(0.0f));
 }
 
-TEST(MATH_TEST, atanl) {
+TEST(math_h, atanl) {
   ASSERT_DOUBLE_EQ(0.0L, atanl(0.0L));
 }
 
-TEST(MATH_TEST, atan2) {
+TEST(math_h, atan2) {
   ASSERT_DOUBLE_EQ(0.0, atan2(0.0, 0.0));
 }
 
-TEST(MATH_TEST, atan2f) {
+TEST(math_h, atan2f) {
   ASSERT_FLOAT_EQ(0.0f, atan2f(0.0f, 0.0f));
 }
 
-TEST(MATH_TEST, atan2l) {
+TEST(math_h, atan2l) {
   ASSERT_DOUBLE_EQ(0.0L, atan2l(0.0L, 0.0L));
 }
 
-TEST(MATH_TEST, cos) {
+TEST(math_h, cos) {
   ASSERT_DOUBLE_EQ(1.0, cos(0.0));
 }
 
-TEST(MATH_TEST, cosf) {
+TEST(math_h, cosf) {
   ASSERT_FLOAT_EQ(1.0f, cosf(0.0f));
 }
 
-TEST(MATH_TEST, cosl) {
+TEST(math_h, cosl) {
   ASSERT_DOUBLE_EQ(1.0L, cosl(0.0L));
 }
 
-TEST(MATH_TEST, sin) {
+TEST(math_h, sin) {
   ASSERT_DOUBLE_EQ(0.0, sin(0.0));
 }
 
-TEST(MATH_TEST, sinf) {
+TEST(math_h, sinf) {
   ASSERT_FLOAT_EQ(0.0f, sinf(0.0f));
 }
 
-TEST(MATH_TEST, sinl) {
+TEST(math_h, sinl) {
   ASSERT_DOUBLE_EQ(0.0L, sinl(0.0L));
 }
 
-TEST(MATH_TEST, sincos) {
+TEST(math_h, sincos) {
   double s, c;
   sincos(0.0, &s, &c);
   ASSERT_DOUBLE_EQ(0.0, s);
   ASSERT_DOUBLE_EQ(1.0, c);
 }
 
-TEST(MATH_TEST, sincosf) {
+TEST(math_h, sincosf) {
   float s, c;
   sincosf(0.0f, &s, &c);
   ASSERT_FLOAT_EQ(0.0f, s);
   ASSERT_FLOAT_EQ(1.0f, c);
 }
 
-TEST(MATH_TEST, sincosl) {
+TEST(math_h, sincosl) {
   long double s, c;
   sincosl(0.0L, &s, &c);
   ASSERT_DOUBLE_EQ(0.0L, s);
   ASSERT_DOUBLE_EQ(1.0L, c);
 }
 
-TEST(MATH_TEST, tan) {
+TEST(math_h, tan) {
   ASSERT_DOUBLE_EQ(0.0, tan(0.0));
 }
 
-TEST(MATH_TEST, tanf) {
+TEST(math_h, tanf) {
   ASSERT_FLOAT_EQ(0.0f, tanf(0.0f));
 }
 
-TEST(MATH_TEST, tanl) {
+TEST(math_h, tanl) {
   ASSERT_DOUBLE_EQ(0.0L, tanl(0.0L));
 }
 
-TEST(MATH_TEST, acosh) {
+TEST(math_h, acosh) {
   ASSERT_DOUBLE_EQ(0.0, acosh(1.0));
 }
 
-TEST(MATH_TEST, acoshf) {
+TEST(math_h, acoshf) {
   ASSERT_FLOAT_EQ(0.0f, acoshf(1.0f));
 }
 
-TEST(MATH_TEST, acoshl) {
+TEST(math_h, acoshl) {
   ASSERT_DOUBLE_EQ(0.0L, acoshl(1.0L));
 }
 
-TEST(MATH_TEST, asinh) {
+TEST(math_h, asinh) {
   ASSERT_DOUBLE_EQ(0.0, asinh(0.0));
 }
 
-TEST(MATH_TEST, asinhf) {
+TEST(math_h, asinhf) {
   ASSERT_FLOAT_EQ(0.0f, asinhf(0.0f));
 }
 
-TEST(MATH_TEST, asinhl) {
+TEST(math_h, asinhl) {
   ASSERT_DOUBLE_EQ(0.0L, asinhl(0.0L));
 }
 
-TEST(MATH_TEST, atanh) {
+TEST(math_h, atanh) {
   ASSERT_DOUBLE_EQ(0.0, atanh(0.0));
 }
 
-TEST(MATH_TEST, atanhf) {
+TEST(math_h, atanhf) {
   ASSERT_FLOAT_EQ(0.0f, atanhf(0.0f));
 }
 
-TEST(MATH_TEST, atanhl) {
+TEST(math_h, atanhl) {
   ASSERT_DOUBLE_EQ(0.0L, atanhl(0.0L));
 }
 
-TEST(MATH_TEST, cosh) {
+TEST(math_h, cosh) {
   ASSERT_DOUBLE_EQ(1.0, cosh(0.0));
 }
 
-TEST(MATH_TEST, coshf) {
+TEST(math_h, coshf) {
   ASSERT_FLOAT_EQ(1.0f, coshf(0.0f));
 }
 
-TEST(MATH_TEST, coshl) {
+TEST(math_h, coshl) {
   ASSERT_DOUBLE_EQ(1.0L, coshl(0.0L));
 }
 
-TEST(MATH_TEST, sinh) {
+TEST(math_h, sinh) {
   ASSERT_DOUBLE_EQ(0.0, sinh(0.0));
 }
 
-TEST(MATH_TEST, sinhf) {
+TEST(math_h, sinhf) {
   ASSERT_FLOAT_EQ(0.0f, sinhf(0.0f));
 }
 
-TEST(MATH_TEST, sinhl) {
+TEST(math_h, sinhl) {
   ASSERT_DOUBLE_EQ(0.0L, sinhl(0.0L));
 }
 
-TEST(MATH_TEST, tanh) {
+TEST(math_h, tanh) {
   ASSERT_DOUBLE_EQ(0.0, tanh(0.0));
 }
 
-TEST(MATH_TEST, tanhf) {
+TEST(math_h, tanhf) {
   ASSERT_FLOAT_EQ(0.0f, tanhf(0.0f));
 }
 
-TEST(MATH_TEST, tanhl) {
+TEST(math_h, tanhl) {
   ASSERT_DOUBLE_EQ(0.0L, tanhl(0.0L));
 }
 
-TEST(MATH_TEST, log) {
+TEST(math_h, log) {
   ASSERT_DOUBLE_EQ(1.0, log(M_E));
 }
 
-TEST(MATH_TEST, logf) {
+TEST(math_h, logf) {
   ASSERT_FLOAT_EQ(1.0f, logf(static_cast<float>(M_E)));
 }
 
-TEST(MATH_TEST, logl) {
+TEST(math_h, logl) {
   ASSERT_DOUBLE_EQ(1.0L, logl(M_E));
 }
 
-TEST(MATH_TEST, log2) {
+TEST(math_h, log2) {
   ASSERT_DOUBLE_EQ(12.0, log2(4096.0));
 }
 
-TEST(MATH_TEST, log2f) {
+TEST(math_h, log2f) {
   ASSERT_FLOAT_EQ(12.0f, log2f(4096.0f));
 }
 
-TEST(MATH_TEST, log2l) {
+TEST(math_h, log2l) {
   ASSERT_DOUBLE_EQ(12.0L, log2l(4096.0L));
 }
 
-TEST(MATH_TEST, log10) {
+TEST(math_h, log10) {
   ASSERT_DOUBLE_EQ(3.0, log10(1000.0));
 }
 
-TEST(MATH_TEST, log10f) {
+TEST(math_h, log10f) {
   ASSERT_FLOAT_EQ(3.0f, log10f(1000.0f));
 }
 
-TEST(MATH_TEST, log10l) {
+TEST(math_h, log10l) {
   ASSERT_DOUBLE_EQ(3.0L, log10l(1000.0L));
 }
 
-TEST(MATH_TEST, cbrt) {
+TEST(math_h, cbrt) {
   ASSERT_DOUBLE_EQ(3.0, cbrt(27.0));
 }
 
-TEST(MATH_TEST, cbrtf) {
+TEST(math_h, cbrtf) {
   ASSERT_FLOAT_EQ(3.0f, cbrtf(27.0f));
 }
 
-TEST(MATH_TEST, cbrtl) {
+TEST(math_h, cbrtl) {
   ASSERT_DOUBLE_EQ(3.0L, cbrtl(27.0L));
 }
 
-TEST(MATH_TEST, sqrt) {
+TEST(math_h, sqrt) {
   ASSERT_DOUBLE_EQ(2.0, sqrt(4.0));
 }
 
-TEST(MATH_TEST, sqrtf) {
+TEST(math_h, sqrtf) {
   ASSERT_FLOAT_EQ(2.0f, sqrtf(4.0f));
 }
 
-TEST(MATH_TEST, sqrtl) {
+TEST(math_h, sqrtl) {
   ASSERT_DOUBLE_EQ(2.0L, sqrtl(4.0L));
 }
 
-TEST(MATH_TEST, exp) {
+TEST(math_h, exp) {
   ASSERT_DOUBLE_EQ(1.0, exp(0.0));
   ASSERT_DOUBLE_EQ(M_E, exp(1.0));
 }
 
-TEST(MATH_TEST, expf) {
+TEST(math_h, expf) {
   ASSERT_FLOAT_EQ(1.0f, expf(0.0f));
   ASSERT_FLOAT_EQ(static_cast<float>(M_E), expf(1.0f));
 }
 
-TEST(MATH_TEST, expl) {
+TEST(math_h, expl) {
   ASSERT_DOUBLE_EQ(1.0L, expl(0.0L));
   ASSERT_DOUBLE_EQ(M_E, expl(1.0L));
 }
 
-TEST(MATH_TEST, exp2) {
+TEST(math_h, exp2) {
   ASSERT_DOUBLE_EQ(8.0, exp2(3.0));
 }
 
-TEST(MATH_TEST, exp2f) {
+TEST(math_h, exp2f) {
   ASSERT_FLOAT_EQ(8.0f, exp2f(3.0f));
 }
 
-TEST(MATH_TEST, exp2l) {
+TEST(math_h, exp2l) {
   ASSERT_DOUBLE_EQ(8.0L, exp2l(3.0L));
 }
 
-TEST(MATH_TEST, expm1) {
+TEST(math_h, expm1) {
   ASSERT_DOUBLE_EQ(M_E - 1.0, expm1(1.0));
 }
 
-TEST(MATH_TEST, expm1f) {
+TEST(math_h, expm1f) {
   ASSERT_FLOAT_EQ(static_cast<float>(M_E) - 1.0f, expm1f(1.0f));
 }
 
-TEST(MATH_TEST, expm1l) {
+TEST(math_h, expm1l) {
   ASSERT_DOUBLE_EQ(M_E - 1.0L, expm1l(1.0L));
 }
 
-TEST(MATH_TEST, pow) {
+TEST(math_h, pow) {
   ASSERT_TRUE(isnan(pow(nan(""), 3.0)));
   ASSERT_DOUBLE_EQ(1.0, (pow(1.0, nan(""))));
   ASSERT_TRUE(isnan(pow(2.0, nan(""))));
   ASSERT_DOUBLE_EQ(8.0, pow(2.0, 3.0));
 }
 
-TEST(MATH_TEST, powf) {
+TEST(math_h, powf) {
   ASSERT_TRUE(isnanf(powf(nanf(""), 3.0f)));
   ASSERT_FLOAT_EQ(1.0f, (powf(1.0f, nanf(""))));
   ASSERT_TRUE(isnanf(powf(2.0f, nanf(""))));
   ASSERT_FLOAT_EQ(8.0f, powf(2.0f, 3.0f));
 }
 
-TEST(MATH_TEST, powl) {
+TEST(math_h, powl) {
   ASSERT_TRUE(__isnanl(powl(nanl(""), 3.0L)));
   ASSERT_DOUBLE_EQ(1.0L, (powl(1.0L, nanl(""))));
   ASSERT_TRUE(__isnanl(powl(2.0L, nanl(""))));
   ASSERT_DOUBLE_EQ(8.0L, powl(2.0L, 3.0L));
 }
 
-TEST(MATH_TEST, ceil) {
+TEST(math_h, ceil) {
   ASSERT_DOUBLE_EQ(1.0, ceil(0.9));
 }
 
-TEST(MATH_TEST, ceilf) {
+TEST(math_h, ceilf) {
   ASSERT_FLOAT_EQ(1.0f, ceilf(0.9f));
 }
 
-TEST(MATH_TEST, ceill) {
+TEST(math_h, ceill) {
   ASSERT_DOUBLE_EQ(1.0L, ceill(0.9L));
 }
 
-TEST(MATH_TEST, floor) {
+TEST(math_h, floor) {
   ASSERT_DOUBLE_EQ(1.0, floor(1.1));
 }
 
-TEST(MATH_TEST, floorf) {
+TEST(math_h, floorf) {
   ASSERT_FLOAT_EQ(1.0f, floorf(1.1f));
 }
 
-TEST(MATH_TEST, floorl) {
+TEST(math_h, floorl) {
   ASSERT_DOUBLE_EQ(1.0L, floorl(1.1L));
 }
 
-TEST(MATH_TEST, fabs) {
+TEST(math_h, fabs) {
   ASSERT_DOUBLE_EQ(1.0, fabs(-1.0));
 }
 
-TEST(MATH_TEST, fabsf) {
+TEST(math_h, fabsf) {
   ASSERT_FLOAT_EQ(1.0f, fabsf(-1.0f));
 }
 
-TEST(MATH_TEST, fabsl) {
+TEST(math_h, fabsl) {
   ASSERT_DOUBLE_EQ(1.0L, fabsl(-1.0L));
 }
 
-TEST(MATH_TEST, ldexp) {
+TEST(math_h, ldexp) {
   ASSERT_DOUBLE_EQ(16.0, ldexp(2.0, 3.0));
 }
 
-TEST(MATH_TEST, ldexpf) {
+TEST(math_h, ldexpf) {
   ASSERT_FLOAT_EQ(16.0f, ldexpf(2.0f, 3.0f));
 }
 
-TEST(MATH_TEST, ldexpl) {
+TEST(math_h, ldexpl) {
   ASSERT_DOUBLE_EQ(16.0L, ldexpl(2.0L, 3.0));
 }
 
-TEST(MATH_TEST, fmod) {
+TEST(math_h, fmod) {
   ASSERT_DOUBLE_EQ(2.0, fmod(12.0, 10.0));
 
   // If x is an infinity, NaN is returned.
@@ -852,7 +846,7 @@ TEST(MATH_TEST, fmod) {
   ASSERT_TRUE(isnan(fmod(3.0, 0.0)));
 }
 
-TEST(MATH_TEST, fmodf) {
+TEST(math_h, fmodf) {
   ASSERT_FLOAT_EQ(2.0f, fmodf(12.0f, 10.0f));
 
   // If x is an infinity, NaN is returned.
@@ -867,7 +861,7 @@ TEST(MATH_TEST, fmodf) {
   ASSERT_TRUE(isnanf(fmodf(3.0f, 0.0f)));
 }
 
-TEST(MATH_TEST, fmodl) {
+TEST(math_h, fmodl) {
   ASSERT_DOUBLE_EQ(2.0L, fmodl(12.0L, 10.0L));
 
   // If x is an infinity, NaN is returned.
@@ -882,7 +876,7 @@ TEST(MATH_TEST, fmodl) {
   ASSERT_TRUE(isnanl(fmodl(3.0L, 0.0L)));
 }
 
-TEST(MATH_TEST, remainder) {
+TEST(math_h, remainder) {
   ASSERT_DOUBLE_EQ(2.0, remainder(12.0, 10.0));
 
   // If x or y is a NaN, NaN is returned.
@@ -897,7 +891,7 @@ TEST(MATH_TEST, remainder) {
   ASSERT_TRUE(isnan(remainder(12.0, 0.0)));
 }
 
-TEST(MATH_TEST, remainderf) {
+TEST(math_h, remainderf) {
   ASSERT_FLOAT_EQ(2.0f, remainderf(12.0f, 10.0f));
 
   // If x or y is a NaN, NaN is returned.
@@ -912,7 +906,7 @@ TEST(MATH_TEST, remainderf) {
   ASSERT_TRUE(isnanf(remainderf(12.0f, 0.0f)));
 }
 
-TEST(MATH_TEST, remainderl) {
+TEST(math_h, remainderl) {
   ASSERT_DOUBLE_EQ(2.0L, remainderl(12.0L, 10.0L));
 
   // If x or y is a NaN, NaN is returned.
@@ -927,63 +921,63 @@ TEST(MATH_TEST, remainderl) {
   ASSERT_TRUE(isnanl(remainderl(12.0L, 0.0L)));
 }
 
-TEST(MATH_TEST, drem) {
+TEST(math_h, drem) {
   ASSERT_DOUBLE_EQ(2.0, drem(12.0, 10.0));
 }
 
-TEST(MATH_TEST, dremf) {
+TEST(math_h, dremf) {
   ASSERT_FLOAT_EQ(2.0f, dremf(12.0f, 10.0f));
 }
 
-TEST(MATH_TEST, fmax) {
+TEST(math_h, fmax) {
   ASSERT_DOUBLE_EQ(12.0, fmax(12.0, 10.0));
   ASSERT_DOUBLE_EQ(12.0, fmax(12.0, nan("")));
   ASSERT_DOUBLE_EQ(12.0, fmax(nan(""), 12.0));
 }
 
-TEST(MATH_TEST, fmaxf) {
+TEST(math_h, fmaxf) {
   ASSERT_FLOAT_EQ(12.0f, fmaxf(12.0f, 10.0f));
   ASSERT_FLOAT_EQ(12.0f, fmaxf(12.0f, nanf("")));
   ASSERT_FLOAT_EQ(12.0f, fmaxf(nanf(""), 12.0f));
 }
 
-TEST(MATH_TEST, fmaxl) {
+TEST(math_h, fmaxl) {
   ASSERT_DOUBLE_EQ(12.0L, fmaxl(12.0L, 10.0L));
   ASSERT_DOUBLE_EQ(12.0L, fmaxl(12.0L, nanl("")));
   ASSERT_DOUBLE_EQ(12.0L, fmaxl(nanl(""), 12.0L));
 }
 
-TEST(MATH_TEST, fmin) {
+TEST(math_h, fmin) {
   ASSERT_DOUBLE_EQ(10.0, fmin(12.0, 10.0));
   ASSERT_DOUBLE_EQ(12.0, fmin(12.0, nan("")));
   ASSERT_DOUBLE_EQ(12.0, fmin(nan(""), 12.0));
 }
 
-TEST(MATH_TEST, fminf) {
+TEST(math_h, fminf) {
   ASSERT_FLOAT_EQ(10.0f, fminf(12.0f, 10.0f));
   ASSERT_FLOAT_EQ(12.0f, fminf(12.0f, nanf("")));
   ASSERT_FLOAT_EQ(12.0f, fminf(nanf(""), 12.0f));
 }
 
-TEST(MATH_TEST, fminl) {
+TEST(math_h, fminl) {
   ASSERT_DOUBLE_EQ(10.0L, fminl(12.0L, 10.0L));
   ASSERT_DOUBLE_EQ(12.0L, fminl(12.0L, nanl("")));
   ASSERT_DOUBLE_EQ(12.0L, fminl(nanl(""), 12.0L));
 }
 
-TEST(MATH_TEST, fma) {
+TEST(math_h, fma) {
   ASSERT_DOUBLE_EQ(10.0, fma(2.0, 3.0, 4.0));
 }
 
-TEST(MATH_TEST, fmaf) {
+TEST(math_h, fmaf) {
   ASSERT_FLOAT_EQ(10.0f, fmaf(2.0f, 3.0f, 4.0f));
 }
 
-TEST(MATH_TEST, fmal) {
+TEST(math_h, fmal) {
   ASSERT_DOUBLE_EQ(10.0L, fmal(2.0L, 3.0L, 4.0L));
 }
 
-TEST(MATH_TEST, hypot) {
+TEST(math_h, hypot) {
   ASSERT_DOUBLE_EQ(5.0, hypot(3.0, 4.0));
 
   // If x or y is an infinity, returns positive infinity.
@@ -997,7 +991,7 @@ TEST(MATH_TEST, hypot) {
   ASSERT_TRUE(isnan(hypot(nan(""), 4.0)));
 }
 
-TEST(MATH_TEST, hypotf) {
+TEST(math_h, hypotf) {
   ASSERT_FLOAT_EQ(5.0f, hypotf(3.0f, 4.0f));
 
   // If x or y is an infinity, returns positive infinity.
@@ -1011,7 +1005,7 @@ TEST(MATH_TEST, hypotf) {
   ASSERT_TRUE(isnanf(hypotf(nanf(""), 4.0f)));
 }
 
-TEST(MATH_TEST, hypotl) {
+TEST(math_h, hypotl) {
   ASSERT_DOUBLE_EQ(5.0L, hypotl(3.0L, 4.0L));
 
   // If x or y is an infinity, returns positive infinity.
@@ -1025,31 +1019,31 @@ TEST(MATH_TEST, hypotl) {
   ASSERT_TRUE(isnanl(hypotl(nanl(""), 4.0L)));
 }
 
-TEST(MATH_TEST, erf) {
+TEST(math_h, erf) {
   ASSERT_DOUBLE_EQ(0.84270079294971489, erf(1.0));
 }
 
-TEST(MATH_TEST, erff) {
+TEST(math_h, erff) {
   ASSERT_FLOAT_EQ(0.84270078f, erff(1.0f));
 }
 
-TEST(MATH_TEST, erfl) {
+TEST(math_h, erfl) {
   ASSERT_DOUBLE_EQ(0.84270079294971489L, erfl(1.0L));
 }
 
-TEST(MATH_TEST, erfc) {
+TEST(math_h, erfc) {
   ASSERT_DOUBLE_EQ(0.15729920705028513, erfc(1.0));
 }
 
-TEST(MATH_TEST, erfcf) {
+TEST(math_h, erfcf) {
   ASSERT_FLOAT_EQ(0.15729921f, erfcf(1.0f));
 }
 
-TEST(MATH_TEST, erfcl) {
+TEST(math_h, erfcl) {
   ASSERT_DOUBLE_EQ(0.15729920705028513L, erfcl(1.0L));
 }
 
-TEST(MATH_TEST, lrint) {
+TEST(math_h, lrint) {
   auto guard = android::base::make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
 
   fesetround(FE_UPWARD); // lrint/lrintf/lrintl obey the rounding mode.
@@ -1071,7 +1065,7 @@ TEST(MATH_TEST, lrint) {
   EXPECT_EQ(1234L, llrintl(1234.01L));
 }
 
-TEST(MATH_TEST, rint) {
+TEST(math_h, rint) {
   auto guard = android::base::make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
 
   fesetround(FE_UPWARD); // rint/rintf/rintl obey the rounding mode.
@@ -1099,7 +1093,7 @@ TEST(MATH_TEST, rint) {
   ASSERT_EQ(1234.0, rintl(1234.01L));
 }
 
-TEST(MATH_TEST, nearbyint) {
+TEST(math_h, nearbyint) {
   auto guard = android::base::make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
   fesetround(FE_UPWARD); // nearbyint/nearbyintf/nearbyintl obey the rounding mode.
   feclearexcept(FE_ALL_EXCEPT); // nearbyint/nearbyintf/nearbyintl don't set the FE_INEXACT flag.
@@ -1126,7 +1120,7 @@ TEST(MATH_TEST, nearbyint) {
   ASSERT_EQ(1234.0, nearbyintl(1234.01L));
 }
 
-TEST(MATH_TEST, lround) {
+TEST(math_h, lround) {
   auto guard = android::base::make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
   fesetround(FE_UPWARD); // lround ignores the rounding mode.
   ASSERT_EQ(1234, lround(1234.01));
@@ -1134,7 +1128,7 @@ TEST(MATH_TEST, lround) {
   ASSERT_EQ(1234, lroundl(1234.01L));
 }
 
-TEST(MATH_TEST, llround) {
+TEST(math_h, llround) {
   auto guard = android::base::make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
   fesetround(FE_UPWARD); // llround ignores the rounding mode.
   ASSERT_EQ(1234L, llround(1234.01));
@@ -1142,7 +1136,7 @@ TEST(MATH_TEST, llround) {
   ASSERT_EQ(1234L, llroundl(1234.01L));
 }
 
-TEST(MATH_TEST, ilogb) {
+TEST(math_h, ilogb) {
   ASSERT_EQ(FP_ILOGB0, ilogb(0.0));
   ASSERT_EQ(FP_ILOGBNAN, ilogb(nan("")));
   ASSERT_EQ(INT_MAX, ilogb(HUGE_VAL));
@@ -1151,7 +1145,7 @@ TEST(MATH_TEST, ilogb) {
   ASSERT_EQ(3, ilogb(10.0));
 }
 
-TEST(MATH_TEST, ilogbf) {
+TEST(math_h, ilogbf) {
   ASSERT_EQ(FP_ILOGB0, ilogbf(0.0f));
   ASSERT_EQ(FP_ILOGBNAN, ilogbf(nanf("")));
   ASSERT_EQ(INT_MAX, ilogbf(HUGE_VALF));
@@ -1160,7 +1154,7 @@ TEST(MATH_TEST, ilogbf) {
   ASSERT_EQ(3, ilogbf(10.0f));
 }
 
-TEST(MATH_TEST, ilogbl) {
+TEST(math_h, ilogbl) {
   ASSERT_EQ(FP_ILOGB0, ilogbl(0.0L));
   ASSERT_EQ(FP_ILOGBNAN, ilogbl(nanl("")));
   ASSERT_EQ(INT_MAX, ilogbl(HUGE_VALL));
@@ -1169,7 +1163,7 @@ TEST(MATH_TEST, ilogbl) {
   ASSERT_EQ(3L, ilogbl(10.0L));
 }
 
-TEST(MATH_TEST, logb) {
+TEST(math_h, logb) {
   ASSERT_EQ(-HUGE_VAL, logb(0.0));
   ASSERT_TRUE(isnan(logb(nan(""))));
   ASSERT_TRUE(isinf(logb(HUGE_VAL)));
@@ -1178,7 +1172,7 @@ TEST(MATH_TEST, logb) {
   ASSERT_EQ(3.0, logb(10.0));
 }
 
-TEST(MATH_TEST, logbf) {
+TEST(math_h, logbf) {
   ASSERT_EQ(-HUGE_VALF, logbf(0.0f));
   ASSERT_TRUE(isnanf(logbf(nanf(""))));
   ASSERT_TRUE(isinff(logbf(HUGE_VALF)));
@@ -1187,7 +1181,7 @@ TEST(MATH_TEST, logbf) {
   ASSERT_EQ(3.0f, logbf(10.0f));
 }
 
-TEST(MATH_TEST, logbl) {
+TEST(math_h, logbl) {
   ASSERT_EQ(-HUGE_VAL, logbl(0.0L));
   ASSERT_TRUE(isnan(logbl(nanl(""))));
   ASSERT_TRUE(isinf(logbl(HUGE_VALL)));
@@ -1196,7 +1190,7 @@ TEST(MATH_TEST, logbl) {
   ASSERT_EQ(3.0L, logbl(10.0L));
 }
 
-TEST(MATH_TEST, log1p) {
+TEST(math_h, log1p) {
   ASSERT_EQ(-HUGE_VAL, log1p(-1.0));
   ASSERT_TRUE(isnan(log1p(nan(""))));
   ASSERT_TRUE(isinf(log1p(HUGE_VAL)));
@@ -1204,7 +1198,7 @@ TEST(MATH_TEST, log1p) {
   ASSERT_DOUBLE_EQ(1.0, log1p(M_E - 1.0));
 }
 
-TEST(MATH_TEST, log1pf) {
+TEST(math_h, log1pf) {
   ASSERT_EQ(-HUGE_VALF, log1pf(-1.0f));
   ASSERT_TRUE(isnanf(log1pf(nanf(""))));
   ASSERT_TRUE(isinff(log1pf(HUGE_VALF)));
@@ -1212,7 +1206,7 @@ TEST(MATH_TEST, log1pf) {
   ASSERT_FLOAT_EQ(1.0f, log1pf(static_cast<float>(M_E) - 1.0f));
 }
 
-TEST(MATH_TEST, log1pl) {
+TEST(math_h, log1pl) {
   ASSERT_EQ(-HUGE_VALL, log1pl(-1.0L));
   ASSERT_TRUE(isnanl(log1pl(nanl(""))));
   ASSERT_TRUE(isinfl(log1pl(HUGE_VALL)));
@@ -1220,25 +1214,25 @@ TEST(MATH_TEST, log1pl) {
   ASSERT_DOUBLE_EQ(1.0L, log1pl(M_E - 1.0L));
 }
 
-TEST(MATH_TEST, fdim) {
+TEST(math_h, fdim) {
   ASSERT_DOUBLE_EQ(0.0, fdim(1.0, 1.0));
   ASSERT_DOUBLE_EQ(1.0, fdim(2.0, 1.0));
   ASSERT_DOUBLE_EQ(0.0, fdim(1.0, 2.0));
 }
 
-TEST(MATH_TEST, fdimf) {
+TEST(math_h, fdimf) {
   ASSERT_FLOAT_EQ(0.0f, fdimf(1.0f, 1.0f));
   ASSERT_FLOAT_EQ(1.0f, fdimf(2.0f, 1.0f));
   ASSERT_FLOAT_EQ(0.0f, fdimf(1.0f, 2.0f));
 }
 
-TEST(MATH_TEST, fdiml) {
+TEST(math_h, fdiml) {
   ASSERT_DOUBLE_EQ(0.0L, fdiml(1.0L, 1.0L));
   ASSERT_DOUBLE_EQ(1.0L, fdiml(2.0L, 1.0L));
   ASSERT_DOUBLE_EQ(0.0L, fdiml(1.0L, 2.0L));
 }
 
-TEST(MATH_TEST, round) {
+TEST(math_h, round) {
   auto guard = android::base::make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
   fesetround(FE_TOWARDZERO); // round ignores the rounding mode and always rounds away from zero.
   ASSERT_DOUBLE_EQ(1.0, round(0.5));
@@ -1250,7 +1244,7 @@ TEST(MATH_TEST, round) {
   ASSERT_DOUBLE_EQ(-HUGE_VAL, round(-HUGE_VAL));
 }
 
-TEST(MATH_TEST, roundf) {
+TEST(math_h, roundf) {
   auto guard = android::base::make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
   fesetround(FE_TOWARDZERO); // roundf ignores the rounding mode and always rounds away from zero.
   ASSERT_FLOAT_EQ(1.0f, roundf(0.5f));
@@ -1262,7 +1256,7 @@ TEST(MATH_TEST, roundf) {
   ASSERT_FLOAT_EQ(-HUGE_VALF, roundf(-HUGE_VALF));
 }
 
-TEST(MATH_TEST, roundl) {
+TEST(math_h, roundl) {
   auto guard = android::base::make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
   fesetround(FE_TOWARDZERO); // roundl ignores the rounding mode and always rounds away from zero.
   ASSERT_DOUBLE_EQ(1.0L, roundl(0.5L));
@@ -1274,7 +1268,7 @@ TEST(MATH_TEST, roundl) {
   ASSERT_DOUBLE_EQ(-HUGE_VALL, roundl(-HUGE_VALL));
 }
 
-TEST(MATH_TEST, trunc) {
+TEST(math_h, trunc) {
   auto guard = android::base::make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
   fesetround(FE_UPWARD); // trunc ignores the rounding mode and always rounds toward zero.
   ASSERT_DOUBLE_EQ(1.0, trunc(1.5));
@@ -1286,7 +1280,7 @@ TEST(MATH_TEST, trunc) {
   ASSERT_DOUBLE_EQ(-HUGE_VAL, trunc(-HUGE_VAL));
 }
 
-TEST(MATH_TEST, truncf) {
+TEST(math_h, truncf) {
   auto guard = android::base::make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
   fesetround(FE_UPWARD); // truncf ignores the rounding mode and always rounds toward zero.
   ASSERT_FLOAT_EQ(1.0f, truncf(1.5f));
@@ -1298,7 +1292,7 @@ TEST(MATH_TEST, truncf) {
   ASSERT_FLOAT_EQ(-HUGE_VALF, truncf(-HUGE_VALF));
 }
 
-TEST(MATH_TEST, truncl) {
+TEST(math_h, truncl) {
   auto guard = android::base::make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
   fesetround(FE_UPWARD); // truncl ignores the rounding mode and always rounds toward zero.
   ASSERT_DOUBLE_EQ(1.0L, truncl(1.5L));
@@ -1310,19 +1304,19 @@ TEST(MATH_TEST, truncl) {
   ASSERT_DOUBLE_EQ(-HUGE_VALL, truncl(-HUGE_VALL));
 }
 
-TEST(MATH_TEST, nextafter) {
+TEST(math_h, nextafter) {
   ASSERT_DOUBLE_EQ(0.0, nextafter(0.0, 0.0));
   ASSERT_DOUBLE_EQ(4.9406564584124654e-324, nextafter(0.0, 1.0));
   ASSERT_DOUBLE_EQ(-4.9406564584124654e-324, nextafter(0.0, -1.0));
 }
 
-TEST(MATH_TEST, nextafterf) {
+TEST(math_h, nextafterf) {
   ASSERT_FLOAT_EQ(0.0f, nextafterf(0.0f, 0.0f));
   ASSERT_FLOAT_EQ(1.4012985e-45f, nextafterf(0.0f, 1.0f));
   ASSERT_FLOAT_EQ(-1.4012985e-45f, nextafterf(0.0f, -1.0f));
 }
 
-TEST(MATH_TEST, nextafterl) {
+TEST(math_h, nextafterl) {
   ASSERT_DOUBLE_EQ(0.0L, nextafterl(0.0L, 0.0L));
   // Use a runtime value to accomodate the case when
   // sizeof(double) == sizeof(long double)
@@ -1331,19 +1325,19 @@ TEST(MATH_TEST, nextafterl) {
   ASSERT_DOUBLE_EQ(-smallest_positive, nextafterl(0.0L, -1.0L));
 }
 
-TEST(MATH_TEST, nexttoward) {
+TEST(math_h, nexttoward) {
   ASSERT_DOUBLE_EQ(0.0, nexttoward(0.0, 0.0L));
   ASSERT_DOUBLE_EQ(4.9406564584124654e-324, nexttoward(0.0, 1.0L));
   ASSERT_DOUBLE_EQ(-4.9406564584124654e-324, nexttoward(0.0, -1.0L));
 }
 
-TEST(MATH_TEST, nexttowardf) {
+TEST(math_h, nexttowardf) {
   ASSERT_FLOAT_EQ(0.0f, nexttowardf(0.0f, 0.0L));
   ASSERT_FLOAT_EQ(1.4012985e-45f, nexttowardf(0.0f, 1.0L));
   ASSERT_FLOAT_EQ(-1.4012985e-45f, nexttowardf(0.0f, -1.0L));
 }
 
-TEST(MATH_TEST, nexttowardl) {
+TEST(math_h, nexttowardl) {
   ASSERT_DOUBLE_EQ(0.0L, nexttowardl(0.0L, 0.0L));
   // Use a runtime value to accomodate the case when
   // sizeof(double) == sizeof(long double)
@@ -1352,40 +1346,40 @@ TEST(MATH_TEST, nexttowardl) {
   ASSERT_DOUBLE_EQ(-smallest_positive, nexttowardl(0.0L, -1.0L));
 }
 
-TEST(MATH_TEST, copysign) {
+TEST(math_h, copysign) {
   ASSERT_DOUBLE_EQ(0.0, copysign(0.0, 1.0));
   ASSERT_DOUBLE_EQ(-0.0, copysign(0.0, -1.0));
   ASSERT_DOUBLE_EQ(2.0, copysign(2.0, 1.0));
   ASSERT_DOUBLE_EQ(-2.0, copysign(2.0, -1.0));
 }
 
-TEST(MATH_TEST, copysignf) {
+TEST(math_h, copysignf) {
   ASSERT_FLOAT_EQ(0.0f, copysignf(0.0f, 1.0f));
   ASSERT_FLOAT_EQ(-0.0f, copysignf(0.0f, -1.0f));
   ASSERT_FLOAT_EQ(2.0f, copysignf(2.0f, 1.0f));
   ASSERT_FLOAT_EQ(-2.0f, copysignf(2.0f, -1.0f));
 }
 
-TEST(MATH_TEST, copysignl) {
+TEST(math_h, copysignl) {
   ASSERT_DOUBLE_EQ(0.0L, copysignl(0.0L, 1.0L));
   ASSERT_DOUBLE_EQ(-0.0L, copysignl(0.0L, -1.0L));
   ASSERT_DOUBLE_EQ(2.0L, copysignl(2.0L, 1.0L));
   ASSERT_DOUBLE_EQ(-2.0L, copysignl(2.0L, -1.0L));
 }
 
-TEST(MATH_TEST, significand) {
+TEST(math_h, significand) {
   ASSERT_DOUBLE_EQ(0.0, significand(0.0));
   ASSERT_DOUBLE_EQ(1.2, significand(1.2));
   ASSERT_DOUBLE_EQ(1.53125, significand(12.25));
 }
 
-TEST(MATH_TEST, significandf) {
+TEST(math_h, significandf) {
   ASSERT_FLOAT_EQ(0.0f, significandf(0.0f));
   ASSERT_FLOAT_EQ(1.2f, significandf(1.2f));
   ASSERT_FLOAT_EQ(1.53125f, significandf(12.25f));
 }
 
-TEST(MATH_TEST, significandl) {
+TEST(math_h, significandl) {
 #if !defined(ANDROID_HOST_MUSL)
   ASSERT_DOUBLE_EQ(0.0L, significandl(0.0L));
   ASSERT_DOUBLE_EQ(1.2L, significandl(1.2L));
@@ -1395,40 +1389,39 @@ TEST(MATH_TEST, significandl) {
 #endif
 }
 
-
-TEST(MATH_TEST, scalb) {
+TEST(math_h, scalb) {
   ASSERT_DOUBLE_EQ(12.0, scalb(3.0, 2.0));
 }
 
-TEST(MATH_TEST, scalbf) {
+TEST(math_h, scalbf) {
   ASSERT_FLOAT_EQ(12.0f, scalbf(3.0f, 2.0f));
 }
 
-TEST(MATH_TEST, scalbln) {
+TEST(math_h, scalbln) {
   ASSERT_DOUBLE_EQ(12.0, scalbln(3.0, 2L));
 }
 
-TEST(MATH_TEST, scalblnf) {
+TEST(math_h, scalblnf) {
   ASSERT_FLOAT_EQ(12.0f, scalblnf(3.0f, 2L));
 }
 
-TEST(MATH_TEST, scalblnl) {
+TEST(math_h, scalblnl) {
   ASSERT_DOUBLE_EQ(12.0L, scalblnl(3.0L, 2L));
 }
 
-TEST(MATH_TEST, scalbn) {
+TEST(math_h, scalbn) {
   ASSERT_DOUBLE_EQ(12.0, scalbn(3.0, 2));
 }
 
-TEST(MATH_TEST, scalbnf) {
+TEST(math_h, scalbnf) {
   ASSERT_FLOAT_EQ(12.0f, scalbnf(3.0f, 2));
 }
 
-TEST(MATH_TEST, scalbnl) {
+TEST(math_h, scalbnl) {
   ASSERT_DOUBLE_EQ(12.0L, scalbnl(3.0L, 2));
 }
 
-TEST(MATH_TEST, gamma) {
+TEST(math_h, gamma) {
 #if !defined(ANDROID_HOST_MUSL)
   ASSERT_DOUBLE_EQ(log(24.0), gamma(5.0));
 #else
@@ -1436,7 +1429,7 @@ TEST(MATH_TEST, gamma) {
 #endif
 }
 
-TEST(MATH_TEST, gammaf) {
+TEST(math_h, gammaf) {
 #if !defined(ANDROID_HOST_MUSL)
   ASSERT_FLOAT_EQ(logf(24.0f), gammaf(5.0f));
 #else
@@ -1444,7 +1437,7 @@ TEST(MATH_TEST, gammaf) {
 #endif
 }
 
-TEST(MATH_TEST, gamma_r) {
+TEST(math_h, gamma_r) {
 #if defined(__BIONIC__)
   int sign;
   ASSERT_DOUBLE_EQ(log(24.0), gamma_r(5.0, &sign));
@@ -1454,7 +1447,7 @@ TEST(MATH_TEST, gamma_r) {
 #endif // __BIONIC__
 }
 
-TEST(MATH_TEST, gammaf_r) {
+TEST(math_h, gammaf_r) {
 #if defined(__BIONIC__)
   int sign;
   ASSERT_FLOAT_EQ(logf(24.0f), gammaf_r(5.0f, &sign));
@@ -1464,25 +1457,25 @@ TEST(MATH_TEST, gammaf_r) {
 #endif // __BIONIC__
 }
 
-TEST(MATH_TEST, lgamma) {
+TEST(math_h, lgamma) {
   ASSERT_DOUBLE_EQ(log(24.0), lgamma(5.0));
 }
 
-TEST(MATH_TEST, lgammaf) {
+TEST(math_h, lgammaf) {
   ASSERT_FLOAT_EQ(logf(24.0f), lgammaf(5.0f));
 }
 
-TEST(MATH_TEST, lgammal) {
+TEST(math_h, lgammal) {
   ASSERT_DOUBLE_EQ(logl(24.0L), lgammal(5.0L));
 }
 
-TEST(MATH_TEST, lgamma_r) {
+TEST(math_h, lgamma_r) {
   int sign;
   ASSERT_DOUBLE_EQ(log(24.0), lgamma_r(5.0, &sign));
   ASSERT_EQ(1, sign);
 }
 
-TEST(MATH_TEST, lgamma_r_17471883) {
+TEST(math_h, lgamma_r_17471883) {
   int sign;
 
   sign = 0;
@@ -1493,13 +1486,13 @@ TEST(MATH_TEST, lgamma_r_17471883) {
   ASSERT_EQ(-1, sign);
 }
 
-TEST(MATH_TEST, lgammaf_r) {
+TEST(math_h, lgammaf_r) {
   int sign;
   ASSERT_FLOAT_EQ(logf(24.0f), lgammaf_r(5.0f, &sign));
   ASSERT_EQ(1, sign);
 }
 
-TEST(MATH_TEST, lgammaf_r_17471883) {
+TEST(math_h, lgammaf_r_17471883) {
   int sign;
 
   sign = 0;
@@ -1510,13 +1503,13 @@ TEST(MATH_TEST, lgammaf_r_17471883) {
   ASSERT_EQ(-1, sign);
 }
 
-TEST(MATH_TEST, lgammal_r) {
+TEST(math_h, lgammal_r) {
   int sign;
   ASSERT_DOUBLE_EQ(log(24.0L), lgamma_r(5.0L, &sign));
   ASSERT_EQ(1, sign);
 }
 
-TEST(MATH_TEST, lgammal_r_17471883) {
+TEST(math_h, lgammal_r_17471883) {
   int sign;
 
   sign = 0;
@@ -1527,142 +1520,142 @@ TEST(MATH_TEST, lgammal_r_17471883) {
   ASSERT_EQ(-1, sign);
 }
 
-TEST(MATH_TEST, tgamma_NaN) {
+TEST(math_h, tgamma_NaN) {
   ASSERT_TRUE(isnan(tgamma(nan(""))));
   ASSERT_TRUE(isnanf(tgammaf(nanf(""))));
   ASSERT_TRUE(isnanl(tgammal(nanl(""))));
 }
 
-TEST(MATH_TEST, tgamma_inf) {
+TEST(math_h, tgamma_inf) {
   ASSERT_TRUE(isinf(tgamma(HUGE_VAL)));
   ASSERT_TRUE(isinff(tgammaf(HUGE_VALF)));
   ASSERT_TRUE(isinfl(tgammal(HUGE_VALL)));
 }
 
-TEST(MATH_TEST, tgamma_negative) {
+TEST(math_h, tgamma_negative) {
   ASSERT_TRUE(isnan(tgamma(-1.0)));
   ASSERT_TRUE(isnanf(tgammaf(-1.0f)));
   ASSERT_TRUE(isnanl(tgammal(-1.0L)));
 }
 
-TEST(MATH_TEST, tgamma) {
+TEST(math_h, tgamma) {
   ASSERT_DOUBLE_EQ(24.0, tgamma(5.0));
   ASSERT_DOUBLE_EQ(120.0, tgamma(6.0));
   ASSERT_TRUE(isinf(tgamma(172.0)));
 }
 
-TEST(MATH_TEST, tgammaf) {
+TEST(math_h, tgammaf) {
   ASSERT_FLOAT_EQ(24.0f, tgammaf(5.0f));
   ASSERT_FLOAT_EQ(120.0f, tgammaf(6.0f));
   ASSERT_TRUE(isinff(tgammaf(172.0f)));
 }
 
-TEST(MATH_TEST, tgammal) {
+TEST(math_h, tgammal) {
   ASSERT_DOUBLE_EQ(24.0L, tgammal(5.0L));
   ASSERT_DOUBLE_EQ(120.0L, tgammal(6.0L));
   ASSERT_TRUE(isinf(tgammal(172.0L)));
 }
 
-TEST(MATH_TEST, j0) {
+TEST(math_h, j0) {
   ASSERT_DOUBLE_EQ(1.0, j0(0.0));
   ASSERT_DOUBLE_EQ(0.76519768655796661, j0(1.0));
 }
 
-TEST(MATH_TEST, j0f) {
+TEST(math_h, j0f) {
   ASSERT_FLOAT_EQ(1.0f, j0f(0.0f));
   ASSERT_FLOAT_EQ(0.76519769f, j0f(1.0f));
 }
 
-TEST(MATH_TEST, j1) {
+TEST(math_h, j1) {
   ASSERT_DOUBLE_EQ(0.0, j1(0.0));
   ASSERT_DOUBLE_EQ(0.44005058574493355, j1(1.0));
 }
 
-TEST(MATH_TEST, j1f) {
+TEST(math_h, j1f) {
   ASSERT_FLOAT_EQ(0.0f, j1f(0.0f));
   ASSERT_FLOAT_EQ(0.44005057f, j1f(1.0f));
 }
 
-TEST(MATH_TEST, jn) {
+TEST(math_h, jn) {
   ASSERT_DOUBLE_EQ(0.0, jn(4, 0.0));
   ASSERT_DOUBLE_EQ(0.0024766389641099553, jn(4, 1.0));
 }
 
-TEST(MATH_TEST, jnf) {
+TEST(math_h, jnf) {
   ASSERT_FLOAT_EQ(0.0f, jnf(4, 0.0f));
   ASSERT_FLOAT_EQ(0.0024766389f, jnf(4, 1.0f));
 }
 
-TEST(MATH_TEST, y0) {
+TEST(math_h, y0) {
   ASSERT_DOUBLE_EQ(-HUGE_VAL, y0(0.0));
   ASSERT_DOUBLE_EQ(0.08825696421567697, y0(1.0));
 }
 
-TEST(MATH_TEST, y0f) {
+TEST(math_h, y0f) {
   ASSERT_FLOAT_EQ(-HUGE_VALF, y0f(0.0f));
   ASSERT_FLOAT_EQ(0.088256963f, y0f(1.0f));
 }
 
-TEST(MATH_TEST, y1) {
+TEST(math_h, y1) {
   ASSERT_DOUBLE_EQ(-HUGE_VAL, y1(0.0));
   ASSERT_DOUBLE_EQ(-0.78121282130028868, y1(1.0));
 }
 
-TEST(MATH_TEST, y1f) {
+TEST(math_h, y1f) {
   ASSERT_FLOAT_EQ(-HUGE_VALF, y1f(0.0f));
   ASSERT_FLOAT_EQ(-0.78121281f, y1f(1.0f));
 }
 
-TEST(MATH_TEST, yn) {
+TEST(math_h, yn) {
   ASSERT_DOUBLE_EQ(-HUGE_VAL, yn(4, 0.0));
   ASSERT_DOUBLE_EQ(-33.278423028972114, yn(4, 1.0));
 }
 
-TEST(MATH_TEST, ynf) {
+TEST(math_h, ynf) {
   ASSERT_FLOAT_EQ(-HUGE_VALF, ynf(4, 0.0f));
   ASSERT_FLOAT_EQ(-33.278423f, ynf(4, 1.0f));
 }
 
-TEST(MATH_TEST, frexp) {
+TEST(math_h, frexp) {
   int exp;
   double dr = frexp(1024.0, &exp);
   ASSERT_DOUBLE_EQ(1024.0, scalbn(dr, exp));
 }
 
-TEST(MATH_TEST, frexpf) {
+TEST(math_h, frexpf) {
   int exp;
   float fr = frexpf(1024.0f, &exp);
   ASSERT_FLOAT_EQ(1024.0f, scalbnf(fr, exp));
 }
 
-TEST(MATH_TEST, frexpl) {
+TEST(math_h, frexpl) {
   int exp;
   long double ldr = frexpl(1024.0L, &exp);
   ASSERT_DOUBLE_EQ(1024.0L, scalbnl(ldr, exp));
 }
 
-TEST(MATH_TEST, modf) {
+TEST(math_h, modf) {
   double di;
   double df = modf(123.75, &di);
   ASSERT_DOUBLE_EQ(123.0, di);
   ASSERT_DOUBLE_EQ(0.75, df);
 }
 
-TEST(MATH_TEST, modff) {
+TEST(math_h, modff) {
   float fi;
   float ff = modff(123.75f, &fi);
   ASSERT_FLOAT_EQ(123.0f, fi);
   ASSERT_FLOAT_EQ(0.75f, ff);
 }
 
-TEST(MATH_TEST, modfl) {
+TEST(math_h, modfl) {
   long double ldi;
   long double ldf = modfl(123.75L, &ldi);
   ASSERT_DOUBLE_EQ(123.0L, ldi);
   ASSERT_DOUBLE_EQ(0.75L, ldf);
 }
 
-TEST(MATH_TEST, remquo) {
+TEST(math_h, remquo) {
   int q;
   double d = remquo(13.0, 4.0, &q);
   ASSERT_EQ(3, q);
@@ -1680,7 +1673,7 @@ TEST(MATH_TEST, remquo) {
   ASSERT_TRUE(isnan(remquo(12.0, 0.0, &q)));
 }
 
-TEST(MATH_TEST, remquof) {
+TEST(math_h, remquof) {
   int q;
   float f = remquof(13.0f, 4.0f, &q);
   ASSERT_EQ(3, q);
@@ -1698,7 +1691,7 @@ TEST(MATH_TEST, remquof) {
   ASSERT_TRUE(isnanf(remquof(12.0f, 0.0f, &q)));
 }
 
-TEST(MATH_TEST, remquol) {
+TEST(math_h, remquol) {
   int q;
   long double ld = remquol(13.0L, 4.0L, &q);
   ASSERT_DOUBLE_EQ(3L, q);
@@ -1717,13 +1710,13 @@ TEST(MATH_TEST, remquol) {
 }
 
 // https://code.google.com/p/android/issues/detail?id=6697
-TEST(MATH_TEST, frexpf_public_bug_6697) {
+TEST(math_h, frexpf_public_bug_6697) {
   int exp;
   float fr = frexpf(14.1f, &exp);
   ASSERT_FLOAT_EQ(14.1f, scalbnf(fr, exp));
 }
 
-TEST(MATH_TEST, exp2_STRICT_ALIGN_OpenBSD_bug) {
+TEST(math_h, exp2_STRICT_ALIGN_OpenBSD_bug) {
   // OpenBSD/x86's libm had a bug here, but it was already fixed in FreeBSD:
   // http://svnweb.FreeBSD.org/base/head/lib/msun/src/math_private.h?revision=240827&view=markup
   ASSERT_DOUBLE_EQ(5.0, exp2(log2(5)));
@@ -1731,7 +1724,7 @@ TEST(MATH_TEST, exp2_STRICT_ALIGN_OpenBSD_bug) {
   ASSERT_DOUBLE_EQ(5.0L, exp2l(log2l(5)));
 }
 
-TEST(MATH_TEST, nextafterl_OpenBSD_bug) {
+TEST(math_h, nextafterl_OpenBSD_bug) {
   // OpenBSD/x86's libm had a bug here.
   ASSERT_TRUE(nextafter(1.0, 0.0) - 1.0 < 0.0);
   ASSERT_TRUE(nextafterf(1.0f, 0.0f) - 1.0f < 0.0f);
@@ -1739,511 +1732,511 @@ TEST(MATH_TEST, nextafterl_OpenBSD_bug) {
 }
 
 #include "math_data/acos_intel_data.h"
-TEST(MATH_TEST, acos_intel) {
+TEST(math_h, acos_intel) {
   DoMathDataTest<1>(g_acos_intel_data, acos);
 }
 
 #include "math_data/acosf_intel_data.h"
-TEST(MATH_TEST, acosf_intel) {
+TEST(math_h, acosf_intel) {
   DoMathDataTest<1>(g_acosf_intel_data, acosf);
 }
 
 #include "math_data/acosh_intel_data.h"
-TEST(MATH_TEST, acosh_intel) {
+TEST(math_h, acosh_intel) {
   DoMathDataTest<2>(g_acosh_intel_data, acosh);
 }
 
 #include "math_data/acoshf_intel_data.h"
-TEST(MATH_TEST, acoshf_intel) {
+TEST(math_h, acoshf_intel) {
   DoMathDataTest<2>(g_acoshf_intel_data, acoshf);
 }
 
 #include "math_data/asin_intel_data.h"
-TEST(MATH_TEST, asin_intel) {
+TEST(math_h, asin_intel) {
   DoMathDataTest<1>(g_asin_intel_data, asin);
 }
 
 #include "math_data/asinf_intel_data.h"
-TEST(MATH_TEST, asinf_intel) {
+TEST(math_h, asinf_intel) {
   DoMathDataTest<1>(g_asinf_intel_data, asinf);
 }
 
 #include "math_data/asinh_intel_data.h"
-TEST(MATH_TEST, asinh_intel) {
+TEST(math_h, asinh_intel) {
   DoMathDataTest<2>(g_asinh_intel_data, asinh);
 }
 
 #include "math_data/asinhf_intel_data.h"
-TEST(MATH_TEST, asinhf_intel) {
+TEST(math_h, asinhf_intel) {
   DoMathDataTest<2>(g_asinhf_intel_data, asinhf);
 }
 
 #include "math_data/atan2_intel_data.h"
-TEST(MATH_TEST, atan2_intel) {
+TEST(math_h, atan2_intel) {
   DoMathDataTest<2>(g_atan2_intel_data, atan2);
 }
 
 #include "math_data/atan2f_intel_data.h"
-TEST(MATH_TEST, atan2f_intel) {
+TEST(math_h, atan2f_intel) {
   DoMathDataTest<2>(g_atan2f_intel_data, atan2f);
 }
 
 #include "math_data/atan_intel_data.h"
-TEST(MATH_TEST, atan_intel) {
+TEST(math_h, atan_intel) {
   DoMathDataTest<1>(g_atan_intel_data, atan);
 }
 
 #include "math_data/atanf_intel_data.h"
-TEST(MATH_TEST, atanf_intel) {
+TEST(math_h, atanf_intel) {
   DoMathDataTest<1>(g_atanf_intel_data, atanf);
 }
 
 #include "math_data/atanh_intel_data.h"
-TEST(MATH_TEST, atanh_intel) {
+TEST(math_h, atanh_intel) {
   DoMathDataTest<2>(g_atanh_intel_data, atanh);
 }
 
 #include "math_data/atanhf_intel_data.h"
-TEST(MATH_TEST, atanhf_intel) {
+TEST(math_h, atanhf_intel) {
   DoMathDataTest<2>(g_atanhf_intel_data, atanhf);
 }
 
 #include "math_data/cbrt_intel_data.h"
-TEST(MATH_TEST, cbrt_intel) {
+TEST(math_h, cbrt_intel) {
   DoMathDataTest<1>(g_cbrt_intel_data, cbrt);
 }
 
 #include "math_data/cbrtf_intel_data.h"
-TEST(MATH_TEST, cbrtf_intel) {
+TEST(math_h, cbrtf_intel) {
   DoMathDataTest<1>(g_cbrtf_intel_data, cbrtf);
 }
 
 #include "math_data/ceil_intel_data.h"
-TEST(MATH_TEST, ceil_intel) {
+TEST(math_h, ceil_intel) {
   DoMathDataTest<1>(g_ceil_intel_data, ceil);
 }
 
 #include "math_data/ceilf_intel_data.h"
-TEST(MATH_TEST, ceilf_intel) {
+TEST(math_h, ceilf_intel) {
   DoMathDataTest<1>(g_ceilf_intel_data, ceilf);
 }
 
 #include "math_data/copysign_intel_data.h"
-TEST(MATH_TEST, copysign_intel) {
+TEST(math_h, copysign_intel) {
   DoMathDataTest<1>(g_copysign_intel_data, copysign);
 }
 
 #include "math_data/copysignf_intel_data.h"
-TEST(MATH_TEST, copysignf_intel) {
+TEST(math_h, copysignf_intel) {
   DoMathDataTest<1>(g_copysignf_intel_data, copysignf);
 }
 
 #include "math_data/cos_intel_data.h"
-TEST(MATH_TEST, cos_intel) {
+TEST(math_h, cos_intel) {
   DoMathDataTest<1>(g_cos_intel_data, cos);
 }
 
 #include "math_data/cosf_intel_data.h"
-TEST(MATH_TEST, cosf_intel) {
+TEST(math_h, cosf_intel) {
   DoMathDataTest<1>(g_cosf_intel_data, cosf);
 }
 
 #include "math_data/cosh_intel_data.h"
-TEST(MATH_TEST, cosh_intel) {
+TEST(math_h, cosh_intel) {
   DoMathDataTest<2>(g_cosh_intel_data, cosh);
 }
 
 #include "math_data/coshf_intel_data.h"
-TEST(MATH_TEST, coshf_intel) {
+TEST(math_h, coshf_intel) {
   DoMathDataTest<2>(g_coshf_intel_data, coshf);
 }
 
 #include "math_data/exp_intel_data.h"
-TEST(MATH_TEST, exp_intel) {
+TEST(math_h, exp_intel) {
   DoMathDataTest<1>(g_exp_intel_data, exp);
 }
 
 #include "math_data/expf_intel_data.h"
-TEST(MATH_TEST, expf_intel) {
+TEST(math_h, expf_intel) {
   DoMathDataTest<1>(g_expf_intel_data, expf);
 }
 
 #include "math_data/exp2_intel_data.h"
-TEST(MATH_TEST, exp2_intel) {
+TEST(math_h, exp2_intel) {
   DoMathDataTest<1>(g_exp2_intel_data, exp2);
 }
 
 #include "math_data/exp2f_intel_data.h"
-TEST(MATH_TEST, exp2f_intel) {
+TEST(math_h, exp2f_intel) {
   DoMathDataTest<1>(g_exp2f_intel_data, exp2f);
 }
 
 #include "math_data/expm1_intel_data.h"
-TEST(MATH_TEST, expm1_intel) {
+TEST(math_h, expm1_intel) {
   DoMathDataTest<1>(g_expm1_intel_data, expm1);
 }
 
 #include "math_data/expm1f_intel_data.h"
-TEST(MATH_TEST, expm1f_intel) {
+TEST(math_h, expm1f_intel) {
   DoMathDataTest<1>(g_expm1f_intel_data, expm1f);
 }
 
 #include "math_data/fabs_intel_data.h"
-TEST(MATH_TEST, fabs_intel) {
+TEST(math_h, fabs_intel) {
   DoMathDataTest<1>(g_fabs_intel_data, fabs);
 }
 
 #include "math_data/fabsf_intel_data.h"
-TEST(MATH_TEST, fabsf_intel) {
+TEST(math_h, fabsf_intel) {
   DoMathDataTest<1>(g_fabsf_intel_data, fabsf);
 }
 
 #include "math_data/fdim_intel_data.h"
-TEST(MATH_TEST, fdim_intel) {
+TEST(math_h, fdim_intel) {
   DoMathDataTest<1>(g_fdim_intel_data, fdim);
 }
 
 #include "math_data/fdimf_intel_data.h"
-TEST(MATH_TEST, fdimf_intel) {
+TEST(math_h, fdimf_intel) {
   DoMathDataTest<1>(g_fdimf_intel_data, fdimf);
 }
 
 #include "math_data/floor_intel_data.h"
-TEST(MATH_TEST, floor_intel) {
+TEST(math_h, floor_intel) {
   DoMathDataTest<1>(g_floor_intel_data, floor);
 }
 
 #include "math_data/floorf_intel_data.h"
-TEST(MATH_TEST, floorf_intel) {
+TEST(math_h, floorf_intel) {
   DoMathDataTest<1>(g_floorf_intel_data, floorf);
 }
 
 #include "math_data/fma_intel_data.h"
-TEST(MATH_TEST, fma_intel) {
+TEST(math_h, fma_intel) {
   DoMathDataTest<1>(g_fma_intel_data, fma);
 }
 
 #include "math_data/fmaf_intel_data.h"
-TEST(MATH_TEST, fmaf_intel) {
+TEST(math_h, fmaf_intel) {
   DoMathDataTest<1>(g_fmaf_intel_data, fmaf);
 }
 
 #include "math_data/fmax_intel_data.h"
-TEST(MATH_TEST, fmax_intel) {
+TEST(math_h, fmax_intel) {
   DoMathDataTest<1>(g_fmax_intel_data, fmax);
 }
 
 #include "math_data/fmaxf_intel_data.h"
-TEST(MATH_TEST, fmaxf_intel) {
+TEST(math_h, fmaxf_intel) {
   DoMathDataTest<1>(g_fmaxf_intel_data, fmaxf);
 }
 
 #include "math_data/fmin_intel_data.h"
-TEST(MATH_TEST, fmin_intel) {
+TEST(math_h, fmin_intel) {
   DoMathDataTest<1>(g_fmin_intel_data, fmin);
 }
 
 #include "math_data/fminf_intel_data.h"
-TEST(MATH_TEST, fminf_intel) {
+TEST(math_h, fminf_intel) {
   DoMathDataTest<1>(g_fminf_intel_data, fminf);
 }
 
 #include "math_data/fmod_intel_data.h"
-TEST(MATH_TEST, fmod_intel) {
+TEST(math_h, fmod_intel) {
   DoMathDataTest<1>(g_fmod_intel_data, fmod);
 }
 
 #include "math_data/fmodf_intel_data.h"
-TEST(MATH_TEST, fmodf_intel) {
+TEST(math_h, fmodf_intel) {
   DoMathDataTest<1>(g_fmodf_intel_data, fmodf);
 }
 
 #include "math_data/frexp_intel_data.h"
-TEST(MATH_TEST, frexp_intel) {
+TEST(math_h, frexp_intel) {
   DoMathDataTest<1>(g_frexp_intel_data, frexp);
 }
 
 #include "math_data/frexpf_intel_data.h"
-TEST(MATH_TEST, frexpf_intel) {
+TEST(math_h, frexpf_intel) {
   DoMathDataTest<1>(g_frexpf_intel_data, frexpf);
 }
 
 #include "math_data/hypot_intel_data.h"
-TEST(MATH_TEST, hypot_intel) {
+TEST(math_h, hypot_intel) {
   DoMathDataTest<1>(g_hypot_intel_data, hypot);
 }
 
 #include "math_data/hypotf_intel_data.h"
-TEST(MATH_TEST, hypotf_intel) {
+TEST(math_h, hypotf_intel) {
   DoMathDataTest<1>(g_hypotf_intel_data, hypotf);
 }
 
 #include "math_data/ilogb_intel_data.h"
-TEST(MATH_TEST, ilogb_intel) {
+TEST(math_h, ilogb_intel) {
   DoMathDataTest<1>(g_ilogb_intel_data, ilogb);
 }
 
 #include "math_data/ilogbf_intel_data.h"
-TEST(MATH_TEST, ilogbf_intel) {
+TEST(math_h, ilogbf_intel) {
   DoMathDataTest<1>(g_ilogbf_intel_data, ilogbf);
 }
 
 #include "math_data/ldexp_intel_data.h"
-TEST(MATH_TEST, ldexp_intel) {
+TEST(math_h, ldexp_intel) {
   DoMathDataTest<1>(g_ldexp_intel_data, ldexp);
 }
 
 #include "math_data/ldexpf_intel_data.h"
-TEST(MATH_TEST, ldexpf_intel) {
+TEST(math_h, ldexpf_intel) {
   DoMathDataTest<1>(g_ldexpf_intel_data, ldexpf);
 }
 
 #include "math_data/llrint_intel_data.h"
-TEST(MATH_TEST, llrint_intel) {
+TEST(math_h, llrint_intel) {
   DoMathDataTest<1>(g_llrint_intel_data, llrint);
 }
 
 #include "math_data/llrintf_intel_data.h"
-TEST(MATH_TEST, llrintf_intel) {
+TEST(math_h, llrintf_intel) {
   DoMathDataTest<1>(g_llrintf_intel_data, llrintf);
 }
 
 #include "math_data/log_intel_data.h"
-TEST(MATH_TEST, log_intel) {
+TEST(math_h, log_intel) {
   DoMathDataTest<1>(g_log_intel_data, log);
 }
 
 #include "math_data/logf_intel_data.h"
-TEST(MATH_TEST, logf_intel) {
+TEST(math_h, logf_intel) {
   DoMathDataTest<1>(g_logf_intel_data, logf);
 }
 
 #include "math_data/log10_intel_data.h"
-TEST(MATH_TEST, log10_intel) {
+TEST(math_h, log10_intel) {
   DoMathDataTest<1>(g_log10_intel_data, log10);
 }
 
 #include "math_data/log10f_intel_data.h"
-TEST(MATH_TEST, log10f_intel) {
+TEST(math_h, log10f_intel) {
   DoMathDataTest<1>(g_log10f_intel_data, log10f);
 }
 
 #include "math_data/log1p_intel_data.h"
-TEST(MATH_TEST, log1p_intel) {
+TEST(math_h, log1p_intel) {
   DoMathDataTest<1>(g_log1p_intel_data, log1p);
 }
 
 #include "math_data/log1pf_intel_data.h"
-TEST(MATH_TEST, log1pf_intel) {
+TEST(math_h, log1pf_intel) {
   DoMathDataTest<1>(g_log1pf_intel_data, log1pf);
 }
 
 #include "math_data/log2_intel_data.h"
-TEST(MATH_TEST, log2_intel) {
+TEST(math_h, log2_intel) {
   DoMathDataTest<1>(g_log2_intel_data, log2);
 }
 
 #include "math_data/log2f_intel_data.h"
-TEST(MATH_TEST, log2f_intel) {
+TEST(math_h, log2f_intel) {
   DoMathDataTest<1>(g_log2f_intel_data, log2f);
 }
 
 #include "math_data/logb_intel_data.h"
-TEST(MATH_TEST, logb_intel) {
+TEST(math_h, logb_intel) {
   DoMathDataTest<1>(g_logb_intel_data, logb);
 }
 
 #include "math_data/logbf_intel_data.h"
-TEST(MATH_TEST, logbf_intel) {
+TEST(math_h, logbf_intel) {
   DoMathDataTest<1>(g_logbf_intel_data, logbf);
 }
 
 #include "math_data/lrint_intel_data.h"
-TEST(MATH_TEST, lrint_intel) {
+TEST(math_h, lrint_intel) {
   DoMathDataTest<1>(g_lrint_intel_data, lrint);
 }
 
 #include "math_data/lrintf_intel_data.h"
-TEST(MATH_TEST, lrintf_intel) {
+TEST(math_h, lrintf_intel) {
   DoMathDataTest<1>(g_lrintf_intel_data, lrintf);
 }
 
 #include "math_data/modf_intel_data.h"
-TEST(MATH_TEST, modf_intel) {
+TEST(math_h, modf_intel) {
   DoMathDataTest<1>(g_modf_intel_data, modf);
 }
 
 #include "math_data/modff_intel_data.h"
-TEST(MATH_TEST, modff_intel) {
+TEST(math_h, modff_intel) {
   DoMathDataTest<1>(g_modff_intel_data, modff);
 }
 
 #include "math_data/nearbyint_intel_data.h"
-TEST(MATH_TEST, nearbyint_intel) {
+TEST(math_h, nearbyint_intel) {
   DoMathDataTest<1>(g_nearbyint_intel_data, nearbyint);
 }
 
 #include "math_data/nearbyintf_intel_data.h"
-TEST(MATH_TEST, nearbyintf_intel) {
+TEST(math_h, nearbyintf_intel) {
   DoMathDataTest<1>(g_nearbyintf_intel_data, nearbyintf);
 }
 
 #include "math_data/nextafter_intel_data.h"
-TEST(MATH_TEST, nextafter_intel) {
+TEST(math_h, nextafter_intel) {
   DoMathDataTest<1>(g_nextafter_intel_data, nextafter);
 }
 
 #include "math_data/nextafterf_intel_data.h"
-TEST(MATH_TEST, nextafterf_intel) {
+TEST(math_h, nextafterf_intel) {
   DoMathDataTest<1>(g_nextafterf_intel_data, nextafterf);
 }
 
 #include "math_data/pow_intel_data.h"
-TEST(MATH_TEST, pow_intel) {
+TEST(math_h, pow_intel) {
   DoMathDataTest<1>(g_pow_intel_data, pow);
 }
 
 #include "math_data/powf_intel_data.h"
-TEST(MATH_TEST, powf_intel) {
+TEST(math_h, powf_intel) {
   DoMathDataTest<1>(g_powf_intel_data, powf);
 }
 
 #include "math_data/remainder_intel_data.h"
-TEST(MATH_TEST, remainder_intel) {
+TEST(math_h, remainder_intel) {
   DoMathDataTest<1>(g_remainder_intel_data, remainder);
 }
 
 #include "math_data/remainderf_intel_data.h"
-TEST(MATH_TEST, remainderf_intel) {
+TEST(math_h, remainderf_intel) {
   DoMathDataTest<1>(g_remainderf_intel_data, remainderf);
 }
 
 #include "math_data/remquo_intel_data.h"
-TEST(MATH_TEST, remquo_intel) {
+TEST(math_h, remquo_intel) {
   DoMathDataTest<1>(g_remquo_intel_data, remquo);
 }
 
 #include "math_data/remquof_intel_data.h"
-TEST(MATH_TEST, remquof_intel) {
+TEST(math_h, remquof_intel) {
   DoMathDataTest<1>(g_remquof_intel_data, remquof);
 }
 
 #include "math_data/rint_intel_data.h"
-TEST(MATH_TEST, rint_intel) {
+TEST(math_h, rint_intel) {
   DoMathDataTest<1>(g_rint_intel_data, rint);
 }
 
 #include "math_data/rintf_intel_data.h"
-TEST(MATH_TEST, rintf_intel) {
+TEST(math_h, rintf_intel) {
   DoMathDataTest<1>(g_rintf_intel_data, rintf);
 }
 
 #include "math_data/round_intel_data.h"
-TEST(MATH_TEST, round_intel) {
+TEST(math_h, round_intel) {
   DoMathDataTest<1>(g_round_intel_data, round);
 }
 
 #include "math_data/roundf_intel_data.h"
-TEST(MATH_TEST, roundf_intel) {
+TEST(math_h, roundf_intel) {
   DoMathDataTest<1>(g_roundf_intel_data, roundf);
 }
 
 #include "math_data/scalb_intel_data.h"
-TEST(MATH_TEST, scalb_intel) {
+TEST(math_h, scalb_intel) {
   DoMathDataTest<1>(g_scalb_intel_data, scalb);
 }
 
 #include "math_data/scalbf_intel_data.h"
-TEST(MATH_TEST, scalbf_intel) {
+TEST(math_h, scalbf_intel) {
   DoMathDataTest<1>(g_scalbf_intel_data, scalbf);
 }
 
 #include "math_data/scalbn_intel_data.h"
-TEST(MATH_TEST, scalbn_intel) {
+TEST(math_h, scalbn_intel) {
   DoMathDataTest<1>(g_scalbn_intel_data, scalbn);
 }
 
 #include "math_data/scalbnf_intel_data.h"
-TEST(MATH_TEST, scalbnf_intel) {
+TEST(math_h, scalbnf_intel) {
   DoMathDataTest<1>(g_scalbnf_intel_data, scalbnf);
 }
 
 #include "math_data/significand_intel_data.h"
-TEST(MATH_TEST, significand_intel) {
+TEST(math_h, significand_intel) {
   DoMathDataTest<1>(g_significand_intel_data, significand);
 }
 
 #include "math_data/significandf_intel_data.h"
-TEST(MATH_TEST, significandf_intel) {
+TEST(math_h, significandf_intel) {
   DoMathDataTest<1>(g_significandf_intel_data, significandf);
 }
 
 #include "math_data/sin_intel_data.h"
-TEST(MATH_TEST, sin_intel) {
+TEST(math_h, sin_intel) {
   DoMathDataTest<1>(g_sin_intel_data, sin);
 }
 
 #include "math_data/sinf_intel_data.h"
-TEST(MATH_TEST, sinf_intel) {
+TEST(math_h, sinf_intel) {
   DoMathDataTest<1>(g_sinf_intel_data, sinf);
 }
 
 #include "math_data/sinh_intel_data.h"
-TEST(MATH_TEST, sinh_intel) {
+TEST(math_h, sinh_intel) {
   DoMathDataTest<2>(g_sinh_intel_data, sinh);
 }
 
 #include "math_data/sinhf_intel_data.h"
-TEST(MATH_TEST, sinhf_intel) {
+TEST(math_h, sinhf_intel) {
   DoMathDataTest<2>(g_sinhf_intel_data, sinhf);
 }
 
 #include "math_data/sincos_intel_data.h"
-TEST(MATH_TEST, sincos_intel) {
+TEST(math_h, sincos_intel) {
   DoMathDataTest<1>(g_sincos_intel_data, sincos);
 }
 
 #include "math_data/sincosf_intel_data.h"
-TEST(MATH_TEST, sincosf_intel) {
+TEST(math_h, sincosf_intel) {
   DoMathDataTest<1>(g_sincosf_intel_data, sincosf);
 }
 
 #include "math_data/sqrt_intel_data.h"
-TEST(MATH_TEST, sqrt_intel) {
+TEST(math_h, sqrt_intel) {
   DoMathDataTest<1>(g_sqrt_intel_data, sqrt);
 }
 
 #include "math_data/sqrtf_intel_data.h"
-TEST(MATH_TEST, sqrtf_intel) {
+TEST(math_h, sqrtf_intel) {
   DoMathDataTest<1>(g_sqrtf_intel_data, sqrtf);
 }
 
 #include "math_data/tan_intel_data.h"
-TEST(MATH_TEST, tan_intel) {
+TEST(math_h, tan_intel) {
   DoMathDataTest<1>(g_tan_intel_data, tan);
 }
 
 #include "math_data/tanf_intel_data.h"
-TEST(MATH_TEST, tanf_intel) {
+TEST(math_h, tanf_intel) {
   DoMathDataTest<1>(g_tanf_intel_data, tanf);
 }
 
 #include "math_data/tanh_intel_data.h"
-TEST(MATH_TEST, tanh_intel) {
+TEST(math_h, tanh_intel) {
   DoMathDataTest<2>(g_tanh_intel_data, tanh);
 }
 
 #include "math_data/tanhf_intel_data.h"
-TEST(MATH_TEST, tanhf_intel) {
+TEST(math_h, tanhf_intel) {
   DoMathDataTest<2>(g_tanhf_intel_data, tanhf);
 }
 
 #include "math_data/trunc_intel_data.h"
-TEST(MATH_TEST, trunc_intel) {
+TEST(math_h, trunc_intel) {
   DoMathDataTest<1>(g_trunc_intel_data, trunc);
 }
 
 #include "math_data/truncf_intel_data.h"
-TEST(MATH_TEST, truncf_intel) {
+TEST(math_h, truncf_intel) {
   DoMathDataTest<1>(g_truncf_intel_data, truncf);
 }

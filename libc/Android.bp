@@ -252,10 +252,11 @@ cc_library_static {
     srcs: [
         "tzcode/**/*.c",
         "tzcode/bionic.cpp",
-        // tzcode doesn't include strptime or wcsftime, so we use the OpenBSD
-        // code (with some local changes in the strptime case).
+        // tzcode doesn't include strptime, so we use a fork of the
+        // OpenBSD code which needs this global data.
         "upstream-openbsd/lib/libc/locale/_def_time.c",
-        "upstream-openbsd/lib/libc/time/wcsftime.c",
+        // tzcode doesn't include wcsftime, so we use the FreeBSD code.
+        "upstream-freebsd/lib/libc/locale/wcsftime.c",
     ],
 
     cflags: [
@@ -284,7 +285,10 @@ cc_library_static {
         "-Dlint",
     ],
 
-    local_include_dirs: ["tzcode/"],
+    local_include_dirs: [
+        "tzcode/",
+        "upstream-freebsd/android/include",
+    ],
     name: "libc_tzcode",
 }
 
@@ -932,6 +936,21 @@ cc_library_static {
                 "arch-riscv64/bionic/setjmp.S",
                 "arch-riscv64/bionic/syscall.S",
                 "arch-riscv64/bionic/vfork.S",
+
+                "arch-riscv64/string/memchr_vext.S",
+                "arch-riscv64/string/memcmp_vext.S",
+                "arch-riscv64/string/memcpy_vext.S",
+                "arch-riscv64/string/memmove_vext.S",
+                "arch-riscv64/string/memset_vext.S",
+                "arch-riscv64/string/strcat_vext.S",
+                "arch-riscv64/string/strchr_vext.S",
+                "arch-riscv64/string/strcmp_vext.S",
+                "arch-riscv64/string/strcpy_vext.S",
+                "arch-riscv64/string/strlen_vext.S",
+                "arch-riscv64/string/strncat_vext.S",
+                "arch-riscv64/string/strncmp_vext.S",
+                "arch-riscv64/string/strncpy_vext.S",
+                "arch-riscv64/string/strnlen_vext.S",
             ],
         },
 
@@ -1541,6 +1560,9 @@ cc_library_static {
         arm64: {
             srcs: ["arch-arm64/static_function_dispatch.S"],
         },
+        riscv64: {
+            srcs: ["arch-riscv64/static_function_dispatch.S"]
+        },
     },
 }
 
@@ -1568,6 +1590,9 @@ cc_library_static {
         },
         arm64: {
             srcs: ["arch-arm64/dynamic_function_dispatch.cpp"],
+        },
+        riscv64: {
+            srcs: ["arch-riscv64/dynamic_function_dispatch.cpp"]
         },
     },
 }
