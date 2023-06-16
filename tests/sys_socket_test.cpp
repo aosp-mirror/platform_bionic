@@ -174,8 +174,11 @@ TEST(sys_socket, recvmmsg_smoke) {
 }
 
 TEST(sys_socket, recvmmsg_error) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
   ASSERT_EQ(-1, recvmmsg(-1, nullptr, 0, 0, nullptr));
   ASSERT_EQ(EBADF, errno);
+#pragma clang diagnostic pop
 }
 
 const char* g_SendMsgs[] = {
@@ -232,6 +235,9 @@ TEST(sys_socket, sendmmsg_smoke) {
 }
 
 TEST(sys_socket, sendmmsg_error) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
   ASSERT_EQ(-1, sendmmsg(-1, nullptr, 0, 0));
   ASSERT_EQ(EBADF, errno);
+#pragma clang diagnostic pop
 }
