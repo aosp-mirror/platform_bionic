@@ -252,10 +252,11 @@ cc_library_static {
     srcs: [
         "tzcode/**/*.c",
         "tzcode/bionic.cpp",
-        // tzcode doesn't include strptime or wcsftime, so we use the OpenBSD
-        // code (with some local changes in the strptime case).
+        // tzcode doesn't include strptime, so we use a fork of the
+        // OpenBSD code which needs this global data.
         "upstream-openbsd/lib/libc/locale/_def_time.c",
-        "upstream-openbsd/lib/libc/time/wcsftime.c",
+        // tzcode doesn't include wcsftime, so we use the FreeBSD code.
+        "upstream-freebsd/lib/libc/locale/wcsftime.c",
     ],
 
     cflags: [
@@ -284,7 +285,10 @@ cc_library_static {
         "-Dlint",
     ],
 
-    local_include_dirs: ["tzcode/"],
+    local_include_dirs: [
+        "tzcode/",
+        "upstream-freebsd/android/include",
+    ],
     name: "libc_tzcode",
 }
 

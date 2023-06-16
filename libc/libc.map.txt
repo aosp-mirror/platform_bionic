@@ -1586,7 +1586,13 @@ LIBC_U { # introduced=UpsideDownCake
 
 LIBC_V { # introduced=VanillaIceCream
   global:
+    localtime_rz;
+    mbsrtowcs_l;
+    mktime_z;
     timespec_getres;
+    tzalloc;
+    tzfree;
+    wcsrtombs_l;
 } LIBC_U;
 
 LIBC_PRIVATE {
