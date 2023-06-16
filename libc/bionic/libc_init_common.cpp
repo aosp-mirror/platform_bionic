@@ -186,7 +186,7 @@ __BIONIC_WEAK_FOR_NATIVE_BRIDGE void __libc_set_target_sdk_version(int target __
 #endif
 }
 
-__noreturn static void __early_abort(int line) {
+__noreturn static void __early_abort(size_t line) {
   // We can't write to stdout or stderr because we're aborting before we've checked that
   // it's safe for us to use those file descriptors. We probably can't strace either, so
   // we rely on the fact that if we dereference a low address, either debuggerd or the
