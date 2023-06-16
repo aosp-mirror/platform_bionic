@@ -28,6 +28,7 @@
 
 #include <atomic>
 #include <chrono>
+#include <thread>
 
 #include "SignalUtils.h"
 #include "utils.h"
@@ -1312,4 +1313,106 @@ TEST(time, timespec_getres_invalid) {
 TEST(time, difftime) {
   ASSERT_EQ(1.0, difftime(1, 0));
   ASSERT_EQ(-1.0, difftime(0, 1));
+}
+
+TEST(time, tzfree_null) {
+#if __BIONIC__
+  tzfree(nullptr);
+#else
+  GTEST_SKIP() << "glibc doesn't have timezone_t";
+#endif
+}
+
+TEST(time, localtime_rz) {
+#if __BIONIC__
+  setenv("TZ", "America/Los_Angeles", 1);
+  tzset();
+
+  auto AssertTmEq = [](const struct tm& rhs, int hour) {
+    ASSERT_EQ(93, rhs.tm_year);
+    ASSERT_EQ(0, rhs.tm_mon);
+    ASSERT_EQ(1, rhs.tm_mday);
+    ASSERT_EQ(hour, rhs.tm_hour);
+    ASSERT_EQ(0, rhs.tm_min);
+    ASSERT_EQ(0, rhs.tm_sec);
+  };
+
+  const time_t t = 725875200;
+
+  // Spam localtime_r() while we use localtime_rz().
+  std::atomic<bool> done = false;
+  std::thread thread{[&] {
+    while (!done) {
+      struct tm tm {};
+      ASSERT_EQ(&tm, localtime_r(&t, &tm));
+      AssertTmEq(tm, 0);
+    }
+  }};
+
+  struct tm tm;
+
+  timezone_t london{tzalloc("Europe/London")};
+  tm = {};
+  ASSERT_EQ(&tm, localtime_rz(london, &t, &tm));
+  AssertTmEq(tm, 8);
+
+  timezone_t seoul{tzalloc("Asia/Seoul")};
+  tm = {};
+  ASSERT_EQ(&tm, localtime_rz(seoul, &t, &tm));
+  AssertTmEq(tm, 17);
+
+  // Just check that mktime()'s time zone didn't change.
+  tm = {};
+  ASSERT_EQ(&tm, localtime_r(&t, &tm));
+  ASSERT_EQ(0, tm.tm_hour);
+  AssertTmEq(tm, 0);
+
+  done = true;
+  thread.join();
+
+  tzfree(london);
+  tzfree(seoul);
+#else
+  GTEST_SKIP() << "glibc doesn't have timezone_t";
+#endif
+}
+
+TEST(time, mktime_z) {
+#if __BIONIC__
+  setenv("TZ", "America/Los_Angeles", 1);
+  tzset();
+
+  // Spam mktime() while we use mktime_z().
+  std::atomic<bool> done = false;
+  std::thread thread{[&done] {
+    while (!done) {
+      struct tm tm {
+        .tm_year = 93, .tm_mday = 1
+      };
+      ASSERT_EQ(725875200, mktime(&tm));
+    }
+  }};
+
+  struct tm tm;
+
+  timezone_t london{tzalloc("Europe/London")};
+  tm = {.tm_year = 93, .tm_mday = 1};
+  ASSERT_EQ(725846400, mktime_z(london, &tm));
+
+  timezone_t seoul{tzalloc("Asia/Seoul")};
+  tm = {.tm_year = 93, .tm_mday = 1};
+  ASSERT_EQ(725814000, mktime_z(seoul, &tm));
+
+  // Just check that mktime()'s time zone didn't change.
+  tm = {.tm_year = 93, .tm_mday = 1};
+  ASSERT_EQ(725875200, mktime(&tm));
+
+  done = true;
+  thread.join();
+
+  tzfree(london);
+  tzfree(seoul);
+#else
+  GTEST_SKIP() << "glibc doesn't have timezone_t";
+#endif
 }

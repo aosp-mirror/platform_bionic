@@ -57,6 +57,7 @@ int mbsinit(const mbstate_t* _Nullable __ps);
 size_t mbrlen(const char* _Nullable __s, size_t __n, mbstate_t* _Nullable __ps);
 size_t mbrtowc(wchar_t* _Nullable __buf, const char* _Nullable __s, size_t __n, mbstate_t* _Nullable __ps);
 size_t mbsrtowcs(wchar_t* _Nullable __dst, const char* _Nullable * _Nonnull __src, size_t __dst_n, mbstate_t* _Nullable __ps);
+size_t mbsrtowcs_l(wchar_t* _Nullable __dst, const char* _Nullable * _Nonnull __src, size_t __dst_n, mbstate_t* _Nullable __ps, locale_t _Nonnull __l) __INTRODUCED_IN(35);
 size_t mbsnrtowcs(wchar_t* _Nullable __dst, const char* _Nullable * _Nullable  __src, size_t __src_n, size_t __dst_n, mbstate_t* _Nullable __ps) __INTRODUCED_IN(21);
 wint_t putwc(wchar_t __wc, FILE* _Nonnull __fp);
 wint_t putwchar(wchar_t __wc);
@@ -92,6 +93,7 @@ size_t wcsnrtombs(char* _Nullable __dst, const wchar_t* __BIONIC_COMPLICATED_NUL
 wchar_t* _Nullable wcspbrk(const wchar_t* _Nonnull __s, const wchar_t* _Nonnull __accept);
 wchar_t* _Nullable wcsrchr(const wchar_t* _Nonnull __s, wchar_t __wc);
 size_t wcsrtombs(char* _Nullable __dst, const wchar_t* __BIONIC_COMPLICATED_NULLNESS * _Nullable __src, size_t __dst_n, mbstate_t* _Nullable __ps);
+size_t wcsrtombs_l(char* _Nullable __dst, const wchar_t* __BIONIC_COMPLICATED_NULLNESS * _Nullable __src, size_t __dst_n, mbstate_t* _Nullable __ps, locale_t _Nonnull __l) __INTRODUCED_IN(35);
 size_t wcsspn(const wchar_t* _Nonnull __s, const wchar_t* _Nonnull __accept);
 wchar_t* _Nullable wcsstr(const wchar_t* _Nonnull __haystack, const wchar_t* _Nonnull __needle);
 double wcstod(const wchar_t* _Nonnull __s, wchar_t* __BIONIC_COMPLICATED_NULLNESS * _Nullable __end_ptr);
