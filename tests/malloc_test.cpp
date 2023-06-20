@@ -708,6 +708,15 @@ TEST(malloc, mallopt_purge_all) {
 #endif
 }
 
+TEST(malloc, mallopt_log_stats) {
+#if defined(__BIONIC__)
+  SKIP_WITH_HWASAN << "hwasan does not implement mallopt";
+  ASSERT_EQ(1, mallopt(M_LOG_STATS, 0));
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
 // Verify that all of the mallopt values are unique.
 TEST(malloc, mallopt_unique_params) {
 #if defined(__BIONIC__)
@@ -722,6 +731,7 @@ TEST(malloc, mallopt_unique_params) {
       std::make_pair(M_TSDS_COUNT_MAX, "M_TSDS_COUNT_MAX"),
       std::make_pair(M_BIONIC_ZERO_INIT, "M_BIONIC_ZERO_INIT"),
       std::make_pair(M_BIONIC_SET_HEAP_TAGGING_LEVEL, "M_BIONIC_SET_HEAP_TAGGING_LEVEL"),
+      std::make_pair(M_LOG_STATS, "M_LOG_STATS"),
   };
 
   std::unordered_map<int, std::string> all_params;

@@ -320,6 +320,16 @@ enum HeapTaggingLevel {
 };
 
 /**
+ * mallopt() option to print human readable statistics about the memory
+ * allocator to the log. There is no format for this data, each allocator
+ * can use a different format, and the data that is printed can
+ * change at any time. This is expected to be used as a debugging aid.
+ *
+ * Available since API level 35.
+ */
+#define M_LOG_STATS (-205)
+
+/**
  * [mallopt(3)](http://man7.org/linux/man-pages/man3/mallopt.3.html) modifies
  * heap behavior. Values of `__option` are the `M_` constants from this header.
  *
