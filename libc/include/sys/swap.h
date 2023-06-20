@@ -55,18 +55,14 @@ __BEGIN_DECLS
  * [swapon(2)](http://man7.org/linux/man-pages/man2/swapon.2.html) enables swapping.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
- *
- * Available since API level 19.
  */
-int swapon(const char* _Nonnull __path,  int __flags) __INTRODUCED_IN(19);
+int swapon(const char* _Nonnull __path,  int __flags);
 
 /**
  * [swapoff(2)](http://man7.org/linux/man-pages/man2/swapoff.2.html) disables swapping.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
- *
- * Available since API level 19.
  */
-int swapoff(const char* _Nonnull __path) __INTRODUCED_IN(19);
+int swapoff(const char* _Nonnull __path);
 
 __END_DECLS

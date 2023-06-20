@@ -179,20 +179,16 @@ int clone(int (* __BIONIC_COMPLICATED_NULLNESS __fn)(void* __BIONIC_COMPLICATED_
  * disassociates part of the caller's execution context.
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
- *
- * Available since API level 17.
  */
-int unshare(int __flags) __INTRODUCED_IN(17);
+int unshare(int __flags);
 
 /**
  * [setns(2)](http://man7.org/linux/man-pages/man2/setns.2.html)
  * reassociates a thread with a different namespace.
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
- *
- * Available since API level 21.
  */
-int setns(int __fd, int __ns_type) __INTRODUCED_IN(21);
+int setns(int __fd, int __ns_type);
 
 /**
  * [sched_getcpu(3)](http://man7.org/linux/man-pages/man3/sched_getcpu.3.html)

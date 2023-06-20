@@ -92,10 +92,8 @@ void* _Nullable memalign(size_t __alignment, size_t __byte_count) __mallocfunc _
 /**
  * [malloc_usable_size(3)](http://man7.org/linux/man-pages/man3/malloc_usable_size.3.html)
  * returns the actual size of the given heap block.
- *
- * Available since API level 17.
  */
-size_t malloc_usable_size(const void* _Nullable __ptr) __INTRODUCED_IN(17);
+size_t malloc_usable_size(const void* _Nullable __ptr);
 
 #define __MALLINFO_BODY \
   /** Total number of non-mmapped bytes currently allocated from OS. */ \
@@ -318,6 +316,16 @@ enum HeapTaggingLevel {
   M_HEAP_TAGGING_LEVEL_SYNC = 3,
 #define M_HEAP_TAGGING_LEVEL_SYNC M_HEAP_TAGGING_LEVEL_SYNC
 };
+
+/**
+ * mallopt() option to print human readable statistics about the memory
+ * allocator to the log. There is no format for this data, each allocator
+ * can use a different format, and the data that is printed can
+ * change at any time. This is expected to be used as a debugging aid.
+ *
+ * Available since API level 35.
+ */
+#define M_LOG_STATS (-205)
 
 /**
  * [mallopt(3)](http://man7.org/linux/man-pages/man3/mallopt.3.html) modifies
