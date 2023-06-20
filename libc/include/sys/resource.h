@@ -46,8 +46,8 @@ typedef unsigned long long rlim64_t;
 int getrlimit(int __resource, struct rlimit* _Nonnull __limit);
 int setrlimit(int __resource, const struct rlimit* _Nonnull __limit);
 
-int getrlimit64(int __resource, struct rlimit64* _Nonnull __limit) __INTRODUCED_IN(21);
-int setrlimit64(int __resource, const struct rlimit64* _Nonnull __limit) __INTRODUCED_IN(21);
+int getrlimit64(int __resource, struct rlimit64* _Nonnull __limit);
+int setrlimit64(int __resource, const struct rlimit64* _Nonnull __limit);
 
 int getpriority(int __which, id_t __who);
 int setpriority(int __which, id_t __who, int __priority);
@@ -55,7 +55,7 @@ int setpriority(int __which, id_t __who, int __priority);
 int getrusage(int __who, struct rusage* _Nonnull __usage);
 
 int prlimit(pid_t __pid, int __resource, const struct rlimit* _Nullable __new_limit, struct rlimit* _Nullable __old_limit) __INTRODUCED_IN_32(24) __INTRODUCED_IN_64(21);
-int prlimit64(pid_t __pid, int __resource, const struct rlimit64* _Nullable __new_limit, struct rlimit64* _Nullable __old_limit) __INTRODUCED_IN(21);
+int prlimit64(pid_t __pid, int __resource, const struct rlimit64* _Nullable __new_limit, struct rlimit64* _Nullable __old_limit);
 
 __END_DECLS
 
