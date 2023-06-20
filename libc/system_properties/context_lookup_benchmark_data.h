@@ -321,7 +321,7 @@ persist.odm.            u:object_r:vendor_default_prop:s0
 persist.vendor.         u:object_r:vendor_default_prop:s0
 vendor.                 u:object_r:vendor_default_prop:s0
 
-# Properties that relate to time / time zone detection behavior.
+# Properties that relate to time / timezone detection behavior.
 persist.time.           u:object_r:time_prop:s0
 
 # Properties that relate to server configurable flags
