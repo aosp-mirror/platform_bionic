@@ -55,7 +55,7 @@ ssize_t sendfile(int __out_fd, int __in_fd, off_t* _Nullable __offset, size_t __
 
 /**
  * Like sendfile() but allows using a 64-bit offset
- * even from a 32-bit process without `__FILE_OFFSET_BITS=64`.
+ * even from a 32-bit process without `_FILE_OFFSET_BITS=64`.
  */
 ssize_t sendfile64(int __out_fd, int __in_fd, off64_t* _Nullable __offset, size_t __count) __INTRODUCED_IN(21);
 
