@@ -39,7 +39,7 @@ typedef __WINT_TYPE__ wint_t;
 
 int iswalnum(wint_t __wc);
 int iswalpha(wint_t __wc);
-int iswblank(wint_t __wc) __INTRODUCED_IN(21);
+int iswblank(wint_t __wc);
 int iswcntrl(wint_t __wc);
 int iswdigit(wint_t __wc);
 int iswgraph(wint_t __wc);

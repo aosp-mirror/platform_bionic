@@ -161,8 +161,8 @@ double log1p(double __x);
 float log1pf(float __x);
 long double log1pl(long double __x);
 
-double log2(double __x) __INTRODUCED_IN(18);
-float log2f(float __x) __INTRODUCED_IN(18);
+double log2(double __x);
+float log2f(float __x);
 long double log2l(long double __x);
 
 double logb(double __x);
@@ -319,7 +319,7 @@ long double fmal(long double __x, long double __y, long double __z);
  * to the std namespace, making it impossible to use both <cmath> (which gets
  * included by a lot of other standard headers) and ::isnan.
  */
-int (isinf)(double __x) __attribute_const__ __INTRODUCED_IN(21);
+int (isinf)(double __x) __attribute_const__;
 int (isnan)(double __x) __attribute_const__;
 
 /* POSIX extensions. */
@@ -367,7 +367,7 @@ double gamma_r(double __x, int* _Nonnull __sign);
 double lgamma_r(double __x, int* _Nonnull __sign);
 double significand(double __x);
 long double lgammal_r(long double __x, int* _Nonnull __sign) __INTRODUCED_IN(23);
-long double significandl(long double __x) __INTRODUCED_IN(21);
+long double significandl(long double __x);
 float dremf(float __x, float __y);
 int finitef(float __x) __attribute_const__;
 float gammaf(float __x);

@@ -59,10 +59,8 @@ void* _Nonnull mmap(void* _Nullable __addr, size_t __size, int __prot, int __fla
  * mmap64() is a variant of mmap() that takes a 64-bit offset even on LP32.
  *
  * See https://android.googlesource.com/platform/bionic/+/master/docs/32-bit-abi.md
- *
- * Available since API level 21.
  */
-void* _Nonnull mmap64(void* _Nullable __addr, size_t __size, int __prot, int __flags, int __fd, off64_t __offset) __INTRODUCED_IN(21);
+void* _Nonnull mmap64(void* _Nullable __addr, size_t __size, int __prot, int __flags, int __fd, off64_t __offset);
 
 /**
  * [munmap(2)](http://man7.org/linux/man-pages/man2/munmap.2.html)
@@ -107,21 +105,17 @@ void* _Nonnull mremap(void* _Nonnull __old_addr, size_t __old_size, size_t __new
  * [mlockall(2)](http://man7.org/linux/man-pages/man2/mlockall.2.html)
  * locks pages (preventing swapping).
  *
- * Available since API level 17.
- *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
-int mlockall(int __flags) __INTRODUCED_IN(17);
+int mlockall(int __flags);
 
 /**
  * [munlockall(2)](http://man7.org/linux/man-pages/man2/munlockall.2.html)
  * unlocks pages (allowing swapping).
  *
- * Available since API level 17.
- *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
-int munlockall(void) __INTRODUCED_IN(17);
+int munlockall(void);
 
 /**
  * [mlock(2)](http://man7.org/linux/man-pages/man2/mlock.2.html)
