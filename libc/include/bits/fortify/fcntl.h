@@ -30,8 +30,8 @@
 #error "Never include this file directly; instead, include <fcntl.h>"
 #endif
 
-int __open_2(const char* _Nonnull, int) __INTRODUCED_IN(17);
-int __openat_2(int, const char* _Nonnull, int) __INTRODUCED_IN(17);
+int __open_2(const char* _Nonnull, int);
+int __openat_2(int, const char* _Nonnull, int);
 /*
  * These are the easiest way to call the real open even in clang FORTIFY.
  */

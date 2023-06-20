@@ -30,7 +30,7 @@
 #error "Never include this file directly; instead, include <stdio.h>"
 #endif
 
-char* _Nullable __fgets_chk(char* _Nonnull, int, FILE* _Nonnull, size_t) __INTRODUCED_IN(17);
+char* _Nullable __fgets_chk(char* _Nonnull, int, FILE* _Nonnull, size_t);
 size_t __fread_chk(void* _Nonnull, size_t, size_t, FILE* _Nonnull, size_t) __INTRODUCED_IN(24);
 size_t __fwrite_chk(const void* _Nonnull, size_t, size_t, FILE* _Nonnull, size_t) __INTRODUCED_IN(24);
 

@@ -66,8 +66,7 @@ void __system_property_read_callback(const prop_info* _Nonnull __pi,
  *
  * This method is for inspecting and debugging the property system, and not generally useful.
  */
-int __system_property_foreach(void (* _Nonnull __callback)(const prop_info* _Nonnull __pi, void* _Nullable __cookie), void* _Nullable __cookie)
-  __INTRODUCED_IN(19);
+int __system_property_foreach(void (* _Nonnull __callback)(const prop_info* _Nonnull __pi, void* _Nullable __cookie), void* _Nullable __cookie);
 
 /*
  * Waits for the specific system property identified by `pi` to be updated
