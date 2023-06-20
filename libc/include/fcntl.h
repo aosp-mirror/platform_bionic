@@ -111,7 +111,7 @@ __BEGIN_DECLS
  */
 int creat(const char* _Nonnull __path, mode_t __mode);
 /** See creat(). */
-int creat64(const char* _Nonnull __path, mode_t __mode) __INTRODUCED_IN(21);
+int creat64(const char* _Nonnull __path, mode_t __mode);
 
 /**
  * [openat(2)](http://man7.org/linux/man-pages/man2/openat.2.html)
@@ -122,7 +122,7 @@ int creat64(const char* _Nonnull __path, mode_t __mode) __INTRODUCED_IN(21);
  */
 int openat(int __dir_fd, const char* _Nonnull __path, int __flags, ...);
 /** See openat(). */
-int openat64(int __dir_fd, const char* _Nonnull __path, int __flags, ...) __INTRODUCED_IN(21);
+int openat64(int __dir_fd, const char* _Nonnull __path, int __flags, ...);
 
 /**
  * [open(2)](http://man7.org/linux/man-pages/man2/open.2.html)
@@ -133,7 +133,7 @@ int openat64(int __dir_fd, const char* _Nonnull __path, int __flags, ...) __INTR
  */
 int open(const char* _Nonnull __path, int __flags, ...);
 /** See open(). */
-int open64(const char* _Nonnull __path, int __flags, ...) __INTRODUCED_IN(21);
+int open64(const char* _Nonnull __path, int __flags, ...);
 
 /**
  * [splice(2)](http://man7.org/linux/man-pages/man2/splice.2.html)
@@ -144,10 +144,8 @@ int open64(const char* _Nonnull __path, int __flags, ...) __INTRODUCED_IN(21);
  *
  * Returns the number of bytes spliced on success and returns -1 and sets
  * `errno` on failure.
- *
- * Available since API level 21.
  */
-ssize_t splice(int __in_fd, off64_t* __BIONIC_COMPLICATED_NULLNESS __in_offset, int __out_fd, off64_t* __BIONIC_COMPLICATED_NULLNESS __out_offset, size_t __length, unsigned int __flags) __INTRODUCED_IN(21);
+ssize_t splice(int __in_fd, off64_t* __BIONIC_COMPLICATED_NULLNESS __in_offset, int __out_fd, off64_t* __BIONIC_COMPLICATED_NULLNESS __out_offset, size_t __length, unsigned int __flags);
 
 /**
  * [tee(2)](http://man7.org/linux/man-pages/man2/tee.2.html)
@@ -158,10 +156,8 @@ ssize_t splice(int __in_fd, off64_t* __BIONIC_COMPLICATED_NULLNESS __in_offset, 
  *
  * Returns the number of bytes duplicated on success and returns -1 and sets
  * `errno` on failure.
- *
- * Available since API level 21.
  */
-ssize_t tee(int __in_fd, int __out_fd, size_t __length, unsigned int __flags) __INTRODUCED_IN(21);
+ssize_t tee(int __in_fd, int __out_fd, size_t __length, unsigned int __flags);
 
 /**
  * [vmsplice(2)](http://man7.org/linux/man-pages/man2/vmsplice.2.html)
@@ -172,10 +168,8 @@ ssize_t tee(int __in_fd, int __out_fd, size_t __length, unsigned int __flags) __
  *
  * Returns the number of bytes spliced on success and returns -1 and sets
  * `errno` on failure.
- *
- * Available since API level 21.
  */
-ssize_t vmsplice(int __fd, const struct iovec* _Nonnull __iov, size_t __count, unsigned int __flags) __INTRODUCED_IN(21);
+ssize_t vmsplice(int __fd, const struct iovec* _Nonnull __iov, size_t __count, unsigned int __flags);
 
 /**
  * [fallocate(2)](http://man7.org/linux/man-pages/man2/fallocate.2.html)
@@ -187,12 +181,10 @@ ssize_t vmsplice(int __fd, const struct iovec* _Nonnull __iov, size_t __count, u
  * `FALLOC_FL_UNSHARE_RANGE`.
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
- *
- * Available since API level 21.
  */
-int fallocate(int __fd, int __mode, off_t __offset, off_t __length) __RENAME_IF_FILE_OFFSET64(fallocate64) __INTRODUCED_IN(21);
+int fallocate(int __fd, int __mode, off_t __offset, off_t __length) __RENAME_IF_FILE_OFFSET64(fallocate64);
 /** See fallocate(). */
-int fallocate64(int __fd, int __mode, off64_t __offset, off64_t __length) __INTRODUCED_IN(21);
+int fallocate64(int __fd, int __mode, off64_t __offset, off64_t __length);
 
 /**
  * [posix_fadvise(2)](http://man7.org/linux/man-pages/man2/posix_fadvise.2.html)
@@ -203,24 +195,20 @@ int fallocate64(int __fd, int __mode, off64_t __offset, off64_t __length) __INTR
  * and `POSIX_FADV_NOREUSE`.
  *
  * Returns 0 on success and returns an error number on failure.
- *
- * Available since API level 21.
  */
-int posix_fadvise(int __fd, off_t __offset, off_t __length, int __advice) __RENAME_IF_FILE_OFFSET64(posix_fadvise64) __INTRODUCED_IN(21);
+int posix_fadvise(int __fd, off_t __offset, off_t __length, int __advice) __RENAME_IF_FILE_OFFSET64(posix_fadvise64);
 /** See posix_fadvise(). */
-int posix_fadvise64(int __fd, off64_t __offset, off64_t __length, int __advice) __INTRODUCED_IN(21);
+int posix_fadvise64(int __fd, off64_t __offset, off64_t __length, int __advice);
 
 /**
  * [posix_fallocate(2)](http://man7.org/linux/man-pages/man2/posix_fallocate.2.html)
  * allocates file space.
  *
  * Returns 0 on success and returns an error number on failure.
- *
- * Available since API level 21.
  */
-int posix_fallocate(int __fd, off_t __offset, off_t __length) __RENAME_IF_FILE_OFFSET64(posix_fallocate64) __INTRODUCED_IN(21);
+int posix_fallocate(int __fd, off_t __offset, off_t __length) __RENAME_IF_FILE_OFFSET64(posix_fallocate64);
 /** See posix_fallocate(). */
-int posix_fallocate64(int __fd, off64_t __offset, off64_t __length) __INTRODUCED_IN(21);
+int posix_fallocate64(int __fd, off64_t __offset, off64_t __length);
 
 #if defined(__USE_GNU)
 

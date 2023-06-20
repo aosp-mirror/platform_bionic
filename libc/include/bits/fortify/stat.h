@@ -28,7 +28,7 @@
 
 #pragma once
 
-mode_t __umask_chk(mode_t) __INTRODUCED_IN(18);
+mode_t __umask_chk(mode_t);
 mode_t __umask_real(mode_t mode) __RENAME(umask);
 
 #if defined(__BIONIC_FORTIFY)
