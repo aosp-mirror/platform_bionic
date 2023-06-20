@@ -118,8 +118,8 @@ int fscanf(FILE* _Nonnull __fp, const char* _Nonnull __fmt, ...) __scanflike(2, 
 size_t fwrite(const void* _Nonnull __buf, size_t __size, size_t __count, FILE* _Nonnull __fp);
 int getc(FILE* _Nonnull __fp);
 int getchar(void);
-ssize_t getdelim(char* _Nullable * _Nonnull __line_ptr, size_t* _Nonnull __line_length_ptr, int __delimiter, FILE* _Nonnull __fp) __INTRODUCED_IN(18);
-ssize_t getline(char* _Nullable * _Nonnull __line_ptr, size_t* _Nonnull __line_length_ptr, FILE* _Nonnull __fp) __INTRODUCED_IN(18);
+ssize_t getdelim(char* _Nullable * _Nonnull __line_ptr, size_t* _Nonnull __line_length_ptr, int __delimiter, FILE* _Nonnull __fp);
+ssize_t getline(char* _Nullable * _Nonnull __line_ptr, size_t* _Nonnull __line_length_ptr, FILE* _Nonnull __fp);
 
 void perror(const char* _Nullable __msg);
 int printf(const char* _Nonnull __fmt, ...) __printflike(1, 2);
@@ -136,8 +136,8 @@ int ungetc(int __ch, FILE* _Nonnull __fp);
 int vfprintf(FILE* _Nonnull __fp, const char* _Nonnull __fmt, va_list __args) __printflike(2, 0);
 int vprintf(const char* _Nonnull __fp, va_list __args) __printflike(1, 0);
 
-int dprintf(int __fd, const char* _Nonnull __fmt, ...) __printflike(2, 3) __INTRODUCED_IN(21);
-int vdprintf(int __fd, const char* _Nonnull __fmt, va_list __args) __printflike(2, 0) __INTRODUCED_IN(21);
+int dprintf(int __fd, const char* _Nonnull __fmt, ...) __printflike(2, 3);
+int vdprintf(int __fd, const char* _Nonnull __fmt, va_list __args) __printflike(2, 0);
 
 #if (defined(__STDC_VERSION__) && __STDC_VERSION__ < 201112L) || \
     (defined(__cplusplus) && __cplusplus <= 201103L)

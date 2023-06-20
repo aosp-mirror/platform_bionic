@@ -38,10 +38,10 @@ __BEGIN_DECLS
 
 in_addr_t inet_addr(const char* _Nonnull __s);
 int inet_aton(const char* _Nonnull __s, struct in_addr* _Nullable __addr);
-in_addr_t inet_lnaof(struct in_addr __addr) __INTRODUCED_IN(21);
-struct in_addr inet_makeaddr(in_addr_t __net, in_addr_t __host) __INTRODUCED_IN(21);
-in_addr_t inet_netof(struct in_addr __addr) __INTRODUCED_IN(21);
-in_addr_t inet_network(const char* _Nonnull __s) __INTRODUCED_IN(21);
+in_addr_t inet_lnaof(struct in_addr __addr);
+struct in_addr inet_makeaddr(in_addr_t __net, in_addr_t __host);
+in_addr_t inet_netof(struct in_addr __addr);
+in_addr_t inet_network(const char* _Nonnull __s);
 char* _Nonnull inet_ntoa(struct in_addr __addr);
 const char* _Nullable inet_ntop(int __af, const void* _Nonnull __src, char* _Nonnull __dst, socklen_t __size);
 unsigned int inet_nsap_addr(const char* _Nonnull __ascii, unsigned char* _Nonnull __binary, int __n);
