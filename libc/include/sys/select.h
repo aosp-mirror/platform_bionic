@@ -71,9 +71,9 @@ typedef struct {
     } \
   } while (0)
 
-void __FD_CLR_chk(int, fd_set* _Nonnull , size_t) __INTRODUCED_IN(21);
-void __FD_SET_chk(int, fd_set* _Nonnull, size_t) __INTRODUCED_IN(21);
-int __FD_ISSET_chk(int, const fd_set* _Nonnull, size_t) __INTRODUCED_IN(21);
+void __FD_CLR_chk(int, fd_set* _Nonnull , size_t);
+void __FD_SET_chk(int, fd_set* _Nonnull, size_t);
+int __FD_ISSET_chk(int, const fd_set* _Nonnull, size_t);
 
 #define __FD_CLR(fd, set) (__FDS_BITS(fd_set*,set)[__FDELT(fd)] &= ~__FDMASK(fd))
 #define __FD_SET(fd, set) (__FDS_BITS(fd_set*,set)[__FDELT(fd)] |= __FDMASK(fd))

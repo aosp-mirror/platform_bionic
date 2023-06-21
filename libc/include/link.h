@@ -55,11 +55,7 @@ struct dl_phdr_info {
   void* _Nullable dlpi_tls_data;
 };
 
-#if defined(__arm__)
-int dl_iterate_phdr(int (* _Nonnull __callback)(struct dl_phdr_info* _Nonnull, size_t, void* _Nullable), void* _Nullable __data) __INTRODUCED_IN(21);
-#else
-int dl_iterate_phdr(int (* _Nonnull __callback)(struct dl_phdr_info* _Nonnull, size_t, void*_Nullable ), void* _Nullable __data);
-#endif
+int dl_iterate_phdr(int (* _Nonnull __callback)(struct dl_phdr_info* _Nonnull, size_t, void* _Nullable), void* _Nullable __data);
 
 #ifdef __arm__
 typedef uintptr_t _Unwind_Ptr;
