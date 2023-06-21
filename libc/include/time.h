@@ -252,7 +252,7 @@ size_t strftime(char* _Nonnull __buf, size_t __n, const char* _Nonnull __fmt, co
 /**
  * Equivalent to strftime() on Android where only C/POSIX locales are available.
  */
-size_t strftime_l(char* _Nonnull __buf, size_t __n, const char* _Nonnull __fmt, const struct tm* _Nullable __tm, locale_t _Nonnull __l) __strftimelike(3) __INTRODUCED_IN(21);
+size_t strftime_l(char* _Nonnull __buf, size_t __n, const char* _Nonnull __fmt, const struct tm* _Nullable __tm, locale_t _Nonnull __l) __strftimelike(3);
 
 /**
  * [ctime(3)](http://man7.org/linux/man-pages/man3/ctime.3p.html) formats

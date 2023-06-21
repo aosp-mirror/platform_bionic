@@ -43,9 +43,7 @@ __BEGIN_DECLS
  * This is meant for use by libraries that deliberately abort so that they can
  * provide an explanation. It is used within bionic to implement assert() and
  * all FORTIFY/fdsan aborts.
- *
- * Available since API level 21.
  */
-void android_set_abort_message(const char* _Nullable __msg) __INTRODUCED_IN(21);
+void android_set_abort_message(const char* _Nullable __msg);
 
 __END_DECLS

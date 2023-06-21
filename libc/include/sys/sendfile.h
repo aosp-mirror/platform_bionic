@@ -40,15 +40,13 @@ __BEGIN_DECLS
 
 /* See https://android.googlesource.com/platform/bionic/+/master/docs/32-bit-abi.md */
 #if defined(__USE_FILE_OFFSET64)
-ssize_t sendfile(int __out_fd, int __in_fd, off_t* _Nullable __offset, size_t __count) __RENAME(sendfile64) __INTRODUCED_IN(21);
+ssize_t sendfile(int __out_fd, int __in_fd, off_t* _Nullable __offset, size_t __count) __RENAME(sendfile64);
 #else
 /**
  * [sendfile(2)](http://man7.org/linux/man-pages/man2/sendfile.2.html) copies data directly
  * between two file descriptors.
  *
  * Returns the number of bytes copied on success, and returns -1 and sets `errno` on failure.
- *
- * Available since API level 21.
  */
 ssize_t sendfile(int __out_fd, int __in_fd, off_t* _Nullable __offset, size_t __count);
 #endif
@@ -57,6 +55,6 @@ ssize_t sendfile(int __out_fd, int __in_fd, off_t* _Nullable __offset, size_t __
  * Like sendfile() but allows using a 64-bit offset
  * even from a 32-bit process without `_FILE_OFFSET_BITS=64`.
  */
-ssize_t sendfile64(int __out_fd, int __in_fd, off64_t* _Nullable __offset, size_t __count) __INTRODUCED_IN(21);
+ssize_t sendfile64(int __out_fd, int __in_fd, off64_t* _Nullable __offset, size_t __count);
 
 __END_DECLS

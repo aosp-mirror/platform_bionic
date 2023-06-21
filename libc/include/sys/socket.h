@@ -120,7 +120,7 @@ struct cmsghdr {
    ? (struct cmsghdr*) (msg)->msg_control : (struct cmsghdr*) NULL)
 #define CMSG_OK(mhdr, cmsg) ((cmsg)->cmsg_len >= sizeof(struct cmsghdr) &&   (cmsg)->cmsg_len <= (unsigned long)   ((mhdr)->msg_controllen -   ((char*)(cmsg) - (char*)(mhdr)->msg_control)))
 
-struct cmsghdr* _Nullable __cmsg_nxthdr(struct msghdr* _Nonnull __msg, struct cmsghdr* _Nonnull __cmsg) __INTRODUCED_IN(21);
+struct cmsghdr* _Nullable __cmsg_nxthdr(struct msghdr* _Nonnull __msg, struct cmsghdr* _Nonnull __cmsg);
 
 #define SCM_RIGHTS 0x01
 #define SCM_CREDENTIALS 0x02
@@ -292,17 +292,16 @@ struct ucred {
 #endif
 
 __socketcall int accept(int __fd, struct sockaddr* _Nullable __addr, socklen_t* _Nullable __addr_length);
-__socketcall int accept4(int __fd, struct sockaddr* _Nullable __addr, socklen_t* _Nullable __addr_length, int __flags) __INTRODUCED_IN(21);
+__socketcall int accept4(int __fd, struct sockaddr* _Nullable __addr, socklen_t* _Nullable __addr_length, int __flags);
 __socketcall int bind(int __fd, const struct sockaddr* _Nonnull __addr, socklen_t __addr_length);
 __socketcall int connect(int __fd, const struct sockaddr* _Nonnull __addr, socklen_t __addr_length);
 __socketcall int getpeername(int __fd, struct sockaddr* _Nonnull __addr, socklen_t* _Nonnull __addr_length);
 __socketcall int getsockname(int __fd, struct sockaddr* _Nonnull __addr, socklen_t* _Nonnull __addr_length);
 __socketcall int getsockopt(int __fd, int __level, int __option, void* _Nullable __value, socklen_t* _Nonnull __value_length);
 __socketcall int listen(int __fd, int __backlog);
-__socketcall int recvmmsg(int __fd, struct mmsghdr* _Nonnull __msgs, unsigned int __msg_count, int __flags, const struct timespec* _Nullable __timeout)
-  __INTRODUCED_IN(21);
+__socketcall int recvmmsg(int __fd, struct mmsghdr* _Nonnull __msgs, unsigned int __msg_count, int __flags, const struct timespec* _Nullable __timeout);
 __socketcall ssize_t recvmsg(int __fd, struct msghdr* _Nonnull __msg, int __flags);
-__socketcall int sendmmsg(int __fd, const struct mmsghdr* _Nonnull __msgs, unsigned int __msg_count, int __flags) __INTRODUCED_IN(21);
+__socketcall int sendmmsg(int __fd, const struct mmsghdr* _Nonnull __msgs, unsigned int __msg_count, int __flags);
 __socketcall ssize_t sendmsg(int __fd, const struct msghdr* _Nonnull __msg, int __flags);
 __socketcall int setsockopt(int __fd, int __level, int __option, const void* _Nullable __value, socklen_t __value_length);
 __socketcall int shutdown(int __fd, int __how);
