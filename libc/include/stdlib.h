@@ -157,11 +157,11 @@ const char* _Nullable getprogname(void);
 void setprogname(const char* _Nonnull __name);
 
 int mblen(const char* _Nullable __s, size_t __n) __INTRODUCED_IN_NO_GUARD_FOR_NDK(26);
-size_t mbstowcs(wchar_t* _Nullable __dst, const char* _Nullable __src, size_t __n) __INTRODUCED_IN_NO_GUARD_FOR_NDK(21);
-int mbtowc(wchar_t* _Nullable __wc_ptr, const char*  _Nullable __s, size_t __n) __INTRODUCED_IN_NO_GUARD_FOR_NDK(21);
-int wctomb(char* _Nullable __dst, wchar_t __wc) __INTRODUCED_IN_NO_GUARD_FOR_NDK(21);
+size_t mbstowcs(wchar_t* _Nullable __dst, const char* _Nullable __src, size_t __n);
+int mbtowc(wchar_t* _Nullable __wc_ptr, const char*  _Nullable __s, size_t __n);
+int wctomb(char* _Nullable __dst, wchar_t __wc);
 
-size_t wcstombs(char* _Nullable __dst, const wchar_t* _Nullable __src, size_t __n) __INTRODUCED_IN_NO_GUARD_FOR_NDK(21);
+size_t wcstombs(char* _Nullable __dst, const wchar_t* _Nullable __src, size_t __n);
 
 size_t __ctype_get_mb_cur_max(void);
 #define MB_CUR_MAX __ctype_get_mb_cur_max()
