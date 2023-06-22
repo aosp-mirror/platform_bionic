@@ -59,7 +59,7 @@ New libc functions in V (API level 35):
   * `timespec_getres` (C23 addition).
   * `localtime_rz`, `mktime_z`, `tzalloc`, and `tzfree` (NetBSD
     extensions implemented in tzcode, and the "least non-standard"
-    functions for avoiding $TZ if you need to use multiple time zones in
+    functions for avoiding $TZ if you need to use multiple timezones in
     multi-threaded C).
   * `mbsrtowcs_l` and `wcsrtombs_l` aliases for `mbsrtowcs` and `wcsrtombs`.
 
