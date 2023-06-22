@@ -36,9 +36,44 @@
 #include "private/CachedProperty.h"
 
 extern "C" void tzset_unlocked(void);
+extern "C" void __bionic_get_system_tz(char* buf, size_t n);
 extern "C" int __bionic_open_tzdata(const char*, int32_t*);
 
 extern "C" void tzsetlcl(char const*);
+
+void __bionic_get_system_tz(char* buf, size_t n) {
+  static CachedProperty persist_sys_timezone("persist.sys.timezone");
+  const char* name = persist_sys_timezone.Get();
+
+  // If the system property is not set, perhaps because this is called
+  // before the default value has been set (the recovery image being a
+  // classic example), fall back to GMT.
+  if (name == nullptr) name = "GMT";
+
+  strlcpy(buf, name, n);
+
+  if (!strcmp(buf, "GMT")) {
+    // Typically we'll set the system property to an Olson ID, but
+    // java.util.TimeZone also supports the "GMT+xxxx" style, and at
+    // least historically (see http://b/25463955) some Android-based set
+    // top boxes would get the timezone from the TV network in this format
+    // and use it directly in the system property. This caused trouble
+    // for native code because POSIX and Java disagree about the sign in
+    // a timezone string. For POSIX, "GMT+3" means "3 hours west/behind",
+    // but for Java it means "3 hours east/ahead". Since (a) Java is the
+    // one that matches human expectations and (b) this system property is
+    // used directly by Java, we flip the sign here to translate from Java
+    // to POSIX. We only need to worry about the "GMT+xxxx" case because
+    // the expectation is that these are valid java.util.TimeZone ids,
+    // not general POSIX custom timezone specifications (which is why this
+    // code only applies to the system property, and not to the environment
+    // variable).
+    char sign = buf[3];
+    if (sign == '-' || sign == '+') {
+      buf[3] = (sign == '-') ? '+' : '-';
+    }
+  }
+}
 
 void tzset_unlocked() {
   // The TZ environment variable is meant to override the system-wide setting.
@@ -47,25 +82,9 @@ void tzset_unlocked() {
 
   // If that's not set, look at the "persist.sys.timezone" system property.
   if (name == nullptr) {
-    static CachedProperty persist_sys_timezone("persist.sys.timezone");
-
-    if ((name = persist_sys_timezone.Get()) != nullptr && strlen(name) > 3) {
-      // POSIX and Java disagree about the sign in a timezone string. For POSIX, "GMT+3" means
-      // "3 hours west/behind", but for Java it means "3 hours east/ahead". Since (a) Java is
-      // the one that matches human expectations and (b) this system property is used directly
-      // by Java, we flip the sign here to translate from Java to POSIX. http://b/25463955.
-      char sign = name[3];
-      if (sign == '-' || sign == '+') {
-        strlcpy(buf, name, sizeof(buf));
-        buf[3] = (sign == '-') ? '+' : '-';
-        name = buf;
-      }
-    }
+    __bionic_get_system_tz(buf, sizeof(buf));
+    name = buf;
   }
-
-  // If the system property is also not available (because you're running AOSP on a WiFi-only
-  // device, say), fall back to GMT.
-  if (name == nullptr) name = "GMT";
 
   tzsetlcl(name);
 }
@@ -192,14 +211,14 @@ static int __bionic_open_tzdata_path(const char* path,
     close(fd);
     // This file descriptor (-1) is passed to localtime.c. In invalid fd case
     // upstream passes errno value around methods and having 0 there will
-    // indicate that time zone was found and read successfully and localtime's
+    // indicate that timezone was found and read successfully and localtime's
     // internal state was properly initialized (which wasn't as we couldn't find
-    // requested time zone in the tzdata file).
+    // requested timezone in the tzdata file).
     // If we reached this point errno is unlikely to be touched. It is only
     // close(fd) which can do it, but that is very unlikely to happen. And
     // even if it happens we can't extract any useful insights from it.
     // We are overriding it to ENOENT as it matches upstream expectations -
-    // time zone is absent in the tzdata file == there is no TZif file in
+    // timezone is absent in the tzdata file == there is no TZif file in
     // /usr/share/zoneinfo.
     errno = ENOENT;
     return -1;
@@ -219,7 +238,7 @@ int __bionic_open_tzdata(const char* olson_id, int32_t* entry_length) {
   int fd;
 
   // Try the two locations for the tzdata file in a strict order:
-  // 1: The time zone data module which contains the main copy. This is the
+  // 1: The timezone data module which contains the main copy. This is the
   //    common case for current devices.
   // 2: The ultimate fallback: the non-updatable copy in /system.
 
