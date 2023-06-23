@@ -208,6 +208,9 @@ extern "C" __LIBC_HIDDEN__ __attribute__((no_sanitize("memtag"))) void memtag_ha
   }
 #endif  // __aarch64__
 
+  // We can use __has_feature here rather than __hwasan_handle_longjmp as a
+  // weak symbol because this is part of libc which is always sanitized for a
+  // hwasan enabled process.
 #if __has_feature(hwaddress_sanitizer)
   __hwasan_handle_longjmp(sp_dst);
 #endif  // __has_feature(hwaddress_sanitizer)
