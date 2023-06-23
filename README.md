@@ -134,9 +134,9 @@ libc/
   tzcode/
     # A modified superset of the IANA tzcode. Most of the modifications relate
     # to Android's use of a single file (with corresponding index) to contain
-    # time zone data.
+    # timezone data.
   zoneinfo/
-    # Android-format time zone data.
+    # Android-format timezone data.
     # See 'Updating tzdata' later.
 ```
 
