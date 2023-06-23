@@ -1452,3 +1452,12 @@ TEST(time, tzalloc_nullptr) {
   GTEST_SKIP() << "glibc doesn't have timezone_t";
 #endif
 }
+
+TEST(time, tzalloc_unique_ptr) {
+#if __BIONIC__
+  std::unique_ptr<std::remove_pointer_t<timezone_t>, decltype(&tzfree)> tz{tzalloc("Asia/Seoul"),
+                                                                           tzfree};
+#else
+  GTEST_SKIP() << "glibc doesn't have timezone_t";
+#endif
+}
