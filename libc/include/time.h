@@ -42,7 +42,13 @@ __BEGIN_DECLS
 /* If we just use void* in the typedef, the compiler exposes that in error messages. */
 struct __timezone_t;
 
-/** The `timezone_t` type that represents a timezone. */
+/**
+ * The `timezone_t` type that represents a timezone.
+ *
+ * To use this with std::unique_ptr you'll want something like
+ * `std::unique_ptr<std::remove_pointer_t<timezone_t>, decltype(&tzfree)> tz{tzalloc("Asia/Seoul"), tzfree};`
+ * to remove the pointer.
+ */
 typedef struct __timezone_t* timezone_t;
 
 /** Divisor to compute seconds from the result of a call to clock(). */
@@ -300,6 +306,10 @@ void tzset(void);
  * tzalloc() is thread safe (though obviously the system timezone can
  * change, especially if your mobile device is actually mobile!).
  *
+ * To use this with std::unique_ptr you'll want something like
+ * `std::unique_ptr<std::remove_pointer_t<timezone_t>, decltype(&tzfree)> tz{tzalloc("Asia/Seoul"), tzfree};`
+ * to remove the pointer.
+ *
  * Returns a timezone object on success, and returns NULL and sets `errno` on failure.
  *
  * Available since API level 35.
@@ -308,6 +318,10 @@ timezone_t _Nullable tzalloc(const char* _Nullable __id) __INTRODUCED_IN(35);
 
 /**
  * tzfree(3) frees a timezone object returned by tzalloc().
+ *
+ * To use this with std::unique_ptr you'll want something like
+ * `std::unique_ptr<std::remove_pointer_t<timezone_t>, decltype(&tzfree)> tz{tzalloc("Asia/Seoul"), tzfree};`
+ * to remove the pointer.
  *
  * Available since API level 35.
  */
