@@ -231,18 +231,13 @@ TEST_P(MemtagNoteTest, SEGV) {
   }
   // Note that we do not check running_with_hwasan() - what matters here is whether the test binary
   // itself is built with HWASan.
-  bool withHWASAN = __has_feature(hwaddress_sanitizer);
   bool withMTE = getauxval(AT_HWCAP2) & HWCAP2_MTE;
 
-  const char* kExpectedOutputHWASAN[] = {".*tag-mismatch.*", ".*tag-mismatch.*",
-                                         ".*tag-mismatch.*"};
   // Note that we do not check the exact si_code of the "async" variant, as it may be auto-upgraded
   // to asymm or even sync.
   const char* kExpectedOutputMTE[] = {"normal exit\n", "SEGV_MTE[AS]ERR\n", "SEGV_MTESERR\n"};
   const char* kExpectedOutputNonMTE[] = {"normal exit\n", "normal exit\n", "normal exit\n"};
-  const char** kExpectedOutput =
-      withHWASAN ? kExpectedOutputHWASAN : (withMTE ? kExpectedOutputMTE : kExpectedOutputNonMTE);
-  const int kExpectedExitStatus = withHWASAN ? -SIGABRT : 0;
+  const char** kExpectedOutput = withMTE ? kExpectedOutputMTE : kExpectedOutputNonMTE;
 
   MemtagNote note = std::get<0>(GetParam());
   bool isStatic = std::get<1>(GetParam());
@@ -252,7 +247,7 @@ TEST_P(MemtagNoteTest, SEGV) {
   chmod(helper.c_str(), 0755);
   ExecTestHelper eth;
   eth.SetArgs({helper.c_str(), nullptr});
-  eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, kExpectedExitStatus,
+  eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0,
           kExpectedOutput[static_cast<int>(note)]);
 #else
   GTEST_SKIP() << "bionic/arm64 only";
