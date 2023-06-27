@@ -3686,3 +3686,10 @@ TEST(STDIO_TEST, swscanf_invalid_w_or_wf_width) {
   GTEST_SKIP() << "no %w in glibc";
 #endif
 }
+
+TEST(STDIO_TEST, printf_lc_0) {
+  // https://austingroupbugs.net/view.php?id=1647
+  char buf[BUFSIZ];
+  EXPECT_EQ(3, snprintf(buf, sizeof(buf), "<%lc>", L'\0'));
+  EXPECT_TRUE(!memcmp(buf, "<\0>", 3));
+}
