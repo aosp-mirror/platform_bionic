@@ -39,6 +39,21 @@ __BEGIN_DECLS
  *
  * Returns a pointer to the allocated memory on success and returns a null
  * pointer and sets `errno` on failure.
+ *
+ * Note that Android (like most Unix systems) allows "overcommit". This
+ * allows processes to allocate more memory than the system has, provided
+ * they don't use it all. This works because only "dirty" pages that have
+ * been written to actually require physical memory. In practice, this
+ * means that it's rare to see memory allocation functions return a null
+ * pointer, and that a non-null pointer does not mean that you actually
+ * have all of the memory you asked for.
+ *
+ * Note also that the Linux Out Of Memory (OOM) killer behaves differently
+ * for code run via `adb shell`. The assumption is that if you ran
+ * something via `adb shell` you're a developer who actually wants the
+ * device to do what you're asking it to do _even if_ that means killing
+ * other processes. Obviously this is not the case for apps, which will
+ * be killed in preference to killing other processes.
  */
 void* _Nullable malloc(size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(1) __wur;
 
@@ -47,7 +62,7 @@ void* _Nullable malloc(size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(1) 
  * and clears memory on the heap.
  *
  * Returns a pointer to the allocated memory on success and returns a null
- * pointer and sets `errno` on failure.
+ * pointer and sets `errno` on failure (but see the notes for malloc()).
  */
 void* _Nullable calloc(size_t __item_count, size_t __item_size) __mallocfunc __BIONIC_ALLOC_SIZE(1,2) __wur;
 
@@ -56,7 +71,8 @@ void* _Nullable calloc(size_t __item_count, size_t __item_size) __mallocfunc __B
  * allocated memory on the heap.
  *
  * Returns a pointer (which may be different from `__ptr`) to the resized
- * memory on success and returns a null pointer and sets `errno` on failure.
+ * memory on success and returns a null pointer and sets `errno` on failure
+ * (but see the notes for malloc()).
  */
 void* _Nullable realloc(void* _Nullable __ptr, size_t __byte_count) __BIONIC_ALLOC_SIZE(2) __wur;
 
@@ -68,7 +84,8 @@ void* _Nullable realloc(void* _Nullable __ptr, size_t __byte_count) __BIONIC_ALL
  * multiplication overflows.
  *
  * Returns a pointer (which may be different from `__ptr`) to the resized
- * memory on success and returns a null pointer and sets `errno` on failure.
+ * memory on success and returns a null pointer and sets `errno` on failure
+ * (but see the notes for malloc()).
  */
 void* _Nullable reallocarray(void* _Nullable __ptr, size_t __item_count, size_t __item_size) __BIONIC_ALLOC_SIZE(2, 3) __wur __INTRODUCED_IN(29);
 
@@ -83,7 +100,7 @@ void free(void* _Nullable __ptr);
  * memory on the heap with the required alignment.
  *
  * Returns a pointer to the allocated memory on success and returns a null
- * pointer and sets `errno` on failure.
+ * pointer and sets `errno` on failure (but see the notes for malloc()).
  *
  * See also posix_memalign().
  */
