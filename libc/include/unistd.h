@@ -302,7 +302,7 @@ int ttyname_r(int __fd, char* _Nonnull __buf, size_t __buf_size);
 
 int acct(const char* _Nullable __path);
 
-int getpagesize(void);
+int getpagesize(void) __attribute_const__;
 
 long syscall(long __number, ...);
 
