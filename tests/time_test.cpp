@@ -28,6 +28,7 @@
 
 #include <atomic>
 #include <chrono>
+#include <thread>
 
 #include "SignalUtils.h"
 #include "utils.h"
@@ -96,7 +97,7 @@ TEST(time, mktime_TZ_as_UTC_and_offset) {
 
 static void* gmtime_no_stack_overflow_14313703_fn(void*) {
   const char* original_tz = getenv("TZ");
-  // Ensure we'll actually have to enter tzload by using a time zone that doesn't exist.
+  // Ensure we'll actually have to enter tzload by using a timezone that doesn't exist.
   setenv("TZ", "gmtime_stack_overflow_14313703", 1);
   tzset();
   if (original_tz != nullptr) {
@@ -323,7 +324,7 @@ TEST(time, strftime_Z_null_tm_zone) {
 
 // According to C language specification the only tm struct field needed to
 // find out replacement for %z and %Z in strftime is tm_isdst. Which is
-// wrong, as time zones change their standard offset and even DST savings.
+// wrong, as timezones change their standard offset and even DST savings.
 // tzcode deviates from C language specification and requires tm struct either
 // to be output of localtime-like functions or to be modified by mktime call
 // before passing to strftime. See tz mailing discussion for more details
@@ -559,7 +560,7 @@ TEST(time, strptime_Z) {
   EXPECT_EQ(1, tm.tm_isdst);
   EXPECT_EQ(3600, tm.tm_gmtoff);
 
-  // And as long as we're in Europe/Berlin, those are the only time zone
+  // And as long as we're in Europe/Berlin, those are the only timezone
   // abbreviations that are recognized.
   tm = {};
   ASSERT_TRUE(strptime("PDT", "%Z", &tm) == nullptr);
@@ -1117,7 +1118,7 @@ TEST(time, bug_31938693) {
   // Actual underlying bug (the code change, not the tzdata upgrade that first exposed the bug):
   // http://b/31848040
 
-  // This isn't a great test, because very few time zones were actually affected, and there's
+  // This isn't a great test, because very few timezones were actually affected, and there's
   // no real logic to which ones were affected: it was just a coincidence of the data that came
   // after them in the tzdata file.
 
@@ -1158,10 +1159,10 @@ TEST(time, bug_31938693) {
 TEST(time, bug_31339449) {
   // POSIX says localtime acts as if it calls tzset.
   // tzset does two things:
-  //  1. it sets the time zone ctime/localtime/mktime/strftime will use.
+  //  1. it sets the timezone ctime/localtime/mktime/strftime will use.
   //  2. it sets the global `tzname`.
   // POSIX says localtime_r need not set `tzname` (2).
-  // Q: should localtime_r set the time zone (1)?
+  // Q: should localtime_r set the timezone (1)?
   // Upstream tzcode (and glibc) answer "no", everyone else answers "yes".
 
   // Pick a time, any time...
@@ -1312,4 +1313,151 @@ TEST(time, timespec_getres_invalid) {
 TEST(time, difftime) {
   ASSERT_EQ(1.0, difftime(1, 0));
   ASSERT_EQ(-1.0, difftime(0, 1));
+}
+
+TEST(time, tzfree_null) {
+#if __BIONIC__
+  tzfree(nullptr);
+#else
+  GTEST_SKIP() << "glibc doesn't have timezone_t";
+#endif
+}
+
+TEST(time, localtime_rz) {
+#if __BIONIC__
+  setenv("TZ", "America/Los_Angeles", 1);
+  tzset();
+
+  auto AssertTmEq = [](const struct tm& rhs, int hour) {
+    ASSERT_EQ(93, rhs.tm_year);
+    ASSERT_EQ(0, rhs.tm_mon);
+    ASSERT_EQ(1, rhs.tm_mday);
+    ASSERT_EQ(hour, rhs.tm_hour);
+    ASSERT_EQ(0, rhs.tm_min);
+    ASSERT_EQ(0, rhs.tm_sec);
+  };
+
+  const time_t t = 725875200;
+
+  // Spam localtime_r() while we use localtime_rz().
+  std::atomic<bool> done = false;
+  std::thread thread{[&] {
+    while (!done) {
+      struct tm tm {};
+      ASSERT_EQ(&tm, localtime_r(&t, &tm));
+      AssertTmEq(tm, 0);
+    }
+  }};
+
+  struct tm tm;
+
+  timezone_t london{tzalloc("Europe/London")};
+  tm = {};
+  ASSERT_EQ(&tm, localtime_rz(london, &t, &tm));
+  AssertTmEq(tm, 8);
+
+  timezone_t seoul{tzalloc("Asia/Seoul")};
+  tm = {};
+  ASSERT_EQ(&tm, localtime_rz(seoul, &t, &tm));
+  AssertTmEq(tm, 17);
+
+  // Just check that mktime()'s timezone didn't change.
+  tm = {};
+  ASSERT_EQ(&tm, localtime_r(&t, &tm));
+  ASSERT_EQ(0, tm.tm_hour);
+  AssertTmEq(tm, 0);
+
+  done = true;
+  thread.join();
+
+  tzfree(london);
+  tzfree(seoul);
+#else
+  GTEST_SKIP() << "glibc doesn't have timezone_t";
+#endif
+}
+
+TEST(time, mktime_z) {
+#if __BIONIC__
+  setenv("TZ", "America/Los_Angeles", 1);
+  tzset();
+
+  // Spam mktime() while we use mktime_z().
+  std::atomic<bool> done = false;
+  std::thread thread{[&done] {
+    while (!done) {
+      struct tm tm {
+        .tm_year = 93, .tm_mday = 1
+      };
+      ASSERT_EQ(725875200, mktime(&tm));
+    }
+  }};
+
+  struct tm tm;
+
+  timezone_t london{tzalloc("Europe/London")};
+  tm = {.tm_year = 93, .tm_mday = 1};
+  ASSERT_EQ(725846400, mktime_z(london, &tm));
+
+  timezone_t seoul{tzalloc("Asia/Seoul")};
+  tm = {.tm_year = 93, .tm_mday = 1};
+  ASSERT_EQ(725814000, mktime_z(seoul, &tm));
+
+  // Just check that mktime()'s timezone didn't change.
+  tm = {.tm_year = 93, .tm_mday = 1};
+  ASSERT_EQ(725875200, mktime(&tm));
+
+  done = true;
+  thread.join();
+
+  tzfree(london);
+  tzfree(seoul);
+#else
+  GTEST_SKIP() << "glibc doesn't have timezone_t";
+#endif
+}
+
+TEST(time, tzalloc_nullptr) {
+#if __BIONIC__
+  // tzalloc(nullptr) returns the system timezone.
+  timezone_t default_tz = tzalloc(nullptr);
+  ASSERT_NE(nullptr, default_tz);
+
+  // Check that mktime_z() with the default timezone matches mktime().
+  // This assumes that the system timezone doesn't change during the test,
+  // but that should be unlikely, and we don't have much choice if we
+  // want to write a test at all.
+  // We unset $TZ before calling mktime() because mktime() honors $TZ.
+  unsetenv("TZ");
+  struct tm tm = {.tm_year = 93, .tm_mday = 1};
+  time_t t = mktime(&tm);
+  ASSERT_EQ(t, mktime_z(default_tz, &tm));
+
+  // Check that changing $TZ doesn't affect the tzalloc() default in
+  // the same way it would the mktime() default.
+  setenv("TZ", "America/Los_Angeles", 1);
+  tzset();
+  ASSERT_EQ(t, mktime_z(default_tz, &tm));
+
+  setenv("TZ", "Europe/London", 1);
+  tzset();
+  ASSERT_EQ(t, mktime_z(default_tz, &tm));
+
+  setenv("TZ", "Asia/Seoul", 1);
+  tzset();
+  ASSERT_EQ(t, mktime_z(default_tz, &tm));
+
+  tzfree(default_tz);
+#else
+  GTEST_SKIP() << "glibc doesn't have timezone_t";
+#endif
+}
+
+TEST(time, tzalloc_unique_ptr) {
+#if __BIONIC__
+  std::unique_ptr<std::remove_pointer_t<timezone_t>, decltype(&tzfree)> tz{tzalloc("Asia/Seoul"),
+                                                                           tzfree};
+#else
+  GTEST_SKIP() << "glibc doesn't have timezone_t";
+#endif
 }
