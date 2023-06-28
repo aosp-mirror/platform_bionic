@@ -141,13 +141,13 @@ int fchmod(int __fd, mode_t __mode);
 int mkdir(const char* _Nonnull __path, mode_t __mode);
 
 int fstat(int __fd, struct stat* _Nonnull __buf);
-int fstat64(int __fd, struct stat64* _Nonnull __buf) __RENAME_STAT64(fstat, 3, 21);
+int fstat64(int __fd, struct stat64* _Nonnull __buf);
 int fstatat(int __dir_fd, const char* _Nonnull __path, struct stat* _Nonnull __buf, int __flags);
-int fstatat64(int __dir_fd, const char* _Nonnull __path, struct stat64* _Nonnull __buf, int __flags) __RENAME_STAT64(fstatat, 3, 21);
+int fstatat64(int __dir_fd, const char* _Nonnull __path, struct stat64* _Nonnull __buf, int __flags);
 int lstat(const char* _Nonnull __path, struct stat* _Nonnull __buf);
-int lstat64(const char* _Nonnull __path, struct stat64* _Nonnull __buf) __RENAME_STAT64(lstat, 3, 21);
+int lstat64(const char* _Nonnull __path, struct stat64* _Nonnull __buf);
 int stat(const char* _Nonnull __path, struct stat* _Nonnull __buf);
-int stat64(const char* _Nonnull __path, struct stat64* _Nonnull __buf) __RENAME_STAT64(stat, 3, 21);
+int stat64(const char* _Nonnull __path, struct stat64* _Nonnull __buf);
 
 int mknod(const char* _Nonnull __path, mode_t __mode, dev_t __dev);
 mode_t umask(mode_t __mask);
@@ -156,12 +156,12 @@ mode_t umask(mode_t __mask);
 #include <bits/fortify/stat.h>
 #endif
 
-int mkfifo(const char* _Nonnull __path, mode_t __mode) __INTRODUCED_IN(21);
+int mkfifo(const char* _Nonnull __path, mode_t __mode);
 int mkfifoat(int __dir_fd, const char* _Nonnull __path, mode_t __mode) __INTRODUCED_IN(23);
 
 int fchmodat(int __dir_fd, const char* _Nonnull __path, mode_t __mode, int __flags);
 int mkdirat(int __dir_fd, const char* _Nonnull __path, mode_t __mode);
-int mknodat(int __dir_fd, const char* _Nonnull __path, mode_t __mode, dev_t __dev) __INTRODUCED_IN(21);
+int mknodat(int __dir_fd, const char* _Nonnull __path, mode_t __mode, dev_t __dev);
 
 /**
  * Used in the tv_nsec field of an argument to utimensat()/futimens()
@@ -200,10 +200,8 @@ int utimensat(int __dir_fd, const char* __BIONIC_COMPLICATED_NULLNESS __path, co
  * See also UTIME_NOW and UTIME_OMIT.
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
- *
- * Available since API level 19.
  */
-int futimens(int __fd, const struct timespec __times[_Nullable 2]) __INTRODUCED_IN(19);
+int futimens(int __fd, const struct timespec __times[_Nullable 2]);
 
 #if defined(__USE_GNU)
 /**
