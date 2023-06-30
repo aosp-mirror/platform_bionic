@@ -219,6 +219,8 @@ const char* android_fdsan_get_tag_type(uint64_t tag) {
       return "ZipArchive";
     case ANDROID_FDSAN_OWNER_TYPE_NATIVE_HANDLE:
       return "native_handle_t";
+    case ANDROID_FDSAN_OWNER_TYPE_PARCEL:
+      return "Parcel";
 
     case ANDROID_FDSAN_OWNER_TYPE_GENERIC_00:
     default:
