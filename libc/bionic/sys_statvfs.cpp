@@ -14,17 +14,36 @@
  * limitations under the License.
  */
 
+#include <sys/statfs.h>
 #include <sys/statvfs.h>
 
-// libc++ uses statvfs (for Darwin compatibility), but on Linux statvfs is
-// just another name for statfs, so it didn't arrive until API level 19. We
-// make the implementation available as inlines to support std::filesystem
-// for NDK users (see https://github.com/android-ndk/ndk/issues/609).
+static __inline void __bionic_statfs_to_statvfs(const struct statfs* src, struct statvfs* dst) {
+  dst->f_bsize = src->f_bsize;
+  dst->f_frsize = src->f_frsize;
+  dst->f_blocks = src->f_blocks;
+  dst->f_bfree = src->f_bfree;
+  dst->f_bavail = src->f_bavail;
+  dst->f_files = src->f_files;
+  dst->f_ffree = src->f_ffree;
+  dst->f_favail = src->f_ffree;
+  dst->f_fsid = src->f_fsid.__val[0] | static_cast<uint64_t>(src->f_fsid.__val[1]) << 32;
+  dst->f_flag = src->f_flags;
+  dst->f_namemax = src->f_namelen;
+}
 
-#define __BIONIC_SYS_STATVFS_INLINE /* Out of line. */
-#define __BIONIC_NEED_STATVFS_INLINES
-#undef __BIONIC_NEED_STATVFS64_INLINES
-#include <bits/sys_statvfs_inlines.h>
+int statvfs(const char* path, struct statvfs* result) {
+  struct statfs tmp;
+  if (statfs(path, &tmp) == -1) return -1;
+  __bionic_statfs_to_statvfs(&tmp, result);
+  return 0;
+}
+
+int fstatvfs(int fd, struct statvfs* result) {
+  struct statfs tmp;
+  if (fstatfs(fd, &tmp) == -1) return -1;
+  __bionic_statfs_to_statvfs(&tmp, result);
+  return 0;
+}
 
 // Historically we provided actual symbols for statvfs64 and fstatvfs64.
 // They're not particularly useful, but we can't take them away.

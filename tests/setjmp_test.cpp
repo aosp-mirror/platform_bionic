@@ -81,8 +81,10 @@ struct SigSets {
     sigset64_t ss;
     sigemptyset64(&ss);
     sigaddset64(&ss, SIGUSR1 + offset);
+#if defined(__BIONIC__)
     // TIMER_SIGNAL.
     sigaddset64(&ss, __SIGRTMIN);
+#endif
     sigaddset64(&ss, SIGRTMIN + offset);
     return ss;
   }
@@ -224,13 +226,15 @@ TEST(setjmp, setjmp_fp_registers) {
 }
 
 #if defined(__arm__)
-#define __JB_SIGFLAG 0
+#define JB_SIGFLAG_OFFSET 0
 #elif defined(__aarch64__)
-#define __JB_SIGFLAG 0
+#define JB_SIGFLAG_OFFSET 0
 #elif defined(__i386__)
-#define __JB_SIGFLAG 8
+#define JB_SIGFLAG_OFFSET 8
+#elif defined(__riscv)
+#define JB_SIGFLAG_OFFSET 0
 #elif defined(__x86_64)
-#define __JB_SIGFLAG 8
+#define JB_SIGFLAG_OFFSET 8
 #endif
 
 TEST_F(setjmp_DeathTest, setjmp_cookie) {
@@ -238,7 +242,7 @@ TEST_F(setjmp_DeathTest, setjmp_cookie) {
   int value = setjmp(jb);
   ASSERT_EQ(0, value);
 
-  long* sigflag = reinterpret_cast<long*>(jb) + __JB_SIGFLAG;
+  long* sigflag = reinterpret_cast<long*>(jb) + JB_SIGFLAG_OFFSET;
 
   // Make sure there's actually a cookie.
   EXPECT_NE(0, *sigflag & ~1);
@@ -274,7 +278,6 @@ TEST(setjmp, setjmp_stack) {
 }
 
 TEST(setjmp, bug_152210274) {
-  SKIP_WITH_HWASAN; // b/227390656
   // Ensure that we never have a mangled value in the stack pointer.
 #if defined(__BIONIC__)
   struct sigaction sa = {.sa_flags = SA_SIGINFO, .sa_sigaction = [](int, siginfo_t*, void*) {}};
@@ -295,15 +298,19 @@ TEST(setjmp, bug_152210274) {
         perror("setjmp");
         abort();
       }
-      if (*static_cast<pid_t*>(arg) == 100) longjmp(buf, 1);
+      // This will never be true, but the compiler doesn't know that, so the
+      // setjmp won't be removed by DCE. With HWASan/MTE this also acts as a
+      // kind of enforcement that the threads are done before leaving the test.
+      if (*static_cast<size_t*>(arg) != 123) longjmp(buf, 1);
     }
     return nullptr;
   };
+  pthread_t threads[kNumThreads];
   pid_t tids[kNumThreads] = {};
+  size_t var = 123;
   for (size_t i = 0; i < kNumThreads; ++i) {
-    pthread_t t;
-    ASSERT_EQ(0, pthread_create(&t, nullptr, jumper, &tids[i]));
-    tids[i] = pthread_gettid_np(t);
+    ASSERT_EQ(0, pthread_create(&threads[i], nullptr, jumper, &var));
+    tids[i] = pthread_gettid_np(threads[i]);
   }
 
   // Start the interrupter thread.
@@ -323,6 +330,9 @@ TEST(setjmp, bug_152210274) {
   pthread_t t;
   ASSERT_EQ(0, pthread_create(&t, nullptr, interrupter, tids));
   pthread_join(t, nullptr);
+  for (size_t i = 0; i < kNumThreads; i++) {
+    pthread_join(threads[i], nullptr);
+  }
 #else
   GTEST_SKIP() << "tests uses functions not in glibc";
 #endif

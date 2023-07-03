@@ -82,9 +82,9 @@ struct sigaction {
   sigset_t sa_mask;
 };
 typedef struct sigaltstack {
-  void __user * ss_sp;
+  void  * ss_sp;
   int ss_flags;
-  size_t ss_size;
+  __kernel_size_t ss_size;
 } stack_t;
 #endif
 #endif

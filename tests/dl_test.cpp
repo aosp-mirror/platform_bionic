@@ -32,9 +32,10 @@
 #include <regex>
 #include <string>
 
-#include "gtest_globals.h"
 #include <android-base/file.h>
+#include <android-base/macros.h>
 #include <android-base/test_utils.h>
+#include "gtest_globals.h"
 #include "utils.h"
 
 extern "C" int main_global_default_serial() {
@@ -84,22 +85,13 @@ TEST(dl, lib_does_not_preempt_global_protected) {
 
 #if defined(__BIONIC__)
 #if defined(__LP64__)
-  static constexpr const char* kPathToLinker = "/system/bin/linker64";
+#define LINKER_NAME "linker64"
 #else
-  static constexpr const char* kPathToLinker = "/system/bin/linker";
+#define LINKER_NAME "linker"
 #endif
-
-#if defined (__aarch64__)
-  static constexpr const char* kAlternatePathToLinker = "/system/bin/arm64/linker64";
-#elif defined (__arm__)
-  static constexpr const char* kAlternatePathToLinker = "/system/bin/arm/linker";
-#elif defined (__x86_64__)
-  static constexpr const char* kAlternatePathToLinker = "/system/bin/x86_64/linker64";
-#elif defined (__i386__)
-  static constexpr const char* kAlternatePathToLinker = "/system/bin/x86/linker";
-#else
-#error "Unknown architecture"
-#endif
+static constexpr const char* kPathToLinker = "/system/bin/" LINKER_NAME;
+static constexpr const char* kAlternatePathToLinker = "/system/bin/" ABI_STRING "/" LINKER_NAME;
+#undef LINKER_NAME
 
 const char* PathToLinker() {
   // On the systems with emulated architecture linker would be of different

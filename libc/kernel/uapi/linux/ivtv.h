@@ -24,8 +24,8 @@
 struct ivtv_dma_frame {
   enum v4l2_buf_type type;
   __u32 pixelformat;
-  void __user * y_source;
-  void __user * uv_source;
+  void  * y_source;
+  void  * uv_source;
   struct v4l2_rect src;
   struct v4l2_rect dst;
   __u32 src_width;

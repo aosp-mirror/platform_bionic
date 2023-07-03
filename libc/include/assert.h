@@ -75,12 +75,12 @@ __BEGIN_DECLS
  * __assert() is called by assert() on failure. Most users want assert()
  * instead, but this can be useful for reporting other failures.
  */
-void __assert(const char* __file, int __line, const char* __msg) __noreturn;
+void __assert(const char* _Nonnull __file, int __line, const char* _Nonnull __msg) __noreturn;
 
 /**
  * __assert2() is called by assert() on failure. Most users want assert()
  * instead, but this can be useful for reporting other failures.
  */
-void __assert2(const char* __file, int __line, const char* __function, const char* __msg) __noreturn;
+void __assert2(const char* _Nonnull __file, int __line, const char* _Nonnull __function, const char* _Nonnull __msg) __noreturn;
 
 __END_DECLS
