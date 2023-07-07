@@ -51,6 +51,6 @@ __BEGIN_DECLS
  *
  * Available since API level 26.
  */
-int quotactl(int __cmd, const char* __special, int __id, char* __addr) __INTRODUCED_IN(26);
+int quotactl(int __cmd, const char* _Nullable __special, int __id, char* __BIONIC_COMPLICATED_NULLNESS __addr) __INTRODUCED_IN(26);
 
 __END_DECLS

@@ -21,9 +21,11 @@
 #if !defined(__x86_64__) || !defined(__ILP32__)
 #include <asm-generic/shmbuf.h>
 #else
+#include <asm/ipcbuf.h>
+#include <asm/posix_types.h>
 struct shmid64_ds {
   struct ipc64_perm shm_perm;
-  size_t shm_segsz;
+  __kernel_size_t shm_segsz;
   __kernel_long_t shm_atime;
   __kernel_long_t shm_dtime;
   __kernel_long_t shm_ctime;

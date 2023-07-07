@@ -55,6 +55,8 @@ static inline T* align_up(T* p, size_t align) {
 #define BIONIC_STOP_UNWIND asm volatile(".cfi_undefined x30")
 #elif defined(__i386__)
 #define BIONIC_STOP_UNWIND asm volatile(".cfi_undefined \%eip")
+#elif defined(__riscv)
+#define BIONIC_STOP_UNWIND asm volatile(".cfi_undefined ra")
 #elif defined(__x86_64__)
 #define BIONIC_STOP_UNWIND asm volatile(".cfi_undefined \%rip")
 #endif
