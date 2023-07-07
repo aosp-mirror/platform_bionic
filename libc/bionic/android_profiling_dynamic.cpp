@@ -204,12 +204,14 @@ static void HandleSigsysSeccompOverride(int /*signal_number*/, siginfo_t* info,
   auto ret = -ENOSYS;
   ucontext_t* ctx = reinterpret_cast<ucontext_t*>(void_context);
 
-#if defined(__arm__)
+#if defined(__aarch64__)
+  ctx->uc_mcontext.regs[0] = ret;
+#elif defined(__arm__)
   ctx->uc_mcontext.arm_r0 = ret;
-#elif defined(__aarch64__)
-  ctx->uc_mcontext.regs[0] = ret;  // x0
 #elif defined(__i386__)
   ctx->uc_mcontext.gregs[REG_EAX] = ret;
+#elif defined(__riscv)
+  ctx->uc_mcontext.__gregs[REG_A0] = ret;
 #elif defined(__x86_64__)
   ctx->uc_mcontext.gregs[REG_RAX] = ret;
 #else

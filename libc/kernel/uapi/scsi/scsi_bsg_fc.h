@@ -66,7 +66,7 @@ struct fc_bsg_host_ct {
 };
 struct fc_bsg_host_vendor {
   __u64 vendor_id;
-  __u32 vendor_cmd[0];
+  __u32 vendor_cmd[];
 };
 struct fc_bsg_host_vendor_reply {
   __u32 vendor_rsp[0];

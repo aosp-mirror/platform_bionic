@@ -49,19 +49,19 @@ __BEGIN_DECLS
  * [cfgetispeed(3)](http://man7.org/linux/man-pages/man3/cfgetispeed.3.html)
  * returns the terminal input baud rate.
  */
-speed_t cfgetispeed(const struct termios* __t) __INTRODUCED_IN(21);
+speed_t cfgetispeed(const struct termios* _Nonnull __t) __INTRODUCED_IN(21);
 
 /**
  * [cfgetospeed(3)](http://man7.org/linux/man-pages/man3/cfgetospeed.3.html)
  * returns the terminal output baud rate.
  */
-speed_t cfgetospeed(const struct termios* __t) __INTRODUCED_IN(21);
+speed_t cfgetospeed(const struct termios* _Nonnull __t) __INTRODUCED_IN(21);
 
 /**
  * [cfmakeraw(3)](http://man7.org/linux/man-pages/man3/cfmakeraw.3.html)
  * configures the terminal for "raw" mode.
  */
-void cfmakeraw(struct termios* __t) __INTRODUCED_IN(21);
+void cfmakeraw(struct termios* _Nonnull __t) __INTRODUCED_IN(21);
 
 /**
  * [cfsetspeed(3)](http://man7.org/linux/man-pages/man3/cfsetspeed.3.html)
@@ -69,7 +69,7 @@ void cfmakeraw(struct termios* __t) __INTRODUCED_IN(21);
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
  */
-int cfsetspeed(struct termios* __t, speed_t __speed) __INTRODUCED_IN(21);
+int cfsetspeed(struct termios* _Nonnull __t, speed_t __speed) __INTRODUCED_IN(21);
 
 /**
  * [cfsetispeed(3)](http://man7.org/linux/man-pages/man3/cfsetispeed.3.html)
@@ -77,7 +77,7 @@ int cfsetspeed(struct termios* __t, speed_t __speed) __INTRODUCED_IN(21);
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
  */
-int cfsetispeed(struct termios* __t, speed_t __speed) __INTRODUCED_IN(21);
+int cfsetispeed(struct termios* _Nonnull _t, speed_t __speed) __INTRODUCED_IN(21);
 
 /**
  * [cfsetospeed(3)](http://man7.org/linux/man-pages/man3/cfsetospeed.3.html)
@@ -85,7 +85,7 @@ int cfsetispeed(struct termios* __t, speed_t __speed) __INTRODUCED_IN(21);
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
  */
-int cfsetospeed(struct termios* __t, speed_t __speed) __INTRODUCED_IN(21);
+int cfsetospeed(struct termios* _Nonnull __t, speed_t __speed) __INTRODUCED_IN(21);
 
 /**
  * [tcdrain(3)](http://man7.org/linux/man-pages/man3/tcdrain.3.html)
@@ -120,7 +120,7 @@ int tcflush(int __fd, int __queue) __INTRODUCED_IN(21);
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
  */
-int tcgetattr(int __fd, struct termios* __t) __INTRODUCED_IN(21);
+int tcgetattr(int __fd, struct termios* _Nonnull __t) __INTRODUCED_IN(21);
 
 /**
  * [tcgetsid(3)](http://man7.org/linux/man-pages/man3/tcgetsid.3.html)
@@ -145,7 +145,7 @@ int tcsendbreak(int __fd, int __duration) __INTRODUCED_IN(21);
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
  */
-int tcsetattr(int __fd, int __optional_actions, const struct termios* __t) __INTRODUCED_IN(21);
+int tcsetattr(int __fd, int __optional_actions, const struct termios* _Nonnull __t) __INTRODUCED_IN(21);
 
 #endif
 

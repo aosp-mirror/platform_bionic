@@ -46,6 +46,8 @@ enum {
   NDA_NH_ID,
   NDA_FDB_EXT_ATTRS,
   NDA_FLAGS_EXT,
+  NDA_NDM_STATE_MASK,
+  NDA_NDM_FLAGS_MASK,
   __NDA_MAX
 };
 #define NDA_MAX (__NDA_MAX - 1)
@@ -58,6 +60,7 @@ enum {
 #define NTF_STICKY (1 << 6)
 #define NTF_ROUTER (1 << 7)
 #define NTF_EXT_MANAGED (1 << 0)
+#define NTF_EXT_LOCKED (1 << 1)
 #define NUD_INCOMPLETE 0x01
 #define NUD_REACHABLE 0x02
 #define NUD_STALE 0x04
@@ -106,6 +109,7 @@ enum {
   NDTPA_QUEUE_LENBYTES,
   NDTPA_MCAST_REPROBES,
   NDTPA_PAD,
+  NDTPA_INTERVAL_PROBE_TIME_MS,
   __NDTPA_MAX
 };
 #define NDTPA_MAX (__NDTPA_MAX - 1)

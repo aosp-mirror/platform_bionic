@@ -25,7 +25,7 @@ struct inotify_event {
   __u32 mask;
   __u32 cookie;
   __u32 len;
-  char name[0];
+  char name[];
 };
 #define IN_ACCESS 0x00000001
 #define IN_MODIFY 0x00000002
