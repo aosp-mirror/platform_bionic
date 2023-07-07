@@ -41,6 +41,7 @@ __BEGIN_DECLS
 #define RLIM_SAVED_MAX RLIM_INFINITY
 
 typedef unsigned long rlim_t;
+typedef unsigned long long rlim64_t;
 
 int getrlimit(int __resource, struct rlimit* __limit);
 int setrlimit(int __resource, const struct rlimit* __limit);

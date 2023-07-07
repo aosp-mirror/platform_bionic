@@ -52,6 +52,6 @@ __BEGIN_DECLS
  *
  * Returns a key on success, and returns -1 and sets `errno` on failure.
  */
-key_t ftok(const char* __path, int __id);
+key_t ftok(const char* _Nonnull __path, int __id);
 
 __END_DECLS

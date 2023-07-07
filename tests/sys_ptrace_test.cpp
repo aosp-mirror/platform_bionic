@@ -257,6 +257,9 @@ static void watchpoint_imprecise_child(Uint128_t& data) {
   asm volatile("stm %0, { r0, r1, r2, r3 }" : : "r"(&data));
 #elif defined(__aarch64__)
   asm volatile("stp x0, x1, %0" : : "m"(data));
+#elif defined(__riscv)
+  UNUSED(data);
+  GTEST_LOG_(INFO) << "missing riscv64 instruction to store > 64 bits in one instruction";
 #endif
 }
 

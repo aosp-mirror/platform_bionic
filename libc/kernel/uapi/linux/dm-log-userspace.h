@@ -49,6 +49,6 @@ struct dm_ulog_request {
   __u32 seq;
   __u32 request_type;
   __u32 data_size;
-  char data[0];
+  char data[];
 };
 #endif
