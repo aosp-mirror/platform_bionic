@@ -58,13 +58,10 @@ extern "C" bool GetInitialArgs(const char*** args, size_t* num_args) {
 // the torture mode is is generally 40,000, so that svelte devices don't
 // explode, as this uses ~163MiB RAM (4KiB per live allocation).
 TEST(gwp_asan_integration, malloc_tests_under_torture) {
-  if (running_with_hwasan()) {
-    // Skip the malloc.zeroed tests since they fail in this particular config.
-    // TODO(b/267386540): Need to fix this problem.
-    RunGwpAsanTest("malloc.*:-malloc.mallinfo*:malloc.zeroed*");
-  } else {
-    RunGwpAsanTest("malloc.*:-malloc.mallinfo*");
-  }
+  // Do not override HWASan with GWP ASan.
+  SKIP_WITH_HWASAN;
+
+  RunGwpAsanTest("malloc.*:-malloc.mallinfo*");
 }
 
 class SyspropRestorer {
@@ -146,6 +143,16 @@ TEST(gwp_asan_integration, DISABLED_assert_gwp_asan_enabled) {
   EXPECT_DEATH({ *x = 7; }, "");
 }
 
+// A weaker version of the above tests, only checking that GWP-ASan is enabled
+// for any pointer, not *our* pointer. This allows us to test the system_default
+// sysprops without potentially OOM-ing other random processes:
+// b/273904016#comment5
+TEST(gwp_asan_integration, DISABLED_assert_gwp_asan_enabled_weaker) {
+  std::string maps;
+  EXPECT_TRUE(android::base::ReadFileToString("/proc/self/maps", &maps));
+  EXPECT_TRUE(maps.find("GWP-ASan") != std::string::npos) << maps;
+}
+
 TEST(gwp_asan_integration, DISABLED_assert_gwp_asan_disabled) {
   std::string maps;
   EXPECT_TRUE(android::base::ReadFileToString("/proc/self/maps", &maps));
@@ -153,6 +160,9 @@ TEST(gwp_asan_integration, DISABLED_assert_gwp_asan_disabled) {
 }
 
 TEST(gwp_asan_integration, sysprops_program_specific) {
+  // Do not override HWASan with GWP ASan.
+  SKIP_WITH_HWASAN;
+
   SyspropRestorer restorer;
 
   std::string path = testing::internal::GetArgvs()[0];
@@ -167,6 +177,9 @@ TEST(gwp_asan_integration, sysprops_program_specific) {
 }
 
 TEST(gwp_asan_integration, sysprops_persist_program_specific) {
+  // Do not override HWASan with GWP ASan.
+  SKIP_WITH_HWASAN;
+
   SyspropRestorer restorer;
 
   std::string path = testing::internal::GetArgvs()[0];
@@ -181,41 +194,32 @@ TEST(gwp_asan_integration, sysprops_persist_program_specific) {
   RunSubtestNoEnv("gwp_asan_integration.DISABLED_assert_gwp_asan_enabled");
 }
 
-TEST(gwp_asan_integration, sysprops_system) {
-  SyspropRestorer restorer;
-
-  __system_property_set("libc.debug.gwp_asan.sample_rate.system_default", "1");
-  __system_property_set("libc.debug.gwp_asan.process_sampling.system_default", "1");
-  __system_property_set("libc.debug.gwp_asan.max_allocs.system_default", "40000");
-
-  RunSubtestNoEnv("gwp_asan_integration.DISABLED_assert_gwp_asan_enabled");
-}
-
-TEST(gwp_asan_integration, sysprops_persist_system) {
-  SyspropRestorer restorer;
-
-  __system_property_set("persist.libc.debug.gwp_asan.sample_rate.system_default", "1");
-  __system_property_set("persist.libc.debug.gwp_asan.process_sampling.system_default", "1");
-  __system_property_set("persist.libc.debug.gwp_asan.max_allocs.system_default", "40000");
-
-  RunSubtestNoEnv("gwp_asan_integration.DISABLED_assert_gwp_asan_enabled");
-}
-
 TEST(gwp_asan_integration, sysprops_non_persist_overrides_persist) {
+  // Do not override HWASan with GWP ASan.
+  SKIP_WITH_HWASAN;
+
   SyspropRestorer restorer;
 
   __system_property_set("libc.debug.gwp_asan.sample_rate.system_default", "1");
   __system_property_set("libc.debug.gwp_asan.process_sampling.system_default", "1");
-  __system_property_set("libc.debug.gwp_asan.max_allocs.system_default", "40000");
+  // Note, any processes launched elsewhere on the system right now will have
+  // GWP-ASan enabled. Make sure that we only use a single slot, otherwise we
+  // could end up causing said badly-timed processes to use up to 163MiB extra
+  // penalty that 40,000 allocs would cause. See b/273904016#comment5 for more
+  // context.
+  __system_property_set("libc.debug.gwp_asan.max_allocs.system_default", "1");
 
   __system_property_set("persist.libc.debug.gwp_asan.sample_rate.system_default", "0");
   __system_property_set("persist.libc.debug.gwp_asan.process_sampling.system_default", "0");
   __system_property_set("persist.libc.debug.gwp_asan.max_allocs.system_default", "0");
 
-  RunSubtestNoEnv("gwp_asan_integration.DISABLED_assert_gwp_asan_enabled");
+  RunSubtestNoEnv("gwp_asan_integration.DISABLED_assert_gwp_asan_enabled_weaker");
 }
 
 TEST(gwp_asan_integration, sysprops_program_specific_overrides_default) {
+  // Do not override HWASan with GWP ASan.
+  SKIP_WITH_HWASAN;
+
   SyspropRestorer restorer;
 
   std::string path = testing::internal::GetArgvs()[0];
@@ -235,6 +239,9 @@ TEST(gwp_asan_integration, sysprops_program_specific_overrides_default) {
 }
 
 TEST(gwp_asan_integration, sysprops_can_disable) {
+  // Do not override HWASan with GWP ASan.
+  SKIP_WITH_HWASAN;
+
   SyspropRestorer restorer;
 
   __system_property_set("libc.debug.gwp_asan.sample_rate.system_default", "0");
@@ -245,6 +252,9 @@ TEST(gwp_asan_integration, sysprops_can_disable) {
 }
 
 TEST(gwp_asan_integration, env_overrides_sysprop) {
+  // Do not override HWASan with GWP ASan.
+  SKIP_WITH_HWASAN;
+
   SyspropRestorer restorer;
 
   __system_property_set("libc.debug.gwp_asan.sample_rate.system_default", "0");

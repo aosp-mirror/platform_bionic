@@ -18,8 +18,12 @@
  ****************************************************************************/
 #ifndef _UAPI_LINUX_BTRFS_H
 #define _UAPI_LINUX_BTRFS_H
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include <linux/types.h>
 #include <linux/ioctl.h>
+#include <linux/fs.h>
 #define BTRFS_IOCTL_MAGIC 0x94
 #define BTRFS_VOL_NAME_MAX 255
 #define BTRFS_LABEL_SIZE 256
@@ -75,7 +79,7 @@ struct btrfs_ioctl_vol_args_v2 {
   union {
     struct {
       __u64 size;
-      struct btrfs_qgroup_inherit __user * qgroup_inherit;
+      struct btrfs_qgroup_inherit  * qgroup_inherit;
     };
     __u64 unused[4];
   };
@@ -296,7 +300,7 @@ struct btrfs_ioctl_search_header {
   __u64 offset;
   __u32 type;
   __u32 len;
-};
+} __attribute__((__may_alias__));
 #define BTRFS_SEARCH_ARGS_BUFSIZE (4096 - sizeof(struct btrfs_ioctl_search_key))
 struct btrfs_ioctl_search_args {
   struct btrfs_ioctl_search_key key;
@@ -428,7 +432,7 @@ struct btrfs_ioctl_received_subvol_args {
 struct btrfs_ioctl_send_args {
   __s64 send_fd;
   __u64 clone_sources_count;
-  __u64 __user * clone_sources;
+  __u64  * clone_sources;
   __u64 parent_root;
   __u64 flags;
   __u32 version;
@@ -465,7 +469,7 @@ struct btrfs_ioctl_get_subvol_rootref_args {
   __u8 align[7];
 };
 struct btrfs_ioctl_encoded_io_args {
-  const struct iovec __user * iov;
+  const struct iovec  * iov;
   unsigned long iovcnt;
   __s64 offset;
   __u64 flags;
@@ -562,4 +566,7 @@ enum btrfs_err_code {
 #define BTRFS_IOC_SNAP_DESTROY_V2 _IOW(BTRFS_IOCTL_MAGIC, 63, struct btrfs_ioctl_vol_args_v2)
 #define BTRFS_IOC_ENCODED_READ _IOR(BTRFS_IOCTL_MAGIC, 64, struct btrfs_ioctl_encoded_io_args)
 #define BTRFS_IOC_ENCODED_WRITE _IOW(BTRFS_IOCTL_MAGIC, 64, struct btrfs_ioctl_encoded_io_args)
+#ifdef __cplusplus
+}
+#endif
 #endif

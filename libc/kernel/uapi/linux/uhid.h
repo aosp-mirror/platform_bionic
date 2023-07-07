@@ -106,7 +106,7 @@ struct uhid_create_req {
   __u8 name[128];
   __u8 phys[64];
   __u8 uniq[64];
-  __u8 __user * rd_data;
+  __u8  * rd_data;
   __u16 rd_size;
   __u16 bus;
   __u32 vendor;

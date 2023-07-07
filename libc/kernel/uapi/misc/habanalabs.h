@@ -549,6 +549,10 @@ enum gaudi2_engine_id {
   GAUDI2_ENGINE_ID_NIC10_1,
   GAUDI2_ENGINE_ID_NIC11_0,
   GAUDI2_ENGINE_ID_NIC11_1,
+  GAUDI2_ENGINE_ID_PCIE,
+  GAUDI2_ENGINE_ID_PSOC,
+  GAUDI2_ENGINE_ID_ARC_FARM,
+  GAUDI2_ENGINE_ID_KDMA,
   GAUDI2_ENGINE_ID_SIZE
 };
 enum hl_goya_pll_index {
@@ -624,6 +628,8 @@ enum hl_server_type {
 #define HL_NOTIFIER_EVENT_DEVICE_UNAVAILABLE (1ULL << 4)
 #define HL_NOTIFIER_EVENT_USER_ENGINE_ERR (1ULL << 5)
 #define HL_NOTIFIER_EVENT_GENERAL_HW_ERR (1ULL << 6)
+#define HL_NOTIFIER_EVENT_RAZWI (1ULL << 7)
+#define HL_NOTIFIER_EVENT_PAGE_FAULT (1ULL << 8)
 #define HL_INFO_HW_IP_INFO 0
 #define HL_INFO_HW_EVENTS 1
 #define HL_INFO_DRAM_USAGE 2
@@ -654,6 +660,8 @@ enum hl_server_type {
 #define HL_INFO_GET_EVENTS 30
 #define HL_INFO_UNDEFINED_OPCODE_EVENT 31
 #define HL_INFO_ENGINE_STATUS 32
+#define HL_INFO_PAGE_FAULT_EVENT 33
+#define HL_INFO_USER_MAPPINGS 34
 #define HL_INFO_VERSION_MAX_LEN 128
 #define HL_INFO_CARD_NAME_MAX_LEN 16
 #define HL_ENGINES_DATA_MAX_SIZE SZ_1M
@@ -686,12 +694,18 @@ struct hl_info_hw_ip_info {
   __u16 pad2;
   __u64 reserved4;
   __u64 device_mem_alloc_default_page_size;
+  __u64 reserved5;
+  __u64 reserved6;
+  __u32 reserved7;
+  __u8 reserved8;
+  __u8 revision_id;
+  __u8 pad[2];
 };
 struct hl_info_dram_usage {
   __u64 dram_free_mem;
   __u64 ctx_dram_mem;
 };
-#define HL_BUSY_ENGINES_MASK_EXT_SIZE 2
+#define HL_BUSY_ENGINES_MASK_EXT_SIZE 4
 struct hl_info_hw_idle {
   __u32 is_idle;
   __u32 busy_engines_mask;
@@ -779,16 +793,21 @@ struct hl_info_cs_timeout_event {
   __s64 timestamp;
   __u64 seq;
 };
-#define HL_RAZWI_PAGE_FAULT 0
-#define HL_RAZWI_MMU_ACCESS_ERROR 1
+#define HL_RAZWI_NA_ENG_ID U16_MAX
+#define HL_RAZWI_MAX_NUM_OF_ENGINES_PER_RTR 128
+#define HL_RAZWI_READ BIT(0)
+#define HL_RAZWI_WRITE BIT(1)
+#define HL_RAZWI_LBW BIT(2)
+#define HL_RAZWI_HBW BIT(3)
+#define HL_RAZWI_RR BIT(4)
+#define HL_RAZWI_ADDR_DEC BIT(5)
 struct hl_info_razwi_event {
   __s64 timestamp;
   __u64 addr;
-  __u16 engine_id_1;
-  __u16 engine_id_2;
-  __u8 no_engine_id;
-  __u8 error_type;
-  __u8 pad[2];
+  __u16 engine_id[HL_RAZWI_MAX_NUM_OF_ENGINES_PER_RTR];
+  __u16 num_of_possible_engines;
+  __u8 flags;
+  __u8 pad[5];
 };
 #define MAX_QMAN_STREAMS_INFO 4
 #define OPCODE_INFO_MAX_ADDR_SIZE 8
@@ -824,6 +843,16 @@ struct hl_info_sec_attest {
   __u8 certificate[SEC_CERTIFICATE_BUF_SZ];
   __u8 pad0[2];
 };
+struct hl_page_fault_info {
+  __s64 timestamp;
+  __u64 addr;
+  __u16 engine_id;
+  __u8 pad[6];
+};
+struct hl_user_mapping {
+  __u64 dev_va;
+  __u64 size;
+};
 enum gaudi_dcores {
   HL_GAUDI_WS_DCORE,
   HL_GAUDI_WN_DCORE,
@@ -842,6 +871,7 @@ struct hl_info_args {
     __u32 eventfd;
     __u32 user_buffer_actual_size;
     __u32 sec_attest_nonce;
+    __u32 array_size;
   };
   __u32 pad;
 };

@@ -93,7 +93,7 @@ riscv64_call = syscall_stub_header + """\
     ret
 1:
     neg     a0, a0
-    j       __set_errno_internal
+    tail    __set_errno_internal
 END(%(func)s)
 """
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
+ * Copyright (C) 2023 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,23 +26,38 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <utmpx.h>
 
-/**
- * @file legacy_sys_statvfs_inlines.h
- * @brief Inline definitions of statvfs/fstatvfs for old API levels.
- */
+#include "header_checks.h"
 
-#include <sys/cdefs.h>
-
-#if __ANDROID_API__ < 21
-
-#define __BIONIC_NEED_STATVFS64_INLINES
-#if __ANDROID_API__ < 19
-#define __BIONIC_NEED_STATVFS_INLINES
+static void utmpx_h() {
+  TYPE(struct utmpx);
+  STRUCT_MEMBER_ARRAY(struct utmpx, char/*[]*/, ut_user);
+  STRUCT_MEMBER_ARRAY(struct utmpx, char/*[]*/, ut_id);
+  STRUCT_MEMBER_ARRAY(struct utmpx, char/*[]*/, ut_line);
+  STRUCT_MEMBER(struct utmpx, pid_t, ut_pid);
+  STRUCT_MEMBER(struct utmpx, short, ut_type);
+#if !defined(__GLIBC__)
+  // POSIX says struct timeval, but glibc has an anonymous struct.
+  STRUCT_MEMBER(struct utmpx, struct timeval, ut_tv);
 #endif
 
-#define __BIONIC_SYS_STATVFS_INLINE static __inline
-#include <bits/sys_statvfs_inlines.h>
+  TYPE(pid_t);
+  TYPE(struct timeval);
 
-#endif
+  MACRO(EMPTY);
+  MACRO(BOOT_TIME);
+  MACRO(OLD_TIME);
+  MACRO(NEW_TIME);
+  MACRO(USER_PROCESS);
+  MACRO(INIT_PROCESS);
+  MACRO(LOGIN_PROCESS);
+  MACRO(DEAD_PROCESS);
+
+  FUNCTION(endutxent, void (*f)(void));
+  FUNCTION(getutxent, struct utmpx* (*f)(void));
+  FUNCTION(getutxid, struct utmpx* (*f)(const struct utmpx*));
+  FUNCTION(getutxline, struct utmpx* (*f)(const struct utmpx*));
+  FUNCTION(pututxline, struct utmpx* (*f)(const struct utmpx*));
+  FUNCTION(setutxent, void (*f)(void));
+}
