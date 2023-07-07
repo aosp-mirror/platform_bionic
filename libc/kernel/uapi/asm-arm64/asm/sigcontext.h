@@ -55,6 +55,14 @@ struct extra_context {
 struct sve_context {
   struct _aarch64_ctx head;
   __u16 vl;
+  __u16 flags;
+  __u16 __reserved[2];
+};
+#define SVE_SIG_FLAG_SM 0x1
+#define ZA_MAGIC 0x54366345
+struct za_context {
+  struct _aarch64_ctx head;
+  __u16 vl;
   __u16 __reserved[3];
 };
 #endif
@@ -82,4 +90,8 @@ struct sve_context {
 #define SVE_SIG_FFR_OFFSET(vq) (SVE_SIG_REGS_OFFSET + __SVE_FFR_OFFSET(vq))
 #define SVE_SIG_REGS_SIZE(vq) (__SVE_FFR_OFFSET(vq) + __SVE_FFR_SIZE(vq))
 #define SVE_SIG_CONTEXT_SIZE(vq) (SVE_SIG_REGS_OFFSET + SVE_SIG_REGS_SIZE(vq))
+#define ZA_SIG_REGS_OFFSET ((sizeof(struct za_context) + (__SVE_VQ_BYTES - 1)) / __SVE_VQ_BYTES * __SVE_VQ_BYTES)
+#define ZA_SIG_REGS_SIZE(vq) ((vq * __SVE_VQ_BYTES) * (vq * __SVE_VQ_BYTES))
+#define ZA_SIG_ZAV_OFFSET(vq,n) (ZA_SIG_REGS_OFFSET + (SVE_SIG_ZREG_SIZE(vq) * n))
+#define ZA_SIG_CONTEXT_SIZE(vq) (ZA_SIG_REGS_OFFSET + ZA_SIG_REGS_SIZE(vq))
 #endif

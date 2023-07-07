@@ -18,8 +18,12 @@
  ****************************************************************************/
 #ifndef _UAPI_LINUX_BTRFS_H
 #define _UAPI_LINUX_BTRFS_H
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include <linux/types.h>
 #include <linux/ioctl.h>
+#include <linux/fs.h>
 #define BTRFS_IOCTL_MAGIC 0x94
 #define BTRFS_VOL_NAME_MAX 255
 #define BTRFS_LABEL_SIZE 256
@@ -59,7 +63,7 @@ struct btrfs_qgroup_inherit {
   __u64 num_ref_copies;
   __u64 num_excl_copies;
   struct btrfs_qgroup_limit lim;
-  __u64 qgroups[0];
+  __u64 qgroups[];
 };
 struct btrfs_ioctl_qgroup_limit_args {
   __u64 qgroupid;
@@ -75,7 +79,7 @@ struct btrfs_ioctl_vol_args_v2 {
   union {
     struct {
       __u64 size;
-      struct btrfs_qgroup_inherit __user * qgroup_inherit;
+      struct btrfs_qgroup_inherit  * qgroup_inherit;
     };
     __u64 unused[4];
   };
@@ -176,6 +180,7 @@ struct btrfs_ioctl_fs_info_args {
 #define BTRFS_FEATURE_COMPAT_RO_FREE_SPACE_TREE (1ULL << 0)
 #define BTRFS_FEATURE_COMPAT_RO_FREE_SPACE_TREE_VALID (1ULL << 1)
 #define BTRFS_FEATURE_COMPAT_RO_VERITY (1ULL << 2)
+#define BTRFS_FEATURE_COMPAT_RO_BLOCK_GROUP_TREE (1ULL << 3)
 #define BTRFS_FEATURE_INCOMPAT_MIXED_BACKREF (1ULL << 0)
 #define BTRFS_FEATURE_INCOMPAT_DEFAULT_SUBVOL (1ULL << 1)
 #define BTRFS_FEATURE_INCOMPAT_MIXED_GROUPS (1ULL << 2)
@@ -189,6 +194,7 @@ struct btrfs_ioctl_fs_info_args {
 #define BTRFS_FEATURE_INCOMPAT_METADATA_UUID (1ULL << 10)
 #define BTRFS_FEATURE_INCOMPAT_RAID1C34 (1ULL << 11)
 #define BTRFS_FEATURE_INCOMPAT_ZONED (1ULL << 12)
+#define BTRFS_FEATURE_INCOMPAT_EXTENT_TREE_V2 (1ULL << 13)
 struct btrfs_ioctl_feature_flags {
   __u64 compat_flags;
   __u64 compat_ro_flags;
@@ -294,7 +300,7 @@ struct btrfs_ioctl_search_header {
   __u64 offset;
   __u32 type;
   __u32 len;
-};
+} __attribute__((__may_alias__));
 #define BTRFS_SEARCH_ARGS_BUFSIZE (4096 - sizeof(struct btrfs_ioctl_search_key))
 struct btrfs_ioctl_search_args {
   struct btrfs_ioctl_search_key key;
@@ -303,7 +309,7 @@ struct btrfs_ioctl_search_args {
 struct btrfs_ioctl_search_args_v2 {
   struct btrfs_ioctl_search_key key;
   __u64 buf_size;
-  __u64 buf[0];
+  __u64 buf[];
 };
 struct btrfs_ioctl_clone_range_args {
   __s64 src_fd;
@@ -334,7 +340,7 @@ struct btrfs_ioctl_same_args {
   __u16 dest_count;
   __u16 reserved1;
   __u32 reserved2;
-  struct btrfs_ioctl_same_extent_info info[0];
+  struct btrfs_ioctl_same_extent_info info[];
 };
 struct btrfs_ioctl_space_info {
   __u64 flags;
@@ -344,14 +350,14 @@ struct btrfs_ioctl_space_info {
 struct btrfs_ioctl_space_args {
   __u64 space_slots;
   __u64 total_spaces;
-  struct btrfs_ioctl_space_info spaces[0];
+  struct btrfs_ioctl_space_info spaces[];
 };
 struct btrfs_data_container {
   __u32 bytes_left;
   __u32 bytes_missing;
   __u32 elem_cnt;
   __u32 elem_missed;
-  __u64 val[0];
+  __u64 val[];
 };
 struct btrfs_ioctl_ino_path_args {
   __u64 inum;
@@ -421,11 +427,12 @@ struct btrfs_ioctl_received_subvol_args {
 #define BTRFS_SEND_FLAG_OMIT_STREAM_HEADER 0x2
 #define BTRFS_SEND_FLAG_OMIT_END_CMD 0x4
 #define BTRFS_SEND_FLAG_VERSION 0x8
-#define BTRFS_SEND_FLAG_MASK (BTRFS_SEND_FLAG_NO_FILE_DATA | BTRFS_SEND_FLAG_OMIT_STREAM_HEADER | BTRFS_SEND_FLAG_OMIT_END_CMD | BTRFS_SEND_FLAG_VERSION)
+#define BTRFS_SEND_FLAG_COMPRESSED 0x10
+#define BTRFS_SEND_FLAG_MASK (BTRFS_SEND_FLAG_NO_FILE_DATA | BTRFS_SEND_FLAG_OMIT_STREAM_HEADER | BTRFS_SEND_FLAG_OMIT_END_CMD | BTRFS_SEND_FLAG_VERSION | BTRFS_SEND_FLAG_COMPRESSED)
 struct btrfs_ioctl_send_args {
   __s64 send_fd;
   __u64 clone_sources_count;
-  __u64 __user * clone_sources;
+  __u64  * clone_sources;
   __u64 parent_root;
   __u64 flags;
   __u32 version;
@@ -461,6 +468,29 @@ struct btrfs_ioctl_get_subvol_rootref_args {
   __u8 num_items;
   __u8 align[7];
 };
+struct btrfs_ioctl_encoded_io_args {
+  const struct iovec  * iov;
+  unsigned long iovcnt;
+  __s64 offset;
+  __u64 flags;
+  __u64 len;
+  __u64 unencoded_len;
+  __u64 unencoded_offset;
+  __u32 compression;
+  __u32 encryption;
+  __u8 reserved[64];
+};
+#define BTRFS_ENCODED_IO_COMPRESSION_NONE 0
+#define BTRFS_ENCODED_IO_COMPRESSION_ZLIB 1
+#define BTRFS_ENCODED_IO_COMPRESSION_ZSTD 2
+#define BTRFS_ENCODED_IO_COMPRESSION_LZO_4K 3
+#define BTRFS_ENCODED_IO_COMPRESSION_LZO_8K 4
+#define BTRFS_ENCODED_IO_COMPRESSION_LZO_16K 5
+#define BTRFS_ENCODED_IO_COMPRESSION_LZO_32K 6
+#define BTRFS_ENCODED_IO_COMPRESSION_LZO_64K 7
+#define BTRFS_ENCODED_IO_COMPRESSION_TYPES 8
+#define BTRFS_ENCODED_IO_ENCRYPTION_NONE 0
+#define BTRFS_ENCODED_IO_ENCRYPTION_TYPES 1
 enum btrfs_err_code {
   BTRFS_ERROR_DEV_RAID1_MIN_NOT_MET = 1,
   BTRFS_ERROR_DEV_RAID10_MIN_NOT_MET,
@@ -534,4 +564,9 @@ enum btrfs_err_code {
 #define BTRFS_IOC_GET_SUBVOL_ROOTREF _IOWR(BTRFS_IOCTL_MAGIC, 61, struct btrfs_ioctl_get_subvol_rootref_args)
 #define BTRFS_IOC_INO_LOOKUP_USER _IOWR(BTRFS_IOCTL_MAGIC, 62, struct btrfs_ioctl_ino_lookup_user_args)
 #define BTRFS_IOC_SNAP_DESTROY_V2 _IOW(BTRFS_IOCTL_MAGIC, 63, struct btrfs_ioctl_vol_args_v2)
+#define BTRFS_IOC_ENCODED_READ _IOR(BTRFS_IOCTL_MAGIC, 64, struct btrfs_ioctl_encoded_io_args)
+#define BTRFS_IOC_ENCODED_WRITE _IOW(BTRFS_IOCTL_MAGIC, 64, struct btrfs_ioctl_encoded_io_args)
+#ifdef __cplusplus
+}
+#endif
 #endif

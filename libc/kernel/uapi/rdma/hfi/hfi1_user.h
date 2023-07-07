@@ -80,7 +80,7 @@ struct hfi1_sdma_comp_entry {
 struct hfi1_status {
   __aligned_u64 dev;
   __aligned_u64 port;
-  char freezemsg[0];
+  char freezemsg[];
 };
 enum sdma_req_opcode {
   EXPECTED = 0,

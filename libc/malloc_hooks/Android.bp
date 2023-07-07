@@ -59,6 +59,11 @@ cc_test {
     name: "malloc_hooks_system_tests",
     isolated: true,
 
+    // The clang-analyzer-unix.Malloc and other warnings in these
+    // unit tests are either false positive or in
+    // negative tests that can be ignored.
+    tidy: false,
+
     srcs: [
         "tests/malloc_hooks_tests.cpp",
     ],

@@ -27,7 +27,7 @@
 struct consolefontdesc {
   unsigned short charcount;
   unsigned short charheight;
-  char __user * chardata;
+  char  * chardata;
 };
 #define PIO_FONTRESET 0x4B6D
 #define GIO_CMAP 0x4B70
@@ -68,7 +68,7 @@ struct unipair {
 };
 struct unimapdesc {
   unsigned short entry_ct;
-  struct unipair __user * entries;
+  struct unipair  * entries;
 };
 #define PIO_UNIMAP 0x4B67
 #define PIO_UNIMAPCLR 0x4B68
@@ -147,7 +147,7 @@ struct console_font_op {
   unsigned int flags;
   unsigned int width, height;
   unsigned int charcount;
-  unsigned char __user * data;
+  unsigned char  * data;
 };
 struct console_font {
   unsigned int width, height;

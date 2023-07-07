@@ -33,10 +33,10 @@ struct i2c_smbus_ioctl_data {
   __u8 read_write;
   __u8 command;
   __u32 size;
-  union i2c_smbus_data __user * data;
+  union i2c_smbus_data  * data;
 };
 struct i2c_rdwr_ioctl_data {
-  struct i2c_msg __user * msgs;
+  struct i2c_msg  * msgs;
   __u32 nmsgs;
 };
 #define I2C_RDWR_IOCTL_MAX_MSGS 42
