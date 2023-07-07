@@ -84,7 +84,11 @@ static void fcntl_h() {
 
   // POSIX: "The <fcntl.h> header shall define the symbolic constants for
   // file modes for use as values of mode_t as described in <sys/stat.h>."
+  // Musl only defines the file mode bits (S_IFUSR, etc.) and not the file
+  // type bits (S_IFMT, etc.).
+#if !defined(ANDROID_HOST_MUSL)
 #include "sys_stat_h_mode_constants.h"
+#endif
 
   MACRO(AT_FDCWD);
 #if !defined(__BIONIC__) // See comment in "faccessat.cpp".

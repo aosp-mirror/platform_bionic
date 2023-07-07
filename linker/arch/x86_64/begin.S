@@ -35,6 +35,6 @@ ENTRY(_start)
   mov %rsp, %rdi
   call __linker_init
 
-  /* linker init returns (%rax) the _entry address in the main image */
+  // __linker_init returns the address of the entry point in the main image.
   jmp *%rax
 END(_start)

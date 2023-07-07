@@ -32,15 +32,17 @@
 
 static void limits_h() {
   // These are only defined if they're constants.
-#if !defined(__BIONIC__) && !defined(__GLIBC__)
+#if !defined(__BIONIC__) && !defined(__GLIBC__) && !defined(ANDROID_HOST_MUSL)
   MACRO(AIO_LISTIO_MAX);
   MACRO(AIO_MAX);
 #endif
-#if !defined(__BIONIC__)
+#if !defined(__BIONIC__) && !defined(ANDROID_HOST_MUSL)
   MACRO(AIO_PRIO_DELTA_MAX);
 #endif
 #if !defined(__BIONIC__) && !defined(__GLIBC__)
   MACRO(ARG_MAX);
+#endif
+#if !defined(__BIONIC__) && !defined(__GLIBC__) && !defined(ANDROID_HOST_MUSL)
   MACRO(ATEXIT_MAX);
   MACRO(CHILD_MAX);
 #endif
@@ -50,14 +52,16 @@ static void limits_h() {
   MACRO(HOST_NAME_MAX);
   MACRO(IOV_MAX);
   MACRO(LOGIN_NAME_MAX);
-#if !defined(__BIONIC__) && !defined(__GLIBC__)
+#if !defined(__BIONIC__) && !defined(__GLIBC__) && !defined(ANDROID_HOST_MUSL)
   MACRO(MQ_OPEN_MAX);
 #endif
 #if !defined(__BIONIC__)
   MACRO(MQ_PRIO_MAX);
 #endif
-#if !defined(__BIONIC__) && !defined(__GLIBC__)
+#if !defined(__BIONIC__) && !defined(__GLIBC__) && !defined(ANDROID_HOST_MUSL)
   MACRO(OPEN_MAX);
+#endif
+#if !defined(__BIONIC__) && !defined(__GLIBC__)
   MACRO(PAGESIZE);
   MACRO(PAGE_SIZE);
 #endif
@@ -66,19 +70,25 @@ static void limits_h() {
 #if !defined(__BIONIC__)
   MACRO(PTHREAD_STACK_MIN);
 #endif
-#if !defined(__BIONIC__) && !defined(__GLIBC__)
+#if !defined(__BIONIC__) && !defined(__GLIBC__) && !defined(ANDROID_HOST_MUSL)
   MACRO(PTHREAD_THREADS_MAX);
 #endif
+#if !defined(ANDROID_HOST_MUSL)
   MACRO(RTSIG_MAX);
+#endif
 #if !defined(__BIONIC__) && !defined(__GLIBC__)
   MACRO(SEM_NSEMS_MAX);
 #endif
   MACRO(SEM_VALUE_MAX);
-#if !defined(__BIONIC__) && !defined(__GLIBC__)
+#if !defined(__BIONIC__) && !defined(__GLIBC__) && !defined(ANDROID_HOST_MUSL)
   MACRO(SIGQUEUE_MAX);
   MACRO(SS_REPL_MAX);
   MACRO(STREAM_MAX);
+#endif
+#if !defined(__BIONIC__) && !defined(__GLIBC__)
   MACRO(SYMLOOP_MAX);
+#endif
+#if !defined(__BIONIC__) && !defined(__GLIBC__) && !defined(ANDROID_HOST_MUSL)
   MACRO(TIMER_MAX);
 #endif
 #if !defined(__BIONIC__)
@@ -90,10 +100,14 @@ static void limits_h() {
 
 #if !defined(__BIONIC__) && !defined(__GLIBC__)
   MACRO(FILESIZEBITS);
+#endif
+#if !defined(__BIONIC__) && !defined(__GLIBC__) && !defined(ANDROID_HOST_MUSL)
   MACRO(LINK_MAX);
 #endif
+#if !defined(ANDROID_HOST_MUSL)
   MACRO(MAX_CANON);
   MACRO(MAX_INPUT);
+#endif
   MACRO(NAME_MAX);
   MACRO(PATH_MAX);
   MACRO(PIPE_BUF);
@@ -104,7 +118,7 @@ static void limits_h() {
   MACRO(POSIX_REC_MIN_XFER_SIZE);
   MACRO(POSIX_REC_XFER_ALIGN);
 #endif
-#if !defined(__BIONIC__) && !defined(__GLIBC__)
+#if !defined(__BIONIC__) && !defined(__GLIBC__) && !defined(ANDROID_HOST_MUSL)
   MACRO(SYMLINK_MAX);
 #endif
 

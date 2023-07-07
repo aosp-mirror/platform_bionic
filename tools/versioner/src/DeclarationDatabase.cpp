@@ -170,6 +170,7 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
               &arch_availability[Arch::x86].introduced } },
           { "introduced_in_64",
             { &arch_availability[Arch::arm64].introduced,
+              &arch_availability[Arch::riscv64].introduced,
               &arch_availability[Arch::x86_64].introduced } },
         };
 

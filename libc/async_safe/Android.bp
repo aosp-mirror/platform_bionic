@@ -30,13 +30,8 @@ cc_library_static {
     stl: "none",
 
     apex_available: [
+        "//apex_available:anyapex",
         "//apex_available:platform",
-        "com.android.runtime",
-        "com.android.art",
-        "com.android.art.debug",
-        "com.android.media",
-        "com.android.media.swcodec",
-        "com.android.virt",
     ],
     min_sdk_version: "apex_inherit",
 }

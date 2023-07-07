@@ -96,9 +96,20 @@ struct serial_rs485 {
 #define SER_RS485_RTS_AFTER_SEND (1 << 2)
 #define SER_RS485_RX_DURING_TX (1 << 4)
 #define SER_RS485_TERMINATE_BUS (1 << 5)
+#define SER_RS485_ADDRB (1 << 6)
+#define SER_RS485_ADDR_RECV (1 << 7)
+#define SER_RS485_ADDR_DEST (1 << 8)
   __u32 delay_rts_before_send;
   __u32 delay_rts_after_send;
-  __u32 padding[5];
+  union {
+    __u32 padding[5];
+    struct {
+      __u8 addr_recv;
+      __u8 addr_dest;
+      __u8 padding0[2];
+      __u32 padding1[4];
+    };
+  };
 };
 struct serial_iso7816 {
   __u32 flags;
