@@ -57,6 +57,7 @@
 #define IFF_TAP 0x0002
 #define IFF_NAPI 0x0010
 #define IFF_NAPI_FRAGS 0x0020
+#define IFF_NO_CARRIER 0x0040
 #define IFF_NO_PI 0x1000
 #define IFF_ONE_QUEUE 0x2000
 #define IFF_VNET_HDR 0x4000
@@ -72,6 +73,8 @@
 #define TUN_F_TSO6 0x04
 #define TUN_F_TSO_ECN 0x08
 #define TUN_F_UFO 0x10
+#define TUN_F_USO4 0x20
+#define TUN_F_USO6 0x40
 #define TUN_PKT_STRIP 0x0001
 struct tun_pi {
   __u16 flags;
@@ -81,6 +84,6 @@ struct tun_pi {
 struct tun_filter {
   __u16 flags;
   __u16 count;
-  __u8 addr[0][ETH_ALEN];
+  __u8 addr[][ETH_ALEN];
 };
 #endif

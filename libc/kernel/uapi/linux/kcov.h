@@ -24,7 +24,7 @@ struct kcov_remote_arg {
   __u32 area_size;
   __u32 num_handles;
   __aligned_u64 common_handle;
-  __aligned_u64 handles[0];
+  __aligned_u64 handles[];
 };
 #define KCOV_REMOTE_MAX_HANDLES 0x100
 #define KCOV_INIT_TRACE _IOR('c', 1, unsigned long)

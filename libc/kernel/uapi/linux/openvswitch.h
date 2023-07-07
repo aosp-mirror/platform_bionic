@@ -44,6 +44,7 @@ enum ovs_datapath_attr {
   OVS_DP_ATTR_PAD,
   OVS_DP_ATTR_MASKS_CACHE_SIZE,
   OVS_DP_ATTR_PER_CPU_PIDS,
+  OVS_DP_ATTR_IFINDEX,
   __OVS_DP_ATTR_MAX
 };
 #define OVS_DP_ATTR_MAX (__OVS_DP_ATTR_MAX - 1)
@@ -130,9 +131,16 @@ enum ovs_vport_attr {
   OVS_VPORT_ATTR_PAD,
   OVS_VPORT_ATTR_IFINDEX,
   OVS_VPORT_ATTR_NETNSID,
+  OVS_VPORT_ATTR_UPCALL_STATS,
   __OVS_VPORT_ATTR_MAX
 };
 #define OVS_VPORT_ATTR_MAX (__OVS_VPORT_ATTR_MAX - 1)
+enum ovs_vport_upcall_attr {
+  OVS_VPORT_UPCALL_ATTR_SUCCESS,
+  OVS_VPORT_UPCALL_ATTR_FAIL,
+  __OVS_VPORT_UPCALL_ATTR_MAX
+};
+#define OVS_VPORT_UPCALL_ATTR_MAX (__OVS_VPORT_UPCALL_ATTR_MAX - 1)
 enum {
   OVS_VXLAN_EXT_UNSPEC,
   OVS_VXLAN_EXT_GBP,
@@ -190,6 +198,10 @@ enum ovs_key_attr {
   OVS_KEY_ATTR_CT_ORIG_TUPLE_IPV4,
   OVS_KEY_ATTR_CT_ORIG_TUPLE_IPV6,
   OVS_KEY_ATTR_NSH,
+  OVS_KEY_ATTR_PACKET_TYPE,
+  OVS_KEY_ATTR_ND_EXTENSIONS,
+  OVS_KEY_ATTR_TUNNEL_INFO,
+  OVS_KEY_ATTR_IPV6_EXTHDRS,
   __OVS_KEY_ATTR_MAX
 };
 #define OVS_KEY_ATTR_MAX (__OVS_KEY_ATTR_MAX - 1)
@@ -244,6 +256,9 @@ struct ovs_key_ipv6 {
   __u8 ipv6_tclass;
   __u8 ipv6_hlimit;
   __u8 ipv6_frag;
+};
+struct ovs_key_ipv6_exthdrs {
+  __u16 hdrs;
 };
 struct ovs_key_tcp {
   __be16 tcp_src;

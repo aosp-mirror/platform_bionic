@@ -945,6 +945,8 @@ int pthread_mutex_trylock(pthread_mutex_t* mutex_interface) {
 }
 
 #if !defined(__LP64__)
+// This exists only for backward binary compatibility on 32 bit platforms.
+// (This function never existed for LP64.)
 extern "C" int pthread_mutex_lock_timeout_np(pthread_mutex_t* mutex_interface, unsigned ms) {
     timespec ts;
     timespec_from_ms(ts, ms);

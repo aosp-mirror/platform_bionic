@@ -15,7 +15,7 @@ license {
 
 subdirs = ["*"]
 
-filegroup {
-    name: "bionic-generate-version-script",
+python_binary_host {
+    name: "generate-version-script",
     srcs: ["generate-version-script.py"],
 }

@@ -192,6 +192,8 @@ struct tcp_info {
   __u32 tcpi_reord_seen;
   __u32 tcpi_rcv_ooopack;
   __u32 tcpi_snd_wnd;
+  __u32 tcpi_rcv_wnd;
+  __u32 tcpi_rehash;
 };
 enum {
   TCP_NLA_PAD,
@@ -221,6 +223,7 @@ enum {
   TCP_NLA_BYTES_NOTSENT,
   TCP_NLA_EDT,
   TCP_NLA_TTL,
+  TCP_NLA_REHASH,
 };
 #define TCP_MD5SIG_MAXKEYLEN 80
 #define TCP_MD5SIG_FLAG_PREFIX 0x1

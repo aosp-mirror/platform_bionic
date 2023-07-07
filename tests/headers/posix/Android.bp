@@ -33,8 +33,5 @@ cc_library_static {
         darwin: {
             enabled: false,
         },
-        musl: {
-            enabled: false,
-        },
     },
 }

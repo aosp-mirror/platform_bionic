@@ -7,7 +7,7 @@
 # where:
 #       arch_list ::= "all" | arches
 #       arches    ::= arch |  arch "," arches
-#       arch      ::= "arm" | "arm64" | "x86" | "x86_64" | "lp32" | "lp64"
+#       arch      ::= "arm" | "arm64" | "riscv64" | "x86" | "x86_64" | "lp32" | "lp64"
 #
 # Note:
 #      - syscall_name corresponds to the name of the syscall, which may differ from
@@ -26,41 +26,47 @@
 # This file is processed by a python script named gensyscalls.py, run via
 # genrules in Android.bp.
 
-int     execve(const char*, char* const*, char* const*)  all
+# Calls that have historical 16-bit variants camping on the best names (CONFIG_UID16).
+uid_t getuid:getuid32()   lp32
+uid_t getuid:getuid()     lp64
+gid_t getgid:getgid32()   lp32
+gid_t getgid:getgid()     lp64
+uid_t geteuid:geteuid32() lp32
+uid_t geteuid:geteuid()   lp64
+gid_t getegid:getegid32() lp32
+gid_t getegid:getegid()   lp64
+uid_t getresuid:getresuid32(uid_t* ruid, uid_t* euid, uid_t* suid) lp32
+uid_t getresuid:getresuid(uid_t* ruid, uid_t* euid, uid_t* suid)   lp64
+gid_t getresgid:getresgid32(gid_t* rgid, gid_t* egid, gid_t* sgid) lp32
+gid_t getresgid:getresgid(gid_t* rgid, gid_t* egid, gid_t* sgid)   lp64
+int getgroups:getgroups32(int, gid_t*) lp32
+int getgroups:getgroups(int, gid_t*)   lp64
+int setgid:setgid32(gid_t) lp32
+int setgid:setgid(gid_t)   lp64
+int setuid:setuid32(uid_t) lp32
+int setuid:setuid(uid_t)   lp64
+int setreuid:setreuid32(uid_t, uid_t) lp32
+int setreuid:setreuid(uid_t, uid_t)   lp64
+int setresuid:setresuid32(uid_t, uid_t, uid_t) lp32
+int setresuid:setresuid(uid_t, uid_t, uid_t)   lp64
+int setresgid:setresgid32(gid_t, gid_t, gid_t) lp32
+int setresgid:setresgid(gid_t, gid_t, gid_t)   lp64
+int setfsgid:setfsgid32(gid_t) lp32
+int setfsgid:setfsgid(gid_t)   lp64
+int setfsuid:setfsuid32(uid_t) lp32
+int setfsuid:setfsuid(uid_t)   lp64
 
-uid_t   getuid:getuid32()         lp32
-uid_t   getuid:getuid()           lp64
-gid_t   getgid:getgid32()         lp32
-gid_t   getgid:getgid()           lp64
-uid_t   geteuid:geteuid32()       lp32
-uid_t   geteuid:geteuid()         lp64
-gid_t   getegid:getegid32()       lp32
-gid_t   getegid:getegid()         lp64
-uid_t   getresuid:getresuid32(uid_t* ruid, uid_t* euid, uid_t* suid)   lp32
-uid_t   getresuid:getresuid(uid_t* ruid, uid_t* euid, uid_t* suid)     lp64
-gid_t   getresgid:getresgid32(gid_t* rgid, gid_t* egid, gid_t* sgid)   lp32
-gid_t   getresgid:getresgid(gid_t* rgid, gid_t* egid, gid_t* sgid)     lp64
-ssize_t readahead(int, off64_t, size_t)     all
-int     getgroups:getgroups32(int, gid_t*)    lp32
-int     getgroups:getgroups(int, gid_t*)      lp64
-pid_t   getpgid(pid_t)             all
-pid_t   getppid()                  all
-pid_t   getsid(pid_t)              all
-pid_t   setsid()                   all
-int     setgid:setgid32(gid_t)     lp32
-int     setgid:setgid(gid_t)       lp64
-int     setuid:setuid32(uid_t)    lp32
-int     setuid:setuid(uid_t)      lp64
-int     setreuid:setreuid32(uid_t, uid_t)   lp32
-int     setreuid:setreuid(uid_t, uid_t)     lp64
-int     setresuid:setresuid32(uid_t, uid_t, uid_t)   lp32
-int     setresuid:setresuid(uid_t, uid_t, uid_t)     lp64
-int     setresgid:setresgid32(gid_t, gid_t, gid_t)   lp32
-int     setresgid:setresgid(gid_t, gid_t, gid_t)     lp64
-void*   __brk:brk(void*)           all
-int     kill(pid_t, int)           all
-int     tgkill(pid_t tgid, pid_t tid, int sig)  all
-int     __ptrace:ptrace(int request, int pid, void* addr, void* data)  all
+ssize_t readahead(int, off64_t, size_t) all
+pid_t getpgid(pid_t) all
+pid_t getppid() all
+pid_t getsid(pid_t) all
+pid_t setsid() all
+int kill(pid_t, int) all
+int tgkill(pid_t tgid, pid_t tid, int sig) all
+
+void* __brk:brk(void*) all
+int __execve:execve(const char*, char* const*, char* const*)  all
+int __ptrace:ptrace(int request, int pid, void* addr, void* data) all
 
 # <sys/resource.h>
 int getrusage(int, struct rusage*)  all
@@ -107,6 +113,8 @@ ssize_t     __preadv64v2:preadv2(int, const struct iovec*, int, long, long, int)
 ssize_t     __pwritev64v2:pwritev2(int, const struct iovec*, int, long, long, int) all
 
 int         __close:close(int)  all
+int         close_range(unsigned int, unsigned int, int) all
+ssize_t     copy_file_range(int, off64_t*, int, off64_t*, size_t, unsigned int) all
 pid_t       __getpid:getpid()  all
 int memfd_create(const char*, unsigned) all
 int         munmap(void*, size_t)  all
@@ -154,7 +162,6 @@ int linkat(int, const char*, int, const char*, int)  all
 int mkdirat(int, const char*, mode_t)  all
 int mknodat(int, const char*, mode_t, dev_t)  all
 int readlinkat(int, const char*, char*, size_t)  all
-int renameat(int, const char*, int, const char*)  all
 int renameat2(int, const char*, int, const char*, unsigned)  all
 int symlinkat(const char*, int, const char*)  all
 int unlinkat(int, const char*, int)   all
@@ -318,7 +325,7 @@ int __epoll_pwait:epoll_pwait(int, struct epoll_event*, int, int, const sigset64
 
 int __eventfd:eventfd2(unsigned int, int)  all
 
-void _exit|_Exit:exit_group(int)  all
+void __exit_group:exit_group(int)  all
 void __exit:exit(int)  all
 
 int inotify_init1(int)  all
@@ -335,9 +342,6 @@ int quotactl(int, const char*, int, char*)  all
 
 int __set_tid_address:set_tid_address(int*)  all
 
-int setfsgid(gid_t)  all
-int setfsuid(uid_t)  all
-
 int setdomainname(const char*, size_t)  all
 int sethostname(const char*, size_t)  all
 
@@ -350,6 +354,9 @@ int __waitid:waitid(int, pid_t, siginfo_t*, int, void*)  all
 # ARM-specific
 int     __set_tls:__ARM_NR_set_tls(void*)                                 arm
 int     cacheflush:__ARM_NR_cacheflush(long start, long end, long flags)  arm
+
+# riscv64-specific
+int _flush_icache:riscv_flush_icache(void*, void*, unsigned long) riscv64
 
 # x86-specific
 int     __set_thread_area:set_thread_area(void*) x86

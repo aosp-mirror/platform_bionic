@@ -1,3 +1,5 @@
+/* asctime and asctime_r a la POSIX and ISO C, except pad years before 1000.  */
+
 /*
 ** This file is in the public domain, so clarified as of
 ** 1996-06-05 by Arthur David Olson.
@@ -12,7 +14,7 @@
 /*LINTLIBRARY*/
 
 #include "private.h"
-#include "tzfile.h"
+#include <stdio.h>
 
 /*
 ** Some systems only handle "%.2d"; others only handle "%02d";
@@ -29,13 +31,13 @@
 ** leading zeroes to get the newline in the traditional place.
 ** The -4 ensures that we get four characters of output even if
 ** we call a strftime variant that produces fewer characters for some years.
-** The ISO C 1999 and POSIX 1003.1-2004 standards prohibit padding the year,
+** The ISO C and POSIX standards prohibit padding the year,
 ** but many implementations pad anyway; most likely the standards are buggy.
 */
 #ifdef __GNUC__
-#define ASCTIME_FMT	"%.3s %.3s%3d %2.2d:%2.2d:%2.2d %-4s\n"
+#define ASCTIME_FMT	"%s %s%3d %2.2d:%2.2d:%2.2d %-4s\n"
 #else /* !defined __GNUC__ */
-#define ASCTIME_FMT	"%.3s %.3s%3d %02.2d:%02.2d:%02.2d %-4s\n"
+#define ASCTIME_FMT	"%s %s%3d %02.2d:%02.2d:%02.2d %-4s\n"
 #endif /* !defined __GNUC__ */
 /*
 ** For years that are more than four digits we put extra spaces before the year
@@ -44,9 +46,9 @@
 ** that no output is better than wrong output).
 */
 #ifdef __GNUC__
-#define ASCTIME_FMT_B	"%.3s %.3s%3d %2.2d:%2.2d:%2.2d     %s\n"
+#define ASCTIME_FMT_B	"%s %s%3d %2.2d:%2.2d:%2.2d     %s\n"
 #else /* !defined __GNUC__ */
-#define ASCTIME_FMT_B	"%.3s %.3s%3d %02.2d:%02.2d:%02.2d     %s\n"
+#define ASCTIME_FMT_B	"%s %s%3d %02.2d:%02.2d:%02.2d     %s\n"
 #endif /* !defined __GNUC__ */
 
 #define STD_ASCTIME_BUF_SIZE	26
@@ -64,17 +66,13 @@
 
 static char	buf_asctime[MAX_ASCTIME_BUF_SIZE];
 
-/*
-** A la ISO/IEC 9945-1, ANSI/IEEE Std 1003.1, 2004 Edition.
-*/
-
 char *
 asctime_r(register const struct tm *timeptr, char *buf)
 {
-	static const char	wday_name[][3] = {
+	static const char	wday_name[][4] = {
 		"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
 	};
-	static const char	mon_name[][3] = {
+	static const char	mon_name[][4] = {
 		"Jan", "Feb", "Mar", "Apr", "May", "Jun",
 		"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 	};
@@ -116,10 +114,6 @@ asctime_r(register const struct tm *timeptr, char *buf)
 		return NULL;
 	}
 }
-
-/*
-** A la ISO/IEC 9945-1, ANSI/IEEE Std 1003.1, 2004 Edition.
-*/
 
 char *
 asctime(register const struct tm *timeptr)

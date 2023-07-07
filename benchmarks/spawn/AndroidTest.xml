@@ -4,18 +4,18 @@
 
     <target_preparer class="com.android.tradefed.targetprep.PushFilePreparer">
         <option name="cleanup" value="true" />
-        <option name="push" value="bionic-spawn-benchmarks->/data/local/tmp/bionic-spawn-benchmarks" />
+        <option name="push" value="bionic-spawn-benchmarks->/data/local/tests/unrestricted/bionic-spawn-benchmarks" />
     </target_preparer>
 
     <!-- TODO(b/120549168): This seems necessary for consistent results on a walleye, but it's not working with atest
     <target_preparer class="com.android.tradefed.targetprep.PushFilePreparer">
-        <option name="push" value="perf-setup.sh->/data/local/tmp/perf-setup.sh" />
-        <option name="post-push" value="chmod 755 /data/local/tmp/perf-setup.sh;/data/local/tmp/perf-setup.sh" />
+        <option name="push" value="perf-setup.sh->/data/local/tests/unrestricted/perf-setup.sh" />
+        <option name="post-push" value="chmod 755 /data/local/tests/unrestricted/perf-setup.sh;/data/local/tests/unrestricted/perf-setup.sh" />
     </target_preparer>
     -->
 
     <test class="com.android.tradefed.testtype.GoogleBenchmarkTest" >
-        <option name="native-benchmark-device-path" value="/data/local/tmp" />
+        <option name="native-benchmark-device-path" value="/data/local/tests/unrestricted" />
         <option name="benchmark-module-name" value="bionic-spawn-benchmarks" />
 
         <!-- The GoogleBenchmarkTest class ordinarily expects every file in the benchmark's

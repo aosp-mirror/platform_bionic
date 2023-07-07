@@ -152,7 +152,7 @@ ssize_t read(int fd, void* const __pass_object_size0 buf, size_t count)
         __overloadable
         __error_if_overflows_ssizet(count, read)
         __error_if_overflows_objectsize(count, __bos0(buf), read) {
-#if __ANDROID_API__ >= 21 && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
+#if __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
     size_t bos = __bos0(buf);
 
     if (!__bos_trivially_ge_no_overflow(bos, count)) {
@@ -192,7 +192,6 @@ ssize_t readlink(const char* path, char* const __pass_object_size buf, size_t si
     return __call_bypassing_fortify(readlink)(path, buf, size);
 }
 
-#if __ANDROID_API__ >= 21
 __BIONIC_FORTIFY_INLINE
 ssize_t readlinkat(int dirfd, const char* path, char* const __pass_object_size buf, size_t size)
         __overloadable
@@ -207,7 +206,6 @@ ssize_t readlinkat(int dirfd, const char* path, char* const __pass_object_size b
 #endif
     return __call_bypassing_fortify(readlinkat)(dirfd, path, buf, size);
 }
-#endif /* __ANDROID_API__ >= 21 */
 
 #undef __bos_trivially_ge_no_overflow
 #undef __enable_if_no_overflow_ssizet
