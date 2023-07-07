@@ -43,7 +43,7 @@ TEST(sys_sysinfo, sysinfo) {
   memset(&si, 0, sizeof(si));
   ASSERT_EQ(0, sysinfo(&si));
 
-  ASSERT_GT(si.uptime, 10);  // You're not running CTS within 10s of booting!
+  ASSERT_GT(static_cast<long>(si.uptime), 10);  // You're not running CTS within 10s of booting!
   ASSERT_GT(uint64_t(si.totalram) * si.mem_unit, uint64_t(512 * 1024 * 1024));
   ASSERT_GE(si.totalram, si.freeram);
   ASSERT_GE(si.totalswap, si.freeswap);

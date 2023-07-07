@@ -127,6 +127,11 @@ struct binder_frozen_status_info {
   __u32 sync_recv;
   __u32 async_recv;
 };
+struct binder_extended_error {
+  __u32 id;
+  __u32 command;
+  __s32 param;
+};
 #define BINDER_WRITE_READ _IOWR('b', 1, struct binder_write_read)
 #define BINDER_SET_IDLE_TIMEOUT _IOW('b', 3, __s64)
 #define BINDER_SET_MAX_THREADS _IOW('b', 5, __u32)
@@ -140,12 +145,14 @@ struct binder_frozen_status_info {
 #define BINDER_FREEZE _IOW('b', 14, struct binder_freeze_info)
 #define BINDER_GET_FROZEN_INFO _IOWR('b', 15, struct binder_frozen_status_info)
 #define BINDER_ENABLE_ONEWAY_SPAM_DETECTION _IOW('b', 16, __u32)
+#define BINDER_GET_EXTENDED_ERROR _IOWR('b', 17, struct binder_extended_error)
 enum transaction_flags {
   TF_ONE_WAY = 0x01,
   TF_ROOT_OBJECT = 0x04,
   TF_STATUS_CODE = 0x08,
   TF_ACCEPT_FDS = 0x10,
   TF_CLEAR_BUF = 0x20,
+  TF_UPDATE_TXN = 0x40,
 };
 struct binder_transaction_data {
   union {
@@ -155,8 +162,8 @@ struct binder_transaction_data {
   binder_uintptr_t cookie;
   __u32 code;
   __u32 flags;
-  pid_t sender_pid;
-  uid_t sender_euid;
+  __kernel_pid_t sender_pid;
+  __kernel_uid32_t sender_euid;
   binder_size_t data_size;
   binder_size_t offsets_size;
   union {
@@ -182,7 +189,7 @@ struct binder_ptr_cookie {
 struct binder_handle_cookie {
   __u32 handle;
   binder_uintptr_t cookie;
-} __packed;
+} __attribute__((__packed__));
 struct binder_pri_desc {
   __s32 priority;
   __u32 desc;

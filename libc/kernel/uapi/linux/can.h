@@ -20,21 +20,29 @@
 #define _UAPI_CAN_H
 #include <linux/types.h>
 #include <linux/socket.h>
+#include <linux/stddef.h>
 #define CAN_EFF_FLAG 0x80000000U
 #define CAN_RTR_FLAG 0x40000000U
 #define CAN_ERR_FLAG 0x20000000U
 #define CAN_SFF_MASK 0x000007FFU
 #define CAN_EFF_MASK 0x1FFFFFFFU
 #define CAN_ERR_MASK 0x1FFFFFFFU
+#define CANXL_PRIO_MASK CAN_SFF_MASK
 typedef __u32 canid_t;
 #define CAN_SFF_ID_BITS 11
 #define CAN_EFF_ID_BITS 29
+#define CANXL_PRIO_BITS CAN_SFF_ID_BITS
 typedef __u32 can_err_mask_t;
 #define CAN_MAX_DLC 8
 #define CAN_MAX_RAW_DLC 15
 #define CAN_MAX_DLEN 8
 #define CANFD_MAX_DLC 15
 #define CANFD_MAX_DLEN 64
+#define CANXL_MIN_DLC 0
+#define CANXL_MAX_DLC 2047
+#define CANXL_MAX_DLC_MASK 0x07FF
+#define CANXL_MIN_DLEN 1
+#define CANXL_MAX_DLEN 2048
 struct can_frame {
   canid_t can_id;
   union {
@@ -57,8 +65,22 @@ struct canfd_frame {
   __u8 __res1;
   __u8 data[CANFD_MAX_DLEN] __attribute__((aligned(8)));
 };
+#define CANXL_XLF 0x80
+#define CANXL_SEC 0x01
+struct canxl_frame {
+  canid_t prio;
+  __u8 flags;
+  __u8 sdt;
+  __u16 len;
+  __u32 af;
+  __u8 data[CANXL_MAX_DLEN];
+};
 #define CAN_MTU (sizeof(struct can_frame))
 #define CANFD_MTU (sizeof(struct canfd_frame))
+#define CANXL_MTU (sizeof(struct canxl_frame))
+#define CANXL_HDR_SIZE (offsetof(struct canxl_frame, data))
+#define CANXL_MIN_MTU (CANXL_HDR_SIZE + 64)
+#define CANXL_MAX_MTU CANXL_MTU
 #define CAN_RAW 1
 #define CAN_BCM 2
 #define CAN_TP16 3

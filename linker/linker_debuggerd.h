@@ -28,4 +28,7 @@
 
 #pragma once
 
+#include <signal.h>
+
 void linker_debuggerd_init();
+extern "C" bool debuggerd_handle_signal(int signal_number, siginfo_t* info, void* context);

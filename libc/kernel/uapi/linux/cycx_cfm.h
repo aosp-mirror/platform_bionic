@@ -53,7 +53,7 @@ struct cycx_firmware {
   unsigned short reserved[6];
   char descr[CFM_DESCR_LEN];
   struct cycx_fw_info info;
-  unsigned char image[0];
+  unsigned char image[];
 };
 struct cycx_fw_header {
   unsigned long reset_size;
