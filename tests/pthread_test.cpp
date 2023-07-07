@@ -41,6 +41,7 @@
 #include <android-base/scopeguard.h>
 #include <android-base/silent_death_test.h>
 #include <android-base/strings.h>
+#include <android-base/test_utils.h>
 
 #include "private/bionic_constants.h"
 #include "SignalUtils.h"
@@ -182,6 +183,30 @@ TEST(pthread, pthread_key_dirty) {
 
   ASSERT_EQ(0, munmap(stack, stack_size));
   ASSERT_EQ(0, pthread_key_delete(key));
+}
+
+static void* FnWithStackFrame(void*) {
+  int x;
+  *const_cast<volatile int*>(&x) = 1;
+  return nullptr;
+}
+
+TEST(pthread, pthread_heap_allocated_stack) {
+  SKIP_WITH_HWASAN; // TODO(b/148982147): Re-enable when fixed.
+
+  size_t stack_size = 640 * 1024;
+  std::unique_ptr<char[]> stack(new (std::align_val_t(getpagesize())) char[stack_size]);
+  memset(stack.get(), '\xff', stack_size);
+
+  pthread_attr_t attr;
+  ASSERT_EQ(0, pthread_attr_init(&attr));
+  ASSERT_EQ(0, pthread_attr_setstack(&attr, stack.get(), stack_size));
+
+  pthread_t t;
+  ASSERT_EQ(0, pthread_create(&t, &attr, FnWithStackFrame, nullptr));
+
+  void* result;
+  ASSERT_EQ(0, pthread_join(t, &result));
 }
 
 TEST(pthread, static_pthread_key_used_before_creation) {

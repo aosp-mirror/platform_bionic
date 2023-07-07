@@ -46,6 +46,6 @@ __BEGIN_DECLS
  *
  * Available since API level 21.
  */
-void android_set_abort_message(const char* __msg) __INTRODUCED_IN(21);
+void android_set_abort_message(const char* _Nullable __msg) __INTRODUCED_IN(21);
 
 __END_DECLS

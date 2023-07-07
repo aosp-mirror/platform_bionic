@@ -140,7 +140,7 @@ struct sockaddr_atmsvc {
 struct atmif_sioc {
   int number;
   int length;
-  void __user * arg;
+  void  * arg;
 };
 typedef unsigned short atm_backend_t;
 #endif

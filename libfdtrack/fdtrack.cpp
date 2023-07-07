@@ -71,7 +71,11 @@ static constexpr size_t kFdTableSize = 4096;
 static constexpr size_t kStackDepth = 32;
 
 // Skip any initial frames from libfdtrack.so.
-static std::vector<std::string> kSkipFdtrackLib [[clang::no_destroy]] = {"libfdtrack.so"};
+// Also ignore frames from ART (http://b/236197847) because we'd rather spend
+// our precious few frames on the actual Java calling code rather than the
+// implementation of JNI!
+static std::vector<std::string> kSkipFdtrackLib
+    [[clang::no_destroy]] = {"libfdtrack.so", "libart.so"};
 
 static bool installed = false;
 static std::array<FdEntry, kFdTableSize> stack_traces [[clang::no_destroy]];
