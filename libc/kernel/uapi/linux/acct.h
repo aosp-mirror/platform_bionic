@@ -74,6 +74,7 @@ struct acct_v3 {
 #define ACOMPAT 0x04
 #define ACORE 0x08
 #define AXSIG 0x10
+#define AGROUP 0x20
 #if defined(__BYTE_ORDER) ? __BYTE_ORDER == __BIG_ENDIAN : defined(__BIG_ENDIAN)
 #define ACCT_BYTEORDER 0x80
 #elif defined(__BYTE_ORDER)?__BYTE_ORDER==__LITTLE_ENDIAN:defined(__LITTLE_ENDIAN)

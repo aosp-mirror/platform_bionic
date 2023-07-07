@@ -24,6 +24,6 @@
 #define VIRTIO_9P_MOUNT_TAG 0
 struct virtio_9p_config {
   __virtio16 tag_len;
-  __u8 tag[0];
+  __u8 tag[];
 } __attribute__((packed));
 #endif

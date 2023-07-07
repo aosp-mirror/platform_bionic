@@ -60,6 +60,8 @@ __LIBC_HIDDEN__ void __libc_init_common();
 
 __LIBC_HIDDEN__ void __libc_init_scudo();
 
+__LIBC_HIDDEN__ void __libc_init_mte_late();
+
 __LIBC_HIDDEN__ void __libc_init_AT_SECURE(char** envp);
 
 // The fork handler must be initialised after __libc_init_malloc, as

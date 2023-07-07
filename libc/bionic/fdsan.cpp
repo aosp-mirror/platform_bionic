@@ -101,7 +101,7 @@ FdEntry* FdTableImpl<inline_fds>::at(size_t idx) {
   }
 
   size_t offset = idx - inline_fds;
-  if (local_overflow->len < offset) {
+  if (local_overflow->len <= offset) {
     return nullptr;
   }
   return &local_overflow->entries[offset];
@@ -216,6 +216,8 @@ const char* android_fdsan_get_tag_type(uint64_t tag) {
       return "SocketImpl";
     case ANDROID_FDSAN_OWNER_TYPE_ZIPARCHIVE:
       return "ZipArchive";
+    case ANDROID_FDSAN_OWNER_TYPE_NATIVE_HANDLE:
+      return "native_handle_t";
 
     case ANDROID_FDSAN_OWNER_TYPE_GENERIC_00:
     default:
