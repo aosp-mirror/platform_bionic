@@ -66,7 +66,7 @@ struct vhost_msg {
 };
 struct vhost_msg_v2 {
   __u32 type;
-  __u32 reserved;
+  __u32 asid;
   union {
     struct vhost_iotlb_msg iotlb;
     __u8 padding[64];
@@ -82,7 +82,7 @@ struct vhost_memory_region {
 struct vhost_memory {
   __u32 nregions;
   __u32 padding;
-  struct vhost_memory_region regions[0];
+  struct vhost_memory_region regions[];
 };
 #define VHOST_SCSI_ABI_VERSION 1
 struct vhost_scsi_target {
@@ -94,7 +94,7 @@ struct vhost_scsi_target {
 struct vhost_vdpa_config {
   __u32 off;
   __u32 len;
-  __u8 buf[0];
+  __u8 buf[];
 };
 struct vhost_vdpa_iova_range {
   __u64 first;
@@ -102,4 +102,8 @@ struct vhost_vdpa_iova_range {
 };
 #define VHOST_F_LOG_ALL 26
 #define VHOST_NET_F_VIRTIO_NET_HDR 27
+#define VHOST_BACKEND_F_IOTLB_MSG_V2 0x1
+#define VHOST_BACKEND_F_IOTLB_BATCH 0x2
+#define VHOST_BACKEND_F_IOTLB_ASID 0x3
+#define VHOST_BACKEND_F_SUSPEND 0x4
 #endif

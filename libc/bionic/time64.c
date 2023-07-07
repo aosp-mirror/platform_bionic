@@ -483,6 +483,11 @@ static Time64_T seconds_between_years(Year left_year, Year right_year) {
 }
 
 
+/* This implementation violates mktime specification, according to which
+   tm_yday, tm_wday, and tm_isdst fields should be updated. This function
+   leaves input_date unmodified. Given that there were no bug reports, fixing
+   it might cause more troubles than just leaving it as it is.
+ */
 Time64_T mktime64(const struct TM *input_date) {
     struct tm safe_date;
     struct TM date;

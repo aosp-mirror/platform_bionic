@@ -23,6 +23,7 @@
 #include <sys/vfs.h>
 
 #include <android-base/file.h>
+#include <android-base/silent_death_test.h>
 #include <android-base/stringprintf.h>
 
 // Glibc v2.19 doesn't include these in fcntl.h so host builds will fail without.
@@ -32,6 +33,8 @@
 #if !defined(EXT4_SUPER_MAGIC)
 #include <linux/magic.h>
 #endif
+
+using fcntl_DeathTest = SilentDeathTest;
 
 TEST(fcntl, fcntl_smoke) {
   int fd = open("/proc/version", O_RDONLY);
@@ -355,4 +358,8 @@ TEST(fcntl, open_O_TMPFILE_mode) {
   ASSERT_EQ(ENOENT, errno);
   ASSERT_EQ(0, close(fd));
 #endif
+}
+
+TEST(fcntl_DeathTest, fcntl_F_SETFD) {
+  EXPECT_DEATH(fcntl(0, F_SETFD, O_NONBLOCK), "non-FD_CLOEXEC");
 }

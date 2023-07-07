@@ -35,7 +35,11 @@
 
 #include <algorithm>
 #include <atomic>
+#include <functional>
+#include <string>
 #include <thread>
+#include <unordered_map>
+#include <utility>
 #include <vector>
 
 #include <tinyxml2.h>
@@ -661,13 +665,13 @@ TEST(malloc, verify_alignment) {
 }
 
 TEST(malloc, mallopt_smoke) {
-#if !defined(ANDROID_HOST_MUSL)
+#if defined(__BIONIC__)
   errno = 0;
   ASSERT_EQ(0, mallopt(-1000, 1));
   // mallopt doesn't set errno.
   ASSERT_EQ(0, errno);
 #else
-  GTEST_SKIP() << "musl doesn't have mallopt";
+  GTEST_SKIP() << "bionic-only test";
 #endif
 }
 
@@ -689,6 +693,44 @@ TEST(malloc, mallopt_purge) {
   SKIP_WITH_HWASAN << "hwasan does not implement mallopt";
   errno = 0;
   ASSERT_EQ(1, mallopt(M_PURGE, 0));
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
+TEST(malloc, mallopt_purge_all) {
+#if defined(__BIONIC__)
+  SKIP_WITH_HWASAN << "hwasan does not implement mallopt";
+  errno = 0;
+  ASSERT_EQ(1, mallopt(M_PURGE_ALL, 0));
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
+// Verify that all of the mallopt values are unique.
+TEST(malloc, mallopt_unique_params) {
+#if defined(__BIONIC__)
+  std::vector<std::pair<int, std::string>> params{
+      std::make_pair(M_DECAY_TIME, "M_DECAY_TIME"),
+      std::make_pair(M_PURGE, "M_PURGE"),
+      std::make_pair(M_PURGE_ALL, "M_PURGE_ALL"),
+      std::make_pair(M_MEMTAG_TUNING, "M_MEMTAG_TUNING"),
+      std::make_pair(M_THREAD_DISABLE_MEM_INIT, "M_THREAD_DISABLE_MEM_INIT"),
+      std::make_pair(M_CACHE_COUNT_MAX, "M_CACHE_COUNT_MAX"),
+      std::make_pair(M_CACHE_SIZE_MAX, "M_CACHE_SIZE_MAX"),
+      std::make_pair(M_TSDS_COUNT_MAX, "M_TSDS_COUNT_MAX"),
+      std::make_pair(M_BIONIC_ZERO_INIT, "M_BIONIC_ZERO_INIT"),
+      std::make_pair(M_BIONIC_SET_HEAP_TAGGING_LEVEL, "M_BIONIC_SET_HEAP_TAGGING_LEVEL"),
+  };
+
+  std::unordered_map<int, std::string> all_params;
+  for (const auto& param : params) {
+    EXPECT_TRUE(all_params.count(param.first) == 0)
+        << "mallopt params " << all_params[param.first] << " and " << param.second
+        << " have the same value " << param.first;
+    all_params.insert(param);
+  }
 #else
   GTEST_SKIP() << "bionic-only test";
 #endif
@@ -1383,6 +1425,15 @@ TEST(android_mallopt, multiple_enable_gwp_asan) {
 #endif
 }
 
+TEST(android_mallopt, memtag_stack_is_on) {
+#if defined(__BIONIC__)
+  bool memtag_stack;
+  EXPECT_TRUE(android_mallopt(M_MEMTAG_STACK_IS_ON, &memtag_stack, sizeof(memtag_stack)));
+#else
+  GTEST_SKIP() << "bionic extension";
+#endif
+}
+
 void TestHeapZeroing(int num_iterations, int (*get_alloc_size)(int iteration)) {
   std::vector<void*> allocs;
   constexpr int kMaxBytesToCheckZero = 64;
@@ -1516,6 +1567,164 @@ TEST(malloc, realloc_mte_crash_b206701345) {
 
     for (void* p : ptrs) {
       free(p);
+    }
+  }
+}
+
+void VerifyAllocationsAreZero(std::function<void*(size_t)> alloc_func, std::string function_name,
+                              std::vector<size_t>& test_sizes, size_t max_allocations) {
+  // Vector of zero'd data used for comparisons. Make it twice the largest size.
+  std::vector<char> zero(test_sizes.back() * 2, 0);
+
+  SCOPED_TRACE(testing::Message() << function_name << " failed to zero memory");
+
+  for (size_t test_size : test_sizes) {
+    std::vector<void*> ptrs(max_allocations);
+    for (size_t i = 0; i < ptrs.size(); i++) {
+      SCOPED_TRACE(testing::Message() << "size " << test_size << " at iteration " << i);
+      ptrs[i] = alloc_func(test_size);
+      ASSERT_TRUE(ptrs[i] != nullptr);
+      size_t alloc_size = malloc_usable_size(ptrs[i]);
+      ASSERT_LE(alloc_size, zero.size());
+      ASSERT_EQ(0, memcmp(ptrs[i], zero.data(), alloc_size));
+
+      // Set the memory to non-zero to make sure if the pointer
+      // is reused it's still zero.
+      memset(ptrs[i], 0xab, alloc_size);
+    }
+    // Free the pointers.
+    for (size_t i = 0; i < ptrs.size(); i++) {
+      free(ptrs[i]);
+    }
+    for (size_t i = 0; i < ptrs.size(); i++) {
+      SCOPED_TRACE(testing::Message() << "size " << test_size << " at iteration " << i);
+      ptrs[i] = malloc(test_size);
+      ASSERT_TRUE(ptrs[i] != nullptr);
+      size_t alloc_size = malloc_usable_size(ptrs[i]);
+      ASSERT_LE(alloc_size, zero.size());
+      ASSERT_EQ(0, memcmp(ptrs[i], zero.data(), alloc_size));
+    }
+    // Free all of the pointers later to maximize the chance of reusing from
+    // the first loop.
+    for (size_t i = 0; i < ptrs.size(); i++) {
+      free(ptrs[i]);
+    }
+  }
+}
+
+// Verify that small and medium allocations are always zero.
+// @CddTest = 9.7/C-4-1
+TEST(malloc, zeroed_allocations_small_medium_sizes) {
+#if !defined(__BIONIC__)
+  GTEST_SKIP() << "Only valid on bionic";
+#endif
+
+  if (IsLowRamDevice()) {
+    GTEST_SKIP() << "Skipped on low memory devices.";
+  }
+
+  constexpr size_t kMaxAllocations = 1024;
+  std::vector<size_t> test_sizes = {16, 48, 128, 1024, 4096, 65536};
+  VerifyAllocationsAreZero([](size_t size) -> void* { return malloc(size); }, "malloc", test_sizes,
+                           kMaxAllocations);
+
+  VerifyAllocationsAreZero([](size_t size) -> void* { return memalign(64, size); }, "memalign",
+                           test_sizes, kMaxAllocations);
+
+  VerifyAllocationsAreZero(
+      [](size_t size) -> void* {
+        void* ptr;
+        if (posix_memalign(&ptr, 64, size) == 0) {
+          return ptr;
+        }
+        return nullptr;
+      },
+      "posix_memalign", test_sizes, kMaxAllocations);
+}
+
+// Verify that large allocations are always zero.
+// @CddTest = 9.7/C-4-1
+TEST(malloc, zeroed_allocations_large_sizes) {
+#if !defined(__BIONIC__)
+  GTEST_SKIP() << "Only valid on bionic";
+#endif
+
+  if (IsLowRamDevice()) {
+    GTEST_SKIP() << "Skipped on low memory devices.";
+  }
+
+  constexpr size_t kMaxAllocations = 20;
+  std::vector<size_t> test_sizes = {1000000, 2000000, 3000000, 4000000};
+  VerifyAllocationsAreZero([](size_t size) -> void* { return malloc(size); }, "malloc", test_sizes,
+                           kMaxAllocations);
+
+  VerifyAllocationsAreZero([](size_t size) -> void* { return memalign(64, size); }, "memalign",
+                           test_sizes, kMaxAllocations);
+
+  VerifyAllocationsAreZero(
+      [](size_t size) -> void* {
+        void* ptr;
+        if (posix_memalign(&ptr, 64, size) == 0) {
+          return ptr;
+        }
+        return nullptr;
+      },
+      "posix_memalign", test_sizes, kMaxAllocations);
+}
+
+// Verify that reallocs are zeroed when expanded.
+// @CddTest = 9.7/C-4-1
+TEST(malloc, zeroed_allocations_realloc) {
+#if !defined(__BIONIC__)
+  GTEST_SKIP() << "Only valid on bionic";
+#endif
+
+  if (IsLowRamDevice()) {
+    GTEST_SKIP() << "Skipped on low memory devices.";
+  }
+
+  // Vector of zero'd data used for comparisons.
+  constexpr size_t kMaxMemorySize = 131072;
+  std::vector<char> zero(kMaxMemorySize, 0);
+
+  constexpr size_t kMaxAllocations = 1024;
+  std::vector<size_t> test_sizes = {16, 48, 128, 1024, 4096, 65536};
+  // Do a number of allocations and set them to non-zero.
+  for (size_t test_size : test_sizes) {
+    std::vector<void*> ptrs(kMaxAllocations);
+    for (size_t i = 0; i < kMaxAllocations; i++) {
+      ptrs[i] = malloc(test_size);
+      ASSERT_TRUE(ptrs[i] != nullptr);
+
+      // Set the memory to non-zero to make sure if the pointer
+      // is reused it's still zero.
+      memset(ptrs[i], 0xab, malloc_usable_size(ptrs[i]));
+    }
+    // Free the pointers.
+    for (size_t i = 0; i < kMaxAllocations; i++) {
+      free(ptrs[i]);
+    }
+  }
+
+  // Do the reallocs to a larger size and verify the rest of the allocation
+  // is zero.
+  constexpr size_t kInitialSize = 8;
+  for (size_t test_size : test_sizes) {
+    std::vector<void*> ptrs(kMaxAllocations);
+    for (size_t i = 0; i < kMaxAllocations; i++) {
+      ptrs[i] = malloc(kInitialSize);
+      ASSERT_TRUE(ptrs[i] != nullptr);
+      size_t orig_alloc_size = malloc_usable_size(ptrs[i]);
+
+      ptrs[i] = realloc(ptrs[i], test_size);
+      ASSERT_TRUE(ptrs[i] != nullptr);
+      size_t new_alloc_size = malloc_usable_size(ptrs[i]);
+      char* ptr = reinterpret_cast<char*>(ptrs[i]);
+      ASSERT_EQ(0, memcmp(&ptr[orig_alloc_size], zero.data(), new_alloc_size - orig_alloc_size))
+          << "realloc from " << kInitialSize << " to size " << test_size << " at iteration " << i;
+    }
+    for (size_t i = 0; i < kMaxAllocations; i++) {
+      free(ptrs[i]);
     }
   }
 }

@@ -29,24 +29,25 @@
 #ifndef _PRIVATE_BIONIC_GLOBALS_H
 #define _PRIVATE_BIONIC_GLOBALS_H
 
+#include <inttypes.h>
+#include <link.h>
+#include <platform/bionic/malloc.h>
+#include <pthread.h>
 #include <stdatomic.h>
 #include <sys/cdefs.h>
-#include <link.h>
-#include <pthread.h>
 
+#include "private/WriteProtected.h"
 #include "private/bionic_allocator.h"
 #include "private/bionic_elf_tls.h"
 #include "private/bionic_fdsan.h"
 #include "private/bionic_malloc_dispatch.h"
 #include "private/bionic_vdso.h"
-#include "private/WriteProtected.h"
-
-#include <platform/bionic/malloc.h>
 
 struct libc_globals {
   vdso_entry vdso[VDSO_END];
   long setjmp_cookie;
   uintptr_t heap_pointer_tag;
+  _Atomic(bool) memtag_stack;
 
   // In order to allow a complete switch between dispatch tables without
   // the need for copying each function by function in the structure,
@@ -106,12 +107,18 @@ struct libc_shared_globals {
 
   const gwp_asan::AllocatorState* gwp_asan_state = nullptr;
   const gwp_asan::AllocationMetadata* gwp_asan_metadata = nullptr;
+  bool (*debuggerd_needs_gwp_asan_recovery)(void* fault_addr) = nullptr;
+  void (*debuggerd_gwp_asan_pre_crash_report)(void* fault_addr) = nullptr;
+  void (*debuggerd_gwp_asan_post_crash_report)(void* fault_addr) = nullptr;
 
   const char* scudo_stack_depot = nullptr;
   const char* scudo_region_info = nullptr;
   const char* scudo_ring_buffer = nullptr;
+  size_t scudo_ring_buffer_size = 0;
 
   HeapTaggingLevel initial_heap_tagging_level = M_HEAP_TAGGING_LEVEL_NONE;
+  bool initial_memtag_stack = false;
+  int64_t heap_tagging_upgrade_timer_sec = 0;
 };
 
 __LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals();

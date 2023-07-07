@@ -22,7 +22,6 @@
 #include <linux/socket.h>
 #include <linux/in.h>
 #include <linux/in6.h>
-#define IPPROTO_L2TP 115
 #define __SOCK_SIZE__ 16
 struct sockaddr_l2tpip {
   __kernel_sa_family_t l2tp_family;

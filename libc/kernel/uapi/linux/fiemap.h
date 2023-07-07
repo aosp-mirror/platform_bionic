@@ -34,7 +34,7 @@ struct fiemap {
   __u32 fm_mapped_extents;
   __u32 fm_extent_count;
   __u32 fm_reserved;
-  struct fiemap_extent fm_extents[0];
+  struct fiemap_extent fm_extents[];
 };
 #define FIEMAP_MAX_OFFSET (~0ULL)
 #define FIEMAP_FLAG_SYNC 0x00000001

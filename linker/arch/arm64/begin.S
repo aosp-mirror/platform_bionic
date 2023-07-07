@@ -35,6 +35,6 @@ ENTRY(_start)
   mov x0, sp
   bl __linker_init
 
-  /* linker init returns the _entry address in the main image */
+  // __linker_init returns the address of the entry point in the main image.
   br x0
 END(_start)

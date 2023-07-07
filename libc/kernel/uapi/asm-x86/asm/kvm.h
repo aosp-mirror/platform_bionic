@@ -57,13 +57,6 @@
 #define __KVM_HAVE_XCRS
 #define __KVM_HAVE_READONLY_MEM
 #define KVM_NR_INTERRUPTS 256
-struct kvm_memory_alias {
-  __u32 slot;
-  __u32 flags;
-  __u64 guest_phys_addr;
-  __u64 memory_size;
-  __u64 target_phys_addr;
-};
 struct kvm_pic_state {
   __u8 last_irr;
   __u8 irr;
@@ -178,16 +171,17 @@ struct kvm_msr_entry {
 struct kvm_msrs {
   __u32 nmsrs;
   __u32 pad;
-  struct kvm_msr_entry entries[0];
+  struct kvm_msr_entry entries[];
 };
 struct kvm_msr_list {
   __u32 nmsrs;
-  __u32 indices[0];
+  __u32 indices[];
 };
 #define KVM_MSR_FILTER_MAX_BITMAP_SIZE 0x600
 struct kvm_msr_filter_range {
 #define KVM_MSR_FILTER_READ (1 << 0)
 #define KVM_MSR_FILTER_WRITE (1 << 1)
+#define KVM_MSR_FILTER_RANGE_VALID_MASK (KVM_MSR_FILTER_READ | KVM_MSR_FILTER_WRITE)
   __u32 flags;
   __u32 nmsrs;
   __u32 base;
@@ -197,6 +191,7 @@ struct kvm_msr_filter_range {
 struct kvm_msr_filter {
 #define KVM_MSR_FILTER_DEFAULT_ALLOW (0 << 0)
 #define KVM_MSR_FILTER_DEFAULT_DENY (1 << 0)
+#define KVM_MSR_FILTER_VALID_MASK (KVM_MSR_FILTER_DEFAULT_DENY)
   __u32 flags;
   struct kvm_msr_filter_range ranges[KVM_MSR_FILTER_MAX_RANGES];
 };
@@ -211,7 +206,7 @@ struct kvm_cpuid_entry {
 struct kvm_cpuid {
   __u32 nent;
   __u32 padding;
-  struct kvm_cpuid_entry entries[0];
+  struct kvm_cpuid_entry entries[];
 };
 struct kvm_cpuid_entry2 {
   __u32 function;
@@ -229,7 +224,7 @@ struct kvm_cpuid_entry2 {
 struct kvm_cpuid2 {
   __u32 nent;
   __u32 padding;
-  struct kvm_cpuid_entry2 entries[0];
+  struct kvm_cpuid_entry2 entries[];
 };
 struct kvm_pit_channel_state {
   __u32 count;
@@ -265,6 +260,7 @@ struct kvm_pit_state {
   struct kvm_pit_channel_state channels[3];
 };
 #define KVM_PIT_FLAGS_HPET_LEGACY 0x00000001
+#define KVM_PIT_FLAGS_SPEAKER_DATA_ON 0x00000002
 struct kvm_pit_state2 {
   struct kvm_pit_channel_state channels[3];
   __u32 flags;
@@ -279,6 +275,7 @@ struct kvm_reinject_control {
 #define KVM_VCPUEVENT_VALID_SHADOW 0x00000004
 #define KVM_VCPUEVENT_VALID_SMM 0x00000008
 #define KVM_VCPUEVENT_VALID_PAYLOAD 0x00000010
+#define KVM_VCPUEVENT_VALID_TRIPLE_FAULT 0x00000020
 #define KVM_X86_SHADOW_INT_MOV_SS 0x01
 #define KVM_X86_SHADOW_INT_STI 0x02
 struct kvm_vcpu_events {
@@ -309,7 +306,10 @@ struct kvm_vcpu_events {
     __u8 smm_inside_nmi;
     __u8 latched_init;
   } smi;
-  __u8 reserved[27];
+  struct {
+    __u8 pending;
+  } triple_fault;
+  __u8 reserved[26];
   __u8 exception_has_payload;
   __u64 exception_payload;
 };
@@ -322,7 +322,7 @@ struct kvm_debugregs {
 };
 struct kvm_xsave {
   __u32 region[1024];
-  __u32 extra[0];
+  __u32 extra[];
 };
 #define KVM_MAX_XCRS 16
 struct kvm_xcr {
@@ -350,6 +350,8 @@ struct kvm_sync_regs {
 #define KVM_X86_QUIRK_LAPIC_MMIO_HOLE (1 << 2)
 #define KVM_X86_QUIRK_OUT_7E_INC_RIP (1 << 3)
 #define KVM_X86_QUIRK_MISC_ENABLE_NO_MWAIT (1 << 4)
+#define KVM_X86_QUIRK_FIX_HYPERCALL_INSN (1 << 5)
+#define KVM_X86_QUIRK_MWAIT_NEVER_UD_FAULTS (1 << 6)
 #define KVM_STATE_NESTED_FORMAT_VMX 0
 #define KVM_STATE_NESTED_FORMAT_SVM 1
 #define KVM_STATE_NESTED_GUEST_MODE 0x00000001
@@ -403,7 +405,7 @@ struct kvm_pmu_event_filter {
   __u32 fixed_counter_bitmap;
   __u32 flags;
   __u32 pad[4];
-  __u64 events[0];
+  __u64 events[];
 };
 #define KVM_PMU_EVENT_ALLOW 0
 #define KVM_PMU_EVENT_DENY 1

@@ -30,7 +30,7 @@ struct rtentry {
   unsigned long rt_pad3;
   void * rt_pad4;
   short rt_metric;
-  char __user * rt_dev;
+  char  * rt_dev;
   unsigned long rt_mtu;
 #define rt_mss rt_mtu
   unsigned long rt_window;
