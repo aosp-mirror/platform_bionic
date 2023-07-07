@@ -27,13 +27,13 @@ struct usbdevfs_ctrltransfer {
   __u16 wIndex;
   __u16 wLength;
   __u32 timeout;
-  void __user * data;
+  void  * data;
 };
 struct usbdevfs_bulktransfer {
   unsigned int ep;
   unsigned int len;
   unsigned int timeout;
-  void __user * data;
+  void  * data;
 };
 struct usbdevfs_setinterface {
   unsigned int interface;
@@ -41,7 +41,7 @@ struct usbdevfs_setinterface {
 };
 struct usbdevfs_disconnectsignal {
   unsigned int signr;
-  void __user * context;
+  void  * context;
 };
 #define USBDEVFS_MAXDRIVERNAME 255
 struct usbdevfs_getdriver {
@@ -80,7 +80,7 @@ struct usbdevfs_urb {
   unsigned char endpoint;
   int status;
   unsigned int flags;
-  void __user * buffer;
+  void  * buffer;
   int buffer_length;
   int actual_length;
   int start_frame;
@@ -90,13 +90,13 @@ struct usbdevfs_urb {
   };
   int error_count;
   unsigned int signr;
-  void __user * usercontext;
-  struct usbdevfs_iso_packet_desc iso_frame_desc[0];
+  void  * usercontext;
+  struct usbdevfs_iso_packet_desc iso_frame_desc[];
 };
 struct usbdevfs_ioctl {
   int ifno;
   int ioctl_code;
-  void __user * data;
+  void  * data;
 };
 struct usbdevfs_hub_portinfo {
   char nports;
@@ -121,7 +121,7 @@ struct usbdevfs_disconnect_claim {
 struct usbdevfs_streams {
   unsigned int num_streams;
   unsigned int num_eps;
-  unsigned char eps[0];
+  unsigned char eps[];
 };
 #define USBDEVFS_CONTROL _IOWR('U', 0, struct usbdevfs_ctrltransfer)
 #define USBDEVFS_CONTROL32 _IOWR('U', 0, struct usbdevfs_ctrltransfer32)

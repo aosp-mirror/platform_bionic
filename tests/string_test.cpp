@@ -136,7 +136,7 @@ TEST(STRING_TEST, strsignal) {
   // A real-time signal.
   ASSERT_STREQ("Real-time signal 14", strsignal(SIGRTMIN + 14));
   // One of the signals the C library keeps to itself.
-  ASSERT_STREQ("Unknown signal 32", strsignal(__SIGRTMIN));
+  ASSERT_STREQ("Unknown signal 32", strsignal(32));  // __SIGRTMIN
 
   // Errors.
   ASSERT_STREQ("Unknown signal -1", strsignal(-1)); // Too small.
@@ -1672,4 +1672,16 @@ TEST(STRING_TEST, memccpy_smoke) {
   memset(dst, 0, sizeof(dst));
   ASSERT_EQ(nullptr, memccpy(dst, "hello world", ' ', 4));
   ASSERT_STREQ("hell", dst);
+}
+
+TEST(STRING_TEST, memset_explicit_smoke) {
+#if defined(__BIONIC__)
+  // We can't reliably test that the compiler won't optimize out calls to
+  // memset_explicit(), but we can at least check that it behaves like memset.
+  char buf[32];
+  memset_explicit(buf, 'x', sizeof(buf));
+  ASSERT_TRUE(memcmp(buf, "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", sizeof(buf)) == 0);
+#else
+  GTEST_SKIP() << "memset_explicit not available";
+#endif
 }

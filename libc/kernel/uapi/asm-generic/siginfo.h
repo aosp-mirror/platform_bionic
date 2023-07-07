@@ -22,7 +22,7 @@
 #include <linux/types.h>
 typedef union sigval {
   int sival_int;
-  void __user * sival_ptr;
+  void  * sival_ptr;
 } sigval_t;
 #define SI_MAX_SIZE 128
 #ifndef __ARCH_SI_BAND_T
@@ -58,7 +58,7 @@ union __sifields {
     __ARCH_SI_CLOCK_T _stime;
   } _sigchld;
   struct {
-    void __user * _addr;
+    void  * _addr;
 #ifdef __ia64__
     int _imm;
     unsigned int _flags;
@@ -70,8 +70,8 @@ union __sifields {
       short _addr_lsb;
       struct {
         char _dummy_bnd[__ADDR_BND_PKEY_PAD];
-        void __user * _lower;
-        void __user * _upper;
+        void  * _lower;
+        void  * _upper;
       } _addr_bnd;
       struct {
         char _dummy_pkey[__ADDR_BND_PKEY_PAD];
@@ -80,6 +80,7 @@ union __sifields {
       struct {
         unsigned long _data;
         __u32 _type;
+        __u32 _flags;
       } _perf;
     };
   } _sigfault;
@@ -88,7 +89,7 @@ union __sifields {
     int _fd;
   } _sigpoll;
   struct {
-    void __user * _call_addr;
+    void  * _call_addr;
     int _syscall;
     unsigned int _arch;
   } _sigsys;
@@ -125,6 +126,7 @@ typedef struct siginfo {
 #define si_pkey _sifields._sigfault._addr_pkey._pkey
 #define si_perf_data _sifields._sigfault._perf._data
 #define si_perf_type _sifields._sigfault._perf._type
+#define si_perf_flags _sifields._sigfault._perf._flags
 #define si_band _sifields._sigpoll._band
 #define si_fd _sifields._sigpoll._fd
 #define si_call_addr _sifields._sigsys._call_addr
@@ -197,6 +199,7 @@ typedef struct siginfo {
 #define TRAP_UNK 5
 #define TRAP_PERF 6
 #define NSIGTRAP 6
+#define TRAP_PERF_FLAG_ASYNC (1u << 0)
 #define CLD_EXITED 1
 #define CLD_KILLED 2
 #define CLD_DUMPED 3

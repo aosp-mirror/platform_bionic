@@ -28,12 +28,12 @@
 typedef struct __user_cap_header_struct {
   __u32 version;
   int pid;
-} __user * cap_user_header_t;
+}  * cap_user_header_t;
 typedef struct __user_cap_data_struct {
   __u32 effective;
   __u32 permitted;
   __u32 inheritable;
-} __user * cap_user_data_t;
+}  * cap_user_data_t;
 #define VFS_CAP_REVISION_MASK 0xFF000000
 #define VFS_CAP_REVISION_SHIFT 24
 #define VFS_CAP_FLAGS_MASK ~VFS_CAP_REVISION_MASK
@@ -111,5 +111,5 @@ struct vfs_ns_cap_data {
 #define CAP_LAST_CAP CAP_CHECKPOINT_RESTORE
 #define cap_valid(x) ((x) >= 0 && (x) <= CAP_LAST_CAP)
 #define CAP_TO_INDEX(x) ((x) >> 5)
-#define CAP_TO_MASK(x) (1 << ((x) & 31))
+#define CAP_TO_MASK(x) (1U << ((x) & 31))
 #endif

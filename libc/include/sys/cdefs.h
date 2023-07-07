@@ -63,6 +63,14 @@
 #define __BIONIC_ALIGN(__value, __alignment) (((__value) + (__alignment)-1) & ~((__alignment)-1))
 
 /*
+ * The nullness constraints of this parameter or return value are
+ * quite complex. This is used to highlight spots where developers
+ * are encouraged to read relevant manuals or code to understand
+ * the full picture of nullness for this pointer.
+ */
+#define __BIONIC_COMPLICATED_NULLNESS _Null_unspecified
+
+/*
  * The __CONCAT macro is used to concatenate parts of symbol names, e.g.
  * with "#define OLD(foo) __CONCAT(old,foo)", OLD(foo) produces oldfoo.
  * The __CONCAT macro is a bit tricky -- make sure you don't put spaces

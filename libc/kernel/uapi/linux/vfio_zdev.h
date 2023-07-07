@@ -29,6 +29,7 @@ struct vfio_device_info_cap_zpci_base {
   __u16 fmb_length;
   __u8 pft;
   __u8 gid;
+  __u32 fh;
 };
 struct vfio_device_info_cap_zpci_group {
   struct vfio_info_cap_header header;
@@ -40,6 +41,8 @@ struct vfio_device_info_cap_zpci_group {
   __u16 noi;
   __u16 maxstbl;
   __u8 version;
+  __u8 reserved;
+  __u16 imaxstbl;
 };
 struct vfio_device_info_cap_zpci_util {
   struct vfio_info_cap_header header;
