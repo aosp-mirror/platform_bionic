@@ -156,3 +156,23 @@ cc_test {
     ],
     data: ["test_suites/*"],
 }
+
+cc_binary {
+    name: "malloc-rss-benchmark",
+    srcs: [
+        "malloc_rss_benchmark.cpp",
+    ],
+
+    shared_libs: [
+        "libbase",
+    ],
+
+    target: {
+        android: {
+            static_libs: [
+                "libmeminfo",
+                "libprocinfo",
+            ],
+        },
+    },
+}

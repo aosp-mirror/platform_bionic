@@ -22,8 +22,10 @@ int     setreuid:setreuid(uid_t, uid_t)     lp64
 int     setresgid:setresgid32(gid_t, gid_t, gid_t)   lp32
 int     setresgid:setresgid(gid_t, gid_t, gid_t)     lp64
 # setresuid is explicitly allowed, see above.
-int     setfsgid(gid_t)  all
-int     setfsuid(uid_t)  all
+int     setfsgid:setfsgid32(gid_t) lp32
+int     setfsgid:setfsgid(gid_t)   lp64
+int     setfsuid:setfsuid32(uid_t) lp32
+int     setfsuid:setfsuid(uid_t)   lp64
 int     setgroups:setgroups32(int, const gid_t*)   lp32
 int     setgroups:setgroups(int, const gid_t*)     lp64
 

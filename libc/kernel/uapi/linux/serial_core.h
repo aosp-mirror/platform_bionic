@@ -47,6 +47,7 @@
 #define PORT_SUNSAB 39
 #define PORT_NPCM 40
 #define PORT_TEGRA_TCU 41
+#define PORT_ASPEED_VUART 42
 #define PORT_PCH_8LINE 44
 #define PORT_PCH_2LINE 45
 #define PORT_DZ 46
@@ -68,8 +69,6 @@
 #define PORT_IMX 62
 #define PORT_MPSC 63
 #define PORT_TXX9 64
-#define PORT_VR41XX_SIU 65
-#define PORT_VR41XX_DSIU 66
 #define PORT_S3C2400 67
 #define PORT_M32R_SIO 68
 #define PORT_JSM 69
@@ -122,4 +121,5 @@
 #define PORT_SIFIVE_V0 120
 #define PORT_SUNIX 121
 #define PORT_LINFLEXUART 122
+#define PORT_SUNPLUS 123
 #endif

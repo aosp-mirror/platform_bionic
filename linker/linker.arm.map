@@ -24,6 +24,7 @@
     __loader_remove_thread_local_dtor;
     __loader_shared_globals;
     rtld_db_dlactivity;
+    __loader_android_handle_signal;
   local:
     *;
 };

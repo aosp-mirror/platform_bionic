@@ -65,7 +65,7 @@ struct ipmi_msg {
   unsigned char netfn;
   unsigned char cmd;
   unsigned short data_len;
-  unsigned char __user * data;
+  unsigned char  * data;
 };
 struct kernel_ipmi_msg {
   unsigned char netfn;
@@ -86,7 +86,7 @@ struct kernel_ipmi_msg {
 #define IPMI_MAINTENANCE_MODE_ON 2
 #define IPMI_IOC_MAGIC 'i'
 struct ipmi_req {
-  unsigned char __user * addr;
+  unsigned char  * addr;
   unsigned int addr_len;
   long msgid;
   struct ipmi_msg msg;
@@ -100,7 +100,7 @@ struct ipmi_req_settime {
 #define IPMICTL_SEND_COMMAND_SETTIME _IOR(IPMI_IOC_MAGIC, 21, struct ipmi_req_settime)
 struct ipmi_recv {
   int recv_type;
-  unsigned char __user * addr;
+  unsigned char  * addr;
   unsigned int addr_len;
   long msgid;
   struct ipmi_msg msg;

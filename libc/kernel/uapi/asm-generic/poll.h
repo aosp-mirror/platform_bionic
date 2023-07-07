@@ -41,8 +41,8 @@
 #ifndef POLLRDHUP
 #define POLLRDHUP 0x2000
 #endif
-#define POLLFREE (__force __poll_t) 0x4000
-#define POLL_BUSY_LOOP (__force __poll_t) 0x8000
+#define POLLFREE ( __poll_t) 0x4000
+#define POLL_BUSY_LOOP ( __poll_t) 0x8000
 struct pollfd {
   int fd;
   short events;

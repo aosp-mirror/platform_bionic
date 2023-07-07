@@ -324,7 +324,7 @@ struct usb_key_descriptor {
   __u8 bDescriptorType;
   __u8 tTKID[3];
   __u8 bReserved;
-  __u8 bKeyData[0];
+  __u8 bKeyData[];
 } __attribute__((packed));
 struct usb_encryption_descriptor {
   __u8 bLength;
