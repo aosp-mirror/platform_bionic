@@ -38,6 +38,9 @@
     },
     {
       "name": "memunreachable_unit_test"
+    },
+    {
+      "name": "toybox-tests"
     }
   ],
   "hwasan-presubmit": [
@@ -73,6 +76,17 @@
     },
     {
       "name": "malloc_hooks_system_tests"
+    },
+    {
+      "name": "memunreachable_unit_test"
+    },
+    {
+      "name": "toybox-tests"
+    }
+  ],
+  "kernel-presubmit": [
+    {
+      "name": "CtsBionicTestCases"
     }
   ]
 }

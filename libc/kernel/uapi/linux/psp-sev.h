@@ -66,37 +66,37 @@ struct sev_user_data_status {
   __u32 flags;
   __u8 build;
   __u32 guest_count;
-} __packed;
+} __attribute__((__packed__));
 #define SEV_STATUS_FLAGS_CONFIG_ES 0x0100
 struct sev_user_data_pek_csr {
   __u64 address;
   __u32 length;
-} __packed;
+} __attribute__((__packed__));
 struct sev_user_data_pek_cert_import {
   __u64 pek_cert_address;
   __u32 pek_cert_len;
   __u64 oca_cert_address;
   __u32 oca_cert_len;
-} __packed;
+} __attribute__((__packed__));
 struct sev_user_data_pdh_cert_export {
   __u64 pdh_cert_address;
   __u32 pdh_cert_len;
   __u64 cert_chain_address;
   __u32 cert_chain_len;
-} __packed;
+} __attribute__((__packed__));
 struct sev_user_data_get_id {
   __u8 socket1[64];
   __u8 socket2[64];
-} __packed;
+} __attribute__((__packed__));
 struct sev_user_data_get_id2 {
   __u64 address;
   __u32 length;
-} __packed;
+} __attribute__((__packed__));
 struct sev_issue_cmd {
   __u32 cmd;
   __u64 data;
   __u32 error;
-} __packed;
+} __attribute__((__packed__));
 #define SEV_IOC_TYPE 'S'
 #define SEV_ISSUE_CMD _IOWR(SEV_IOC_TYPE, 0x0, struct sev_issue_cmd)
 #endif

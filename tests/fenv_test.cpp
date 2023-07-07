@@ -117,6 +117,21 @@ TEST(fenv, fegetenv_fesetenv) {
   ASSERT_EQ(FE_OVERFLOW, fetestexcept(FE_ALL_EXCEPT));
 }
 
+TEST(fenv, fegetenv_fesetenv_rounding_mode) {
+  // Test that fegetenv()/fesetenv() includes the rounding mode.
+  fesetround(FE_DOWNWARD);
+  ASSERT_EQ(FE_DOWNWARD, fegetround());
+
+  fenv_t env;
+  fegetenv(&env);
+
+  fesetround(FE_UPWARD);
+  ASSERT_EQ(FE_UPWARD, fegetround());
+
+  fesetenv(&env);
+  ASSERT_EQ(FE_DOWNWARD, fegetround());
+}
+
 TEST(fenv, feholdexcept_feupdateenv) {
   // Set FE_OVERFLOW only.
   feclearexcept(FE_ALL_EXCEPT);
@@ -187,9 +202,10 @@ TEST(fenv, fedisableexcept_fegetexcept) {
 
 TEST(fenv, feenableexcept_fegetexcept) {
 #if !defined(ANDROID_HOST_MUSL)
-#if defined(__aarch64__) || defined(__arm__)
-  // ARM doesn't support this. They used to if you go back far enough, but it was removed in
-  // the Cortex-A8 between r3p1 and r3p2.
+#if defined(__aarch64__) || defined(__arm__) || defined(__riscv)
+  // ARM and RISC-V don't support hardware trapping of floating point
+  // exceptions. ARM used to if you go back far enough, but it was
+  // removed in the Cortex-A8 between r3p1 and r3p2. RISC-V never has.
   ASSERT_EQ(-1, feenableexcept(FE_INVALID));
   ASSERT_EQ(0, fegetexcept());
   ASSERT_EQ(-1, feenableexcept(FE_DIVBYZERO));
@@ -200,8 +216,10 @@ TEST(fenv, feenableexcept_fegetexcept) {
   ASSERT_EQ(0, fegetexcept());
   ASSERT_EQ(-1, feenableexcept(FE_INEXACT));
   ASSERT_EQ(0, fegetexcept());
+#if defined(_FE_DENORMAL)  // riscv64 doesn't support this.
   ASSERT_EQ(-1, feenableexcept(FE_DENORMAL));
   ASSERT_EQ(0, fegetexcept());
+#endif
 #else
   // We can't recover from SIGFPE, so sacrifice a child...
   pid_t pid = fork();
