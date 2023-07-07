@@ -22,6 +22,7 @@
 #include <bits/ip_mreq_source.h>
 #include <bits/in_addr.h>
 #include <linux/types.h>
+#include <linux/stddef.h>
 #include <linux/libc-compat.h>
 #include <linux/socket.h>
 #if __UAPI_DEF_IN_IPPROTO
@@ -68,6 +69,8 @@ enum {
 #define IPPROTO_PIM IPPROTO_PIM
   IPPROTO_COMP = 108,
 #define IPPROTO_COMP IPPROTO_COMP
+  IPPROTO_L2TP = 115,
+#define IPPROTO_L2TP IPPROTO_L2TP
   IPPROTO_SCTP = 132,
 #define IPPROTO_SCTP IPPROTO_SCTP
   IPPROTO_UDPLITE = 136,

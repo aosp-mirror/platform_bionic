@@ -50,7 +50,7 @@ __BEGIN_DECLS
  * Note that Android's cv-qualifiers differ from POSIX; Android's implementation doesn't
  * modify its input and uses thread-local storage for the result if necessary.
  */
-char* __posix_basename(const char* __path) __RENAME(basename);
+char* _Nullable __posix_basename(const char* _Nullable __path) __RENAME(basename);
 
 /**
  * This macro ensures that callers get the POSIX basename() if they include this header,
@@ -65,13 +65,13 @@ char* __posix_basename(const char* __path) __RENAME(basename);
  * Note that Android's cv-qualifiers differ from POSIX; Android's implementation doesn't
  * modify its input and uses thread-local storage for the result if necessary.
  */
-char* dirname(const char* __path);
+char* _Nullable dirname(const char* _Nullable __path);
 
 #if !defined(__LP64__)
 /** Deprecated. Use dirname() instead. */
-int dirname_r(const char* __path, char* __buf, size_t __n);
+int dirname_r(const char* _Nullable __path, char* _Nullable __buf, size_t __n);
 /** Deprecated. Use basename() instead. */
-int basename_r(const char* __path, char* __buf, size_t __n);
+int basename_r(const char* _Nullable __path, char* _Nullable __buf, size_t __n);
 #endif
 
 __END_DECLS

@@ -90,6 +90,22 @@ struct vduse_vq_eventfd {
 };
 #define VDUSE_VQ_SETUP_KICKFD _IOW(VDUSE_BASE, 0x16, struct vduse_vq_eventfd)
 #define VDUSE_VQ_INJECT_IRQ _IOW(VDUSE_BASE, 0x17, __u32)
+struct vduse_iova_umem {
+  __u64 uaddr;
+  __u64 iova;
+  __u64 size;
+  __u64 reserved[3];
+};
+#define VDUSE_IOTLB_REG_UMEM _IOW(VDUSE_BASE, 0x18, struct vduse_iova_umem)
+#define VDUSE_IOTLB_DEREG_UMEM _IOW(VDUSE_BASE, 0x19, struct vduse_iova_umem)
+struct vduse_iova_info {
+  __u64 start;
+  __u64 last;
+#define VDUSE_IOVA_CAP_UMEM (1 << 0)
+  __u64 capability;
+  __u64 reserved[3];
+};
+#define VDUSE_IOTLB_GET_INFO _IOWR(VDUSE_BASE, 0x1a, struct vduse_iova_info)
 enum vduse_req_type {
   VDUSE_GET_VQ_STATE,
   VDUSE_SET_STATUS,

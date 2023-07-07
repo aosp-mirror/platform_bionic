@@ -49,8 +49,8 @@ typedef ssize_t regoff_t;
 typedef struct {
 	int re_magic;
 	size_t re_nsub;		/* number of parenthesized subexpressions */
-	const char *re_endp;	/* end pointer for REG_PEND */
-	struct re_guts *re_g;	/* none of your business :-) */
+	const char * __BIONIC_COMPLICATED_NULLNESS re_endp;	/* end pointer for REG_PEND */
+	struct re_guts * __BIONIC_COMPLICATED_NULLNESS re_g;	/* none of your business :-) */
 } regex_t;
 
 typedef struct {
@@ -67,6 +67,7 @@ typedef struct {
 #define	REG_NOSPEC	0020
 #define	REG_PEND	0040
 #define	REG_DUMP	0200
+#define	REG_GNU		0400
 
 /* regerror() flags */
 #define	REG_NOMATCH	 1
@@ -85,6 +86,7 @@ typedef struct {
 #define	REG_EMPTY	14
 #define	REG_ASSERT	15
 #define	REG_INVARG	16
+#define	REG_ILLSEQ	17
 #define	REG_ATOI	255	/* convert name to number (!) */
 #define	REG_ITOA	0400	/* convert number to name (!) */
 
@@ -97,10 +99,10 @@ typedef struct {
 #define	REG_BACKR	02000	/* force use of backref code */
 
 __BEGIN_DECLS
-int regcomp(regex_t* __re, const char* __regex, int __flags);
-size_t regerror(int __error_code, const regex_t* __re, char* __buf, size_t __n);
-int regexec(const regex_t* __re, const char* __s, size_t __match_count, regmatch_t __matches[], int __flags);
-void regfree(regex_t* __re);
+int regcomp(regex_t* _Nonnull __re, const char* _Nonnull __regex, int __flags);
+size_t regerror(int __error_code, const regex_t* _Nullable __re, char* _Nullable __buf, size_t __n);
+int regexec(const regex_t* _Nonnull __re, const char* _Nonnull __s, size_t __match_count, regmatch_t __matches[_Nullable], int __flags);
+void regfree(regex_t* _Nonnull __re);
 __END_DECLS
 
 #endif

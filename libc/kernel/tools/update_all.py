@@ -27,8 +27,14 @@ def Usage():
 def ProcessFiles(updater, original_dir, modified_dir, src_rel_dir, update_rel_dir):
     # Delete the old headers before updating to the new headers.
     update_dir = os.path.join(get_kernel_dir(), update_rel_dir)
-    shutil.rmtree(update_dir)
-    os.mkdir(update_dir, 0o755)
+    for root, dirs, files in os.walk(update_dir, topdown=True):
+        for entry in files:
+            # BUILD is a special file that needs to be preserved.
+            if entry == "BUILD":
+                continue
+            os.remove(os.path.join(root, entry))
+        for entry in dirs:
+            shutil.rmtree(os.path.join(root, entry))
 
     src_dir = os.path.normpath(os.path.join(original_dir, src_rel_dir))
     src_dir_len = len(src_dir) + 1

@@ -125,6 +125,7 @@ struct input_mask {
 #define BUS_RMI 0x1D
 #define BUS_CEC 0x1E
 #define BUS_INTEL_ISHTP 0x1F
+#define BUS_AMD_SFH 0x20
 #define MT_TOOL_FINGER 0x00
 #define MT_TOOL_PEN 0x01
 #define MT_TOOL_PALM 0x02
@@ -172,7 +173,7 @@ struct ff_periodic_effect {
   __u16 phase;
   struct ff_envelope envelope;
   __u32 custom_len;
-  __s16 __user * custom_data;
+  __s16  * custom_data;
 };
 struct ff_rumble_effect {
   __u16 strong_magnitude;
