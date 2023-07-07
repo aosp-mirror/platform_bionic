@@ -110,7 +110,7 @@ struct vfio_region_info_cap_type {
 #define VFIO_REGION_TYPE_PCI_VENDOR_MASK (0xffff)
 #define VFIO_REGION_TYPE_GFX (1)
 #define VFIO_REGION_TYPE_CCW (2)
-#define VFIO_REGION_TYPE_MIGRATION (3)
+#define VFIO_REGION_TYPE_MIGRATION_DEPRECATED (3)
 #define VFIO_REGION_SUBTYPE_INTEL_IGD_OPREGION (1)
 #define VFIO_REGION_SUBTYPE_INTEL_IGD_HOST_CFG (2)
 #define VFIO_REGION_SUBTYPE_INTEL_IGD_LPC_CFG (3)
@@ -130,17 +130,17 @@ struct vfio_region_gfx_edid {
 #define VFIO_REGION_SUBTYPE_CCW_ASYNC_CMD (1)
 #define VFIO_REGION_SUBTYPE_CCW_SCHIB (2)
 #define VFIO_REGION_SUBTYPE_CCW_CRW (3)
-#define VFIO_REGION_SUBTYPE_MIGRATION (1)
+#define VFIO_REGION_SUBTYPE_MIGRATION_DEPRECATED (1)
 struct vfio_device_migration_info {
   __u32 device_state;
-#define VFIO_DEVICE_STATE_STOP (0)
-#define VFIO_DEVICE_STATE_RUNNING (1 << 0)
-#define VFIO_DEVICE_STATE_SAVING (1 << 1)
-#define VFIO_DEVICE_STATE_RESUMING (1 << 2)
-#define VFIO_DEVICE_STATE_MASK (VFIO_DEVICE_STATE_RUNNING | VFIO_DEVICE_STATE_SAVING | VFIO_DEVICE_STATE_RESUMING)
-#define VFIO_DEVICE_STATE_VALID(state) (state & VFIO_DEVICE_STATE_RESUMING ? (state & VFIO_DEVICE_STATE_MASK) == VFIO_DEVICE_STATE_RESUMING : 1)
-#define VFIO_DEVICE_STATE_IS_ERROR(state) ((state & VFIO_DEVICE_STATE_MASK) == (VFIO_DEVICE_STATE_SAVING | VFIO_DEVICE_STATE_RESUMING))
-#define VFIO_DEVICE_STATE_SET_ERROR(state) ((state & ~VFIO_DEVICE_STATE_MASK) | VFIO_DEVICE_SATE_SAVING | VFIO_DEVICE_STATE_RESUMING)
+#define VFIO_DEVICE_STATE_V1_STOP (0)
+#define VFIO_DEVICE_STATE_V1_RUNNING (1 << 0)
+#define VFIO_DEVICE_STATE_V1_SAVING (1 << 1)
+#define VFIO_DEVICE_STATE_V1_RESUMING (1 << 2)
+#define VFIO_DEVICE_STATE_MASK (VFIO_DEVICE_STATE_V1_RUNNING | VFIO_DEVICE_STATE_V1_SAVING | VFIO_DEVICE_STATE_V1_RESUMING)
+#define VFIO_DEVICE_STATE_VALID(state) (state & VFIO_DEVICE_STATE_V1_RESUMING ? (state & VFIO_DEVICE_STATE_MASK) == VFIO_DEVICE_STATE_V1_RESUMING : 1)
+#define VFIO_DEVICE_STATE_IS_ERROR(state) ((state & VFIO_DEVICE_STATE_MASK) == (VFIO_DEVICE_STATE_V1_SAVING | VFIO_DEVICE_STATE_V1_RESUMING))
+#define VFIO_DEVICE_STATE_SET_ERROR(state) ((state & ~VFIO_DEVICE_STATE_MASK) | VFIO_DEVICE_STATE_V1_SAVING | VFIO_DEVICE_STATE_V1_RESUMING)
   __u32 reserved;
   __u64 pending_bytes;
   __u64 data_offset;
@@ -285,6 +285,65 @@ struct vfio_device_feature {
 };
 #define VFIO_DEVICE_FEATURE _IO(VFIO_TYPE, VFIO_BASE + 17)
 #define VFIO_DEVICE_FEATURE_PCI_VF_TOKEN (0)
+struct vfio_device_feature_migration {
+  __aligned_u64 flags;
+#define VFIO_MIGRATION_STOP_COPY (1 << 0)
+#define VFIO_MIGRATION_P2P (1 << 1)
+#define VFIO_MIGRATION_PRE_COPY (1 << 2)
+};
+#define VFIO_DEVICE_FEATURE_MIGRATION 1
+struct vfio_device_feature_mig_state {
+  __u32 device_state;
+  __s32 data_fd;
+};
+#define VFIO_DEVICE_FEATURE_MIG_DEVICE_STATE 2
+enum vfio_device_mig_state {
+  VFIO_DEVICE_STATE_ERROR = 0,
+  VFIO_DEVICE_STATE_STOP = 1,
+  VFIO_DEVICE_STATE_RUNNING = 2,
+  VFIO_DEVICE_STATE_STOP_COPY = 3,
+  VFIO_DEVICE_STATE_RESUMING = 4,
+  VFIO_DEVICE_STATE_RUNNING_P2P = 5,
+  VFIO_DEVICE_STATE_PRE_COPY = 6,
+  VFIO_DEVICE_STATE_PRE_COPY_P2P = 7,
+};
+struct vfio_precopy_info {
+  __u32 argsz;
+  __u32 flags;
+  __aligned_u64 initial_bytes;
+  __aligned_u64 dirty_bytes;
+};
+#define VFIO_MIG_GET_PRECOPY_INFO _IO(VFIO_TYPE, VFIO_BASE + 21)
+#define VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY 3
+struct vfio_device_low_power_entry_with_wakeup {
+  __s32 wakeup_eventfd;
+  __u32 reserved;
+};
+#define VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY_WITH_WAKEUP 4
+#define VFIO_DEVICE_FEATURE_LOW_POWER_EXIT 5
+struct vfio_device_feature_dma_logging_control {
+  __aligned_u64 page_size;
+  __u32 num_ranges;
+  __u32 __reserved;
+  __aligned_u64 ranges;
+};
+struct vfio_device_feature_dma_logging_range {
+  __aligned_u64 iova;
+  __aligned_u64 length;
+};
+#define VFIO_DEVICE_FEATURE_DMA_LOGGING_START 6
+#define VFIO_DEVICE_FEATURE_DMA_LOGGING_STOP 7
+struct vfio_device_feature_dma_logging_report {
+  __aligned_u64 iova;
+  __aligned_u64 length;
+  __aligned_u64 page_size;
+  __aligned_u64 bitmap;
+};
+#define VFIO_DEVICE_FEATURE_DMA_LOGGING_REPORT 8
+struct vfio_device_feature_mig_data_size {
+  __aligned_u64 stop_copy_length;
+};
+#define VFIO_DEVICE_FEATURE_MIG_DATA_SIZE 9
 struct vfio_iommu_type1_info {
   __u32 argsz;
   __u32 flags;
@@ -331,7 +390,7 @@ struct vfio_iommu_type1_dma_map {
 struct vfio_bitmap {
   __u64 pgsize;
   __u64 size;
-  __u64 __user * data;
+  __u64  * data;
 };
 struct vfio_iommu_type1_dma_unmap {
   __u32 argsz;

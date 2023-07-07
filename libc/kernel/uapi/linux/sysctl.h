@@ -23,11 +23,11 @@
 #include <linux/compiler.h>
 #define CTL_MAXNAME 10
 struct __sysctl_args {
-  int __user * name;
+  int  * name;
   int nlen;
-  void __user * oldval;
-  size_t __user * oldlenp;
-  void __user * newval;
+  void  * oldval;
+  size_t  * oldlenp;
+  void  * newval;
   size_t newlen;
   unsigned long __linux_unused[4];
 };
@@ -516,6 +516,7 @@ enum {
   NET_NEIGH_GC_THRESH3 = 16,
   NET_NEIGH_RETRANS_TIME_MS = 17,
   NET_NEIGH_REACHABLE_TIME_MS = 18,
+  NET_NEIGH_INTERVAL_PROBE_TIME_MS = 19,
 };
 enum {
   NET_DCCP_DEFAULT = 1,

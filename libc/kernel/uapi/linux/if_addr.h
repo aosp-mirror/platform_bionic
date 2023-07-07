@@ -39,6 +39,7 @@ enum {
   IFA_FLAGS,
   IFA_RT_PRIORITY,
   IFA_TARGET_NETNSID,
+  IFA_PROTO,
   __IFA_MAX,
 };
 #define IFA_MAX (__IFA_MAX - 1)
@@ -63,4 +64,8 @@ struct ifa_cacheinfo {
 };
 #define IFA_RTA(r) ((struct rtattr *) (((char *) (r)) + NLMSG_ALIGN(sizeof(struct ifaddrmsg))))
 #define IFA_PAYLOAD(n) NLMSG_PAYLOAD(n, sizeof(struct ifaddrmsg))
+#define IFAPROT_UNSPEC 0
+#define IFAPROT_KERNEL_LO 1
+#define IFAPROT_KERNEL_RA 2
+#define IFAPROT_KERNEL_LL 3
 #endif

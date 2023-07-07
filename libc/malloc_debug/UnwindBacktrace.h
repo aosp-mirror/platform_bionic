@@ -30,10 +30,8 @@
 
 #include <stdint.h>
 
-#include <string>
 #include <vector>
 
-#include <unwindstack/MapInfo.h>
 #include <unwindstack/Unwinder.h>
 
 bool Unwind(std::vector<uintptr_t>* frames, std::vector<unwindstack::FrameData>* info,

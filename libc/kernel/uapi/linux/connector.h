@@ -50,6 +50,6 @@ struct cn_msg {
   __u32 ack;
   __u16 len;
   __u16 flags;
-  __u8 data[0];
+  __u8 data[];
 };
 #endif

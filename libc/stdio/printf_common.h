@@ -524,8 +524,21 @@ static int __find_arguments(const CHAR_TYPE* fmt0, va_list ap, union arg** argta
       case 'u':
       case 'X':
       case 'x':
+      case 'B':
+      case 'b':
         ADDUARG();
         break;
+      case 'w':
+        n = 0;
+        ch = *fmt++;
+        while (is_digit(ch)) {
+          APPEND_DIGIT(n, ch);
+          ch = *fmt++;
+        }
+        if (n == 64) {
+          flags |= LLONGINT;
+        }
+        goto reswitch;
       default: /* "%?" prints ?, unless ? is NUL */
         if (ch == '\0') goto done;
         break;
