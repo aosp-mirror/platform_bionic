@@ -36,11 +36,11 @@
 
 #if defined(__BIONIC__)
 
-static void BM_mallopt_purge(benchmark::State& state) {
+static void RunMalloptPurge(benchmark::State& state, int purge_value) {
   static size_t sizes[] = {8, 16, 32, 64, 128, 1024, 4096, 16384, 65536, 131072, 1048576};
   static int pagesize = getpagesize();
   mallopt(M_DECAY_TIME, 1);
-  mallopt(M_PURGE, 0);
+  mallopt(M_PURGE_ALL, 0);
   for (auto _ : state) {
     state.PauseTiming();
     std::vector<void*> ptrs;
@@ -63,10 +63,19 @@ static void BM_mallopt_purge(benchmark::State& state) {
     ptrs.clear();
     state.ResumeTiming();
 
-    mallopt(M_PURGE, 0);
+    mallopt(purge_value, 0);
   }
   mallopt(M_DECAY_TIME, 0);
 }
+
+static void BM_mallopt_purge(benchmark::State& state) {
+  RunMalloptPurge(state, M_PURGE);
+}
 BIONIC_BENCHMARK(BM_mallopt_purge);
+
+static void BM_mallopt_purge_all(benchmark::State& state) {
+  RunMalloptPurge(state, M_PURGE_ALL);
+}
+BIONIC_BENCHMARK(BM_mallopt_purge_all);
 
 #endif

@@ -166,6 +166,7 @@ class Config {
   static bool read_binary_config(const char* ld_config_file_path,
                                  const char* binary_realpath,
                                  bool is_asan,
+                                 bool is_hwasan,
                                  const Config** config,
                                  std::string* error_msg);
 

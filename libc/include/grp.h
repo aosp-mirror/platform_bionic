@@ -39,26 +39,26 @@
 #include <sys/types.h>
 
 struct group {
-  char* gr_name; /* group name */
-  char* gr_passwd; /* group password */
+  char* _Nullable gr_name; /* group name */
+  char* _Nullable gr_passwd; /* group password */
   gid_t gr_gid; /* group id */
-  char** gr_mem; /* group members */
+  char* _Nullable * _Nullable gr_mem; /* group members */
 };
 
 __BEGIN_DECLS
 
-struct group* getgrgid(gid_t __gid);
-struct group* getgrnam(const char* __name);
+struct group* _Nullable getgrgid(gid_t __gid);
+struct group* _Nullable getgrnam(const char* _Nonnull __name);
 
 /* Note: Android has thousands and thousands of ids to iterate through. */
-struct group* getgrent(void) __INTRODUCED_IN(26);
+struct group* _Nullable getgrent(void) __INTRODUCED_IN(26);
 
 void setgrent(void) __INTRODUCED_IN(26);
 void endgrent(void) __INTRODUCED_IN(26);
-int getgrgid_r(gid_t __gid, struct group* __group, char* __buf, size_t __n, struct group** __result) __INTRODUCED_IN(24);
-int getgrnam_r(const char* __name, struct group* __group, char* __buf, size_t __n, struct group** __result) __INTRODUCED_IN(24);
-int getgrouplist(const char* __user, gid_t __group, gid_t* __groups, int* __group_count);
-int initgroups(const char* __user, gid_t __group);
+int getgrgid_r(gid_t __gid, struct group* __BIONIC_COMPLICATED_NULLNESS __group, char* _Nonnull __buf, size_t __n, struct group* _Nullable * _Nonnull __result) __INTRODUCED_IN(24);
+int getgrnam_r(const char* _Nonnull __name, struct group* __BIONIC_COMPLICATED_NULLNESS __group, char* _Nonnull __buf, size_t __n, struct group* _Nullable *_Nonnull __result) __INTRODUCED_IN(24);
+int getgrouplist(const char* _Nonnull __user, gid_t __group, gid_t* __BIONIC_COMPLICATED_NULLNESS __groups, int* _Nonnull __group_count);
+int initgroups(const char* _Nonnull __user, gid_t __group);
 
 __END_DECLS
 

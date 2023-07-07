@@ -33,11 +33,11 @@ struct dlm_lock_params {
   __u32 parent;
   __u64 xid;
   __u64 timeout;
-  void __user * castparam;
-  void __user * castaddr;
-  void __user * bastparam;
-  void __user * bastaddr;
-  struct dlm_lksb __user * lksb;
+  void  * castparam;
+  void  * castaddr;
+  void  * bastparam;
+  void  * bastaddr;
+  struct dlm_lksb  * lksb;
   char lvb[DLM_USER_LVB_LEN];
   char name[];
 };
@@ -67,9 +67,9 @@ struct dlm_device_version {
 struct dlm_lock_result {
   __u32 version[3];
   __u32 length;
-  void __user * user_astaddr;
-  void __user * user_astparam;
-  struct dlm_lksb __user * user_lksb;
+  void  * user_astaddr;
+  void  * user_astparam;
+  struct dlm_lksb  * user_lksb;
   struct dlm_lksb lksb;
   __u8 bast_mode;
   __u8 unused[3];

@@ -43,6 +43,18 @@ static debugger_process_info get_process_info() {
       .scudo_stack_depot = __libc_shared_globals()->scudo_stack_depot,
       .scudo_region_info = __libc_shared_globals()->scudo_region_info,
       .scudo_ring_buffer = __libc_shared_globals()->scudo_ring_buffer,
+      .scudo_ring_buffer_size = __libc_shared_globals()->scudo_ring_buffer_size,
+  };
+}
+
+static gwp_asan_callbacks_t get_gwp_asan_callbacks() {
+  return {
+      .debuggerd_needs_gwp_asan_recovery =
+          __libc_shared_globals()->debuggerd_needs_gwp_asan_recovery,
+      .debuggerd_gwp_asan_pre_crash_report =
+          __libc_shared_globals()->debuggerd_gwp_asan_pre_crash_report,
+      .debuggerd_gwp_asan_post_crash_report =
+          __libc_shared_globals()->debuggerd_gwp_asan_post_crash_report,
   };
 }
 #endif
@@ -52,9 +64,10 @@ void linker_debuggerd_init() {
   // so don't pass in any process info from the bootstrap linker.
   debuggerd_callbacks_t callbacks = {
 #if defined(__ANDROID_APEX__)
-      .get_process_info = get_process_info,
+    .get_process_info = get_process_info,
+    .get_gwp_asan_callbacks = get_gwp_asan_callbacks,
 #endif
-      .post_dump = notify_gdb_of_libraries,
+    .post_dump = notify_gdb_of_libraries,
   };
   debuggerd_init(&callbacks);
 }

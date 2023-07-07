@@ -128,7 +128,7 @@ struct cdrom_read_audio {
   union cdrom_addr addr;
   __u8 addr_format;
   int nframes;
-  __u8 __user * buf;
+  __u8  * buf;
 };
 struct cdrom_multisession {
   union cdrom_addr addr;
@@ -149,16 +149,16 @@ struct cdrom_blk {
 #define CGC_DATA_NONE 3
 struct cdrom_generic_command {
   unsigned char cmd[CDROM_PACKET_SIZE];
-  unsigned char __user * buffer;
+  unsigned char  * buffer;
   unsigned int buflen;
   int stat;
-  struct request_sense __user * sense;
+  struct request_sense  * sense;
   unsigned char data_direction;
   int quiet;
   int timeout;
   union {
-    void __user * reserved[1];
-    void __user * unused;
+    void  * reserved[1];
+    void  * unused;
   };
 };
 struct cdrom_timed_media_change_info {

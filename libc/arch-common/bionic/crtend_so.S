@@ -32,11 +32,10 @@
 __bionic_asm_custom_note_gnu_section()
 #endif
 
-#if defined(__linux__) && defined(__ELF__)
-	.section .note.GNU-stack,"",%progbits
-#endif
+	.section .note.GNU-stack, "", %progbits
+
 #if !defined(__arm__)
-	.section	.eh_frame,"a",@progbits
+	.section .eh_frame, "a", @progbits
 	.balign 4
 	.type	__FRAME_END__, @object
 	.size	__FRAME_END__, 4

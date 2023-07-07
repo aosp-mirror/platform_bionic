@@ -34,11 +34,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/auxv.h>
 #include <sys/mman.h>
 #include <sys/param.h>
 #include <sys/vfs.h>
 #include <unistd.h>
 
+#include <iterator>
 #include <new>
 #include <string>
 #include <unordered_map>
@@ -131,6 +133,36 @@ static const char* const kAsanDefaultLdPaths[] = {
   kVendorLibDir,
   nullptr
 };
+
+#if defined(__aarch64__)
+static const char* const kHwasanSystemLibDir  = "/system/lib64/hwasan";
+static const char* const kHwasanOdmLibDir     = "/odm/lib64/hwasan";
+static const char* const kHwasanVendorLibDir  = "/vendor/lib64/hwasan";
+
+// HWASan is only supported on aarch64.
+static const char* const kHwsanDefaultLdPaths[] = {
+  kHwasanSystemLibDir,
+  kSystemLibDir,
+  kHwasanOdmLibDir,
+  kOdmLibDir,
+  kHwasanVendorLibDir,
+  kVendorLibDir,
+  nullptr
+};
+
+// Is HWASAN enabled?
+static bool g_is_hwasan = false;
+#else
+static const char* const kHwsanDefaultLdPaths[] = {
+  kSystemLibDir,
+  kOdmLibDir,
+  kVendorLibDir,
+  nullptr
+};
+
+// Never any HWASan. Help the compiler remove the code we don't need.
+constexpr bool g_is_hwasan = false;
+#endif
 
 // Is ASAN enabled?
 static bool g_is_asan = false;
@@ -371,7 +403,7 @@ static inline void* get_tls_block_for_this_thread(const soinfo_tls* si_tls, bool
     char* static_tls = reinterpret_cast<char*>(__get_bionic_tcb()) - layout.offset_bionic_tcb();
     return static_tls + tls_mod.static_offset;
   } else if (should_alloc) {
-    const TlsIndex ti { si_tls->module_id, 0 };
+    const TlsIndex ti { si_tls->module_id, static_cast<size_t>(0 - TLS_DTV_OFFSET) };
     return TLS_GET_ADDR(&ti);
   } else {
     TlsDtv* dtv = __get_tcb_dtv(__get_bionic_tcb());
@@ -1189,8 +1221,6 @@ static bool load_library(android_namespace_t* ns,
   if ((fs_stat.f_type != TMPFS_MAGIC) && (!ns->is_accessible(realpath))) {
     // TODO(dimitry): workaround for http://b/26394120 - the exempt-list
 
-    // TODO(dimitry) before O release: add a namespace attribute to have this enabled
-    // only for classloader-namespaces
     const soinfo* needed_by = task->is_dt_needed() ? task->get_needed_by() : nullptr;
     if (is_exempt_lib(ns, name, needed_by)) {
       // print warning only if needed by non-system library
@@ -1568,18 +1598,16 @@ bool find_libraries(android_namespace_t* ns,
     task->set_extinfo(is_dt_needed ? nullptr : extinfo);
     task->set_dt_needed(is_dt_needed);
 
-    LD_LOG(kLogDlopen, "find_libraries(ns=%s): task=%s, is_dt_needed=%d", ns->get_name(),
-           task->get_name(), is_dt_needed);
-
     // Note: start from the namespace that is stored in the LoadTask. This namespace
     // is different from the current namespace when the LoadTask is for a transitive
     // dependency and the lib that created the LoadTask is not found in the
-    // current namespace but in one of the linked namespace.
-    if (!find_library_internal(const_cast<android_namespace_t*>(task->get_start_from()),
-                               task,
-                               &zip_archive_cache,
-                               &load_tasks,
-                               rtld_flags)) {
+    // current namespace but in one of the linked namespaces.
+    android_namespace_t* start_ns = const_cast<android_namespace_t*>(task->get_start_from());
+
+    LD_LOG(kLogDlopen, "find_library_internal(ns=%s@%p): task=%s, is_dt_needed=%d",
+           start_ns->get_name(), start_ns, task->get_name(), is_dt_needed);
+
+    if (!find_library_internal(start_ns, task, &zip_archive_cache, &load_tasks, rtld_flags)) {
       return false;
     }
 
@@ -2137,26 +2165,46 @@ void* do_dlopen(const char* name, int flags,
   }
   // End Workaround for dlopen(/system/lib/<soname>) when .so is in /apex.
 
-  std::string asan_name_holder;
+  std::string translated_name_holder;
 
+  assert(!g_is_hwasan || !g_is_asan);
   const char* translated_name = name;
   if (g_is_asan && translated_name != nullptr && translated_name[0] == '/') {
     char original_path[PATH_MAX];
     if (realpath(name, original_path) != nullptr) {
-      asan_name_holder = std::string(kAsanLibDirPrefix) + original_path;
-      if (file_exists(asan_name_holder.c_str())) {
+      translated_name_holder = std::string(kAsanLibDirPrefix) + original_path;
+      if (file_exists(translated_name_holder.c_str())) {
         soinfo* si = nullptr;
         if (find_loaded_library_by_realpath(ns, original_path, true, &si)) {
           PRINT("linker_asan dlopen NOT translating \"%s\" -> \"%s\": library already loaded", name,
-                asan_name_holder.c_str());
+                translated_name_holder.c_str());
         } else {
           PRINT("linker_asan dlopen translating \"%s\" -> \"%s\"", name, translated_name);
-          translated_name = asan_name_holder.c_str();
+          translated_name = translated_name_holder.c_str();
+        }
+      }
+    }
+  } else if (g_is_hwasan && translated_name != nullptr && translated_name[0] == '/') {
+    char original_path[PATH_MAX];
+    if (realpath(name, original_path) != nullptr) {
+      // Keep this the same as CreateHwasanPath in system/linkerconfig/modules/namespace.cc.
+      std::string path(original_path);
+      auto slash = path.rfind('/');
+      if (slash != std::string::npos || slash != path.size() - 1) {
+        translated_name_holder = path.substr(0, slash) + "/hwasan" + path.substr(slash);
+      }
+      if (!translated_name_holder.empty() && file_exists(translated_name_holder.c_str())) {
+        soinfo* si = nullptr;
+        if (find_loaded_library_by_realpath(ns, original_path, true, &si)) {
+          PRINT("linker_hwasan dlopen NOT translating \"%s\" -> \"%s\": library already loaded", name,
+                translated_name_holder.c_str());
+        } else {
+          PRINT("linker_hwasan dlopen translating \"%s\" -> \"%s\"", name, translated_name);
+          translated_name = translated_name_holder.c_str();
         }
       }
     }
   }
-
   ProtectedDataGuard guard;
   soinfo* si = find_library(ns, translated_name, flags, extinfo, caller);
   loading_trace.End();
@@ -2488,11 +2536,12 @@ bool link_namespaces(android_namespace_t* namespace_from,
     return false;
   }
 
-  auto sonames = android::base::Split(shared_lib_sonames, ":");
-  std::unordered_set<std::string> sonames_set(sonames.begin(), sonames.end());
+  std::vector<std::string> sonames = android::base::Split(shared_lib_sonames, ":");
+  std::unordered_set<std::string> sonames_set(std::make_move_iterator(sonames.begin()),
+                                              std::make_move_iterator(sonames.end()));
 
   ProtectedDataGuard guard;
-  namespace_from->add_linked_namespace(namespace_to, sonames_set, false);
+  namespace_from->add_linked_namespace(namespace_to, std::move(sonames_set), false);
 
   return true;
 }
@@ -3144,6 +3193,14 @@ bool soinfo::prelink_image() {
       case DT_AARCH64_VARIANT_PCS:
         // Ignored: AArch64 processor-specific dynamic array tags.
         break;
+      // TODO(mitchp): Add support to libc_init_mte to use these dynamic array entries instead of
+      // the Android-specific ELF note.
+      case DT_AARCH64_MEMTAG_MODE:
+      case DT_AARCH64_MEMTAG_HEAP:
+      case DT_AARCH64_MEMTAG_STACK:
+      case DT_AARCH64_MEMTAG_GLOBALS:
+      case DT_AARCH64_MEMTAG_GLOBALSSZ:
+        break;
 #endif
 
       default:
@@ -3329,9 +3386,10 @@ bool soinfo::protect_relro() {
   return true;
 }
 
-static std::vector<android_namespace_t*> init_default_namespace_no_config(bool is_asan) {
+static std::vector<android_namespace_t*> init_default_namespace_no_config(bool is_asan, bool is_hwasan) {
   g_default_namespace.set_isolated(false);
-  auto default_ld_paths = is_asan ? kAsanDefaultLdPaths : kDefaultLdPaths;
+  auto default_ld_paths = is_asan ? kAsanDefaultLdPaths : (
+    is_hwasan ? kHwsanDefaultLdPaths : kDefaultLdPaths);
 
   char real_path[PATH_MAX];
   std::vector<std::string> ld_default_paths;
@@ -3435,6 +3493,7 @@ static std::string get_ld_config_file_path(const char* executable_path) {
   return kLdConfigFilePath;
 }
 
+
 std::vector<android_namespace_t*> init_default_namespaces(const char* executable_path) {
   g_default_namespace.set_name("(default)");
 
@@ -3448,6 +3507,16 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
               (strcmp(bname, "linker_asan") == 0 ||
                strcmp(bname, "linker_asan64") == 0);
 
+#if defined(__aarch64__)
+  // HWASan is only supported on AArch64.
+  // The AT_SECURE restriction is because this is a debug feature that does
+  // not need to work on secure binaries, it doesn't hurt to disallow the
+  // environment variable for them, as it impacts the program execution.
+  char* hwasan_env = getenv("LD_HWASAN");
+  g_is_hwasan = (bname != nullptr &&
+              strcmp(bname, "linker_hwasan64") == 0) ||
+              (hwasan_env != nullptr && !getauxval(AT_SECURE) && strcmp(hwasan_env, "1") == 0);
+#endif
   const Config* config = nullptr;
 
   {
@@ -3455,7 +3524,7 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
     INFO("[ Reading linker config \"%s\" ]", ld_config_file_path.c_str());
     ScopedTrace trace(("linker config " + ld_config_file_path).c_str());
     std::string error_msg;
-    if (!Config::read_binary_config(ld_config_file_path.c_str(), executable_path, g_is_asan,
+    if (!Config::read_binary_config(ld_config_file_path.c_str(), executable_path, g_is_asan, g_is_hwasan,
                                     &config, &error_msg)) {
       if (!error_msg.empty()) {
         DL_WARN("Warning: couldn't read '%s' for '%s' (using default configuration instead): %s",
@@ -3466,7 +3535,7 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
   }
 
   if (config == nullptr) {
-    return init_default_namespace_no_config(g_is_asan);
+    return init_default_namespace_no_config(g_is_asan, g_is_hwasan);
   }
 
   const auto& namespace_configs = config->namespace_configs();

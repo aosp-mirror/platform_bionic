@@ -51,6 +51,8 @@ static int GetTargetElfMachine() {
   return EM_AARCH64;
 #elif defined(__i386__)
   return EM_386;
+#elif defined(__riscv)
+  return EM_RISCV;
 #elif defined(__x86_64__)
   return EM_X86_64;
 #endif
@@ -173,7 +175,8 @@ bool ElfReader::Load(address_space_params* address_space) {
   if (did_load_) {
     return true;
   }
-  if (ReserveAddressSpace(address_space) && LoadSegments() && FindPhdr() &&
+  bool reserveSuccess = ReserveAddressSpace(address_space);
+  if (reserveSuccess && LoadSegments() && FindPhdr() &&
       FindGnuPropertySection()) {
     did_load_ = true;
 #if defined(__aarch64__)
@@ -183,6 +186,13 @@ bool ElfReader::Load(address_space_params* address_space) {
                                                &note_gnu_property_) == 0);
     }
 #endif
+  }
+  if (reserveSuccess && !did_load_) {
+    if (load_start_ != nullptr && load_size_ != 0) {
+      if (!mapped_by_caller_) {
+        munmap(load_start_, load_size_);
+      }
+    }
   }
 
   return did_load_;
@@ -214,6 +224,7 @@ static const char* EM_to_string(int em) {
   if (em == EM_386) return "EM_386";
   if (em == EM_AARCH64) return "EM_AARCH64";
   if (em == EM_ARM) return "EM_ARM";
+  if (em == EM_RISCV) return "EM_RISCV";
   if (em == EM_X86_64) return "EM_X86_64";
   return "EM_???";
 }
