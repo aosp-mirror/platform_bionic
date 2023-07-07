@@ -45,4 +45,5 @@ LIBC_PLATFORM {
   global:
     android_get_LD_LIBRARY_PATH;
     __cfi_init;
+    android_handle_signal;
 } LIBC_OMR1;

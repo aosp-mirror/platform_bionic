@@ -159,11 +159,11 @@ struct ip_vs_get_dests {
   __be16 port;
   __u32 fwmark;
   unsigned int num_dests;
-  struct ip_vs_dest_entry entrytable[0];
+  struct ip_vs_dest_entry entrytable[];
 };
 struct ip_vs_get_services {
   unsigned int num_services;
-  struct ip_vs_service_entry entrytable[0];
+  struct ip_vs_service_entry entrytable[];
 };
 struct ip_vs_timeout_user {
   int tcp_timeout;

@@ -19,6 +19,14 @@
 #ifndef _UAPI_PR_H
 #define _UAPI_PR_H
 #include <linux/types.h>
+enum pr_status {
+  PR_STS_SUCCESS = 0x0,
+  PR_STS_IOERR = 0x2,
+  PR_STS_RESERVATION_CONFLICT = 0x18,
+  PR_STS_RETRY_PATH_FAILURE = 0xe0000,
+  PR_STS_PATH_FAST_FAILED = 0xf0000,
+  PR_STS_PATH_FAILED = 0x10000,
+};
 enum pr_type {
   PR_WRITE_EXCLUSIVE = 1,
   PR_EXCLUSIVE_ACCESS = 2,

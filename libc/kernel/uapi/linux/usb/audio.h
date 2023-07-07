@@ -186,7 +186,7 @@ struct uac_feature_unit_descriptor {
   __u8 bUnitID;
   __u8 bSourceID;
   __u8 bControlSize;
-  __u8 bmaControls[0];
+  __u8 bmaControls[];
 } __attribute__((packed));
 struct uac_processing_unit_descriptor {
   __u8 bLength;

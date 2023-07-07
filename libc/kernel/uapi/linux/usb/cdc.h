@@ -131,7 +131,7 @@ struct usb_cdc_mdlm_detail_desc {
   __u8 bDescriptorType;
   __u8 bDescriptorSubType;
   __u8 bGuidDescriptorType;
-  __u8 bDetailData[0];
+  __u8 bDetailData[];
 } __attribute__((packed));
 struct usb_cdc_obex_desc {
   __u8 bLength;
@@ -201,6 +201,8 @@ struct usb_cdc_line_coding {
 #define USB_CDC_SPACE_PARITY 4
   __u8 bDataBits;
 } __attribute__((packed));
+#define USB_CDC_CTRL_DTR (1 << 0)
+#define USB_CDC_CTRL_RTS (1 << 1)
 #define USB_CDC_PACKET_TYPE_PROMISCUOUS (1 << 0)
 #define USB_CDC_PACKET_TYPE_ALL_MULTICAST (1 << 1)
 #define USB_CDC_PACKET_TYPE_DIRECTED (1 << 2)
@@ -217,6 +219,13 @@ struct usb_cdc_notification {
   __le16 wIndex;
   __le16 wLength;
 } __attribute__((packed));
+#define USB_CDC_SERIAL_STATE_DCD (1 << 0)
+#define USB_CDC_SERIAL_STATE_DSR (1 << 1)
+#define USB_CDC_SERIAL_STATE_BREAK (1 << 2)
+#define USB_CDC_SERIAL_STATE_RING_SIGNAL (1 << 3)
+#define USB_CDC_SERIAL_STATE_FRAMING (1 << 4)
+#define USB_CDC_SERIAL_STATE_PARITY (1 << 5)
+#define USB_CDC_SERIAL_STATE_OVERRUN (1 << 6)
 struct usb_cdc_speed_change {
   __le32 DLBitRRate;
   __le32 ULBitRate;
@@ -267,7 +276,7 @@ struct usb_cdc_ncm_ndp16 {
   __le32 dwSignature;
   __le16 wLength;
   __le16 wNextNdpIndex;
-  struct usb_cdc_ncm_dpe16 dpe16[0];
+  struct usb_cdc_ncm_dpe16 dpe16[];
 } __attribute__((packed));
 struct usb_cdc_ncm_dpe32 {
   __le32 dwDatagramIndex;
@@ -279,7 +288,7 @@ struct usb_cdc_ncm_ndp32 {
   __le16 wReserved6;
   __le32 dwNextNdpIndex;
   __le32 dwReserved12;
-  struct usb_cdc_ncm_dpe32 dpe32[0];
+  struct usb_cdc_ncm_dpe32 dpe32[];
 } __attribute__((packed));
 #define USB_CDC_NCM_NDP16_INDEX_MIN 0x000C
 #define USB_CDC_NCM_NDP32_INDEX_MIN 0x0010

@@ -54,28 +54,32 @@ static bool __bionic_current_locale_is_utf8 = true;
 
 struct __locale_t {
   size_t mb_cur_max;
-
-  explicit __locale_t(size_t mb_cur_max) : mb_cur_max(mb_cur_max) {
-  }
-
-  explicit __locale_t(const __locale_t* other) {
-    if (other == LC_GLOBAL_LOCALE) {
-      mb_cur_max = __bionic_current_locale_is_utf8 ? 4 : 1;
-    } else {
-      mb_cur_max = other->mb_cur_max;
-    }
-  }
-
-  BIONIC_DISALLOW_IMPLICIT_CONSTRUCTORS(__locale_t);
 };
 
-size_t __ctype_get_mb_cur_max() {
-  locale_t l = uselocale(nullptr);
+// Avoid using new/delete in this file, because a user may have overridden
+// new/delete, and we want to avoid making extraneous calls to them. This isn't
+// an issue for libc.so in the platform, but this file is also compiled into the
+// NDK's libandroid_support.a, and there are libc++ tests that count the number
+// of calls to new/delete.
+#pragma clang poison new delete
+
+static inline locale_t __alloc_locale(size_t mb_cur_max) {
+  auto result = static_cast<__locale_t*>(malloc(sizeof(__locale_t)));
+  if (result == nullptr) return nullptr;
+  result->mb_cur_max = mb_cur_max;
+  return result;
+}
+
+static inline size_t get_locale_mb_cur_max(locale_t l) {
   if (l == LC_GLOBAL_LOCALE) {
     return __bionic_current_locale_is_utf8 ? 4 : 1;
   } else {
     return l->mb_cur_max;
   }
+}
+
+size_t __ctype_get_mb_cur_max() {
+  return get_locale_mb_cur_max(uselocale(nullptr));
 }
 
 #if !USE_TLS_SLOT
@@ -133,11 +137,11 @@ lconv* localeconv() {
 }
 
 locale_t duplocale(locale_t l) {
-  return new __locale_t(l);
+  return __alloc_locale(get_locale_mb_cur_max(l));
 }
 
 void freelocale(locale_t l) {
-  delete l;
+  free(l);
 }
 
 locale_t newlocale(int category_mask, const char* locale_name, locale_t /*base*/) {
@@ -152,7 +156,7 @@ locale_t newlocale(int category_mask, const char* locale_name, locale_t /*base*/
     return nullptr;
   }
 
-  return new __locale_t(__is_utf8_locale(locale_name) ? 4 : 1);
+  return __alloc_locale(__is_utf8_locale(locale_name) ? 4 : 1);
 }
 
 char* setlocale(int category, const char* locale_name) {
