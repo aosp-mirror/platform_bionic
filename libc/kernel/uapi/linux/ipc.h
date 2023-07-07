@@ -42,7 +42,7 @@ struct __kernel_legacy_ipc_perm {
 #define IPC_OLD 0
 #define IPC_64 0x0100
 struct ipc_kludge {
-  struct msgbuf __user * msgp;
+  struct msgbuf  * msgp;
   long msgtyp;
 };
 #define SEMOP 1

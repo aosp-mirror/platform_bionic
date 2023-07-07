@@ -44,26 +44,26 @@ __BEGIN_DECLS
  */
 struct ifaddrs {
   /** Pointer to the next element in the linked list. */
-  struct ifaddrs* ifa_next;
+  struct ifaddrs* _Nullable ifa_next;
 
   /** Interface name. */
-  char* ifa_name;
+  char* _Nullable ifa_name;
   /** Interface flags (like `SIOCGIFFLAGS`). */
   unsigned int ifa_flags;
   /** Interface address. */
-  struct sockaddr* ifa_addr;
+  struct sockaddr* _Nullable ifa_addr;
   /** Interface netmask. */
-  struct sockaddr* ifa_netmask;
+  struct sockaddr* _Nullable ifa_netmask;
 
   union {
     /** Interface broadcast address (if IFF_BROADCAST is set). */
-    struct sockaddr* ifu_broadaddr;
+    struct sockaddr* _Nullable ifu_broadaddr;
     /** Interface destination address (if IFF_POINTOPOINT is set). */
-    struct sockaddr* ifu_dstaddr;
+    struct sockaddr* _Nullable ifu_dstaddr;
   } ifa_ifu;
 
   /** Unused. */
-  void* ifa_data;
+  void* _Nullable ifa_data;
 };
 
 /** Synonym for `ifa_ifu.ifu_broadaddr` in `struct ifaddrs`. */
@@ -80,7 +80,7 @@ struct ifaddrs {
  *
  * Available since API level 24.
  */
-int getifaddrs(struct ifaddrs** __list_ptr) __INTRODUCED_IN(24);
+int getifaddrs(struct ifaddrs* _Nullable * _Nonnull __list_ptr) __INTRODUCED_IN(24);
 
 /**
  * [freeifaddrs(3)](http://man7.org/linux/man-pages/man3/freeifaddrs.3.html) frees a linked list
@@ -88,6 +88,6 @@ int getifaddrs(struct ifaddrs** __list_ptr) __INTRODUCED_IN(24);
  *
  * Available since API level 24.
  */
-void freeifaddrs(struct ifaddrs* __ptr) __INTRODUCED_IN(24);
+void freeifaddrs(struct ifaddrs* _Nullable __ptr) __INTRODUCED_IN(24);
 
 __END_DECLS

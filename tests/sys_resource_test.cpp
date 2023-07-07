@@ -26,6 +26,7 @@ TEST(sys_resource, rlimit_struct_size) {
   ASSERT_NE(sizeof(rlimit), sizeof(rlimit64));
   ASSERT_EQ(4U, sizeof(rlim_t));
 #endif
+  ASSERT_EQ(8U, sizeof(rlim64_t));
 }
 
 class SysResourceTest : public ::testing::Test {

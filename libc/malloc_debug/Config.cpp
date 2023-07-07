@@ -70,73 +70,139 @@ static constexpr const char DEFAULT_RECORD_ALLOCS_FILE[] = "/data/local/tmp/reco
 
 const std::unordered_map<std::string, Config::OptionInfo> Config::kOptions = {
     {
-        "guard", {FRONT_GUARD | REAR_GUARD | TRACK_ALLOCS, &Config::SetGuard},
+        "guard",
+        {FRONT_GUARD | REAR_GUARD | TRACK_ALLOCS, &Config::SetGuard},
     },
     {
-        "front_guard", {FRONT_GUARD | TRACK_ALLOCS, &Config::SetFrontGuard},
+        "front_guard",
+        {FRONT_GUARD | TRACK_ALLOCS, &Config::SetFrontGuard},
     },
     {
-        "rear_guard", {REAR_GUARD | TRACK_ALLOCS, &Config::SetRearGuard},
+        "rear_guard",
+        {REAR_GUARD | TRACK_ALLOCS, &Config::SetRearGuard},
     },
 
     {
-        "backtrace", {BACKTRACE | TRACK_ALLOCS, &Config::SetBacktrace},
+        "backtrace_size",
+        {BACKTRACE_SPECIFIC_SIZES, &Config::SetBacktraceSize},
+    },
+    {
+        "bt_sz",
+        {BACKTRACE_SPECIFIC_SIZES, &Config::SetBacktraceSize},
+    },
+    {
+        "backtrace_min_size",
+        {BACKTRACE_SPECIFIC_SIZES, &Config::SetBacktraceMinSize},
+    },
+    {
+        "bt_min_sz",
+        {BACKTRACE_SPECIFIC_SIZES, &Config::SetBacktraceMinSize},
+    },
+    {
+        "backtrace_max_size",
+        {BACKTRACE_SPECIFIC_SIZES, &Config::SetBacktraceMaxSize},
+    },
+    {
+        "bt_max_sz",
+        {BACKTRACE_SPECIFIC_SIZES, &Config::SetBacktraceMaxSize},
+    },
+    {
+        "backtrace",
+        {BACKTRACE | TRACK_ALLOCS, &Config::SetBacktrace},
+    },
+    {
+        "bt",
+        {BACKTRACE | TRACK_ALLOCS, &Config::SetBacktrace},
     },
     {
         "backtrace_enable_on_signal",
         {BACKTRACE | TRACK_ALLOCS, &Config::SetBacktraceEnableOnSignal},
     },
-
     {
-        "backtrace_dump_on_exit", {0, &Config::SetBacktraceDumpOnExit},
+        "bt_en_on_sig",
+        {BACKTRACE | TRACK_ALLOCS, &Config::SetBacktraceEnableOnSignal},
     },
     {
-        "backtrace_dump_prefix", {0, &Config::SetBacktraceDumpPrefix},
+        "backtrace_dump_on_exit",
+        {0, &Config::SetBacktraceDumpOnExit},
     },
     {
-        "backtrace_full", {BACKTRACE_FULL, &Config::VerifyValueEmpty},
-    },
-
-    {
-        "fill", {FILL_ON_ALLOC | FILL_ON_FREE, &Config::SetFill},
+        "bt_dmp_on_ex",
+        {0, &Config::SetBacktraceDumpOnExit},
     },
     {
-        "fill_on_alloc", {FILL_ON_ALLOC, &Config::SetFillOnAlloc},
+        "backtrace_dump_prefix",
+        {0, &Config::SetBacktraceDumpPrefix},
     },
     {
-        "fill_on_free", {FILL_ON_FREE, &Config::SetFillOnFree},
-    },
-
-    {
-        "expand_alloc", {EXPAND_ALLOC, &Config::SetExpandAlloc},
-    },
-
-    {
-        "free_track", {FREE_TRACK | FILL_ON_FREE | TRACK_ALLOCS, &Config::SetFreeTrack},
+        "bt_dmp_pre",
+        {0, &Config::SetBacktraceDumpPrefix},
     },
     {
-        "free_track_backtrace_num_frames", {0, &Config::SetFreeTrackBacktraceNumFrames},
+        "backtrace_full",
+        {BACKTRACE_FULL, &Config::VerifyValueEmpty},
+    },
+    {
+        "bt_full",
+        {BACKTRACE_FULL, &Config::VerifyValueEmpty},
     },
 
     {
-        "leak_track", {LEAK_TRACK | TRACK_ALLOCS, &Config::VerifyValueEmpty},
+        "fill",
+        {FILL_ON_ALLOC | FILL_ON_FREE, &Config::SetFill},
+    },
+    {
+        "fill_on_alloc",
+        {FILL_ON_ALLOC, &Config::SetFillOnAlloc},
+    },
+    {
+        "fill_on_free",
+        {FILL_ON_FREE, &Config::SetFillOnFree},
     },
 
     {
-        "record_allocs", {RECORD_ALLOCS, &Config::SetRecordAllocs},
-    },
-    {
-        "record_allocs_file", {0, &Config::SetRecordAllocsFile},
+        "expand_alloc",
+        {EXPAND_ALLOC, &Config::SetExpandAlloc},
     },
 
     {
-        "verify_pointers", {TRACK_ALLOCS, &Config::VerifyValueEmpty},
+        "free_track",
+        {FREE_TRACK | FILL_ON_FREE | TRACK_ALLOCS, &Config::SetFreeTrack},
     },
     {
-        "abort_on_error", {ABORT_ON_ERROR, &Config::VerifyValueEmpty},
+        "free_track_backtrace_num_frames",
+        {0, &Config::SetFreeTrackBacktraceNumFrames},
+    },
+
+    {
+        "leak_track",
+        {LEAK_TRACK | TRACK_ALLOCS, &Config::VerifyValueEmpty},
+    },
+
+    {
+        "record_allocs",
+        {RECORD_ALLOCS, &Config::SetRecordAllocs},
     },
     {
-        "verbose", {VERBOSE, &Config::VerifyValueEmpty},
+        "record_allocs_file",
+        {0, &Config::SetRecordAllocsFile},
+    },
+
+    {
+        "verify_pointers",
+        {TRACK_ALLOCS, &Config::VerifyValueEmpty},
+    },
+    {
+        "abort_on_error",
+        {ABORT_ON_ERROR, &Config::VerifyValueEmpty},
+    },
+    {
+        "verbose",
+        {VERBOSE, &Config::VerifyValueEmpty},
+    },
+    {
+        "check_unreachable_on_signal",
+        {CHECK_UNREACHABLE_ON_SIGNAL, &Config::VerifyValueEmpty},
     },
 };
 
@@ -274,6 +340,23 @@ bool Config::SetBacktraceDumpPrefix(const std::string&, const std::string& value
   return true;
 }
 
+bool Config::SetBacktraceSize(const std::string& option, const std::string& value) {
+  if (!ParseValue(option, value, 1, SIZE_MAX, &backtrace_min_size_bytes_)) {
+    return false;
+  }
+  backtrace_max_size_bytes_ = backtrace_min_size_bytes_;
+
+  return true;
+}
+
+bool Config::SetBacktraceMinSize(const std::string& option, const std::string& value) {
+  return ParseValue(option, value, 1, SIZE_MAX, &backtrace_min_size_bytes_);
+}
+
+bool Config::SetBacktraceMaxSize(const std::string& option, const std::string& value) {
+  return ParseValue(option, value, 1, SIZE_MAX, &backtrace_max_size_bytes_);
+}
+
 bool Config::SetExpandAlloc(const std::string& option, const std::string& value) {
   return ParseValue(option, value, DEFAULT_EXPAND_BYTES, 1, MAX_EXPAND_BYTES, &expand_alloc_bytes_);
 }
@@ -380,6 +463,9 @@ bool Config::Init(const char* options_str) {
   backtrace_enabled_ = false;
   backtrace_dump_on_exit_ = false;
   backtrace_dump_prefix_ = DEFAULT_BACKTRACE_DUMP_PREFIX;
+  backtrace_min_size_bytes_ = 0;
+  backtrace_max_size_bytes_ = SIZE_MAX;
+  check_unreachable_signal_ = SIGRTMAX - 16;
 
   // Process each option name we can find.
   std::string option;

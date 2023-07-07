@@ -1053,22 +1053,22 @@ TEST(MATH_TEST, lrint) {
   auto guard = android::base::make_scope_guard([]() { fesetenv(FE_DFL_ENV); });
 
   fesetround(FE_UPWARD); // lrint/lrintf/lrintl obey the rounding mode.
-  ASSERT_EQ(1235, lrint(1234.01));
-  ASSERT_EQ(1235, lrintf(1234.01f));
-  ASSERT_EQ(1235, lrintl(1234.01L));
+  EXPECT_EQ(1235, lrint(1234.01));
+  EXPECT_EQ(1235, lrintf(1234.01f));
+  EXPECT_EQ(1235, lrintl(1234.01L));
   fesetround(FE_TOWARDZERO); // lrint/lrintf/lrintl obey the rounding mode.
-  ASSERT_EQ(1234, lrint(1234.01));
-  ASSERT_EQ(1234, lrintf(1234.01f));
-  ASSERT_EQ(1234, lrintl(1234.01L));
+  EXPECT_EQ(1234, lrint(1234.01));
+  EXPECT_EQ(1234, lrintf(1234.01f));
+  EXPECT_EQ(1234, lrintl(1234.01L));
 
   fesetround(FE_UPWARD); // llrint/llrintf/llrintl obey the rounding mode.
-  ASSERT_EQ(1235L, llrint(1234.01));
-  ASSERT_EQ(1235L, llrintf(1234.01f));
-  ASSERT_EQ(1235L, llrintl(1234.01L));
+  EXPECT_EQ(1235L, llrint(1234.01));
+  EXPECT_EQ(1235L, llrintf(1234.01f));
+  EXPECT_EQ(1235L, llrintl(1234.01L));
   fesetround(FE_TOWARDZERO); // llrint/llrintf/llrintl obey the rounding mode.
-  ASSERT_EQ(1234L, llrint(1234.01));
-  ASSERT_EQ(1234L, llrintf(1234.01f));
-  ASSERT_EQ(1234L, llrintl(1234.01L));
+  EXPECT_EQ(1234L, llrint(1234.01));
+  EXPECT_EQ(1234L, llrintf(1234.01f));
+  EXPECT_EQ(1234L, llrintl(1234.01L));
 }
 
 TEST(MATH_TEST, rint) {
