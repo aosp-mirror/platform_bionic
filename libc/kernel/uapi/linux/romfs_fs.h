@@ -35,14 +35,14 @@ struct romfs_super_block {
   __be32 word1;
   __be32 size;
   __be32 checksum;
-  char name[0];
+  char name[];
 };
 struct romfs_inode {
   __be32 next;
   __be32 spec;
   __be32 size;
   __be32 checksum;
-  char name[0];
+  char name[];
 };
 #define ROMFH_TYPE 7
 #define ROMFH_HRD 0

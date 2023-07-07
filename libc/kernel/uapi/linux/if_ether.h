@@ -67,8 +67,10 @@
 #define ETH_P_LINK_CTL 0x886c
 #define ETH_P_ATMFATE 0x8884
 #define ETH_P_PAE 0x888E
+#define ETH_P_PROFINET 0x8892
 #define ETH_P_REALTEK 0x8899
 #define ETH_P_AOE 0x88A2
+#define ETH_P_ETHERCAT 0x88A4
 #define ETH_P_8021AD 0x88A8
 #define ETH_P_802_EX1 0x88B5
 #define ETH_P_PREAUTH 0x88C7
@@ -95,6 +97,7 @@
 #define ETH_P_QINQ3 0x9300
 #define ETH_P_EDSA 0xDADA
 #define ETH_P_DSA_8021Q 0xDADB
+#define ETH_P_DSA_A5PSW 0xE001
 #define ETH_P_IFE 0xED3E
 #define ETH_P_AF_IUCV 0xFBFB
 #define ETH_P_802_3_MIN 0x0600
@@ -109,6 +112,7 @@
 #define ETH_P_LOCALTALK 0x0009
 #define ETH_P_CAN 0x000C
 #define ETH_P_CANFD 0x000D
+#define ETH_P_CANXL 0x000E
 #define ETH_P_PPPTALK 0x0010
 #define ETH_P_TR_802_2 0x0011
 #define ETH_P_MOBITEX 0x0015

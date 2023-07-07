@@ -55,13 +55,13 @@ struct dns_payload_header {
   __u8 zero;
   __u8 content;
   __u8 version;
-} __packed;
+} __attribute__((__packed__));
 struct dns_server_list_v1_header {
   struct dns_payload_header hdr;
   __u8 source;
   __u8 status;
   __u8 nr_servers;
-} __packed;
+} __attribute__((__packed__));
 struct dns_server_list_v1_server {
   __u16 name_len;
   __u16 priority;
@@ -71,8 +71,8 @@ struct dns_server_list_v1_server {
   __u8 status;
   __u8 protocol;
   __u8 nr_addrs;
-} __packed;
+} __attribute__((__packed__));
 struct dns_server_list_v1_address {
   __u8 address_type;
-} __packed;
+} __attribute__((__packed__));
 #endif

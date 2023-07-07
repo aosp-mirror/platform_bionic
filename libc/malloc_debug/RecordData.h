@@ -29,12 +29,15 @@
 #pragma once
 
 #include <pthread.h>
+#include <signal.h>
 #include <stdint.h>
 #include <unistd.h>
 
 #include <atomic>
+#include <memory>
 #include <mutex>
 #include <string>
+#include <vector>
 
 #include <platform/bionic/macros.h>
 
@@ -43,7 +46,7 @@ class RecordEntry {
   RecordEntry();
   virtual ~RecordEntry() = default;
 
-  virtual std::string GetString() const = 0;
+  virtual bool Write(int fd) const = 0;
 
  protected:
   pid_t tid_;
@@ -57,7 +60,7 @@ class ThreadCompleteEntry : public RecordEntry {
   ThreadCompleteEntry() = default;
   virtual ~ThreadCompleteEntry() = default;
 
-  std::string GetString() const override;
+  bool Write(int fd) const override;
 
  private:
   BIONIC_DISALLOW_COPY_AND_ASSIGN(ThreadCompleteEntry);
@@ -65,11 +68,15 @@ class ThreadCompleteEntry : public RecordEntry {
 
 class AllocEntry : public RecordEntry {
  public:
-  explicit AllocEntry(void* pointer);
+  explicit AllocEntry(void* pointer, uint64_t st, uint64_t et);
   virtual ~AllocEntry() = default;
 
  protected:
   void* pointer_;
+
+  // The start/end time of this operation.
+  uint64_t start_ns_;
+  uint64_t end_ns_;
 
  private:
   BIONIC_DISALLOW_COPY_AND_ASSIGN(AllocEntry);
@@ -77,10 +84,10 @@ class AllocEntry : public RecordEntry {
 
 class MallocEntry : public AllocEntry {
  public:
-  MallocEntry(void* pointer, size_t size);
+  MallocEntry(void* pointer, size_t size, uint64_t st, uint64_t et);
   virtual ~MallocEntry() = default;
 
-  std::string GetString() const override;
+  bool Write(int fd) const override;
 
  protected:
   size_t size_;
@@ -91,10 +98,10 @@ class MallocEntry : public AllocEntry {
 
 class FreeEntry : public AllocEntry {
  public:
-  explicit FreeEntry(void* pointer);
+  explicit FreeEntry(void* pointer, uint64_t st, uint64_t et);
   virtual ~FreeEntry() = default;
 
-  std::string GetString() const override;
+  bool Write(int fd) const override;
 
  private:
   BIONIC_DISALLOW_COPY_AND_ASSIGN(FreeEntry);
@@ -102,10 +109,10 @@ class FreeEntry : public AllocEntry {
 
 class CallocEntry : public MallocEntry {
  public:
-  CallocEntry(void* pointer, size_t size, size_t nmemb);
+  CallocEntry(void* pointer, size_t nmemb, size_t size, uint64_t st, uint64_t et);
   virtual ~CallocEntry() = default;
 
-  std::string GetString() const override;
+  bool Write(int fd) const override;
 
  protected:
   size_t nmemb_;
@@ -116,10 +123,10 @@ class CallocEntry : public MallocEntry {
 
 class ReallocEntry : public MallocEntry {
  public:
-  ReallocEntry(void* pointer, size_t size, void* old_pointer);
+  ReallocEntry(void* pointer, size_t size, void* old_pointer, uint64_t st, uint64_t et);
   virtual ~ReallocEntry() = default;
 
-  std::string GetString() const override;
+  bool Write(int fd) const override;
 
  protected:
   void* old_pointer_;
@@ -131,10 +138,10 @@ class ReallocEntry : public MallocEntry {
 // aligned_alloc, posix_memalign, memalign, pvalloc, valloc all recorded with this class.
 class MemalignEntry : public MallocEntry {
  public:
-  MemalignEntry(void* pointer, size_t size, size_t alignment);
+  MemalignEntry(void* pointer, size_t size, size_t alignment, uint64_t st, uint64_t et);
   virtual ~MemalignEntry() = default;
 
-  std::string GetString() const override;
+  bool Write(int fd) const override;
 
  protected:
   size_t alignment_;
@@ -155,19 +162,18 @@ class RecordData {
   void AddEntry(const RecordEntry* entry);
   void AddEntryOnly(const RecordEntry* entry);
 
-  void SetToDump() { dump_ = true; }
-
   pthread_key_t key() { return key_; }
 
  private:
-  void Dump();
+  static void WriteData(int, siginfo_t*, void*);
+  static RecordData* record_obj_;
 
-  std::mutex dump_lock_;
+  void WriteEntries();
+
+  std::mutex entries_lock_;
   pthread_key_t key_;
-  const RecordEntry** entries_ = nullptr;
-  size_t num_entries_ = 0;
-  std::atomic_uint cur_index_;
-  std::atomic_bool dump_;
+  std::vector<std::unique_ptr<const RecordEntry>> entries_;
+  size_t cur_index_;
   std::string dump_file_;
 
   BIONIC_DISALLOW_COPY_AND_ASSIGN(RecordData);

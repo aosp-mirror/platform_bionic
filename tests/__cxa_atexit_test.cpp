@@ -26,19 +26,30 @@
  * SUCH DAMAGE.
  */
 
-#include <cxxabi.h>
 #include <gtest/gtest.h>
+
+extern "C" {
+int __cxa_atexit(void (*func)(void*), void* arg, void* dso);
+
+// TODO(b/175635923). __cxa_finalize's return type should actually be "void",
+// but it is declared "int" here instead to be compatible with the declaration
+// in an old version of cxxabi.h, which is included indirectly. The declarations
+// of __cxa_atexit and __cxa_finalize are removed from newer versions of
+// cxxabi.h, so once libc++ is updated, this return type should be changed to
+// "void".
+int __cxa_finalize(void* dso);
+}
 
 TEST(__cxa_atexit, simple) {
   int counter = 0;
 
-  __cxxabiv1::__cxa_atexit([](void* arg) { ++*static_cast<int*>(arg); }, &counter, &counter);
+  __cxa_atexit([](void* arg) { ++*static_cast<int*>(arg); }, &counter, &counter);
 
-  __cxxabiv1::__cxa_finalize(&counter);
+  __cxa_finalize(&counter);
   ASSERT_EQ(counter, 1);
 
   // The handler won't be called twice.
-  __cxxabiv1::__cxa_finalize(&counter);
+  __cxa_finalize(&counter);
   ASSERT_EQ(counter, 1);
 }
 
@@ -54,16 +65,16 @@ TEST(__cxa_atexit, order) {
   };
 
   for (int i = 0; i < 500; ++i) {
-    __cxxabiv1::__cxa_atexit(append_to_actual, new int{i}, &handles[i % 2]);
+    __cxa_atexit(append_to_actual, new int{i}, &handles[i % 2]);
   }
 
-  __cxxabiv1::__cxa_finalize(&handles[0]);
+  __cxa_finalize(&handles[0]);
 
   for (int i = 500; i < 750; ++i) {
-    __cxxabiv1::__cxa_atexit(append_to_actual, new int{i}, &handles[1]);
+    __cxa_atexit(append_to_actual, new int{i}, &handles[1]);
   }
 
-  __cxxabiv1::__cxa_finalize(&handles[1]);
+  __cxa_finalize(&handles[1]);
 
   std::vector<int> expected;
   for (int i = 498; i >= 0; i -= 2) expected.push_back(i);

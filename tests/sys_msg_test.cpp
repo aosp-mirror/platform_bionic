@@ -74,9 +74,12 @@ TEST(sys_msg, smoke) {
 }
 
 TEST(sys_msg, msgctl_failure) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
   errno = 0;
   ASSERT_EQ(-1, msgctl(-1, IPC_STAT, nullptr));
   ASSERT_TRUE(errno == EINVAL || errno == ENOSYS);
+#pragma clang diagnostic pop
 }
 
 TEST(sys_msg, msgget_failure) {
@@ -86,9 +89,12 @@ TEST(sys_msg, msgget_failure) {
 }
 
 TEST(sys_msg, msgrcv_failure) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
   errno = 0;
   ASSERT_EQ(-1, msgrcv(-1, nullptr, 0, 0, 0));
   ASSERT_TRUE(errno == EINVAL || errno == ENOSYS);
+#pragma clang diagnostic pop
 }
 
 TEST(sys_msg, msgsnd_failure) {
