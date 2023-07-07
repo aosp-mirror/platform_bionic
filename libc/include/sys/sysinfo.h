@@ -43,7 +43,7 @@ __BEGIN_DECLS
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
-int sysinfo(struct sysinfo* __info);
+int sysinfo(struct sysinfo* _Nonnull __info);
 
 /**
  * [get_nprocs_conf(3)](http://man7.org/linux/man-pages/man3/get_nprocs_conf.3.html) returns

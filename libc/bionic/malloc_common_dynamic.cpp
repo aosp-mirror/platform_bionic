@@ -371,6 +371,7 @@ static bool InstallHooks(libc_globals* globals, const char* options, const char*
 extern "C" const char* __scudo_get_stack_depot_addr();
 extern "C" const char* __scudo_get_region_info_addr();
 extern "C" const char* __scudo_get_ring_buffer_addr();
+extern "C" size_t __scudo_get_ring_buffer_size();
 
 // Initializes memory allocation framework once per process.
 static void MallocInitImpl(libc_globals* globals) {
@@ -383,6 +384,7 @@ static void MallocInitImpl(libc_globals* globals) {
   __libc_shared_globals()->scudo_stack_depot = __scudo_get_stack_depot_addr();
   __libc_shared_globals()->scudo_region_info = __scudo_get_region_info_addr();
   __libc_shared_globals()->scudo_ring_buffer = __scudo_get_ring_buffer_addr();
+  __libc_shared_globals()->scudo_ring_buffer_size = __scudo_get_ring_buffer_size();
 #endif
 
   // Prefer malloc debug since it existed first and is a more complete
@@ -532,6 +534,14 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
     }
 
     return EnableGwpAsan(*reinterpret_cast<android_mallopt_gwp_asan_options_t*>(arg));
+  }
+  if (opcode == M_MEMTAG_STACK_IS_ON) {
+    if (arg == nullptr || arg_size != sizeof(bool)) {
+      errno = EINVAL;
+      return false;
+    }
+    *reinterpret_cast<bool*>(arg) = atomic_load(&__libc_globals->memtag_stack);
+    return true;
   }
   // Try heapprofd's mallopt, as it handles options not covered here.
   return HeapprofdMallopt(opcode, arg, arg_size);

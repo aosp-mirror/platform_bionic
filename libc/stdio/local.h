@@ -170,7 +170,6 @@ struct __sfileext {
 #define _EXT(fp) __BIONIC_CAST(reinterpret_cast, struct __sfileext*, (fp)->_ext._base)
 
 #define _UB(fp) _EXT(fp)->_ub
-#define _FLOCK(fp) _EXT(fp)->_lock
 
 #define _FILEEXT_SETUP(fp, fext)                                              \
   do {                                                                        \

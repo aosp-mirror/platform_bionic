@@ -62,7 +62,7 @@ typedef uint64_t eventfd_t;
  *
  * Returns 0 on success, or returns -1 otherwise.
  */
-int eventfd_read(int __fd, eventfd_t* __value);
+int eventfd_read(int __fd, eventfd_t* _Nonnull __value);
 
 /**
  * [eventfd_write(3)](http://man7.org/linux/man-pages/man2/eventfd.2.html) is a convenience

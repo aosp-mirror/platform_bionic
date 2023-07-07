@@ -38,6 +38,6 @@ ENTRY(_start)
   call __linker_init      // %esp is aligned to 16 before the call.
   addl $16, %esp
 
-  /* linker init returns (%eax) the _entry address in the main image */
+  // __linker_init returns the address of the entry point in the main image.
   jmp *%eax
 END(_start)

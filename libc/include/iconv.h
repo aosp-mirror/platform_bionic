@@ -54,7 +54,7 @@ typedef struct __iconv_t* iconv_t;
  *
  * Available since API level 28.
  */
-iconv_t iconv_open(const char* __src_encoding, const char* __dst_encoding) __INTRODUCED_IN(28);
+iconv_t _Nonnull iconv_open(const char* _Nonnull __src_encoding, const char* _Nonnull __dst_encoding) __INTRODUCED_IN(28);
 
 /**
  * [iconv(3)](http://man7.org/linux/man-pages/man3/iconv.3.html) converts characters from one
@@ -68,7 +68,7 @@ iconv_t iconv_open(const char* __src_encoding, const char* __dst_encoding) __INT
  *
  * Available since API level 28.
  */
-size_t iconv(iconv_t __converter, char** __src_buf, size_t* __src_bytes_left, char** __dst_buf, size_t* __dst_bytes_left) __INTRODUCED_IN(28);
+size_t iconv(iconv_t _Nonnull __converter, char* _Nullable * _Nullable __src_buf, size_t* __BIONIC_COMPLICATED_NULLNESS __src_bytes_left, char* _Nullable * _Nullable __dst_buf, size_t* __BIONIC_COMPLICATED_NULLNESS __dst_bytes_left) __INTRODUCED_IN(28);
 
 /**
  * [iconv_close(3)](http://man7.org/linux/man-pages/man3/iconv_close.3.html) deallocates a converter
@@ -78,6 +78,6 @@ size_t iconv(iconv_t __converter, char** __src_buf, size_t* __src_bytes_left, ch
  *
  * Available since API level 28.
  */
-int iconv_close(iconv_t __converter) __INTRODUCED_IN(28);
+int iconv_close(iconv_t _Nonnull __converter) __INTRODUCED_IN(28);
 
 __END_DECLS

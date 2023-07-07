@@ -64,6 +64,7 @@ cc_library {
         "malloc_debug.cpp",
         "PointerData.cpp",
         "RecordData.cpp",
+        "Unreachable.cpp",
         "UnwindBacktrace.cpp",
     ],
 
@@ -73,6 +74,7 @@ cc_library {
         "libasync_safe",
         "libbase",
         "libc_malloc_debug_backtrace",
+        "libmemunreachable",
     ],
 
     shared_libs: [
@@ -120,6 +122,7 @@ cc_library {
 cc_test {
     name: "malloc_debug_unit_tests",
     test_suites: ["device-tests"],
+    isolated: true,
 
     srcs: [
         "tests/backtrace_fake.cpp",
@@ -173,13 +176,17 @@ cc_test {
         "bionic_libc_platform_headers",
     ],
 
+    // The clang-analyzer-unix.Malloc and other warnings in these
+    // unit tests are either false positive or in
+    // negative tests that can be ignored.
+    tidy: false,
+
     srcs: [
         "tests/malloc_debug_system_tests.cpp",
     ],
 
     shared_libs: [
         "libbase",
-        "libbacktrace",
         "liblog",
         "libunwindstack",
     ],

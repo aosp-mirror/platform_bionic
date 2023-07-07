@@ -254,7 +254,7 @@ static void out_vformat(Out& o, const char* format, va_list args) {
     bool alternate = false;
     size_t bytelen = sizeof(int);
     int slen;
-    char buffer[32]; /* temporary buffer used to format numbers */
+    char buffer[64];  // temporary buffer used to format numbers/format errno string
 
     char c;
 
@@ -359,8 +359,7 @@ static void out_vformat(Out& o, const char* format, va_list args) {
       buffer[1] = 'x';
       format_integer(buffer + 2, sizeof(buffer) - 2, value, 'x');
     } else if (c == 'm') {
-      char buf[256];
-      str = strerror_r(errno, buf, sizeof(buf));
+      strerror_r(errno, buffer, sizeof(buffer));
     } else if (c == 'd' || c == 'i' || c == 'o' || c == 'u' || c == 'x' || c == 'X') {
       /* integers - first read value from stack */
       uint64_t value;

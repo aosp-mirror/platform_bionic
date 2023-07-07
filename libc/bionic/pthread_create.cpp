@@ -40,15 +40,16 @@
 
 #include <async_safe/log.h>
 
+#include "platform/bionic/macros.h"
+#include "platform/bionic/mte.h"
+#include "private/ErrnoRestorer.h"
 #include "private/ScopedRWLock.h"
 #include "private/bionic_constants.h"
 #include "private/bionic_defs.h"
 #include "private/bionic_globals.h"
-#include "platform/bionic/macros.h"
 #include "private/bionic_ssp.h"
 #include "private/bionic_systrace.h"
 #include "private/bionic_tls.h"
-#include "private/ErrnoRestorer.h"
 
 // x86 uses segment descriptors rather than a direct pointer to TLS.
 #if defined(__i386__)
@@ -88,7 +89,13 @@ void __free_temp_bionic_tls(bionic_tls* tls) {
 
 static void __init_alternate_signal_stack(pthread_internal_t* thread) {
   // Create and set an alternate signal stack.
-  void* stack_base = mmap(nullptr, SIGNAL_STACK_SIZE, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+  int prot = PROT_READ | PROT_WRITE;
+#ifdef __aarch64__
+  if (atomic_load(&__libc_globals->memtag_stack)) {
+    prot |= PROT_MTE;
+  }
+#endif
+  void* stack_base = mmap(nullptr, SIGNAL_STACK_SIZE, prot, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   if (stack_base != MAP_FAILED) {
     // Create a guard to catch stack overflows in signal handlers.
     if (mprotect(stack_base, PTHREAD_GUARD_SIZE, PROT_NONE) == -1) {
@@ -109,14 +116,14 @@ static void __init_alternate_signal_stack(pthread_internal_t* thread) {
 }
 
 static void __init_shadow_call_stack(pthread_internal_t* thread __unused) {
-#ifdef __aarch64__
+#if defined(__aarch64__) || defined(__riscv)
   // Allocate the stack and the guard region.
   char* scs_guard_region = reinterpret_cast<char*>(
       mmap(nullptr, SCS_GUARD_REGION_SIZE, 0, MAP_PRIVATE | MAP_ANON, -1, 0));
   thread->shadow_call_stack_guard_region = scs_guard_region;
 
   // The address is aligned to SCS_SIZE so that we only need to store the lower log2(SCS_SIZE) bits
-  // in jmp_buf.
+  // in jmp_buf. See the SCS commentary in pthread_internal.h for more detail.
   char* scs_aligned_guard_region =
       reinterpret_cast<char*>(align_up(reinterpret_cast<uintptr_t>(scs_guard_region), SCS_SIZE));
 
@@ -126,11 +133,15 @@ static void __init_shadow_call_stack(pthread_internal_t* thread __unused) {
   size_t scs_offset =
       (getpid() == 1) ? 0 : (arc4random_uniform(SCS_GUARD_REGION_SIZE / SCS_SIZE - 1) * SCS_SIZE);
 
-  // Make the stack readable and writable and store its address in register x18. This is
-  // deliberately the only place where the address is stored.
-  char *scs = scs_aligned_guard_region + scs_offset;
+  // Make the stack read-write, and store its address in the register we're using as the shadow
+  // stack pointer. This is deliberately the only place where the address is stored.
+  char* scs = scs_aligned_guard_region + scs_offset;
   mprotect(scs, SCS_SIZE, PROT_READ | PROT_WRITE);
+#if defined(__aarch64__)
   __asm__ __volatile__("mov x18, %0" ::"r"(scs));
+#elif defined(__riscv)
+  __asm__ __volatile__("mv gp, %0" ::"r"(scs));
+#endif
 #endif
 }
 
@@ -224,12 +235,19 @@ ThreadMapping __allocate_thread_mapping(size_t stack_size, size_t stack_guard_si
     return {};
   }
   const size_t writable_size = mmap_size - stack_guard_size - PTHREAD_GUARD_SIZE;
-  if (mprotect(space + stack_guard_size,
-               writable_size,
-               PROT_READ | PROT_WRITE) != 0) {
-    async_safe_format_log(ANDROID_LOG_WARN, "libc",
-                          "pthread_create failed: couldn't mprotect R+W %zu-byte thread mapping region: %s",
-                          writable_size, strerror(errno));
+  int prot = PROT_READ | PROT_WRITE;
+  const char* prot_str = "R+W";
+#ifdef __aarch64__
+  if (atomic_load(&__libc_globals->memtag_stack)) {
+    prot |= PROT_MTE;
+    prot_str = "R+W+MTE";
+  }
+#endif
+  if (mprotect(space + stack_guard_size, writable_size, prot) != 0) {
+    async_safe_format_log(
+        ANDROID_LOG_WARN, "libc",
+        "pthread_create failed: couldn't mprotect %s %zu-byte thread mapping region: %s", prot_str,
+        writable_size, strerror(errno));
     munmap(space, mmap_size);
     return {};
   }

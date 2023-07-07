@@ -84,7 +84,11 @@ struct icmphdr {
     } echo;
     __be32 gateway;
     struct {
+#ifdef __BIONIC__
       __be16 __linux_unused;
+#else
+      __be16 __linux_unused;
+#endif
       __be16 mtu;
     } frag;
     __u8 reserved[4];
