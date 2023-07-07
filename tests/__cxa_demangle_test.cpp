@@ -29,11 +29,9 @@
 #include <cxxabi.h>
 #include <gtest/gtest.h>
 
-extern "C" char* __cxa_demangle(const char*, char*, size_t*, int*);
-
 TEST(__cxa_demangle, cxa_demangle_fuzz_152588929) {
 #if defined(__aarch64__)
-  char* p = __cxa_demangle("1\006ILeeeEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE", 0, 0, 0);
+  char* p = abi::__cxa_demangle("1\006ILeeeEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE", 0, 0, 0);
   ASSERT_STREQ("\x6<-0x1.cecececececececececececececep+11983", p);
   free(p);
 #endif
@@ -41,7 +39,7 @@ TEST(__cxa_demangle, cxa_demangle_fuzz_152588929) {
 
 TEST(__cxa_demangle, DISABLED_cxa_demangle_fuzz_167977068) {
 #if defined(__aarch64__)
-  char* p = __cxa_demangle("DTLeeeeeeeeeeeeeeeeeeeeeeeeeEEEEeeEEEE", 0, 0, 0);
+  char* p = abi::__cxa_demangle("DTLeeeeeeeeeeeeeeeeeeeeeeeeeEEEEeeEEEE", 0, 0, 0);
   ASSERT_EQ(nullptr, p) << p;
   free(p);
 #endif

@@ -117,7 +117,7 @@ void pthread_exit(void* return_value) {
     __rt_sigprocmask(SIG_BLOCK, &set, nullptr, sizeof(sigset64_t));
   }
 
-#ifdef __aarch64__
+#if defined(__aarch64__) || defined(__riscv)
   // Free the shadow call stack and guard pages.
   munmap(thread->shadow_call_stack_guard_region, SCS_GUARD_REGION_SIZE);
 #endif

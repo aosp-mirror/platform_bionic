@@ -16,6 +16,8 @@
 
 #include <gtest/gtest.h>
 
+#include <errno.h>
+
 #if defined(__BIONIC__)
 #include <async_safe/log.h>
 #endif // __BIONIC__
@@ -226,4 +228,20 @@ TEST(async_safe_log, buffer_overrun) {
 #else // __BIONIC__
   GTEST_SKIP() << "bionic-only test";
 #endif // __BIONIC__
+}
+
+// Verify that using %m is never cut off.
+TEST(async_safe_format_buffer, percent_m_fits_in_buffer) {
+#if defined(__BIONIC__)
+  for (int i = 0; i < 256; i++) {
+    errno = i;
+    char async_buf[256];
+    async_safe_format_buffer(async_buf, sizeof(async_buf), "%m");
+    char strerror_buf[1024];
+    strerror_r(errno, strerror_buf, sizeof(strerror_buf));
+    ASSERT_STREQ(strerror_buf, async_buf);
+  }
+#else   // __BIONIC__
+  GTEST_SKIP() << "bionic-only test";
+#endif  // __BIONIC__
 }

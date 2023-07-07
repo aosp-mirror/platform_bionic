@@ -47,17 +47,17 @@ __BEGIN_DECLS
 
 typedef int64_t time64_t;
 
-char* asctime64(const struct tm*);
-char* asctime64_r(const struct tm*, char*);
-char* ctime64(const time64_t*);
-char* ctime64_r(const time64_t*, char*);
-struct tm* gmtime64(const time64_t*);
-struct tm* gmtime64_r(const time64_t*, struct tm*);
-struct tm* localtime64(const time64_t*);
-struct tm* localtime64_r(const time64_t*, struct tm*);
-time64_t mktime64(const struct tm*);
-time64_t timegm64(const struct tm*);
-time64_t timelocal64(const struct tm*);
+char* _Nullable asctime64(const struct tm* _Nonnull);
+char* _Nullable asctime64_r(const struct tm* _Nonnull, char* _Nonnull);
+char* _Nullable ctime64(const time64_t* _Nonnull);
+char* _Nullable ctime64_r(const time64_t* _Nonnull, char* _Nonnull);
+struct tm* _Nullable gmtime64(const time64_t* _Nonnull);
+struct tm* _Nullable gmtime64_r(const time64_t* _Nonnull, struct tm* _Nonnull);
+struct tm* _Nullable localtime64(const time64_t* _Nonnull);
+struct tm* _Nullable localtime64_r(const time64_t* _Nonnull, struct tm* _Nonnull);
+time64_t mktime64(const struct tm* _Nonnull);
+time64_t timegm64(const struct tm* _Nonnull);
+time64_t timelocal64(const struct tm* _Nonnull);
 
 __END_DECLS
 
