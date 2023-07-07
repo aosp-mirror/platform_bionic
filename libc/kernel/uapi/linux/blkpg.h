@@ -25,7 +25,7 @@ struct blkpg_ioctl_arg {
   int op;
   int flags;
   int datalen;
-  void __user * data;
+  void  * data;
 };
 #define BLKPG_ADD_PARTITION 1
 #define BLKPG_DEL_PARTITION 2

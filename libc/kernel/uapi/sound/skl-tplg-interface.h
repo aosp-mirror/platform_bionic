@@ -110,8 +110,8 @@ struct skl_dfw_algo_data {
   __u32 rsvd : 30;
   __u32 param_id;
   __u32 max;
-  char params[0];
-} __packed;
+  char params[];
+} __attribute__((__packed__));
 enum skl_tkn_dir {
   SKL_DIR_IN,
   SKL_DIR_OUT
@@ -123,7 +123,7 @@ enum skl_tuple_type {
 struct skl_dfw_v4_module_pin {
   __u16 module_id;
   __u16 instance_id;
-} __packed;
+} __attribute__((__packed__));
 struct skl_dfw_v4_module_fmt {
   __u32 channels;
   __u32 freq;
@@ -133,21 +133,21 @@ struct skl_dfw_v4_module_fmt {
   __u32 interleaving_style;
   __u32 sample_type;
   __u32 ch_map;
-} __packed;
+} __attribute__((__packed__));
 struct skl_dfw_v4_module_caps {
   __u32 set_params : 2;
   __u32 rsvd : 30;
   __u32 param_id;
   __u32 caps_size;
   __u32 caps[HDA_SST_CFG_MAX];
-} __packed;
+} __attribute__((__packed__));
 struct skl_dfw_v4_pipe {
   __u8 pipe_id;
   __u8 pipe_priority;
   __u16 conn_type : 4;
   __u16 rsvd : 4;
   __u16 memory_pages : 8;
-} __packed;
+} __attribute__((__packed__));
 struct skl_dfw_v4_module {
   char uuid[SKL_UUID_STR_SZ];
   __u16 module_id;
@@ -181,5 +181,5 @@ struct skl_dfw_v4_module {
   struct skl_dfw_v4_module_pin in_pin[MAX_IN_QUEUE];
   struct skl_dfw_v4_module_pin out_pin[MAX_OUT_QUEUE];
   struct skl_dfw_v4_module_caps caps;
-} __packed;
+} __attribute__((__packed__));
 #endif

@@ -45,6 +45,8 @@
 #include <private/bionic_asm_arm.h>
 #elif defined(__i386__)
 #include <private/bionic_asm_x86.h>
+#elif defined(__riscv)
+#include <private/bionic_asm_riscv64.h>
 #elif defined(__x86_64__)
 #include <private/bionic_asm_x86_64.h>
 #endif

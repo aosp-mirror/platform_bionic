@@ -42,6 +42,7 @@ enum gpio_v2_line_flag {
   GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN = _BITULL(9),
   GPIO_V2_LINE_FLAG_BIAS_DISABLED = _BITULL(10),
   GPIO_V2_LINE_FLAG_EVENT_CLOCK_REALTIME = _BITULL(11),
+  GPIO_V2_LINE_FLAG_EVENT_CLOCK_HTE = _BITULL(12),
 };
 struct gpio_v2_line_values {
   __aligned_u64 bits;

@@ -175,7 +175,7 @@ struct floppy_raw_cmd {
 #define FD_RAW_SOFTFAILURE 0x800
 #define FD_RAW_FAILURE 0x10000
 #define FD_RAW_HARDFAILURE 0x20000
-  void __user * data;
+  void  * data;
   char * kernel_data;
   struct floppy_raw_cmd * next;
   long length;

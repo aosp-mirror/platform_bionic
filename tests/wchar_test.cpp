@@ -460,6 +460,7 @@ void TestWcsToInt(WcsToIntFn<T> fn) {
   TestSingleWcsToInt(fn, L"   123 45", 0, static_cast<T>(123), 6);
   TestSingleWcsToInt(fn, L"  -123", 0, static_cast<T>(-123), 6);
   TestSingleWcsToInt(fn, L"0x10000", 0, static_cast<T>(65536), 7);
+  TestSingleWcsToInt(fn, L"0b1011", 0, static_cast<T>(0b1011), 6);
 }
 
 template <typename T>
@@ -713,7 +714,8 @@ TEST(stdio, open_wmemstream_EINVAL) {
 #if defined(__BIONIC__)
   wchar_t* p;
   size_t size;
-
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
   // Invalid buffer.
   errno = 0;
   ASSERT_EQ(nullptr, open_wmemstream(nullptr, &size));
@@ -723,6 +725,7 @@ TEST(stdio, open_wmemstream_EINVAL) {
   errno = 0;
   ASSERT_EQ(nullptr, open_wmemstream(&p, nullptr));
   ASSERT_EQ(EINVAL, errno);
+#pragma clang diagnostic pop
 #else
   GTEST_SKIP() << "This test is bionic-specific";
 #endif

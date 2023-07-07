@@ -41,16 +41,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endif
 
 
-ENTRY(__memset_chk)
+ENTRY(__memset_chk_generic)
   # %rdi = dst, %rsi = byte, %rdx = n, %rcx = dst_len
   cmp %rcx, %rdx
   ja __memset_chk_fail
   // Fall through to memset...
-END(__memset_chk)
+END(__memset_chk_generic)
 
 
 	.section .text.sse2,"ax",@progbits
-ENTRY(memset)
+ENTRY(memset_generic)
 	movq	%rdi, %rax
 	and	$0xff, %rsi
 	mov	$0x0101010101010101, %rcx
@@ -146,4 +146,4 @@ L(128bytesmore_nt):
 	sfence
 	ret
 
-END(memset)
+END(memset_generic)

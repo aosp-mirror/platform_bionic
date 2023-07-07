@@ -1,12 +1,4 @@
-# this module contains all the defaults used by the generation of cleaned-up headers
-# for the Bionic C library
-#
-
-import time, os, sys
-from utils import *
-
-# the list of supported architectures
-kernel_archs = [ 'arm', 'arm64', 'x86' ]
+# All the defaults used to generate the cleaned-up uapi headers for bionic.
 
 # the list of include directories that belong to the kernel
 # tree. used when looking for sources...
@@ -35,34 +27,35 @@ kernel_known_macros = {
     "__kernel_old_timeval": "1",
     }
 
-# this is the set of known kernel data structures we want to remove from
-# the final headers
-kernel_structs_to_remove = set(
-        [
-          # Remove the structures since they are still the same as
-          # timeval, itimerval.
-          "__kernel_old_timeval",
-          "__kernel_old_itimerval",
-        ]
-    )
+# This is the set of known kernel data structures we want to remove from
+# the final headers. If the map value is False, that means that in
+# addition to removing the structure, add an #include <bits/STRUCT.h>
+# to the file.
+kernel_structs_to_remove = {
+    # Remove the structures since they are still the same as
+    # timeval, itimerval.
+    "__kernel_old_timeval": True,
+    "__kernel_old_itimerval": True,
+    # Replace all of the below structures with #include <bits/STRUCT.h>
+    "epoll_event": False,
+    "flock": False,
+    "flock64": False,
+    "in_addr": False,
+    "ip_mreq_source": False,
+    "ip_msfilter": False,
+    "timespec": False,
+    }
 
 # define to true if you want to remove all defined(CONFIG_FOO) tests
 # from the clean headers. testing shows that this is not strictly necessary
 # but just generates cleaner results
 kernel_remove_config_macros = True
 
-# maps an architecture to a set of default macros that would be provided by
-# toolchain preprocessor
+# Maps an architecture to a set of default macros that would be provided by
+# the toolchain's preprocessor. Currently only used to remove confusing
+# big-endian junk from the 32-bit arm headers.
 kernel_default_arch_macros = {
     "arm": {"__ARMEB__": kCppUndefinedMacro, "__ARM_EABI__": "1"},
-    "arm64": {},
-    "x86": {},
-    }
-
-kernel_arch_token_replacements = {
-    "arm": {},
-    "arm64": {},
-    "x86": {},
     }
 
 # Replace tokens in the output according to this mapping.
@@ -97,21 +90,13 @@ kernel_token_replacements = {
     "__kernel_old_timeval": "timeval",
     # Do the same for __kernel_old_itimerval as for timeval.
     "__kernel_old_itimerval": "itimerval",
+    # Replace __packed with __attribute__((__packed__)) to avoid depending
+    # on sys/cdefs.h
+    "__packed": "__attribute__((__packed__))",
+    # Remove unused macros (http://b/262917450).
+    "__force": "",
+    "__user": "",
     }
-
-
-# This is the set of struct definitions that we want to replace with
-# a #include of <bits/struct.h> instead.
-kernel_struct_replacements = set(
-        [
-          "epoll_event",
-          "flock",
-          "flock64",
-          "in_addr",
-          "ip_mreq_source",
-          "ip_msfilter",
-        ]
-    )
 
 
 # This is the set of known static inline functions that we want to keep

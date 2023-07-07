@@ -5,9 +5,10 @@ import logging
 import operator
 import os
 import re
+import sys
 import textwrap
 
-from gensyscalls import SupportedArchitectures, SysCallsTxtParser
+from gensyscalls import SysCallsTxtParser
 
 
 BPF_JGE = "BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, {0}, {1}, {2})"
@@ -84,42 +85,46 @@ def parse_syscall_NRs(names_path):
   #    #define __(ARM_)?NR_${NAME} ${VALUE}
   #
   # Where ${VALUE} is a preprocessor expression.
+  #
+  # Newer architectures have things like this though:
+  #
+  #    #define __NR3264_fcntl 25
+  #    #define __NR_fcntl __NR3264_fcntl
+  #
+  # So we need to keep track of the __NR3264_* constants and substitute them.
 
-  constant_re = re.compile(
-      r'^\s*#define\s+([A-Za-z_][A-Za-z0-9_]+)\s+(.+)\s*$')
+  line_re = re.compile(r'^# \d+ ".*".*')
+  undef_re = re.compile(r'^#undef\s.*')
+  define_re = re.compile(r'^\s*#define\s+([A-Za-z0-9_(,)]+)(?:\s+(.+))?\s*$')
   token_re = re.compile(r'\b[A-Za-z_][A-Za-z0-9_]+\b')
   constants = {}
+  nr3264s = {}
   with open(names_path) as f:
     for line in f:
-      m = constant_re.match(line)
-      if m is None:
-        continue
-      try:
+      line = line.strip()
+      m = define_re.match(line)
+      if m:
         name = m.group(1)
-        # eval() takes care of any arithmetic that may be done
-        value = eval(token_re.sub(lambda x: str(constants[x.group(0)]),
-                                  m.group(2)))
+        value = m.group(2)
+        if name.startswith('__NR3264'):
+          nr3264s[name] = value
+        elif name.startswith('__NR_') or name.startswith('__ARM_NR_'):
+          if value in nr3264s:
+            value = nr3264s[value]
+          # eval() takes care of any arithmetic that may be done
+          value = eval(token_re.sub(lambda x: str(constants[x.group(0)]), value))
 
-        constants[name] = value
-      except:  # pylint: disable=bare-except
-        # TODO: This seems wrong.
-        # Key error doesn't seem like the error the original author was trying
-        # to catch. It looks like the intent was to catch IndexError from
-        # match.group() for non-matching lines, but that's impossible because
-        # the match object is checked and continued if not matched. What
-        # actually happens is that KeyError is thrown by constants[x.group(0)]
-        # on at least the first run because the dict is empty.
-        #
-        # It's also matching syntax errors because not all C integer literals
-        # are valid Python integer literals, e.g. 10L.
-        logging.debug('Failed to parse %s', line)
+          constants[name] = value
+      else:
+        if not line_re.match(line) and not undef_re.match(line) and line:
+          print('%s: failed to parse line `%s`' % (names_path, line))
+          sys.exit(1)
 
   syscalls = {}
   for name, value in constants.items():
-    if not name.startswith("__NR_") and not name.startswith("__ARM_NR"):
-      continue
+    # Remove the __NR_ prefix.
+    # TODO: why not __ARM_NR too?
     if name.startswith("__NR_"):
-      # Remote the __NR_ prefix
       name = name[len("__NR_"):]
     syscalls[name] = value
 
@@ -237,7 +242,7 @@ def construct_bpf(syscalls, architecture, name_modifier, priorities):
 
 def gen_policy(name_modifier, out_dir, base_syscall_file, syscall_files,
                syscall_NRs, priority_file):
-  for arch in SupportedArchitectures:
+  for arch in syscall_NRs.keys():
     base_names = load_syscall_names_from_file(base_syscall_file, arch)
     allowlist_names = set()
     blocklist_names = set()
@@ -251,11 +256,11 @@ def gen_policy(name_modifier, out_dir, base_syscall_file, syscall_files,
       priorities = load_syscall_priorities_from_file(priority_file)
 
     allowed_syscalls = []
-    for name in merge_names(base_names, allowlist_names, blocklist_names):
+    for name in sorted(merge_names(base_names, allowlist_names, blocklist_names)):
       try:
         allowed_syscalls.append((name, syscall_NRs[arch][name]))
       except:
-        logging.exception("Failed to find %s in %s", name, arch)
+        logging.exception("Failed to find %s in %s (%s)", name, arch, syscall_NRs[arch])
         raise
     output = construct_bpf(allowed_syscalls, arch, name_modifier, priorities)
 

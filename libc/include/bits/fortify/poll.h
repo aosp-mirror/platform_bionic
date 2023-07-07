@@ -54,7 +54,6 @@ int poll(struct pollfd* const fds __pass_object_size, nfds_t fd_count, int timeo
   return __call_bypassing_fortify(poll)(fds, fd_count, timeout);
 }
 
-#if __ANDROID_API__ >= 21
 __BIONIC_FORTIFY_INLINE
 int ppoll(struct pollfd* const fds __pass_object_size, nfds_t fd_count, const struct timespec* timeout, const sigset_t* mask)
     __overloadable
@@ -69,7 +68,6 @@ int ppoll(struct pollfd* const fds __pass_object_size, nfds_t fd_count, const st
 #endif
   return __call_bypassing_fortify(ppoll)(fds, fd_count, timeout, mask);
 }
-#endif /* __ANDROID_API__ >= 21 */
 
 #if __ANDROID_API__ >= 28
 __BIONIC_FORTIFY_INLINE

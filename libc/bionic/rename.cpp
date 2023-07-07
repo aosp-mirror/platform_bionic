@@ -30,5 +30,9 @@
 #include <stdio.h>
 
 int rename(const char* old_path, const char* new_path) {
-  return renameat(AT_FDCWD, old_path, AT_FDCWD, new_path);
+  return renameat2(AT_FDCWD, old_path, AT_FDCWD, new_path, 0);
+}
+
+int renameat(int old_dir_fd, const char* old_path, int new_dir_fd, const char* new_path) {
+  return renameat2(old_dir_fd, old_path, new_dir_fd, new_path, 0);
 }
