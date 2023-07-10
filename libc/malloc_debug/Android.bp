@@ -197,4 +197,5 @@ cc_test {
         "-O0",
     ],
     test_suites: ["general-tests"],
+    test_config: "tests/AndroidTest.xml",
 }

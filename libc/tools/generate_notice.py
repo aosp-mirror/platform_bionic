@@ -33,6 +33,7 @@ def is_interesting(path_str: str) -> bool:
         ".pyc",
         ".swp",
         ".txt",
+        ".xml",
     ]
     if path.suffix in uninteresting_extensions:
         return False
