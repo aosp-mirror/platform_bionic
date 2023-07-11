@@ -204,6 +204,7 @@ enum bpf_prog_type {
   BPF_PROG_TYPE_LSM,
   BPF_PROG_TYPE_SK_LOOKUP,
   BPF_PROG_TYPE_SYSCALL,
+  BPF_PROG_TYPE_NETFILTER,
 };
 enum bpf_attach_type {
   BPF_CGROUP_INET_INGRESS,
@@ -250,6 +251,8 @@ enum bpf_attach_type {
   BPF_PERF_EVENT,
   BPF_TRACE_KPROBE_MULTI,
   BPF_LSM_CGROUP,
+  BPF_STRUCT_OPS,
+  BPF_NETFILTER,
   __MAX_BPF_ATTACH_TYPE
 };
 #define MAX_BPF_ATTACH_TYPE __MAX_BPF_ATTACH_TYPE
@@ -264,6 +267,7 @@ enum bpf_link_type {
   BPF_LINK_TYPE_PERF_EVENT = 7,
   BPF_LINK_TYPE_KPROBE_MULTI = 8,
   BPF_LINK_TYPE_STRUCT_OPS = 9,
+  BPF_LINK_TYPE_NETFILTER = 10,
   MAX_BPF_LINK_TYPE,
 };
 #define BPF_F_ALLOW_OVERRIDE (1U << 0)
@@ -305,6 +309,7 @@ enum {
   BPF_F_MMAPABLE = (1U << 10),
   BPF_F_PRESERVE_ELEMS = (1U << 11),
   BPF_F_INNER_MAP = (1U << 12),
+  BPF_F_LINK = (1U << 13),
 };
 #define BPF_F_QUERY_EFFECTIVE (1U << 0)
 #define BPF_F_TEST_RUN_ON_CPU (1U << 0)
@@ -392,6 +397,7 @@ union bpf_attr {
     __aligned_u64 fd_array;
     __aligned_u64 core_relos;
     __u32 core_relo_rec_size;
+    __u32 log_true_size;
   };
   struct {
     __aligned_u64 pathname;
@@ -457,6 +463,7 @@ union bpf_attr {
     __u32 btf_size;
     __u32 btf_log_size;
     __u32 btf_log_level;
+    __u32 btf_log_true_size;
   };
   struct {
     __u32 pid;
@@ -470,7 +477,10 @@ union bpf_attr {
     __u64 probe_addr;
   } task_fd_query;
   struct {
-    __u32 prog_fd;
+    union {
+      __u32 prog_fd;
+      __u32 map_fd;
+    };
     union {
       __u32 target_fd;
       __u32 target_ifindex;
@@ -497,13 +507,25 @@ union bpf_attr {
         __u32 target_btf_id;
         __u64 cookie;
       } tracing;
+      struct {
+        __u32 pf;
+        __u32 hooknum;
+        __s32 priority;
+        __u32 flags;
+      } netfilter;
     };
   } link_create;
   struct {
     __u32 link_fd;
-    __u32 new_prog_fd;
+    union {
+      __u32 new_prog_fd;
+      __u32 new_map_fd;
+    };
     __u32 flags;
-    __u32 old_prog_fd;
+    union {
+      __u32 old_prog_fd;
+      __u32 old_map_fd;
+    };
   } link_update;
   struct {
     __u32 link_fd;
@@ -954,6 +976,15 @@ struct bpf_link_info {
     struct {
       __u32 ifindex;
     } xdp;
+    struct {
+      __u32 map_id;
+    } struct_ops;
+    struct {
+      __u32 pf;
+      __u32 hooknum;
+      __s32 priority;
+      __u32 flags;
+    } netfilter;
   };
 } __attribute__((aligned(8)));
 struct bpf_sock_addr {
@@ -1232,6 +1263,9 @@ struct bpf_rb_node {
   __u64 : 64;
   __u64 : 64;
 } __attribute__((aligned(8)));
+struct bpf_refcount {
+  __u32 : 32;
+} __attribute__((aligned(4)));
 struct bpf_sysctl {
   __u32 write;
   __u32 file_pos;
@@ -1297,4 +1331,10 @@ struct bpf_core_relo {
   __u32 access_str_off;
   enum bpf_core_relo_kind kind;
 };
+enum {
+  BPF_F_TIMER_ABS = (1ULL << 0),
+};
+struct bpf_iter_num {
+  __u64 __opaque[1];
+} __attribute__((aligned(8)));
 #endif

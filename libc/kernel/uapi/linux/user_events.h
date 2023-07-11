@@ -16,28 +16,31 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _UAPI_LINUX_VIRTIO_CONFIG_H
-#define _UAPI_LINUX_VIRTIO_CONFIG_H
+#ifndef _UAPI_LINUX_USER_EVENTS_H
+#define _UAPI_LINUX_USER_EVENTS_H
 #include <linux/types.h>
-#define VIRTIO_CONFIG_S_ACKNOWLEDGE 1
-#define VIRTIO_CONFIG_S_DRIVER 2
-#define VIRTIO_CONFIG_S_DRIVER_OK 4
-#define VIRTIO_CONFIG_S_FEATURES_OK 8
-#define VIRTIO_CONFIG_S_NEEDS_RESET 0x40
-#define VIRTIO_CONFIG_S_FAILED 0x80
-#define VIRTIO_TRANSPORT_F_START 28
-#define VIRTIO_TRANSPORT_F_END 41
-#ifndef VIRTIO_CONFIG_NO_LEGACY
-#define VIRTIO_F_NOTIFY_ON_EMPTY 24
-#define VIRTIO_F_ANY_LAYOUT 27
-#endif
-#define VIRTIO_F_VERSION_1 32
-#define VIRTIO_F_ACCESS_PLATFORM 33
-#define VIRTIO_F_IOMMU_PLATFORM VIRTIO_F_ACCESS_PLATFORM
-#define VIRTIO_F_RING_PACKED 34
-#define VIRTIO_F_IN_ORDER 35
-#define VIRTIO_F_ORDER_PLATFORM 36
-#define VIRTIO_F_SR_IOV 37
-#define VIRTIO_F_NOTIFICATION_DATA 38
-#define VIRTIO_F_RING_RESET 40
+#include <linux/ioctl.h>
+#define USER_EVENTS_SYSTEM "user_events"
+#define USER_EVENTS_PREFIX "u:"
+#define DYN_LOC(offset,size) ((size) << 16 | (offset))
+struct user_reg {
+  __u32 size;
+  __u8 enable_bit;
+  __u8 enable_size;
+  __u16 flags;
+  __u64 enable_addr;
+  __u64 name_args;
+  __u32 write_index;
+} __attribute__((__packed__));
+struct user_unreg {
+  __u32 size;
+  __u8 disable_bit;
+  __u8 __reserved;
+  __u16 __reserved2;
+  __u64 disable_addr;
+} __attribute__((__packed__));
+#define DIAG_IOC_MAGIC '*'
+#define DIAG_IOCSREG _IOWR(DIAG_IOC_MAGIC, 0, struct user_reg *)
+#define DIAG_IOCSDEL _IOW(DIAG_IOC_MAGIC, 1, char *)
+#define DIAG_IOCSUNREG _IOW(DIAG_IOC_MAGIC, 2, struct user_unreg *)
 #endif

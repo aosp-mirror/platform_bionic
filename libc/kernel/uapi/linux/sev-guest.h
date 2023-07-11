@@ -42,7 +42,13 @@ struct snp_guest_request_ioctl {
   __u8 msg_version;
   __u64 req_data;
   __u64 resp_data;
-  __u64 fw_err;
+  union {
+    __u64 exitinfo2;
+    struct {
+      __u32 fw_error;
+      __u32 vmm_error;
+    };
+  };
 };
 struct snp_ext_report_req {
   struct snp_report_req data;
@@ -53,4 +59,9 @@ struct snp_ext_report_req {
 #define SNP_GET_REPORT _IOWR(SNP_GUEST_REQ_IOC_TYPE, 0x0, struct snp_guest_request_ioctl)
 #define SNP_GET_DERIVED_KEY _IOWR(SNP_GUEST_REQ_IOC_TYPE, 0x1, struct snp_guest_request_ioctl)
 #define SNP_GET_EXT_REPORT _IOWR(SNP_GUEST_REQ_IOC_TYPE, 0x2, struct snp_guest_request_ioctl)
+#define SNP_GUEST_FW_ERR_MASK GENMASK_ULL(31, 0)
+#define SNP_GUEST_VMM_ERR_SHIFT 32
+#define SNP_GUEST_VMM_ERR(x) (((u64) x) << SNP_GUEST_VMM_ERR_SHIFT)
+#define SNP_GUEST_VMM_ERR_INVALID_LEN 1
+#define SNP_GUEST_VMM_ERR_BUSY 2
 #endif

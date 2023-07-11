@@ -500,6 +500,7 @@ enum nft_meta_keys {
   NFT_META_TIME_HOUR,
   NFT_META_SDIF,
   NFT_META_SDIFNAME,
+  NFT_META_BRI_BROUTE,
   __NFT_META_IIFTYPE,
 };
 enum nft_rt_keys {
