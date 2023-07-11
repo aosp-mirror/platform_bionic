@@ -40,13 +40,15 @@ __BEGIN_DECLS
 #if defined(__aarch64__)
 
 /**
- * Provides information about hardware capabilities to ifunc resolvers.
+ * Provides information about hardware capabilities to arm64 ifunc resolvers.
  *
- * Starting with API level 30, ifunc resolvers on arm64 are passed two arguments. The first is a
- * uint64_t whose value is equal to getauxval(AT_HWCAP) | _IFUNC_ARG_HWCAP. The second is a pointer
- * to a data structure of this type. Prior to API level 30, no arguments are passed to ifunc
- * resolvers. Code that wishes to be compatible with prior API levels should not accept any
- * arguments in the resolver.
+ * Prior to API level 30, arm64 ifunc resolvers are passed no arguments.
+ *
+ * Starting with API level 30, arm64 ifunc resolvers are passed two arguments.
+ * The first is a uint64_t whose value is equal to getauxval(AT_HWCAP) | _IFUNC_ARG_HWCAP.
+ * The second is a pointer to a data structure of this type.
+ *
+ * Code that wishes to be compatible with API levels before 30 must call getauxval() itself.
  */
 typedef struct __ifunc_arg_t {
   /** Set to sizeof(__ifunc_arg_t). */
@@ -60,9 +62,14 @@ typedef struct __ifunc_arg_t {
 } __ifunc_arg_t;
 
 /**
- * If this bit is set in the first argument to an ifunc resolver, indicates that the second argument
- * is a pointer to a data structure of type __ifunc_arg_t. This bit is always set on Android
- * starting with API level 30.
+ * If this bit is set in the first argument to an ifunc resolver, the second argument
+ * is a pointer to a data structure of type __ifunc_arg_t.
+ *
+ * This bit is always set on Android starting with API level 30.
+ * This bit is meaningless before API level 30 because ifunc resolvers are not passed any arguments.
+ * This bit has no real use on Android, but is included for glibc source compatibility;
+ * glibc used this bit to distinguish the case where the ifunc resolver received a single argument,
+ * which was an evolutionary stage Android never went through.
  */
 #define _IFUNC_ARG_HWCAP (1ULL << 62)
 
