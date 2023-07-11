@@ -21,7 +21,9 @@
 // Size of the shadow call stack. This can be small because these stacks only
 // contain return addresses. This must be a power of 2 so the mask trick works.
 // See the SCS commentary in pthread_internal.h for more detail.
-#define SCS_SIZE (8 * 1024)
+// SCS_SIZE must be a multiple of page size.
+// We used 8KiB until V but switched to 16KiB in V to experiment with 16KiB pages.
+#define SCS_SIZE (16 * 1024)
 #define SCS_MASK (SCS_SIZE - 1)
 
 // The shadow call stack is allocated at an aligned address within a guard region of this size. The
