@@ -75,4 +75,7 @@ typedef enum {
 #define IEEE1284_DATA 0
 #define PARPORT_EPP_FAST (1 << 0)
 #define PARPORT_W91284PIC (1 << 1)
+#define PARPORT_EPP_FAST_32 PARPORT_EPP_FAST
+#define PARPORT_EPP_FAST_16 (1 << 2)
+#define PARPORT_EPP_FAST_8 (1 << 3)
 #endif

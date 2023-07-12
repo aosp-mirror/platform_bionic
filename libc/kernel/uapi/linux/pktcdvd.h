@@ -23,7 +23,6 @@
 #define MAX_WRITERS 8
 #define PKT_RB_POOL_SIZE 512
 #define PACKET_WAIT_TIME (HZ * 5 / 1000)
-#define USE_WCACHING 0
 #define PACKET_CDR 1
 #define PACKET_CDRW 2
 #define PACKET_DVDR 3
