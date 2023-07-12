@@ -137,7 +137,10 @@ static void __init_shadow_call_stack(pthread_internal_t* thread __unused) {
   // Make the stack read-write, and store its address in the register we're using as the shadow
   // stack pointer. This is deliberately the only place where the address is stored.
   char* scs = scs_aligned_guard_region + scs_offset;
-  mprotect(scs, SCS_SIZE, PROT_READ | PROT_WRITE);
+  if (mprotect(scs, SCS_SIZE, PROT_READ | PROT_WRITE) == -1) {
+    async_safe_fatal("failed to mprotect() on shadow stack %p %d error %s", scs, SCS_SIZE,
+                     strerror(errno));
+  }
 #if defined(__aarch64__)
   __asm__ __volatile__("mov x18, %0" ::"r"(scs));
 #elif defined(__riscv)
