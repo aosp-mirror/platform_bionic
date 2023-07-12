@@ -51,13 +51,19 @@ enum {
 struct nbd_request {
   __be32 magic;
   __be32 type;
-  char handle[8];
+  union {
+    __be64 cookie;
+    char handle[8];
+  };
   __be64 from;
   __be32 len;
 } __attribute__((packed));
 struct nbd_reply {
   __be32 magic;
   __be32 error;
-  char handle[8];
+  union {
+    __be64 cookie;
+    char handle[8];
+  };
 };
 #endif
