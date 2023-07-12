@@ -36,9 +36,4 @@ enum {
   HW_BREAKPOINT_X = 4,
   HW_BREAKPOINT_INVALID = HW_BREAKPOINT_RW | HW_BREAKPOINT_X,
 };
-enum bp_type_idx {
-  TYPE_INST = 0,
-  TYPE_DATA = 1,
-  TYPE_MAX
-};
 #endif
