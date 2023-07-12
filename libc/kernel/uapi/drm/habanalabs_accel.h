@@ -619,7 +619,8 @@ enum hl_server_type {
   HL_SERVER_GAUDI_HLS1H = 2,
   HL_SERVER_GAUDI_TYPE1 = 3,
   HL_SERVER_GAUDI_TYPE2 = 4,
-  HL_SERVER_GAUDI2_HLS2 = 5
+  HL_SERVER_GAUDI2_HLS2 = 5,
+  HL_SERVER_GAUDI2_TYPE1 = 7
 };
 #define HL_NOTIFIER_EVENT_TPC_ASSERT (1ULL << 0)
 #define HL_NOTIFIER_EVENT_UNDEFINED_OPCODE (1ULL << 1)
@@ -630,6 +631,8 @@ enum hl_server_type {
 #define HL_NOTIFIER_EVENT_GENERAL_HW_ERR (1ULL << 6)
 #define HL_NOTIFIER_EVENT_RAZWI (1ULL << 7)
 #define HL_NOTIFIER_EVENT_PAGE_FAULT (1ULL << 8)
+#define HL_NOTIFIER_EVENT_CRITICL_HW_ERR (1ULL << 9)
+#define HL_NOTIFIER_EVENT_CRITICL_FW_ERR (1ULL << 10)
 #define HL_INFO_HW_IP_INFO 0
 #define HL_INFO_HW_EVENTS 1
 #define HL_INFO_DRAM_USAGE 2
@@ -663,6 +666,8 @@ enum hl_server_type {
 #define HL_INFO_PAGE_FAULT_EVENT 33
 #define HL_INFO_USER_MAPPINGS 34
 #define HL_INFO_FW_GENERIC_REQ 35
+#define HL_INFO_HW_ERR_EVENT 36
+#define HL_INFO_FW_ERR_EVENT 37
 #define HL_INFO_VERSION_MAX_LEN 128
 #define HL_INFO_CARD_NAME_MAX_LEN 16
 #define HL_ENGINES_DATA_MAX_SIZE SZ_1M
@@ -692,15 +697,20 @@ struct hl_info_hw_ip_info {
   __u64 dram_page_size;
   __u32 edma_enabled_mask;
   __u16 number_of_user_interrupts;
-  __u16 pad2;
-  __u64 reserved4;
+  __u8 reserved1;
+  __u8 reserved2;
+  __u64 reserved3;
   __u64 device_mem_alloc_default_page_size;
+  __u64 reserved4;
   __u64 reserved5;
-  __u64 reserved6;
-  __u32 reserved7;
-  __u8 reserved8;
+  __u32 reserved6;
+  __u8 reserved7;
   __u8 revision_id;
-  __u8 pad[2];
+  __u16 tpc_interrupt_id;
+  __u32 rotator_enabled_mask;
+  __u32 reserved9;
+  __u64 engine_core_interrupt_reg_addr;
+  __u64 reserved_dram_size;
 };
 struct hl_info_dram_usage {
   __u64 dram_free_mem;
@@ -821,6 +831,21 @@ struct hl_info_undefined_opcode_event {
   __u32 engine_id;
   __u32 stream_id;
 };
+struct hl_info_hw_err_event {
+  __s64 timestamp;
+  __u16 event_id;
+  __u16 pad[3];
+};
+enum hl_info_fw_err_type {
+  HL_INFO_FW_HEARTBEAT_ERR,
+  HL_INFO_FW_REPORTED_ERR,
+};
+struct hl_info_fw_err_event {
+  __s64 timestamp;
+  __u16 err_type;
+  __u16 event_id;
+  __u32 pad;
+};
 struct hl_info_dev_memalloc_page_sizes {
   __u64 page_order_bitmask;
 };
@@ -938,10 +963,16 @@ struct hl_cs_chunk {
 #define HL_CS_FLAGS_UNRESERVE_SIGNALS_ONLY 0x2000
 #define HL_CS_FLAGS_ENGINE_CORE_COMMAND 0x4000
 #define HL_CS_FLAGS_FLUSH_PCI_HBW_WRITES 0x8000
+#define HL_CS_FLAGS_ENGINES_COMMAND 0x10000
 #define HL_CS_STATUS_SUCCESS 0
 #define HL_MAX_JOBS_PER_CS 512
-#define HL_ENGINE_CORE_HALT (1 << 0)
-#define HL_ENGINE_CORE_RUN (1 << 1)
+enum hl_engine_command {
+  HL_ENGINE_CORE_HALT = 1,
+  HL_ENGINE_CORE_RUN = 2,
+  HL_ENGINE_STALL = 3,
+  HL_ENGINE_RESUME = 4,
+  HL_ENGINE_COMMAND_MAX
+};
 struct hl_cs_in {
   union {
     struct {
@@ -952,6 +983,11 @@ struct hl_cs_in {
       __u64 engine_cores;
       __u32 num_engine_cores;
       __u32 core_command;
+    };
+    struct {
+      __u64 engines;
+      __u32 num_engines;
+      __u32 engine_command;
     };
   };
   union {

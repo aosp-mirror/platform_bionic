@@ -19,7 +19,7 @@
 #ifndef _LINUX_TASKSTATS_H
 #define _LINUX_TASKSTATS_H
 #include <linux/types.h>
-#define TASKSTATS_VERSION 13
+#define TASKSTATS_VERSION 14
 #define TS_COMM_LEN 32
 struct taskstats {
   __u16 version;
@@ -77,6 +77,8 @@ struct taskstats {
   __u64 ac_exe_inode;
   __u64 wpcopy_count;
   __u64 wpcopy_delay_total;
+  __u64 irq_count;
+  __u64 irq_delay_total;
 };
 enum {
   TASKSTATS_CMD_UNSPEC = 0,
