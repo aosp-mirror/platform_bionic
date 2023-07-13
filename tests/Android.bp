@@ -470,6 +470,7 @@ cc_test_library {
         "struct_layout_test.cpp",
         "sstream_test.cpp",
         "sys_auxv_test.cpp",
+        "sys_cachectl_test.cpp",
         "sys_epoll_test.cpp",
         "sys_mman_test.cpp",
         "sys_msg_test.cpp",
