@@ -1589,6 +1589,7 @@ LIBC_V { # introduced=VanillaIceCream
     localtime_rz;
     mbsrtowcs_l;
     mktime_z;
+    __riscv_flush_icache; # riscv64
     timespec_getres;
     tzalloc;
     tzfree;
