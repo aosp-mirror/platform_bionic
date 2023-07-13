@@ -158,7 +158,7 @@ void AtexitArray::set_writable(bool writable, size_t start_idx, size_t num_entri
 
   const int prot = PROT_READ | (writable ? PROT_WRITE : 0);
   if (mprotect(reinterpret_cast<char*>(array_) + start_byte, byte_len, prot) != 0) {
-    async_safe_fatal("mprotect failed on atexit array: %s", strerror(errno));
+    async_safe_fatal("mprotect failed on atexit array: %m");
   }
 }
 
@@ -198,8 +198,8 @@ bool AtexitArray::expand_capacity() {
   }
   if (new_pages == MAP_FAILED) {
     async_safe_format_log(ANDROID_LOG_WARN, "libc",
-                          "__cxa_atexit: mmap/mremap failed to allocate %zu bytes: %s",
-                          new_capacity_bytes, strerror(errno));
+                          "__cxa_atexit: mmap/mremap failed to allocate %zu bytes: %m",
+                          new_capacity_bytes);
   } else {
     result = true;
     prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, new_pages, new_capacity_bytes, "atexit handlers");
