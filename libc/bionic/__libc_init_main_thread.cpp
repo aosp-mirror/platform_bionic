@@ -150,7 +150,7 @@ extern "C" void __libc_init_main_thread_final() {
   // stack.)
   ThreadMapping mapping = __allocate_thread_mapping(0, PTHREAD_GUARD_SIZE);
   if (mapping.mmap_base == nullptr) {
-    async_safe_fatal("failed to mmap main thread static TLS: %s", strerror(errno));
+    async_safe_fatal("failed to mmap main thread static TLS: %m");
   }
 
   const StaticTlsLayout& layout = __libc_shared_globals()->static_tls_layout;

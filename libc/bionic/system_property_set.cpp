@@ -285,10 +285,9 @@ int __system_property_set(const char* key, const char* value) {
     PropertyServiceConnection connection(key);
     if (!connection.IsValid()) {
       errno = connection.GetLastError();
-      async_safe_format_log(
-          ANDROID_LOG_WARN, "libc",
-          "Unable to set property \"%s\" to \"%s\": connection failed; errno=%d (%s)", key, value,
-          errno, strerror(errno));
+      async_safe_format_log(ANDROID_LOG_WARN, "libc",
+                            "Unable to set property \"%s\" to \"%s\": connection failed: %m", key,
+                            value);
       return -1;
     }
 
@@ -296,8 +295,8 @@ int __system_property_set(const char* key, const char* value) {
     if (!writer.WriteUint32(PROP_MSG_SETPROP2).WriteString(key).WriteString(value).Send()) {
       errno = connection.GetLastError();
       async_safe_format_log(ANDROID_LOG_WARN, "libc",
-                            "Unable to set property \"%s\" to \"%s\": write failed; errno=%d (%s)",
-                            key, value, errno, strerror(errno));
+                            "Unable to set property \"%s\" to \"%s\": write failed: %m", key,
+                            value);
       return -1;
     }
 
@@ -305,8 +304,7 @@ int __system_property_set(const char* key, const char* value) {
     if (!connection.RecvInt32(&result)) {
       errno = connection.GetLastError();
       async_safe_format_log(ANDROID_LOG_WARN, "libc",
-                            "Unable to set property \"%s\" to \"%s\": recv failed; errno=%d (%s)",
-                            key, value, errno, strerror(errno));
+                            "Unable to set property \"%s\" to \"%s\": recv failed: %m", key, value);
       return -1;
     }
 
