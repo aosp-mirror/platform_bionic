@@ -63,7 +63,7 @@ New libc functions in V (API level 35):
     multi-threaded C).
   * `mbsrtowcs_l` and `wcsrtombs_l` aliases for `mbsrtowcs` and `wcsrtombs`.
   * New system call wrappers: `__riscv_flush_icache` (`<sys/cachectl.h>`),
-    `__riscv_hwprobe` (`<sys/hwprobe.h>`).
+    `__riscv_hwprobe` (`<sys/hwprobe.h>`), `epoll_pwait2`/`epoll_pwait2_64` (`<sys/epoll.h>`).
 
 New libc behavior in V (API level 35):
   * Added `LD_SHOW_AUXV` to the dynamic linker to dump the ELF auxiliary
