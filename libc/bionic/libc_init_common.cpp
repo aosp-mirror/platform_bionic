@@ -340,11 +340,11 @@ static void __initialize_personality() {
 #if !defined(__LP64__)
   int old_value = personality(0xffffffff);
   if (old_value == -1) {
-    async_safe_fatal("error getting old personality value: %s", strerror(errno));
+    async_safe_fatal("error getting old personality value: %m");
   }
 
   if (personality((static_cast<unsigned int>(old_value) & ~PER_MASK) | PER_LINUX32) == -1) {
-    async_safe_fatal("error setting PER_LINUX32 personality: %s", strerror(errno));
+    async_safe_fatal("error setting PER_LINUX32 personality: %m");
   }
 #endif
 }
