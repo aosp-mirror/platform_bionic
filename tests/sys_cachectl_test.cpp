@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2023 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,29 +26,19 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <gtest/gtest.h>
 
-/*
- * @file sys/cachectl.h
- * @brief Architecture-specific cache control.
- */
+#if __has_include(<sys/cachectl.h>)
+#include <sys/cachectl.h>
+#endif
 
-#include <sys/cdefs.h>
-
-__BEGIN_DECLS
-
-/**
- * Flag for __riscv_flush_icache() to indicate that only the current
- * thread's instruction cache needs to be flushed (rather than the
- * default of all threads).
- */
-#define SYS_RISCV_FLUSH_ICACHE_LOCAL 1UL
-
-/**
- * __riscv_flush_icache(2) flushes the instruction cache for the given range of addresses.
- *
- * Returns 0 on success, and returns -1 and sets `errno` on failure.
- */
-int __riscv_flush_icache(void* __start, void* __end, unsigned long __flags);
-
-__END_DECLS
+TEST(sys_cachectl, __riscv_flush_icache) {
+#if defined(__riscv) && __has_include(<sys/cachectl.h>)
+  // As of Linux 6.4, the address range is ignored (so nullptr is fine),
+  // and the flags you actually want are 0 ("all threads"),
+  // but we test the unusual flag just to make sure it works.
+  ASSERT_EQ(0, __riscv_flush_icache(nullptr, nullptr, SYS_RISCV_FLUSH_ICACHE_LOCAL));
+#else
+  GTEST_SKIP() << "__riscv_flush_icache requires riscv64";
+#endif
+}
