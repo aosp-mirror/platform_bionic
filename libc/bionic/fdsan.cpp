@@ -87,7 +87,7 @@ FdEntry* FdTableImpl<inline_fds>::at(size_t idx) {
     void* allocation =
         mmap(nullptr, aligned_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
     if (allocation == MAP_FAILED) {
-      async_safe_fatal("fdsan: mmap failed: %s", strerror(errno));
+      async_safe_fatal("fdsan: mmap failed: %m");
     }
 
     FdTableOverflow* new_overflow = reinterpret_cast<FdTableOverflow*>(allocation);

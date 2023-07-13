@@ -357,8 +357,7 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const v
         void* pg_start =
             reinterpret_cast<void*>(page_start(reinterpret_cast<uintptr_t>(stack_top)));
         if (mprotect(pg_start, PAGE_SIZE, PROT_READ | PROT_WRITE | PROT_MTE | PROT_GROWSDOWN)) {
-          async_safe_fatal("error: failed to set PROT_MTE on main thread stack: %s\n",
-                           strerror(errno));
+          async_safe_fatal("error: failed to set PROT_MTE on main thread stack: %m");
         }
       }
 
