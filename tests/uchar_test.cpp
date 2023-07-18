@@ -295,10 +295,18 @@ TEST(uchar, mbrtoc32_out_of_range) {
   ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
   uselocale(LC_GLOBAL_LOCALE);
 
-  char32_t out[8] = {};
+  char32_t out = U'\0';
   errno = 0;
-  ASSERT_EQ(static_cast<size_t>(-1), mbrtoc32(out, "\xf5\x80\x80\x80", 4, nullptr));
-  ASSERT_EQ(EILSEQ, errno);
+  auto result = mbrtoc32(&out, "\xf5\x80\x80\x80", 4, nullptr);
+  if (kLibcSupportsLongUtf8Sequences) {
+    EXPECT_EQ(4U, result);
+    EXPECT_EQ(0, errno);
+    EXPECT_EQ(U'\x140000', out);
+  } else {
+    EXPECT_EQ(static_cast<size_t>(-1), result);
+    EXPECT_EQ(EILSEQ, errno);
+    EXPECT_EQ(U'\0', out);
+  }
 }
 
 TEST(uchar, mbrtoc32) {
