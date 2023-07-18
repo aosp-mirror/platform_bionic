@@ -37,6 +37,8 @@
 
 __BEGIN_DECLS
 
+#if defined(__riscv)
+
 /**
  * Flag for __riscv_flush_icache() to indicate that only the current
  * thread's instruction cache needs to be flushed (rather than the
@@ -46,9 +48,12 @@ __BEGIN_DECLS
 
 /**
  * __riscv_flush_icache(2) flushes the instruction cache for the given range of addresses.
+ * The address range is currently (Linux 6.4) ignored, so both pointers may be null.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
-int __riscv_flush_icache(void* __start, void* __end, unsigned long __flags);
+int __riscv_flush_icache(void* _Nullable __start, void* _Nullable __end, unsigned long __flags);
+
+#endif
 
 __END_DECLS
