@@ -40,6 +40,31 @@ constexpr bool kLibcSupportsLongUtf8Sequences = 1;
 #error kLibcSupportsLongUtf8Sequences must be configured for this platform
 #endif
 
+// C23 7.30.1 (for each `mbrtoc*` function) says:
+//
+// Returns:
+//
+//     0 if the next n or fewer bytes complete the multibyte character that
+//     corresponds to the null wide character (which is the value stored).
+//
+//     (size_t)(-2) if the next n bytes contribute to an incomplete (but
+//     potentially valid) multibyte character, and all n bytes have been
+//     processed (no value is stored).
+//
+// Bionic historically interpreted the behavior when n is 0 to be the next 0
+// bytes decoding to the null. That's a pretty bad interpretation, and both
+// glibc and musl return -2 for that case.
+//
+// The tests currently checks the incorrect behavior for bionic because gtest
+// doesn't support explicit xfail annotations. The behavior difference here
+// should be fixed, but danalbert wants to add more tests before tackling the
+// bugs.
+#ifdef __ANDROID__
+constexpr size_t kExpectedResultForZeroLength = 0U;
+#else
+constexpr size_t kExpectedResultForZeroLength = static_cast<size_t>(-2);
+#endif
+
 TEST(uchar, sizeof_uchar_t) {
   EXPECT_EQ(2U, sizeof(char16_t));
   EXPECT_EQ(4U, sizeof(char32_t));
@@ -132,13 +157,13 @@ TEST(uchar, mbrtoc16_zero_len) {
   char16_t out;
 
   out = L'x';
-  ASSERT_EQ(0U, mbrtoc16(&out, "hello", 0, nullptr));
-  ASSERT_EQ(L'x', out);
+  EXPECT_EQ(kExpectedResultForZeroLength, mbrtoc16(&out, "hello", 0, nullptr));
+  EXPECT_EQ(L'x', out);
 
-  ASSERT_EQ(0U, mbrtoc16(&out, "hello", 0, nullptr));
-  ASSERT_EQ(0U, mbrtoc16(&out, "", 0, nullptr));
-  ASSERT_EQ(1U, mbrtoc16(&out, "hello", 1, nullptr));
-  ASSERT_EQ(L'h', out);
+  EXPECT_EQ(kExpectedResultForZeroLength, mbrtoc16(&out, "hello", 0, nullptr));
+  EXPECT_EQ(kExpectedResultForZeroLength, mbrtoc16(&out, "", 0, nullptr));
+  EXPECT_EQ(1U, mbrtoc16(&out, "hello", 1, nullptr));
+  EXPECT_EQ(L'h', out);
 }
 
 TEST(uchar, mbrtoc16) {
@@ -312,42 +337,17 @@ TEST(uchar, mbrtoc32_out_of_range) {
 TEST(uchar, mbrtoc32) {
   char32_t out[8];
 
-  // C23 says:
-  //
-  // Returns:
-  //
-  //     0 if the next n or fewer bytes complete the multibyte character that
-  //     corresponds to the null wide character (which is the value stored).
-  //
-  //     (size_t)(-2) if the next n bytes contribute to an incomplete (but
-  //     potentially valid) multibyte character, and all n bytes have been
-  //     processed (no value is stored).
-  //
-  // Bionic historically interpreted the behavior when n is 0 to be the next 0
-  // bytes decoding to the null. That's a pretty bad interpretation, and both
-  // glibc and musl return -2 for that case.
-  //
-  // The test currently checks the incorrect behavior for bionic because gtest
-  // doesn't support explicit xfail annotations. The behavior difference here
-  // should be fixed, but danalbert wants to add more tests before tackling the
-  // bugs.
-#ifdef __ANDROID__
-  const size_t expected_result_for_zero_length = 0U;
-#else
-  const size_t expected_result_for_zero_length = static_cast<size_t>(-2);
-#endif
-
   out[0] = L'x';
-  EXPECT_EQ(expected_result_for_zero_length, mbrtoc32(out, "hello", 0, nullptr));
+  EXPECT_EQ(kExpectedResultForZeroLength, mbrtoc32(out, "hello", 0, nullptr));
   EXPECT_EQ(static_cast<char32_t>(L'x'), out[0]);
 
-  EXPECT_EQ(expected_result_for_zero_length, mbrtoc32(out, "hello", 0, nullptr));
-  EXPECT_EQ(expected_result_for_zero_length, mbrtoc32(out, "", 0, nullptr));
+  EXPECT_EQ(kExpectedResultForZeroLength, mbrtoc32(out, "hello", 0, nullptr));
+  EXPECT_EQ(kExpectedResultForZeroLength, mbrtoc32(out, "", 0, nullptr));
   EXPECT_EQ(1U, mbrtoc32(out, "hello", 1, nullptr));
   EXPECT_EQ(static_cast<char32_t>(L'h'), out[0]);
 
-  EXPECT_EQ(expected_result_for_zero_length, mbrtoc32(nullptr, "hello", 0, nullptr));
-  EXPECT_EQ(expected_result_for_zero_length, mbrtoc32(nullptr, "", 0, nullptr));
+  EXPECT_EQ(kExpectedResultForZeroLength, mbrtoc32(nullptr, "hello", 0, nullptr));
+  EXPECT_EQ(kExpectedResultForZeroLength, mbrtoc32(nullptr, "", 0, nullptr));
   EXPECT_EQ(1U, mbrtoc32(nullptr, "hello", 1, nullptr));
 
   EXPECT_EQ(0U, mbrtoc32(nullptr, nullptr, 0, nullptr));
