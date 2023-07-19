@@ -24,6 +24,22 @@
 #include <locale.h>
 #include <stdint.h>
 
+// Modern versions of UTF-8 (https://datatracker.ietf.org/doc/html/rfc3629 and
+// newer) explicitly disallow code points beyond U+10FFFF, which exclude all 5-
+// and 6-byte sequences. Earlier versions of UTF-8 allowed the wider range:
+// https://datatracker.ietf.org/doc/html/rfc2279.
+//
+// Bionic's unicode implementation was written after the high values were
+// excluded, so it has never supported them. Other implementations (at least
+// as of glibc 2.36), do support those sequences.
+#if defined(__ANDROID__) || defined(ANDROID_HOST_MUSL)
+constexpr bool kLibcSupportsLongUtf8Sequences = 0;
+#elif defined(__GLIBC__)
+constexpr bool kLibcSupportsLongUtf8Sequences = 1;
+#else
+#error kLibcSupportsLongUtf8Sequences must be configured for this platform
+#endif
+
 TEST(uchar, sizeof_uchar_t) {
   EXPECT_EQ(2U, sizeof(char16_t));
   EXPECT_EQ(4U, sizeof(char32_t));
@@ -146,10 +162,24 @@ TEST(uchar, mbrtoc16) {
   ASSERT_EQ(static_cast<char16_t>(0xdbea), out);
   ASSERT_EQ(4U, mbrtoc16(&out, "\xf4\x8a\xaf\x8d" "ef", 6, nullptr));
   ASSERT_EQ(static_cast<char16_t>(0xdfcd), out);
-  // Illegal 5-byte UTF-8.
+}
+
+TEST(uchar, mbrtoc16_long_sequences) {
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
+
+  char16_t out = u'\0';
   errno = 0;
-  ASSERT_EQ(static_cast<size_t>(-1), mbrtoc16(&out, "\xf8\xa1\xa2\xa3\xa4", 5, nullptr));
-  ASSERT_EQ(EILSEQ, errno);
+  auto result = mbrtoc16(&out, "\xf8\xa1\xa2\xa3\xa4", 5, nullptr);
+  if (kLibcSupportsLongUtf8Sequences) {
+    EXPECT_EQ(5U, result);
+    EXPECT_EQ(0, errno);
+    EXPECT_EQ(u'\uf94a', out);
+  } else {
+    EXPECT_EQ(static_cast<size_t>(-1), result);
+    EXPECT_EQ(EILSEQ, errno);
+    EXPECT_EQ(u'\0', out);
+  }
 }
 
 TEST(uchar, mbrtoc16_reserved_range) {
