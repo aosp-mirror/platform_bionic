@@ -237,9 +237,13 @@ TEST(uchar, mbrtoc16_long_sequences) {
 }
 
 TEST(uchar, mbrtoc16_reserved_range) {
-  char16_t out;
-  ASSERT_EQ(static_cast<size_t>(-1),
-            mbrtoc16(&out, "\xf0\x80\xbf\xbf", 6, nullptr));
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+
+  errno = 0;
+  char16_t out = u'\0';
+  EXPECT_EQ(static_cast<size_t>(-1), mbrtoc16(&out, "\xf0\x80\xbf\xbf", 6, nullptr));
+  EXPECT_EQ(u'\0', out);
+  EXPECT_EQ(EILSEQ, errno);
 }
 
 TEST(uchar, mbrtoc16_beyond_range) {
