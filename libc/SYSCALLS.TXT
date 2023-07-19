@@ -161,7 +161,7 @@ int fstatat64|fstatat:newfstatat(int, const char*, struct stat*, int)  lp64
 int linkat(int, const char*, int, const char*, int)  all
 int mkdirat(int, const char*, mode_t)  all
 int mknodat(int, const char*, mode_t, dev_t)  all
-int readlinkat(int, const char*, char*, size_t)  all
+ssize_t readlinkat(int, const char*, char*, size_t)  all
 int renameat2(int, const char*, int, const char*, unsigned)  all
 int symlinkat(const char*, int, const char*)  all
 int unlinkat(int, const char*, int)   all
