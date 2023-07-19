@@ -40,6 +40,31 @@ constexpr bool kLibcSupportsLongUtf8Sequences = 1;
 #error kLibcSupportsLongUtf8Sequences must be configured for this platform
 #endif
 
+// C23 7.30.1 (for each `mbrtoc*` function) says:
+//
+// Returns:
+//
+//     0 if the next n or fewer bytes complete the multibyte character that
+//     corresponds to the null wide character (which is the value stored).
+//
+//     (size_t)(-2) if the next n bytes contribute to an incomplete (but
+//     potentially valid) multibyte character, and all n bytes have been
+//     processed (no value is stored).
+//
+// Bionic historically interpreted the behavior when n is 0 to be the next 0
+// bytes decoding to the null. That's a pretty bad interpretation, and both
+// glibc and musl return -2 for that case.
+//
+// The tests currently checks the incorrect behavior for bionic because gtest
+// doesn't support explicit xfail annotations. The behavior difference here
+// should be fixed, but danalbert wants to add more tests before tackling the
+// bugs.
+#ifdef __ANDROID__
+constexpr size_t kExpectedResultForZeroLength = 0U;
+#else
+constexpr size_t kExpectedResultForZeroLength = static_cast<size_t>(-2);
+#endif
+
 TEST(uchar, sizeof_uchar_t) {
   EXPECT_EQ(2U, sizeof(char16_t));
   EXPECT_EQ(4U, sizeof(char32_t));
@@ -132,13 +157,13 @@ TEST(uchar, mbrtoc16_zero_len) {
   char16_t out;
 
   out = L'x';
-  ASSERT_EQ(0U, mbrtoc16(&out, "hello", 0, nullptr));
-  ASSERT_EQ(L'x', out);
+  EXPECT_EQ(kExpectedResultForZeroLength, mbrtoc16(&out, "hello", 0, nullptr));
+  EXPECT_EQ(L'x', out);
 
-  ASSERT_EQ(0U, mbrtoc16(&out, "hello", 0, nullptr));
-  ASSERT_EQ(0U, mbrtoc16(&out, "", 0, nullptr));
-  ASSERT_EQ(1U, mbrtoc16(&out, "hello", 1, nullptr));
-  ASSERT_EQ(L'h', out);
+  EXPECT_EQ(kExpectedResultForZeroLength, mbrtoc16(&out, "hello", 0, nullptr));
+  EXPECT_EQ(kExpectedResultForZeroLength, mbrtoc16(&out, "", 0, nullptr));
+  EXPECT_EQ(1U, mbrtoc16(&out, "hello", 1, nullptr));
+  EXPECT_EQ(L'h', out);
 }
 
 TEST(uchar, mbrtoc16) {
@@ -295,55 +320,78 @@ TEST(uchar, mbrtoc32_out_of_range) {
   ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
   uselocale(LC_GLOBAL_LOCALE);
 
-  char32_t out[8] = {};
+  char32_t out = U'\0';
   errno = 0;
-  ASSERT_EQ(static_cast<size_t>(-1), mbrtoc32(out, "\xf5\x80\x80\x80", 4, nullptr));
-  ASSERT_EQ(EILSEQ, errno);
+  auto result = mbrtoc32(&out, "\xf5\x80\x80\x80", 4, nullptr);
+  if (kLibcSupportsLongUtf8Sequences) {
+    EXPECT_EQ(4U, result);
+    EXPECT_EQ(0, errno);
+    EXPECT_EQ(U'\x140000', out);
+  } else {
+    EXPECT_EQ(static_cast<size_t>(-1), result);
+    EXPECT_EQ(EILSEQ, errno);
+    EXPECT_EQ(U'\0', out);
+  }
 }
 
 TEST(uchar, mbrtoc32) {
   char32_t out[8];
 
   out[0] = L'x';
-  ASSERT_EQ(0U, mbrtoc32(out, "hello", 0, nullptr));
-  ASSERT_EQ(static_cast<char32_t>(L'x'), out[0]);
+  EXPECT_EQ(kExpectedResultForZeroLength, mbrtoc32(out, "hello", 0, nullptr));
+  EXPECT_EQ(static_cast<char32_t>(L'x'), out[0]);
 
-  ASSERT_EQ(0U, mbrtoc32(out, "hello", 0, nullptr));
-  ASSERT_EQ(0U, mbrtoc32(out, "", 0, nullptr));
-  ASSERT_EQ(1U, mbrtoc32(out, "hello", 1, nullptr));
-  ASSERT_EQ(static_cast<char32_t>(L'h'), out[0]);
+  EXPECT_EQ(kExpectedResultForZeroLength, mbrtoc32(out, "hello", 0, nullptr));
+  EXPECT_EQ(kExpectedResultForZeroLength, mbrtoc32(out, "", 0, nullptr));
+  EXPECT_EQ(1U, mbrtoc32(out, "hello", 1, nullptr));
+  EXPECT_EQ(static_cast<char32_t>(L'h'), out[0]);
 
-  ASSERT_EQ(0U, mbrtoc32(nullptr, "hello", 0, nullptr));
-  ASSERT_EQ(0U, mbrtoc32(nullptr, "", 0, nullptr));
-  ASSERT_EQ(1U, mbrtoc32(nullptr, "hello", 1, nullptr));
+  EXPECT_EQ(kExpectedResultForZeroLength, mbrtoc32(nullptr, "hello", 0, nullptr));
+  EXPECT_EQ(kExpectedResultForZeroLength, mbrtoc32(nullptr, "", 0, nullptr));
+  EXPECT_EQ(1U, mbrtoc32(nullptr, "hello", 1, nullptr));
 
-  ASSERT_EQ(0U, mbrtoc32(nullptr, nullptr, 0, nullptr));
+  EXPECT_EQ(0U, mbrtoc32(nullptr, nullptr, 0, nullptr));
 
   ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
   uselocale(LC_GLOBAL_LOCALE);
 
   // 1-byte UTF-8.
-  ASSERT_EQ(1U, mbrtoc32(out, "abcdef", 6, nullptr));
-  ASSERT_EQ(static_cast<char32_t>(L'a'), out[0]);
+  EXPECT_EQ(1U, mbrtoc32(out, "abcdef", 6, nullptr));
+  EXPECT_EQ(static_cast<char32_t>(L'a'), out[0]);
   // 2-byte UTF-8.
-  ASSERT_EQ(2U, mbrtoc32(out, "\xc2\xa2" "cdef", 6, nullptr));
-  ASSERT_EQ(static_cast<char32_t>(0x00a2), out[0]);
+  EXPECT_EQ(2U, mbrtoc32(out,
+                         "\xc2\xa2"
+                         "cdef",
+                         6, nullptr));
+  EXPECT_EQ(static_cast<char32_t>(0x00a2), out[0]);
   // 3-byte UTF-8.
-  ASSERT_EQ(3U, mbrtoc32(out, "\xe2\x82\xac" "def", 6, nullptr));
-  ASSERT_EQ(static_cast<char32_t>(0x20ac), out[0]);
+  EXPECT_EQ(3U, mbrtoc32(out,
+                         "\xe2\x82\xac"
+                         "def",
+                         6, nullptr));
+  EXPECT_EQ(static_cast<char32_t>(0x20ac), out[0]);
   // 4-byte UTF-8.
-  ASSERT_EQ(4U, mbrtoc32(out, "\xf0\xa4\xad\xa2" "ef", 6, nullptr));
-  ASSERT_EQ(static_cast<char32_t>(0x24b62), out[0]);
+  EXPECT_EQ(4U, mbrtoc32(out,
+                         "\xf0\xa4\xad\xa2"
+                         "ef",
+                         6, nullptr));
+  EXPECT_EQ(static_cast<char32_t>(0x24b62), out[0]);
 #if defined(__BIONIC__) // glibc allows this.
   // Illegal 5-byte UTF-8.
   errno = 0;
-  ASSERT_EQ(static_cast<size_t>(-1), mbrtoc32(out, "\xf8\xa1\xa2\xa3\xa4" "f", 6, nullptr));
-  ASSERT_EQ(EILSEQ, errno);
+  EXPECT_EQ(static_cast<size_t>(-1), mbrtoc32(out,
+                                              "\xf8\xa1\xa2\xa3\xa4"
+                                              "f",
+                                              6, nullptr));
+  EXPECT_EQ(EILSEQ, errno);
 #endif
   // Illegal over-long sequence.
   errno = 0;
-  ASSERT_EQ(static_cast<size_t>(-1), mbrtoc32(out, "\xf0\x82\x82\xac" "ef", 6, nullptr));
-  ASSERT_EQ(EILSEQ, errno);
+  EXPECT_EQ(static_cast<size_t>(-1), mbrtoc32(out,
+                                              "\xf0\x82\x82\xac"
+                                              "ef",
+                                              6, nullptr));
+  EXPECT_EQ(EILSEQ, errno);
 }
 
 void test_mbrtoc32_incomplete(mbstate_t* ps) {
