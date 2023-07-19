@@ -1,5 +1,5 @@
 /*-
- * SPDX-License-Identifier: BSD-2-Clause-FreeBSD
+ * SPDX-License-Identifier: BSD-2-Clause
  *
  * Copyright (c) 2009 David Schultz <das@FreeBSD.org>
  * All rights reserved.
@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/string/wcscasecmp.c 326193 2017-11-25 17:12:48Z pfg $");
+__FBSDID("$FreeBSD$");
 
 #include <wchar.h>
 #include <wctype.h>
