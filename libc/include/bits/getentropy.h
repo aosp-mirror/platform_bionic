@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2023 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,29 +29,25 @@
 #pragma once
 
 /**
- * @file sys/random.h
- * @brief The getentropy() and getrandom() functions.
+ * @file bits/getentropy.h
+ * @brief The getentropy() function.
  */
 
 #include <sys/cdefs.h>
 #include <sys/types.h>
 
-#include <linux/random.h>
-
-#include <bits/getentropy.h>
-
 __BEGIN_DECLS
 
 /**
- * [getrandom(2)](http://man7.org/linux/man-pages/man2/getrandom.2.html) fills the given buffer
+ * [getentropy(3)](http://man7.org/linux/man-pages/man3/getentropy.3.html) fills the given buffer
  * with random bytes.
  *
- * Returns the number of bytes copied on success, and returns -1 and sets `errno` on failure.
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
  *
  * Available since API level 28.
  *
  * See also arc4random_buf() which is available in all API levels.
  */
-ssize_t getrandom(void* _Nonnull __buffer, size_t __buffer_size, unsigned int __flags) __wur __INTRODUCED_IN(28);
+int getentropy(void* _Nonnull __buffer, size_t __buffer_size) __wur __INTRODUCED_IN(28);
 
 __END_DECLS
