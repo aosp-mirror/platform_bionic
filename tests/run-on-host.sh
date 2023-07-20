@@ -2,9 +2,14 @@
 
 . $(dirname $0)/../build/run-on-host.sh
 
-if [ "$1" = glibc ]; then
+if [ "$1" = glibc -o "$1" = musl ]; then
+  if [ "$1" = musl ]; then
+    BUILD_ARGS=USE_HOST_MUSL=true
+  else
+    BUILD_ARGS=
+  fi
   shift
-  m -j bionic-unit-tests-glibc
+  m -j $BUILD_ARGS bionic-unit-tests-glibc
   (
     cd ${ANDROID_BUILD_TOP}
     export ANDROID_DATA=${TARGET_OUT_DATA}
@@ -13,7 +18,7 @@ if [ "$1" = glibc ]; then
   )
   exit 0
 elif [ "$1" != 32 -a "$1" != 64 ]; then
-  echo "Usage: $0 [ 32 | 64 | glibc ] [gtest flags]"
+  echo "Usage: $0 [ 32 | 64 | glibc | musl ] [gtest flags]"
   exit 1
 fi
 
