@@ -76,13 +76,23 @@ int sigaddset64(sigset64_t* set, int sig) {
   return SigAddSet(set, sig);
 }
 
-// This isn't in our header files, but is exposed on all architectures.
+union BsdSigSet {
+  int mask;
+  sigset64_t set;
+};
+
+// This isn't in our header files, but is exposed on all architectures except riscv64.
 extern "C" int sigblock(int mask) {
-  SigSetConverter in, out;
-  sigemptyset(&in.sigset);
-  in.bsd = mask;
-  if (sigprocmask(SIG_BLOCK, &in.sigset, &out.sigset) == -1) return -1;
-  return out.bsd;
+  BsdSigSet in{.mask = mask}, out;
+  if (sigprocmask64(SIG_BLOCK, &in.set, &out.set) == -1) return -1;
+  return out.mask;
+}
+
+// This isn't in our header files, but is exposed on all architectures except riscv64.
+extern "C" int sigsetmask(int mask) {
+  BsdSigSet in{.mask = mask}, out;
+  if (sigprocmask64(SIG_SETMASK, &in.set, &out.set) == -1) return -1;
+  return out.mask;
 }
 
 template <typename SigSetT>
@@ -198,10 +208,9 @@ int sigpause(int sig) {
 }
 
 int sigpending(sigset_t* bionic_set) {
-  SigSetConverter set = {};
-  set.sigset = *bionic_set;
-  if (__rt_sigpending(&set.sigset64, sizeof(set.sigset64)) == -1) return -1;
-  *bionic_set = set.sigset;
+  SigSetConverter set{bionic_set};
+  if (__rt_sigpending(set.ptr, sizeof(sigset64_t)) == -1) return -1;
+  set.copy_out();
   return 0;
 }
 
@@ -245,19 +254,9 @@ sighandler_t sigset(int sig, sighandler_t disp) {
   return sigismember64(&old_mask, sig) ? SIG_HOLD : old_sa.sa_handler;
 }
 
-// This isn't in our header files, but is exposed on all architectures.
-extern "C" int sigsetmask(int mask) {
-  SigSetConverter in, out;
-  sigemptyset(&in.sigset);
-  in.bsd = mask;
-  if (sigprocmask(SIG_SETMASK, &in.sigset, &out.sigset) == -1) return -1;
-  return out.bsd;
-}
-
 int sigsuspend(const sigset_t* bionic_set) {
-  SigSetConverter set = {};
-  set.sigset = *bionic_set;
-  return sigsuspend64(&set.sigset64);
+  SigSetConverter set{bionic_set};
+  return sigsuspend64(set.ptr);
 }
 
 int sigsuspend64(const sigset64_t* set) {
@@ -271,9 +270,8 @@ int sigsuspend64(const sigset64_t* set) {
 }
 
 int sigtimedwait(const sigset_t* bionic_set, siginfo_t* info, const timespec* timeout) {
-  SigSetConverter set = {};
-  set.sigset = *bionic_set;
-  return sigtimedwait64(&set.sigset64, info, timeout);
+  SigSetConverter set{bionic_set};
+  return sigtimedwait64(set.ptr, info, timeout);
 }
 
 int sigtimedwait64(const sigset64_t* set, siginfo_t* info, const timespec* timeout) {
@@ -287,9 +285,8 @@ int sigtimedwait64(const sigset64_t* set, siginfo_t* info, const timespec* timeo
 }
 
 int sigwait(const sigset_t* bionic_set, int* sig) {
-  SigSetConverter set = {};
-  set.sigset = *bionic_set;
-  return sigwait64(&set.sigset64, sig);
+  SigSetConverter set{bionic_set};
+  return sigwait64(set.ptr, sig);
 }
 
 int sigwait64(const sigset64_t* set, int* sig) {

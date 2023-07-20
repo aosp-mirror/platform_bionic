@@ -48,14 +48,8 @@ int epoll_create1(int flags) {
 }
 
 int epoll_pwait(int fd, epoll_event* events, int max_events, int timeout, const sigset_t* ss) {
-  SigSetConverter set;
-  sigset64_t* ss_ptr = nullptr;
-  if (ss != nullptr) {
-    set = {};
-    set.sigset = *ss;
-    ss_ptr = &set.sigset64;
-  }
-  return epoll_pwait64(fd, events, max_events, timeout, ss_ptr);
+  SigSetConverter set{ss};
+  return epoll_pwait64(fd, events, max_events, timeout, set.ptr);
 }
 
 int epoll_pwait64(int fd, epoll_event* events, int max_events, int timeout, const sigset64_t* ss) {

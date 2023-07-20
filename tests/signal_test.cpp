@@ -530,14 +530,15 @@ TEST(signal, sighold_filter) {
 #endif
 }
 
-#if defined(__BIONIC__)
+#if defined(__BIONIC__) && !defined(__riscv)
 // Not exposed via headers, but the symbols are available if you declare them yourself.
 extern "C" int sigblock(int);
 extern "C" int sigsetmask(int);
+#define HAVE_SIGBLOCK_SIGSETMASK
 #endif
 
 TEST(signal, sigblock_filter) {
-#if defined(__BIONIC__)
+#if defined(HAVE_SIGBLOCK_SIGSETMASK)
   TestSignalMaskFunction([]() {
     sigblock(~0U);
   });
@@ -545,7 +546,7 @@ TEST(signal, sigblock_filter) {
 }
 
 TEST(signal, sigsetmask_filter) {
-#if defined(__BIONIC__)
+#if defined(HAVE_SIGBLOCK_SIGSETMASK)
   TestSignalMaskFunction([]() {
     sigsetmask(~0U);
   });
