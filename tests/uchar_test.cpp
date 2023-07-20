@@ -247,9 +247,20 @@ TEST(uchar, mbrtoc16_reserved_range) {
 }
 
 TEST(uchar, mbrtoc16_beyond_range) {
-  char16_t out;
-  ASSERT_EQ(static_cast<size_t>(-1),
-            mbrtoc16(&out, "\xf5\x80\x80\x80", 6, nullptr));
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+
+  errno = 0;
+  char16_t out = u'\0';
+  auto result = mbrtoc16(&out, "\xf5\x80\x80\x80", 6, nullptr);
+  if (kLibcRejectsOverLongUtf8Sequences) {
+    EXPECT_EQ(static_cast<size_t>(-1), result);
+    EXPECT_EQ(u'\0', out);
+    EXPECT_EQ(EILSEQ, errno);
+  } else {
+    EXPECT_EQ(4U, result);
+    EXPECT_EQ(u'\xdcc0', out);
+    EXPECT_EQ(0, errno);
+  }
 }
 
 void test_mbrtoc16_incomplete(mbstate_t* ps) {
