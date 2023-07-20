@@ -224,32 +224,6 @@ TEST(uchar, mbrtoc16) {
   ASSERT_EQ(3U, mbrtoc16(&out, "\xe2\x82\xac" "def", 6, nullptr));
   ASSERT_EQ(static_cast<char16_t>(0x20ac), out);
   // 4-byte UTF-8 will be returned as a surrogate pair...
-#ifdef __BIONIC__
-  // https://issuetracker.google.com/289419882
-  //
-  // We misread the spec when implementing this. The first call should return
-  // the length of the decoded character, and the second call should return -3
-  // to indicate that the output is a continuation of the character decoded by
-  // the first call.
-  //
-  // C23 7.30.1.3.4:
-  //
-  //     between 1 and n inclusive if the next n or fewer bytes complete a valid
-  //     multibyte character (which is the value stored); the value returned is
-  //     the number of bytes that complete the multibyte character.
-  //
-  //     (size_t)(-3) if the next character resulting from a previous call has
-  //     been stored (no bytes from the input have been consumed by this call).
-  //
-  // Leaving the test for the wrong outputs here while we clean up and improve
-  // the rest of the tests to get a better handle on the behavior differences
-  // before fixing the bug.
-  ASSERT_EQ(static_cast<size_t>(-3),
-            mbrtoc16(&out, "\xf4\x8a\xaf\x8d", 6, nullptr));
-  ASSERT_EQ(static_cast<char16_t>(0xdbea), out);
-  ASSERT_EQ(4U, mbrtoc16(&out, "\xf4\x8a\xaf\x8d" "ef", 6, nullptr));
-  ASSERT_EQ(static_cast<char16_t>(0xdfcd), out);
-#else
   ASSERT_EQ(4U, mbrtoc16(&out, "\xf4\x8a\xaf\x8d", 6, nullptr));
   ASSERT_EQ(static_cast<char16_t>(0xdbea), out);
   ASSERT_EQ(static_cast<size_t>(-3), mbrtoc16(&out,
@@ -257,7 +231,6 @@ TEST(uchar, mbrtoc16) {
                                               "ef",
                                               6, nullptr));
   ASSERT_EQ(static_cast<char16_t>(0xdfcd), out);
-#endif
 }
 
 TEST(uchar, mbrtoc16_long_sequences) {
@@ -326,14 +299,6 @@ void test_mbrtoc16_incomplete(mbstate_t* ps) {
   // 4-byte UTF-8.
   ASSERT_EQ(static_cast<size_t>(-2), mbrtoc16(&out, "\xf4", 1, ps));
   ASSERT_EQ(static_cast<size_t>(-2), mbrtoc16(&out, "\x8a\xaf", 2, ps));
-#ifdef __BIONIC__
-  // https://issuetracker.google.com/289419882
-  // See explanation in mbrtoc16 test for the same bug.
-  ASSERT_EQ(static_cast<size_t>(-3), mbrtoc16(&out, "\x8d" "ef", 3, ps));
-  ASSERT_EQ(static_cast<char16_t>(0xdbea), out);
-  ASSERT_EQ(1U, mbrtoc16(&out, "\x80" "ef", 3, ps));
-  ASSERT_EQ(static_cast<char16_t>(0xdfcd), out);
-#else
   ASSERT_EQ(1U, mbrtoc16(&out,
                          "\x8d"
                          "ef",
@@ -344,7 +309,6 @@ void test_mbrtoc16_incomplete(mbstate_t* ps) {
                                               "ef",
                                               3, ps));
   ASSERT_EQ(static_cast<char16_t>(0xdfcd), out);
-#endif
   ASSERT_TRUE(mbsinit(ps));
 
   // Invalid 2-byte
