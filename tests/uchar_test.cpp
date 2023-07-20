@@ -33,11 +33,11 @@
 // excluded, so it has never supported them. Other implementations (at least
 // as of glibc 2.36), do support those sequences.
 #if defined(__ANDROID__) || defined(ANDROID_HOST_MUSL)
-constexpr bool kLibcSupportsLongUtf8Sequences = 0;
+constexpr bool kLibcRejectsOverLongUtf8Sequences = true;
 #elif defined(__GLIBC__)
-constexpr bool kLibcSupportsLongUtf8Sequences = 1;
+constexpr bool kLibcRejectsOverLongUtf8Sequences = false;
 #else
-#error kLibcSupportsLongUtf8Sequences must be configured for this platform
+#error kLibcRejectsOverLongUtf8Sequences must be configured for this platform
 #endif
 
 // C23 7.30.1 (for each `mbrtoc*` function) says:
@@ -196,14 +196,14 @@ TEST(uchar, mbrtoc16_long_sequences) {
   char16_t out = u'\0';
   errno = 0;
   auto result = mbrtoc16(&out, "\xf8\xa1\xa2\xa3\xa4", 5, nullptr);
-  if (kLibcSupportsLongUtf8Sequences) {
-    EXPECT_EQ(5U, result);
-    EXPECT_EQ(0, errno);
-    EXPECT_EQ(u'\uf94a', out);
-  } else {
+  if (kLibcRejectsOverLongUtf8Sequences) {
     EXPECT_EQ(static_cast<size_t>(-1), result);
     EXPECT_EQ(EILSEQ, errno);
     EXPECT_EQ(u'\0', out);
+  } else {
+    EXPECT_EQ(5U, result);
+    EXPECT_EQ(0, errno);
+    EXPECT_EQ(u'\uf94a', out);
   }
 }
 
@@ -323,14 +323,14 @@ TEST(uchar, mbrtoc32_out_of_range) {
   char32_t out = U'\0';
   errno = 0;
   auto result = mbrtoc32(&out, "\xf5\x80\x80\x80", 4, nullptr);
-  if (kLibcSupportsLongUtf8Sequences) {
-    EXPECT_EQ(4U, result);
-    EXPECT_EQ(0, errno);
-    EXPECT_EQ(U'\x140000', out);
-  } else {
+  if (kLibcRejectsOverLongUtf8Sequences) {
     EXPECT_EQ(static_cast<size_t>(-1), result);
     EXPECT_EQ(EILSEQ, errno);
     EXPECT_EQ(U'\0', out);
+  } else {
+    EXPECT_EQ(4U, result);
+    EXPECT_EQ(0, errno);
+    EXPECT_EQ(U'\x140000', out);
   }
 }
 
