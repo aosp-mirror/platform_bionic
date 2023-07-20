@@ -33,7 +33,8 @@
 #include <stdint.h>
 
 // Structures for android_mallopt.
-
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnullability-completeness"
 typedef struct {
   // Pointer to the buffer allocated by a call to M_GET_MALLOC_LEAK_INFO.
   uint8_t* buffer;
@@ -47,7 +48,7 @@ typedef struct {
   // The maximum number of backtrace entries.
   size_t backtrace_size;
 } android_mallopt_leak_info_t;
-
+#pragma clang diagnostic pop
 // Opcodes for android_mallopt.
 
 enum {
@@ -105,6 +106,8 @@ enum {
 #define M_MEMTAG_STACK_IS_ON M_MEMTAG_STACK_IS_ON
 };
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnullability-completeness"
 typedef struct {
   // The null-terminated name that the zygote is spawning. Because native
   // SpecializeCommon (where the GWP-ASan mallopt() is called from) happens
@@ -147,9 +150,9 @@ typedef struct {
 
   Action desire = DONT_TURN_ON_UNLESS_OVERRIDDEN;
 } android_mallopt_gwp_asan_options_t;
-
+#pragma clang diagnostic pop
 // Manipulates bionic-specific handling of memory allocation APIs such as
 // malloc. Only for use by the Android platform and APEXes.
 //
 // On success, returns true. On failure, returns false and sets errno.
-extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size);
+extern "C" bool android_mallopt(int opcode, void* _Nullable arg, size_t arg_size);

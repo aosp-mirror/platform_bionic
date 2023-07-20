@@ -374,8 +374,11 @@ union input_buffer {
      + 4 * TZ_MAX_TIMES];
 };
 
-// Android-removed: There is no directory with file-per-time zone on Android.
-#ifndef __BIONIC__
+#if defined(__BIONIC__)
+// Android: there is no directory with one file per timezone on Android,
+// but we do have a system property instead.
+#include <sys/system_properties.h>
+#else
 /* TZDIR with a trailing '/' rather than a trailing '\0'.  */
 static char const tzdirslash[sizeof TZDIR] = TZDIR "/";
 #endif
@@ -415,13 +418,20 @@ tzloadbody(char const *name, struct state *sp, bool doextend,
 #endif
 	register union input_buffer *up = &lsp->u.u;
 	register int tzheadsize = sizeof(struct tzhead);
+	char system_tz_name[PROP_VALUE_MAX];
 
 	sp->goback = sp->goahead = false;
 
 	if (! name) {
+#if defined(__BIONIC__)
+		extern void __bionic_get_system_tz(char* , size_t);
+		__bionic_get_system_tz(system_tz_name, sizeof(system_tz_name));
+		name = system_tz_name;
+#else
 		name = TZDEFAULT;
 		if (! name)
 		  return EINVAL;
+#endif
 	}
 
 #if defined(__BIONIC__)

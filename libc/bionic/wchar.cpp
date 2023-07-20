@@ -135,6 +135,7 @@ size_t mbsnrtowcs(wchar_t* dst, const char** src, size_t nmc, size_t len, mbstat
 size_t mbsrtowcs(wchar_t* dst, const char** src, size_t len, mbstate_t* ps) {
   return mbsnrtowcs(dst, src, SIZE_MAX, len, ps);
 }
+__strong_alias(mbsrtowcs_l, mbsrtowcs);
 
 size_t wcrtomb(char* s, wchar_t wc, mbstate_t* ps) {
   static mbstate_t __private_state;
@@ -210,3 +211,4 @@ size_t wcsnrtombs(char* dst, const wchar_t** src, size_t nwc, size_t len, mbstat
 size_t wcsrtombs(char* dst, const wchar_t** src, size_t len, mbstate_t* ps) {
   return wcsnrtombs(dst, src, SIZE_MAX, len, ps);
 }
+__strong_alias(wcsrtombs_l, wcsrtombs);

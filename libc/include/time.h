@@ -39,19 +39,31 @@
 
 __BEGIN_DECLS
 
+/* If we just use void* in the typedef, the compiler exposes that in error messages. */
+struct __timezone_t;
+
+/**
+ * The `timezone_t` type that represents a timezone.
+ *
+ * To use this with std::unique_ptr you'll want something like
+ * `std::unique_ptr<std::remove_pointer_t<timezone_t>, decltype(&tzfree)> tz{tzalloc("Asia/Seoul"), tzfree};`
+ * to remove the pointer.
+ */
+typedef struct __timezone_t* timezone_t;
+
 /** Divisor to compute seconds from the result of a call to clock(). */
 #define CLOCKS_PER_SEC 1000000
 
 /**
- * The name of the current time zone's non-daylight savings (`tzname[0]`) and
+ * The name of the current timezone's non-daylight savings (`tzname[0]`) and
  * daylight savings (`tzname[1]`) variants. See tzset().
  */
 extern char* _Nonnull tzname[];
 
-/** Whether the current time zone ever uses daylight savings time. See tzset(). */
+/** Whether the current timezone ever uses daylight savings time. See tzset(). */
 extern int daylight;
 
-/** The difference in seconds between UTC and the current time zone. See tzset(). */
+/** The difference in seconds between UTC and the current timezone. See tzset(). */
 extern long int timezone;
 
 struct sigevent;
@@ -80,7 +92,7 @@ struct tm {
   int tm_isdst;
   /** Offset from UTC (GMT) in seconds for this time. */
   long int tm_gmtoff;
-  /** Name of the time zone for this time. */
+  /** Name of the timezone for this time. */
   const char* _Nullable tm_zone;
 };
 
@@ -139,9 +151,22 @@ double difftime(time_t __lhs, time_t __rhs);
  * [mktime(3)](http://man7.org/linux/man-pages/man3/mktime.3p.html) converts
  * broken-down time `tm` into the number of seconds since the Unix epoch.
  *
+ * See tzset() for details of how the timezone is set, and mktime_rz()
+ * for an alternative.
+ *
  * Returns the time in seconds on success, and returns -1 and sets `errno` on failure.
  */
 time_t mktime(struct tm* _Nonnull __tm);
+
+/**
+ * mktime_z(3) converts broken-down time `tm` into the number of seconds
+ * since the Unix epoch, assuming the given timezone.
+ *
+ * Returns the time in seconds on success, and returns -1 and sets `errno` on failure.
+ *
+ * Available since API level 35.
+ */
+time_t mktime_z(timezone_t _Nonnull __tz, struct tm* _Nonnull __tm) __INTRODUCED_IN(35);
 
 /**
  * [localtime(3)](http://man7.org/linux/man-pages/man3/localtime.3p.html) converts
@@ -159,9 +184,23 @@ struct tm* _Nullable localtime(const time_t* _Nonnull __t);
  * the number of seconds since the Unix epoch in `t` to a broken-down time.
  * That broken-down time will be written to the given struct `tm`.
  *
+ * See tzset() for details of how the timezone is set, and localtime_rz()
+ * for an alternative.
+ *
  * Returns a pointer to a broken-down time on success, and returns null and sets `errno` on failure.
  */
 struct tm* _Nullable localtime_r(const time_t* _Nonnull __t, struct tm* _Nonnull __tm);
+
+/**
+ * localtime_rz(3) converts the number of seconds since the Unix epoch in
+ * `t` to a broken-down time, assuming the given timezone. That broken-down
+ * time will be written to the given struct `tm`.
+ *
+ * Returns a pointer to a broken-down time on success, and returns null and sets `errno` on failure.
+ *
+ * Available since API level 35.
+ */
+struct tm* _Nullable localtime_rz(timezone_t _Nonnull __tz, const time_t* _Nonnull __t, struct tm* _Nonnull __tm) __INTRODUCED_IN(35);
 
 /**
  * Inverse of localtime().
@@ -219,7 +258,7 @@ size_t strftime(char* _Nonnull __buf, size_t __n, const char* _Nonnull __fmt, co
 /**
  * Equivalent to strftime() on Android where only C/POSIX locales are available.
  */
-size_t strftime_l(char* _Nonnull __buf, size_t __n, const char* _Nonnull __fmt, const struct tm* _Nullable __tm, locale_t _Nonnull __l) __strftimelike(3) __INTRODUCED_IN(21);
+size_t strftime_l(char* _Nonnull __buf, size_t __n, const char* _Nonnull __fmt, const struct tm* _Nullable __tm, locale_t _Nonnull __l) __strftimelike(3);
 
 /**
  * [ctime(3)](http://man7.org/linux/man-pages/man3/ctime.3p.html) formats
@@ -245,9 +284,48 @@ char* _Nullable ctime_r(const time_t* _Nonnull __t, char* _Nonnull __buf);
 
 /**
  * [tzset(3)](http://man7.org/linux/man-pages/man3/tzset.3.html) tells
- * libc that the time zone has changed.
+ * libc that the timezone has changed.
+ *
+ * tzset() on Android looks at both the system property
+ * `persist.sys.timezone` and the environment variable `TZ`. The former is
+ * the device's current timezone as shown in Settings, while the latter is
+ * usually unset but can be used to override the global setting. This is a
+ * bad idea outside of unit tests or single-threaded programs because it's
+ * inherently thread-unsafe. See tzalloc(), localtime_rz(), mktime_z(),
+ * and tzfree() for an alternative.
  */
 void tzset(void);
+
+/**
+ * tzalloc(3) allocates a timezone corresponding to the given Olson ID.
+ *
+ * A null `id` returns the system timezone (as seen in Settings) from
+ * the system property `persist.sys.timezone`, ignoring `$TZ`. Although
+ * tzset() honors `$TZ`, callers of tzalloc() can use `$TZ` themselves if
+ * that's the (thread-unsafe) behavior they want, but by ignoring `$TZ`
+ * tzalloc() is thread safe (though obviously the system timezone can
+ * change, especially if your mobile device is actually mobile!).
+ *
+ * To use this with std::unique_ptr you'll want something like
+ * `std::unique_ptr<std::remove_pointer_t<timezone_t>, decltype(&tzfree)> tz{tzalloc("Asia/Seoul"), tzfree};`
+ * to remove the pointer.
+ *
+ * Returns a timezone object on success, and returns NULL and sets `errno` on failure.
+ *
+ * Available since API level 35.
+ */
+timezone_t _Nullable tzalloc(const char* _Nullable __id) __INTRODUCED_IN(35);
+
+/**
+ * tzfree(3) frees a timezone object returned by tzalloc().
+ *
+ * To use this with std::unique_ptr you'll want something like
+ * `std::unique_ptr<std::remove_pointer_t<timezone_t>, decltype(&tzfree)> tz{tzalloc("Asia/Seoul"), tzfree};`
+ * to remove the pointer.
+ *
+ * Available since API level 35.
+ */
+void tzfree(timezone_t _Nullable __tz) __INTRODUCED_IN(35);
 
 /**
  * [clock(3)](http://man7.org/linux/man-pages/man3/clock.3.html)
@@ -263,7 +341,7 @@ clock_t clock(void);
 
 /**
  * [clock_getcpuclockid(3)](http://man7.org/linux/man-pages/man3/clock_getcpuclockid.3.html)
- * gets the clock id of the cpu-time clock for the given `pid`.
+ * gets the clock ID of the cpu-time clock for the given `pid`.
  *
  * Returns 0 on success, and returns -1 and returns an error number on failure.
  */

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Android Open Source Project
+ * Copyright (C) 2023 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,41 +26,10 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _BITS_WCTYPE_H_
-#define _BITS_WCTYPE_H_
+#pragma once
 
-#include <sys/cdefs.h>
+#include <locale.h>
 
-__BEGIN_DECLS
+#define __get_locale() LC_GLOBAL_LOCALE
 
-typedef __WINT_TYPE__ wint_t;
-
-#define WEOF __BIONIC_CAST(static_cast, wint_t, -1)
-
-int iswalnum(wint_t __wc);
-int iswalpha(wint_t __wc);
-int iswblank(wint_t __wc);
-int iswcntrl(wint_t __wc);
-int iswdigit(wint_t __wc);
-int iswgraph(wint_t __wc);
-int iswlower(wint_t __wc);
-int iswprint(wint_t __wc);
-int iswpunct(wint_t __wc);
-int iswspace(wint_t __wc);
-int iswupper(wint_t __wc);
-int iswxdigit(wint_t __wc);
-
-wint_t towlower(wint_t __wc);
-wint_t towupper(wint_t __wc);
-
-typedef long wctype_t;
-wctype_t wctype(const char* _Nonnull __name);
-int iswctype(wint_t __wc, wctype_t __type);
-
-typedef const void* wctrans_t;
-wint_t towctrans(wint_t __wc, wctrans_t _Nonnull __transform) __INTRODUCED_IN_NO_GUARD_FOR_NDK(26);
-wctrans_t _Nullable wctrans(const char* _Nonnull __name) __INTRODUCED_IN_NO_GUARD_FOR_NDK(26);
-
-__END_DECLS
-
-#endif
+#define FIX_LOCALE(__l) /* Nothing. */
