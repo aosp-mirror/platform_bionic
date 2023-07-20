@@ -71,6 +71,9 @@ TEST(uchar, sizeof_uchar_t) {
 }
 
 TEST(uchar, start_state) {
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
+
   char out[MB_LEN_MAX];
   mbstate_t ps;
 
@@ -95,11 +98,17 @@ TEST(uchar, start_state) {
 }
 
 TEST(uchar, c16rtomb_null_out) {
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
+
   EXPECT_EQ(1U, c16rtomb(nullptr, L'\0', nullptr));
   EXPECT_EQ(1U, c16rtomb(nullptr, L'h', nullptr));
 }
 
 TEST(uchar, c16rtomb_null_char) {
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
+
   char bytes[MB_LEN_MAX];
   EXPECT_EQ(1U, c16rtomb(bytes, L'\0', nullptr));
 }
@@ -140,6 +149,9 @@ TEST(uchar, c16rtomb) {
 }
 
 TEST(uchar, c16rtomb_invalid) {
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
+
   char bytes[MB_LEN_MAX];
 
   memset(bytes, 0, sizeof(bytes));
@@ -150,10 +162,16 @@ TEST(uchar, c16rtomb_invalid) {
 }
 
 TEST(uchar, mbrtoc16_null) {
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
+
   ASSERT_EQ(0U, mbrtoc16(nullptr, nullptr, 0, nullptr));
 }
 
 TEST(uchar, mbrtoc16_zero_len) {
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
+
   char16_t out;
 
   out = L'x';
@@ -238,6 +256,7 @@ TEST(uchar, mbrtoc16_long_sequences) {
 
 TEST(uchar, mbrtoc16_reserved_range) {
   ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
 
   errno = 0;
   char16_t out = u'\0';
@@ -248,6 +267,7 @@ TEST(uchar, mbrtoc16_reserved_range) {
 
 TEST(uchar, mbrtoc16_beyond_range) {
   ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
 
   errno = 0;
   char16_t out = u'\0';
@@ -311,6 +331,9 @@ void test_mbrtoc16_incomplete(mbstate_t* ps) {
 }
 
 TEST(uchar, mbrtoc16_incomplete) {
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
+
   mbstate_t ps;
   memset(&ps, 0, sizeof(ps));
 
@@ -484,6 +507,9 @@ void test_mbrtoc32_incomplete(mbstate_t* ps) {
 }
 
 TEST(uchar, mbrtoc32_incomplete) {
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
+
   mbstate_t ps;
   memset(&ps, 0, sizeof(ps));
 
