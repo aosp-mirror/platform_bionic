@@ -27,9 +27,10 @@
  */
 
 #include <unistd.h>
+#include "platform/bionic/page.h"
 
 // Portable code should use sysconf(_SC_PAGE_SIZE) directly instead.
 int getpagesize() {
   // We dont use sysconf(3) here because that drags in stdio, which makes static binaries fat.
-  return PAGE_SIZE;
+  return page_size();
 }

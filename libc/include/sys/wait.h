@@ -39,7 +39,7 @@ __BEGIN_DECLS
 
 pid_t wait(int* _Nullable __status);
 pid_t waitpid(pid_t __pid, int* _Nullable __status, int __options);
-pid_t wait4(pid_t __pid, int* _Nullable __status, int __options, struct rusage* _Nullable __rusage) __INTRODUCED_IN(18);
+pid_t wait4(pid_t __pid, int* _Nullable __status, int __options, struct rusage* _Nullable __rusage);
 
 /* Posix states that idtype_t should be an enumeration type, but
  * the kernel headers define P_ALL, P_PID and P_PGID as constant macros
