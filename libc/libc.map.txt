@@ -955,7 +955,7 @@ LIBC {
     sigaction;
     sigaddset; # introduced=21
     sigaltstack;
-    sigblock;
+    sigblock; # arm x86 arm64 x86_64
     sigdelset; # introduced=21
     sigemptyset; # introduced=21
     sigfillset; # introduced=21
@@ -968,7 +968,7 @@ LIBC {
     sigprocmask;
     sigqueue; # introduced=23
     sigsetjmp; # introduced-arm=9 introduced-arm64=21 introduced-x86=12 introduced-x86_64=21
-    sigsetmask;
+    sigsetmask; # arm x86 arm64 x86_64
     sigsuspend;
     sigtimedwait; # introduced=23
     sigwait;
