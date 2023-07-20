@@ -22,7 +22,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libc/stdlib/hsearch.h 292767 2015-12-27 07:50:11Z ed $
+ * $FreeBSD$
  */
 
 #ifndef HSEARCH_H

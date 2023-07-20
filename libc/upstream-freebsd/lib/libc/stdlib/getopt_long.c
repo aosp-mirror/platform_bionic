@@ -55,7 +55,7 @@ static char *rcsid = "$OpenBSD: getopt_long.c,v 1.16 2004/02/04 18:17:25 millert
 #endif /* LIBC_SCCS and not lint */
 #endif
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/stdlib/getopt_long.c 342757 2019-01-04 03:13:24Z kevans $");
+__FBSDID("$FreeBSD$");
 
 #include <err.h>
 #include <errno.h>
@@ -88,7 +88,7 @@ char    *optarg;		/* argument associated with option */
 #define	BADARG		((*options == ':') ? (int)':' : (int)'?')
 #define	INORDER 	(int)1
 
-#define	EMSG		""
+static char EMSG[] = "";
 
 #ifdef GNU_COMPATIBLE
 #define NO_PREFIX	(-1)
@@ -194,7 +194,7 @@ parse_long_options(char * const *nargv, const char *options,
 {
 	char *current_argv, *has_equal;
 #ifdef GNU_COMPATIBLE
-	char *current_dash;
+	const char *current_dash;
 #endif
 	size_t current_argv_len;
 	int i, match, exact_match, second_partial_match;
