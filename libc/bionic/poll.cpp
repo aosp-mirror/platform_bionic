@@ -50,14 +50,8 @@ int poll(pollfd* fds, nfds_t fd_count, int ms) {
 
 int ppoll(pollfd* fds, nfds_t fd_count, const timespec* ts, const sigset_t* ss) {
   // The underlying `__ppoll` system call only takes `sigset64_t`.
-  SigSetConverter set;
-  sigset64_t* ss_ptr = nullptr;
-  if (ss != nullptr) {
-    set = {};
-    set.sigset = *ss;
-    ss_ptr = &set.sigset64;
-  }
-  return ppoll64(fds, fd_count, ts, ss_ptr);
+  SigSetConverter set{ss};
+  return ppoll64(fds, fd_count, ts, set.ptr);
 }
 
 int ppoll64(pollfd* fds, nfds_t fd_count, const timespec* ts, const sigset64_t* ss) {
@@ -99,14 +93,8 @@ int select(int fd_count, fd_set* read_fds, fd_set* write_fds, fd_set* error_fds,
 int pselect(int fd_count, fd_set* read_fds, fd_set* write_fds, fd_set* error_fds,
             const timespec* ts, const sigset_t* ss) {
   // The underlying `__pselect6` system call only takes `sigset64_t`.
-  SigSetConverter set;
-  sigset64_t* ss_ptr = nullptr;
-  if (ss != nullptr) {
-    set = {};
-    set.sigset = *ss;
-    ss_ptr = &set.sigset64;
-  }
-  return pselect64(fd_count, read_fds, write_fds, error_fds, ts, ss_ptr);
+  SigSetConverter set{ss};
+  return pselect64(fd_count, read_fds, write_fds, error_fds, ts, set.ptr);
 }
 
 int pselect64(int fd_count, fd_set* read_fds, fd_set* write_fds, fd_set* error_fds,
