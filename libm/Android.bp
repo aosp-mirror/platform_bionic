@@ -509,3 +509,8 @@ genrule {
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) x86_64 $(in) $(out)",
 }
+
+filegroup {
+    name: "libc_ldexp_srcs",
+    srcs: ["upstream-freebsd/lib/msun/src/s_scalbn.c"],
+}
