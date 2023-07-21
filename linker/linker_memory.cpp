@@ -76,6 +76,10 @@ void* memalign(size_t alignment, size_t byte_count) {
   return get_allocator().memalign(alignment, byte_count);
 }
 
+void* aligned_alloc(size_t alignment, size_t byte_count) {
+  return get_allocator().memalign(alignment, byte_count);
+}
+
 void* calloc(size_t item_count, size_t item_size) {
   return get_allocator().alloc(item_count*item_size);
 }
