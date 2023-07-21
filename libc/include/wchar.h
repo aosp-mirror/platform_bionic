@@ -37,6 +37,7 @@
 #include <time.h>
 #include <xlocale.h>
 
+#include <bits/bionic_multibyte_result.h>
 #include <bits/mbstate_t.h>
 #include <bits/wchar_limits.h>
 #include <bits/wctype.h>

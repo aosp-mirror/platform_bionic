@@ -35,6 +35,8 @@
 
 #include <stddef.h>
 #include <sys/cdefs.h>
+
+#include <bits/bionic_multibyte_result.h>
 #include <bits/mbstate_t.h>
 
 __BEGIN_DECLS

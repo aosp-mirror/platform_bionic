@@ -78,7 +78,7 @@ size_t c32rtomb(char* s, char32_t c32, mbstate_t* ps) {
     length = 4;
   } else {
     errno = EILSEQ;
-    return __MB_ERR_ILLEGAL_SEQUENCE;
+    return BIONIC_MULTIBYTE_RESULT_ILLEGAL_SEQUENCE;
   }
 
   // Output the octets representing the character in chunks
