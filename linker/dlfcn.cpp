@@ -97,7 +97,7 @@ bool __loader_android_handle_signal(int signal_number, siginfo_t* info,
                                     void* context) __LINKER_PUBLIC__;
 }
 
-static pthread_mutex_t g_dl_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
+pthread_mutex_t g_dl_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
 
 static char* __bionic_set_dlerror(char* new_value) {
   char* old_value = __get_thread()->current_dlerror;
