@@ -19,6 +19,8 @@
 #include <malloc.h>
 #include <sys/prctl.h>
 
+#include <android-base/silent_death_test.h>
+
 #if defined(__BIONIC__)
 #include "gtest_globals.h"
 #include "platform/bionic/mte.h"
@@ -44,7 +46,9 @@ static bool SetHeapTaggingLevel(HeapTaggingLevel level) {
 }
 #endif
 
-TEST(heap_tagging_level, tagged_pointer_dies) {
+using heap_tagging_level_DeathTest = SilentDeathTest;
+
+TEST_F(heap_tagging_level_DeathTest, tagged_pointer_dies) {
 #if defined(__BIONIC__)
   if (!KernelSupportsTaggedPointers()) {
     GTEST_SKIP() << "Kernel doesn't support tagged pointers.";
