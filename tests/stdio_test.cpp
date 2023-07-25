@@ -1049,11 +1049,13 @@ TEST(STDIO_TEST, popen_return_value_1) {
 }
 
 TEST(STDIO_TEST, popen_return_value_signal) {
-  FILE* fp = popen("kill -7 $$", "r");
+  // Use a realtime signal to avoid creating a tombstone when running.
+  std::string cmd = android::base::StringPrintf("kill -%d $$", SIGRTMIN);
+  FILE* fp = popen(cmd.c_str(), "r");
   ASSERT_TRUE(fp != nullptr);
   int status = pclose(fp);
   EXPECT_TRUE(WIFSIGNALED(status));
-  EXPECT_EQ(7, WTERMSIG(status));
+  EXPECT_EQ(SIGRTMIN, WTERMSIG(status));
 }
 
 TEST(STDIO_TEST, getc) {
