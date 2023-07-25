@@ -34,11 +34,14 @@
 #if defined(__BIONIC__)
 
 #include "android-base/file.h"
+#include "android-base/silent_death_test.h"
 #include "android-base/test_utils.h"
 #include "gwp_asan/options.h"
 #include "platform/bionic/malloc.h"
 #include "sys/system_properties.h"
 #include "utils.h"
+
+using gwp_asan_integration_DeathTest = SilentDeathTest;
 
 // basename is a mess, use gnu basename explicitly to avoid the need for string
 // mutation.
@@ -133,7 +136,7 @@ class SyspropRestorer {
   }
 };
 
-TEST(gwp_asan_integration, DISABLED_assert_gwp_asan_enabled) {
+TEST_F(gwp_asan_integration_DeathTest, DISABLED_assert_gwp_asan_enabled) {
   std::string maps;
   EXPECT_TRUE(android::base::ReadFileToString("/proc/self/maps", &maps));
   EXPECT_TRUE(maps.find("GWP-ASan") != std::string::npos) << maps;
@@ -173,7 +176,7 @@ TEST(gwp_asan_integration, sysprops_program_specific) {
   __system_property_set((std::string("libc.debug.gwp_asan.max_allocs.") + basename).c_str(),
                         "40000");
 
-  RunSubtestNoEnv("gwp_asan_integration.DISABLED_assert_gwp_asan_enabled");
+  RunSubtestNoEnv("gwp_asan_integration_DeathTest.DISABLED_assert_gwp_asan_enabled");
 }
 
 TEST(gwp_asan_integration, sysprops_persist_program_specific) {
@@ -191,7 +194,7 @@ TEST(gwp_asan_integration, sysprops_persist_program_specific) {
   __system_property_set((std::string("persist.libc.debug.gwp_asan.max_allocs.") + basename).c_str(),
                         "40000");
 
-  RunSubtestNoEnv("gwp_asan_integration.DISABLED_assert_gwp_asan_enabled");
+  RunSubtestNoEnv("gwp_asan_integration_DeathTest.DISABLED_assert_gwp_asan_enabled");
 }
 
 TEST(gwp_asan_integration, sysprops_non_persist_overrides_persist) {
@@ -235,7 +238,7 @@ TEST(gwp_asan_integration, sysprops_program_specific_overrides_default) {
   __system_property_set("libc.debug.gwp_asan.process_sampling.system_default", "0");
   __system_property_set("libc.debug.gwp_asan.max_allocs.system_default", "0");
 
-  RunSubtestNoEnv("gwp_asan_integration.DISABLED_assert_gwp_asan_enabled");
+  RunSubtestNoEnv("gwp_asan_integration_DeathTest.DISABLED_assert_gwp_asan_enabled");
 }
 
 TEST(gwp_asan_integration, sysprops_can_disable) {
@@ -261,7 +264,7 @@ TEST(gwp_asan_integration, env_overrides_sysprop) {
   __system_property_set("libc.debug.gwp_asan.process_sampling.system_default", "0");
   __system_property_set("libc.debug.gwp_asan.max_allocs.system_default", "0");
 
-  RunGwpAsanTest("gwp_asan_integration.DISABLED_assert_gwp_asan_enabled");
+  RunGwpAsanTest("gwp_asan_integration_DeathTest.DISABLED_assert_gwp_asan_enabled");
 }
 
 #endif  // defined(__BIONIC__)
