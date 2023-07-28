@@ -62,7 +62,8 @@ New libc functions in V (API level 35):
     functions for avoiding $TZ if you need to use multiple timezones in
     multi-threaded C).
   * `mbsrtowcs_l` and `wcsrtombs_l` aliases for `mbsrtowcs` and `wcsrtombs`.
-  * New system call wrapper: `__riscv_flush_icache` (`<sys/cachectl.h>`).
+  * New system call wrappers: `__riscv_flush_icache` (`<sys/cachectl.h>`),
+    `__riscv_hwprobe` (`<sys/hwprobe.h>`).
 
 New libc functions in U (API level 34):
   * `close_range` and `copy_file_range` (Linux-specific GNU extensions).

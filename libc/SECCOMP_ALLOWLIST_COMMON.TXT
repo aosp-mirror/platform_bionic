@@ -74,5 +74,3 @@ int recvmmsg_time64(int, mmsghdr*, unsigned int, int, const timespec64*) lp32
 int rt_sigtimedwait_time64(const sigset64_t*, siginfo_t*, const timespec64*, size_t) lp32
 int futex_time64(int*, int, int, const timespec64*, int*, int) lp32
 int sched_rr_get_interval_time64(pid_t, timespec64*) lp32
-# Since Linux 6.4, not in glibc (https://www.openwall.com/lists/libc-coord/2023/07/13/1).
-int riscv_hwprobe(riscv_hwprobe*, size_t, size_t, unsigned long*, unsigned) riscv64
