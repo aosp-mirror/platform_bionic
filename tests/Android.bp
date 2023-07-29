@@ -472,6 +472,7 @@ cc_test_library {
         "sys_auxv_test.cpp",
         "sys_cachectl_test.cpp",
         "sys_epoll_test.cpp",
+        "sys_hwprobe_test.cpp",
         "sys_mman_test.cpp",
         "sys_msg_test.cpp",
         "sys_param_test.cpp",
