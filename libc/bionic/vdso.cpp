@@ -22,9 +22,15 @@
 #include <string.h>
 #include <sys/auxv.h>
 #include <sys/cdefs.h>
+#include <sys/hwprobe.h>
 #include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
+
+extern "C" int __clock_gettime(int, struct timespec*);
+extern "C" int __clock_getres(int, struct timespec*);
+extern "C" int __gettimeofday(struct timeval*, struct timezone*);
+extern "C" int riscv_hwprobe(struct riscv_hwprobe*, size_t, size_t, unsigned long*, unsigned);
 
 static inline int vdso_return(int result) {
   if (__predict_true(result == 0)) return 0;
@@ -61,10 +67,13 @@ int gettimeofday(timeval* tv, struct timezone* tz) {
 }
 
 time_t time(time_t* t) {
+  // Only x86/x86-64 actually have time() in the vdso.
+#if defined(VDSO_TIME_SYMBOL)
   auto vdso_time = reinterpret_cast<decltype(&time)>(__libc_globals->vdso[VDSO_TIME].fn);
   if (__predict_true(vdso_time)) {
     return vdso_time(t);
   }
+#endif
 
   // We can't fallback to the time(2) system call because it doesn't exist for most architectures.
   timeval tv;
@@ -73,12 +82,29 @@ time_t time(time_t* t) {
   return tv.tv_sec;
 }
 
+#if defined(__riscv)
+int __riscv_hwprobe(struct riscv_hwprobe* _Nonnull pairs, size_t pair_count, size_t cpu_count,
+                    unsigned long* _Nullable cpus, unsigned flags) {
+  auto vdso_riscv_hwprobe =
+      reinterpret_cast<decltype(&__riscv_hwprobe)>(__libc_globals->vdso[VDSO_RISCV_HWPROBE].fn);
+  if (__predict_true(vdso_riscv_hwprobe)) {
+    return vdso_return(vdso_riscv_hwprobe(pairs, pair_count, cpu_count, cpus, flags));
+  }
+  return riscv_hwprobe(pairs, pair_count, cpu_count, cpus, flags);
+}
+#endif
+
 void __libc_init_vdso(libc_globals* globals) {
   auto&& vdso = globals->vdso;
-  vdso[VDSO_CLOCK_GETTIME] = { VDSO_CLOCK_GETTIME_SYMBOL, nullptr };
-  vdso[VDSO_CLOCK_GETRES] = { VDSO_CLOCK_GETRES_SYMBOL, nullptr };
-  vdso[VDSO_GETTIMEOFDAY] = { VDSO_GETTIMEOFDAY_SYMBOL, nullptr };
-  vdso[VDSO_TIME] = { VDSO_TIME_SYMBOL, nullptr };
+  vdso[VDSO_CLOCK_GETTIME] = {VDSO_CLOCK_GETTIME_SYMBOL, nullptr};
+  vdso[VDSO_CLOCK_GETRES] = {VDSO_CLOCK_GETRES_SYMBOL, nullptr};
+  vdso[VDSO_GETTIMEOFDAY] = {VDSO_GETTIMEOFDAY_SYMBOL, nullptr};
+#if defined(VDSO_TIME_SYMBOL)
+  vdso[VDSO_TIME] = {VDSO_TIME_SYMBOL, nullptr};
+#endif
+#if defined(VDSO_RISCV_HWPROBE_SYMBOL)
+  vdso[VDSO_RISCV_HWPROBE] = {VDSO_RISCV_HWPROBE_SYMBOL, nullptr};
+#endif
 
   // Do we have a vdso?
   uintptr_t vdso_ehdr_addr = getauxval(AT_SYSINFO_EHDR);
