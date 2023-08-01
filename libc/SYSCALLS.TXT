@@ -357,7 +357,7 @@ int     cacheflush:__ARM_NR_cacheflush(long start, long end, long flags)  arm
 
 # riscv64-specific
 int __riscv_flush_icache:riscv_flush_icache(void*, void*, unsigned long) riscv64
-int __riscv_hwprobe:riscv_hwprobe(riscv_hwprobe*, size_t, size_t, unsigned long*, unsigned) riscv64
+int riscv_hwprobe(riscv_hwprobe*, size_t, size_t, unsigned long*, unsigned) riscv64
 
 # x86-specific
 int     __set_thread_area:set_thread_area(void*) x86
