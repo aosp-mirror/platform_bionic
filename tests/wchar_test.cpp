@@ -543,8 +543,8 @@ template <typename T>
 void TestSingleWcsToInt(WcsToIntFn<T> fn, const wchar_t* str, int base,
                         T expected_value, ptrdiff_t expected_len) {
   wchar_t* p;
-  ASSERT_EQ(expected_value, fn(str, &p, base));
-  ASSERT_EQ(expected_len, p - str) << str;
+  EXPECT_EQ(expected_value, fn(str, &p, base)) << str << " " << base;
+  EXPECT_EQ(expected_len, p - str) << str << " " << base;
 }
 
 template <typename T>
