@@ -28,6 +28,7 @@
 
 #include "utils.h"
 
+#include <syscall.h>
 #include <string>
 
 #include <android-base/properties.h>
@@ -63,3 +64,9 @@ bool IsLowRamDevice() {
          (android::base::GetBoolProperty("ro.debuggable", false) &&
           android::base::GetBoolProperty("debug.force_low_ram", false));
 }
+
+#if defined(__GLIBC__) && __GLIBC_MINOR__ < 30
+pid_t gettid() {
+  return syscall(__NR_gettid);
+}
+#endif

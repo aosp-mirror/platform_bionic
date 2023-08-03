@@ -21,7 +21,7 @@
 #include <drm/drm.h>
 #include <linux/ioctl.h>
 #define KFD_IOCTL_MAJOR_VERSION 1
-#define KFD_IOCTL_MINOR_VERSION 11
+#define KFD_IOCTL_MINOR_VERSION 12
 struct kfd_ioctl_get_version_args {
   __u32 major_version;
   __u32 minor_version;
@@ -294,6 +294,11 @@ struct kfd_ioctl_import_dmabuf_args {
   __u32 gpu_id;
   __u32 dmabuf_fd;
 };
+struct kfd_ioctl_export_dmabuf_args {
+  __u64 handle;
+  __u32 flags;
+  __u32 dmabuf_fd;
+};
 enum kfd_smi_event {
   KFD_SMI_EVENT_NONE = 0,
   KFD_SMI_EVENT_VMFAULT = 1,
@@ -451,6 +456,7 @@ struct kfd_ioctl_set_xnack_mode_args {
 #define AMDKFD_IOC_SET_XNACK_MODE AMDKFD_IOWR(0x21, struct kfd_ioctl_set_xnack_mode_args)
 #define AMDKFD_IOC_CRIU_OP AMDKFD_IOWR(0x22, struct kfd_ioctl_criu_args)
 #define AMDKFD_IOC_AVAILABLE_MEMORY AMDKFD_IOWR(0x23, struct kfd_ioctl_get_available_memory_args)
+#define AMDKFD_IOC_EXPORT_DMABUF AMDKFD_IOWR(0x24, struct kfd_ioctl_export_dmabuf_args)
 #define AMDKFD_COMMAND_START 0x01
-#define AMDKFD_COMMAND_END 0x24
+#define AMDKFD_COMMAND_END 0x25
 #endif

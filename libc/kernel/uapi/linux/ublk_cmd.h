@@ -30,9 +30,23 @@
 #define UBLK_CMD_START_USER_RECOVERY 0x10
 #define UBLK_CMD_END_USER_RECOVERY 0x11
 #define UBLK_CMD_GET_DEV_INFO2 0x12
+#define UBLK_U_CMD_GET_QUEUE_AFFINITY _IOR('u', UBLK_CMD_GET_QUEUE_AFFINITY, struct ublksrv_ctrl_cmd)
+#define UBLK_U_CMD_GET_DEV_INFO _IOR('u', UBLK_CMD_GET_DEV_INFO, struct ublksrv_ctrl_cmd)
+#define UBLK_U_CMD_ADD_DEV _IOWR('u', UBLK_CMD_ADD_DEV, struct ublksrv_ctrl_cmd)
+#define UBLK_U_CMD_DEL_DEV _IOWR('u', UBLK_CMD_DEL_DEV, struct ublksrv_ctrl_cmd)
+#define UBLK_U_CMD_START_DEV _IOWR('u', UBLK_CMD_START_DEV, struct ublksrv_ctrl_cmd)
+#define UBLK_U_CMD_STOP_DEV _IOWR('u', UBLK_CMD_STOP_DEV, struct ublksrv_ctrl_cmd)
+#define UBLK_U_CMD_SET_PARAMS _IOWR('u', UBLK_CMD_SET_PARAMS, struct ublksrv_ctrl_cmd)
+#define UBLK_U_CMD_GET_PARAMS _IOR('u', UBLK_CMD_GET_PARAMS, struct ublksrv_ctrl_cmd)
+#define UBLK_U_CMD_START_USER_RECOVERY _IOWR('u', UBLK_CMD_START_USER_RECOVERY, struct ublksrv_ctrl_cmd)
+#define UBLK_U_CMD_END_USER_RECOVERY _IOWR('u', UBLK_CMD_END_USER_RECOVERY, struct ublksrv_ctrl_cmd)
+#define UBLK_U_CMD_GET_DEV_INFO2 _IOR('u', UBLK_CMD_GET_DEV_INFO2, struct ublksrv_ctrl_cmd)
 #define UBLK_IO_FETCH_REQ 0x20
 #define UBLK_IO_COMMIT_AND_FETCH_REQ 0x21
 #define UBLK_IO_NEED_GET_DATA 0x22
+#define UBLK_U_IO_FETCH_REQ _IOWR('u', UBLK_IO_FETCH_REQ, struct ublksrv_io_cmd)
+#define UBLK_U_IO_COMMIT_AND_FETCH_REQ _IOWR('u', UBLK_IO_COMMIT_AND_FETCH_REQ, struct ublksrv_io_cmd)
+#define UBLK_U_IO_NEED_GET_DATA _IOWR('u', UBLK_IO_NEED_GET_DATA, struct ublksrv_io_cmd)
 #define UBLK_IO_RES_OK 0
 #define UBLK_IO_RES_NEED_GET_DATA 1
 #define UBLK_IO_RES_ABORT (- ENODEV)
@@ -45,6 +59,7 @@
 #define UBLK_F_USER_RECOVERY (1UL << 3)
 #define UBLK_F_USER_RECOVERY_REISSUE (1UL << 4)
 #define UBLK_F_UNPRIVILEGED_DEV (1UL << 5)
+#define UBLK_F_CMD_IOCTL_ENCODE (1UL << 6)
 #define UBLK_S_DEV_DEAD 0
 #define UBLK_S_DEV_LIVE 1
 #define UBLK_S_DEV_QUIESCED 2
