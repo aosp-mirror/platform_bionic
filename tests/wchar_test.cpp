@@ -29,6 +29,15 @@
 
 #define NUM_WCHARS(num_bytes) ((num_bytes)/sizeof(wchar_t))
 
+#ifdef __GLIBC__
+// glibc immediately dereferences the locale passed to all wcsto*_l functions,
+// even if it won't be used, and even if it's LC_GLOBAL_LOCALE, which isn't a
+// pointer to valid memory.
+static locale_t SAFE_LC_GLOBAL_LOCALE = duplocale(LC_GLOBAL_LOCALE);
+#else
+static locale_t SAFE_LC_GLOBAL_LOCALE = LC_GLOBAL_LOCALE;
+#endif
+
 TEST(wchar, sizeof_wchar_t) {
   EXPECT_EQ(4U, sizeof(wchar_t));
   EXPECT_EQ(4U, sizeof(wint_t));
@@ -584,7 +593,7 @@ TEST(wchar, wcsftime__wcsftime_l) {
 
   EXPECT_EQ(24U, wcsftime(buf, sizeof(buf), L"%c", &t));
   EXPECT_STREQ(L"Sun Mar 10 00:00:00 2100", buf);
-  EXPECT_EQ(24U, wcsftime_l(buf, sizeof(buf), L"%c", &t, LC_GLOBAL_LOCALE));
+  EXPECT_EQ(24U, wcsftime_l(buf, sizeof(buf), L"%c", &t, SAFE_LC_GLOBAL_LOCALE));
   EXPECT_STREQ(L"Sun Mar 10 00:00:00 2100", buf);
 }
 
@@ -781,25 +790,25 @@ TEST(wchar, wcstoull_EINVAL) {
 
 TEST(wchar, wcstoll_l_EINVAL) {
   errno = 0;
-  wcstoll_l(L"123", nullptr, -1, LC_GLOBAL_LOCALE);
+  wcstoll_l(L"123", nullptr, -1, SAFE_LC_GLOBAL_LOCALE);
   ASSERT_EQ(EINVAL, errno);
   errno = 0;
-  wcstoll_l(L"123", nullptr, 1, LC_GLOBAL_LOCALE);
+  wcstoll_l(L"123", nullptr, 1, SAFE_LC_GLOBAL_LOCALE);
   ASSERT_EQ(EINVAL, errno);
   errno = 0;
-  wcstoll_l(L"123", nullptr, 37, LC_GLOBAL_LOCALE);
+  wcstoll_l(L"123", nullptr, 37, SAFE_LC_GLOBAL_LOCALE);
   ASSERT_EQ(EINVAL, errno);
 }
 
 TEST(wchar, wcstoull_l_EINVAL) {
   errno = 0;
-  wcstoull_l(L"123", nullptr, -1, LC_GLOBAL_LOCALE);
+  wcstoull_l(L"123", nullptr, -1, SAFE_LC_GLOBAL_LOCALE);
   ASSERT_EQ(EINVAL, errno);
   errno = 0;
-  wcstoull_l(L"123", nullptr, 1, LC_GLOBAL_LOCALE);
+  wcstoull_l(L"123", nullptr, 1, SAFE_LC_GLOBAL_LOCALE);
   ASSERT_EQ(EINVAL, errno);
   errno = 0;
-  wcstoull_l(L"123", nullptr, 37, LC_GLOBAL_LOCALE);
+  wcstoull_l(L"123", nullptr, 37, SAFE_LC_GLOBAL_LOCALE);
   ASSERT_EQ(EINVAL, errno);
 }
 
@@ -922,7 +931,7 @@ TEST(wchar, wcstold_hex_inf_nan) {
 
 TEST(wchar, wcstod_l) {
 #if !defined(ANDROID_HOST_MUSL)
-  EXPECT_EQ(1.23, wcstod_l(L"1.23", nullptr, LC_GLOBAL_LOCALE));
+  EXPECT_EQ(1.23, wcstod_l(L"1.23", nullptr, SAFE_LC_GLOBAL_LOCALE));
 #else
   GTEST_SKIP() << "musl doesn't have wcstod_l";
 #endif
@@ -930,7 +939,7 @@ TEST(wchar, wcstod_l) {
 
 TEST(wchar, wcstof_l) {
 #if !defined(ANDROID_HOST_MUSL)
-  EXPECT_EQ(1.23f, wcstof_l(L"1.23", nullptr, LC_GLOBAL_LOCALE));
+  EXPECT_EQ(1.23f, wcstof_l(L"1.23", nullptr, SAFE_LC_GLOBAL_LOCALE));
 #else
   GTEST_SKIP() << "musl doesn't have wcstof_l";
 #endif
@@ -938,30 +947,30 @@ TEST(wchar, wcstof_l) {
 
 TEST(wchar, wcstol_l) {
 #if !defined(ANDROID_HOST_MUSL)
-  EXPECT_EQ(123L, wcstol_l(L"123", nullptr, 10, LC_GLOBAL_LOCALE));
+  EXPECT_EQ(123L, wcstol_l(L"123", nullptr, 10, SAFE_LC_GLOBAL_LOCALE));
 #else
   GTEST_SKIP() << "musl doesn't have wcstol_l";
 #endif
 }
 
 TEST(wchar, wcstold_l) {
-  EXPECT_EQ(1.23L, wcstold_l(L"1.23", nullptr, LC_GLOBAL_LOCALE));
+  EXPECT_EQ(1.23L, wcstold_l(L"1.23", nullptr, SAFE_LC_GLOBAL_LOCALE));
 }
 
 TEST(wchar, wcstoll_l) {
-  EXPECT_EQ(123LL, wcstoll_l(L"123", nullptr, 10, LC_GLOBAL_LOCALE));
+  EXPECT_EQ(123LL, wcstoll_l(L"123", nullptr, 10, SAFE_LC_GLOBAL_LOCALE));
 }
 
 TEST(wchar, wcstoul_l) {
 #if !defined(ANDROID_HOST_MUSL)
-  EXPECT_EQ(123UL, wcstoul_l(L"123", nullptr, 10, LC_GLOBAL_LOCALE));
+  EXPECT_EQ(123UL, wcstoul_l(L"123", nullptr, 10, SAFE_LC_GLOBAL_LOCALE));
 #else
   GTEST_SKIP() << "musl doesn't have wcstoul_l";
 #endif
 }
 
 TEST(wchar, wcstoull_l) {
-  EXPECT_EQ(123ULL, wcstoull_l(L"123", nullptr, 10, LC_GLOBAL_LOCALE));
+  EXPECT_EQ(123ULL, wcstoull_l(L"123", nullptr, 10, SAFE_LC_GLOBAL_LOCALE));
 }
 
 static void AssertWcwidthRange(wchar_t begin, wchar_t end, int expected) {
