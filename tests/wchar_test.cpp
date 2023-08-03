@@ -79,6 +79,12 @@ constexpr size_t kExpectedResultForZeroLength = 0U;
 constexpr size_t kExpectedResultForZeroLength = static_cast<size_t>(-2);
 #endif
 
+#if defined(__GLIBC__)
+constexpr bool kLibcSupportsParsingBinaryLiterals = __GLIBC_PREREQ(2, 38);
+#else
+constexpr bool kLibcSupportsParsingBinaryLiterals = true;
+#endif
+
 TEST(wchar, sizeof_wchar_t) {
   EXPECT_EQ(4U, sizeof(wchar_t));
   EXPECT_EQ(4U, sizeof(wint_t));
@@ -557,7 +563,9 @@ void TestWcsToInt(WcsToIntFn<T> fn) {
   TestSingleWcsToInt(fn, L"   123 45", 0, static_cast<T>(123), 6);
   TestSingleWcsToInt(fn, L"  -123", 0, static_cast<T>(-123), 6);
   TestSingleWcsToInt(fn, L"0x10000", 0, static_cast<T>(65536), 7);
-  TestSingleWcsToInt(fn, L"0b1011", 0, static_cast<T>(0b1011), 6);
+  if (kLibcSupportsParsingBinaryLiterals) {
+    TestSingleWcsToInt(fn, L"0b1011", 0, static_cast<T>(0b1011), 6);
+  }
 }
 
 template <typename T>
