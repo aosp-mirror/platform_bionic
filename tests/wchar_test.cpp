@@ -145,6 +145,9 @@ TEST(wchar, wctomb_wcrtomb) {
 }
 
 TEST(wchar, wcrtomb_start_state) {
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
+
   char out[MB_LEN_MAX];
   mbstate_t ps;
 
@@ -168,6 +171,9 @@ TEST(wchar, wcrtomb_start_state) {
 }
 
 TEST(wchar, wcstombs_wcrtombs) {
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
+
   const wchar_t chars[] = { L'h', L'e', L'l', L'l', L'o', 0 };
   const wchar_t bad_chars[] = { L'h', L'i', static_cast<wchar_t>(0xffffffff), 0 };
   const wchar_t* src;
