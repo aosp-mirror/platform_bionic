@@ -38,6 +38,22 @@ static locale_t SAFE_LC_GLOBAL_LOCALE = duplocale(LC_GLOBAL_LOCALE);
 static locale_t SAFE_LC_GLOBAL_LOCALE = LC_GLOBAL_LOCALE;
 #endif
 
+// Modern versions of UTF-8 (https://datatracker.ietf.org/doc/html/rfc3629 and
+// newer) explicitly disallow code points beyond U+10FFFF, which exclude all 5-
+// and 6-byte sequences. Earlier versions of UTF-8 allowed the wider range:
+// https://datatracker.ietf.org/doc/html/rfc2279.
+//
+// Bionic's unicode implementation was written after the high values were
+// excluded, so it has never supported them. Other implementations (at least
+// as of glibc 2.36), do support those sequences.
+#if defined(__ANDROID__) || defined(ANDROID_HOST_MUSL)
+constexpr bool kLibcRejectsOverLongUtf8Sequences = true;
+#elif defined(__GLIBC__)
+constexpr bool kLibcRejectsOverLongUtf8Sequences = false;
+#else
+#error kLibcRejectsOverLongUtf8Sequences must be configured for this platform
+#endif
+
 // C23 7.31.6.3.2 (mbrtowc) says:
 //
 // Returns:
@@ -401,8 +417,14 @@ TEST(wchar, mbrtowc_out_of_range) {
 
   wchar_t out[8] = {};
   errno = 0;
-  ASSERT_EQ(static_cast<size_t>(-1), mbrtowc(out, "\xf5\x80\x80\x80", 4, nullptr));
-  ASSERT_EQ(EILSEQ, errno);
+  auto result = mbrtowc(out, "\xf5\x80\x80\x80", 4, nullptr);
+  if (kLibcRejectsOverLongUtf8Sequences) {
+    ASSERT_EQ(static_cast<size_t>(-1), result);
+    ASSERT_EQ(EILSEQ, errno);
+  } else {
+    ASSERT_EQ(4U, result);
+    ASSERT_EQ(0, errno);
+  }
 }
 
 static void test_mbrtowc_incomplete(mbstate_t* ps) {
