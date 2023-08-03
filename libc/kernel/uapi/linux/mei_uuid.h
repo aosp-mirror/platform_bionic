@@ -16,39 +16,14 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _UAPI_CM4000_H_
-#define _UAPI_CM4000_H_
+#ifndef _UAPI_LINUX_MEI_UUID_H_
+#define _UAPI_LINUX_MEI_UUID_H_
 #include <linux/types.h>
-#include <linux/ioctl.h>
-#define MAX_ATR 33
-#define CM4000_MAX_DEV 4
-typedef struct atreq {
-  __s32 atr_len;
-  unsigned char atr[64];
-  __s32 power_act;
-  unsigned char bIFSD;
-  unsigned char bIFSC;
-} atreq_t;
-typedef struct ptsreq {
-  __u32 protocol;
-  unsigned char flags;
-  unsigned char pts1;
-  unsigned char pts2;
-  unsigned char pts3;
-} ptsreq_t;
-#define CM_IOC_MAGIC 'c'
-#define CM_IOC_MAXNR 255
-#define CM_IOCGSTATUS _IOR(CM_IOC_MAGIC, 0, unsigned char *)
-#define CM_IOCGATR _IOWR(CM_IOC_MAGIC, 1, atreq_t *)
-#define CM_IOCSPTS _IOW(CM_IOC_MAGIC, 2, ptsreq_t *)
-#define CM_IOCSRDR _IO(CM_IOC_MAGIC, 3)
-#define CM_IOCARDOFF _IO(CM_IOC_MAGIC, 4)
-#define CM_IOSDBGLVL _IOW(CM_IOC_MAGIC, 250, int *)
-#define CM_CARD_INSERTED 0x01
-#define CM_CARD_POWERED 0x02
-#define CM_ATR_PRESENT 0x04
-#define CM_ATR_VALID 0x08
-#define CM_STATE_VALID 0x0f
-#define CM_NO_READER 0x10
-#define CM_BAD_CARD 0x20
+typedef struct {
+  __u8 b[16];
+} uuid_le;
+#define UUID_LE(a,b,c,d0,d1,d2,d3,d4,d5,d6,d7) \
+((uuid_le) \
+{ { (a) & 0xff, ((a) >> 8) & 0xff, ((a) >> 16) & 0xff, ((a) >> 24) & 0xff, (b) & 0xff, ((b) >> 8) & 0xff, (c) & 0xff, ((c) >> 8) & 0xff, (d0), (d1), (d2), (d3), (d4), (d5), (d6), (d7) } })
+#define NULL_UUID_LE UUID_LE(0x00000000, 0x0000, 0x0000, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
 #endif

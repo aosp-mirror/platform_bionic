@@ -133,6 +133,8 @@ cc_defaults {
     lto: {
         never: true,
     },
+
+    apex_available: ["com.android.runtime"],
 }
 
 libc_scudo_product_variables = {
@@ -334,10 +336,16 @@ cc_library_static {
 // automatically included.
 
 cc_library_static {
+    name: "libc_freebsd_ldexp",
+    defaults: ["libc_defaults"],
+    cflags: ["-Dscalbn=ldexp"],
+    srcs: [":libc_ldexp_srcs"],
+}
+
+cc_library_static {
     defaults: ["libc_defaults"],
     tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: [
-        "upstream-freebsd/lib/libc/gen/ldexp.c",
         "upstream-freebsd/lib/libc/stdlib/getopt_long.c",
         "upstream-freebsd/lib/libc/stdlib/hcreate.c",
         "upstream-freebsd/lib/libc/stdlib/hcreate_r.c",
@@ -1276,9 +1284,6 @@ cc_library_static {
     srcs: [
         "bionic/bionic_systrace.cpp",
     ],
-    apex_available: [
-        "com.android.runtime",
-    ],
 }
 
 // ========================================================
@@ -1475,6 +1480,7 @@ cc_library_static {
         "libc_fortify",
         "libc_freebsd",
         "libc_freebsd_large_stack",
+        "libc_freebsd_ldexp",
         "libc_gdtoa",
         "libc_netbsd",
         "libc_openbsd_large_stack",
@@ -1509,6 +1515,7 @@ cc_library_static {
         "libc_fortify",
         "libc_freebsd",
         "libc_freebsd_large_stack",
+        "libc_freebsd_ldexp",
         "libc_gdtoa",
         "libc_netbsd",
         "libc_openbsd",
@@ -1831,7 +1838,6 @@ cc_defaults {
         },
     },
 
-
     apex_available: [
         "//apex_available:platform",
         "com.android.runtime",
@@ -2095,6 +2101,9 @@ cc_library {
     name: "libstdc++",
     static_ndk_lib: true,
     static_libs: ["libasync_safe"],
+    apex_available: [
+        "//apex_available:platform",
+    ],
 
     static: {
         system_shared_libs: [],
@@ -2478,8 +2487,6 @@ ndk_library {
     name: "libc",
     symbol_file: "libc.map.txt",
     first_version: "9",
-    // APIs implemented in asm don't have debug info: http://b/190554910.
-    allow_untyped_symbols: true,
     export_header_libs: [
         "common_libc",
         "libc_uapi",

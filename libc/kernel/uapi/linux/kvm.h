@@ -265,8 +265,10 @@ struct kvm_run {
       __u64 nr;
       __u64 args[6];
       __u64 ret;
-      __u32 longmode;
-      __u32 pad;
+      union {
+        __u32 longmode;
+        __u64 flags;
+      };
     } hypercall;
     struct {
       __u64 rip;
@@ -932,6 +934,7 @@ struct kvm_ppc_resize_hpt {
 #define KVM_CAP_S390_PROTECTED_ASYNC_DISABLE 224
 #define KVM_CAP_DIRTY_LOG_RING_WITH_BITMAP 225
 #define KVM_CAP_PMU_EVENT_MASKED_EVENTS 226
+#define KVM_CAP_COUNTER_OFFSET 227
 #ifdef KVM_CAP_IRQ_ROUTING
 struct kvm_irq_routing_irqchip {
   __u32 irqchip;
@@ -1198,6 +1201,7 @@ struct kvm_s390_ucas_mapping {
 #define KVM_SET_PMU_EVENT_FILTER _IOW(KVMIO, 0xb2, struct kvm_pmu_event_filter)
 #define KVM_PPC_SVM_OFF _IO(KVMIO, 0xb3)
 #define KVM_ARM_MTE_COPY_TAGS _IOR(KVMIO, 0xb4, struct kvm_arm_copy_mte_tags)
+#define KVM_ARM_SET_COUNTER_OFFSET _IOW(KVMIO, 0xb5, struct kvm_arm_counter_offset)
 #define KVM_CREATE_DEVICE _IOWR(KVMIO, 0xe0, struct kvm_create_device)
 #define KVM_SET_DEVICE_ATTR _IOW(KVMIO, 0xe1, struct kvm_device_attr)
 #define KVM_GET_DEVICE_ATTR _IOW(KVMIO, 0xe2, struct kvm_device_attr)

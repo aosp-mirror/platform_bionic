@@ -78,8 +78,7 @@ bionic_tls* __allocate_temp_bionic_tls() {
                           MAP_PRIVATE | MAP_ANONYMOUS,
                           -1, 0);
   if (allocation == MAP_FAILED) {
-    // Avoid strerror because it might need bionic_tls.
-    async_safe_fatal("failed to allocate bionic_tls: error %d", errno);
+    async_safe_fatal("failed to allocate bionic_tls: %m");
   }
   return static_cast<bionic_tls*>(allocation);
 }
@@ -137,7 +136,9 @@ static void __init_shadow_call_stack(pthread_internal_t* thread __unused) {
   // Make the stack read-write, and store its address in the register we're using as the shadow
   // stack pointer. This is deliberately the only place where the address is stored.
   char* scs = scs_aligned_guard_region + scs_offset;
-  mprotect(scs, SCS_SIZE, PROT_READ | PROT_WRITE);
+  if (mprotect(scs, SCS_SIZE, PROT_READ | PROT_WRITE) == -1) {
+    async_safe_fatal("shadow stack read-write mprotect(%p, %d) failed: %m", scs, SCS_SIZE);
+  }
 #if defined(__aarch64__)
   __asm__ __volatile__("mov x18, %0" ::"r"(scs));
 #elif defined(__riscv)
@@ -171,12 +172,11 @@ int __init_thread(pthread_internal_t* thread) {
     if (need_set) {
       if (policy == -1) {
         async_safe_format_log(ANDROID_LOG_WARN, "libc",
-                              "pthread_create sched_getscheduler failed: %s", strerror(errno));
+                              "pthread_create sched_getscheduler failed: %m");
         return errno;
       }
       if (sched_getparam(0, &param) == -1) {
-        async_safe_format_log(ANDROID_LOG_WARN, "libc",
-                              "pthread_create sched_getparam failed: %s", strerror(errno));
+        async_safe_format_log(ANDROID_LOG_WARN, "libc", "pthread_create sched_getparam failed: %m");
         return errno;
       }
     }
@@ -192,8 +192,8 @@ int __init_thread(pthread_internal_t* thread) {
   if (need_set) {
     if (sched_setscheduler(thread->tid, policy, &param) == -1) {
       async_safe_format_log(ANDROID_LOG_WARN, "libc",
-                            "pthread_create sched_setscheduler(%d, {%d}) call failed: %s", policy,
-                            param.sched_priority, strerror(errno));
+                            "pthread_create sched_setscheduler(%d, {%d}) call failed: %m", policy,
+                            param.sched_priority);
 #if defined(__LP64__)
       // For backwards compatibility reasons, we only report failures on 64-bit devices.
       return errno;
@@ -228,10 +228,9 @@ ThreadMapping __allocate_thread_mapping(size_t stack_size, size_t stack_guard_si
   const int flags = MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE;
   char* const space = static_cast<char*>(mmap(nullptr, mmap_size, PROT_NONE, flags, -1, 0));
   if (space == MAP_FAILED) {
-    async_safe_format_log(ANDROID_LOG_WARN,
-                          "libc",
-                          "pthread_create failed: couldn't allocate %zu-bytes mapped space: %s",
-                          mmap_size, strerror(errno));
+    async_safe_format_log(ANDROID_LOG_WARN, "libc",
+                          "pthread_create failed: couldn't allocate %zu-bytes mapped space: %m",
+                          mmap_size);
     return {};
   }
   const size_t writable_size = mmap_size - stack_guard_size - PTHREAD_GUARD_SIZE;
@@ -246,8 +245,8 @@ ThreadMapping __allocate_thread_mapping(size_t stack_size, size_t stack_guard_si
   if (mprotect(space + stack_guard_size, writable_size, prot) != 0) {
     async_safe_format_log(
         ANDROID_LOG_WARN, "libc",
-        "pthread_create failed: couldn't mprotect %s %zu-byte thread mapping region: %s", prot_str,
-        writable_size, strerror(errno));
+        "pthread_create failed: couldn't mprotect %s %zu-byte thread mapping region: %m", prot_str,
+        writable_size);
     munmap(space, mmap_size);
     return {};
   }
@@ -458,8 +457,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
     if (thread->mmap_size != 0) {
       munmap(thread->mmap_base, thread->mmap_size);
     }
-    async_safe_format_log(ANDROID_LOG_WARN, "libc", "pthread_create failed: clone failed: %s",
-                          strerror(clone_errno));
+    async_safe_format_log(ANDROID_LOG_WARN, "libc", "pthread_create failed: clone failed: %m");
     return clone_errno;
   }
 

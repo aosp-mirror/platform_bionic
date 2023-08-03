@@ -1049,11 +1049,13 @@ TEST(STDIO_TEST, popen_return_value_1) {
 }
 
 TEST(STDIO_TEST, popen_return_value_signal) {
-  FILE* fp = popen("kill -7 $$", "r");
+  // Use a realtime signal to avoid creating a tombstone when running.
+  std::string cmd = android::base::StringPrintf("kill -%d $$", SIGRTMIN);
+  FILE* fp = popen(cmd.c_str(), "r");
   ASSERT_TRUE(fp != nullptr);
   int status = pclose(fp);
   EXPECT_TRUE(WIFSIGNALED(status));
-  EXPECT_EQ(7, WTERMSIG(status));
+  EXPECT_EQ(SIGRTMIN, WTERMSIG(status));
 }
 
 TEST(STDIO_TEST, getc) {
@@ -3310,7 +3312,7 @@ TEST(STDIO_TEST, swprintf_w_arguments_reordering) {
 #endif
 }
 
-TEST(STDIO_TEST, snprintf_invalid_w_width) {
+TEST_F(STDIO_DEATHTEST, snprintf_invalid_w_width) {
 #if defined(__BIONIC__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wformat-invalid-specifier"
@@ -3323,7 +3325,7 @@ TEST(STDIO_TEST, snprintf_invalid_w_width) {
 #endif
 }
 
-TEST(STDIO_TEST, swprintf_invalid_w_width) {
+TEST_F(STDIO_DEATHTEST, swprintf_invalid_w_width) {
 #if defined(__BIONIC__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wformat-invalid-specifier"
@@ -3459,7 +3461,7 @@ TEST(STDIO_TEST, swprintf_wf_arguments_reordering) {
 #endif
 }
 
-TEST(STDIO_TEST, snprintf_invalid_wf_width) {
+TEST_F(STDIO_DEATHTEST, snprintf_invalid_wf_width) {
 #if defined(__BIONIC__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wformat"
@@ -3473,7 +3475,7 @@ TEST(STDIO_TEST, snprintf_invalid_wf_width) {
 #endif
 }
 
-TEST(STDIO_TEST, swprintf_invalid_wf_width) {
+TEST_F(STDIO_DEATHTEST, swprintf_invalid_wf_width) {
 #if defined(__BIONIC__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wformat"
@@ -3572,7 +3574,7 @@ TEST(STDIO_TEST, sscanf_w_combination) {
 #endif
 }
 
-TEST(STDIO_TEST, sscanf_invalid_w_or_wf_width) {
+TEST_F(STDIO_DEATHTEST, sscanf_invalid_w_or_wf_width) {
 #if defined(__BIONIC__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wformat"
@@ -3672,7 +3674,7 @@ TEST(STDIO_TEST, swscanf_w_combination) {
 #endif
 }
 
-TEST(STDIO_TEST, swscanf_invalid_w_or_wf_width) {
+TEST_F(STDIO_DEATHTEST, swscanf_invalid_w_or_wf_width) {
 #if defined(__BIONIC__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wformat"
