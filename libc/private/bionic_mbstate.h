@@ -63,7 +63,7 @@ static inline __wur size_t mbstate_reset_and_return_illegal(int _errno, mbstate_
   return BIONIC_MULTIBYTE_RESULT_ILLEGAL_SEQUENCE;
 }
 
-static inline __wur size_t mbstate_reset_and_return(int _return, mbstate_t* ps) {
+static inline __wur size_t mbstate_reset_and_return(size_t _return, mbstate_t* ps) {
   *(reinterpret_cast<uint32_t*>(ps->__seq)) = 0;
   return _return;
 }
