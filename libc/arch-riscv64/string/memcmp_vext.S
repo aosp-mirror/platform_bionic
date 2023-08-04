@@ -55,7 +55,7 @@
 
 #if defined(__riscv_v)
 
-#include "sys/asm.h"
+#include <private/bionic_asm.h>
 
 #define iResult a0
 
