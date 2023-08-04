@@ -106,9 +106,9 @@ enum {
 #define DM_TARGET_MSG _IOWR(DM_IOCTL, DM_TARGET_MSG_CMD, struct dm_ioctl)
 #define DM_DEV_SET_GEOMETRY _IOWR(DM_IOCTL, DM_DEV_SET_GEOMETRY_CMD, struct dm_ioctl)
 #define DM_VERSION_MAJOR 4
-#define DM_VERSION_MINOR 47
+#define DM_VERSION_MINOR 48
 #define DM_VERSION_PATCHLEVEL 0
-#define DM_VERSION_EXTRA "-ioctl(2022-07-28)"
+#define DM_VERSION_EXTRA "-ioctl(2023-03-01)"
 #define DM_READONLY_FLAG (1 << 0)
 #define DM_SUSPEND_FLAG (1 << 1)
 #define DM_PERSISTENT_DEV_FLAG (1 << 3)

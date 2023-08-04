@@ -28,6 +28,6 @@
 
 #pragma once
 
-#ifdef __aarch64__
-#define OFFSETOF_libc_globals_memtag_stack 80
+#if defined(__aarch64__)
+#define OFFSETOF_libc_globals_memtag_stack 64
 #endif

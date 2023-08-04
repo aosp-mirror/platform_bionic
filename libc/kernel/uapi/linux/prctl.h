@@ -189,4 +189,7 @@ struct prctl_mm_map {
 #define PR_GET_MDWE 66
 #define PR_SET_VMA 0x53564d41
 #define PR_SET_VMA_ANON_NAME 0
+#define PR_GET_AUXV 0x41555856
+#define PR_SET_MEMORY_MERGE 67
+#define PR_GET_MEMORY_MERGE 68
 #endif

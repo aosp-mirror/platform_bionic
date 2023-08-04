@@ -43,10 +43,11 @@
 #include "linker_tls.h"
 #include "linker_utils.h"
 
+#include "private/KernelArgumentBlock.h"
+#include "private/ScopedPthreadMutexLocker.h"
 #include "private/bionic_call_ifunc_resolver.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_tls.h"
-#include "private/KernelArgumentBlock.h"
 
 #include "android-base/unique_fd.h"
 #include "android-base/strings.h"
@@ -497,6 +498,11 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   __libc_init_main_thread_final();
 
   if (!get_cfi_shadow()->InitialLinkDone(solist)) __linker_cannot_link(g_argv[0]);
+
+  // A constructor could spawn a thread that calls into the loader, so as soon
+  // as we've called a constructor, we need to hold the lock while accessing
+  // global loader state.
+  ScopedPthreadMutexLocker locker(&g_dl_mutex);
 
   si->call_pre_init_constructors();
   si->call_constructors();

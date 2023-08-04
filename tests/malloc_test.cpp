@@ -1347,44 +1347,43 @@ TEST(android_mallopt, set_allocation_limit_realloc_free) {
 }
 
 #if defined(__BIONIC__)
-static void* SetAllocationLimit(void* data) {
-  std::atomic_bool* go = reinterpret_cast<std::atomic_bool*>(data);
-  while (!go->load()) {
-  }
-  size_t limit = 500 * 1024 * 1024;
-  if (android_mallopt(M_SET_ALLOCATION_LIMIT_BYTES, &limit, sizeof(limit))) {
-    return reinterpret_cast<void*>(-1);
-  }
-  return nullptr;
-}
-
 static void SetAllocationLimitMultipleThreads() {
-  std::atomic_bool go;
-  go = false;
-
   static constexpr size_t kNumThreads = 4;
-  pthread_t threads[kNumThreads];
+  std::atomic_bool start_running = false;
+  std::atomic<size_t> num_running;
+  std::atomic<size_t> num_successful;
+  std::unique_ptr<std::thread> threads[kNumThreads];
   for (size_t i = 0; i < kNumThreads; i++) {
-    ASSERT_EQ(0, pthread_create(&threads[i], nullptr, SetAllocationLimit, &go));
+    threads[i].reset(new std::thread([&num_running, &start_running, &num_successful] {
+      ++num_running;
+      while (!start_running) {
+      }
+      size_t limit = 500 * 1024 * 1024;
+      if (android_mallopt(M_SET_ALLOCATION_LIMIT_BYTES, &limit, sizeof(limit))) {
+        ++num_successful;
+      }
+    }));
   }
 
-  // Let them go all at once.
-  go = true;
+  // Wait until all of the threads have started.
+  while (num_running != kNumThreads)
+    ;
+
+  // Now start all of the threads setting the mallopt at once.
+  start_running = true;
+
   // Send hardcoded signal (BIONIC_SIGNAL_PROFILER with value 0) to trigger
-  // heapprofd handler.
-  union sigval signal_value;
-  signal_value.sival_int = 0;
+  // heapprofd handler. This will verify that changing the limit while
+  // the allocation handlers are being changed at the same time works,
+  // or that the limit handler is changed first and this also works properly.
+  union sigval signal_value {};
   ASSERT_EQ(0, sigqueue(getpid(), BIONIC_SIGNAL_PROFILER, signal_value));
 
-  size_t num_successful = 0;
+  // Wait for all of the threads to finish.
   for (size_t i = 0; i < kNumThreads; i++) {
-    void* result;
-    ASSERT_EQ(0, pthread_join(threads[i], &result));
-    if (result != nullptr) {
-      num_successful++;
-    }
+    threads[i]->join();
   }
-  ASSERT_EQ(1U, num_successful);
+  ASSERT_EQ(1U, num_successful) << "Only one thread should be able to set the limit.";
   exit(0);
 }
 #endif

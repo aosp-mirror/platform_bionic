@@ -34,6 +34,7 @@
 #include <sys/select.h>
 
 #include <bits/fcntl.h>
+#include <bits/getentropy.h>
 #include <bits/getopt.h>
 #include <bits/ioctl.h>
 #include <bits/lockf.h>

@@ -107,6 +107,7 @@ struct btrfs_scrub_progress {
   __u64 unverified_errors;
 };
 #define BTRFS_SCRUB_READONLY 1
+#define BTRFS_SCRUB_SUPPORTED_FLAGS (BTRFS_SCRUB_READONLY)
 struct btrfs_ioctl_scrub_args {
   __u64 devid;
   __u64 start;

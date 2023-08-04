@@ -16,44 +16,26 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _DLM_NETLINK_H
-#define _DLM_NETLINK_H
+#ifndef _UAPI_ASM_HWPROBE_H
+#define _UAPI_ASM_HWPROBE_H
 #include <linux/types.h>
-#include <linux/dlmconstants.h>
-enum {
-  DLM_STATUS_WAITING = 1,
-  DLM_STATUS_GRANTED = 2,
-  DLM_STATUS_CONVERT = 3,
+struct riscv_hwprobe {
+  __s64 key;
+  __u64 value;
 };
-#define DLM_LOCK_DATA_VERSION 1
-struct dlm_lock_data {
-  __u16 version;
-  __u32 lockspace_id;
-  int nodeid;
-  int ownpid;
-  __u32 id;
-  __u32 remid;
-  __u64 xid;
-  __s8 status;
-  __s8 grmode;
-  __s8 rqmode;
-  unsigned long timestamp;
-  int resource_namelen;
-  char resource_name[DLM_RESNAME_MAXLEN];
-};
-enum {
-  DLM_CMD_UNSPEC = 0,
-  DLM_CMD_HELLO,
-  DLM_CMD_TIMEOUT,
-  __DLM_CMD_MAX,
-};
-#define DLM_CMD_MAX (__DLM_CMD_MAX - 1)
-enum {
-  DLM_TYPE_UNSPEC = 0,
-  DLM_TYPE_LOCK,
-  __DLM_TYPE_MAX,
-};
-#define DLM_TYPE_MAX (__DLM_TYPE_MAX - 1)
-#define DLM_GENL_VERSION 0x1
-#define DLM_GENL_NAME "DLM"
+#define RISCV_HWPROBE_KEY_MVENDORID 0
+#define RISCV_HWPROBE_KEY_MARCHID 1
+#define RISCV_HWPROBE_KEY_MIMPID 2
+#define RISCV_HWPROBE_KEY_BASE_BEHAVIOR 3
+#define RISCV_HWPROBE_BASE_BEHAVIOR_IMA (1 << 0)
+#define RISCV_HWPROBE_KEY_IMA_EXT_0 4
+#define RISCV_HWPROBE_IMA_FD (1 << 0)
+#define RISCV_HWPROBE_IMA_C (1 << 1)
+#define RISCV_HWPROBE_KEY_CPUPERF_0 5
+#define RISCV_HWPROBE_MISALIGNED_UNKNOWN (0 << 0)
+#define RISCV_HWPROBE_MISALIGNED_EMULATED (1 << 0)
+#define RISCV_HWPROBE_MISALIGNED_SLOW (2 << 0)
+#define RISCV_HWPROBE_MISALIGNED_FAST (3 << 0)
+#define RISCV_HWPROBE_MISALIGNED_UNSUPPORTED (4 << 0)
+#define RISCV_HWPROBE_MISALIGNED_MASK (7 << 0)
 #endif

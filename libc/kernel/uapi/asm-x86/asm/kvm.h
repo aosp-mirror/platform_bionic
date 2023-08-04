@@ -420,4 +420,5 @@ struct kvm_pmu_event_filter {
 #define KVM_PMU_MASKED_ENTRY_UMASK_MASK_SHIFT (56)
 #define KVM_VCPU_TSC_CTRL 0
 #define KVM_VCPU_TSC_OFFSET 0
+#define KVM_EXIT_HYPERCALL_LONG_MODE BIT(0)
 #endif
