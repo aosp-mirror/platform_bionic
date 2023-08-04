@@ -90,6 +90,14 @@ struct ptrace_rseq_configuration {
   __u32 flags;
   __u32 pad;
 };
+#define PTRACE_SET_SYSCALL_USER_DISPATCH_CONFIG 0x4210
+#define PTRACE_GET_SYSCALL_USER_DISPATCH_CONFIG 0x4211
+struct ptrace_sud_config {
+  __u64 mode;
+  __u64 selector;
+  __u64 offset;
+  __u64 len;
+};
 #define PTRACE_EVENTMSG_SYSCALL_ENTRY 1
 #define PTRACE_EVENTMSG_SYSCALL_EXIT 2
 #define PTRACE_PEEKSIGINFO_SHARED (1 << 0)

@@ -20,6 +20,7 @@
 #define __LINUX_KVM_RISCV_H
 #ifndef __ASSEMBLY__
 #include <linux/types.h>
+#include <asm/bitsperlong.h>
 #include <asm/ptrace.h>
 #define __KVM_HAVE_READONLY_MEM
 #define KVM_COALESCED_MMIO_PAGE_OFFSET 1
@@ -43,6 +44,7 @@ struct kvm_riscv_config {
   unsigned long mvendorid;
   unsigned long marchid;
   unsigned long mimpid;
+  unsigned long zicboz_block_size;
 };
 struct kvm_riscv_core {
   struct user_regs_struct regs;
@@ -61,6 +63,15 @@ struct kvm_riscv_csr {
   unsigned long sip;
   unsigned long satp;
   unsigned long scounteren;
+};
+struct kvm_riscv_aia_csr {
+  unsigned long siselect;
+  unsigned long iprio1;
+  unsigned long iprio2;
+  unsigned long sieh;
+  unsigned long siph;
+  unsigned long iprio1h;
+  unsigned long iprio2h;
 };
 struct kvm_riscv_timer {
   __u64 frequency;
@@ -81,19 +92,39 @@ enum KVM_RISCV_ISA_EXT_ID {
   KVM_RISCV_ISA_EXT_SVINVAL,
   KVM_RISCV_ISA_EXT_ZIHINTPAUSE,
   KVM_RISCV_ISA_EXT_ZICBOM,
+  KVM_RISCV_ISA_EXT_ZICBOZ,
+  KVM_RISCV_ISA_EXT_ZBB,
+  KVM_RISCV_ISA_EXT_SSAIA,
   KVM_RISCV_ISA_EXT_MAX,
+};
+enum KVM_RISCV_SBI_EXT_ID {
+  KVM_RISCV_SBI_EXT_V01 = 0,
+  KVM_RISCV_SBI_EXT_TIME,
+  KVM_RISCV_SBI_EXT_IPI,
+  KVM_RISCV_SBI_EXT_RFENCE,
+  KVM_RISCV_SBI_EXT_SRST,
+  KVM_RISCV_SBI_EXT_HSM,
+  KVM_RISCV_SBI_EXT_PMU,
+  KVM_RISCV_SBI_EXT_EXPERIMENTAL,
+  KVM_RISCV_SBI_EXT_VENDOR,
+  KVM_RISCV_SBI_EXT_MAX,
 };
 #define KVM_RISCV_TIMER_STATE_OFF 0
 #define KVM_RISCV_TIMER_STATE_ON 1
 #define KVM_REG_SIZE(id) (1U << (((id) & KVM_REG_SIZE_MASK) >> KVM_REG_SIZE_SHIFT))
 #define KVM_REG_RISCV_TYPE_MASK 0x00000000FF000000
 #define KVM_REG_RISCV_TYPE_SHIFT 24
+#define KVM_REG_RISCV_SUBTYPE_MASK 0x0000000000FF0000
+#define KVM_REG_RISCV_SUBTYPE_SHIFT 16
 #define KVM_REG_RISCV_CONFIG (0x01 << KVM_REG_RISCV_TYPE_SHIFT)
 #define KVM_REG_RISCV_CONFIG_REG(name) (offsetof(struct kvm_riscv_config, name) / sizeof(unsigned long))
 #define KVM_REG_RISCV_CORE (0x02 << KVM_REG_RISCV_TYPE_SHIFT)
 #define KVM_REG_RISCV_CORE_REG(name) (offsetof(struct kvm_riscv_core, name) / sizeof(unsigned long))
 #define KVM_REG_RISCV_CSR (0x03 << KVM_REG_RISCV_TYPE_SHIFT)
+#define KVM_REG_RISCV_CSR_GENERAL (0x0 << KVM_REG_RISCV_SUBTYPE_SHIFT)
+#define KVM_REG_RISCV_CSR_AIA (0x1 << KVM_REG_RISCV_SUBTYPE_SHIFT)
 #define KVM_REG_RISCV_CSR_REG(name) (offsetof(struct kvm_riscv_csr, name) / sizeof(unsigned long))
+#define KVM_REG_RISCV_CSR_AIA_REG(name) (offsetof(struct kvm_riscv_aia_csr, name) / sizeof(unsigned long))
 #define KVM_REG_RISCV_TIMER (0x04 << KVM_REG_RISCV_TYPE_SHIFT)
 #define KVM_REG_RISCV_TIMER_REG(name) (offsetof(struct kvm_riscv_timer, name) / sizeof(__u64))
 #define KVM_REG_RISCV_FP_F (0x05 << KVM_REG_RISCV_TYPE_SHIFT)
@@ -101,5 +132,12 @@ enum KVM_RISCV_ISA_EXT_ID {
 #define KVM_REG_RISCV_FP_D (0x06 << KVM_REG_RISCV_TYPE_SHIFT)
 #define KVM_REG_RISCV_FP_D_REG(name) (offsetof(struct __riscv_d_ext_state, name) / sizeof(__u64))
 #define KVM_REG_RISCV_ISA_EXT (0x07 << KVM_REG_RISCV_TYPE_SHIFT)
+#define KVM_REG_RISCV_SBI_EXT (0x08 << KVM_REG_RISCV_TYPE_SHIFT)
+#define KVM_REG_RISCV_SBI_SINGLE (0x0 << KVM_REG_RISCV_SUBTYPE_SHIFT)
+#define KVM_REG_RISCV_SBI_MULTI_EN (0x1 << KVM_REG_RISCV_SUBTYPE_SHIFT)
+#define KVM_REG_RISCV_SBI_MULTI_DIS (0x2 << KVM_REG_RISCV_SUBTYPE_SHIFT)
+#define KVM_REG_RISCV_SBI_MULTI_REG(__ext_id) ((__ext_id) / __BITS_PER_LONG)
+#define KVM_REG_RISCV_SBI_MULTI_MASK(__ext_id) (1UL << ((__ext_id) % __BITS_PER_LONG))
+#define KVM_REG_RISCV_SBI_MULTI_REG_LAST KVM_REG_RISCV_SBI_MULTI_REG(KVM_RISCV_SBI_EXT_MAX - 1)
 #endif
 #endif

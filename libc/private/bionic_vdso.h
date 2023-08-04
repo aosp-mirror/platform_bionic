@@ -26,26 +26,23 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _PRIVATE_BIONIC_VDSO_H
-#define _PRIVATE_BIONIC_VDSO_H
-
-#include <time.h>
+#pragma once
 
 #if defined(__aarch64__)
 #define VDSO_CLOCK_GETTIME_SYMBOL "__kernel_clock_gettime"
-#define VDSO_CLOCK_GETRES_SYMBOL  "__kernel_clock_getres"
-#define VDSO_GETTIMEOFDAY_SYMBOL  "__kernel_gettimeofday"
-#define VDSO_TIME_SYMBOL          "__kernel_time"
+#define VDSO_CLOCK_GETRES_SYMBOL "__kernel_clock_getres"
+#define VDSO_GETTIMEOFDAY_SYMBOL "__kernel_gettimeofday"
 #else
 #define VDSO_CLOCK_GETTIME_SYMBOL "__vdso_clock_gettime"
-#define VDSO_CLOCK_GETRES_SYMBOL  "__vdso_clock_getres"
-#define VDSO_GETTIMEOFDAY_SYMBOL  "__vdso_gettimeofday"
-#define VDSO_TIME_SYMBOL          "__vdso_time"
+#define VDSO_CLOCK_GETRES_SYMBOL "__vdso_clock_getres"
+#define VDSO_GETTIMEOFDAY_SYMBOL "__vdso_gettimeofday"
 #endif
-
-extern "C" int __clock_gettime(int, timespec*);
-extern "C" int __clock_getres(int, timespec*);
-extern "C" int __gettimeofday(timeval*, struct timezone*);
+#if defined(__riscv)
+#define VDSO_RISCV_HWPROBE_SYMBOL "__vdso_riscv_hwprobe"
+#endif
+#if defined(__i386__) || defined(__x86_64__)
+#define VDSO_TIME_SYMBOL "__vdso_time"
+#endif
 
 struct vdso_entry {
   const char* name;
@@ -56,8 +53,11 @@ enum {
   VDSO_CLOCK_GETTIME = 0,
   VDSO_CLOCK_GETRES,
   VDSO_GETTIMEOFDAY,
+#if defined(VDSO_TIME_SYMBOL)
   VDSO_TIME,
+#endif
+#if defined(VDSO_RISCV_HWPROBE_SYMBOL)
+  VDSO_RISCV_HWPROBE,
+#endif
   VDSO_END
 };
-
-#endif  // _PRIVATE_BIONIC_VDSO_H

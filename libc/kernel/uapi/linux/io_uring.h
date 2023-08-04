@@ -178,6 +178,7 @@ enum io_uring_op {
 #define IORING_TIMEOUT_REALTIME (1U << 3)
 #define IORING_LINK_TIMEOUT_UPDATE (1U << 4)
 #define IORING_TIMEOUT_ETIME_SUCCESS (1U << 5)
+#define IORING_TIMEOUT_MULTISHOT (1U << 6)
 #define IORING_TIMEOUT_CLOCK_MASK (IORING_TIMEOUT_BOOTTIME | IORING_TIMEOUT_REALTIME)
 #define IORING_TIMEOUT_UPDATE_MASK (IORING_TIMEOUT_UPDATE | IORING_LINK_TIMEOUT_UPDATE)
 #define SPLICE_F_FD_IN_FIXED (1U << 31)
@@ -217,6 +218,9 @@ enum {
 #define IORING_OFF_SQ_RING 0ULL
 #define IORING_OFF_CQ_RING 0x8000000ULL
 #define IORING_OFF_SQES 0x10000000ULL
+#define IORING_OFF_PBUF_RING 0x80000000ULL
+#define IORING_OFF_PBUF_SHIFT 16
+#define IORING_OFF_MMAP_MASK 0xf8000000ULL
 struct io_sqring_offsets {
   __u32 head;
   __u32 tail;
@@ -334,17 +338,6 @@ struct io_uring_rsrc_update2 {
   __u32 nr;
   __u32 resv2;
 };
-struct io_uring_notification_slot {
-  __u64 tag;
-  __u64 resv[3];
-};
-struct io_uring_notification_register {
-  __u32 nr_slots;
-  __u32 resv;
-  __u64 resv2;
-  __u64 data;
-  __u64 resv3;
-};
 #define IORING_REGISTER_FILES_SKIP (- 2)
 #define IO_URING_OP_SUPPORTED (1U << 0)
 struct io_uring_probe_op {
@@ -387,11 +380,14 @@ struct io_uring_buf_ring {
     __DECLARE_FLEX_ARRAY(struct io_uring_buf, bufs);
   };
 };
+enum {
+  IOU_PBUF_RING_MMAP = 1,
+};
 struct io_uring_buf_reg {
   __u64 ring_addr;
   __u32 ring_entries;
   __u16 bgid;
-  __u16 pad;
+  __u16 flags;
   __u64 resv[3];
 };
 enum {

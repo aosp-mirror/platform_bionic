@@ -28,8 +28,45 @@
 
 #pragma once
 
-union SigSetConverter {
-  int bsd;
-  sigset_t sigset;
-  sigset64_t sigset64;
+// Android's 32-bit ABI shipped with a sigset_t too small to include any
+// of the realtime signals, so we have both sigset_t and sigset64_t. Many
+// new system calls only accept a sigset64_t, so this helps paper over
+// the difference at zero cost to LP64 in most cases after the optimizer
+// removes the unnecessary temporary `ptr`.
+struct SigSetConverter {
+ public:
+  SigSetConverter(const sigset_t* s) : SigSetConverter(const_cast<sigset_t*>(s)) {}
+
+  SigSetConverter(sigset_t* s) {
+#if defined(__LP64__)
+    // sigset_t == sigset64_t on LP64.
+    ptr = s;
+#else
+    sigset64 = {};
+    if (s != nullptr) {
+      original_ptr = s;
+      sigset = *s;
+      ptr = &sigset64;
+    } else {
+      ptr = nullptr;
+    }
+#endif
+  }
+
+  void copy_out() {
+#if defined(__LP64__)
+    // We used the original pointer directly, so no copy needed.
+#else
+    *original_ptr = sigset;
+#endif
+  }
+
+  sigset64_t* ptr;
+
+ private:
+  [[maybe_unused]] sigset_t* original_ptr;
+  union {
+    sigset_t sigset;
+    sigset64_t sigset64;
+  };
 };

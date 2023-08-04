@@ -797,7 +797,7 @@ struct i915_context_param_engines {
 #define I915_CONTEXT_ENGINES_EXT_LOAD_BALANCE 0
 #define I915_CONTEXT_ENGINES_EXT_BOND 1
 #define I915_CONTEXT_ENGINES_EXT_PARALLEL_SUBMIT 2
-  struct i915_engine_class_instance engines[0];
+  struct i915_engine_class_instance engines[];
 } __attribute__((packed));
 #define I915_DEFINE_CONTEXT_PARAM_ENGINES(name__,N__) struct { __u64 extensions; struct i915_engine_class_instance engines[N__]; \
 } __attribute__((packed)) name__
@@ -849,6 +849,8 @@ enum drm_i915_oa_format {
   I915_OA_FORMAT_A32u40_A4u32_B8_C8,
   I915_OAR_FORMAT_A32u40_A4u32_B8_C8,
   I915_OA_FORMAT_A24u40_A14u32_B8_C8,
+  I915_OAM_FORMAT_MPEC8u64_B8_C8,
+  I915_OAM_FORMAT_MPEC8u32_B8_C8,
   I915_OA_FORMAT_MAX
 };
 enum drm_i915_perf_property_id {
@@ -860,6 +862,8 @@ enum drm_i915_perf_property_id {
   DRM_I915_PERF_PROP_HOLD_PREEMPTION,
   DRM_I915_PERF_PROP_GLOBAL_SSEU,
   DRM_I915_PERF_PROP_POLL_OA_PERIOD,
+  DRM_I915_PERF_PROP_OA_ENGINE_CLASS,
+  DRM_I915_PERF_PROP_OA_ENGINE_INSTANCE,
   DRM_I915_PERF_PROP_MAX
 };
 struct drm_i915_perf_open_param {

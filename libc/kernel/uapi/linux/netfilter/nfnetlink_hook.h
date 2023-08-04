@@ -50,5 +50,12 @@ enum nfnl_hook_chain_desc_attributes {
 #define NFNLA_CHAIN_MAX (__NFNLA_CHAIN_MAX - 1)
 enum nfnl_hook_chaintype {
   NFNL_HOOK_TYPE_NFTABLES = 0x1,
+  NFNL_HOOK_TYPE_BPF,
 };
+enum nfnl_hook_bpf_attributes {
+  NFNLA_HOOK_BPF_UNSPEC,
+  NFNLA_HOOK_BPF_ID,
+  __NFNLA_HOOK_BPF_MAX,
+};
+#define NFNLA_HOOK_BPF_MAX (__NFNLA_HOOK_BPF_MAX - 1)
 #endif

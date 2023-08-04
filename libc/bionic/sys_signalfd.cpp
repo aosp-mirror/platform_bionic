@@ -32,12 +32,12 @@
 
 extern "C" int __signalfd4(int, const sigset64_t*, size_t, int);
 
-int signalfd(int fd, const sigset_t* mask, int flags) {
-  SigSetConverter set = {};
-  set.sigset = *mask;
-  return signalfd64(fd, &set.sigset64, flags);
-}
-
 int signalfd64(int fd, const sigset64_t* mask, int flags) {
   return __signalfd4(fd, mask, sizeof(*mask), flags);
+}
+
+int signalfd(int fd, const sigset_t* mask, int flags) {
+  // The underlying `__signalfd4` system call only takes `sigset64_t`.
+  SigSetConverter set{mask};
+  return signalfd64(fd, set.ptr, flags);
 }

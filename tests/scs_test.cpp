@@ -16,7 +16,11 @@
 
 #include <gtest/gtest.h>
 
+#include <android-base/silent_death_test.h>
+
 #include "private/bionic_constants.h"
+
+using scs_DeathTest = SilentDeathTest;
 
 int recurse2(int count);
 
@@ -30,7 +34,7 @@ __attribute__((weak, noinline)) int recurse2(int count) {
   return 0;
 }
 
-TEST(scs_test, stack_overflow) {
+TEST_F(scs_DeathTest, stack_overflow) {
 #if defined(__aarch64__) || defined(__riscv)
   ASSERT_EXIT(recurse1(SCS_SIZE), testing::KilledBySignal(SIGSEGV), "");
 #else

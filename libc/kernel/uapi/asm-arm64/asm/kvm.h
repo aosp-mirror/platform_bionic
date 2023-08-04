@@ -126,6 +126,10 @@ struct kvm_arm_copy_mte_tags {
   __u64 flags;
   __u64 reserved[2];
 };
+struct kvm_arm_counter_offset {
+  __u64 counter_offset;
+  __u64 reserved;
+};
 #define KVM_ARM_TAGS_TO_GUEST 0
 #define KVM_ARM_TAGS_FROM_GUEST 1
 #define KVM_REG_ARM_COPROC_MASK 0x000000000FFF0000
@@ -204,6 +208,8 @@ enum {
   KVM_REG_ARM_VENDOR_HYP_BIT_FUNC_FEAT = 0,
   KVM_REG_ARM_VENDOR_HYP_BIT_PTP = 1,
 };
+#define KVM_ARM_VM_SMCCC_CTRL 0
+#define KVM_ARM_VM_SMCCC_FILTER 0
 #define KVM_DEV_ARM_VGIC_GRP_ADDR 0
 #define KVM_DEV_ARM_VGIC_GRP_DIST_REGS 1
 #define KVM_DEV_ARM_VGIC_GRP_CPU_REGS 2
@@ -237,6 +243,8 @@ enum {
 #define KVM_ARM_VCPU_TIMER_CTRL 1
 #define KVM_ARM_VCPU_TIMER_IRQ_VTIMER 0
 #define KVM_ARM_VCPU_TIMER_IRQ_PTIMER 1
+#define KVM_ARM_VCPU_TIMER_IRQ_HVTIMER 2
+#define KVM_ARM_VCPU_TIMER_IRQ_HPTIMER 3
 #define KVM_ARM_VCPU_PVTIME_CTRL 2
 #define KVM_ARM_VCPU_PVTIME_IPA 0
 #define KVM_ARM_IRQ_VCPU2_SHIFT 28
@@ -266,5 +274,18 @@ enum {
 #define KVM_PSCI_RET_DENIED PSCI_RET_DENIED
 #define KVM_SYSTEM_EVENT_RESET_FLAG_PSCI_RESET2 (1ULL << 0)
 #define KVM_EXIT_FAIL_ENTRY_CPU_UNSUPPORTED (1ULL << 0)
+enum kvm_smccc_filter_action {
+  KVM_SMCCC_FILTER_HANDLE = 0,
+  KVM_SMCCC_FILTER_DENY,
+  KVM_SMCCC_FILTER_FWD_TO_USER,
+};
+struct kvm_smccc_filter {
+  __u32 base;
+  __u32 nr_functions;
+  __u8 action;
+  __u8 pad[15];
+};
+#define KVM_HYPERCALL_EXIT_SMC (1U << 0)
+#define KVM_HYPERCALL_EXIT_16BIT (1U << 1)
 #endif
 #endif

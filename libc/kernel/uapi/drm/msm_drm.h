@@ -85,7 +85,8 @@ struct drm_msm_gem_info {
 #define MSM_PREP_READ 0x01
 #define MSM_PREP_WRITE 0x02
 #define MSM_PREP_NOSYNC 0x04
-#define MSM_PREP_FLAGS (MSM_PREP_READ | MSM_PREP_WRITE | MSM_PREP_NOSYNC)
+#define MSM_PREP_BOOST 0x08
+#define MSM_PREP_FLAGS (MSM_PREP_READ | MSM_PREP_WRITE | MSM_PREP_NOSYNC | MSM_PREP_BOOST | 0)
 struct drm_msm_gem_cpu_prep {
   __u32 handle;
   __u32 op;
@@ -96,7 +97,11 @@ struct drm_msm_gem_cpu_fini {
 };
 struct drm_msm_gem_submit_reloc {
   __u32 submit_offset;
+#ifdef __cplusplus
+  __u32 _or;
+#else
   __u32 or;
+#endif
   __s32 shift;
   __u32 reloc_idx;
   __u64 reloc_offset;
@@ -154,9 +159,11 @@ struct drm_msm_gem_submit {
   __u32 syncobj_stride;
   __u32 pad;
 };
+#define MSM_WAIT_FENCE_BOOST 0x00000001
+#define MSM_WAIT_FENCE_FLAGS (MSM_WAIT_FENCE_BOOST | 0)
 struct drm_msm_wait_fence {
   __u32 fence;
-  __u32 pad;
+  __u32 flags;
   struct drm_msm_timespec timeout;
   __u32 queueid;
 };
