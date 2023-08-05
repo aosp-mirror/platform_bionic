@@ -90,3 +90,5 @@
 
 #define NOTE_GNU_PROPERTY() \
     __bionic_asm_custom_note_gnu_section()
+
+#define L(__label) .L##__label

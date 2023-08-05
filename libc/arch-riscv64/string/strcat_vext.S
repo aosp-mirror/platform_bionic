@@ -55,7 +55,7 @@
 
 #if defined(__riscv_v)
 
-#include "sys/asm.h"
+#include <private/bionic_asm.h>
 
 #define pDst a0
 #define pSrc a1
