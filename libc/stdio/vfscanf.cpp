@@ -327,12 +327,12 @@ literal:
             fp->_r--;
             memset(&mbs, 0, sizeof(mbs));
             nconv = mbrtowc(wcp, buf, bytes, &mbs);
-            if (nconv == __MB_ERR_ILLEGAL_SEQUENCE) {
+            if (nconv == BIONIC_MULTIBYTE_RESULT_ILLEGAL_SEQUENCE) {
               fp->_flags |= __SERR;
               goto input_failure;
             }
             if (nconv == 0 && !(flags & SUPPRESS)) *wcp = L'\0';
-            if (nconv != __MB_ERR_INCOMPLETE_SEQUENCE) {
+            if (nconv != BIONIC_MULTIBYTE_RESULT_INCOMPLETE_SEQUENCE) {
               nread += bytes;
               width--;
               if (!(flags & SUPPRESS)) wcp++;
@@ -417,11 +417,11 @@ literal:
             wchar_t wc = L'\0';
             memset(&mbs, 0, sizeof(mbs));
             nconv = mbrtowc(&wc, buf, bytes, &mbs);
-            if (nconv == __MB_ERR_ILLEGAL_SEQUENCE) {
+            if (nconv == BIONIC_MULTIBYTE_RESULT_ILLEGAL_SEQUENCE) {
               fp->_flags |= __SERR;
               goto input_failure;
             }
-            if (nconv != __MB_ERR_INCOMPLETE_SEQUENCE) {
+            if (nconv != BIONIC_MULTIBYTE_RESULT_INCOMPLETE_SEQUENCE) {
               if ((c == CT_CCL && wctob(wc) != EOF && !ccltab[wctob(wc)]) || (c == CT_STRING && iswspace(wc))) {
                 while (bytes != 0) {
                   bytes--;
