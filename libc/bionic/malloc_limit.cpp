@@ -278,7 +278,7 @@ static bool EnableLimitDispatchTable() {
   // being called, allow a short period for the signal handler to complete
   // before failing.
   bool enabled = false;
-  size_t num_tries = 20;
+  size_t num_tries = 200;
   while (true) {
     if (!atomic_exchange(&gGlobalsMutating, true)) {
       __libc_globals.mutate([](libc_globals* globals) {
@@ -328,9 +328,16 @@ bool LimitEnable(void* arg, size_t arg_size) {
     current_allocated = Malloc(mallinfo)().uordblks;
   }
 #endif
+  // This has to be set before the enable occurs since "gAllocated" is used
+  // to compute the limit. If the enable fails, "gAllocated" is never used.
   atomic_store(&gAllocated, current_allocated);
 
-  return EnableLimitDispatchTable();
+  if (!EnableLimitDispatchTable()) {
+    // Failed to enable, reset so a future enable will pass.
+    atomic_store(&limit_enabled, false);
+    return false;
+  }
+  return true;
 }
 
 static size_t LimitUsableSize(const void* mem) {
