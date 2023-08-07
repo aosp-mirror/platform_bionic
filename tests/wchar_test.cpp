@@ -29,6 +29,62 @@
 
 #define NUM_WCHARS(num_bytes) ((num_bytes)/sizeof(wchar_t))
 
+#ifdef __GLIBC__
+// glibc immediately dereferences the locale passed to all wcsto*_l functions,
+// even if it won't be used, and even if it's LC_GLOBAL_LOCALE, which isn't a
+// pointer to valid memory.
+static locale_t SAFE_LC_GLOBAL_LOCALE = duplocale(LC_GLOBAL_LOCALE);
+#else
+static locale_t SAFE_LC_GLOBAL_LOCALE = LC_GLOBAL_LOCALE;
+#endif
+
+// Modern versions of UTF-8 (https://datatracker.ietf.org/doc/html/rfc3629 and
+// newer) explicitly disallow code points beyond U+10FFFF, which exclude all 5-
+// and 6-byte sequences. Earlier versions of UTF-8 allowed the wider range:
+// https://datatracker.ietf.org/doc/html/rfc2279.
+//
+// Bionic's unicode implementation was written after the high values were
+// excluded, so it has never supported them. Other implementations (at least
+// as of glibc 2.36), do support those sequences.
+#if defined(__ANDROID__) || defined(ANDROID_HOST_MUSL)
+constexpr bool kLibcRejectsOverLongUtf8Sequences = true;
+#elif defined(__GLIBC__)
+constexpr bool kLibcRejectsOverLongUtf8Sequences = false;
+#else
+#error kLibcRejectsOverLongUtf8Sequences must be configured for this platform
+#endif
+
+// C23 7.31.6.3.2 (mbrtowc) says:
+//
+// Returns:
+//
+//     0 if the next n or fewer bytes complete the multibyte character that
+//     corresponds to the null wide character (which is the value stored).
+//
+//     (size_t)(-2) if the next n bytes contribute to an incomplete (but
+//     potentially valid) multibyte character, and all n bytes have been
+//     processed (no value is stored).
+//
+// Bionic historically interpreted the behavior when n is 0 to be the next 0
+// bytes decoding to the null. That's a pretty bad interpretation, and both
+// glibc and musl return -2 for that case.
+//
+// The tests currently checks the incorrect behavior for bionic because gtest
+// doesn't support explicit xfail annotations. The behavior difference here
+// should be fixed, but danalbert wants to add more tests before tackling the
+// bugs.
+#ifdef __ANDROID__
+constexpr size_t kExpectedResultForZeroLength = 0U;
+#else
+constexpr size_t kExpectedResultForZeroLength = static_cast<size_t>(-2);
+#endif
+
+#if defined(__GLIBC__)
+constexpr bool kLibcSupportsParsingBinaryLiterals = __GLIBC_PREREQ(2, 38);
+#else
+constexpr bool kLibcSupportsParsingBinaryLiterals = true;
+#endif
+
 TEST(wchar, sizeof_wchar_t) {
   EXPECT_EQ(4U, sizeof(wchar_t));
   EXPECT_EQ(4U, sizeof(wint_t));
@@ -36,7 +92,7 @@ TEST(wchar, sizeof_wchar_t) {
 
 TEST(wchar, mbrlen) {
   char bytes[] = { 'h', 'e', 'l', 'l', 'o', '\0' };
-  EXPECT_EQ(0U, mbrlen(&bytes[0], 0, nullptr));
+  EXPECT_EQ(kExpectedResultForZeroLength, mbrlen(&bytes[0], 0, nullptr));
   EXPECT_EQ(1U, mbrlen(&bytes[0], 1, nullptr));
 
   EXPECT_EQ(1U, mbrlen(&bytes[4], 1, nullptr));
@@ -95,6 +151,9 @@ TEST(wchar, wctomb_wcrtomb) {
 }
 
 TEST(wchar, wcrtomb_start_state) {
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
+
   char out[MB_LEN_MAX];
   mbstate_t ps;
 
@@ -118,6 +177,9 @@ TEST(wchar, wcrtomb_start_state) {
 }
 
 TEST(wchar, wcstombs_wcrtombs) {
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
+
   const wchar_t chars[] = { L'h', L'e', L'l', L'l', L'o', 0 };
   const wchar_t bad_chars[] = { L'h', L'i', static_cast<wchar_t>(0xffffffff), 0 };
   const wchar_t* src;
@@ -255,63 +317,98 @@ TEST(wchar, wcsstr_80199) {
 TEST(wchar, mbtowc) {
   wchar_t out[8];
 
+  // bionic has the same misunderstanding of the result for a zero-length
+  // conversion for mbtowc as it does for all the other multibyte conversion
+  // functions but mbtowc returns different values than all the others:
+  //
+  // C23 7.24.7.2.4:
+  //
+  // If s is a null pointer, the mbtowc function returns a nonzero or zero
+  // value, if multibyte character encodings, respectively, do or do not have
+  // state-dependent encodings. If s is not a null pointer, the mbtowc function
+  // either returns 0 (if s points to the null character), or returns the number
+  // of bytes that are contained in the converted multibyte character (if the
+  // next n or fewer bytes form a valid multibyte character), or returns -1 (if
+  // they do not form a valid multibyte character).
+
+#ifdef __BIONIC__
+  int expected_result_for_zero_length = 0;
+#else
+  int expected_result_for_zero_length = -1;
+#endif
+
   out[0] = 'x';
-  ASSERT_EQ(0, mbtowc(out, "hello", 0));
-  ASSERT_EQ('x', out[0]);
+  EXPECT_EQ(expected_result_for_zero_length, mbtowc(out, "hello", 0));
+  EXPECT_EQ('x', out[0]);
 
-  ASSERT_EQ(0, mbtowc(out, "hello", 0));
-  ASSERT_EQ(0, mbtowc(out, "", 0));
-  ASSERT_EQ(1, mbtowc(out, "hello", 1));
-  ASSERT_EQ(L'h', out[0]);
+  EXPECT_EQ(expected_result_for_zero_length, mbtowc(out, "hello", 0));
+  EXPECT_EQ(0, mbtowc(out, "", 0));
+  EXPECT_EQ(1, mbtowc(out, "hello", 1));
+  EXPECT_EQ(L'h', out[0]);
 
-  ASSERT_EQ(0, mbtowc(nullptr, "hello", 0));
-  ASSERT_EQ(0, mbtowc(nullptr, "", 0));
-  ASSERT_EQ(1, mbtowc(nullptr, "hello", 1));
+  EXPECT_EQ(expected_result_for_zero_length, mbtowc(nullptr, "hello", 0));
+  EXPECT_EQ(0, mbtowc(nullptr, "", 0));
+  EXPECT_EQ(1, mbtowc(nullptr, "hello", 1));
 
-  ASSERT_EQ(0, mbtowc(nullptr, nullptr, 0));
+  EXPECT_EQ(0, mbtowc(nullptr, nullptr, 0));
 }
 
 TEST(wchar, mbrtowc) {
   wchar_t out[8];
 
   out[0] = 'x';
-  ASSERT_EQ(0U, mbrtowc(out, "hello", 0, nullptr));
-  ASSERT_EQ('x', out[0]);
+  EXPECT_EQ(kExpectedResultForZeroLength, mbrtowc(out, "hello", 0, nullptr));
+  EXPECT_EQ('x', out[0]);
 
-  ASSERT_EQ(0U, mbrtowc(out, "hello", 0, nullptr));
-  ASSERT_EQ(0U, mbrtowc(out, "", 0, nullptr));
-  ASSERT_EQ(1U, mbrtowc(out, "hello", 1, nullptr));
-  ASSERT_EQ(L'h', out[0]);
+  EXPECT_EQ(kExpectedResultForZeroLength, mbrtowc(out, "hello", 0, nullptr));
+  EXPECT_EQ(kExpectedResultForZeroLength, mbrtowc(out, "", 0, nullptr));
+  EXPECT_EQ(1U, mbrtowc(out, "hello", 1, nullptr));
+  EXPECT_EQ(L'h', out[0]);
 
-  ASSERT_EQ(0U, mbrtowc(nullptr, "hello", 0, nullptr));
-  ASSERT_EQ(0U, mbrtowc(nullptr, "", 0, nullptr));
-  ASSERT_EQ(1U, mbrtowc(nullptr, "hello", 1, nullptr));
+  EXPECT_EQ(kExpectedResultForZeroLength, mbrtowc(nullptr, "hello", 0, nullptr));
+  EXPECT_EQ(kExpectedResultForZeroLength, mbrtowc(nullptr, "", 0, nullptr));
+  EXPECT_EQ(1U, mbrtowc(nullptr, "hello", 1, nullptr));
 
-  ASSERT_EQ(0U, mbrtowc(nullptr, nullptr, 0, nullptr));
+  EXPECT_EQ(0U, mbrtowc(nullptr, nullptr, 0, nullptr));
 
-  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  EXPECT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
   uselocale(LC_GLOBAL_LOCALE);
 
   // 1-byte UTF-8.
-  ASSERT_EQ(1U, mbrtowc(out, "abcdef", 6, nullptr));
-  ASSERT_EQ(L'a', out[0]);
+  EXPECT_EQ(1U, mbrtowc(out, "abcdef", 6, nullptr));
+  EXPECT_EQ(L'a', out[0]);
   // 2-byte UTF-8.
-  ASSERT_EQ(2U, mbrtowc(out, "\xc2\xa2" "cdef", 6, nullptr));
-  ASSERT_EQ(static_cast<wchar_t>(0x00a2), out[0]);
+  EXPECT_EQ(2U, mbrtowc(out,
+                        "\xc2\xa2"
+                        "cdef",
+                        6, nullptr));
+  EXPECT_EQ(static_cast<wchar_t>(0x00a2), out[0]);
   // 3-byte UTF-8.
-  ASSERT_EQ(3U, mbrtowc(out, "\xe2\x82\xac" "def", 6, nullptr));
-  ASSERT_EQ(static_cast<wchar_t>(0x20ac), out[0]);
+  EXPECT_EQ(3U, mbrtowc(out,
+                        "\xe2\x82\xac"
+                        "def",
+                        6, nullptr));
+  EXPECT_EQ(static_cast<wchar_t>(0x20ac), out[0]);
   // 4-byte UTF-8.
-  ASSERT_EQ(4U, mbrtowc(out, "\xf0\xa4\xad\xa2" "ef", 6, nullptr));
-  ASSERT_EQ(static_cast<wchar_t>(0x24b62), out[0]);
+  EXPECT_EQ(4U, mbrtowc(out,
+                        "\xf0\xa4\xad\xa2"
+                        "ef",
+                        6, nullptr));
+  EXPECT_EQ(static_cast<wchar_t>(0x24b62), out[0]);
 #if defined(__BIONIC__) // glibc allows this.
   // Illegal 5-byte UTF-8.
-  ASSERT_EQ(static_cast<size_t>(-1), mbrtowc(out, "\xf8\xa1\xa2\xa3\xa4" "f", 6, nullptr));
-  ASSERT_EQ(EILSEQ, errno);
+  EXPECT_EQ(static_cast<size_t>(-1), mbrtowc(out,
+                                             "\xf8\xa1\xa2\xa3\xa4"
+                                             "f",
+                                             6, nullptr));
+  EXPECT_EQ(EILSEQ, errno);
 #endif
   // Illegal over-long sequence.
-  ASSERT_EQ(static_cast<size_t>(-1), mbrtowc(out, "\xf0\x82\x82\xac" "ef", 6, nullptr));
-  ASSERT_EQ(EILSEQ, errno);
+  EXPECT_EQ(static_cast<size_t>(-1), mbrtowc(out,
+                                             "\xf0\x82\x82\xac"
+                                             "ef",
+                                             6, nullptr));
+  EXPECT_EQ(EILSEQ, errno);
 }
 
 TEST(wchar, mbrtowc_valid_non_characters) {
@@ -332,8 +429,14 @@ TEST(wchar, mbrtowc_out_of_range) {
 
   wchar_t out[8] = {};
   errno = 0;
-  ASSERT_EQ(static_cast<size_t>(-1), mbrtowc(out, "\xf5\x80\x80\x80", 4, nullptr));
-  ASSERT_EQ(EILSEQ, errno);
+  auto result = mbrtowc(out, "\xf5\x80\x80\x80", 4, nullptr);
+  if (kLibcRejectsOverLongUtf8Sequences) {
+    ASSERT_EQ(static_cast<size_t>(-1), result);
+    ASSERT_EQ(EILSEQ, errno);
+  } else {
+    ASSERT_EQ(4U, result);
+    ASSERT_EQ(0, errno);
+  }
 }
 
 static void test_mbrtowc_incomplete(mbstate_t* ps) {
@@ -446,8 +549,8 @@ template <typename T>
 void TestSingleWcsToInt(WcsToIntFn<T> fn, const wchar_t* str, int base,
                         T expected_value, ptrdiff_t expected_len) {
   wchar_t* p;
-  ASSERT_EQ(expected_value, fn(str, &p, base));
-  ASSERT_EQ(expected_len, p - str) << str;
+  EXPECT_EQ(expected_value, fn(str, &p, base)) << str << " " << base;
+  EXPECT_EQ(expected_len, p - str) << str << " " << base;
 }
 
 template <typename T>
@@ -460,7 +563,9 @@ void TestWcsToInt(WcsToIntFn<T> fn) {
   TestSingleWcsToInt(fn, L"   123 45", 0, static_cast<T>(123), 6);
   TestSingleWcsToInt(fn, L"  -123", 0, static_cast<T>(-123), 6);
   TestSingleWcsToInt(fn, L"0x10000", 0, static_cast<T>(65536), 7);
-  TestSingleWcsToInt(fn, L"0b1011", 0, static_cast<T>(0b1011), 6);
+  if (kLibcSupportsParsingBinaryLiterals) {
+    TestSingleWcsToInt(fn, L"0b1011", 0, static_cast<T>(0b1011), 6);
+  }
 }
 
 template <typename T>
@@ -584,7 +689,7 @@ TEST(wchar, wcsftime__wcsftime_l) {
 
   EXPECT_EQ(24U, wcsftime(buf, sizeof(buf), L"%c", &t));
   EXPECT_STREQ(L"Sun Mar 10 00:00:00 2100", buf);
-  EXPECT_EQ(24U, wcsftime_l(buf, sizeof(buf), L"%c", &t, LC_GLOBAL_LOCALE));
+  EXPECT_EQ(24U, wcsftime_l(buf, sizeof(buf), L"%c", &t, SAFE_LC_GLOBAL_LOCALE));
   EXPECT_STREQ(L"Sun Mar 10 00:00:00 2100", buf);
 }
 
@@ -781,25 +886,25 @@ TEST(wchar, wcstoull_EINVAL) {
 
 TEST(wchar, wcstoll_l_EINVAL) {
   errno = 0;
-  wcstoll_l(L"123", nullptr, -1, LC_GLOBAL_LOCALE);
+  wcstoll_l(L"123", nullptr, -1, SAFE_LC_GLOBAL_LOCALE);
   ASSERT_EQ(EINVAL, errno);
   errno = 0;
-  wcstoll_l(L"123", nullptr, 1, LC_GLOBAL_LOCALE);
+  wcstoll_l(L"123", nullptr, 1, SAFE_LC_GLOBAL_LOCALE);
   ASSERT_EQ(EINVAL, errno);
   errno = 0;
-  wcstoll_l(L"123", nullptr, 37, LC_GLOBAL_LOCALE);
+  wcstoll_l(L"123", nullptr, 37, SAFE_LC_GLOBAL_LOCALE);
   ASSERT_EQ(EINVAL, errno);
 }
 
 TEST(wchar, wcstoull_l_EINVAL) {
   errno = 0;
-  wcstoull_l(L"123", nullptr, -1, LC_GLOBAL_LOCALE);
+  wcstoull_l(L"123", nullptr, -1, SAFE_LC_GLOBAL_LOCALE);
   ASSERT_EQ(EINVAL, errno);
   errno = 0;
-  wcstoull_l(L"123", nullptr, 1, LC_GLOBAL_LOCALE);
+  wcstoull_l(L"123", nullptr, 1, SAFE_LC_GLOBAL_LOCALE);
   ASSERT_EQ(EINVAL, errno);
   errno = 0;
-  wcstoull_l(L"123", nullptr, 37, LC_GLOBAL_LOCALE);
+  wcstoull_l(L"123", nullptr, 37, SAFE_LC_GLOBAL_LOCALE);
   ASSERT_EQ(EINVAL, errno);
 }
 
@@ -922,7 +1027,7 @@ TEST(wchar, wcstold_hex_inf_nan) {
 
 TEST(wchar, wcstod_l) {
 #if !defined(ANDROID_HOST_MUSL)
-  EXPECT_EQ(1.23, wcstod_l(L"1.23", nullptr, LC_GLOBAL_LOCALE));
+  EXPECT_EQ(1.23, wcstod_l(L"1.23", nullptr, SAFE_LC_GLOBAL_LOCALE));
 #else
   GTEST_SKIP() << "musl doesn't have wcstod_l";
 #endif
@@ -930,7 +1035,7 @@ TEST(wchar, wcstod_l) {
 
 TEST(wchar, wcstof_l) {
 #if !defined(ANDROID_HOST_MUSL)
-  EXPECT_EQ(1.23f, wcstof_l(L"1.23", nullptr, LC_GLOBAL_LOCALE));
+  EXPECT_EQ(1.23f, wcstof_l(L"1.23", nullptr, SAFE_LC_GLOBAL_LOCALE));
 #else
   GTEST_SKIP() << "musl doesn't have wcstof_l";
 #endif
@@ -938,30 +1043,30 @@ TEST(wchar, wcstof_l) {
 
 TEST(wchar, wcstol_l) {
 #if !defined(ANDROID_HOST_MUSL)
-  EXPECT_EQ(123L, wcstol_l(L"123", nullptr, 10, LC_GLOBAL_LOCALE));
+  EXPECT_EQ(123L, wcstol_l(L"123", nullptr, 10, SAFE_LC_GLOBAL_LOCALE));
 #else
   GTEST_SKIP() << "musl doesn't have wcstol_l";
 #endif
 }
 
 TEST(wchar, wcstold_l) {
-  EXPECT_EQ(1.23L, wcstold_l(L"1.23", nullptr, LC_GLOBAL_LOCALE));
+  EXPECT_EQ(1.23L, wcstold_l(L"1.23", nullptr, SAFE_LC_GLOBAL_LOCALE));
 }
 
 TEST(wchar, wcstoll_l) {
-  EXPECT_EQ(123LL, wcstoll_l(L"123", nullptr, 10, LC_GLOBAL_LOCALE));
+  EXPECT_EQ(123LL, wcstoll_l(L"123", nullptr, 10, SAFE_LC_GLOBAL_LOCALE));
 }
 
 TEST(wchar, wcstoul_l) {
 #if !defined(ANDROID_HOST_MUSL)
-  EXPECT_EQ(123UL, wcstoul_l(L"123", nullptr, 10, LC_GLOBAL_LOCALE));
+  EXPECT_EQ(123UL, wcstoul_l(L"123", nullptr, 10, SAFE_LC_GLOBAL_LOCALE));
 #else
   GTEST_SKIP() << "musl doesn't have wcstoul_l";
 #endif
 }
 
 TEST(wchar, wcstoull_l) {
-  EXPECT_EQ(123ULL, wcstoull_l(L"123", nullptr, 10, LC_GLOBAL_LOCALE));
+  EXPECT_EQ(123ULL, wcstoull_l(L"123", nullptr, 10, SAFE_LC_GLOBAL_LOCALE));
 }
 
 static void AssertWcwidthRange(wchar_t begin, wchar_t end, int expected) {

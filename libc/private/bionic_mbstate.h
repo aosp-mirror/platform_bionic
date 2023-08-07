@@ -34,15 +34,9 @@
 
 __BEGIN_DECLS
 
-/*
- * These return values are specified by POSIX for multibyte conversion
- * functions.
- */
-#define __MB_ERR_ILLEGAL_SEQUENCE static_cast<size_t>(-1)
-#define __MB_ERR_INCOMPLETE_SEQUENCE static_cast<size_t>(-2)
-
-#define __MB_IS_ERR(rv) (rv == __MB_ERR_ILLEGAL_SEQUENCE || \
-                         rv == __MB_ERR_INCOMPLETE_SEQUENCE)
+#define __MB_IS_ERR(rv)                              \
+  (rv == BIONIC_MULTIBYTE_RESULT_ILLEGAL_SEQUENCE || \
+   rv == BIONIC_MULTIBYTE_RESULT_INCOMPLETE_SEQUENCE)
 
 static inline __wur bool mbstate_is_initial(const mbstate_t* ps) {
   return *(reinterpret_cast<const uint32_t*>(ps->__seq)) == 0;
@@ -66,10 +60,10 @@ static inline __wur uint8_t mbstate_get_byte(const mbstate_t* ps, int n) {
 static inline __wur size_t mbstate_reset_and_return_illegal(int _errno, mbstate_t* ps) {
   errno = _errno;
   *(reinterpret_cast<uint32_t*>(ps->__seq)) = 0;
-  return __MB_ERR_ILLEGAL_SEQUENCE;
+  return BIONIC_MULTIBYTE_RESULT_ILLEGAL_SEQUENCE;
 }
 
-static inline __wur size_t mbstate_reset_and_return(int _return, mbstate_t* ps) {
+static inline __wur size_t mbstate_reset_and_return(size_t _return, mbstate_t* ps) {
   *(reinterpret_cast<uint32_t*>(ps->__seq)) = 0;
   return _return;
 }
