@@ -54,31 +54,6 @@ constexpr bool kLibcRejectsOverLongUtf8Sequences = false;
 #error kLibcRejectsOverLongUtf8Sequences must be configured for this platform
 #endif
 
-// C23 7.31.6.3.2 (mbrtowc) says:
-//
-// Returns:
-//
-//     0 if the next n or fewer bytes complete the multibyte character that
-//     corresponds to the null wide character (which is the value stored).
-//
-//     (size_t)(-2) if the next n bytes contribute to an incomplete (but
-//     potentially valid) multibyte character, and all n bytes have been
-//     processed (no value is stored).
-//
-// Bionic historically interpreted the behavior when n is 0 to be the next 0
-// bytes decoding to the null. That's a pretty bad interpretation, and both
-// glibc and musl return -2 for that case.
-//
-// The tests currently checks the incorrect behavior for bionic because gtest
-// doesn't support explicit xfail annotations. The behavior difference here
-// should be fixed, but danalbert wants to add more tests before tackling the
-// bugs.
-#ifdef __ANDROID__
-constexpr size_t kExpectedResultForZeroLength = 0U;
-#else
-constexpr size_t kExpectedResultForZeroLength = static_cast<size_t>(-2);
-#endif
-
 #if defined(__GLIBC__)
 constexpr bool kLibcSupportsParsingBinaryLiterals = __GLIBC_PREREQ(2, 38);
 #else
@@ -92,7 +67,7 @@ TEST(wchar, sizeof_wchar_t) {
 
 TEST(wchar, mbrlen) {
   char bytes[] = { 'h', 'e', 'l', 'l', 'o', '\0' };
-  EXPECT_EQ(kExpectedResultForZeroLength, mbrlen(&bytes[0], 0, nullptr));
+  EXPECT_EQ(static_cast<size_t>(-2), mbrlen(&bytes[0], 0, nullptr));
   EXPECT_EQ(1U, mbrlen(&bytes[0], 1, nullptr));
 
   EXPECT_EQ(1U, mbrlen(&bytes[4], 1, nullptr));
@@ -317,37 +292,36 @@ TEST(wchar, wcsstr_80199) {
 TEST(wchar, mbtowc) {
   wchar_t out[8];
 
-  // bionic has the same misunderstanding of the result for a zero-length
-  // conversion for mbtowc as it does for all the other multibyte conversion
-  // functions but mbtowc returns different values than all the others:
+  // mbtowc and all the mbrto* APIs behave slightly differently when n is 0:
   //
-  // C23 7.24.7.2.4:
+  // mbrtowc returns 0 "if the next n or fewer bytes complete the multibyte
+  // character that corresponds to the null wide character"
   //
-  // If s is a null pointer, the mbtowc function returns a nonzero or zero
-  // value, if multibyte character encodings, respectively, do or do not have
-  // state-dependent encodings. If s is not a null pointer, the mbtowc function
-  // either returns 0 (if s points to the null character), or returns the number
-  // of bytes that are contained in the converted multibyte character (if the
-  // next n or fewer bytes form a valid multibyte character), or returns -1 (if
-  // they do not form a valid multibyte character).
-
-#ifdef __BIONIC__
-  int expected_result_for_zero_length = 0;
+  // mbrtoc says: "If s is not a null pointer, the mbtowc function either
+  // returns 0 (if s points to the null character)..."
+  //
+  // So mbrtowc will not provide the correct mbtowc return value for "" and
+  // n = 0.
+  //
+  // glibc gets this right, but all the BSDs (including macOS) and bionic (by
+  // way of openbsd) return -1 instead of 0.
+#ifdef __GLIBC__
+  int expected_result_for_zero_length_empty_string = 0;
 #else
-  int expected_result_for_zero_length = -1;
+  int expected_result_for_zero_length_empty_string = -1;
 #endif
 
   out[0] = 'x';
-  EXPECT_EQ(expected_result_for_zero_length, mbtowc(out, "hello", 0));
+  EXPECT_EQ(-1, mbtowc(out, "hello", 0));
   EXPECT_EQ('x', out[0]);
 
-  EXPECT_EQ(expected_result_for_zero_length, mbtowc(out, "hello", 0));
-  EXPECT_EQ(0, mbtowc(out, "", 0));
+  EXPECT_EQ(-1, mbtowc(out, "hello", 0));
+  EXPECT_EQ(expected_result_for_zero_length_empty_string, mbtowc(out, "", 0));
   EXPECT_EQ(1, mbtowc(out, "hello", 1));
   EXPECT_EQ(L'h', out[0]);
 
-  EXPECT_EQ(expected_result_for_zero_length, mbtowc(nullptr, "hello", 0));
-  EXPECT_EQ(0, mbtowc(nullptr, "", 0));
+  EXPECT_EQ(-1, mbtowc(nullptr, "hello", 0));
+  EXPECT_EQ(expected_result_for_zero_length_empty_string, mbtowc(nullptr, "", 0));
   EXPECT_EQ(1, mbtowc(nullptr, "hello", 1));
 
   EXPECT_EQ(0, mbtowc(nullptr, nullptr, 0));
@@ -357,16 +331,16 @@ TEST(wchar, mbrtowc) {
   wchar_t out[8];
 
   out[0] = 'x';
-  EXPECT_EQ(kExpectedResultForZeroLength, mbrtowc(out, "hello", 0, nullptr));
+  EXPECT_EQ(static_cast<size_t>(-2), mbrtowc(out, "hello", 0, nullptr));
   EXPECT_EQ('x', out[0]);
 
-  EXPECT_EQ(kExpectedResultForZeroLength, mbrtowc(out, "hello", 0, nullptr));
-  EXPECT_EQ(kExpectedResultForZeroLength, mbrtowc(out, "", 0, nullptr));
+  EXPECT_EQ(static_cast<size_t>(-2), mbrtowc(out, "hello", 0, nullptr));
+  EXPECT_EQ(static_cast<size_t>(-2), mbrtowc(out, "", 0, nullptr));
   EXPECT_EQ(1U, mbrtowc(out, "hello", 1, nullptr));
   EXPECT_EQ(L'h', out[0]);
 
-  EXPECT_EQ(kExpectedResultForZeroLength, mbrtowc(nullptr, "hello", 0, nullptr));
-  EXPECT_EQ(kExpectedResultForZeroLength, mbrtowc(nullptr, "", 0, nullptr));
+  EXPECT_EQ(static_cast<size_t>(-2), mbrtowc(nullptr, "hello", 0, nullptr));
+  EXPECT_EQ(static_cast<size_t>(-2), mbrtowc(nullptr, "", 0, nullptr));
   EXPECT_EQ(1U, mbrtowc(nullptr, "hello", 1, nullptr));
 
   EXPECT_EQ(0U, mbrtowc(nullptr, nullptr, 0, nullptr));
