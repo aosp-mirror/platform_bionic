@@ -40,31 +40,6 @@ constexpr bool kLibcRejectsOverLongUtf8Sequences = false;
 #error kLibcRejectsOverLongUtf8Sequences must be configured for this platform
 #endif
 
-// C23 7.30.1 (for each `mbrtoc*` function) says:
-//
-// Returns:
-//
-//     0 if the next n or fewer bytes complete the multibyte character that
-//     corresponds to the null wide character (which is the value stored).
-//
-//     (size_t)(-2) if the next n bytes contribute to an incomplete (but
-//     potentially valid) multibyte character, and all n bytes have been
-//     processed (no value is stored).
-//
-// Bionic historically interpreted the behavior when n is 0 to be the next 0
-// bytes decoding to the null. That's a pretty bad interpretation, and both
-// glibc and musl return -2 for that case.
-//
-// The tests currently checks the incorrect behavior for bionic because gtest
-// doesn't support explicit xfail annotations. The behavior difference here
-// should be fixed, but danalbert wants to add more tests before tackling the
-// bugs.
-#ifdef __ANDROID__
-constexpr size_t kExpectedResultForZeroLength = 0U;
-#else
-constexpr size_t kExpectedResultForZeroLength = static_cast<size_t>(-2);
-#endif
-
 TEST(uchar, sizeof_uchar_t) {
   EXPECT_EQ(2U, sizeof(char16_t));
   EXPECT_EQ(4U, sizeof(char32_t));
@@ -199,11 +174,11 @@ TEST(uchar, mbrtoc16_zero_len) {
   char16_t out;
 
   out = L'x';
-  EXPECT_EQ(kExpectedResultForZeroLength, mbrtoc16(&out, "hello", 0, nullptr));
+  EXPECT_EQ(static_cast<size_t>(-2), mbrtoc16(&out, "hello", 0, nullptr));
   EXPECT_EQ(L'x', out);
 
-  EXPECT_EQ(kExpectedResultForZeroLength, mbrtoc16(&out, "hello", 0, nullptr));
-  EXPECT_EQ(kExpectedResultForZeroLength, mbrtoc16(&out, "", 0, nullptr));
+  EXPECT_EQ(static_cast<size_t>(-2), mbrtoc16(&out, "hello", 0, nullptr));
+  EXPECT_EQ(static_cast<size_t>(-2), mbrtoc16(&out, "", 0, nullptr));
   EXPECT_EQ(1U, mbrtoc16(&out, "hello", 1, nullptr));
   EXPECT_EQ(L'h', out);
 }
@@ -224,32 +199,6 @@ TEST(uchar, mbrtoc16) {
   ASSERT_EQ(3U, mbrtoc16(&out, "\xe2\x82\xac" "def", 6, nullptr));
   ASSERT_EQ(static_cast<char16_t>(0x20ac), out);
   // 4-byte UTF-8 will be returned as a surrogate pair...
-#ifdef __BIONIC__
-  // https://issuetracker.google.com/289419882
-  //
-  // We misread the spec when implementing this. The first call should return
-  // the length of the decoded character, and the second call should return -3
-  // to indicate that the output is a continuation of the character decoded by
-  // the first call.
-  //
-  // C23 7.30.1.3.4:
-  //
-  //     between 1 and n inclusive if the next n or fewer bytes complete a valid
-  //     multibyte character (which is the value stored); the value returned is
-  //     the number of bytes that complete the multibyte character.
-  //
-  //     (size_t)(-3) if the next character resulting from a previous call has
-  //     been stored (no bytes from the input have been consumed by this call).
-  //
-  // Leaving the test for the wrong outputs here while we clean up and improve
-  // the rest of the tests to get a better handle on the behavior differences
-  // before fixing the bug.
-  ASSERT_EQ(static_cast<size_t>(-3),
-            mbrtoc16(&out, "\xf4\x8a\xaf\x8d", 6, nullptr));
-  ASSERT_EQ(static_cast<char16_t>(0xdbea), out);
-  ASSERT_EQ(4U, mbrtoc16(&out, "\xf4\x8a\xaf\x8d" "ef", 6, nullptr));
-  ASSERT_EQ(static_cast<char16_t>(0xdfcd), out);
-#else
   ASSERT_EQ(4U, mbrtoc16(&out, "\xf4\x8a\xaf\x8d", 6, nullptr));
   ASSERT_EQ(static_cast<char16_t>(0xdbea), out);
   ASSERT_EQ(static_cast<size_t>(-3), mbrtoc16(&out,
@@ -257,7 +206,6 @@ TEST(uchar, mbrtoc16) {
                                               "ef",
                                               6, nullptr));
   ASSERT_EQ(static_cast<char16_t>(0xdfcd), out);
-#endif
 }
 
 TEST(uchar, mbrtoc16_long_sequences) {
@@ -326,14 +274,6 @@ void test_mbrtoc16_incomplete(mbstate_t* ps) {
   // 4-byte UTF-8.
   ASSERT_EQ(static_cast<size_t>(-2), mbrtoc16(&out, "\xf4", 1, ps));
   ASSERT_EQ(static_cast<size_t>(-2), mbrtoc16(&out, "\x8a\xaf", 2, ps));
-#ifdef __BIONIC__
-  // https://issuetracker.google.com/289419882
-  // See explanation in mbrtoc16 test for the same bug.
-  ASSERT_EQ(static_cast<size_t>(-3), mbrtoc16(&out, "\x8d" "ef", 3, ps));
-  ASSERT_EQ(static_cast<char16_t>(0xdbea), out);
-  ASSERT_EQ(1U, mbrtoc16(&out, "\x80" "ef", 3, ps));
-  ASSERT_EQ(static_cast<char16_t>(0xdfcd), out);
-#else
   ASSERT_EQ(1U, mbrtoc16(&out,
                          "\x8d"
                          "ef",
@@ -344,7 +284,6 @@ void test_mbrtoc16_incomplete(mbstate_t* ps) {
                                               "ef",
                                               3, ps));
   ASSERT_EQ(static_cast<char16_t>(0xdfcd), out);
-#endif
   ASSERT_TRUE(mbsinit(ps));
 
   // Invalid 2-byte
@@ -444,16 +383,16 @@ TEST(uchar, mbrtoc32) {
   char32_t out[8];
 
   out[0] = L'x';
-  EXPECT_EQ(kExpectedResultForZeroLength, mbrtoc32(out, "hello", 0, nullptr));
+  EXPECT_EQ(static_cast<size_t>(-2), mbrtoc32(out, "hello", 0, nullptr));
   EXPECT_EQ(static_cast<char32_t>(L'x'), out[0]);
 
-  EXPECT_EQ(kExpectedResultForZeroLength, mbrtoc32(out, "hello", 0, nullptr));
-  EXPECT_EQ(kExpectedResultForZeroLength, mbrtoc32(out, "", 0, nullptr));
+  EXPECT_EQ(static_cast<size_t>(-2), mbrtoc32(out, "hello", 0, nullptr));
+  EXPECT_EQ(static_cast<size_t>(-2), mbrtoc32(out, "", 0, nullptr));
   EXPECT_EQ(1U, mbrtoc32(out, "hello", 1, nullptr));
   EXPECT_EQ(static_cast<char32_t>(L'h'), out[0]);
 
-  EXPECT_EQ(kExpectedResultForZeroLength, mbrtoc32(nullptr, "hello", 0, nullptr));
-  EXPECT_EQ(kExpectedResultForZeroLength, mbrtoc32(nullptr, "", 0, nullptr));
+  EXPECT_EQ(static_cast<size_t>(-2), mbrtoc32(nullptr, "hello", 0, nullptr));
+  EXPECT_EQ(static_cast<size_t>(-2), mbrtoc32(nullptr, "", 0, nullptr));
   EXPECT_EQ(1U, mbrtoc32(nullptr, "hello", 1, nullptr));
 
   EXPECT_EQ(0U, mbrtoc32(nullptr, nullptr, 0, nullptr));
