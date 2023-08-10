@@ -146,8 +146,8 @@ that you want to load directly from your APK must be page aligned
 (on a 4096-byte boundary) in the zip file and stored uncompressed.
 Current versions of the zipalign tool take care of alignment.
 
-Note that in API level 23 and above dlopen(3) will open a library from
-any zip file, not just your APK. Just give dlopen(3) a path of the form
+Note that in API level 23 and above dlopen(3) can open a library from
+any zip file, not just an APK. Just give dlopen(3) a path of the form
 "my_zip_file.zip!/libs/libstuff.so". As with APKs, the library must be
 page-aligned and stored uncompressed for this to work.
 
