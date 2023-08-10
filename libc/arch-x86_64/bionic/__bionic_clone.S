@@ -48,8 +48,8 @@ ENTRY_PRIVATE(__bionic_clone)
 
         # Check result.
         testq   %rax, %rax
-        jz      .L_bc_child
-        jg      .L_bc_parent
+        jz      L(bc_child)
+        jg      L(bc_parent)
 
         # An error occurred, set errno and return -1.
         negl    %eax
@@ -57,7 +57,7 @@ ENTRY_PRIVATE(__bionic_clone)
         call    __set_errno_internal
         ret
 
-.L_bc_child:
+L(bc_child):
         # We don't want anyone to unwind past this point.
         .cfi_undefined %rip
         .cfi_undefined %rbp
@@ -70,7 +70,7 @@ ENTRY_PRIVATE(__bionic_clone)
         call    __start_thread
         hlt
 
-.L_bc_parent:
+L(bc_parent):
         # We're the parent; nothing to do.
         ret
 END(__bionic_clone)
