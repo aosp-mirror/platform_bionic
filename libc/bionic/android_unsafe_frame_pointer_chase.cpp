@@ -74,7 +74,9 @@ __attribute__((no_sanitize("address", "hwaddress"))) size_t android_unsafe_frame
   while (1) {
 #if defined(__riscv)
     // Frame addresses seem to have been implemented incorrectly for RISC-V.
-    // See https://reviews.llvm.org/D87579.
+    // See https://reviews.llvm.org/D87579. We did at least manage to get this
+    // documented in the RISC-V psABI though:
+    // https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-cc.adoc#frame-pointer-convention
     auto* frame = reinterpret_cast<frame_record*>(begin - 16);
 #else
     auto* frame = reinterpret_cast<frame_record*>(begin);
