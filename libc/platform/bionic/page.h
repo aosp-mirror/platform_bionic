@@ -27,7 +27,7 @@ inline size_t page_size() {
 #if defined(PAGE_SIZE)
   return PAGE_SIZE;
 #else
-  static const size_t page_size = getauxval(PAGE_SIZE);
+  static const size_t page_size = getauxval(AT_PAGESZ);
   return page_size;
 #endif
 }
