@@ -66,12 +66,14 @@
 /**
  * The size in words of a riscv64 jmp_buf. Room for callee-saved registers,
  * including floating point, stack pointer and program counter, various
- * internal implementation details, and leaving some free space.
+ * internal implementation details, and leaving lots of free space.
  *
- * Coincidentally matches OpenBSD, though they also save/restore the
- * floating point status register too.
+ * Deliberately very large given the uncertainty around the final form of
+ * hardware shadow stack, and the fact that x86-64 glibc needed to steal
+ * space from their enormous sigset_t (which we don't have) to be able to
+ * implement the CET shadow stack.
  */
-#define _JBLEN 32
+#define _JBLEN 64
 #elif defined(__x86_64__)
 /** The size in words of an x86-64 jmp_buf. Inherited from OpenBSD. */
 #define _JBLEN 11
