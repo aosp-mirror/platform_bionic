@@ -60,6 +60,26 @@ extern "C" fn_ptr_t hwcap_resolver(unsigned long hwcap) {
   return ret42;
 }
 
+#elif defined(__riscv)
+
+#include <sys/hwprobe.h>
+
+static uint64_t g_hwcap;
+
+static riscv_hwprobe g_hwprobes[] = {{.key = RISCV_HWPROBE_KEY_IMA_EXT_0}};
+
+extern "C" fn_ptr_t hwcap_resolver(uint64_t hwcap, void* null) {
+  // Check hwcap like arm32/arm64.
+  g_hwcap = hwcap;
+
+  // For now, the pointer argument is reserved for future expansion.
+  if (null != NULL) abort();
+
+  // Ensure that __riscv_hwprobe() can be called from an ifunc.
+  if (__riscv_hwprobe(g_hwprobes, 1, 0, nullptr, 0) != 0) return nullptr;
+  return ret42;
+}
+
 #else
 
 extern "C" fn_ptr_t hwcap_resolver() {
@@ -81,6 +101,12 @@ TEST(ifunc, hwcap) {
   EXPECT_EQ(getauxval(AT_HWCAP2), g_arg._hwcap2);
 #elif defined(__arm__)
   EXPECT_EQ(getauxval(AT_HWCAP), g_hwcap);
+#elif defined(__riscv)
+  EXPECT_EQ(getauxval(AT_HWCAP), g_hwcap);
+
+  riscv_hwprobe probes[] = {{.key = RISCV_HWPROBE_KEY_IMA_EXT_0}};
+  ASSERT_EQ(0, __riscv_hwprobe(probes, 1, 0, nullptr, 0));
+  EXPECT_EQ(probes[0].value, g_hwprobes[0].value);
 #endif
 }
 
