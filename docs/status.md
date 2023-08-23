@@ -65,6 +65,10 @@ New libc functions in V (API level 35):
   * New system call wrappers: `__riscv_flush_icache` (`<sys/cachectl.h>`),
     `__riscv_hwprobe` (`<sys/hwprobe.h>`).
 
+New libc behavior in V (API level 35):
+  * Added `LD_SHOW_AUXV` to the dynamic linker to dump the ELF auxiliary
+    vector if the environment variable is set.
+
 New libc functions in U (API level 34):
   * `close_range` and `copy_file_range` (Linux-specific GNU extensions).
   * `memset_explicit` in <string.h> (C23 addition).
