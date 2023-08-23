@@ -32,6 +32,7 @@
 #include <sys/auxv.h>
 
 #include "linker.h"
+#include "linker_auxv.h"
 #include "linker_cfi.h"
 #include "linker_debug.h"
 #include "linker_debuggerd.h"
@@ -324,11 +325,13 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
 
   g_linker_logger.ResetState();
 
-  // Get a few environment variables.
+  // Enable debugging logs?
   const char* LD_DEBUG = getenv("LD_DEBUG");
   if (LD_DEBUG != nullptr) {
     g_ld_debug_verbosity = atoi(LD_DEBUG);
   }
+
+  if (getenv("LD_SHOW_AUXV") != nullptr) ld_show_auxv(args.auxv);
 
 #if defined(__LP64__)
   INFO("[ Android dynamic linker (64-bit) ]");
