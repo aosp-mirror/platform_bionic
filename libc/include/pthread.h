@@ -34,6 +34,7 @@
  */
 
 #include <limits.h>
+#include <bits/page_size.h>
 #include <bits/pthread_types.h>
 #include <sched.h>
 #include <sys/cdefs.h>
@@ -73,8 +74,13 @@ enum {
 #define PTHREAD_BARRIER_SERIAL_THREAD (-1)
 #endif
 
+
 #if defined(__LP64__)
+#if defined(PAGE_SIZE)
 #define PTHREAD_STACK_MIN (4 * PAGE_SIZE)
+#else
+#define PTHREAD_STACK_MIN 65536
+#endif
 #else
 #define PTHREAD_STACK_MIN (2 * PAGE_SIZE)
 #endif
