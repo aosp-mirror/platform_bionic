@@ -45,6 +45,15 @@ TEST(async_safe_log, smoke) {
   async_safe_format_buffer(buf, sizeof(buf), "aa%scc", "bb");
   EXPECT_STREQ("aabbcc", buf);
 
+  async_safe_format_buffer(buf, sizeof(buf), "a%bb", 1234);
+  EXPECT_STREQ("a10011010010b", buf);
+
+  async_safe_format_buffer(buf, sizeof(buf), "a%#bb", 1234);
+  EXPECT_STREQ("a0b10011010010b", buf);
+
+  async_safe_format_buffer(buf, sizeof(buf), "a%#Bb", 1234);
+  EXPECT_STREQ("a0B10011010010b", buf);
+
   async_safe_format_buffer(buf, sizeof(buf), "a%cc", 'b');
   EXPECT_STREQ("abc", buf);
 
@@ -76,8 +85,14 @@ TEST(async_safe_log, smoke) {
   async_safe_format_buffer(buf, sizeof(buf), "a%xz", 0x12ab);
   EXPECT_STREQ("a12abz", buf);
 
+  async_safe_format_buffer(buf, sizeof(buf), "a%#xz", 0x12ab);
+  EXPECT_STREQ("a0x12abz", buf);
+
   async_safe_format_buffer(buf, sizeof(buf), "a%Xz", 0x12ab);
   EXPECT_STREQ("a12ABz", buf);
+
+  async_safe_format_buffer(buf, sizeof(buf), "a%#Xz", 0x12ab);
+  EXPECT_STREQ("a0X12ABz", buf);
 
   async_safe_format_buffer(buf, sizeof(buf), "a%08xz", 0x123456);
   EXPECT_STREQ("a00123456z", buf);
