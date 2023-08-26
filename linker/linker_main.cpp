@@ -32,6 +32,7 @@
 #include <sys/auxv.h>
 
 #include "linker.h"
+#include "linker_auxv.h"
 #include "linker_cfi.h"
 #include "linker_debug.h"
 #include "linker_debuggerd.h"
@@ -44,7 +45,6 @@
 #include "linker_utils.h"
 
 #include "private/KernelArgumentBlock.h"
-#include "private/ScopedPthreadMutexLocker.h"
 #include "private/bionic_call_ifunc_resolver.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_tls.h"
@@ -325,11 +325,13 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
 
   g_linker_logger.ResetState();
 
-  // Get a few environment variables.
+  // Enable debugging logs?
   const char* LD_DEBUG = getenv("LD_DEBUG");
   if (LD_DEBUG != nullptr) {
     g_ld_debug_verbosity = atoi(LD_DEBUG);
   }
+
+  if (getenv("LD_SHOW_AUXV") != nullptr) ld_show_auxv(args.auxv);
 
 #if defined(__LP64__)
   INFO("[ Android dynamic linker (64-bit) ]");
@@ -498,11 +500,6 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   __libc_init_main_thread_final();
 
   if (!get_cfi_shadow()->InitialLinkDone(solist)) __linker_cannot_link(g_argv[0]);
-
-  // A constructor could spawn a thread that calls into the loader, so as soon
-  // as we've called a constructor, we need to hold the lock while accessing
-  // global loader state.
-  ScopedPthreadMutexLocker locker(&g_dl_mutex);
 
   si->call_pre_init_constructors();
   si->call_constructors();
@@ -696,6 +693,13 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& linker_so);
  * function, or other GOT reference will generate a segfault.
  */
 extern "C" ElfW(Addr) __linker_init(void* raw_args) {
+  // Unlock the loader mutex immediately before transferring to the executable's
+  // entry point. This must happen after destructors are called in this function
+  // (e.g. ~soinfo), so declare this variable very early.
+  struct DlMutexUnlocker {
+    ~DlMutexUnlocker() { pthread_mutex_unlock(&g_dl_mutex); }
+  } unlocker;
+
   // Initialize TLS early so system calls and errno work.
   KernelArgumentBlock args(raw_args);
   bionic_tcb temp_tcb __attribute__((uninitialized));
@@ -757,6 +761,11 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) 
 
   // Initialize the linker's static libc's globals
   __libc_init_globals();
+
+  // A constructor could spawn a thread that calls into the loader, so as soon
+  // as we've called a constructor, we need to hold the lock until transferring
+  // to the entry point.
+  pthread_mutex_lock(&g_dl_mutex);
 
   // Initialize the linker's own global variables
   tmp_linker_so.call_constructors();
