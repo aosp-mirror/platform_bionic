@@ -1806,6 +1806,7 @@ LIBC_PLATFORM {
     __system_property_area_init;
     __system_property_set_filename;
     __system_property_update;
+    __system_properties_reload;
     android_fdsan_get_fd_table;
     android_fdtrack_compare_exchange_hook; # llndk
     android_fdtrack_get_enabled; # llndk
