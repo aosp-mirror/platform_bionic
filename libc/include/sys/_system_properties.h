@@ -41,6 +41,7 @@
 __BEGIN_DECLS
 
 #define PROP_SERVICE_NAME "property_service"
+#define PROP_SERVICE_FOR_SYSTEM_NAME "property_service_for_system"
 #define PROP_FILENAME "/dev/__properties__"
 
 #define PROP_MSG_SETPROP 1
