@@ -43,3 +43,10 @@
 #include <bits/termios_inlines.h>
 
 #endif
+
+#if __ANDROID_API__ < 35
+
+#define __BIONIC_TERMIOS_WINSIZE_INLINE static __inline
+#include <bits/termios_winsize_inlines.h>
+
+#endif
