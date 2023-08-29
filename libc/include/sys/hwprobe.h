@@ -49,7 +49,7 @@ __BEGIN_DECLS
  *
  * A `__cpu_count` of 0 and null `__cpus` means "all online cpus".
  *
- * Returns 0 on success and returns -1 and sets `errno` on failure.
+ * Returns 0 on success and returns an error number on failure.
  */
 int __riscv_hwprobe(struct riscv_hwprobe* _Nonnull __pairs, size_t __pair_count, size_t __cpu_count, unsigned long* _Nullable __cpus, unsigned __flags);
 

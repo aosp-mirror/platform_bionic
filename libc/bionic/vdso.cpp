@@ -24,13 +24,13 @@
 #include <sys/cdefs.h>
 #include <sys/hwprobe.h>
 #include <sys/time.h>
+#include <syscall.h>
 #include <time.h>
 #include <unistd.h>
 
 extern "C" int __clock_gettime(int, struct timespec*);
 extern "C" int __clock_getres(int, struct timespec*);
 extern "C" int __gettimeofday(struct timeval*, struct timezone*);
-extern "C" int riscv_hwprobe(struct riscv_hwprobe*, size_t, size_t, unsigned long*, unsigned);
 
 static inline int vdso_return(int result) {
   if (__predict_true(result == 0)) return 0;
@@ -88,9 +88,21 @@ int __riscv_hwprobe(struct riscv_hwprobe* _Nonnull pairs, size_t pair_count, siz
   auto vdso_riscv_hwprobe =
       reinterpret_cast<decltype(&__riscv_hwprobe)>(__libc_globals->vdso[VDSO_RISCV_HWPROBE].fn);
   if (__predict_true(vdso_riscv_hwprobe)) {
-    return vdso_return(vdso_riscv_hwprobe(pairs, pair_count, cpu_count, cpus, flags));
+    return -vdso_riscv_hwprobe(pairs, pair_count, cpu_count, cpus, flags);
   }
-  return riscv_hwprobe(pairs, pair_count, cpu_count, cpus, flags);
+  // Inline the syscall directly in case someone's calling it from an
+  // ifunc resolver where we won't be able to set errno on failure.
+  // (Rather than our usual trick of letting the python-generated
+  // wrapper set errno but saving/restoring errno in cases where the API
+  // is to return an error value rather than setting errno.)
+  register long a0 __asm__("a0") = reinterpret_cast<long>(pairs);
+  register long a1 __asm__("a1") = pair_count;
+  register long a2 __asm__("a2") = cpu_count;
+  register long a3 __asm__("a3") = reinterpret_cast<long>(cpus);
+  register long a4 __asm__("a4") = flags;
+  register long a7 __asm__("a7") = __NR_riscv_hwprobe;
+  __asm__ volatile("ecall" : "=r"(a0) : "r"(a0), "r"(a1), "r"(a2), "r"(a3), "r"(a4), "r"(a7));
+  return -a0;
 }
 #endif
 
