@@ -29,6 +29,8 @@
 #include <termios.h>
 
 #include <errno.h>
+#include <fcntl.h>
+#include <pty.h>
 
 #include <gtest/gtest.h>
 
@@ -95,4 +97,50 @@ TEST(termios, cfmakeraw) {
   EXPECT_EQ(CS8, static_cast<int>(t.c_cflag & CSIZE));
   EXPECT_EQ(1, t.c_cc[VMIN]);
   EXPECT_EQ(0, t.c_cc[VTIME]);
+}
+
+TEST(termios, tcgetwinsize_tcsetwinsize_invalid) {
+#if !defined(__GLIBC__)
+  winsize ws = {};
+
+  errno = 0;
+  ASSERT_EQ(-1, tcgetwinsize(-1, &ws));
+  ASSERT_EQ(EBADF, errno);
+
+  errno = 0;
+  ASSERT_EQ(-1, tcsetwinsize(-1, &ws));
+  ASSERT_EQ(EBADF, errno);
+#else
+  GTEST_SKIP() << "glibc too old";
+#endif
+}
+
+TEST(termios, tcgetwinsize_tcsetwinsize) {
+#if !defined(__GLIBC__)
+  int pty, tty;
+  winsize ws = {123, 456, 9999, 9999};
+  ASSERT_EQ(0, openpty(&pty, &tty, nullptr, nullptr, &ws));
+
+  winsize actual = {};
+  ASSERT_EQ(0, tcgetwinsize(tty, &actual));
+  EXPECT_EQ(ws.ws_xpixel, actual.ws_xpixel);
+  EXPECT_EQ(ws.ws_ypixel, actual.ws_ypixel);
+  EXPECT_EQ(ws.ws_row, actual.ws_row);
+  EXPECT_EQ(ws.ws_col, actual.ws_col);
+
+  ws = {1, 2, 3, 4};
+  ASSERT_EQ(0, tcsetwinsize(tty, &ws));
+
+  actual = {};
+  ASSERT_EQ(0, tcgetwinsize(tty, &actual));
+  EXPECT_EQ(ws.ws_xpixel, actual.ws_xpixel);
+  EXPECT_EQ(ws.ws_ypixel, actual.ws_ypixel);
+  EXPECT_EQ(ws.ws_row, actual.ws_row);
+  EXPECT_EQ(ws.ws_col, actual.ws_col);
+
+  close(pty);
+  close(tty);
+#else
+  GTEST_SKIP() << "glibc too old";
+#endif
 }
