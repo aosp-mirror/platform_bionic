@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2023 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,25 +26,27 @@
  * SUCH DAMAGE.
  */
 
-#include <termios.h>
-#include <unistd.h>
+#pragma once
 
-// Most of termios was missing in the platform until L, but available as inlines in the NDK.
-// We share definitions with the NDK to avoid bugs (https://github.com/android-ndk/ndk/issues/441).
-#define __BIONIC_TERMIOS_INLINE /* Out of line. */
-#include <bits/termios_inlines.h>
+#include <errno.h>
+#include <sys/cdefs.h>
+#include <sys/ioctl.h>
+#include <sys/types.h>
 
-// POSIX added a couple more functions much later, so do the same for them.
-#define __BIONIC_TERMIOS_WINSIZE_INLINE /* Out of line. */
-#include <bits/termios_winsize_inlines.h>
+#include <linux/termios.h>
 
-// Actually declared in <unistd.h>, present on all API levels.
-pid_t tcgetpgrp(int fd) {
-  pid_t pid;
-  return (ioctl(fd, TIOCGPGRP, &pid) == -1) ? -1 : pid;
+#if !defined(__BIONIC_TERMIOS_WINSIZE_INLINE)
+#define __BIONIC_TERMIOS_WINSIZE_INLINE static __inline
+#endif
+
+__BEGIN_DECLS
+
+__BIONIC_TERMIOS_WINSIZE_INLINE int tcgetwinsize(int __fd, struct winsize* _Nonnull __size) {
+  return ioctl(__fd, TIOCGWINSZ, __size);
 }
 
-// Actually declared in <unistd.h>, present on all API levels.
-int tcsetpgrp(int fd, pid_t pid) {
-  return ioctl(fd, TIOCSPGRP, &pid);
+__BIONIC_TERMIOS_WINSIZE_INLINE int tcsetwinsize(int __fd, const struct winsize* _Nonnull __size) {
+  return ioctl(__fd, TIOCSWINSZ, __size);
 }
+
+__END_DECLS
