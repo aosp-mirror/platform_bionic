@@ -83,3 +83,12 @@ TEST(sys_hwprobe, __riscv_hwprobe_syscall_vdso) {
   GTEST_SKIP() << "__riscv_hwprobe requires riscv64";
 #endif
 }
+
+TEST(sys_hwprobe, __riscv_hwprobe_fail) {
+#if defined(__riscv) && __has_include(<sys/hwprobe.h>)
+  riscv_hwprobe probes[] = {};
+  ASSERT_EQ(EINVAL, __riscv_hwprobe(probes, 0, 0, nullptr, ~0));
+#else
+  GTEST_SKIP() << "__riscv_hwprobe requires riscv64";
+#endif
+}
