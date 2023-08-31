@@ -56,6 +56,7 @@ list of POSIX functions implemented by glibc but not by bionic.
 Current libc symbols: https://android.googlesource.com/platform/bionic/+/master/libc/libc.map.txt
 
 New libc functions in V (API level 35):
+  * `tcgetwinsize`, `tcsetwinsize` (POSIX Issue 8 additions).
   * `timespec_getres` (C23 addition).
   * `localtime_rz`, `mktime_z`, `tzalloc`, and `tzfree` (NetBSD
     extensions implemented in tzcode, and the "least non-standard"

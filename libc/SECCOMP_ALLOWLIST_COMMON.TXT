@@ -17,6 +17,9 @@ int	rt_sigreturn(unsigned long)	all
 int	rt_tgsigqueueinfo(pid_t, pid_t, int, siginfo_t*)	all
 int	restart_syscall()	all
 
+# The public API doesn't set errno, so we call this via inline assembler.
+int riscv_hwprobe(riscv_hwprobe*, size_t, size_t, unsigned long*, unsigned) riscv64
+
 # vfork is used by bionic (and java.lang.ProcessBuilder) on some
 # architectures. (The others use clone(2) directly instead.)
 pid_t	vfork()	arm,x86,x86_64
