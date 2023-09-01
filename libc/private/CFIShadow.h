@@ -68,8 +68,7 @@ class CFIShadow {
 #endif
 
   // Shadow is 2 -> 2**kShadowGranularity.
-  static constexpr uintptr_t kShadowSize =
-      align_up((kMaxTargetAddr >> (kShadowGranularity - 1)), PAGE_SIZE);
+  static constexpr uintptr_t kShadowSize = kMaxTargetAddr >> (kShadowGranularity - 1);
 
   // Returns offset inside the shadow region for an address.
   static constexpr uintptr_t MemToShadowOffset(uintptr_t x) {
