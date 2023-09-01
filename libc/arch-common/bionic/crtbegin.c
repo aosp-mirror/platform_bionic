@@ -30,17 +30,53 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define SECTION(name) __attribute__((__section__(name)))
-SECTION(".preinit_array") init_func_t* __PREINIT_ARRAY__ = (init_func_t*)-1;
-SECTION(".init_array.0") init_func_t* __INIT_ARRAY__ = (init_func_t*)-1;
-SECTION(".fini_array.0") fini_func_t* __FINI_ARRAY__ = (fini_func_t*)-1;
-#undef SECTION
+extern init_func_t* __preinit_array_start[];
+extern init_func_t* __preinit_array_end[];
+extern init_func_t* __init_array_start[];
+extern init_func_t* __init_array_end[];
+extern fini_func_t* __fini_array_start[];
+extern fini_func_t* __fini_array_end[];
+
+#if !defined(CRTBEGIN_STATIC)
+/* This function will be called during normal program termination
+ * to run the destructors that are listed in the .fini_array section
+ * of the executable, if any.
+ *
+ * 'fini_array' points to a list of function addresses.
+ */
+static void call_fini_array() {
+  fini_func_t** array = __fini_array_start;
+  size_t count = __fini_array_end - __fini_array_start;
+  // Call fini functions in reverse order.
+  while (count-- > 0) {
+    fini_func_t* function = array[count];
+    (*function)();
+  }
+}
+
+// libc.so needs fini_array with sentinels. So create a fake fini_array with sentinels.
+// It contains a function to call functions in real fini_array.
+static fini_func_t* fini_array_with_sentinels[] = {
+    (fini_func_t*)-1,
+    &call_fini_array,
+    (fini_func_t*)0,
+};
+#endif  // !defined(CRTBEGIN_STATIC)
 
 __used static void _start_main(void* raw_args) {
-  structors_array_t array;
-  array.preinit_array = &__PREINIT_ARRAY__;
-  array.init_array = &__INIT_ARRAY__;
-  array.fini_array = &__FINI_ARRAY__;
+  structors_array_t array = {};
+#if defined(CRTBEGIN_STATIC)
+  array.preinit_array = __preinit_array_start;
+  array.preinit_array_count = __preinit_array_end - __preinit_array_start;
+  array.init_array = __init_array_start;
+  array.init_array_count = __init_array_end - __init_array_start;
+  array.fini_array = __fini_array_start;
+  array.fini_array_count = __fini_array_end - __fini_array_start;
+#else
+  if (__fini_array_end - __fini_array_start > 0) {
+    array.fini_array = fini_array_with_sentinels;
+  }
+#endif  // !defined(CRTBEGIN_STATIC)
 
   __libc_init(raw_args, NULL, &main, &array);
 }
