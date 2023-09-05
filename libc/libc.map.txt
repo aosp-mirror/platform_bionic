@@ -1586,6 +1586,8 @@ LIBC_U { # introduced=UpsideDownCake
 
 LIBC_V { # introduced=VanillaIceCream
   global:
+    epoll_pwait2;
+    epoll_pwait2_64;
     localtime_rz;
     mbsrtowcs_l;
     mktime_z;
