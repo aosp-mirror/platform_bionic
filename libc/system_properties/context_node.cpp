@@ -49,17 +49,11 @@ bool ContextNode::Open(bool access_rw, bool* fsetxattr_failed) {
     return true;
   }
 
-  char filename[PROP_FILENAME_MAX];
-  int len = async_safe_format_buffer(filename, sizeof(filename), "%s/%s", filename_, context_);
-  if (len < 0 || len >= PROP_FILENAME_MAX) {
-    lock_.unlock();
-    return false;
-  }
-
+  PropertiesFilename filename(filename_, context_);
   if (access_rw) {
-    pa_ = prop_area::map_prop_area_rw(filename, context_, fsetxattr_failed);
+    pa_ = prop_area::map_prop_area_rw(filename.c_str(), context_, fsetxattr_failed);
   } else {
-    pa_ = prop_area::map_prop_area(filename);
+    pa_ = prop_area::map_prop_area(filename.c_str());
   }
   lock_.unlock();
   return pa_;
@@ -84,13 +78,8 @@ void ContextNode::ResetAccess() {
 }
 
 bool ContextNode::CheckAccess() {
-  char filename[PROP_FILENAME_MAX];
-  int len = async_safe_format_buffer(filename, sizeof(filename), "%s/%s", filename_, context_);
-  if (len < 0 || len >= PROP_FILENAME_MAX) {
-    return false;
-  }
-
-  return access(filename, R_OK) == 0;
+  PropertiesFilename filename(filename_, context_);
+  return access(filename.c_str(), R_OK) == 0;
 }
 
 void ContextNode::Unmap() {
