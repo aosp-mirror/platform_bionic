@@ -114,6 +114,11 @@ struct mptcp_info {
   __u8 mptcpi_local_addr_used;
   __u8 mptcpi_local_addr_max;
   __u8 mptcpi_csum_enabled;
+  __u32 mptcpi_retransmits;
+  __u64 mptcpi_bytes_retrans;
+  __u64 mptcpi_bytes_sent;
+  __u64 mptcpi_bytes_received;
+  __u64 mptcpi_bytes_acked;
 };
 enum mptcp_event_type {
   MPTCP_EVENT_UNSPEC = 0,
@@ -179,7 +184,23 @@ struct mptcp_subflow_addrs {
     struct __kernel_sockaddr_storage ss_remote;
   };
 };
+struct mptcp_subflow_info {
+  __u32 id;
+  struct mptcp_subflow_addrs addrs;
+};
+struct mptcp_full_info {
+  __u32 size_tcpinfo_kernel;
+  __u32 size_tcpinfo_user;
+  __u32 size_sfinfo_kernel;
+  __u32 size_sfinfo_user;
+  __u32 num_subflows;
+  __u32 size_arrays_user;
+  __aligned_u64 subflow_info;
+  __aligned_u64 tcp_info;
+  struct mptcp_info mptcp_info;
+};
 #define MPTCP_INFO 1
 #define MPTCP_TCPINFO 2
 #define MPTCP_SUBFLOW_ADDRS 3
+#define MPTCP_FULL_INFO 4
 #endif
