@@ -1166,7 +1166,7 @@ TEST(UNISTD_TEST, sysconf_unknown) {
   VERIFY_SYSCONF_UNKNOWN(666);
 }
 
-static void show_cache(const char* name, long size, long assoc, long line_size) {
+[[maybe_unused]] static void show_cache(const char* name, long size, long assoc, long line_size) {
   printf("%s cache size: %ld bytes, line size %ld bytes, ", name, size, line_size);
   if (assoc == 0) {
     printf("fully");
@@ -1177,6 +1177,9 @@ static void show_cache(const char* name, long size, long assoc, long line_size) 
 }
 
 TEST(UNISTD_TEST, sysconf_cache) {
+#if defined(ANDROID_HOST_MUSL)
+  GTEST_SKIP() << "musl does not have _SC_LEVEL?_?CACHE_SIZE";
+#else
   // It's not obvious we can _test_ any of these, but we can at least
   // show the output for humans to inspect.
   show_cache("L1D", sysconf(_SC_LEVEL1_DCACHE_SIZE), sysconf(_SC_LEVEL1_DCACHE_ASSOC), sysconf(_SC_LEVEL1_DCACHE_LINESIZE));
@@ -1184,6 +1187,7 @@ TEST(UNISTD_TEST, sysconf_cache) {
   show_cache("L2", sysconf(_SC_LEVEL2_CACHE_SIZE), sysconf(_SC_LEVEL2_CACHE_ASSOC), sysconf(_SC_LEVEL2_CACHE_LINESIZE));
   show_cache("L3", sysconf(_SC_LEVEL3_CACHE_SIZE), sysconf(_SC_LEVEL3_CACHE_ASSOC), sysconf(_SC_LEVEL3_CACHE_LINESIZE));
   show_cache("L4", sysconf(_SC_LEVEL4_CACHE_SIZE), sysconf(_SC_LEVEL4_CACHE_ASSOC), sysconf(_SC_LEVEL4_CACHE_LINESIZE));
+#endif
 }
 
 TEST(UNISTD_TEST, dup2_same) {
