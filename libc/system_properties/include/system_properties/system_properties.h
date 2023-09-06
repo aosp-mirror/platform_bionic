@@ -53,7 +53,8 @@ class PropertiesFilename {
   const char* c_str() { return filename_; }
 
  private:
-  char filename_[1024];
+  // Typically something like "/dev/__properties__/properties_serial".
+  char filename_[128];
 };
 
 class SystemProperties {
