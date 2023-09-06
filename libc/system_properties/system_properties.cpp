@@ -67,26 +67,23 @@ bool SystemProperties::Init(const char* filename) {
     return true;
   }
 
-  if (strlen(filename) >= PROP_FILENAME_MAX) {
-    return false;
-  }
-  strcpy(property_filename_, filename);
+  properties_filename_ = filename;
 
-  if (is_dir(property_filename_)) {
+  if (is_dir(properties_filename_.c_str())) {
     if (access("/dev/__properties__/property_info", R_OK) == 0) {
       contexts_ = new (contexts_data_) ContextsSerialized();
-      if (!contexts_->Initialize(false, property_filename_, nullptr)) {
+      if (!contexts_->Initialize(false, properties_filename_.c_str(), nullptr)) {
         return false;
       }
     } else {
       contexts_ = new (contexts_data_) ContextsSplit();
-      if (!contexts_->Initialize(false, property_filename_, nullptr)) {
+      if (!contexts_->Initialize(false, properties_filename_.c_str(), nullptr)) {
         return false;
       }
     }
   } else {
     contexts_ = new (contexts_data_) ContextsPreSplit();
-    if (!contexts_->Initialize(false, property_filename_, nullptr)) {
+    if (!contexts_->Initialize(false, properties_filename_.c_str(), nullptr)) {
       return false;
     }
   }
@@ -95,13 +92,9 @@ bool SystemProperties::Init(const char* filename) {
 }
 
 bool SystemProperties::AreaInit(const char* filename, bool* fsetxattr_failed) {
-  if (strlen(filename) >= PROP_FILENAME_MAX) {
-    return false;
-  }
-  strcpy(property_filename_, filename);
-
+  properties_filename_ = filename;
   contexts_ = new (contexts_data_) ContextsSerialized();
-  if (!contexts_->Initialize(true, property_filename_, fsetxattr_failed)) {
+  if (!contexts_->Initialize(true, properties_filename_.c_str(), fsetxattr_failed)) {
     return false;
   }
   initialized_ = true;
