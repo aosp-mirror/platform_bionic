@@ -396,6 +396,7 @@ struct ovs_action_push_vlan {
 };
 enum ovs_hash_alg {
   OVS_HASH_ALG_L4,
+  OVS_HASH_ALG_SYM_L4,
 };
 struct ovs_action_hash {
   __u32 hash_alg;
