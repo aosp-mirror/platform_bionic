@@ -51,6 +51,18 @@ struct utp_upiu_query {
   __be32 value;
   __be32 reserved[2];
 };
+struct utp_upiu_query_v4_0 {
+  __u8 opcode;
+  __u8 idn;
+  __u8 index;
+  __u8 selector;
+  __u8 osf3;
+  __u8 osf4;
+  __be16 osf5;
+  __be32 osf6;
+  __be32 osf7;
+  __be32 reserved;
+};
 struct utp_upiu_cmd {
   __be32 exp_data_transfer_len;
   __u8 cdb[UFS_CDB_SIZE];

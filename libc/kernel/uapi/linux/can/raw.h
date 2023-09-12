@@ -20,6 +20,7 @@
 #define _UAPI_CAN_RAW_H
 #include <linux/can.h>
 #define SOL_CAN_RAW (SOL_CAN_BASE + CAN_RAW)
+#define CAN_RAW_FILTER_MAX 512
 enum {
   SCM_CAN_RAW_ERRQUEUE = 1,
 };
