@@ -126,6 +126,7 @@ union drm_amdgpu_bo_list {
 #define AMDGPU_CTX_QUERY2_FLAGS_GUILTY (1 << 2)
 #define AMDGPU_CTX_QUERY2_FLAGS_RAS_CE (1 << 3)
 #define AMDGPU_CTX_QUERY2_FLAGS_RAS_UE (1 << 4)
+#define AMDGPU_CTX_QUERY2_FLAGS_RESET_IN_PROGRESS (1 << 5)
 #define AMDGPU_CTX_PRIORITY_UNSET - 2048
 #define AMDGPU_CTX_PRIORITY_VERY_LOW - 1023
 #define AMDGPU_CTX_PRIORITY_LOW - 512
@@ -352,6 +353,7 @@ struct drm_amdgpu_gem_va {
 #define AMDGPU_CHUNK_ID_SCHEDULED_DEPENDENCIES 0x07
 #define AMDGPU_CHUNK_ID_SYNCOBJ_TIMELINE_WAIT 0x08
 #define AMDGPU_CHUNK_ID_SYNCOBJ_TIMELINE_SIGNAL 0x09
+#define AMDGPU_CHUNK_ID_CP_GFX_SHADOW 0x0a
 struct drm_amdgpu_cs_chunk {
   __u32 chunk_id;
   __u32 length_dw;
@@ -424,6 +426,13 @@ struct drm_amdgpu_cs_chunk_data {
     struct drm_amdgpu_cs_chunk_ib ib_data;
     struct drm_amdgpu_cs_chunk_fence fence_data;
   };
+};
+#define AMDGPU_CS_CHUNK_CP_GFX_SHADOW_FLAGS_INIT_SHADOW 0x1
+struct drm_amdgpu_cs_chunk_cp_gfx_shadow {
+  __u64 shadow_va;
+  __u64 csa_va;
+  __u64 gds_va;
+  __u64 flags;
 };
 #define AMDGPU_IDS_FLAGS_FUSION 0x1
 #define AMDGPU_IDS_FLAGS_PREEMPTION 0x2
@@ -509,6 +518,7 @@ struct drm_amdgpu_cs_chunk_data {
 #define AMDGPU_INFO_VIDEO_CAPS 0x21
 #define AMDGPU_INFO_VIDEO_CAPS_DECODE 0
 #define AMDGPU_INFO_VIDEO_CAPS_ENCODE 1
+#define AMDGPU_INFO_MAX_IBS 0x22
 #define AMDGPU_INFO_MMR_SE_INDEX_SHIFT 0
 #define AMDGPU_INFO_MMR_SE_INDEX_MASK 0xff
 #define AMDGPU_INFO_MMR_SH_INDEX_SHIFT 8
@@ -662,6 +672,10 @@ struct drm_amdgpu_info_device {
   __u32 gl2c_cache_size;
   __u64 mall_size;
   __u32 enabled_rb_pipes_mask_hi;
+  __u32 shadow_size;
+  __u32 shadow_alignment;
+  __u32 csa_size;
+  __u32 csa_alignment;
 };
 struct drm_amdgpu_info_hw_ip {
   __u32 hw_ip_version_major;
