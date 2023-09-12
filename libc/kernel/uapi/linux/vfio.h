@@ -62,6 +62,7 @@ struct vfio_device_info {
 #define VFIO_DEVICE_FLAGS_AP (1 << 5)
 #define VFIO_DEVICE_FLAGS_FSL_MC (1 << 6)
 #define VFIO_DEVICE_FLAGS_CAPS (1 << 7)
+#define VFIO_DEVICE_FLAGS_CDX (1 << 8)
   __u32 num_regions;
   __u32 num_irqs;
   __u32 cap_offset;
@@ -76,6 +77,15 @@ struct vfio_device_info {
 #define VFIO_DEVICE_INFO_CAP_ZPCI_GROUP 2
 #define VFIO_DEVICE_INFO_CAP_ZPCI_UTIL 3
 #define VFIO_DEVICE_INFO_CAP_ZPCI_PFIP 4
+#define VFIO_DEVICE_INFO_CAP_PCI_ATOMIC_COMP 5
+struct vfio_device_info_cap_pci_atomic_comp {
+  struct vfio_info_cap_header header;
+  __u32 flags;
+#define VFIO_PCI_ATOMIC_COMP32 (1 << 0)
+#define VFIO_PCI_ATOMIC_COMP64 (1 << 1)
+#define VFIO_PCI_ATOMIC_COMP128 (1 << 2)
+  __u32 reserved;
+};
 struct vfio_region_info {
   __u32 argsz;
   __u32 flags;
@@ -216,6 +226,10 @@ enum {
   VFIO_CCW_CRW_IRQ_INDEX,
   VFIO_CCW_REQ_IRQ_INDEX,
   VFIO_CCW_NUM_IRQS
+};
+enum {
+  VFIO_AP_REQ_IRQ_INDEX,
+  VFIO_AP_NUM_IRQS
 };
 struct vfio_pci_dependent_device {
   __u32 group_id;
