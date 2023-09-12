@@ -39,6 +39,13 @@ struct vhost_vring_addr {
   __u64 avail_user_addr;
   __u64 log_guest_addr;
 };
+struct vhost_worker_state {
+  unsigned int worker_id;
+};
+struct vhost_vring_worker {
+  unsigned int index;
+  unsigned int worker_id;
+};
 struct vhost_iotlb_msg {
   __u64 iova;
   __u64 size;

@@ -138,6 +138,10 @@ enum fe_code_rate {
   FEC_28_45,
   FEC_32_45,
   FEC_77_90,
+  FEC_11_45,
+  FEC_4_15,
+  FEC_14_45,
+  FEC_7_15,
 };
 enum fe_modulation {
   QPSK,

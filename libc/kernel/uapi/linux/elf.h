@@ -335,6 +335,8 @@ typedef struct elf64_shdr {
 #define NT_PPC_TM_CPPR 0x10e
 #define NT_PPC_TM_CDSCR 0x10f
 #define NT_PPC_PKEY 0x110
+#define NT_PPC_DEXCR 0x111
+#define NT_PPC_HASHKEYR 0x112
 #define NT_386_TLS 0x200
 #define NT_386_IOPERM 0x201
 #define NT_X86_XSTATE 0x202
