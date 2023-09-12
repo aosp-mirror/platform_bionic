@@ -85,7 +85,7 @@ struct autofs_dev_ioctl {
     struct args_askumount askumount;
     struct args_ismountpoint ismountpoint;
   };
-  char path[0];
+  char path[];
 };
 enum {
   AUTOFS_DEV_IOCTL_VERSION_CMD = 0x71,

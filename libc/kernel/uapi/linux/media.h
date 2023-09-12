@@ -66,8 +66,8 @@ struct media_device_info {
 #define MEDIA_ENT_F_ATV_DECODER (MEDIA_ENT_F_OLD_SUBDEV_BASE + 4)
 #define MEDIA_ENT_F_DV_DECODER (MEDIA_ENT_F_BASE + 0x6001)
 #define MEDIA_ENT_F_DV_ENCODER (MEDIA_ENT_F_BASE + 0x6002)
-#define MEDIA_ENT_FL_DEFAULT (1 << 0)
-#define MEDIA_ENT_FL_CONNECTOR (1 << 1)
+#define MEDIA_ENT_FL_DEFAULT (1U << 0)
+#define MEDIA_ENT_FL_CONNECTOR (1U << 1)
 #define MEDIA_ENT_ID_FLAG_NEXT (1U << 31)
 struct media_entity_desc {
   __u32 id;
@@ -101,22 +101,22 @@ struct media_entity_desc {
     __u8 raw[184];
   };
 };
-#define MEDIA_PAD_FL_SINK (1 << 0)
-#define MEDIA_PAD_FL_SOURCE (1 << 1)
-#define MEDIA_PAD_FL_MUST_CONNECT (1 << 2)
+#define MEDIA_PAD_FL_SINK (1U << 0)
+#define MEDIA_PAD_FL_SOURCE (1U << 1)
+#define MEDIA_PAD_FL_MUST_CONNECT (1U << 2)
 struct media_pad_desc {
   __u32 entity;
   __u16 index;
   __u32 flags;
   __u32 reserved[2];
 };
-#define MEDIA_LNK_FL_ENABLED (1 << 0)
-#define MEDIA_LNK_FL_IMMUTABLE (1 << 1)
-#define MEDIA_LNK_FL_DYNAMIC (1 << 2)
+#define MEDIA_LNK_FL_ENABLED (1U << 0)
+#define MEDIA_LNK_FL_IMMUTABLE (1U << 1)
+#define MEDIA_LNK_FL_DYNAMIC (1U << 2)
 #define MEDIA_LNK_FL_LINK_TYPE (0xf << 28)
-#define MEDIA_LNK_FL_DATA_LINK (0 << 28)
-#define MEDIA_LNK_FL_INTERFACE_LINK (1 << 28)
-#define MEDIA_LNK_FL_ANCILLARY_LINK (2 << 28)
+#define MEDIA_LNK_FL_DATA_LINK (0U << 28)
+#define MEDIA_LNK_FL_INTERFACE_LINK (1U << 28)
+#define MEDIA_LNK_FL_ANCILLARY_LINK (2U << 28)
 struct media_link_desc {
   struct media_pad_desc source;
   struct media_pad_desc sink;
@@ -146,7 +146,7 @@ struct media_links_enum {
 #define MEDIA_INTF_T_ALSA_PCM_CAPTURE (MEDIA_INTF_T_ALSA_BASE)
 #define MEDIA_INTF_T_ALSA_PCM_PLAYBACK (MEDIA_INTF_T_ALSA_BASE + 1)
 #define MEDIA_INTF_T_ALSA_CONTROL (MEDIA_INTF_T_ALSA_BASE + 2)
-#define MEDIA_V2_ENTITY_HAS_FLAGS(media_version) ((media_version) >= ((4 << 16) | (19 << 8) | 0))
+#define MEDIA_V2_ENTITY_HAS_FLAGS(media_version) ((media_version) >= ((4U << 16) | (19U << 8) | 0U))
 struct media_v2_entity {
   __u32 id;
   char name[64];
@@ -168,7 +168,7 @@ struct media_v2_interface {
     __u32 raw[16];
   };
 } __attribute__((packed));
-#define MEDIA_V2_PAD_HAS_INDEX(media_version) ((media_version) >= ((4 << 16) | (19 << 8) | 0))
+#define MEDIA_V2_PAD_HAS_INDEX(media_version) ((media_version) >= ((4U << 16) | (19U << 8) | 0U))
 struct media_v2_pad {
   __u32 id;
   __u32 entity_id;
@@ -229,5 +229,5 @@ struct media_v2_topology {
 #define MEDIA_INTF_T_ALSA_HWDEP (MEDIA_INTF_T_ALSA_BASE + 5)
 #define MEDIA_INTF_T_ALSA_SEQUENCER (MEDIA_INTF_T_ALSA_BASE + 6)
 #define MEDIA_INTF_T_ALSA_TIMER (MEDIA_INTF_T_ALSA_BASE + 7)
-#define MEDIA_API_VERSION ((0 << 16) | (1 << 8) | 0)
+#define MEDIA_API_VERSION ((0U << 16) | (1U << 8) | 0U)
 #endif
