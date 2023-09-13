@@ -118,6 +118,8 @@ enum {
 #define IORING_SETUP_CQE32 (1U << 11)
 #define IORING_SETUP_SINGLE_ISSUER (1U << 12)
 #define IORING_SETUP_DEFER_TASKRUN (1U << 13)
+#define IORING_SETUP_NO_MMAP (1U << 14)
+#define IORING_SETUP_REGISTERED_FD_ONLY (1U << 15)
 enum io_uring_op {
   IORING_OP_NOP,
   IORING_OP_READV,
@@ -171,6 +173,7 @@ enum io_uring_op {
   IORING_OP_LAST,
 };
 #define IORING_URING_CMD_FIXED (1U << 0)
+#define IORING_URING_CMD_POLLED (1U << 31)
 #define IORING_FSYNC_DATASYNC (1U << 0)
 #define IORING_TIMEOUT_ABS (1U << 0)
 #define IORING_TIMEOUT_UPDATE (1U << 1)
@@ -230,7 +233,7 @@ struct io_sqring_offsets {
   __u32 dropped;
   __u32 array;
   __u32 resv1;
-  __u64 resv2;
+  __u64 user_addr;
 };
 #define IORING_SQ_NEED_WAKEUP (1U << 0)
 #define IORING_SQ_CQ_OVERFLOW (1U << 1)
@@ -244,7 +247,7 @@ struct io_cqring_offsets {
   __u32 cqes;
   __u32 flags;
   __u32 resv1;
-  __u64 resv2;
+  __u64 user_addr;
 };
 #define IORING_CQ_EVENTFD_DISABLED (1U << 0)
 #define IORING_ENTER_GETEVENTS (1U << 0)

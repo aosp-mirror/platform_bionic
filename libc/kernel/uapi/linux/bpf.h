@@ -310,6 +310,7 @@ enum {
   BPF_F_PRESERVE_ELEMS = (1U << 11),
   BPF_F_INNER_MAP = (1U << 12),
   BPF_F_LINK = (1U << 13),
+  BPF_F_PATH_FD = (1U << 14),
 };
 #define BPF_F_QUERY_EFFECTIVE (1U << 0)
 #define BPF_F_TEST_RUN_ON_CPU (1U << 0)
@@ -403,6 +404,7 @@ union bpf_attr {
     __aligned_u64 pathname;
     __u32 bpf_fd;
     __u32 file_flags;
+    __s32 path_fd;
   };
   struct {
     __u32 target_fd;
@@ -1131,6 +1133,7 @@ enum {
   BPF_FIB_LOOKUP_DIRECT = (1U << 0),
   BPF_FIB_LOOKUP_OUTPUT = (1U << 1),
   BPF_FIB_LOOKUP_SKIP_NEIGH = (1U << 2),
+  BPF_FIB_LOOKUP_TBID = (1U << 3),
 };
 enum {
   BPF_FIB_LKUP_RET_SUCCESS,
@@ -1166,8 +1169,13 @@ struct bpf_fib_lookup {
     __be32 ipv4_dst;
     __u32 ipv6_dst[4];
   };
-  __be16 h_vlan_proto;
-  __be16 h_vlan_TCI;
+  union {
+    struct {
+      __be16 h_vlan_proto;
+      __be16 h_vlan_TCI;
+    };
+    __u32 tbid;
+  };
   __u8 smac[6];
   __u8 dmac[6];
 };

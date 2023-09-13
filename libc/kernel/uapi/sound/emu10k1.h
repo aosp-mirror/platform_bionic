@@ -262,6 +262,8 @@ struct snd_emu10k1_fx8010_info {
 #define EMU10K1_GPR_TRANSLATION_BASS 2
 #define EMU10K1_GPR_TRANSLATION_TREBLE 3
 #define EMU10K1_GPR_TRANSLATION_ONOFF 4
+#define EMU10K1_GPR_TRANSLATION_NEGATE 5
+#define EMU10K1_GPR_TRANSLATION_NEG_TABLE100 6
 enum emu10k1_ctl_elem_iface {
   EMU10K1_CTL_ELEM_IFACE_MIXER = 2,
   EMU10K1_CTL_ELEM_IFACE_PCM = 3,
@@ -279,9 +281,9 @@ struct snd_emu10k1_fx8010_control_gpr {
   unsigned int vcount;
   unsigned int count;
   unsigned short gpr[32];
-  unsigned int value[32];
-  unsigned int min;
-  unsigned int max;
+  int value[32];
+  int min;
+  int max;
   unsigned int translation;
   const unsigned int * tlv;
 };

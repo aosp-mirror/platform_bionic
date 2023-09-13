@@ -63,13 +63,20 @@ enum drm_i915_pmu_engine_sample {
 #define I915_PMU_ENGINE_BUSY(class,instance) __I915_PMU_ENGINE(class, instance, I915_SAMPLE_BUSY)
 #define I915_PMU_ENGINE_WAIT(class,instance) __I915_PMU_ENGINE(class, instance, I915_SAMPLE_WAIT)
 #define I915_PMU_ENGINE_SEMA(class,instance) __I915_PMU_ENGINE(class, instance, I915_SAMPLE_SEMA)
-#define __I915_PMU_OTHER(x) (__I915_PMU_ENGINE(0xff, 0xff, 0xf) + 1 + (x))
+#define __I915_PMU_GT_SHIFT (60)
+#define ___I915_PMU_OTHER(gt,x) (((__u64) __I915_PMU_ENGINE(0xff, 0xff, 0xf) + 1 + (x)) | ((__u64) (gt) << __I915_PMU_GT_SHIFT))
+#define __I915_PMU_OTHER(x) ___I915_PMU_OTHER(0, x)
 #define I915_PMU_ACTUAL_FREQUENCY __I915_PMU_OTHER(0)
 #define I915_PMU_REQUESTED_FREQUENCY __I915_PMU_OTHER(1)
 #define I915_PMU_INTERRUPTS __I915_PMU_OTHER(2)
 #define I915_PMU_RC6_RESIDENCY __I915_PMU_OTHER(3)
 #define I915_PMU_SOFTWARE_GT_AWAKE_TIME __I915_PMU_OTHER(4)
 #define I915_PMU_LAST I915_PMU_RC6_RESIDENCY
+#define __I915_PMU_ACTUAL_FREQUENCY(gt) ___I915_PMU_OTHER(gt, 0)
+#define __I915_PMU_REQUESTED_FREQUENCY(gt) ___I915_PMU_OTHER(gt, 1)
+#define __I915_PMU_INTERRUPTS(gt) ___I915_PMU_OTHER(gt, 2)
+#define __I915_PMU_RC6_RESIDENCY(gt) ___I915_PMU_OTHER(gt, 3)
+#define __I915_PMU_SOFTWARE_GT_AWAKE_TIME(gt) ___I915_PMU_OTHER(gt, 4)
 #define I915_NR_TEX_REGIONS 255
 #define I915_LOG_MIN_TEX_REGION_SIZE 14
 typedef struct _drm_i915_init {
@@ -369,6 +376,7 @@ typedef struct drm_i915_irq_wait {
 #define I915_PARAM_HAS_EXEC_TIMELINE_FENCES 55
 #define I915_PARAM_HAS_USERPTR_PROBE 56
 #define I915_PARAM_OA_TIMESTAMP_FREQUENCY 57
+#define I915_PARAM_PXP_STATUS 58
 struct drm_i915_getparam {
   __s32 param;
   int  * value;
@@ -987,6 +995,7 @@ struct drm_i915_gem_create_ext {
   __u32 flags;
 #define I915_GEM_CREATE_EXT_MEMORY_REGIONS 0
 #define I915_GEM_CREATE_EXT_PROTECTED_CONTENT 1
+#define I915_GEM_CREATE_EXT_SET_PAT 2
   __u64 extensions;
 };
 struct drm_i915_gem_create_ext_memory_regions {
@@ -998,6 +1007,11 @@ struct drm_i915_gem_create_ext_memory_regions {
 struct drm_i915_gem_create_ext_protected_content {
   struct i915_user_extension base;
   __u32 flags;
+};
+struct drm_i915_gem_create_ext_set_pat {
+  struct i915_user_extension base;
+  __u32 pat_index;
+  __u32 rsvd;
 };
 #define I915_PROTECTED_CONTENT_DEFAULT_SESSION 0xf
 #ifdef __cplusplus
