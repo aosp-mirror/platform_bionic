@@ -59,6 +59,9 @@ cc_defaults {
         // Needed to test pthread_internal_t layout.
         "-Wno-invalid-offsetof",
 
+        // This warning does not provide any benefit to the tests.
+        "-Wno-reorder-init-list",
+
         // For glibc.
         "-D__STDC_LIMIT_MACROS",
     ],
