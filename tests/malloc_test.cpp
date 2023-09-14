@@ -824,7 +824,7 @@ TEST(malloc, mallinfo) {
     8, 32, 128, 4096, 32768, 131072, 1024000, 10240000, 20480000, 300000000
   };
 
-  constexpr static size_t kMaxAllocs = 50;
+  static constexpr size_t kMaxAllocs = 50;
 
   for (size_t size : sizes) {
     // If some of these allocations are stuck in a thread cache, then keep
@@ -867,7 +867,7 @@ TEST(malloc, mallinfo2) {
   SKIP_WITH_HWASAN << "hwasan does not implement mallinfo2";
   static size_t sizes[] = {8, 32, 128, 4096, 32768, 131072, 1024000, 10240000, 20480000, 300000000};
 
-  constexpr static size_t kMaxAllocs = 50;
+  static constexpr size_t kMaxAllocs = 50;
 
   for (size_t size : sizes) {
     // If some of these allocations are stuck in a thread cache, then keep
