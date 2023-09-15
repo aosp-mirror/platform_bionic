@@ -498,7 +498,7 @@ TEST(properties, __system_property_extra_long_read_only) {
     check_with_read_callback(name, value);
   }
 
-  constexpr static const char* kExtraLongLegacyError =
+  static constexpr const char* kExtraLongLegacyError =
       "Must use __system_property_read_callback() to read";
   for (const auto& property : long_properties) {
     const std::string& name = property.first;
