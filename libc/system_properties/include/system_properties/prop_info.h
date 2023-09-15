@@ -45,14 +45,14 @@ struct prop_info {
   // Read only properties will not set anything but the bottom most bit of serial and the top byte.
   // We borrow the 2nd from the top byte for extra flags, and use the bottom most bit of that for
   // our first user, kLongFlag.
-  constexpr static uint32_t kLongFlag = 1 << 16;
+  static constexpr uint32_t kLongFlag = 1 << 16;
 
   // The error message fits in part of a union with the previous 92 char property value so there
   // must be room left over after the error message for the offset to the new longer property value
   // and future expansion fields if needed. Note that this value cannot ever increase.  The offset
   // to the new longer property value appears immediately after it, so an increase of this size will
   // break compatibility.
-  constexpr static size_t kLongLegacyErrorBufferSize = 56;
+  static constexpr size_t kLongLegacyErrorBufferSize = 56;
 
  public:
   atomic_uint_least32_t serial;
