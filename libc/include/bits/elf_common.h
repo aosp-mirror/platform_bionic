@@ -1264,6 +1264,7 @@
 #define	R_RISCV_TLS_DTPREL64	9
 #define	R_RISCV_TLS_TPREL32	10
 #define	R_RISCV_TLS_TPREL64	11
+#define	R_RISCV_TLSDESC    	12
 
 /* Relocation types not used by the dynamic linker. */
 #define	R_RISCV_BRANCH		16
@@ -1308,6 +1309,10 @@
 #define	R_RISCV_PLT32		59
 #define	R_RISCV_SET_ULEB128	60
 #define	R_RISCV_SUB_ULEB128	61
+#define	R_RISCV_TLSDESC_HI20	62
+#define	R_RISCV_TLSDESC_LOAD_LO12 63
+#define	R_RISCV_TLSDESC_ADD_LO12 64
+#define	R_RISCV_TLSDESC_CALL	65
 
 #define	R_SPARC_NONE		0
 #define	R_SPARC_8		1
