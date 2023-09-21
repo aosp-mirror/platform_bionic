@@ -29,6 +29,8 @@
 #include <android-base/silent_death_test.h>
 #include <android-base/unique_fd.h>
 
+#include "utils.h"
+
 using android::base::unique_fd;
 using namespace std::chrono_literals;
 
@@ -44,14 +46,14 @@ TEST(pidfd, pidfd_open) {
 
   unique_fd pidfd(pidfd_open(child, 0));
   if (pidfd.get() == -1) {
-    ASSERT_EQ(ENOSYS, errno);
+    ASSERT_ERRNO(ENOSYS);
     GTEST_SKIP() << "pidfd_open not available";
   }
 
   siginfo_t siginfo;
   int rc = waitid(P_PIDFD, pidfd.get(), &siginfo, WEXITED);
   if (rc == -1) {
-    ASSERT_EQ(EINVAL, errno) << strerror(errno);
+    ASSERT_ERRNO(EINVAL);
     GTEST_SKIP() << "P_PIDFD not available";
   }
 
@@ -65,13 +67,13 @@ TEST(pidfd, pidfd_getfd) {
   ASSERT_TRUE(android::base::Pipe(&r, &w));
   unique_fd self(pidfd_open(getpid(), 0));
   if (self.get() == -1) {
-    ASSERT_EQ(ENOSYS, errno);
+    ASSERT_ERRNO(ENOSYS);
     GTEST_SKIP() << "pidfd_open not available";
   }
 
   unique_fd dup(pidfd_getfd(self.get(), r.get(), 0));
   if (dup.get() == -1) {
-    ASSERT_EQ(ENOSYS, errno) << strerror(errno);
+    ASSERT_ERRNO(ENOSYS);
     GTEST_SKIP() << "pidfd_getfd not available";
   }
 
@@ -87,12 +89,12 @@ TEST_F(pidfd_DeathTest, pidfd_send_signal) {
 #if defined(__BIONIC__)
   unique_fd self(pidfd_open(getpid(), 0));
   if (self.get() == -1) {
-    ASSERT_EQ(ENOSYS, errno);
+    ASSERT_ERRNO(ENOSYS);
     GTEST_SKIP() << "pidfd_open not available";
   }
 
   if (pidfd_send_signal(self.get(), 0, nullptr, 0) == -1) {
-    ASSERT_EQ(ENOSYS, errno);
+    ASSERT_ERRNO(ENOSYS);
     GTEST_SKIP() << "pidfd_send_signal not available";
   }
 

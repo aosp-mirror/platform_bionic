@@ -48,7 +48,7 @@ static void WaitUntilAllThreadsExited(pid_t* tids, size_t tid_count) {
         if (syscall(__NR_tgkill, getpid(), tids[i], 0) == 0) {
           alive = true;
         } else {
-          EXPECT_EQ(errno, ESRCH);
+          EXPECT_ERRNO(ESRCH);
           tids[i] = 0;  // Skip in next loop.
         }
       }

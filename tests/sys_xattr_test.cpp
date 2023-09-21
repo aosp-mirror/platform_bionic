@@ -21,6 +21,8 @@
 #include <android-base/file.h>
 #include <gtest/gtest.h>
 
+#include "utils.h"
+
 TEST(sys_xattr, setxattr) {
   TemporaryFile tf;
   char buf[10];
@@ -52,17 +54,17 @@ TEST(sys_xattr, fsetxattr_toosmallbuf) {
   char buf[10];
   ASSERT_EQ(0, fsetxattr(tf.fd, "user.foo", "01234567890123456789", 21, 0));
   ASSERT_EQ(-1, fgetxattr(tf.fd, "user.foo", buf, sizeof(buf)));
-  ASSERT_EQ(ERANGE, errno);
+  ASSERT_ERRNO(ERANGE);
 }
 
 TEST(sys_xattr, fsetxattr_invalid_fd) {
   char buf[10];
   errno = 0;
   ASSERT_EQ(-1, fsetxattr(-1, "user.foo", "0123", 5, 0));
-  ASSERT_EQ(EBADF, errno);
+  ASSERT_ERRNO(EBADF);
   errno = 0;
   ASSERT_EQ(-1, fgetxattr(-1, "user.foo", buf, sizeof(buf)));
-  ASSERT_EQ(EBADF, errno);
+  ASSERT_ERRNO(EBADF);
 }
 
 TEST(sys_xattr, fsetxattr_with_opath) {
@@ -78,7 +80,7 @@ TEST(sys_xattr, fsetxattr_with_opath) {
   ASSERT_STREQ("bar", buf);
 #else
   ASSERT_EQ(-1, res);
-  ASSERT_EQ(EBADF, errno);
+  ASSERT_ERRNO(EBADF);
 #endif
   close(fd);
 }
@@ -93,10 +95,10 @@ TEST(sys_xattr, fsetxattr_with_opath_toosmall) {
   char buf[10];
   ASSERT_EQ(0, res);
   ASSERT_EQ(-1, fgetxattr(fd, "user.foo", buf, sizeof(buf)));
-  ASSERT_EQ(ERANGE, errno);
+  ASSERT_ERRNO(ERANGE);
 #else
   ASSERT_EQ(-1, res);
-  ASSERT_EQ(EBADF, errno);
+  ASSERT_ERRNO(EBADF);
 #endif
   close(fd);
 }
@@ -123,7 +125,7 @@ TEST(sys_xattr, flistattr_opath) {
   ASSERT_TRUE(memmem(buf, res, "user.foo", 9) != nullptr);
 #else
   ASSERT_EQ(-1, res);
-  ASSERT_EQ(EBADF, errno);
+  ASSERT_ERRNO(EBADF);
 #endif
   close(fd);
 }
@@ -132,5 +134,5 @@ TEST(sys_xattr, flistattr_invalid_fd) {
   char buf[65536];  // 64kB is max possible xattr list size. See "man 7 xattr".
   errno = 0;
   ASSERT_EQ(-1, flistxattr(-1, buf, sizeof(buf)));
-  ASSERT_EQ(EBADF, errno);
+  ASSERT_ERRNO(EBADF);
 }
