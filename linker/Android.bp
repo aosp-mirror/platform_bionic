@@ -169,6 +169,7 @@ filegroup {
     srcs: [
         "dlfcn.cpp",
         "linker.cpp",
+        "linker_auxv.cpp",
         "linker_block_allocator.cpp",
         "linker_dlwarning.cpp",
         "linker_cfi.cpp",

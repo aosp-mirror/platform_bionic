@@ -207,10 +207,12 @@ static void format_integer(char* buf, size_t buf_size, uint64_t value, char conv
   // Decode the conversion specifier.
   int is_signed = (conversion == 'd' || conversion == 'i' || conversion == 'o');
   int base = 10;
-  if (conversion == 'x' || conversion == 'X') {
+  if (tolower(conversion) == 'x') {
     base = 16;
   } else if (conversion == 'o') {
     base = 8;
+  } else if (tolower(conversion) == 'b') {
+    base = 2;
   }
   bool caps = (conversion == 'X');
 
@@ -360,7 +362,8 @@ static void out_vformat(Out& o, const char* format, va_list args) {
       format_integer(buffer + 2, sizeof(buffer) - 2, value, 'x');
     } else if (c == 'm') {
       strerror_r(errno, buffer, sizeof(buffer));
-    } else if (c == 'd' || c == 'i' || c == 'o' || c == 'u' || c == 'x' || c == 'X') {
+    } else if (tolower(c) == 'b' || c == 'd' || c == 'i' || c == 'o' || c == 'u' ||
+               tolower(c) == 'x') {
       /* integers - first read value from stack */
       uint64_t value;
       int is_signed = (c == 'd' || c == 'i' || c == 'o');
@@ -391,10 +394,10 @@ static void out_vformat(Out& o, const char* format, va_list args) {
         value = static_cast<uint64_t>((static_cast<int64_t>(value << shift)) >> shift);
       }
 
-      if (alternate && value != 0 && (c == 'x' || c == 'o')) {
-        if (c == 'x') {
+      if (alternate && value != 0 && (tolower(c) == 'x' || c == 'o' || tolower(c) == 'b')) {
+        if (tolower(c) == 'x' || tolower(c) == 'b') {
           buffer[0] = '0';
-          buffer[1] = 'x';
+          buffer[1] = c;
           format_integer(buffer + 2, sizeof(buffer) - 2, value, c);
         } else {
           buffer[0] = '0';

@@ -59,6 +59,9 @@ cc_defaults {
         // Needed to test pthread_internal_t layout.
         "-Wno-invalid-offsetof",
 
+        // This warning does not provide any benefit to the tests.
+        "-Wno-reorder-init-list",
+
         // For glibc.
         "-D__STDC_LIMIT_MACROS",
     ],
@@ -676,22 +679,6 @@ cc_defaults {
     },
 }
 
-// Ensures that FORTIFY checks aren't run when ASAN is on.
-cc_test {
-    name: "bionic-fortify-runtime-asan-test",
-    defaults: [
-        "bionic_clang_fortify_tests_w_flags",
-    ],
-    cflags: [
-        "-Werror",
-        "-D_FORTIFY_SOURCE=2",
-    ],
-    sanitize: {
-        address: true,
-    },
-    srcs: ["clang_fortify_asan.cpp"],
-}
-
 // Ensure we don't use FORTIFY'ed functions with the static analyzer/clang-tidy:
 // it can confuse these tools pretty easily. If this builds successfully, then
 // __clang_analyzer__ overrode FORTIFY. Otherwise, FORTIFY was incorrectly
@@ -867,79 +854,8 @@ cc_test_library {
     ],
 }
 
-// -----------------------------------------------------------------------------
-// Tests for the device using bionic's .so. Run with:
-//   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests
-//   adb shell /data/nativetest64/bionic-unit-tests/bionic-unit-tests
-// -----------------------------------------------------------------------------
 cc_defaults {
-    name: "bionic_unit_tests_defaults",
-    host_supported: false,
-    gtest: false,
-
-    defaults: [
-        "bionic_tests_defaults",
-    ],
-
-    whole_static_libs: [
-        "libBionicTests",
-        "libBionicLoaderTests",
-        "libBionicElfTlsLoaderTests",
-    ],
-
-    static_libs: [
-        "libtinyxml2",
-        "liblog",
-        "libbase",
-        "libgtest_isolated",
-    ],
-
-    srcs: [
-        // TODO: Include __cxa_thread_atexit_test.cpp to glibc tests once it is upgraded (glibc 2.18+)
-        "__cxa_thread_atexit_test.cpp",
-        "gtest_globals.cpp",
-        "gtest_main.cpp",
-        "gwp_asan_test.cpp",
-        "thread_local_test.cpp",
-    ],
-
-    conlyflags: [
-        "-fexceptions",
-        "-fnon-call-exceptions",
-    ],
-
-    ldflags: ["-Wl,--export-dynamic"],
-
-    include_dirs: ["bionic/libc"],
-
-    stl: "libc++_static",
-
-    target: {
-        android: {
-            shared_libs: [
-                "ld-android",
-                "libdl",
-                "libdl_android",
-                "libdl_preempt_test_1",
-                "libdl_preempt_test_2",
-                "libdl_test_df_1_global",
-                "libtest_elftls_shared_var",
-                "libtest_elftls_tprel",
-            ],
-            static_libs: [
-                // The order of these libraries matters, do not shuffle them.
-                "libmeminfo",
-                "libziparchive",
-                "libz",
-                "libutils",
-            ],
-            ldflags: [
-                "-Wl,--rpath,${ORIGIN}/bionic-loader-test-libs",
-                "-Wl,--enable-new-dtags",
-            ],
-        },
-    },
-
+    name: "bionic_unit_tests_data",
     data_bins: [
         "cfi_test_helper",
         "cfi_test_helper2",
@@ -967,7 +883,6 @@ cc_defaults {
         "thread_exit_cb_helper",
         "tls_properties_helper",
     ],
-
     data_libs: [
         "libatest_simple_zip",
         "libcfi-test",
@@ -1102,6 +1017,81 @@ cc_defaults {
         "libtest_with_dependency_loop_c",
         "libtestshared",
     ],
+}
+
+// -----------------------------------------------------------------------------
+// Tests for the device using bionic's .so. Run with:
+//   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests
+//   adb shell /data/nativetest64/bionic-unit-tests/bionic-unit-tests
+// -----------------------------------------------------------------------------
+cc_defaults {
+    name: "bionic_unit_tests_defaults",
+    host_supported: false,
+    gtest: false,
+
+    defaults: [
+        "bionic_tests_defaults",
+        "bionic_unit_tests_data",
+    ],
+
+    whole_static_libs: [
+        "libBionicTests",
+        "libBionicLoaderTests",
+        "libBionicElfTlsLoaderTests",
+    ],
+
+    static_libs: [
+        "libtinyxml2",
+        "liblog",
+        "libbase",
+        "libgtest_isolated",
+    ],
+
+    srcs: [
+        // TODO: Include __cxa_thread_atexit_test.cpp to glibc tests once it is upgraded (glibc 2.18+)
+        "__cxa_thread_atexit_test.cpp",
+        "gtest_globals.cpp",
+        "gtest_main.cpp",
+        "gwp_asan_test.cpp",
+        "thread_local_test.cpp",
+    ],
+
+    conlyflags: [
+        "-fexceptions",
+        "-fnon-call-exceptions",
+    ],
+
+    ldflags: ["-Wl,--export-dynamic"],
+
+    include_dirs: ["bionic/libc"],
+
+    stl: "libc++_static",
+
+    target: {
+        android: {
+            shared_libs: [
+                "ld-android",
+                "libdl",
+                "libdl_android",
+                "libdl_preempt_test_1",
+                "libdl_preempt_test_2",
+                "libdl_test_df_1_global",
+                "libtest_elftls_shared_var",
+                "libtest_elftls_tprel",
+            ],
+            static_libs: [
+                // The order of these libraries matters, do not shuffle them.
+                "libmeminfo",
+                "libziparchive",
+                "libz",
+                "libutils",
+            ],
+            ldflags: [
+                "-Wl,--rpath,${ORIGIN}/bionic-loader-test-libs",
+                "-Wl,--enable-new-dtags",
+            ],
+        },
+    },
 }
 
 cc_test {

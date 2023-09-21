@@ -41,5 +41,6 @@
 #define SPI_RX_OCTAL _BITUL(14)
 #define SPI_3WIRE_HIZ _BITUL(15)
 #define SPI_RX_CPHA_FLIP _BITUL(16)
-#define SPI_MODE_USER_MASK (_BITUL(17) - 1)
+#define SPI_MOSI_IDLE_LOW _BITUL(17)
+#define SPI_MODE_USER_MASK (_BITUL(18) - 1)
 #endif

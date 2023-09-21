@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2023 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,50 +28,13 @@
 
 #pragma once
 
-#include <stdint.h>
 #include <sys/cdefs.h>
-
-typedef void init_func_t(int, char*[], char*[]);
-typedef void fini_func_t(void);
-
-typedef struct {
-  init_func_t** preinit_array;
-  init_func_t** init_array;
-  fini_func_t** fini_array;
-  // Below fields are only available in static executables.
-  size_t preinit_array_count;
-  size_t init_array_count;
-  size_t fini_array_count;
-} structors_array_t;
 
 __BEGIN_DECLS
 
-extern int main(int argc, char** argv, char** env);
-
-__noreturn void __libc_init(void* raw_args,
-                            void (*onexit)(void),
-                            int (*slingshot)(int, char**, char**),
-                            structors_array_t const* const structors);
-__LIBC_HIDDEN__ void __libc_fini(void* finit_array);
+#if !defined(__BIONIC_NO_PAGE_SIZE_MACRO)
+#define PAGE_SIZE 4096
+#define PAGE_MASK (~(PAGE_SIZE - 1))
+#endif
 
 __END_DECLS
-
-#if defined(__cplusplus)
-
-__LIBC_HIDDEN__ void __libc_init_globals();
-
-__LIBC_HIDDEN__ void __libc_init_common();
-
-__LIBC_HIDDEN__ void __libc_init_scudo();
-
-__LIBC_HIDDEN__ void __libc_init_mte_late();
-
-__LIBC_HIDDEN__ void __libc_init_AT_SECURE(char** envp);
-
-// The fork handler must be initialised after __libc_init_malloc, as
-// pthread_atfork may call malloc() during its once-init.
-__LIBC_HIDDEN__ void __libc_init_fork_handler();
-
-__LIBC_HIDDEN__ void __libc_set_target_sdk_version(int target);
-
-#endif

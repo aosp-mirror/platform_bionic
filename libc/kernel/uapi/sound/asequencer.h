@@ -19,7 +19,7 @@
 #ifndef _UAPI__SOUND_ASEQUENCER_H
 #define _UAPI__SOUND_ASEQUENCER_H
 #include <sound/asound.h>
-#define SNDRV_SEQ_VERSION SNDRV_PROTOCOL_VERSION(1, 0, 2)
+#define SNDRV_SEQ_VERSION SNDRV_PROTOCOL_VERSION(1, 0, 3)
 #define SNDRV_SEQ_EVENT_SYSTEM 0
 #define SNDRV_SEQ_EVENT_RESULT 1
 #define SNDRV_SEQ_EVENT_NOTE 5
@@ -106,6 +106,7 @@ struct snd_seq_connect {
 #define SNDRV_SEQ_PRIORITY_NORMAL (0 << 4)
 #define SNDRV_SEQ_PRIORITY_HIGH (1 << 4)
 #define SNDRV_SEQ_PRIORITY_MASK (1 << 4)
+#define SNDRV_SEQ_EVENT_UMP (1 << 5)
 struct snd_seq_ev_note {
   unsigned char channel;
   unsigned char note;
@@ -163,6 +164,19 @@ struct snd_seq_ev_quote {
   unsigned short value;
   struct snd_seq_event * event;
 } __attribute__((packed));
+union snd_seq_event_data {
+  struct snd_seq_ev_note note;
+  struct snd_seq_ev_ctrl control;
+  struct snd_seq_ev_raw8 raw8;
+  struct snd_seq_ev_raw32 raw32;
+  struct snd_seq_ev_ext ext;
+  struct snd_seq_ev_queue_control queue;
+  union snd_seq_timestamp time;
+  struct snd_seq_addr addr;
+  struct snd_seq_connect connect;
+  struct snd_seq_result result;
+  struct snd_seq_ev_quote quote;
+};
 struct snd_seq_event {
   snd_seq_event_type_t type;
   unsigned char flags;
@@ -171,19 +185,20 @@ struct snd_seq_event {
   union snd_seq_timestamp time;
   struct snd_seq_addr source;
   struct snd_seq_addr dest;
+  union snd_seq_event_data data;
+};
+struct snd_seq_ump_event {
+  snd_seq_event_type_t type;
+  unsigned char flags;
+  char tag;
+  unsigned char queue;
+  union snd_seq_timestamp time;
+  struct snd_seq_addr source;
+  struct snd_seq_addr dest;
   union {
-    struct snd_seq_ev_note note;
-    struct snd_seq_ev_ctrl control;
-    struct snd_seq_ev_raw8 raw8;
-    struct snd_seq_ev_raw32 raw32;
-    struct snd_seq_ev_ext ext;
-    struct snd_seq_ev_queue_control queue;
-    union snd_seq_timestamp time;
-    struct snd_seq_addr addr;
-    struct snd_seq_connect connect;
-    struct snd_seq_result result;
-    struct snd_seq_ev_quote quote;
-  } data;
+    union snd_seq_event_data data;
+    unsigned int ump[4];
+  };
 };
 struct snd_seq_event_bounce {
   int err;
@@ -215,6 +230,7 @@ typedef int __bitwise snd_seq_client_type_t;
 #define SNDRV_SEQ_FILTER_BROADCAST (1U << 0)
 #define SNDRV_SEQ_FILTER_MULTICAST (1U << 1)
 #define SNDRV_SEQ_FILTER_BOUNCE (1U << 2)
+#define SNDRV_SEQ_FILTER_NO_CONVERT (1U << 30)
 #define SNDRV_SEQ_FILTER_USE_EVENT (1U << 31)
 struct snd_seq_client_info {
   int client;
@@ -227,8 +243,13 @@ struct snd_seq_client_info {
   int event_lost;
   int card;
   int pid;
-  char reserved[56];
+  unsigned int midi_version;
+  unsigned int group_filter;
+  char reserved[48];
 };
+#define SNDRV_SEQ_CLIENT_LEGACY_MIDI 0
+#define SNDRV_SEQ_CLIENT_UMP_MIDI_1_0 1
+#define SNDRV_SEQ_CLIENT_UMP_MIDI_2_0 2
 struct snd_seq_client_pool {
   int client;
   int output_pool;
@@ -268,6 +289,8 @@ struct snd_seq_remove_events {
 #define SNDRV_SEQ_PORT_CAP_SUBS_READ (1 << 5)
 #define SNDRV_SEQ_PORT_CAP_SUBS_WRITE (1 << 6)
 #define SNDRV_SEQ_PORT_CAP_NO_EXPORT (1 << 7)
+#define SNDRV_SEQ_PORT_CAP_INACTIVE (1 << 8)
+#define SNDRV_SEQ_PORT_CAP_UMP_ENDPOINT (1 << 9)
 #define SNDRV_SEQ_PORT_TYPE_SPECIFIC (1 << 0)
 #define SNDRV_SEQ_PORT_TYPE_MIDI_GENERIC (1 << 1)
 #define SNDRV_SEQ_PORT_TYPE_MIDI_GM (1 << 2)
@@ -275,6 +298,7 @@ struct snd_seq_remove_events {
 #define SNDRV_SEQ_PORT_TYPE_MIDI_XG (1 << 4)
 #define SNDRV_SEQ_PORT_TYPE_MIDI_MT32 (1 << 5)
 #define SNDRV_SEQ_PORT_TYPE_MIDI_GM2 (1 << 6)
+#define SNDRV_SEQ_PORT_TYPE_MIDI_UMP (1 << 7)
 #define SNDRV_SEQ_PORT_TYPE_SYNTH (1 << 10)
 #define SNDRV_SEQ_PORT_TYPE_DIRECT_SAMPLE (1 << 11)
 #define SNDRV_SEQ_PORT_TYPE_SAMPLE (1 << 12)
@@ -286,6 +310,10 @@ struct snd_seq_remove_events {
 #define SNDRV_SEQ_PORT_FLG_GIVEN_PORT (1 << 0)
 #define SNDRV_SEQ_PORT_FLG_TIMESTAMP (1 << 1)
 #define SNDRV_SEQ_PORT_FLG_TIME_REAL (1 << 2)
+#define SNDRV_SEQ_PORT_DIR_UNKNOWN 0
+#define SNDRV_SEQ_PORT_DIR_INPUT 1
+#define SNDRV_SEQ_PORT_DIR_OUTPUT 2
+#define SNDRV_SEQ_PORT_DIR_BIDIRECTION 3
 struct snd_seq_port_info {
   struct snd_seq_addr addr;
   char name[64];
@@ -299,7 +327,9 @@ struct snd_seq_port_info {
   void * kernel;
   unsigned int flags;
   unsigned char time_queue;
-  char reserved[59];
+  unsigned char direction;
+  unsigned char ump_group;
+  char reserved[57];
 };
 #define SNDRV_SEQ_QUEUE_FLG_SYNC (1 << 0)
 struct snd_seq_queue_info {
@@ -371,12 +401,22 @@ struct snd_seq_query_subs {
   unsigned int flags;
   char reserved[64];
 };
+#define SNDRV_SEQ_CLIENT_UMP_INFO_ENDPOINT 0
+#define SNDRV_SEQ_CLIENT_UMP_INFO_BLOCK 1
+struct snd_seq_client_ump_info {
+  int client;
+  int type;
+  unsigned char info[512];
+} __attribute__((__packed__));
 #define SNDRV_SEQ_IOCTL_PVERSION _IOR('S', 0x00, int)
 #define SNDRV_SEQ_IOCTL_CLIENT_ID _IOR('S', 0x01, int)
 #define SNDRV_SEQ_IOCTL_SYSTEM_INFO _IOWR('S', 0x02, struct snd_seq_system_info)
 #define SNDRV_SEQ_IOCTL_RUNNING_MODE _IOWR('S', 0x03, struct snd_seq_running_info)
+#define SNDRV_SEQ_IOCTL_USER_PVERSION _IOW('S', 0x04, int)
 #define SNDRV_SEQ_IOCTL_GET_CLIENT_INFO _IOWR('S', 0x10, struct snd_seq_client_info)
 #define SNDRV_SEQ_IOCTL_SET_CLIENT_INFO _IOW('S', 0x11, struct snd_seq_client_info)
+#define SNDRV_SEQ_IOCTL_GET_CLIENT_UMP_INFO _IOWR('S', 0x12, struct snd_seq_client_ump_info)
+#define SNDRV_SEQ_IOCTL_SET_CLIENT_UMP_INFO _IOWR('S', 0x13, struct snd_seq_client_ump_info)
 #define SNDRV_SEQ_IOCTL_CREATE_PORT _IOWR('S', 0x20, struct snd_seq_port_info)
 #define SNDRV_SEQ_IOCTL_DELETE_PORT _IOW('S', 0x21, struct snd_seq_port_info)
 #define SNDRV_SEQ_IOCTL_GET_PORT_INFO _IOWR('S', 0x22, struct snd_seq_port_info)

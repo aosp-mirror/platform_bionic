@@ -28,4 +28,5 @@
 #define AT_L3_CACHESIZE 46
 #define AT_L3_CACHEGEOMETRY 47
 #define AT_VECTOR_SIZE_ARCH 9
+#define AT_MINSIGSTKSZ 51
 #endif
