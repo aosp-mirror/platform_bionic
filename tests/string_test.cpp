@@ -29,6 +29,7 @@
 #include <vector>
 
 #include "buffer_tests.h"
+#include "utils.h"
 
 #if defined(NOFORTIFY)
 #define STRING_TEST string_nofortify
@@ -123,7 +124,7 @@ TEST(STRING_TEST, gnu_strerror_r) {
   ASSERT_EQ(buf, strerror_r(4567, buf, 2));
   ASSERT_STREQ("U", buf);
   // The GNU strerror_r doesn't set errno (the POSIX one sets it to ERANGE).
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
 #else
   GTEST_SKIP() << "musl doesn't have GNU strerror_r";
 #endif
@@ -1483,7 +1484,7 @@ static void TestBasename(const char* in, const char* expected_out) {
   errno = 0;
   const char* out = basename(in);
   ASSERT_STREQ(expected_out, out) << in;
-  ASSERT_EQ(0, errno) << in;
+  ASSERT_ERRNO(0) << in;
 }
 #endif
 

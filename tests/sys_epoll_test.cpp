@@ -122,7 +122,7 @@ TEST(sys_epoll, epoll_pwait2_64_with_sigset) {
 TEST(sys_epoll, epoll_create_invalid_size) {
   errno = 0;
   ASSERT_EQ(-1, epoll_create(0));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(sys_epoll, epoll_event_data) {
