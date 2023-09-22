@@ -70,3 +70,12 @@ pid_t gettid() {
   return syscall(__NR_gettid);
 }
 #endif
+
+void PrintTo(const Errno& e, std::ostream* os) {
+  // TODO: strerrorname_np() might be more useful here, but we'd need to implement it first!
+  *os << strerror(e.errno_);
+}
+
+bool operator==(const Errno& lhs, const Errno& rhs) {
+  return lhs.errno_ == rhs.errno_;
+}

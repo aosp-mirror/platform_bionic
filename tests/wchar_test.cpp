@@ -122,7 +122,7 @@ TEST(wchar, wctomb_wcrtomb) {
   EXPECT_EQ('\xa2', bytes[3]);
   // Invalid code point.
   EXPECT_EQ(static_cast<size_t>(-1), wcrtomb(bytes, 0xffffffff, nullptr));
-  EXPECT_EQ(EILSEQ, errno);
+  EXPECT_ERRNO(EILSEQ);
 }
 
 TEST(wchar, wcrtomb_start_state) {
@@ -136,7 +136,7 @@ TEST(wchar, wcrtomb_start_state) {
   memset(&ps, 0, sizeof(ps));
   EXPECT_EQ(static_cast<size_t>(-2), mbrtowc(nullptr, "\xc2", 1, &ps));
   EXPECT_EQ(static_cast<size_t>(-1), wcrtomb(out, 0x00a2, &ps));
-  EXPECT_EQ(EILSEQ, errno);
+  EXPECT_ERRNO(EILSEQ);
 
   // If the first argument to wcrtomb is NULL or the second is L'\0' the shift
   // state should be reset.
@@ -177,10 +177,10 @@ TEST(wchar, wcstombs_wcrtombs) {
   // An unrepresentable char just returns an error from wcstombs...
   errno = 0;
   EXPECT_EQ(static_cast<size_t>(-1), wcstombs(nullptr, bad_chars, 0));
-  EXPECT_EQ(EILSEQ, errno);
+  EXPECT_ERRNO(EILSEQ);
   errno = 0;
   EXPECT_EQ(static_cast<size_t>(-1), wcstombs(nullptr, bad_chars, 256));
-  EXPECT_EQ(EILSEQ, errno);
+  EXPECT_ERRNO(EILSEQ);
 
   // And wcsrtombs doesn't tell us where it got stuck because we didn't ask it
   // to actually convert anything...
@@ -188,12 +188,12 @@ TEST(wchar, wcstombs_wcrtombs) {
   src = bad_chars;
   EXPECT_EQ(static_cast<size_t>(-1), wcsrtombs(nullptr, &src, 0, nullptr));
   EXPECT_EQ(&bad_chars[0], src);
-  EXPECT_EQ(EILSEQ, errno);
+  EXPECT_ERRNO(EILSEQ);
   errno = 0;
   src = bad_chars;
   EXPECT_EQ(static_cast<size_t>(-1), wcsrtombs(nullptr, &src, 256, nullptr));
   EXPECT_EQ(&bad_chars[0], src);
-  EXPECT_EQ(EILSEQ, errno);
+  EXPECT_ERRNO(EILSEQ);
 
   // Okay, now let's test actually converting something...
   memset(bytes, 'x', sizeof(bytes));
@@ -211,7 +211,7 @@ TEST(wchar, wcstombs_wcrtombs) {
   errno = 0;
   memset(bytes, 'x', sizeof(bytes));
   EXPECT_EQ(static_cast<size_t>(-1), wcstombs(bytes, bad_chars, 256));
-  EXPECT_EQ(EILSEQ, errno);
+  EXPECT_ERRNO(EILSEQ);
   bytes[3] = 0;
   EXPECT_STREQ("hix", bytes);
 
@@ -220,13 +220,13 @@ TEST(wchar, wcstombs_wcrtombs) {
   src = chars;
   EXPECT_EQ(0U, wcsrtombs(bytes, &src, 0, nullptr));
   EXPECT_EQ(&chars[0], src); // No input consumed.
-  EXPECT_EQ(EILSEQ, errno);
+  EXPECT_ERRNO(EILSEQ);
 
   memset(bytes, 'x', sizeof(bytes));
   src = chars;
   EXPECT_EQ(4U, wcsrtombs(bytes, &src, 4, nullptr));
   EXPECT_EQ(&chars[4], src); // Some input consumed.
-  EXPECT_EQ(EILSEQ, errno);
+  EXPECT_ERRNO(EILSEQ);
   bytes[5] = 0;
   EXPECT_STREQ("hellx", bytes);
 
@@ -234,21 +234,21 @@ TEST(wchar, wcstombs_wcrtombs) {
   src = chars;
   EXPECT_EQ(5U, wcsrtombs(bytes, &src, 256, nullptr));
   EXPECT_EQ(nullptr, src); // All input consumed!
-  EXPECT_EQ(EILSEQ, errno);
+  EXPECT_ERRNO(EILSEQ);
   EXPECT_STREQ("hello", bytes);
 
   memset(bytes, 'x', sizeof(bytes));
   src = chars;
   EXPECT_EQ(5U, wcsrtombs(bytes, &src, 6, nullptr));
   EXPECT_EQ(nullptr, src); // All input consumed.
-  EXPECT_EQ(EILSEQ, errno);
+  EXPECT_ERRNO(EILSEQ);
   EXPECT_STREQ("hello", bytes);
 
   memset(bytes, 'x', sizeof(bytes));
   src = bad_chars;
   EXPECT_EQ(static_cast<size_t>(-1), wcsrtombs(bytes, &src, 256, nullptr));
   EXPECT_EQ(&bad_chars[2], src);
-  EXPECT_EQ(EILSEQ, errno);
+  EXPECT_ERRNO(EILSEQ);
   bytes[3] = 0;
   EXPECT_STREQ("hix", bytes);
 
@@ -258,7 +258,7 @@ TEST(wchar, wcstombs_wcrtombs) {
   memset(&ps, 0, sizeof(ps));
   ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(nullptr, "\xc2", 1, &ps));
   EXPECT_EQ(static_cast<size_t>(-1), wcsrtombs(nullptr, &src, 0, &ps));
-  EXPECT_EQ(EILSEQ, errno);
+  EXPECT_ERRNO(EILSEQ);
 }
 
 TEST(wchar, limits) {
@@ -375,14 +375,14 @@ TEST(wchar, mbrtowc) {
                                              "\xf8\xa1\xa2\xa3\xa4"
                                              "f",
                                              6, nullptr));
-  EXPECT_EQ(EILSEQ, errno);
+  EXPECT_ERRNO(EILSEQ);
 #endif
   // Illegal over-long sequence.
   EXPECT_EQ(static_cast<size_t>(-1), mbrtowc(out,
                                              "\xf0\x82\x82\xac"
                                              "ef",
                                              6, nullptr));
-  EXPECT_EQ(EILSEQ, errno);
+  EXPECT_ERRNO(EILSEQ);
 }
 
 TEST(wchar, mbrtowc_valid_non_characters) {
@@ -406,10 +406,10 @@ TEST(wchar, mbrtowc_out_of_range) {
   auto result = mbrtowc(out, "\xf5\x80\x80\x80", 4, nullptr);
   if (kLibcRejectsOverLongUtf8Sequences) {
     ASSERT_EQ(static_cast<size_t>(-1), result);
-    ASSERT_EQ(EILSEQ, errno);
+    ASSERT_ERRNO(EILSEQ);
   } else {
     ASSERT_EQ(4U, result);
-    ASSERT_EQ(0, errno);
+    ASSERT_ERRNO(0);
   }
 }
 
@@ -439,7 +439,7 @@ static void test_mbrtowc_incomplete(mbstate_t* ps) {
   // Invalid 2-byte
   ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(&out, "\xc2", 1, ps));
   ASSERT_EQ(static_cast<size_t>(-1), mbrtowc(&out, "\x20" "cdef", 5, ps));
-  ASSERT_EQ(EILSEQ, errno);
+  ASSERT_ERRNO(EILSEQ);
 }
 
 TEST(wchar, mbrtowc_incomplete) {
@@ -477,12 +477,12 @@ static void test_mbsrtowcs(mbstate_t* ps) {
 
   const char* invalid = INVALID;
   ASSERT_EQ(static_cast<size_t>(-1), mbsrtowcs(out, &invalid, 4, ps));
-  EXPECT_EQ(EILSEQ, errno);
+  EXPECT_ERRNO(EILSEQ);
   ASSERT_EQ('\xc2', *invalid);
 
   const char* incomplete = INCOMPLETE;
   ASSERT_EQ(static_cast<size_t>(-1), mbsrtowcs(out, &incomplete, 2, ps));
-  EXPECT_EQ(EILSEQ, errno);
+  EXPECT_ERRNO(EILSEQ);
   ASSERT_EQ('\xc2', *incomplete);
 
   // If dst is null, *src shouldn't be updated.
@@ -512,7 +512,7 @@ TEST(wchar, mbsrtowcs) {
   wchar_t out;
   ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(&out, "\xc2", 1, &ps));
   ASSERT_EQ(static_cast<size_t>(-1), mbsrtowcs(&out, &invalid, 1, &ps));
-  EXPECT_EQ(EILSEQ, errno);
+  EXPECT_ERRNO(EILSEQ);
   ASSERT_EQ('\x20', *invalid);
 }
 
@@ -642,12 +642,12 @@ TEST(wchar, mbsnrtowcs) {
   src = incomplete;
   errno = 0;
   ASSERT_EQ(static_cast<size_t>(-1), mbsnrtowcs(dst, &src, SIZE_MAX, 3, nullptr));
-  ASSERT_EQ(EILSEQ, errno);
+  ASSERT_ERRNO(EILSEQ);
 
   src = incomplete;
   errno = 0;
   ASSERT_EQ(static_cast<size_t>(-1), mbsnrtowcs(nullptr, &src, SIZE_MAX, 3, nullptr));
-  ASSERT_EQ(EILSEQ, errno);
+  ASSERT_ERRNO(EILSEQ);
 }
 
 TEST(wchar, wcsftime__wcsftime_l) {
@@ -798,12 +798,12 @@ TEST(stdio, open_wmemstream_EINVAL) {
   // Invalid buffer.
   errno = 0;
   ASSERT_EQ(nullptr, open_wmemstream(nullptr, &size));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 
   // Invalid size.
   errno = 0;
   ASSERT_EQ(nullptr, open_wmemstream(&p, nullptr));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 #pragma clang diagnostic pop
 #else
   GTEST_SKIP() << "This test is bionic-specific";
@@ -813,73 +813,73 @@ TEST(stdio, open_wmemstream_EINVAL) {
 TEST(wchar, wcstol_EINVAL) {
   errno = 0;
   wcstol(L"123", nullptr, -1);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   errno = 0;
   wcstol(L"123", nullptr, 1);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   errno = 0;
   wcstol(L"123", nullptr, 37);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(wchar, wcstoll_EINVAL) {
   errno = 0;
   wcstoll(L"123", nullptr, -1);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   errno = 0;
   wcstoll(L"123", nullptr, 1);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   errno = 0;
   wcstoll(L"123", nullptr, 37);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(wchar, wcstoul_EINVAL) {
   errno = 0;
   wcstoul(L"123", nullptr, -1);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   errno = 0;
   wcstoul(L"123", nullptr, 1);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   errno = 0;
   wcstoul(L"123", nullptr, 37);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(wchar, wcstoull_EINVAL) {
   errno = 0;
   wcstoull(L"123", nullptr, -1);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   errno = 0;
   wcstoull(L"123", nullptr, 1);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   errno = 0;
   wcstoull(L"123", nullptr, 37);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(wchar, wcstoll_l_EINVAL) {
   errno = 0;
   wcstoll_l(L"123", nullptr, -1, SAFE_LC_GLOBAL_LOCALE);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   errno = 0;
   wcstoll_l(L"123", nullptr, 1, SAFE_LC_GLOBAL_LOCALE);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   errno = 0;
   wcstoll_l(L"123", nullptr, 37, SAFE_LC_GLOBAL_LOCALE);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(wchar, wcstoull_l_EINVAL) {
   errno = 0;
   wcstoull_l(L"123", nullptr, -1, SAFE_LC_GLOBAL_LOCALE);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   errno = 0;
   wcstoull_l(L"123", nullptr, 1, SAFE_LC_GLOBAL_LOCALE);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   errno = 0;
   wcstoull_l(L"123", nullptr, 37, SAFE_LC_GLOBAL_LOCALE);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(wchar, wmempcpy) {

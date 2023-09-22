@@ -40,6 +40,8 @@
 #include <android-base/logging.h>
 #include <android-base/unique_fd.h>
 
+#include "utils.h"
+
 using android::base::ReceiveFileDescriptors;
 using android::base::SendFileDescriptors;
 using android::base::unique_fd;
@@ -234,7 +236,7 @@ FDTRACK_TEST(socket, socket(AF_UNIX, SOCK_STREAM, 0));
 FDTRACK_TEST(pidfd_open, ({
   int rc = pidfd_open(getpid(), 0);
   if (rc == -1) {
-    ASSERT_EQ(ENOSYS, errno);
+    ASSERT_ERRNO(ENOSYS);
     GTEST_SKIP() << "pidfd_open not available";
   }
   rc;
@@ -244,14 +246,14 @@ FDTRACK_TEST(pidfd_getfd, ({
   android_fdtrack_set_enabled(false);
   int pidfd_self = pidfd_open(getpid(), 0);
   if (pidfd_self == -1) {
-    ASSERT_EQ(ENOSYS, errno);
+    ASSERT_ERRNO(ENOSYS);
     GTEST_SKIP() << "pidfd_open not available";
   }
   android_fdtrack_set_enabled(true);
 
   int rc = pidfd_getfd(pidfd_self, STDIN_FILENO, 0);
   if (rc == -1) {
-    ASSERT_EQ(ENOSYS, errno);
+    ASSERT_ERRNO(ENOSYS);
     GTEST_SKIP() << "pidfd_getfd not available";
   }
 

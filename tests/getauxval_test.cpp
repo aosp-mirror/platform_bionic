@@ -21,6 +21,8 @@
 #include <sys/utsname.h>
 #include <gtest/gtest.h>
 
+#include "utils.h"
+
 TEST(getauxval, expected_values) {
   ASSERT_EQ(0UL, getauxval(AT_SECURE));
   ASSERT_EQ(getuid(), getauxval(AT_UID));
@@ -38,7 +40,7 @@ TEST(getauxval, expected_values) {
 TEST(getauxval, unexpected_values) {
   errno = 0;
   ASSERT_EQ(0UL, getauxval(0xdeadbeef));
-  ASSERT_EQ(ENOENT, errno);
+  ASSERT_ERRNO(ENOENT);
 }
 
 TEST(getauxval, arm_has_AT_HWCAP2) {
@@ -57,7 +59,7 @@ TEST(getauxval, arm_has_AT_HWCAP2) {
     // to check errno to see whether we got a "true" 0 or a "not found" 0.
     errno = 0;
     getauxval(AT_HWCAP2);
-    ASSERT_EQ(0, errno) << "64-bit kernel not reporting AT_HWCAP2 to 32-bit ARM process";
+    ASSERT_ERRNO(0) << "64-bit kernel not reporting AT_HWCAP2 to 32-bit ARM process";
     return;
   }
 #endif
