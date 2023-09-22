@@ -31,6 +31,8 @@
 #include "android-base/file.h"
 #include "android-base/strings.h"
 
+#include "utils.h"
+
 // http://b/20017123.
 TEST(sys_prctl, bug_20017123) {
 #if defined(PR_SET_VMA) // PR_SET_VMA is only available in Android kernels.
@@ -91,7 +93,7 @@ TEST(sys_prctl, pr_cap_ambient) {
   // but they can check or lower it
   err = prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, CAP_SYS_ADMIN, 0, 0);
   EXPECT_EQ(-1, err);
-  EXPECT_EQ(EPERM, errno);
+  EXPECT_ERRNO(EPERM);
 
   err = prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_IS_SET, CAP_SYS_ADMIN, 0, 0);
   EXPECT_EQ(0, err);
@@ -102,15 +104,15 @@ TEST(sys_prctl, pr_cap_ambient) {
   // ULONG_MAX isn't a legal cap
   err = prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_RAISE, ULONG_MAX, 0, 0);
   EXPECT_EQ(-1, err);
-  EXPECT_EQ(EINVAL, errno);
+  EXPECT_ERRNO(EINVAL);
 
   err = prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_IS_SET, ULONG_MAX, 0, 0);
   EXPECT_EQ(-1, err);
-  EXPECT_EQ(EINVAL, errno);
+  EXPECT_ERRNO(EINVAL);
 
   err = prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_LOWER, ULONG_MAX, 0, 0);
   EXPECT_EQ(-1, err);
-  EXPECT_EQ(EINVAL, errno);
+  EXPECT_ERRNO(EINVAL);
 #else
   GTEST_SKIP() << "PR_CAP_AMBIENT not available";
 #endif
