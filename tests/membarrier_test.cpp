@@ -22,6 +22,8 @@
 #include <linux/membarrier.h>
 #include <sys/syscall.h>
 
+#include "utils.h"
+
 class ScopedErrnoCleaner {
  public:
   ScopedErrnoCleaner() { errno = 0; }
@@ -92,7 +94,7 @@ static void TestRegisterAndBarrierCommands(int membarrier_cmd_register,
   } else {
     // Private barrier should fail.
     ASSERT_EQ(-1, syscall(__NR_membarrier, membarrier_cmd_barrier, 0));
-    ASSERT_EQ(EPERM, errno);
+    ASSERT_ERRNO(EPERM);
     errno = 0;
   }
 

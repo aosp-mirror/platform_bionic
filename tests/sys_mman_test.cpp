@@ -23,6 +23,8 @@
 #include <android-base/file.h>
 #include <gtest/gtest.h>
 
+#include "utils.h"
+
 TEST(sys_mman, mmap_std) {
   void* map = mmap(nullptr, 4096, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
   ASSERT_NE(MAP_FAILED, map);
@@ -278,7 +280,7 @@ TEST(sys_mman, memfd_create) {
   errno = 0;
   int fd = memfd_create("doesn't matter", 0);
   if (fd == -1) {
-    ASSERT_EQ(ENOSYS, errno);
+    ASSERT_ERRNO(ENOSYS);
     GTEST_SKIP() << "no memfd_create available";
   }
   int f = fcntl(fd, F_GETFD);

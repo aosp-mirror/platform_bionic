@@ -21,6 +21,8 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+#include "utils.h"
+
 static int child_fn(void* i_ptr) {
   *reinterpret_cast<int*>(i_ptr) = 42;
   return 123;
@@ -57,14 +59,14 @@ TEST(sched, clone_errno) {
   errno = 0;
   // If CLONE_THREAD is set, CLONE_SIGHAND must be set too.
   ASSERT_EQ(-1, clone(child_fn, &fake_child_stack[16], CLONE_THREAD, nullptr));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(sched, clone_null_child_stack) {
   int i = 0;
   errno = 0;
   ASSERT_EQ(-1, clone(child_fn, nullptr, CLONE_VM, &i));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(sched, cpu_set) {
@@ -289,7 +291,7 @@ TEST(sched, sched_getscheduler_sched_setscheduler) {
   p.sched_priority = sched_get_priority_min(original_policy);
   errno = 0;
   ASSERT_EQ(-1, sched_setscheduler(getpid(), INT_MAX, &p));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 
   ASSERT_EQ(0, sched_getparam(getpid(), &p));
   ASSERT_EQ(original_policy, sched_setscheduler(getpid(), SCHED_BATCH, &p));

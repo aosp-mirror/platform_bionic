@@ -315,3 +315,13 @@ static inline bool running_with_mte() {
 }
 
 bool IsLowRamDevice();
+
+class Errno {
+ public:
+  Errno(int e) : errno_(e) {}
+  int errno_;
+};
+void PrintTo(const Errno& e, std::ostream* os);
+bool operator==(const Errno& lhs, const Errno& rhs);
+#define ASSERT_ERRNO(expected_errno) ASSERT_EQ(Errno(expected_errno), Errno(errno))
+#define EXPECT_ERRNO(expected_errno) EXPECT_EQ(Errno(expected_errno), Errno(errno))
