@@ -585,7 +585,7 @@ TEST(pthread, pthread_kill__exited_thread) {
   while (TEMP_FAILURE_RETRY(syscall(__NR_tgkill, getpid(), tid, 0)) != -1) {
     continue;
   }
-  ASSERT_EQ(ESRCH, errno);
+  ASSERT_ERRNO(ESRCH);
 
   ASSERT_EQ(ESRCH, pthread_kill(thread, 0));
 }

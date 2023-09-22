@@ -72,7 +72,7 @@ TEST(UNISTD_TEST, brk) {
   void* new_break = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(initial_break) + 1);
   int ret = brk(new_break);
   if (ret == -1) {
-    ASSERT_EQ(errno, ENOMEM);
+    ASSERT_ERRNO(ENOMEM);
   } else {
     ASSERT_EQ(0, ret);
     ASSERT_GE(get_brk(), new_break);
@@ -82,7 +82,7 @@ TEST(UNISTD_TEST, brk) {
   new_break = page_align(reinterpret_cast<uintptr_t>(initial_break) + sysconf(_SC_PAGE_SIZE));
   ret = brk(new_break);
   if (ret == -1) {
-    ASSERT_EQ(errno, ENOMEM);
+    ASSERT_ERRNO(ENOMEM);
   } else {
     ASSERT_EQ(0, ret);
     ASSERT_EQ(get_brk(), new_break);
@@ -91,7 +91,7 @@ TEST(UNISTD_TEST, brk) {
 
 TEST(UNISTD_TEST, brk_ENOMEM) {
   ASSERT_EQ(-1, brk(reinterpret_cast<void*>(-1)));
-  ASSERT_EQ(ENOMEM, errno);
+  ASSERT_ERRNO(ENOMEM);
 }
 
 #if defined(__GLIBC__)
@@ -124,18 +124,18 @@ TEST(UNISTD_TEST, sbrk_ENOMEM) {
 
   // Can't increase by so much that we'd overflow.
   ASSERT_EQ(reinterpret_cast<void*>(-1), sbrk(PTRDIFF_MAX));
-  ASSERT_EQ(ENOMEM, errno);
+  ASSERT_ERRNO(ENOMEM);
 
   // Set the current break to a point that will cause an overflow.
   __bionic_brk = reinterpret_cast<void*>(static_cast<uintptr_t>(PTRDIFF_MAX));
 
   ASSERT_EQ(reinterpret_cast<void*>(-1), sbrk(PTRDIFF_MIN));
-  ASSERT_EQ(ENOMEM, errno);
+  ASSERT_ERRNO(ENOMEM);
 
   __bionic_brk = reinterpret_cast<void*>(static_cast<uintptr_t>(PTRDIFF_MAX) - 1);
 
   ASSERT_EQ(reinterpret_cast<void*>(-1), sbrk(PTRDIFF_MIN + 1));
-  ASSERT_EQ(ENOMEM, errno);
+  ASSERT_ERRNO(ENOMEM);
 #else
   class ScopedBrk {
   public:
@@ -154,7 +154,7 @@ TEST(UNISTD_TEST, sbrk_ENOMEM) {
     ASSERT_EQ(reinterpret_cast<void*>(-1), sbrk(SBRK_MIN));
 #if defined(__BIONIC__)
     // GLIBC does not set errno in overflow case.
-    ASSERT_EQ(ENOMEM, errno);
+    ASSERT_ERRNO(ENOMEM);
 #endif
   }
 
@@ -167,7 +167,7 @@ TEST(UNISTD_TEST, sbrk_ENOMEM) {
     ASSERT_EQ(reinterpret_cast<void*>(-1), sbrk(SBRK_MAX));
 #if defined(__BIONIC__)
     // GLIBC does not set errno in overflow case.
-    ASSERT_EQ(ENOMEM, errno);
+    ASSERT_ERRNO(ENOMEM);
 #endif
   }
 #endif
@@ -217,7 +217,7 @@ TEST(UNISTD_TEST, ftruncate_negative) {
   TemporaryFile tf;
   errno = 0;
   ASSERT_EQ(-1, ftruncate(tf.fd, -123));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 static bool g_pause_test_flag = false;
@@ -253,7 +253,7 @@ TEST(UNISTD_TEST, read_EBADF) {
   // our syscall stubs correctly return a 64-bit -1.
   char buf[1];
   ASSERT_EQ(-1, read(-1, buf, sizeof(buf)));
-  ASSERT_EQ(EBADF, errno);
+  ASSERT_ERRNO(EBADF);
 }
 
 TEST(UNISTD_TEST, syscall_long) {
@@ -288,27 +288,27 @@ TEST(UNISTD_TEST, getenv_unsetenv) {
 
 TEST(UNISTD_TEST, unsetenv_EINVAL) {
   EXPECT_EQ(-1, unsetenv(""));
-  EXPECT_EQ(EINVAL, errno);
+  EXPECT_ERRNO(EINVAL);
   EXPECT_EQ(-1, unsetenv("a=b"));
-  EXPECT_EQ(EINVAL, errno);
+  EXPECT_ERRNO(EINVAL);
 }
 
 TEST(UNISTD_TEST, setenv_EINVAL) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wnonnull"
   EXPECT_EQ(-1, setenv(nullptr, "value", 0));
-  EXPECT_EQ(EINVAL, errno);
+  EXPECT_ERRNO(EINVAL);
   EXPECT_EQ(-1, setenv(nullptr, "value", 1));
-  EXPECT_EQ(EINVAL, errno);
+  EXPECT_ERRNO(EINVAL);
 #pragma clang diagnostic pop
   EXPECT_EQ(-1, setenv("", "value", 0));
-  EXPECT_EQ(EINVAL, errno);
+  EXPECT_ERRNO(EINVAL);
   EXPECT_EQ(-1, setenv("", "value", 1));
-  EXPECT_EQ(EINVAL, errno);
+  EXPECT_ERRNO(EINVAL);
   EXPECT_EQ(-1, setenv("a=b", "value", 0));
-  EXPECT_EQ(EINVAL, errno);
+  EXPECT_ERRNO(EINVAL);
   EXPECT_EQ(-1, setenv("a=b", "value", 1));
-  EXPECT_EQ(EINVAL, errno);
+  EXPECT_ERRNO(EINVAL);
 }
 
 TEST(UNISTD_TEST, setenv) {
@@ -394,7 +394,7 @@ static void TestSyncFunction(int (*fn)(int)) {
   // Can't sync an invalid fd.
   errno = 0;
   EXPECT_EQ(-1, fn(-1));
-  EXPECT_EQ(EBADF, errno);
+  EXPECT_ERRNO(EBADF);
 
   // It doesn't matter whether you've opened a file for write or not.
   TemporaryFile tf;
@@ -424,7 +424,7 @@ static void TestFsyncFunction(int (*fn)(int)) {
   int fd = open("/proc/version", O_RDONLY);
   ASSERT_NE(-1, fd);
   EXPECT_EQ(-1, fn(fd));
-  EXPECT_EQ(EINVAL, errno);
+  EXPECT_ERRNO(EINVAL);
   close(fd);
 }
 
@@ -737,7 +737,6 @@ TEST(UNISTD_TEST, gethostname) {
   ASSERT_EQ(0, gethostname(hostname, HOST_NAME_MAX));
 
   // Can we get the hostname with a right-sized buffer?
-  errno = 0;
   ASSERT_EQ(0, gethostname(hostname, strlen(hostname) + 1));
 
   // Does uname(2) agree?
@@ -749,7 +748,7 @@ TEST(UNISTD_TEST, gethostname) {
   // Do we correctly detect truncation?
   errno = 0;
   ASSERT_EQ(-1, gethostname(hostname, strlen(hostname)));
-  ASSERT_EQ(ENAMETOOLONG, errno);
+  ASSERT_ERRNO(ENAMETOOLONG);
 }
 
 TEST(UNISTD_TEST, pathconf_fpathconf) {
@@ -1206,7 +1205,7 @@ TEST(UNISTD_TEST, dup2_same) {
   // Equal, but invalid.
   errno = 0;
   ASSERT_EQ(-1, dup2(fd, fd));
-  ASSERT_EQ(EBADF, errno);
+  ASSERT_ERRNO(EBADF);
 }
 
 TEST(UNISTD_TEST, dup3) {
@@ -1297,11 +1296,11 @@ TEST(UNISTD_TEST, lockf_with_child) {
     // Check that the child cannot lock the file.
     ASSERT_EQ(0, lseek64(tf.fd, 0, SEEK_SET));
     ASSERT_EQ(-1, lockf64(tf.fd, F_TLOCK, file_size));
-    ASSERT_EQ(EAGAIN, errno);
+    ASSERT_ERRNO(EAGAIN);
     // Check also that it reports itself as locked.
     ASSERT_EQ(0, lseek64(tf.fd, 0, SEEK_SET));
     ASSERT_EQ(-1, lockf64(tf.fd, F_TEST, file_size));
-    ASSERT_EQ(EACCES, errno);
+    ASSERT_ERRNO(EACCES);
     _exit(0);
   }
   AssertChildExited(pid, 0);
@@ -1327,11 +1326,11 @@ TEST(UNISTD_TEST, lockf_partial_with_child) {
     // Check that the child cannot lock the first half.
     ASSERT_EQ(0, lseek64(tf.fd, 0, SEEK_SET));
     ASSERT_EQ(-1, lockf64(tf.fd, F_TEST, file_size/2));
-    ASSERT_EQ(EACCES, errno);
+    ASSERT_ERRNO(EACCES);
     // Check also that it reports itself as locked.
     ASSERT_EQ(0, lseek64(tf.fd, 0, SEEK_SET));
     ASSERT_EQ(-1, lockf64(tf.fd, F_TEST, file_size/2));
-    ASSERT_EQ(EACCES, errno);
+    ASSERT_ERRNO(EACCES);
     _exit(0);
   }
   AssertChildExited(pid, 0);
@@ -1353,7 +1352,7 @@ TEST(UNISTD_TEST, getdomainname) {
 #if defined(__BIONIC__)
   // bionic and glibc have different behaviors when len is too small
   ASSERT_EQ(-1, getdomainname(buf, strlen(u.domainname)));
-  EXPECT_EQ(EINVAL, errno);
+  EXPECT_ERRNO(EINVAL);
 #endif
 }
 
@@ -1378,7 +1377,7 @@ TEST(UNISTD_TEST, setdomainname) {
 
   const char* name = "newdomainname";
   ASSERT_EQ(-1, setdomainname(name, strlen(name)));
-  ASSERT_EQ(EPERM, errno);
+  ASSERT_ERRNO(EPERM);
 
   if (has_admin) {
     ASSERT_EQ(0, capset(&header, &old_caps[0])) << "failed to restore admin privileges";
@@ -1389,7 +1388,7 @@ TEST(UNISTD_TEST, execve_failure) {
   ExecTestHelper eth;
   errno = 0;
   ASSERT_EQ(-1, execve("/", eth.GetArgs(), eth.GetEnv()));
-  ASSERT_EQ(EACCES, errno);
+  ASSERT_ERRNO(EACCES);
 }
 
 static void append_llvm_cov_env_var(std::string& env_str) {
@@ -1419,7 +1418,7 @@ TEST(UNISTD_TEST, execve_args) {
 TEST(UNISTD_TEST, execl_failure) {
   errno = 0;
   ASSERT_EQ(-1, execl("/", "/", nullptr));
-  ASSERT_EQ(EACCES, errno);
+  ASSERT_ERRNO(EACCES);
 }
 
 TEST(UNISTD_TEST, execl) {
@@ -1432,7 +1431,7 @@ TEST(UNISTD_TEST, execle_failure) {
   ExecTestHelper eth;
   errno = 0;
   ASSERT_EQ(-1, execle("/", "/", nullptr, eth.GetEnv()));
-  ASSERT_EQ(EACCES, errno);
+  ASSERT_ERRNO(EACCES);
 }
 
 TEST(UNISTD_TEST, execle) {
@@ -1451,7 +1450,7 @@ TEST(UNISTD_TEST, execv_failure) {
   ExecTestHelper eth;
   errno = 0;
   ASSERT_EQ(-1, execv("/", eth.GetArgs()));
-  ASSERT_EQ(EACCES, errno);
+  ASSERT_ERRNO(EACCES);
 }
 
 TEST(UNISTD_TEST, execv) {
@@ -1464,7 +1463,7 @@ TEST(UNISTD_TEST, execv) {
 TEST(UNISTD_TEST, execlp_failure) {
   errno = 0;
   ASSERT_EQ(-1, execlp("/", "/", nullptr));
-  ASSERT_EQ(EACCES, errno);
+  ASSERT_ERRNO(EACCES);
 }
 
 TEST(UNISTD_TEST, execlp) {
@@ -1478,7 +1477,7 @@ TEST(UNISTD_TEST, execvp_failure) {
   eth.SetArgs({nullptr});
   errno = 0;
   ASSERT_EQ(-1, execvp("/", eth.GetArgs()));
-  ASSERT_EQ(EACCES, errno);
+  ASSERT_ERRNO(EACCES);
 }
 
 TEST(UNISTD_TEST, execvp) {
@@ -1493,7 +1492,7 @@ TEST(UNISTD_TEST, execvpe_failure) {
   errno = 0;
   ASSERT_EQ(-1, execvpe("this-does-not-exist", eth.GetArgs(), eth.GetEnv()));
   // Running in CTS we might not even be able to search all directories in $PATH.
-  ASSERT_TRUE(errno == ENOENT || errno == EACCES);
+  ASSERT_TRUE(errno == ENOENT || errno == EACCES) << strerror(errno);
 }
 
 TEST(UNISTD_TEST, execvpe) {
@@ -1528,7 +1527,7 @@ TEST(UNISTD_TEST, execvpe_ENOEXEC) {
   // It's not inherently executable.
   errno = 0;
   ASSERT_EQ(-1, execvpe(basename(tf.path), eth.GetArgs(), eth.GetEnv()));
-  ASSERT_EQ(EACCES, errno);
+  ASSERT_ERRNO(EACCES);
 
   // Make it executable (and keep it writable because we're going to rewrite it below).
   ASSERT_EQ(0, chmod(tf.path, 0777));
@@ -1536,7 +1535,7 @@ TEST(UNISTD_TEST, execvpe_ENOEXEC) {
   // TemporaryFile will have a writable fd, so we can test ETXTBSY while we're here...
   errno = 0;
   ASSERT_EQ(-1, execvpe(basename(tf.path), eth.GetArgs(), eth.GetEnv()));
-  ASSERT_EQ(ETXTBSY, errno);
+  ASSERT_ERRNO(ETXTBSY);
 
   // 1. The simplest test: the kernel should handle this.
   ASSERT_EQ(0, close(tf.fd));
@@ -1557,7 +1556,7 @@ TEST(UNISTD_TEST, execvp_libcore_test_55017) {
 
   errno = 0;
   ASSERT_EQ(-1, execvp("/system/bin/does-not-exist", eth.GetArgs()));
-  ASSERT_EQ(ENOENT, errno);
+  ASSERT_ERRNO(ENOENT);
 }
 
 TEST(UNISTD_TEST, exec_argv0_null) {
@@ -1584,7 +1583,7 @@ TEST(UNISTD_TEST, fexecve_failure) {
   int fd = open("/", O_RDONLY);
   ASSERT_NE(-1, fd);
   ASSERT_EQ(-1, fexecve(fd, eth.GetArgs(), eth.GetEnv()));
-  ASSERT_EQ(EACCES, errno);
+  ASSERT_ERRNO(EACCES);
   close(fd);
 }
 
@@ -1592,7 +1591,7 @@ TEST(UNISTD_TEST, fexecve_bad_fd) {
   ExecTestHelper eth;
   errno = 0;
   ASSERT_EQ(-1, fexecve(-1, eth.GetArgs(), eth.GetEnv()));
-  ASSERT_EQ(EBADF, errno);
+  ASSERT_ERRNO(EBADF);
 }
 
 TEST(UNISTD_TEST, fexecve_args) {
@@ -1694,9 +1693,9 @@ TEST(UNISTD_TEST, close_range) {
   if (close_range(fd, fd, 0) == 0) {
     // we can't close it *again*
     ASSERT_EQ(close(fd), -1);
-    ASSERT_EQ(errno, EBADF);
+    ASSERT_ERRNO(EBADF);
   } else {
-    ASSERT_EQ(errno, ENOSYS);
+    ASSERT_ERRNO(ENOSYS);
     // since close_range() failed, we can close it normally
     ASSERT_EQ(close(fd), 0);
   }
