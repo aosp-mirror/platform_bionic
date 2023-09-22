@@ -34,6 +34,8 @@
 
 #include <gtest/gtest.h>
 
+#include "utils.h"
+
 // TODO:
 // tcdrain
 // tcflow
@@ -53,7 +55,7 @@ TEST(termios, cfsetispeed_EINVAL) {
   termios t = {};
   errno = 0;
   ASSERT_EQ(-1, cfsetispeed(&t, 1200));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(termios, cfgetospeed_cfsetospeed) {
@@ -66,7 +68,7 @@ TEST(termios, cfsetospeed_EINVAL) {
   termios t = {};
   errno = 0;
   ASSERT_EQ(-1, cfsetospeed(&t, 1200));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(termios, cfsetspeed) {
@@ -82,7 +84,7 @@ TEST(termios, cfsetspeed_EINVAL) {
   // glibc seems to allow 1200 as well as B1200 here, presumably for
   // BSD compatibility (where Bxxx == xxx, unlike Linux).
   ASSERT_EQ(-1, cfsetspeed(&t, 123));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(termios, cfmakeraw) {
@@ -105,11 +107,11 @@ TEST(termios, tcgetwinsize_tcsetwinsize_invalid) {
 
   errno = 0;
   ASSERT_EQ(-1, tcgetwinsize(-1, &ws));
-  ASSERT_EQ(EBADF, errno);
+  ASSERT_ERRNO(EBADF);
 
   errno = 0;
   ASSERT_EQ(-1, tcsetwinsize(-1, &ws));
-  ASSERT_EQ(EBADF, errno);
+  ASSERT_ERRNO(EBADF);
 #else
   GTEST_SKIP() << "glibc too old";
 #endif

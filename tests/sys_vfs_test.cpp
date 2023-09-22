@@ -24,6 +24,8 @@
 
 #include <string>
 
+#include "utils.h"
+
 template <typename StatFsT> void Check(StatFsT& sb) {
   EXPECT_EQ(4096, static_cast<int>(sb.f_bsize));
   EXPECT_EQ(0U, sb.f_bfree);
@@ -48,7 +50,7 @@ TEST(sys_vfs, statfs_failure) {
   struct statfs sb;
   errno = 0;
   ASSERT_EQ(-1, statfs("/does-not-exist", &sb));
-  ASSERT_EQ(ENOENT, errno);
+  ASSERT_ERRNO(ENOENT);
 }
 
 TEST(sys_vfs, statfs64_smoke) {
@@ -61,7 +63,7 @@ TEST(sys_vfs, statfs64_failure) {
   struct statfs64 sb;
   errno = 0;
   ASSERT_EQ(-1, statfs64("/does-not-exist", &sb));
-  ASSERT_EQ(ENOENT, errno);
+  ASSERT_ERRNO(ENOENT);
 }
 
 TEST(sys_vfs, fstatfs) {
@@ -76,7 +78,7 @@ TEST(sys_vfs, fstatfs_failure) {
   struct statfs sb;
   errno = 0;
   ASSERT_EQ(-1, fstatfs(-1, &sb));
-  ASSERT_EQ(EBADF, errno);
+  ASSERT_ERRNO(EBADF);
 }
 
 TEST(sys_vfs, fstatfs64_smoke) {
@@ -91,5 +93,5 @@ TEST(sys_vfs, fstatfs64_failure) {
   struct statfs sb;
   errno = 0;
   ASSERT_EQ(-1, fstatfs(-1, &sb));
-  ASSERT_EQ(EBADF, errno);
+  ASSERT_ERRNO(EBADF);
 }
