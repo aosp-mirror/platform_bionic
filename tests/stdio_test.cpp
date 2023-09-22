@@ -2523,6 +2523,24 @@ TEST(STDIO_TEST, wprintf_m) {
   EXPECT_SWPRINTF(L"<Invalid argument>", L"<%m>");
 }
 
+TEST(STDIO_TEST, printf_hash_m) {
+  errno = 0;
+  EXPECT_SNPRINTF("<0>", "<%#m>");
+  errno = -1;
+  EXPECT_SNPRINTF("<-1>", "<%#m>");
+  errno = EINVAL;
+  EXPECT_SNPRINTF("<EINVAL>", "<%#m>");
+}
+
+TEST(STDIO_TEST, wprintf_hash_m) {
+  errno = 0;
+  EXPECT_SWPRINTF(L"<0>", L"<%#m>");
+  errno = -1;
+  EXPECT_SWPRINTF(L"<-1>", L"<%#m>");
+  errno = EINVAL;
+  EXPECT_SWPRINTF(L"<EINVAL>", L"<%#m>");
+}
+
 TEST(STDIO_TEST, printf_m_does_not_clobber_strerror) {
   const char* m = strerror(-1);
   ASSERT_STREQ("Unknown error -1", m);
