@@ -41,6 +41,8 @@
 // Generated android_ids array
 #include "generated_android_ids.h"
 
+#include "utils.h"
+
 using android::base::Join;
 using android::base::ReadFileToString;
 using android::base::Split;
@@ -86,7 +88,7 @@ static void check_getpwuid(const char* username, uid_t uid, uid_type_t uid_type,
                            bool check_username) {
   errno = 0;
   passwd* pwd = getpwuid(uid);
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
   SCOPED_TRACE("getpwuid");
   check_passwd(pwd, username, uid, uid_type, check_username);
 }
@@ -95,7 +97,7 @@ static void check_getpwnam(const char* username, uid_t uid, uid_type_t uid_type,
                            bool check_username) {
   errno = 0;
   passwd* pwd = getpwnam(username);
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
   SCOPED_TRACE("getpwnam");
   check_passwd(pwd, username, uid, uid_type, check_username);
 }
@@ -110,7 +112,7 @@ static void check_getpwuid_r(const char* username, uid_t uid, uid_type_t uid_typ
   passwd* pwd = nullptr;
   result = getpwuid_r(uid, &pwd_storage, buf, sizeof(buf), &pwd);
   ASSERT_EQ(0, result);
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
   SCOPED_TRACE("getpwuid_r");
   check_passwd(pwd, username, uid, uid_type, check_username);
 }
@@ -125,7 +127,7 @@ static void check_getpwnam_r(const char* username, uid_t uid, uid_type_t uid_typ
   passwd* pwd = nullptr;
   result = getpwnam_r(username, &pwd_storage, buf, sizeof(buf), &pwd);
   ASSERT_EQ(0, result);
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
   SCOPED_TRACE("getpwnam_r");
   check_passwd(pwd, username, uid, uid_type, check_username);
 }
@@ -145,7 +147,7 @@ static void expect_no_passwd_id(uid_t uid) {
   passwd* passwd = nullptr;
   passwd = getpwuid(uid);
   EXPECT_EQ(nullptr, passwd) << "name = '" << passwd->pw_name << "'";
-  EXPECT_EQ(ENOENT, errno);
+  EXPECT_ERRNO(ENOENT);
 
   struct passwd passwd_storage;
   char buf[512];
@@ -159,7 +161,7 @@ static void expect_no_passwd_name(const char* username) {
   passwd* passwd = nullptr;
   passwd = getpwnam(username);
   EXPECT_EQ(nullptr, passwd) << "name = '" << passwd->pw_name << "'";
-  EXPECT_EQ(ENOENT, errno);
+  EXPECT_ERRNO(ENOENT);
 
   struct passwd passwd_storage;
   char buf[512];
@@ -507,7 +509,7 @@ static void check_group(const group* grp, const char* group_name, gid_t gid,
 static void check_getgrgid(const char* group_name, gid_t gid, bool check_groupname) {
   errno = 0;
   group* grp = getgrgid(gid);
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
   SCOPED_TRACE("getgrgid");
   check_group(grp, group_name, gid, check_groupname);
 }
@@ -515,7 +517,7 @@ static void check_getgrgid(const char* group_name, gid_t gid, bool check_groupna
 static void check_getgrnam(const char* group_name, gid_t gid, bool check_groupname) {
   errno = 0;
   group* grp = getgrnam(group_name);
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
   SCOPED_TRACE("getgrnam");
   check_group(grp, group_name, gid, check_groupname);
 }
@@ -528,7 +530,7 @@ static void check_getgrgid_r(const char* group_name, gid_t gid, bool check_group
   errno = 0;
   int result = getgrgid_r(gid, &grp_storage, buf, sizeof(buf), &grp);
   ASSERT_EQ(0, result);
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
   SCOPED_TRACE("getgrgid_r");
   check_group(grp, group_name, gid, check_groupname);
 }
@@ -541,7 +543,7 @@ static void check_getgrnam_r(const char* group_name, gid_t gid, bool check_group
   errno = 0;
   int result = getgrnam_r(group_name, &grp_storage, buf, sizeof(buf), &grp);
   ASSERT_EQ(0, result);
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
   SCOPED_TRACE("getgrnam_r");
   check_group(grp, group_name, gid, check_groupname);
 }
@@ -560,7 +562,7 @@ static void expect_no_group_id(gid_t gid) {
   group* group = nullptr;
   group = getgrgid(gid);
   EXPECT_EQ(nullptr, group) << "name = '" << group->gr_name << "'";
-  EXPECT_EQ(ENOENT, errno);
+  EXPECT_ERRNO(ENOENT);
 
   struct group group_storage;
   char buf[512];
@@ -574,7 +576,7 @@ static void expect_no_group_name(const char* groupname) {
   group* group = nullptr;
   group = getgrnam(groupname);
   EXPECT_EQ(nullptr, group) << "name = '" << group->gr_name << "'";
-  EXPECT_EQ(ENOENT, errno);
+  EXPECT_ERRNO(ENOENT);
 
   struct group group_storage;
   char buf[512];

@@ -24,6 +24,8 @@
 
 #include <android-base/file.h>
 
+#include "utils.h"
+
 TEST(sys_uio, readv_writev) {
   TemporaryFile tf;
 
@@ -123,8 +125,9 @@ TEST(sys_uio, process_vm_readv) {
 
   // Reading from non-allocated memory should return an error
   remote = { nullptr, sizeof dst };
+  errno = 0;
   ASSERT_EQ(-1, process_vm_readv(getpid(), &local, 1, &remote, 1, 0));
-  ASSERT_EQ(EFAULT, errno);
+  ASSERT_ERRNO(EFAULT);
 }
 
 TEST(sys_uio, process_vm_writev) {
@@ -142,6 +145,7 @@ TEST(sys_uio, process_vm_writev) {
 
   // Writing to non-allocated memory should return an error
   remote = { nullptr, sizeof dst };
+  errno = 0;
   ASSERT_EQ(-1, process_vm_writev(getpid(), &local, 1, &remote, 1, 0));
-  ASSERT_EQ(EFAULT, errno);
+  ASSERT_ERRNO(EFAULT);
 }

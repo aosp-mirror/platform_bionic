@@ -835,7 +835,7 @@ TEST(dlfcn, dlclose_unload) {
   // this case.
   uintptr_t page_start = reinterpret_cast<uintptr_t>(taxicab_number) & ~(PAGE_SIZE - 1);
   ASSERT_TRUE(mprotect(reinterpret_cast<void*>(page_start), PAGE_SIZE, PROT_NONE) != 0);
-  ASSERT_EQ(ENOMEM, errno) << strerror(errno);
+  ASSERT_ERRNO(ENOMEM);
 }
 
 static void ConcurrentDlErrorFn(std::string& error) {

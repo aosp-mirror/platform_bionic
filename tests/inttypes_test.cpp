@@ -20,6 +20,8 @@
 #include <gtest/gtest.h>
 #include <stdio.h>
 
+#include "utils.h"
+
 #define PRINTF_TYPED(FMT_SUFFIX, TYPE_SUFFIX) \
   do { \
     char buf[512]; \
@@ -124,13 +126,13 @@ TEST(inttypes, strtoimax_hex) {
 TEST(inttypes, strtoimax_EINVAL) {
   errno = 0;
   strtoimax("123", nullptr, -1);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   errno = 0;
   strtoimax("123", nullptr, 1);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   errno = 0;
   strtoimax("123", nullptr, 37);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(inttypes, strtoumax_dec) {
@@ -154,37 +156,37 @@ TEST(inttypes, strtoumax_negative) {
 TEST(inttypes, strtoumax_EINVAL) {
   errno = 0;
   strtoumax("123", nullptr, -1);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   errno = 0;
   strtoumax("123", nullptr, 1);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   errno = 0;
   strtoumax("123", nullptr, 37);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(inttypes, wcstoimax_EINVAL) {
   errno = 0;
   wcstoimax(L"123", nullptr, -1);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   errno = 0;
   wcstoimax(L"123", nullptr, 1);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   errno = 0;
   wcstoimax(L"123", nullptr, 37);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(inttypes, wcstoumax_EINVAL) {
   errno = 0;
   wcstoumax(L"123", nullptr, -1);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   errno = 0;
   wcstoumax(L"123", nullptr, 1);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   errno = 0;
   wcstoumax(L"123", nullptr, 37);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(inttypes, div) {
