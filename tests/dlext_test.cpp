@@ -964,10 +964,7 @@ TEST(dlext, dlopen_ext_use_memfd) {
 
   // create memfd
   int memfd = memfd_create("foobar", MFD_CLOEXEC);
-  if (memfd == -1 && errno == ENOSYS) {
-    return;
-  }
-
+  if (memfd == -1 && errno == ENOSYS) GTEST_SKIP() << "no memfd_create() in this kernel";
   ASSERT_TRUE(memfd != -1) << strerror(errno);
 
   // Check st.f_type is TMPFS_MAGIC for memfd
