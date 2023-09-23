@@ -150,7 +150,7 @@ TEST(time, mktime_10310929) {
 #if !defined(__LP64__)
   // 32-bit bionic has a signed 32-bit time_t.
   ASSERT_EQ(-1, mktime(&tm));
-  ASSERT_EQ(EOVERFLOW, errno);
+  ASSERT_ERRNO(EOVERFLOW);
 #else
   // Everyone else should be using a signed 64-bit time_t.
   ASSERT_GE(sizeof(time_t) * 8, 64U);
@@ -164,7 +164,7 @@ TEST(time, mktime_10310929) {
   // mktime to interpret that time as local standard, hence offset
   // is 8 hours, not 7.
   ASSERT_EQ(static_cast<time_t>(4108348800U), mktime(&tm));
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
 #endif
 }
 
@@ -182,7 +182,7 @@ TEST(time, mktime_EOVERFLOW) {
 
   errno = 0;
   ASSERT_NE(static_cast<time_t>(-1), mktime(&t));
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
 
   // This will overflow for LP32.
   t.tm_year = INT_MAX;
@@ -190,10 +190,10 @@ TEST(time, mktime_EOVERFLOW) {
   errno = 0;
 #if !defined(__LP64__)
   ASSERT_EQ(static_cast<time_t>(-1), mktime(&t));
-  ASSERT_EQ(EOVERFLOW, errno);
+  ASSERT_ERRNO(EOVERFLOW);
 #else
   ASSERT_EQ(static_cast<time_t>(67768036166016000U), mktime(&t));
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
 #endif
 
   // This will overflow for LP32 or LP64.
@@ -204,7 +204,7 @@ TEST(time, mktime_EOVERFLOW) {
 
   errno = 0;
   ASSERT_EQ(static_cast<time_t>(-1), mktime(&t));
-  ASSERT_EQ(EOVERFLOW, errno);
+  ASSERT_ERRNO(EOVERFLOW);
 }
 
 TEST(time, mktime_invalid_tm_TZ_combination) {
@@ -222,7 +222,7 @@ TEST(time, mktime_invalid_tm_TZ_combination) {
 
   EXPECT_EQ(static_cast<time_t>(-1), mktime(&t));
   // mktime sets errno to EOVERFLOW if result is unrepresentable.
-  EXPECT_EQ(EOVERFLOW, errno);
+  EXPECT_ERRNO(EOVERFLOW);
 }
 
 // Transitions in the tzdata file are generated up to the year 2100. Testing
@@ -233,14 +233,13 @@ TEST(time, mktime_after_2100) {
 #if !defined(__LP64__)
   // 32-bit bionic has a signed 32-bit time_t.
   ASSERT_EQ(-1, mktime(&tm));
-  ASSERT_EQ(EOVERFLOW, errno);
+  ASSERT_ERRNO(EOVERFLOW);
 #else
   setenv("TZ", "Europe/London", 1);
   tzset();
   errno = 0;
-
   ASSERT_EQ(static_cast<time_t>(5686156800U), mktime(&tm));
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
 #endif
 }
 
@@ -649,7 +648,7 @@ TEST(time, timer_create) {
   if (pid == 0) {
     // Timers are not inherited by the child.
     ASSERT_EQ(-1, timer_delete(timer_id));
-    ASSERT_EQ(EINVAL, errno);
+    ASSERT_ERRNO(EINVAL);
     _exit(0);
   }
 
@@ -804,7 +803,7 @@ TEST(time, timer_create_EINVAL) {
   // A SIGEV_SIGNAL timer is easy; the kernel does all that.
   timer_t timer_id;
   ASSERT_EQ(-1, timer_create(invalid_clock, nullptr, &timer_id));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 
   // A SIGEV_THREAD timer is more interesting because we have stuff to clean up.
   sigevent se;
@@ -812,7 +811,7 @@ TEST(time, timer_create_EINVAL) {
   se.sigev_notify = SIGEV_THREAD;
   se.sigev_notify_function = NoOpNotifyFunction;
   ASSERT_EQ(-1, timer_create(invalid_clock, &se, &timer_id));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(time, timer_create_multiple) {
@@ -915,7 +914,7 @@ TEST(time, timer_delete_from_timer_thread) {
   cur_time = time(NULL);
   while ((kill(tdd.tid, 0) != -1 || errno != ESRCH) && (time(NULL) - cur_time) < 5);
   ASSERT_EQ(-1, kill(tdd.tid, 0));
-  ASSERT_EQ(ESRCH, errno);
+  ASSERT_ERRNO(ESRCH);
 #endif
 }
 
@@ -973,7 +972,7 @@ TEST(time, clock_gettime_unknown) {
   errno = 0;
   timespec ts;
   ASSERT_EQ(-1, clock_gettime(-1, &ts));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(time, clock_getres_CLOCK_REALTIME) {
@@ -1011,7 +1010,7 @@ TEST(time, clock_getres_unknown) {
   errno = 0;
   timespec ts = { -1, -1 };
   ASSERT_EQ(-1, clock_getres(-1, &ts));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   ASSERT_EQ(-1, ts.tv_nsec);
   ASSERT_EQ(-1, ts.tv_sec);
 }
@@ -1064,14 +1063,14 @@ TEST(time, clock_getcpuclockid_ESRCH) {
     << "commit/?id=e1b6b6ce55a0a25c8aa8af019095253b2133a41a\n"
     << "* https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/"
     << "commit/?id=c80ed088a519da53f27b798a69748eaabc66aadf\n";
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
 }
 
 TEST(time, clock_settime) {
   errno = 0;
   timespec ts;
   ASSERT_EQ(-1, clock_settime(-1, &ts));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(time, clock_nanosleep_EINVAL) {
@@ -1107,7 +1106,7 @@ TEST(time, nanosleep_EINVAL) {
   timespec ts = {.tv_sec = -1};
   errno = 0;
   ASSERT_EQ(-1, nanosleep(&ts, nullptr));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(time, bug_31938693) {
