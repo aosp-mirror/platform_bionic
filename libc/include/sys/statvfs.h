@@ -88,6 +88,9 @@ struct statvfs64 { __STATVFS64_BODY __STATVFS64_CODA };
 /** Flag for `f_flag` in `struct statvfs`: see `MS_RELATIME`. */
 #define ST_RELATIME    0x1000
 
+/** Flag for `f_flag` in `struct statvfs`: don't follow symlinks. */
+#define ST_NOSYMFOLLOW 0x2000
+
 /**
  * [statvfs(3)](http://man7.org/linux/man-pages/man3/statvfs.3.html)
  * queries filesystem statistics for the given path.
