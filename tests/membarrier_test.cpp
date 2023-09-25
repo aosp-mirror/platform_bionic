@@ -30,7 +30,7 @@ class ScopedErrnoCleaner {
   ~ScopedErrnoCleaner() { errno = 0; }
 };
 
-bool HasMembarrier(int membarrier_cmd) {
+static bool HasMembarrier(int membarrier_cmd) {
   ScopedErrnoCleaner errno_cleaner;
   int supported_cmds = syscall(__NR_membarrier, MEMBARRIER_CMD_QUERY, 0);
   return (supported_cmds > 0) && ((supported_cmds & membarrier_cmd) != 0);
@@ -39,11 +39,8 @@ bool HasMembarrier(int membarrier_cmd) {
 TEST(membarrier, query) {
   ScopedErrnoCleaner errno_cleaner;
   int supported = syscall(__NR_membarrier, MEMBARRIER_CMD_QUERY, 0);
-  if (errno == 0) {
-    ASSERT_TRUE(supported >= 0);
-  } else {
-    ASSERT_TRUE(errno == ENOSYS && supported == -1);
-  }
+  if (supported == -1 && errno == ENOSYS) GTEST_SKIP() << "no membarrier() in this kernel";
+  ASSERT_GE(supported, 0);
 }
 
 TEST(membarrier, global_barrier) {
