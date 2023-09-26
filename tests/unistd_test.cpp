@@ -1689,16 +1689,13 @@ TEST(UNISTD_TEST, close_range) {
   int fd = open("/proc/version", O_RDONLY);
   ASSERT_GE(fd, 0);
 
-  // Try to close the file descriptor (this requires a 5.9+ kernel)
-  if (close_range(fd, fd, 0) == 0) {
-    // we can't close it *again*
-    ASSERT_EQ(close(fd), -1);
-    ASSERT_ERRNO(EBADF);
-  } else {
-    ASSERT_ERRNO(ENOSYS);
-    // since close_range() failed, we can close it normally
-    ASSERT_EQ(close(fd), 0);
-  }
+  int rc = close_range(fd, fd, 0);
+  if (rc == -1 && errno == ENOSYS) GTEST_SKIP() << "no close_range() in this kernel";
+  ASSERT_EQ(0, rc) << strerror(errno);
+
+  // Check the fd is actually closed.
+  ASSERT_EQ(close(fd), -1);
+  ASSERT_ERRNO(EBADF);
 #endif  // __GLIBC__
 }
 
