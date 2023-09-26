@@ -109,9 +109,7 @@ TEST(sys_stat, statx) {
 #if defined(HAVE_STATX)
   struct statx sx;
   int rc = statx(AT_FDCWD, "/proc/version", AT_STATX_SYNC_AS_STAT, STATX_ALL, &sx);
-  if (rc == -1 && errno == ENOSYS) {
-    GTEST_SKIP() << "statx returned ENOSYS";
-  }
+  if (rc == -1 && errno == ENOSYS) GTEST_SKIP() << "no statx() in this kernel";
   ASSERT_EQ(0, rc);
   struct stat64 sb;
   ASSERT_EQ(0, stat64("/proc/version", &sb));
