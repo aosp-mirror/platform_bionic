@@ -64,7 +64,7 @@ TEST(sys_epoll, epoll_pwait2_no_sigset) {
   epoll_event events[1] = {};
   timespec ts = {.tv_nsec = 500};
   int rc = epoll_pwait2(epoll_fd, events, 1, &ts, nullptr);
-  if (rc == -1 && errno == ENOSYS) GTEST_SKIP() << "no epoll_pwait2 in this kernel";
+  if (rc == -1 && errno == ENOSYS) GTEST_SKIP() << "no epoll_pwait2() in this kernel";
   ASSERT_EQ(0, rc) << strerror(errno);
 #else
   GTEST_SKIP() << "epoll_pwait2 is only in glibc 2.35+";
@@ -94,7 +94,7 @@ TEST(sys_epoll, epoll_pwait2_with_sigset) {
   sigemptyset(&ss2);
   sigaddset(&ss2, SIGPIPE);
   int rc = epoll_pwait2(epoll_fd, events, 1, &ts, &ss2);
-  if (rc == -1 && errno == ENOSYS) GTEST_SKIP() << "no epoll_pwait2 in this kernel";
+  if (rc == -1 && errno == ENOSYS) GTEST_SKIP() << "no epoll_pwait2() in this kernel";
   ASSERT_EQ(0, rc) << strerror(errno);
 #else
   GTEST_SKIP() << "epoll_pwait2 is only in glibc 2.35+";
@@ -112,7 +112,7 @@ TEST(sys_epoll, epoll_pwait2_64_with_sigset) {
   sigemptyset64(&ss2);
   sigaddset64(&ss2, SIGPIPE);
   int rc = epoll_pwait2_64(epoll_fd, events, 1, &ts, &ss2);
-  if (rc == -1 && errno == ENOSYS) GTEST_SKIP() << "no epoll_pwait2 in this kernel";
+  if (rc == -1 && errno == ENOSYS) GTEST_SKIP() << "no epoll_pwait2() in this kernel";
   ASSERT_EQ(0, rc) << strerror(errno);
 #else
   GTEST_SKIP() << "epoll_pwait2_64 is bionic-only";
