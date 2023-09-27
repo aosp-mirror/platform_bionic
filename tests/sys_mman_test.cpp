@@ -279,10 +279,9 @@ TEST(sys_mman, memfd_create) {
   // Is the MFD_CLOEXEC flag obeyed?
   errno = 0;
   int fd = memfd_create("doesn't matter", 0);
-  if (fd == -1) {
-    ASSERT_ERRNO(ENOSYS);
-    GTEST_SKIP() << "no memfd_create available";
-  }
+  if (fd == -1 && errno == ENOSYS) GTEST_SKIP() << "no memfd_create() in this kernel";
+  ASSERT_NE(-1, fd) << strerror(errno);
+
   int f = fcntl(fd, F_GETFD);
   ASSERT_NE(-1, f);
   ASSERT_FALSE(f & FD_CLOEXEC);
