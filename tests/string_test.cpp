@@ -1686,3 +1686,16 @@ TEST(STRING_TEST, memset_explicit_smoke) {
   GTEST_SKIP() << "memset_explicit not available";
 #endif
 }
+
+TEST(STRING_TEST, strerrorname_np) {
+#if defined(__BIONIC__)
+  ASSERT_STREQ("0", strerrorname_np(0));
+  ASSERT_STREQ("EINVAL", strerrorname_np(EINVAL));
+  ASSERT_STREQ("ENOSYS", strerrorname_np(ENOSYS));
+
+  ASSERT_EQ(nullptr, strerrorname_np(-1));
+  ASSERT_EQ(nullptr, strerrorname_np(666));
+#else
+  GTEST_SKIP() << "strerrorname_np not available";
+#endif
+}
