@@ -340,6 +340,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
       case 'd':
       case 'i':
         _umax = SARG();
+signed_decimal:
         if ((intmax_t)_umax < 0) {
           _umax = -_umax;
           sign = '-';
@@ -468,7 +469,15 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
       case 'n':
         __fortify_fatal("%%n not allowed on Android");
       case 'm':
-        cp = strerror_r(caller_errno, buf, sizeof(buf));
+        if (flags & ALT) {
+          cp = const_cast<char*>(strerrorname_np(caller_errno));
+          if (cp == nullptr) {
+            _umax = caller_errno;
+            goto signed_decimal;
+          }
+        } else {
+          cp = strerror_r(caller_errno, buf, sizeof(buf));
+        }
         goto string;
       case 'O':
         flags |= LONGINT;
