@@ -786,7 +786,7 @@ struct helpers {
   //
   // Returns NULL on failure.
   // To find out what happened check errno for ENOMEM, EILSEQ and EINVAL.
-  static wchar_t* mbsconv(char* mbsarg, int prec) {
+  static wchar_t* mbsconv(const char* mbsarg, int prec) {
     mbstate_t mbs;
     const char* p;
     size_t insize, nchars, nconv;
