@@ -1593,6 +1593,7 @@ LIBC_V { # introduced=VanillaIceCream
     mktime_z;
     __riscv_flush_icache; # riscv64
     __riscv_hwprobe; # riscv64
+    strerrorname_np;
     tcgetwinsize;
     tcsetwinsize;
     timespec_getres;

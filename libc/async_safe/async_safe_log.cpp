@@ -361,7 +361,19 @@ static void out_vformat(Out& o, const char* format, va_list args) {
       buffer[1] = 'x';
       format_integer(buffer + 2, sizeof(buffer) - 2, value, 'x');
     } else if (c == 'm') {
-      strerror_r(errno, buffer, sizeof(buffer));
+#if __ANDROID_API_LEVEL__ >= 35 // This library is used in mainline modules.
+      if (alternate) {
+        const char* name = strerrorname_np(errno);
+        if (name) {
+          strcpy(buffer, name);
+        } else {
+          format_integer(buffer, sizeof(buffer), errno, 'd');
+        }
+      } else
+#endif
+      {
+        strerror_r(errno, buffer, sizeof(buffer));
+      }
     } else if (tolower(c) == 'b' || c == 'd' || c == 'i' || c == 'o' || c == 'u' ||
                tolower(c) == 'x') {
       /* integers - first read value from stack */
