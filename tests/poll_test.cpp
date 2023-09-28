@@ -49,7 +49,7 @@ TEST(poll, ppoll_null_fds) {
 }
 
 TEST(poll, ppoll64_null_fds) {
-#if __BIONIC__
+#if defined(__BIONIC__)
   // Because nanosleep(2) is relatively new to POSIX, code sometimes abuses poll.
   errno = 0;
   timespec ts = { .tv_nsec = 100 };
