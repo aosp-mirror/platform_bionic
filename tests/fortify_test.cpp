@@ -412,9 +412,6 @@ TEST_F(DEATHTEST, sprintf_fortified) {
   ASSERT_FORTIFY(sprintf(buf, "%s", source_buf));
 }
 
-#if !__has_attribute(alloc_size)
-// TODO: remove this after Clang prebuilt rebase.
-#else
 TEST_F(DEATHTEST, sprintf_malloc_fortified) {
   char* buf = (char *) malloc(10);
   char source_buf[11];
@@ -422,7 +419,6 @@ TEST_F(DEATHTEST, sprintf_malloc_fortified) {
   ASSERT_FORTIFY(sprintf(buf, "%s", source_buf));
   free(buf);
 }
-#endif
 
 TEST_F(DEATHTEST, sprintf2_fortified) {
   char buf[5];
