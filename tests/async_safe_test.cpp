@@ -79,6 +79,18 @@ TEST(async_safe_log, smoke) {
   async_safe_format_buffer(buf, sizeof(buf), "a%mZ");
   EXPECT_STREQ("aInvalid argumentZ", buf);
 
+#if __ANDROID_API_LEVEL__ >= 35
+  errno = EINVAL;
+  async_safe_format_buffer(buf, sizeof(buf), "a%#mZ");
+  EXPECT_STREQ("aEINVALZ", buf);
+#endif
+
+#if __ANDROID_API_LEVEL__ >= 35
+  errno = -1;
+  async_safe_format_buffer(buf, sizeof(buf), "a%#mZ");
+  EXPECT_STREQ("a-1Z", buf);
+#endif
+
   async_safe_format_buffer(buf, sizeof(buf), "a%pb", reinterpret_cast<void*>(0xb0001234));
   EXPECT_STREQ("a0xb0001234b", buf);
 

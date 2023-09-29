@@ -52,6 +52,19 @@
 
 #include "printf_common.h"
 
+#define print_utf8(utf8, prec) \
+  do { \
+    free(convbuf); \
+    convbuf = helpers::mbsconv(utf8, prec); \
+    if (convbuf == nullptr) { \
+      fp->_flags |= __SERR; \
+      goto error; \
+    } else { \
+      cp = convbuf; \
+    } \
+    goto string; \
+  } while (0)
+
 int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
   int caller_errno = errno;
   int n, n2;
@@ -319,6 +332,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
       case 'd':
       case 'i':
         _umax = SARG();
+signed_decimal:
         if ((intmax_t)_umax < 0) {
           _umax = -_umax;
           sign = '-';
@@ -447,16 +461,13 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
       case 'n':
         __fortify_fatal("%%n not allowed on Android");
       case 'm':
-        free(convbuf);
-        convbuf = helpers::mbsconv(strerror_r(caller_errno,
-                                              reinterpret_cast<char*>(buf), sizeof(buf)), prec);
-        if (convbuf == nullptr) {
-            fp->_flags |= __SERR;
-            goto error;
-        } else {
-            cp = convbuf;
+        if (flags & ALT) {
+          const char* name = strerrorname_np(caller_errno);
+          if (name) print_utf8(name, prec);
+          _umax = caller_errno;
+          goto signed_decimal;
         }
-        goto string;
+        print_utf8(strerror_r(caller_errno, reinterpret_cast<char*>(buf), sizeof(buf)), prec);
       case 'O':
         flags |= LONGINT;
         __BIONIC_FALLTHROUGH;
@@ -486,14 +497,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
         } else {
           char* mbsarg;
           if ((mbsarg = GETARG(char*)) == nullptr) mbsarg = const_cast<char*>("(null)");
-          free(convbuf);
-          convbuf = helpers::mbsconv(mbsarg, prec);
-          if (convbuf == nullptr) {
-            fp->_flags |= __SERR;
-            goto error;
-          } else {
-            cp = convbuf;
-          }
+          print_utf8(mbsarg, prec);
         }
   string:
         if (prec >= 0) {

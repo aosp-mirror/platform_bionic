@@ -27,8 +27,8 @@
  */
 
 /*
- * this header is used to define signal constants and names;
- * it might be included several times
+ * This header is used to define signal constants and names;
+ * it might be included several times.
  */
 
 #ifndef __BIONIC_SIGDEF
@@ -41,9 +41,6 @@ __BIONIC_SIGDEF(SIGQUIT,   "Quit")
 __BIONIC_SIGDEF(SIGILL,    "Illegal instruction")
 __BIONIC_SIGDEF(SIGTRAP,   "Trap")
 __BIONIC_SIGDEF(SIGABRT,   "Aborted")
-#ifdef SIGEMT
-__BIONIC_SIGDEF(SIGEMT,    "EMT")
-#endif
 __BIONIC_SIGDEF(SIGFPE,    "Floating point exception")
 __BIONIC_SIGDEF(SIGKILL,   "Killed")
 __BIONIC_SIGDEF(SIGBUS,    "Bus error")
@@ -67,9 +64,7 @@ __BIONIC_SIGDEF(SIGVTALRM, "Virtual timer expired")
 __BIONIC_SIGDEF(SIGPROF,   "Profiling timer expired")
 __BIONIC_SIGDEF(SIGXCPU,   "CPU time limit exceeded")
 __BIONIC_SIGDEF(SIGXFSZ,   "File size limit exceeded")
-#if defined(SIGSTKFLT)
 __BIONIC_SIGDEF(SIGSTKFLT, "Stack fault")
-#endif
 __BIONIC_SIGDEF(SIGSYS,    "Bad system call")
 
 #undef __BIONIC_SIGDEF
