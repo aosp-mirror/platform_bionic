@@ -63,12 +63,15 @@ New libc functions in V (API level 35):
     functions for avoiding $TZ if you need to use multiple timezones in
     multi-threaded C).
   * `mbsrtowcs_l` and `wcsrtombs_l` aliases for `mbsrtowcs` and `wcsrtombs`.
+  * GNU extensions `strerrordesc_np` and `strerrorname_np`.
   * New system call wrappers: `__riscv_flush_icache` (`<sys/cachectl.h>`),
     `__riscv_hwprobe` (`<sys/hwprobe.h>`), `epoll_pwait2`/`epoll_pwait2_64` (`<sys/epoll.h>`).
 
 New libc behavior in V (API level 35):
   * Added `LD_SHOW_AUXV` to the dynamic linker to dump the ELF auxiliary
     vector if the environment variable is set.
+  * The printf family now supports `%#m` to print the name of the errno
+    constant (rather than the description printed by `%m`).
 
 New libc functions in U (API level 34):
   * `close_range` and `copy_file_range` (Linux-specific GNU extensions).
