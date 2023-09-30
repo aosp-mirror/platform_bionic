@@ -28,12 +28,12 @@
 
 #include <gtest/gtest.h>
 
-#if __BIONIC__
+#if __has_include(<android/api-level.h>)
 #include <android/api-level.h>
 #endif
 
 TEST(android_get_device_api_level, smoke) {
-#if __BIONIC__
+#if defined(__BIONIC__)
   // This will fail if you run the tests on an old device, but who does that?
   ASSERT_GE(android_get_device_api_level(), 29);
 #endif
