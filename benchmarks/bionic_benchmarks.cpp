@@ -521,12 +521,22 @@ std::map<std::string, args_vector_t> GetShorthand() {
   all_sizes.insert(all_sizes.end(), kMediumSizes.begin(), kMediumSizes.end());
   all_sizes.insert(all_sizes.end(), kLargeSizes.begin(), kLargeSizes.end());
 
+  int page_sz = getpagesize();
+  std::vector<int> sub_page_sizes = {page_sz / 2, page_sz / 4, page_sz / 8};
+  std::vector<int> multi_page_sizes = {page_sz, page_sz * 2, page_sz * 3, page_sz * 10,
+                                       page_sz * 100};
+  std::vector<int> all_page_sizes(sub_page_sizes);
+  all_page_sizes.insert(all_page_sizes.end(), multi_page_sizes.begin(), multi_page_sizes.end());
+
   std::map<std::string, args_vector_t> args_shorthand {
     {"AT_COMMON_SIZES", GetArgs(kCommonSizes)},
     {"AT_SMALL_SIZES", GetArgs(kSmallSizes)},
     {"AT_MEDIUM_SIZES", GetArgs(kMediumSizes)},
     {"AT_LARGE_SIZES", GetArgs(kLargeSizes)},
     {"AT_ALL_SIZES", GetArgs(all_sizes)},
+    {"AT_SUB_PAGE_SIZES", GetArgs(sub_page_sizes)},
+    {"AT_MULTI_PAGE_SIZES", GetArgs(multi_page_sizes)},
+    {"AT_All_PAGE_SIZES", GetArgs(all_page_sizes)},
 
     {"AT_ALIGNED_ONEBUF", GetArgs(kCommonSizes, 0)},
     {"AT_ALIGNED_ONEBUF_SMALL", GetArgs(kSmallSizes, 0)},
