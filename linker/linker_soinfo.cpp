@@ -211,11 +211,8 @@ const ElfW(Sym)* soinfo_do_lookup(const char* name, const version_info* vi,
       soinfo_do_lookup_impl<false>(name, vi, si_found_in, lookup_list);
 }
 
-soinfo::soinfo(android_namespace_t* ns, const char* realpath,
-               const struct stat* file_stat, off64_t file_offset,
-               int rtld_flags) {
-  memset(this, 0, sizeof(*this));
-
+soinfo::soinfo(android_namespace_t* ns, const char* realpath, const struct stat* file_stat,
+               off64_t file_offset, int rtld_flags) {
   if (realpath != nullptr) {
     realpath_ = realpath;
   }
