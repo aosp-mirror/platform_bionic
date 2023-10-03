@@ -951,6 +951,7 @@ cc_library_static {
                 "arch-riscv64/string/memcpy_vext.S",
                 "arch-riscv64/string/memmove_vext.S",
                 "arch-riscv64/string/memset_vext.S",
+                "arch-riscv64/string/stpcpy_vext.S",
                 "arch-riscv64/string/strcat_vext.S",
                 "arch-riscv64/string/strchr_vext.S",
                 "arch-riscv64/string/strcmp_vext.S",
