@@ -72,7 +72,7 @@ class VersionTracker {
 };
 
 static constexpr const char* kBionicChangesUrl =
-    "https://android.googlesource.com/platform/bionic/+/master/"
+    "https://android.googlesource.com/platform/bionic/+/main/"
     "android-changes-for-ndk-developers.md";
 
 soinfo* get_libdl_info(const soinfo& linker_si);

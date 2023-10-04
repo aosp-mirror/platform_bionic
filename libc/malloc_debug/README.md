@@ -170,7 +170,7 @@ backtrace\_max\_size will be backtraced. The backtrace\_size option
 overrides this option, and should not be used at the same time.
 
 This option can also be used in combination with other tools such
-as [libmemunreachable](https://android.googlesource.com/platform/system/memory/libmemunreachable/+/master/README.md)
+as [libmemunreachable](https://android.googlesource.com/platform/system/memory/libmemunreachable/+/main/README.md)
 to only get backtraces for sizes of allocations listed as being leaked.
 
 ### backtrace\_max\_size=ALLOCATION\_SIZE\_BYTES
@@ -183,7 +183,7 @@ backtrace\_max\_size will be backtraced. The backtrace\_size option
 overrides this option, and should not be used at the same time.
 
 This option can also be used in combination with other tools such
-as [libmemunreachable](https://android.googlesource.com/platform/system/memory/libmemunreachable/+/master/README.md)
+as [libmemunreachable](https://android.googlesource.com/platform/system/memory/libmemunreachable/+/main/README.md)
 to only get backtraces for sizes of allocations listed as being leaked.
 
 ### backtrace\_size=ALLOCATION\_SIZE\_BYTES
@@ -192,7 +192,7 @@ that only allocations of size **ALLOCATION\_SIZE\_BYTES** will be backtraced.
 This option overrides the backtrace\_min\_size and the backtrace\_max\_size.
 
 This option can also be used in combination with other tools such
-as [libmemunreachable](https://android.googlesource.com/platform/system/memory/libmemunreachable/+/master/README.md)
+as [libmemunreachable](https://android.googlesource.com/platform/system/memory/libmemunreachable/+/main/README.md)
 to only get backtraces for sizes of allocations listed as being leaked.
 
 ### backtrace\_full
