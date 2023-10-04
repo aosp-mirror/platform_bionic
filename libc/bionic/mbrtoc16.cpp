@@ -47,15 +47,36 @@ static size_t begin_surrogate(char32_t c32, char16_t* pc16,
   mbstate_set_byte(state, 3, nconv & 0xff);
 
   *pc16 = ((c32 & 0xffc00) >> 10) | 0xd800;
-  // Defined by POSIX as return value for first surrogate character.
-  return static_cast<size_t>(-3);
+  // https://issuetracker.google.com/289419882
+  //
+  // We misread the spec when implementing this. The first call should return
+  // the length of the decoded character, and the second call should return -3
+  // to indicate that the output is a continuation of the character decoded by
+  // the first call.
+  //
+  // C23 7.30.1.3.4:
+  //
+  //     between 1 and n inclusive if the next n or fewer bytes complete a valid
+  //     multibyte character (which is the value stored); the value returned is
+  //     the number of bytes that complete the multibyte character.
+  //
+  //     (size_t)(-3) if the next character resulting from a previous call has
+  //     been stored (no bytes from the input have been consumed by this call).
+  //
+  // The first call returns the number of bytes consumed, and the second call
+  // returns -3.
+  //
+  // All UTF-8 sequences that encode a surrogate pair are 4 bytes, but we may
+  // not have seen the full sequence yet.
+  return nconv;
 }
 
 static size_t finish_surrogate(char16_t* pc16, mbstate_t* state) {
   char16_t trail = mbstate_get_byte(state, 1) << 8 |
                    mbstate_get_byte(state, 0);
   *pc16 = trail;
-  return mbstate_reset_and_return(mbstate_get_byte(state, 3), state);
+  mbstate_reset(state);
+  return static_cast<size_t>(-3);
 }
 
 size_t mbrtoc16(char16_t* pc16, const char* s, size_t n, mbstate_t* ps) {

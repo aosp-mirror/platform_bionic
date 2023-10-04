@@ -314,7 +314,7 @@ struct iw_encode_ext {
   struct sockaddr addr;
   __u16 alg;
   __u16 key_len;
-  __u8 key[0];
+  __u8 key[];
 };
 struct iw_mlme {
   __u16 cmd;

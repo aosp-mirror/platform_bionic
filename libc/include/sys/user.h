@@ -32,10 +32,9 @@
 #include <stddef.h> /* For size_t. */
 #include <stdint.h>
 
-__BEGIN_DECLS
+#include <bits/page_size.h>
 
-#define PAGE_SIZE 4096
-#define PAGE_MASK (~(PAGE_SIZE - 1))
+__BEGIN_DECLS
 
 #if defined(__i386__)
 

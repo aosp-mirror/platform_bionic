@@ -160,9 +160,9 @@ struct __iconv_t {
 
       case UTF_8:
         src_bytes_used = mbrtoc32(&wc, *src_buf, *src_bytes_left, &ps);
-        if (src_bytes_used == __MB_ERR_ILLEGAL_SEQUENCE) {
+        if (src_bytes_used == BIONIC_MULTIBYTE_RESULT_ILLEGAL_SEQUENCE) {
           break;  // EILSEQ already set.
-        } else if (src_bytes_used == __MB_ERR_INCOMPLETE_SEQUENCE) {
+        } else if (src_bytes_used == BIONIC_MULTIBYTE_RESULT_INCOMPLETE_SEQUENCE) {
           errno = EINVAL;
           return false;
         }
@@ -235,9 +235,9 @@ struct __iconv_t {
 
       case UTF_8:
         dst_bytes_used = c32rtomb(buf, wc, &ps);
-        if (dst_bytes_used == __MB_ERR_ILLEGAL_SEQUENCE) {
+        if (dst_bytes_used == BIONIC_MULTIBYTE_RESULT_ILLEGAL_SEQUENCE) {
           break;  // EILSEQ already set.
-        } else if (dst_bytes_used == __MB_ERR_INCOMPLETE_SEQUENCE) {
+        } else if (dst_bytes_used == BIONIC_MULTIBYTE_RESULT_INCOMPLETE_SEQUENCE) {
           errno = EINVAL;
           return false;
         }

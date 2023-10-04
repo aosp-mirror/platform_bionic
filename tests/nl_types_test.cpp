@@ -19,6 +19,8 @@
 #include <errno.h>
 #include <gtest/gtest.h>
 
+#include "utils.h"
+
 TEST(nl_types, smoke) {
   nl_catd cat = catopen("/does/not/exist", NL_CAT_LOCALE);
   ASSERT_EQ(reinterpret_cast<nl_catd>(-1), cat);
@@ -27,5 +29,5 @@ TEST(nl_types, smoke) {
 
   errno = 0;
   ASSERT_EQ(-1, catclose(cat));
-  ASSERT_EQ(EBADF, errno);
+  ASSERT_ERRNO(EBADF);
 }

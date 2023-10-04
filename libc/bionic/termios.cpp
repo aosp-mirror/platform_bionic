@@ -34,6 +34,10 @@
 #define __BIONIC_TERMIOS_INLINE /* Out of line. */
 #include <bits/termios_inlines.h>
 
+// POSIX added a couple more functions much later, so do the same for them.
+#define __BIONIC_TERMIOS_WINSIZE_INLINE /* Out of line. */
+#include <bits/termios_winsize_inlines.h>
+
 // Actually declared in <unistd.h>, present on all API levels.
 pid_t tcgetpgrp(int fd) {
   pid_t pid;

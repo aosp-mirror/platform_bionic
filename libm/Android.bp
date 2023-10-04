@@ -466,8 +466,6 @@ ndk_library {
     name: "libm",
     symbol_file: "libm.map.txt",
     first_version: "9",
-    // APIs implemented in asm don't have debug info: http://b/190554910.
-    allow_untyped_symbols: true,
 }
 
 genrule {
@@ -508,4 +506,9 @@ genrule {
     srcs: ["libm.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) x86_64 $(in) $(out)",
+}
+
+filegroup {
+    name: "libc_ldexp_srcs",
+    srcs: ["upstream-freebsd/lib/msun/src/s_scalbn.c"],
 }

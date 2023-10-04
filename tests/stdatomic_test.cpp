@@ -181,7 +181,7 @@ TEST(stdatomic, atomic_fetch_and) {
 
 // And a rudimentary test of acquire-release memory ordering:
 
-constexpr static uint_least32_t BIG = 30'000'000ul; // Assumed even below.
+static constexpr uint_least32_t BIG = 30'000'000ul;  // Assumed even below.
 
 struct three_atomics {
   atomic_uint_least32_t x;
