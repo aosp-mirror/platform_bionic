@@ -146,8 +146,8 @@ that you want to load directly from your APK must be page aligned
 (on a 4096-byte boundary) in the zip file and stored uncompressed.
 Current versions of the zipalign tool take care of alignment.
 
-Note that in API level 23 and above dlopen(3) will open a library from
-any zip file, not just your APK. Just give dlopen(3) a path of the form
+Note that in API level 23 and above dlopen(3) can open a library from
+any zip file, not just an APK. Just give dlopen(3) a path of the form
 "my_zip_file.zip!/libs/libstuff.so". As with APKs, the library must be
 page-aligned and stored uncompressed for this to work.
 
@@ -479,3 +479,20 @@ relocations.
 You can read more about relative relocations
 and their long and complicated history at
 https://maskray.me/blog/2021-10-31-relative-relocations-and-relr.
+
+## No more sentinels in .preinit_array/.init_array/.fini_array sections of executables (in All API levels)
+
+In Android <= U and NDK <= 26, Android used sentinels in these sections of
+executables to locate the start and end of arrays. However, when building with
+LTO, the function pointers in the arrays can be reordered, making sentinels no
+longer work. This prevents constructors for global C++ variables from being
+called in static executables when using LTO.
+
+To fix this, in Android >= V and NDK >= 27, we removed sentinels and switched
+to using symbols inserted by LLD (like `__init_array_start`,
+`__init_array_end`) to locate the arrays. This also avoids keeping a section
+when there are no corresponding functions.
+
+For dynamic executables, we kept sentinel support in crtbegin_dynamic.o and
+libc.so. This ensures that executables built with newer crtbegin_dynamic.o
+(in NDK >= 27) work with older libc.so (in Android <= U), and vice versa.

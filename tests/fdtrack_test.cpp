@@ -40,6 +40,8 @@
 #include <android-base/logging.h>
 #include <android-base/unique_fd.h>
 
+#include "utils.h"
+
 using android::base::ReceiveFileDescriptors;
 using android::base::SendFileDescriptors;
 using android::base::unique_fd;
@@ -233,27 +235,22 @@ FDTRACK_TEST(socket, socket(AF_UNIX, SOCK_STREAM, 0));
 
 FDTRACK_TEST(pidfd_open, ({
   int rc = pidfd_open(getpid(), 0);
-  if (rc == -1) {
-    ASSERT_EQ(ENOSYS, errno);
-    GTEST_SKIP() << "pidfd_open not available";
-  }
+  if (rc == -1 && errno == ENOSYS) GTEST_SKIP() << "no pidfd_open() in this kernel";
+  ASSERT_NE(-1, rc) << strerror(errno);
   rc;
 }));
 
 FDTRACK_TEST(pidfd_getfd, ({
   android_fdtrack_set_enabled(false);
   int pidfd_self = pidfd_open(getpid(), 0);
-  if (pidfd_self == -1) {
-    ASSERT_EQ(ENOSYS, errno);
-    GTEST_SKIP() << "pidfd_open not available";
-  }
+  if (pidfd_self == -1 && errno == ENOSYS) GTEST_SKIP() << "no pidfd_open() in this kernel";
+  ASSERT_NE(-1, pidfd_self) << strerror(errno);
+
   android_fdtrack_set_enabled(true);
 
   int rc = pidfd_getfd(pidfd_self, STDIN_FILENO, 0);
-  if (rc == -1) {
-    ASSERT_EQ(ENOSYS, errno);
-    GTEST_SKIP() << "pidfd_getfd not available";
-  }
+  if (rc == -1 && errno == ENOSYS) GTEST_SKIP() << "no pidfd_getfd() in this kernel";
+  ASSERT_NE(-1, rc) << strerror(errno);
 
   android_fdtrack_set_enabled(false);
   close(pidfd_self);

@@ -52,9 +52,10 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 #if defined(__riscv_v)
 
-#include "sys/asm.h"
+#include <private/bionic_asm.h>
 
 #define pDst a0
 #define pSrc a1

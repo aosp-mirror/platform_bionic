@@ -32,7 +32,10 @@ struct sockaddr_ll {
   unsigned short sll_hatype;
   unsigned char sll_pkttype;
   unsigned char sll_halen;
-  unsigned char sll_addr[8];
+  union {
+    unsigned char sll_addr[8];
+    __DECLARE_FLEX_ARRAY(unsigned char, sll_addr_flex);
+  };
 };
 #define PACKET_HOST 0
 #define PACKET_BROADCAST 1
@@ -65,6 +68,7 @@ struct sockaddr_ll {
 #define PACKET_ROLLOVER_STATS 21
 #define PACKET_FANOUT_DATA 22
 #define PACKET_IGNORE_OUTGOING 23
+#define PACKET_VNET_HDR_SZ 24
 #define PACKET_FANOUT_HASH 0
 #define PACKET_FANOUT_LB 1
 #define PACKET_FANOUT_CPU 2

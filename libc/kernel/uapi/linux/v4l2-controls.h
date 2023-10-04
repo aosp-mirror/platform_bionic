@@ -691,6 +691,39 @@ enum v4l2_mpeg_video_frame_skip_mode {
 #define V4L2_CID_MPEG_VIDEO_HEVC_B_FRAME_MAX_QP (V4L2_CID_CODEC_BASE + 652)
 #define V4L2_CID_MPEG_VIDEO_DEC_DISPLAY_DELAY (V4L2_CID_CODEC_BASE + 653)
 #define V4L2_CID_MPEG_VIDEO_DEC_DISPLAY_DELAY_ENABLE (V4L2_CID_CODEC_BASE + 654)
+#define V4L2_CID_MPEG_VIDEO_AV1_PROFILE (V4L2_CID_CODEC_BASE + 655)
+enum v4l2_mpeg_video_av1_profile {
+  V4L2_MPEG_VIDEO_AV1_PROFILE_MAIN = 0,
+  V4L2_MPEG_VIDEO_AV1_PROFILE_HIGH = 1,
+  V4L2_MPEG_VIDEO_AV1_PROFILE_PROFESSIONAL = 2,
+};
+#define V4L2_CID_MPEG_VIDEO_AV1_LEVEL (V4L2_CID_CODEC_BASE + 656)
+enum v4l2_mpeg_video_av1_level {
+  V4L2_MPEG_VIDEO_AV1_LEVEL_2_0 = 0,
+  V4L2_MPEG_VIDEO_AV1_LEVEL_2_1 = 1,
+  V4L2_MPEG_VIDEO_AV1_LEVEL_2_2 = 2,
+  V4L2_MPEG_VIDEO_AV1_LEVEL_2_3 = 3,
+  V4L2_MPEG_VIDEO_AV1_LEVEL_3_0 = 4,
+  V4L2_MPEG_VIDEO_AV1_LEVEL_3_1 = 5,
+  V4L2_MPEG_VIDEO_AV1_LEVEL_3_2 = 6,
+  V4L2_MPEG_VIDEO_AV1_LEVEL_3_3 = 7,
+  V4L2_MPEG_VIDEO_AV1_LEVEL_4_0 = 8,
+  V4L2_MPEG_VIDEO_AV1_LEVEL_4_1 = 9,
+  V4L2_MPEG_VIDEO_AV1_LEVEL_4_2 = 10,
+  V4L2_MPEG_VIDEO_AV1_LEVEL_4_3 = 11,
+  V4L2_MPEG_VIDEO_AV1_LEVEL_5_0 = 12,
+  V4L2_MPEG_VIDEO_AV1_LEVEL_5_1 = 13,
+  V4L2_MPEG_VIDEO_AV1_LEVEL_5_2 = 14,
+  V4L2_MPEG_VIDEO_AV1_LEVEL_5_3 = 15,
+  V4L2_MPEG_VIDEO_AV1_LEVEL_6_0 = 16,
+  V4L2_MPEG_VIDEO_AV1_LEVEL_6_1 = 17,
+  V4L2_MPEG_VIDEO_AV1_LEVEL_6_2 = 18,
+  V4L2_MPEG_VIDEO_AV1_LEVEL_6_3 = 19,
+  V4L2_MPEG_VIDEO_AV1_LEVEL_7_0 = 20,
+  V4L2_MPEG_VIDEO_AV1_LEVEL_7_1 = 21,
+  V4L2_MPEG_VIDEO_AV1_LEVEL_7_2 = 22,
+  V4L2_MPEG_VIDEO_AV1_LEVEL_7_3 = 23
+};
 #define V4L2_CID_CODEC_CX2341X_BASE (V4L2_CTRL_CLASS_CODEC | 0x1000)
 #define V4L2_CID_MPEG_CX2341X_VIDEO_SPATIAL_FILTER_MODE (V4L2_CID_CODEC_CX2341X_BASE + 0)
 enum v4l2_mpeg_cx2341x_video_spatial_filter_mode {
@@ -1520,7 +1553,8 @@ struct v4l2_ctrl_hevc_decode_params {
   __u8 poc_st_curr_before[V4L2_HEVC_DPB_ENTRIES_NUM_MAX];
   __u8 poc_st_curr_after[V4L2_HEVC_DPB_ENTRIES_NUM_MAX];
   __u8 poc_lt_curr[V4L2_HEVC_DPB_ENTRIES_NUM_MAX];
-  __u8 reserved[4];
+  __u8 num_delta_pocs_of_ref_rps_idx;
+  __u8 reserved[3];
   struct v4l2_hevc_dpb_entry dpb[V4L2_HEVC_DPB_ENTRIES_NUM_MAX];
   __u64 flags;
 };
@@ -1683,6 +1717,271 @@ struct v4l2_ctrl_vp9_compressed_hdr {
   __u8 uv_mode[10][9];
   __u8 partition[16][3];
   struct v4l2_vp9_mv_probs mv;
+};
+#define V4L2_AV1_TOTAL_REFS_PER_FRAME 8
+#define V4L2_AV1_CDEF_MAX 8
+#define V4L2_AV1_NUM_PLANES_MAX 3
+#define V4L2_AV1_MAX_SEGMENTS 8
+#define V4L2_AV1_MAX_OPERATING_POINTS (1 << 5)
+#define V4L2_AV1_REFS_PER_FRAME 7
+#define V4L2_AV1_MAX_NUM_Y_POINTS (1 << 4)
+#define V4L2_AV1_MAX_NUM_CB_POINTS (1 << 4)
+#define V4L2_AV1_MAX_NUM_CR_POINTS (1 << 4)
+#define V4L2_AV1_AR_COEFFS_SIZE 25
+#define V4L2_AV1_MAX_NUM_PLANES 3
+#define V4L2_AV1_MAX_TILE_COLS 64
+#define V4L2_AV1_MAX_TILE_ROWS 64
+#define V4L2_AV1_MAX_TILE_COUNT 512
+#define V4L2_AV1_SEQUENCE_FLAG_STILL_PICTURE 0x00000001
+#define V4L2_AV1_SEQUENCE_FLAG_USE_128X128_SUPERBLOCK 0x00000002
+#define V4L2_AV1_SEQUENCE_FLAG_ENABLE_FILTER_INTRA 0x00000004
+#define V4L2_AV1_SEQUENCE_FLAG_ENABLE_INTRA_EDGE_FILTER 0x00000008
+#define V4L2_AV1_SEQUENCE_FLAG_ENABLE_INTERINTRA_COMPOUND 0x00000010
+#define V4L2_AV1_SEQUENCE_FLAG_ENABLE_MASKED_COMPOUND 0x00000020
+#define V4L2_AV1_SEQUENCE_FLAG_ENABLE_WARPED_MOTION 0x00000040
+#define V4L2_AV1_SEQUENCE_FLAG_ENABLE_DUAL_FILTER 0x00000080
+#define V4L2_AV1_SEQUENCE_FLAG_ENABLE_ORDER_HINT 0x00000100
+#define V4L2_AV1_SEQUENCE_FLAG_ENABLE_JNT_COMP 0x00000200
+#define V4L2_AV1_SEQUENCE_FLAG_ENABLE_REF_FRAME_MVS 0x00000400
+#define V4L2_AV1_SEQUENCE_FLAG_ENABLE_SUPERRES 0x00000800
+#define V4L2_AV1_SEQUENCE_FLAG_ENABLE_CDEF 0x00001000
+#define V4L2_AV1_SEQUENCE_FLAG_ENABLE_RESTORATION 0x00002000
+#define V4L2_AV1_SEQUENCE_FLAG_MONO_CHROME 0x00004000
+#define V4L2_AV1_SEQUENCE_FLAG_COLOR_RANGE 0x00008000
+#define V4L2_AV1_SEQUENCE_FLAG_SUBSAMPLING_X 0x00010000
+#define V4L2_AV1_SEQUENCE_FLAG_SUBSAMPLING_Y 0x00020000
+#define V4L2_AV1_SEQUENCE_FLAG_FILM_GRAIN_PARAMS_PRESENT 0x00040000
+#define V4L2_AV1_SEQUENCE_FLAG_SEPARATE_UV_DELTA_Q 0x00080000
+#define V4L2_CID_STATELESS_AV1_SEQUENCE (V4L2_CID_CODEC_STATELESS_BASE + 500)
+struct v4l2_ctrl_av1_sequence {
+  __u32 flags;
+  __u8 seq_profile;
+  __u8 order_hint_bits;
+  __u8 bit_depth;
+  __u8 reserved;
+  __u16 max_frame_width_minus_1;
+  __u16 max_frame_height_minus_1;
+};
+#define V4L2_CID_STATELESS_AV1_TILE_GROUP_ENTRY (V4L2_CID_CODEC_STATELESS_BASE + 501)
+struct v4l2_ctrl_av1_tile_group_entry {
+  __u32 tile_offset;
+  __u32 tile_size;
+  __u32 tile_row;
+  __u32 tile_col;
+};
+enum v4l2_av1_warp_model {
+  V4L2_AV1_WARP_MODEL_IDENTITY = 0,
+  V4L2_AV1_WARP_MODEL_TRANSLATION = 1,
+  V4L2_AV1_WARP_MODEL_ROTZOOM = 2,
+  V4L2_AV1_WARP_MODEL_AFFINE = 3,
+};
+enum v4l2_av1_reference_frame {
+  V4L2_AV1_REF_INTRA_FRAME = 0,
+  V4L2_AV1_REF_LAST_FRAME = 1,
+  V4L2_AV1_REF_LAST2_FRAME = 2,
+  V4L2_AV1_REF_LAST3_FRAME = 3,
+  V4L2_AV1_REF_GOLDEN_FRAME = 4,
+  V4L2_AV1_REF_BWDREF_FRAME = 5,
+  V4L2_AV1_REF_ALTREF2_FRAME = 6,
+  V4L2_AV1_REF_ALTREF_FRAME = 7,
+};
+#define V4L2_AV1_GLOBAL_MOTION_IS_INVALID(ref) (1 << (ref))
+#define V4L2_AV1_GLOBAL_MOTION_FLAG_IS_GLOBAL 0x1
+#define V4L2_AV1_GLOBAL_MOTION_FLAG_IS_ROT_ZOOM 0x2
+#define V4L2_AV1_GLOBAL_MOTION_FLAG_IS_TRANSLATION 0x4
+struct v4l2_av1_global_motion {
+  __u8 flags[V4L2_AV1_TOTAL_REFS_PER_FRAME];
+  enum v4l2_av1_warp_model type[V4L2_AV1_TOTAL_REFS_PER_FRAME];
+  __s32 params[V4L2_AV1_TOTAL_REFS_PER_FRAME][6];
+  __u8 invalid;
+  __u8 reserved[3];
+};
+enum v4l2_av1_frame_restoration_type {
+  V4L2_AV1_FRAME_RESTORE_NONE = 0,
+  V4L2_AV1_FRAME_RESTORE_WIENER = 1,
+  V4L2_AV1_FRAME_RESTORE_SGRPROJ = 2,
+  V4L2_AV1_FRAME_RESTORE_SWITCHABLE = 3,
+};
+#define V4L2_AV1_LOOP_RESTORATION_FLAG_USES_LR 0x1
+#define V4L2_AV1_LOOP_RESTORATION_FLAG_USES_CHROMA_LR 0x2
+struct v4l2_av1_loop_restoration {
+  __u8 flags;
+  __u8 lr_unit_shift;
+  __u8 lr_uv_shift;
+  __u8 reserved;
+  enum v4l2_av1_frame_restoration_type frame_restoration_type[V4L2_AV1_NUM_PLANES_MAX];
+  __u32 loop_restoration_size[V4L2_AV1_MAX_NUM_PLANES];
+};
+struct v4l2_av1_cdef {
+  __u8 damping_minus_3;
+  __u8 bits;
+  __u8 y_pri_strength[V4L2_AV1_CDEF_MAX];
+  __u8 y_sec_strength[V4L2_AV1_CDEF_MAX];
+  __u8 uv_pri_strength[V4L2_AV1_CDEF_MAX];
+  __u8 uv_sec_strength[V4L2_AV1_CDEF_MAX];
+};
+#define V4L2_AV1_SEGMENTATION_FLAG_ENABLED 0x1
+#define V4L2_AV1_SEGMENTATION_FLAG_UPDATE_MAP 0x2
+#define V4L2_AV1_SEGMENTATION_FLAG_TEMPORAL_UPDATE 0x4
+#define V4L2_AV1_SEGMENTATION_FLAG_UPDATE_DATA 0x8
+#define V4L2_AV1_SEGMENTATION_FLAG_SEG_ID_PRE_SKIP 0x10
+enum v4l2_av1_segment_feature {
+  V4L2_AV1_SEG_LVL_ALT_Q = 0,
+  V4L2_AV1_SEG_LVL_ALT_LF_Y_V = 1,
+  V4L2_AV1_SEG_LVL_REF_FRAME = 5,
+  V4L2_AV1_SEG_LVL_REF_SKIP = 6,
+  V4L2_AV1_SEG_LVL_REF_GLOBALMV = 7,
+  V4L2_AV1_SEG_LVL_MAX = 8
+};
+#define V4L2_AV1_SEGMENT_FEATURE_ENABLED(id) (1 << (id))
+struct v4l2_av1_segmentation {
+  __u8 flags;
+  __u8 last_active_seg_id;
+  __u8 feature_enabled[V4L2_AV1_MAX_SEGMENTS];
+  __s16 feature_data[V4L2_AV1_MAX_SEGMENTS][V4L2_AV1_SEG_LVL_MAX];
+};
+#define V4L2_AV1_LOOP_FILTER_FLAG_DELTA_ENABLED 0x1
+#define V4L2_AV1_LOOP_FILTER_FLAG_DELTA_UPDATE 0x2
+#define V4L2_AV1_LOOP_FILTER_FLAG_DELTA_LF_PRESENT 0x4
+#define V4L2_AV1_LOOP_FILTER_FLAG_DELTA_LF_MULTI 0x8
+struct v4l2_av1_loop_filter {
+  __u8 flags;
+  __u8 level[4];
+  __u8 sharpness;
+  __s8 ref_deltas[V4L2_AV1_TOTAL_REFS_PER_FRAME];
+  __s8 mode_deltas[2];
+  __u8 delta_lf_res;
+};
+#define V4L2_AV1_QUANTIZATION_FLAG_DIFF_UV_DELTA 0x1
+#define V4L2_AV1_QUANTIZATION_FLAG_USING_QMATRIX 0x2
+#define V4L2_AV1_QUANTIZATION_FLAG_DELTA_Q_PRESENT 0x4
+struct v4l2_av1_quantization {
+  __u8 flags;
+  __u8 base_q_idx;
+  __s8 delta_q_y_dc;
+  __s8 delta_q_u_dc;
+  __s8 delta_q_u_ac;
+  __s8 delta_q_v_dc;
+  __s8 delta_q_v_ac;
+  __u8 qm_y;
+  __u8 qm_u;
+  __u8 qm_v;
+  __u8 delta_q_res;
+};
+#define V4L2_AV1_TILE_INFO_FLAG_UNIFORM_TILE_SPACING 0x1
+struct v4l2_av1_tile_info {
+  __u8 flags;
+  __u8 context_update_tile_id;
+  __u8 tile_cols;
+  __u8 tile_rows;
+  __u32 mi_col_starts[V4L2_AV1_MAX_TILE_COLS + 1];
+  __u32 mi_row_starts[V4L2_AV1_MAX_TILE_ROWS + 1];
+  __u32 width_in_sbs_minus_1[V4L2_AV1_MAX_TILE_COLS];
+  __u32 height_in_sbs_minus_1[V4L2_AV1_MAX_TILE_ROWS];
+  __u8 tile_size_bytes;
+  __u8 reserved[3];
+};
+enum v4l2_av1_frame_type {
+  V4L2_AV1_KEY_FRAME = 0,
+  V4L2_AV1_INTER_FRAME = 1,
+  V4L2_AV1_INTRA_ONLY_FRAME = 2,
+  V4L2_AV1_SWITCH_FRAME = 3
+};
+enum v4l2_av1_interpolation_filter {
+  V4L2_AV1_INTERPOLATION_FILTER_EIGHTTAP = 0,
+  V4L2_AV1_INTERPOLATION_FILTER_EIGHTTAP_SMOOTH = 1,
+  V4L2_AV1_INTERPOLATION_FILTER_EIGHTTAP_SHARP = 2,
+  V4L2_AV1_INTERPOLATION_FILTER_BILINEAR = 3,
+  V4L2_AV1_INTERPOLATION_FILTER_SWITCHABLE = 4,
+};
+enum v4l2_av1_tx_mode {
+  V4L2_AV1_TX_MODE_ONLY_4X4 = 0,
+  V4L2_AV1_TX_MODE_LARGEST = 1,
+  V4L2_AV1_TX_MODE_SELECT = 2
+};
+#define V4L2_AV1_FRAME_FLAG_SHOW_FRAME 0x00000001
+#define V4L2_AV1_FRAME_FLAG_SHOWABLE_FRAME 0x00000002
+#define V4L2_AV1_FRAME_FLAG_ERROR_RESILIENT_MODE 0x00000004
+#define V4L2_AV1_FRAME_FLAG_DISABLE_CDF_UPDATE 0x00000008
+#define V4L2_AV1_FRAME_FLAG_ALLOW_SCREEN_CONTENT_TOOLS 0x00000010
+#define V4L2_AV1_FRAME_FLAG_FORCE_INTEGER_MV 0x00000020
+#define V4L2_AV1_FRAME_FLAG_ALLOW_INTRABC 0x00000040
+#define V4L2_AV1_FRAME_FLAG_USE_SUPERRES 0x00000080
+#define V4L2_AV1_FRAME_FLAG_ALLOW_HIGH_PRECISION_MV 0x00000100
+#define V4L2_AV1_FRAME_FLAG_IS_MOTION_MODE_SWITCHABLE 0x00000200
+#define V4L2_AV1_FRAME_FLAG_USE_REF_FRAME_MVS 0x00000400
+#define V4L2_AV1_FRAME_FLAG_DISABLE_FRAME_END_UPDATE_CDF 0x00000800
+#define V4L2_AV1_FRAME_FLAG_ALLOW_WARPED_MOTION 0x00001000
+#define V4L2_AV1_FRAME_FLAG_REFERENCE_SELECT 0x00002000
+#define V4L2_AV1_FRAME_FLAG_REDUCED_TX_SET 0x00004000
+#define V4L2_AV1_FRAME_FLAG_SKIP_MODE_ALLOWED 0x00008000
+#define V4L2_AV1_FRAME_FLAG_SKIP_MODE_PRESENT 0x00010000
+#define V4L2_AV1_FRAME_FLAG_FRAME_SIZE_OVERRIDE 0x00020000
+#define V4L2_AV1_FRAME_FLAG_BUFFER_REMOVAL_TIME_PRESENT 0x00040000
+#define V4L2_AV1_FRAME_FLAG_FRAME_REFS_SHORT_SIGNALING 0x00080000
+#define V4L2_CID_STATELESS_AV1_FRAME (V4L2_CID_CODEC_STATELESS_BASE + 502)
+struct v4l2_ctrl_av1_frame {
+  struct v4l2_av1_tile_info tile_info;
+  struct v4l2_av1_quantization quantization;
+  __u8 superres_denom;
+  struct v4l2_av1_segmentation segmentation;
+  struct v4l2_av1_loop_filter loop_filter;
+  struct v4l2_av1_cdef cdef;
+  __u8 skip_mode_frame[2];
+  __u8 primary_ref_frame;
+  struct v4l2_av1_loop_restoration loop_restoration;
+  struct v4l2_av1_global_motion global_motion;
+  __u32 flags;
+  enum v4l2_av1_frame_type frame_type;
+  __u32 order_hint;
+  __u32 upscaled_width;
+  enum v4l2_av1_interpolation_filter interpolation_filter;
+  enum v4l2_av1_tx_mode tx_mode;
+  __u32 frame_width_minus_1;
+  __u32 frame_height_minus_1;
+  __u16 render_width_minus_1;
+  __u16 render_height_minus_1;
+  __u32 current_frame_id;
+  __u32 buffer_removal_time[V4L2_AV1_MAX_OPERATING_POINTS];
+  __u8 reserved[4];
+  __u32 order_hints[V4L2_AV1_TOTAL_REFS_PER_FRAME];
+  __u64 reference_frame_ts[V4L2_AV1_TOTAL_REFS_PER_FRAME];
+  __s8 ref_frame_idx[V4L2_AV1_REFS_PER_FRAME];
+  __u8 refresh_frame_flags;
+};
+#define V4L2_AV1_FILM_GRAIN_FLAG_APPLY_GRAIN 0x1
+#define V4L2_AV1_FILM_GRAIN_FLAG_UPDATE_GRAIN 0x2
+#define V4L2_AV1_FILM_GRAIN_FLAG_CHROMA_SCALING_FROM_LUMA 0x4
+#define V4L2_AV1_FILM_GRAIN_FLAG_OVERLAP 0x8
+#define V4L2_AV1_FILM_GRAIN_FLAG_CLIP_TO_RESTRICTED_RANGE 0x10
+#define V4L2_CID_STATELESS_AV1_FILM_GRAIN (V4L2_CID_CODEC_STATELESS_BASE + 505)
+struct v4l2_ctrl_av1_film_grain {
+  __u8 flags;
+  __u8 cr_mult;
+  __u16 grain_seed;
+  __u8 film_grain_params_ref_idx;
+  __u8 num_y_points;
+  __u8 point_y_value[V4L2_AV1_MAX_NUM_Y_POINTS];
+  __u8 point_y_scaling[V4L2_AV1_MAX_NUM_Y_POINTS];
+  __u8 num_cb_points;
+  __u8 point_cb_value[V4L2_AV1_MAX_NUM_CB_POINTS];
+  __u8 point_cb_scaling[V4L2_AV1_MAX_NUM_CB_POINTS];
+  __u8 num_cr_points;
+  __u8 point_cr_value[V4L2_AV1_MAX_NUM_CR_POINTS];
+  __u8 point_cr_scaling[V4L2_AV1_MAX_NUM_CR_POINTS];
+  __u8 grain_scaling_minus_8;
+  __u8 ar_coeff_lag;
+  __u8 ar_coeffs_y_plus_128[V4L2_AV1_AR_COEFFS_SIZE];
+  __u8 ar_coeffs_cb_plus_128[V4L2_AV1_AR_COEFFS_SIZE];
+  __u8 ar_coeffs_cr_plus_128[V4L2_AV1_AR_COEFFS_SIZE];
+  __u8 ar_coeff_shift_minus_6;
+  __u8 grain_scale_shift;
+  __u8 cb_mult;
+  __u8 cb_luma_mult;
+  __u8 cr_luma_mult;
+  __u16 cb_offset;
+  __u16 cr_offset;
+  __u8 reserved[4];
 };
 #define V4L2_CTRL_CLASS_MPEG V4L2_CTRL_CLASS_CODEC
 #define V4L2_CID_MPEG_CLASS V4L2_CID_CODEC_CLASS

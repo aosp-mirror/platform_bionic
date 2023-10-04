@@ -115,6 +115,10 @@ struct v4l2_subdev_routing {
   __u64 routes;
   __u32 reserved[6];
 };
+#define V4L2_SUBDEV_CLIENT_CAP_STREAMS (1U << 0)
+struct v4l2_subdev_client_capability {
+  __u64 capabilities;
+};
 #define v4l2_subdev_edid v4l2_edid
 #define VIDIOC_SUBDEV_QUERYCAP _IOR('V', 0, struct v4l2_subdev_capability)
 #define VIDIOC_SUBDEV_G_FMT _IOWR('V', 4, struct v4l2_subdev_format)
@@ -130,6 +134,8 @@ struct v4l2_subdev_routing {
 #define VIDIOC_SUBDEV_S_SELECTION _IOWR('V', 62, struct v4l2_subdev_selection)
 #define VIDIOC_SUBDEV_G_ROUTING _IOWR('V', 38, struct v4l2_subdev_routing)
 #define VIDIOC_SUBDEV_S_ROUTING _IOWR('V', 39, struct v4l2_subdev_routing)
+#define VIDIOC_SUBDEV_G_CLIENT_CAP _IOR('V', 101, struct v4l2_subdev_client_capability)
+#define VIDIOC_SUBDEV_S_CLIENT_CAP _IOWR('V', 102, struct v4l2_subdev_client_capability)
 #define VIDIOC_SUBDEV_G_STD _IOR('V', 23, v4l2_std_id)
 #define VIDIOC_SUBDEV_S_STD _IOW('V', 24, v4l2_std_id)
 #define VIDIOC_SUBDEV_ENUMSTD _IOWR('V', 25, struct v4l2_standard)

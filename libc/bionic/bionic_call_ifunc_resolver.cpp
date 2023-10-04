@@ -57,6 +57,13 @@ ElfW(Addr) __bionic_call_ifunc_resolver(ElfW(Addr) resolver_addr) {
     hwcap = getauxval(AT_HWCAP);
   }
   return reinterpret_cast<ifunc_resolver_t>(resolver_addr)(hwcap);
+#elif defined(__riscv)
+  // The pointer argument is currently unused, but reserved for future
+  // expansion. If we pass nullptr from the beginning, it'll be easier
+  // to recognize if/when we pass actual data (and matches glibc).
+  typedef ElfW(Addr) (*ifunc_resolver_t)(uint64_t, void*);
+  static uint64_t hwcap = getauxval(AT_HWCAP);
+  return reinterpret_cast<ifunc_resolver_t>(resolver_addr)(hwcap, nullptr);
 #else
   typedef ElfW(Addr) (*ifunc_resolver_t)(void);
   return reinterpret_cast<ifunc_resolver_t>(resolver_addr)();

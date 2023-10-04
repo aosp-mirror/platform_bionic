@@ -56,13 +56,13 @@ static void TestSigSet1(int (fn)(SigSetT*)) {
   SigSetT* set_ptr = nullptr;
   errno = 0;
   ASSERT_EQ(-1, fn(set_ptr));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 
   // Non-nullptr.
   SigSetT set = {};
   errno = 0;
   ASSERT_EQ(0, fn(&set));
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
 }
 
 template <typename SigSetT>
@@ -71,26 +71,26 @@ static void TestSigSet2(int (fn)(SigSetT*, int)) {
   SigSetT* set_ptr = nullptr;
   errno = 0;
   ASSERT_EQ(-1, fn(set_ptr, SIGSEGV));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 
   SigSetT set = {};
 
   // Bad signal number: too small.
   errno = 0;
   ASSERT_EQ(-1, fn(&set, 0));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 
   // Bad signal number: too high.
   errno = 0;
   ASSERT_EQ(-1, fn(&set, SIGNAL_MAX(&set) + 1));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 
   // Good signal numbers, low and high ends of range.
   errno = 0;
   ASSERT_EQ(0, fn(&set, SIGNAL_MIN()));
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
   ASSERT_EQ(0, fn(&set, SIGNAL_MAX(&set)));
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
 }
 
 TEST(signal, sigaddset_invalid) {
@@ -146,7 +146,7 @@ TEST(signal, sigismember64_invalid) {
 TEST(signal, raise_invalid) {
   errno = 0;
   ASSERT_EQ(-1, raise(-1));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 static void raise_in_signal_handler_helper(int signal_number) {
@@ -199,7 +199,7 @@ TEST(signal, sigsuspend_sigpending) {
   sigfillset(&not_SIGALRM);
   sigdelset(&not_SIGALRM, SIGALRM);
   ASSERT_EQ(-1, sigsuspend(&not_SIGALRM));
-  ASSERT_EQ(EINTR, errno);
+  ASSERT_ERRNO(EINTR);
   // ...and check that we now receive our pending SIGALRM.
   ASSERT_EQ(1, g_sigsuspend_signal_handler_call_count);
 }
@@ -241,7 +241,7 @@ TEST(signal, sigsuspend64_sigpending64) {
   sigfillset64(&not_SIGRTMIN);
   sigdelset64(&not_SIGRTMIN, SIGRTMIN);
   ASSERT_EQ(-1, sigsuspend64(&not_SIGRTMIN));
-  ASSERT_EQ(EINTR, errno);
+  ASSERT_ERRNO(EINTR);
   // ...and check that we now receive our pending SIGRTMIN.
   ASSERT_EQ(1, g_sigsuspend64_signal_handler_call_count);
 }
@@ -530,14 +530,15 @@ TEST(signal, sighold_filter) {
 #endif
 }
 
-#if defined(__BIONIC__)
+#if defined(__BIONIC__) && !defined(__riscv)
 // Not exposed via headers, but the symbols are available if you declare them yourself.
 extern "C" int sigblock(int);
 extern "C" int sigsetmask(int);
+#define HAVE_SIGBLOCK_SIGSETMASK
 #endif
 
 TEST(signal, sigblock_filter) {
-#if defined(__BIONIC__)
+#if defined(HAVE_SIGBLOCK_SIGSETMASK)
   TestSignalMaskFunction([]() {
     sigblock(~0U);
   });
@@ -545,7 +546,7 @@ TEST(signal, sigblock_filter) {
 }
 
 TEST(signal, sigsetmask_filter) {
-#if defined(__BIONIC__)
+#if defined(HAVE_SIGBLOCK_SIGSETMASK)
   TestSignalMaskFunction([]() {
     sigsetmask(~0U);
   });
@@ -597,7 +598,7 @@ TEST(signal, sigqueue) {
   sigval sigval = {.sival_int = 1};
   errno = 0;
   ASSERT_EQ(0, sigqueue(getpid(), SIGALRM, sigval));
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
   ASSERT_EQ(1, g_sigqueue_signal_handler_call_count);
 }
 
@@ -607,7 +608,7 @@ TEST(signal, pthread_sigqueue_self) {
   sigval sigval = {.sival_int = 1};
   errno = 0;
   ASSERT_EQ(0, pthread_sigqueue(pthread_self(), SIGALRM, sigval));
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
   ASSERT_EQ(1, g_sigqueue_signal_handler_call_count);
 #else
   GTEST_SKIP() << "musl doesn't have pthread_sigqueue";
@@ -635,7 +636,7 @@ TEST(signal, pthread_sigqueue_other) {
 
   errno = 0;
   ASSERT_EQ(0, pthread_sigqueue(thread, SIGALRM, sigval));
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
   pthread_join(thread, nullptr);
   ASSERT_EQ(1, g_sigqueue_signal_handler_call_count);
 #else
@@ -698,7 +699,7 @@ TEST(signal, sigwaitinfo) {
   siginfo_t info;
   errno = 0;
   ASSERT_EQ(SIGALRM, sigwaitinfo(&just_SIGALRM, &info));
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
   ASSERT_EQ(SIGALRM, info.si_signo);
   ASSERT_EQ(1, info.si_value.sival_int);
 }
@@ -720,7 +721,7 @@ TEST(signal, sigwaitinfo64_SIGRTMIN) {
   siginfo_t info;
   errno = 0;
   ASSERT_EQ(SIGRTMIN, sigwaitinfo64(&just_SIGRTMIN, &info));
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
   ASSERT_EQ(SIGRTMIN, info.si_signo);
   ASSERT_EQ(1, info.si_value.sival_int);
 }
@@ -743,7 +744,7 @@ TEST(signal, sigtimedwait) {
   timespec timeout = { .tv_sec = 2, .tv_nsec = 0 };
   errno = 0;
   ASSERT_EQ(SIGALRM, sigtimedwait(&just_SIGALRM, &info, &timeout));
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
 }
 
 TEST(signal, sigtimedwait64_SIGRTMIN) {
@@ -764,7 +765,7 @@ TEST(signal, sigtimedwait64_SIGRTMIN) {
   timespec timeout = { .tv_sec = 2, .tv_nsec = 0 };
   errno = 0;
   ASSERT_EQ(SIGRTMIN, sigtimedwait64(&just_SIGRTMIN, &info, &timeout));
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
 }
 
 TEST(signal, sigtimedwait_timeout) {
@@ -781,7 +782,7 @@ TEST(signal, sigtimedwait_timeout) {
   timespec timeout = { .tv_sec = 0, .tv_nsec = 1000000 };
   errno = 0;
   ASSERT_EQ(-1, sigtimedwait(&just_SIGALRM, &info, &timeout));
-  ASSERT_EQ(EAGAIN, errno);
+  ASSERT_ERRNO(EAGAIN);
   auto t1 = std::chrono::steady_clock::now();
   ASSERT_GE(t1-t0, 1000000ns);
 
@@ -835,17 +836,17 @@ TEST(signal, sigset_size) {
 TEST(signal, sigignore_EINVAL) {
   errno = 0;
   ASSERT_EQ(-1, sigignore(99999));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(signal, sigignore) {
   errno = 0;
   EXPECT_EQ(-1, sigignore(SIGKILL));
-  EXPECT_EQ(errno, EINVAL);
+  EXPECT_ERRNO(EINVAL);
 
   errno = 0;
   EXPECT_EQ(-1, sigignore(SIGSTOP));
-  EXPECT_EQ(errno, EINVAL);
+  EXPECT_ERRNO(EINVAL);
 
   ScopedSignalHandler sigalrm{SIGALRM};
   ASSERT_EQ(0, sigignore(SIGALRM));
@@ -858,19 +859,19 @@ TEST(signal, sigignore) {
 TEST(signal, sighold_EINVAL) {
   errno = 0;
   ASSERT_EQ(-1, sighold(99999));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(signal, sigpause_EINVAL) {
   errno = 0;
   ASSERT_EQ(-1, sigpause(99999));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(signal, sigrelse_EINVAL) {
   errno = 0;
   ASSERT_EQ(-1, sigpause(99999));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 static void TestSigholdSigpauseSigrelse(int sig) {
@@ -889,7 +890,7 @@ static void TestSigholdSigpauseSigrelse(int sig) {
   ASSERT_EQ(0, signal_handler_call_count);
   // ... until sigpause(SIGALRM/SIGRTMIN) temporarily unblocks it.
   ASSERT_EQ(-1, sigpause(sig));
-  ASSERT_EQ(EINTR, errno);
+  ASSERT_ERRNO(EINTR);
   ASSERT_EQ(1, signal_handler_call_count);
 
   if (sig >= SIGRTMIN && sizeof(void*) == 8) {
@@ -917,7 +918,7 @@ TEST(signal, sighold_sigpause_sigrelse_RT) {
 TEST(signal, sigset_EINVAL) {
   errno = 0;
   ASSERT_EQ(SIG_ERR, sigset(99999, SIG_DFL));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(signal, sigset_RT) {
@@ -979,5 +980,5 @@ TEST(signal, killpg_EINVAL) {
   // and passes 0 through to kill(2).
   errno = 0;
   ASSERT_EQ(-1, killpg(-1, SIGKILL));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }

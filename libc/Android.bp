@@ -55,6 +55,7 @@ libc_common_flags = [
     "-Wno-deprecated-declarations",
     "-Wno-gcc-compat",
     "-Wframe-larger-than=2048",
+    "-Wno-reorder-init-list",
 
     // Try to catch typical 32-bit assumptions that break with 64-bit pointers.
     "-Werror=pointer-to-int-cast",
@@ -133,6 +134,8 @@ cc_defaults {
     lto: {
         never: true,
     },
+
+    apex_available: ["com.android.runtime"],
 }
 
 libc_scudo_product_variables = {
@@ -334,10 +337,16 @@ cc_library_static {
 // automatically included.
 
 cc_library_static {
+    name: "libc_freebsd_ldexp",
+    defaults: ["libc_defaults"],
+    cflags: ["-Dscalbn=ldexp"],
+    srcs: [":libc_ldexp_srcs"],
+}
+
+cc_library_static {
     defaults: ["libc_defaults"],
     tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: [
-        "upstream-freebsd/lib/libc/gen/ldexp.c",
         "upstream-freebsd/lib/libc/stdlib/getopt_long.c",
         "upstream-freebsd/lib/libc/stdlib/hcreate.c",
         "upstream-freebsd/lib/libc/stdlib/hcreate_r.c",
@@ -942,6 +951,7 @@ cc_library_static {
                 "arch-riscv64/string/memcpy_vext.S",
                 "arch-riscv64/string/memmove_vext.S",
                 "arch-riscv64/string/memset_vext.S",
+                "arch-riscv64/string/stpcpy_vext.S",
                 "arch-riscv64/string/strcat_vext.S",
                 "arch-riscv64/string/strchr_vext.S",
                 "arch-riscv64/string/strcmp_vext.S",
@@ -1276,9 +1286,6 @@ cc_library_static {
     srcs: [
         "bionic/bionic_systrace.cpp",
     ],
-    apex_available: [
-        "com.android.runtime",
-    ],
 }
 
 // ========================================================
@@ -1475,6 +1482,7 @@ cc_library_static {
         "libc_fortify",
         "libc_freebsd",
         "libc_freebsd_large_stack",
+        "libc_freebsd_ldexp",
         "libc_gdtoa",
         "libc_netbsd",
         "libc_openbsd_large_stack",
@@ -1509,6 +1517,7 @@ cc_library_static {
         "libc_fortify",
         "libc_freebsd",
         "libc_freebsd_large_stack",
+        "libc_freebsd_ldexp",
         "libc_gdtoa",
         "libc_netbsd",
         "libc_openbsd",
@@ -1831,7 +1840,6 @@ cc_defaults {
         },
     },
 
-
     apex_available: [
         "//apex_available:platform",
         "com.android.runtime",
@@ -2095,6 +2103,9 @@ cc_library {
     name: "libstdc++",
     static_ndk_lib: true,
     static_libs: ["libasync_safe"],
+    apex_available: [
+        "//apex_available:platform",
+    ],
 
     static: {
         system_shared_libs: [],
@@ -2272,6 +2283,8 @@ cc_object {
         "include",
         "bionic", // crtbegin.c includes bionic/libc_init_common.h
     ],
+
+    cflags: [ "-DCRTBEGIN_STATIC", ],
 
     srcs: ["arch-common/bionic/crtbegin.c"],
     objs: [
@@ -2478,8 +2491,6 @@ ndk_library {
     name: "libc",
     symbol_file: "libc.map.txt",
     first_version: "9",
-    // APIs implemented in asm don't have debug info: http://b/190554910.
-    allow_untyped_symbols: true,
     export_header_libs: [
         "common_libc",
         "libc_uapi",
@@ -3111,4 +3122,11 @@ cc_genrule {
             },
         },
     },
+}
+
+// headers that will be placed on the include path when running versioner in bazel
+// this module should be a no-op in soong
+filegroup {
+   name: "versioner-dependencies",
+   srcs: ["versioner-dependencies/**/*"],
 }

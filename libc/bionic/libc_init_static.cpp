@@ -69,10 +69,21 @@ __LIBC_HIDDEN__ void* __libc_sysinfo;
 extern "C" int __cxa_atexit(void (*)(void *), void *, void *);
 extern "C" const char* __gnu_basename(const char* path);
 
-static void call_array(init_func_t** list, int argc, char* argv[], char* envp[]) {
-  // First element is -1, list is null-terminated
-  while (*++list) {
-    (*list)(argc, argv, envp);
+static void call_array(init_func_t** list, size_t count, int argc, char* argv[], char* envp[]) {
+  while (count-- > 0) {
+    init_func_t* function = *list++;
+    (*function)(argc, argv, envp);
+  }
+}
+
+static void call_fini_array(void* arg) {
+  structors_array_t* structors = reinterpret_cast<structors_array_t*>(arg);
+  fini_func_t** array = structors->fini_array;
+  size_t count = structors->fini_array_count;
+  // Now call each destructor in reverse order.
+  while (count-- > 0) {
+    fini_func_t* function = array[count];
+    (*function)();
   }
 }
 
@@ -356,9 +367,8 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const v
       if (memtag_stack) {
         void* pg_start =
             reinterpret_cast<void*>(page_start(reinterpret_cast<uintptr_t>(stack_top)));
-        if (mprotect(pg_start, PAGE_SIZE, PROT_READ | PROT_WRITE | PROT_MTE | PROT_GROWSDOWN)) {
-          async_safe_fatal("error: failed to set PROT_MTE on main thread stack: %s\n",
-                           strerror(errno));
+        if (mprotect(pg_start, page_size(), PROT_READ | PROT_WRITE | PROT_MTE | PROT_GROWSDOWN)) {
+          async_safe_fatal("error: failed to set PROT_MTE on main thread stack: %m");
         }
       }
 
@@ -414,14 +424,15 @@ __attribute__((no_sanitize("memtag"))) __noreturn static void __real_libc_init(
   // Several Linux ABIs don't pass the onexit pointer, and the ones that
   // do never use it.  Therefore, we ignore it.
 
-  call_array(structors->preinit_array, args.argc, args.argv, args.envp);
-  call_array(structors->init_array, args.argc, args.argv, args.envp);
+  call_array(structors->preinit_array, structors->preinit_array_count, args.argc, args.argv,
+             args.envp);
+  call_array(structors->init_array, structors->init_array_count, args.argc, args.argv, args.envp);
 
   // The executable may have its own destructors listed in its .fini_array
   // so we need to ensure that these are called when the program exits
   // normally.
-  if (structors->fini_array != nullptr) {
-    __cxa_atexit(__libc_fini,structors->fini_array,nullptr);
+  if (structors->fini_array_count > 0) {
+    __cxa_atexit(call_fini_array, const_cast<structors_array_t*>(structors), nullptr);
   }
 
   __libc_init_mte_late();

@@ -23,6 +23,8 @@
 
 #include <android-base/file.h>
 
+#include "utils.h"
+
 // http://b/11383777
 TEST(sys_time, utimes_nullptr) {
   TemporaryFile tf;
@@ -36,19 +38,19 @@ TEST(sys_time, utimes_EINVAL) {
 
   tv[0].tv_usec = -123;
   ASSERT_EQ(-1, utimes(tf.path, tv));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   tv[0].tv_usec = 1234567;
   ASSERT_EQ(-1, utimes(tf.path, tv));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 
   tv[0].tv_usec = 0;
 
   tv[1].tv_usec = -123;
   ASSERT_EQ(-1, utimes(tf.path, tv));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   tv[1].tv_usec = 1234567;
   ASSERT_EQ(-1, utimes(tf.path, tv));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(sys_time, futimes_nullptr) {
@@ -63,19 +65,19 @@ TEST(sys_time, futimes_EINVAL) {
 
   tv[0].tv_usec = -123;
   ASSERT_EQ(-1, futimes(tf.fd, tv));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   tv[0].tv_usec = 1234567;
   ASSERT_EQ(-1, futimes(tf.fd, tv));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 
   tv[0].tv_usec = 0;
 
   tv[1].tv_usec = -123;
   ASSERT_EQ(-1, futimes(tf.fd, tv));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   tv[1].tv_usec = 1234567;
   ASSERT_EQ(-1, futimes(tf.fd, tv));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(sys_time, futimesat_nullptr) {
@@ -90,19 +92,19 @@ TEST(sys_time, futimesat_EINVAL) {
 
   tv[0].tv_usec = -123;
   ASSERT_EQ(-1, futimesat(AT_FDCWD, tf.path, tv));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   tv[0].tv_usec = 1234567;
   ASSERT_EQ(-1, futimesat(AT_FDCWD, tf.path, tv));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 
   tv[0].tv_usec = 0;
 
   tv[1].tv_usec = -123;
   ASSERT_EQ(-1, futimesat(AT_FDCWD, tf.path, tv));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   tv[1].tv_usec = 1234567;
   ASSERT_EQ(-1, futimesat(AT_FDCWD, tf.path, tv));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(sys_time, lutimes_nullptr) {
@@ -117,19 +119,19 @@ TEST(sys_time, lutimes_EINVAL) {
 
   tv[0].tv_usec = -123;
   ASSERT_EQ(-1, lutimes(tf.path, tv));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   tv[0].tv_usec = 1234567;
   ASSERT_EQ(-1, lutimes(tf.path, tv));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 
   tv[0].tv_usec = 0;
 
   tv[1].tv_usec = -123;
   ASSERT_EQ(-1, lutimes(tf.path, tv));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   tv[1].tv_usec = 1234567;
   ASSERT_EQ(-1, lutimes(tf.path, tv));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 // Musl doesn't define __NR_gettimeofday on 32-bit architectures.

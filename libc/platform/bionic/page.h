@@ -24,16 +24,19 @@
 #include <sys/user.h>
 
 inline size_t page_size() {
-  /*
-   * PAGE_SIZE defines the maximum supported page size. Since 4096 is the
-   * minimum supported page size we can just let it be constant folded if it's
-   * also the maximum.
-   */
-#if PAGE_SIZE == 4096
+#if defined(PAGE_SIZE)
   return PAGE_SIZE;
 #else
-  static size_t size = getauxval(AT_PAGESZ);
-  return size;
+  static const size_t page_size = getauxval(AT_PAGESZ);
+  return page_size;
+#endif
+}
+
+constexpr size_t max_page_size() {
+#if defined(PAGE_SIZE)
+  return PAGE_SIZE;
+#else
+  return 65536;
 #endif
 }
 

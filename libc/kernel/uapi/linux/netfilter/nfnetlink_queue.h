@@ -71,6 +71,7 @@ enum nfqnl_attr_type {
   NFQA_VLAN,
   NFQA_L2HDR,
   NFQA_PRIORITY,
+  NFQA_CGROUP_CLASSID,
   __NFQA_MAX
 };
 #define NFQA_MAX (__NFQA_MAX - 1)
