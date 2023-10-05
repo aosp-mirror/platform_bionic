@@ -9,7 +9,7 @@ that's invoked on file descriptor operations, and a library that implements a
 hook to perform and store backtraces for file descriptor creation.
 
 ### bionic hooks
-bionic provides a header in the `bionic_libc_platform_headers` header_lib at <[bionic/fdtrack.h](https://android.googlesource.com/platform/bionic/+/refs/heads/master/libc/platform/bionic/fdtrack.h)>.
+bionic provides a header in the `bionic_libc_platform_headers` header_lib at <[bionic/fdtrack.h](https://android.googlesource.com/platform/bionic/+/refs/heads/main/libc/platform/bionic/fdtrack.h)>.
 Register a callback with `android_fdtrack_compare_exchange_hook` to receive
 callbacks upon file descriptor creation and destruction. This function can be
 called at any point in order to start capturing events, but be sure to properly
@@ -18,7 +18,7 @@ context, but not vfork (bionic tracks whether a thread is vforked, and chooses
 not to call callbacks when this is the case).
 
 ### libfdtrack
-[libfdtrack](https://android.googlesource.com/platform/bionic/+/refs/heads/master/libfdtrack)
+[libfdtrack](https://android.googlesource.com/platform/bionic/+/refs/heads/main/libfdtrack)
 implements a library that uses libunwindstack to unwind and store fd creation backtraces.
 
 

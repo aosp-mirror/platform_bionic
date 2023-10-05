@@ -7,7 +7,7 @@ See also [bionic status](docs/status.md) for general libc/libm/libdl
 behavior changes.
 
 See also the
-[unwinder documentation](https://android.googlesource.com/platform/system/unwinding/+/refs/heads/master/libunwindstack/AndroidVersions.md)
+[unwinder documentation](https://android.googlesource.com/platform/system/unwinding/+/refs/heads/main/libunwindstack/AndroidVersions.md)
 for details about changes in stack unwinding (crash dumps) between
 different releases.
 
