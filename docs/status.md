@@ -11,7 +11,7 @@ for changes related to native code loading in various Android releases.
 ### POSIX
 
 You can see the current status with respect to POSIX in the form of tests:
-https://android.googlesource.com/platform/bionic/+/master/tests/headers/posix/
+https://android.googlesource.com/platform/bionic/+/main/tests/headers/posix/
 
 Some POSIX functionality is not supported by the Linux kernel, and
 is guarded with tests for `__linux__`. Other functionality is not
@@ -53,7 +53,7 @@ list of POSIX functions implemented by glibc but not by bionic.
 
 ### libc
 
-Current libc symbols: https://android.googlesource.com/platform/bionic/+/master/libc/libc.map.txt
+Current libc symbols: https://android.googlesource.com/platform/bionic/+/main/libc/libc.map.txt
 
 New libc functions in V (API level 35):
   * `tcgetwinsize`, `tcsetwinsize` (POSIX Issue 8 additions).
@@ -299,7 +299,7 @@ ndk-r21$ for i in `ls -1v platforms/android-*/arch-arm/usr/lib/libc.so` ; do \
 
 ### libm
 
-Current libm symbols: https://android.googlesource.com/platform/bionic/+/master/libm/libm.map.txt
+Current libm symbols: https://android.googlesource.com/platform/bionic/+/main/libm/libm.map.txt
 
 0 remaining missing C11/POSIX libm functions.
 
