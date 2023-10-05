@@ -265,7 +265,7 @@ int dup3(int __old_fd, int __new_fd, int __flags);
 int fsync(int __fd);
 int fdatasync(int __fd);
 
-/* See https://android.googlesource.com/platform/bionic/+/master/docs/32-bit-abi.md */
+/* See https://android.googlesource.com/platform/bionic/+/main/docs/32-bit-abi.md */
 #if defined(__USE_FILE_OFFSET64)
 int truncate(const char* _Nonnull __path, off_t __length) __RENAME(truncate64);
 off_t lseek(int __fd, off_t __offset, int __whence) __RENAME(lseek64);
