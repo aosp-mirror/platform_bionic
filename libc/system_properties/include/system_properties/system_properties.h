@@ -37,7 +37,25 @@
 #include "contexts_serialized.h"
 #include "contexts_split.h"
 
-constexpr int PROP_FILENAME_MAX = 1024;
+class PropertiesFilename {
+ public:
+  PropertiesFilename() = default;
+  PropertiesFilename(const char* dir, const char* file) {
+    if (snprintf(filename_, sizeof(filename_), "%s/%s", dir, file) >=
+        static_cast<int>(sizeof(filename_))) {
+      abort();
+    }
+  }
+  void operator=(const char* value) {
+    if (strlen(value) >= sizeof(filename_)) abort();
+    strcpy(filename_, value);
+  }
+  const char* c_str() { return filename_; }
+
+ private:
+  // Typically something like "/dev/__properties__/properties_serial".
+  char filename_[128];
+};
 
 class SystemProperties {
  public:
@@ -86,5 +104,5 @@ class SystemProperties {
   Contexts* contexts_;
 
   bool initialized_;
-  char property_filename_[PROP_FILENAME_MAX];
+  PropertiesFilename properties_filename_;
 };

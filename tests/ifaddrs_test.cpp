@@ -32,6 +32,8 @@
 #include <thread>
 #include <vector>
 
+#include "utils.h"
+
 TEST(ifaddrs, freeifaddrs_null) {
   freeifaddrs(nullptr);
 }
@@ -294,7 +296,7 @@ TEST(ifaddrs, errno_EMFILE) {
   while (true) {
     int fd = open("/dev/null", O_RDONLY|O_CLOEXEC);
     if (fd == -1) {
-      ASSERT_EQ(EMFILE, errno);
+      ASSERT_ERRNO(EMFILE);
       break;
     }
     fds.push_back(fd);
@@ -302,7 +304,7 @@ TEST(ifaddrs, errno_EMFILE) {
 
   ifaddrs* addrs;
   EXPECT_EQ(-1, getifaddrs(&addrs));
-  EXPECT_EQ(EMFILE, errno);
+  EXPECT_ERRNO(EMFILE);
 
   for (int fd : fds) close(fd);
 }

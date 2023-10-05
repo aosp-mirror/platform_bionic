@@ -59,6 +59,9 @@ cc_defaults {
         // Needed to test pthread_internal_t layout.
         "-Wno-invalid-offsetof",
 
+        // This warning does not provide any benefit to the tests.
+        "-Wno-reorder-init-list",
+
         // For glibc.
         "-D__STDC_LIMIT_MACROS",
     ],
@@ -674,22 +677,6 @@ cc_defaults {
             enabled: false,
         },
     },
-}
-
-// Ensures that FORTIFY checks aren't run when ASAN is on.
-cc_test {
-    name: "bionic-fortify-runtime-asan-test",
-    defaults: [
-        "bionic_clang_fortify_tests_w_flags",
-    ],
-    cflags: [
-        "-Werror",
-        "-D_FORTIFY_SOURCE=2",
-    ],
-    sanitize: {
-        address: true,
-    },
-    srcs: ["clang_fortify_asan.cpp"],
 }
 
 // Ensure we don't use FORTIFY'ed functions with the static analyzer/clang-tidy:

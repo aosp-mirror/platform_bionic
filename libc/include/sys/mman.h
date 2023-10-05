@@ -58,7 +58,7 @@ void* _Nonnull mmap(void* _Nullable __addr, size_t __size, int __prot, int __fla
 /**
  * mmap64() is a variant of mmap() that takes a 64-bit offset even on LP32.
  *
- * See https://android.googlesource.com/platform/bionic/+/master/docs/32-bit-abi.md
+ * See https://android.googlesource.com/platform/bionic/+/main/docs/32-bit-abi.md
  */
 void* _Nonnull mmap64(void* _Nullable __addr, size_t __size, int __prot, int __flags, int __fd, off64_t __offset);
 

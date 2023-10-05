@@ -220,7 +220,7 @@ TEST(STDIO_TEST, getdelim) {
   // It should set the end-of-file indicator for the stream, though.
   errno = 0;
   ASSERT_EQ(getdelim(&word_read, &allocated_length, ' ', fp), -1);
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
   ASSERT_TRUE(feof(fp));
 
   free(word_read);
@@ -239,12 +239,12 @@ TEST(STDIO_TEST, getdelim_invalid) {
   // The first argument can't be NULL.
   errno = 0;
   ASSERT_EQ(getdelim(nullptr, &buffer_length, ' ', fp), -1);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 
   // The second argument can't be NULL.
   errno = 0;
   ASSERT_EQ(getdelim(&buffer, nullptr, ' ', fp), -1);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   fclose(fp);
 #pragma clang diagnostic pop
 }
@@ -293,7 +293,7 @@ TEST(STDIO_TEST, getline) {
   // It should set the end-of-file indicator for the stream, though.
   errno = 0;
   ASSERT_EQ(getline(&line_read, &allocated_length, fp), -1);
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
   ASSERT_TRUE(feof(fp));
 
   free(line_read);
@@ -312,12 +312,12 @@ TEST(STDIO_TEST, getline_invalid) {
   // The first argument can't be NULL.
   errno = 0;
   ASSERT_EQ(getline(nullptr, &buffer_length, fp), -1);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 
   // The second argument can't be NULL.
   errno = 0;
   ASSERT_EQ(getline(&buffer, nullptr, fp), -1);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   fclose(fp);
 #pragma clang diagnostic pop
 }
@@ -916,7 +916,7 @@ TEST(STDIO_TEST, snprintf_asterisk_overflow) {
   ASSERT_EQ(12, snprintf(buf, sizeof(buf), "%.2147483646s%c", "hello world", '!'));
   ASSERT_EQ(12, snprintf(buf, sizeof(buf), "%.2147483647s%c", "hello world", '!'));
   ASSERT_EQ(-1, snprintf(buf, sizeof(buf), "%.2147483648s%c", "hello world", '!'));
-  ASSERT_EQ(ENOMEM, errno);
+  ASSERT_ERRNO(ENOMEM);
 }
 
 TEST(STDIO_TEST, swprintf_asterisk_overflow) {
@@ -931,7 +931,7 @@ TEST(STDIO_TEST, swprintf_asterisk_overflow) {
   ASSERT_EQ(12, swprintf(buf, sizeof(buf), L"%.2147483646s%c", "hello world", '!'));
   ASSERT_EQ(12, swprintf(buf, sizeof(buf), L"%.2147483647s%c", "hello world", '!'));
   ASSERT_EQ(-1, swprintf(buf, sizeof(buf), L"%.2147483648s%c", "hello world", '!'));
-  ASSERT_EQ(ENOMEM, errno);
+  ASSERT_ERRNO(ENOMEM);
 }
 
 // Inspired by https://github.com/landley/toybox/issues/163.
@@ -1402,30 +1402,30 @@ TEST(STDIO_TEST, cantwrite_EBADF) {
 
   errno = 0;
   EXPECT_EQ(EOF, putc('x', fp));
-  EXPECT_EQ(EBADF, errno);
+  EXPECT_ERRNO(EBADF);
 
   errno = 0;
   EXPECT_EQ(EOF, fprintf(fp, "hello"));
-  EXPECT_EQ(EBADF, errno);
+  EXPECT_ERRNO(EBADF);
 
   errno = 0;
   EXPECT_EQ(EOF, fwprintf(fp, L"hello"));
 #if defined(__BIONIC__)
-  EXPECT_EQ(EBADF, errno);
+  EXPECT_ERRNO(EBADF);
 #endif
 
   errno = 0;
   EXPECT_EQ(0U, fwrite("hello", 1, 2, fp));
-  EXPECT_EQ(EBADF, errno);
+  EXPECT_ERRNO(EBADF);
 
   errno = 0;
   EXPECT_EQ(EOF, fputs("hello", fp));
-  EXPECT_EQ(EBADF, errno);
+  EXPECT_ERRNO(EBADF);
 
   errno = 0;
   EXPECT_EQ(WEOF, fputwc(L'x', fp));
 #if defined(__BIONIC__)
-  EXPECT_EQ(EBADF, errno);
+  EXPECT_ERRNO(EBADF);
 #endif
 }
 
@@ -1540,7 +1540,7 @@ TEST(STDIO_TEST, fpos_t_and_seek) {
 
   // Reading from within a byte should produce an error.
   ASSERT_EQ(WEOF, fgetwc(fp));
-  ASSERT_EQ(EILSEQ, errno);
+  ASSERT_ERRNO(EILSEQ);
 
   // Reverting to a valid position should work.
   ASSERT_EQ(0, fsetpos(fp, &mb_two_bytes_pos));
@@ -1550,7 +1550,7 @@ TEST(STDIO_TEST, fpos_t_and_seek) {
   // produce an error.
   ASSERT_EQ(0, fsetpos(fp, &pos_inside_mb));
   ASSERT_EQ(WEOF, fgetwc(fp));
-  ASSERT_EQ(EILSEQ, errno);
+  ASSERT_ERRNO(EILSEQ);
 
   ASSERT_EQ(0, fclose(fp));
 }
@@ -1951,7 +1951,7 @@ TEST(STDIO_TEST, fmemopen_fileno) {
   ASSERT_TRUE(fp != nullptr);
   errno = 0;
   ASSERT_EQ(-1, fileno(fp));
-  ASSERT_EQ(EBADF, errno);
+  ASSERT_ERRNO(EBADF);
   ASSERT_EQ(0, fclose(fp));
 }
 
@@ -1999,12 +1999,12 @@ TEST(STDIO_TEST, open_memstream_EINVAL) {
   // Invalid buffer.
   errno = 0;
   ASSERT_EQ(nullptr, open_memstream(nullptr, &size));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 
   // Invalid size.
   errno = 0;
   ASSERT_EQ(nullptr, open_memstream(&p, nullptr));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 #pragma clang diagnostic pop
 #else
   GTEST_SKIP() << "glibc is broken";
@@ -2139,7 +2139,7 @@ static void test_fread_from_write_only_stream(size_t n) {
   std::vector<char> buf(n, 0);
   errno = 0;
   ASSERT_EQ(0U, fread(&buf[0], n, 1, fp));
-  ASSERT_EQ(EBADF, errno);
+  ASSERT_ERRNO(EBADF);
   ASSERT_TRUE(ferror(fp));
   ASSERT_FALSE(feof(fp));
   fclose(fp);
@@ -2271,7 +2271,7 @@ TEST(STDIO_TEST, fclose_invalidates_fd) {
   // especially because they might actually correspond to a real stream.
   errno = 0;
   ASSERT_EQ(-1, fileno(stdin));
-  ASSERT_EQ(EBADF, errno);
+  ASSERT_ERRNO(EBADF);
 }
 
 TEST(STDIO_TEST, fseek_ftell_unseekable) {
@@ -2283,17 +2283,17 @@ TEST(STDIO_TEST, fseek_ftell_unseekable) {
   // Check that ftell balks on an unseekable FILE*.
   errno = 0;
   ASSERT_EQ(-1, ftell(fp));
-  ASSERT_EQ(ESPIPE, errno);
+  ASSERT_ERRNO(ESPIPE);
 
   // SEEK_CUR is rewritten as SEEK_SET internally...
   errno = 0;
   ASSERT_EQ(-1, fseek(fp, 0, SEEK_CUR));
-  ASSERT_EQ(ESPIPE, errno);
+  ASSERT_ERRNO(ESPIPE);
 
   // ...so it's worth testing the direct seek path too.
   errno = 0;
   ASSERT_EQ(-1, fseek(fp, 0, SEEK_SET));
-  ASSERT_EQ(ESPIPE, errno);
+  ASSERT_ERRNO(ESPIPE);
 
   fclose(fp);
 #else
@@ -2305,7 +2305,7 @@ TEST(STDIO_TEST, funopen_EINVAL) {
 #if defined(__BIONIC__)
   errno = 0;
   ASSERT_EQ(nullptr, funopen(nullptr, nullptr, nullptr, nullptr, nullptr));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 #else
   GTEST_SKIP() << "glibc uses fopencookie instead";
 #endif
@@ -2326,7 +2326,7 @@ TEST(STDIO_TEST, funopen_seek) {
   EXPECT_EQ(0xfedcba12LL, pos);
 #else
   EXPECT_EQ(-1, fgetpos(fp, &pos)) << strerror(errno);
-  EXPECT_EQ(EOVERFLOW, errno);
+  EXPECT_ERRNO(EOVERFLOW);
 #endif
 
   FILE* fp64 = funopen64(nullptr, read_fn, nullptr, seek64_fn, nullptr);
@@ -2428,24 +2428,24 @@ TEST(STDIO_TEST, fseek_fseeko_EINVAL) {
   // Bad whence.
   errno = 0;
   ASSERT_EQ(-1, fseek(fp, 0, 123));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   errno = 0;
   ASSERT_EQ(-1, fseeko(fp, 0, 123));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   errno = 0;
   ASSERT_EQ(-1, fseeko64(fp, 0, 123));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 
   // Bad offset.
   errno = 0;
   ASSERT_EQ(-1, fseek(fp, -1, SEEK_SET));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   errno = 0;
   ASSERT_EQ(-1, fseeko(fp, -1, SEEK_SET));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   errno = 0;
   ASSERT_EQ(-1, fseeko64(fp, -1, SEEK_SET));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 
   fclose(fp);
 }
@@ -2464,20 +2464,20 @@ TEST(STDIO_TEST, remove) {
   TemporaryFile tf;
   ASSERT_EQ(0, remove(tf.path));
   ASSERT_EQ(-1, lstat(tf.path, &sb));
-  ASSERT_EQ(ENOENT, errno);
+  ASSERT_ERRNO(ENOENT);
 
   TemporaryDir td;
   ASSERT_EQ(0, remove(td.path));
   ASSERT_EQ(-1, lstat(td.path, &sb));
-  ASSERT_EQ(ENOENT, errno);
+  ASSERT_ERRNO(ENOENT);
 
   errno = 0;
   ASSERT_EQ(-1, remove(tf.path));
-  ASSERT_EQ(ENOENT, errno);
+  ASSERT_ERRNO(ENOENT);
 
   errno = 0;
   ASSERT_EQ(-1, remove(td.path));
-  ASSERT_EQ(ENOENT, errno);
+  ASSERT_ERRNO(ENOENT);
 }
 
 TEST_F(STDIO_DEATHTEST, snprintf_30445072_known_buffer_size) {
@@ -2521,6 +2521,24 @@ TEST(STDIO_TEST, wprintf_m) {
   EXPECT_SWPRINTF(L"<Unknown error -1>", L"<%m>");
   errno = EINVAL;
   EXPECT_SWPRINTF(L"<Invalid argument>", L"<%m>");
+}
+
+TEST(STDIO_TEST, printf_hash_m) {
+  errno = 0;
+  EXPECT_SNPRINTF("<0>", "<%#m>");
+  errno = -1;
+  EXPECT_SNPRINTF("<-1>", "<%#m>");
+  errno = EINVAL;
+  EXPECT_SNPRINTF("<EINVAL>", "<%#m>");
+}
+
+TEST(STDIO_TEST, wprintf_hash_m) {
+  errno = 0;
+  EXPECT_SWPRINTF(L"<0>", L"<%#m>");
+  errno = -1;
+  EXPECT_SWPRINTF(L"<-1>", L"<%#m>");
+  errno = EINVAL;
+  EXPECT_SWPRINTF(L"<EINVAL>", L"<%#m>");
 }
 
 TEST(STDIO_TEST, printf_m_does_not_clobber_strerror) {
@@ -2688,7 +2706,7 @@ TEST(STDIO_TEST, fseek_overflow_32bit) {
 #if defined(__BIONIC__) && !defined(__LP64__)
   ASSERT_EQ(0, fseek(fp, 0x7fff'ffff, SEEK_SET));
   ASSERT_EQ(-1, fseek(fp, 1, SEEK_CUR));
-  ASSERT_EQ(EOVERFLOW, errno);
+  ASSERT_ERRNO(EOVERFLOW);
 #endif
 
   // Neither Bionic nor glibc implement the overflow checking for SEEK_END.
@@ -2807,7 +2825,7 @@ TEST(STDIO_TEST, renameat2) {
 
   // Rename and check it moved.
   ASSERT_EQ(-1, renameat2(dirfd, "old", dirfd, "new", RENAME_NOREPLACE));
-  ASSERT_EQ(EEXIST, errno);
+  ASSERT_ERRNO(EEXIST);
 #endif
 }
 
@@ -2830,25 +2848,25 @@ TEST(STDIO_TEST, fdopen_failures) {
   errno = 0;
   fp = fdopen(fd, "nonsense");
   ASSERT_TRUE(fp == nullptr);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 
   // Mode that isn't a subset of the fd's actual mode.
   errno = 0;
   fp = fdopen(fd, "w");
   ASSERT_TRUE(fp == nullptr);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 
   // Can't set append on the underlying fd.
   errno = 0;
   fp = fdopen(fd, "a");
   ASSERT_TRUE(fp == nullptr);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 
   // Bad fd.
   errno = 0;
   fp = fdopen(-1, "re");
   ASSERT_TRUE(fp == nullptr);
-  ASSERT_EQ(EBADF, errno);
+  ASSERT_ERRNO(EBADF);
 
   close(fd);
 }
@@ -2857,14 +2875,14 @@ TEST(STDIO_TEST, fmemopen_invalid_mode) {
   errno = 0;
   FILE* fp = fmemopen(nullptr, 16, "nonsense");
   ASSERT_TRUE(fp == nullptr);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(STDIO_TEST, fopen_invalid_mode) {
   errno = 0;
   FILE* fp = fopen("/proc/version", "nonsense");
   ASSERT_TRUE(fp == nullptr);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(STDIO_TEST, freopen_invalid_mode) {
@@ -2874,7 +2892,7 @@ TEST(STDIO_TEST, freopen_invalid_mode) {
   errno = 0;
   fp = freopen("/proc/version", "nonsense", fp);
   ASSERT_TRUE(fp == nullptr);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(STDIO_TEST, asprintf_smoke) {
@@ -2888,7 +2906,7 @@ TEST(STDIO_TEST, fopen_ENOENT) {
   errno = 0;
   FILE* fp = fopen("/proc/does-not-exist", "re");
   ASSERT_TRUE(fp == nullptr);
-  ASSERT_EQ(ENOENT, errno);
+  ASSERT_ERRNO(ENOENT);
 }
 
 static void tempnam_test(bool has_TMPDIR, const char* dir, const char* prefix, const char* re) {

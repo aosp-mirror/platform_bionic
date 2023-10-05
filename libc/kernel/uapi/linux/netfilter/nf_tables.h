@@ -94,6 +94,7 @@ enum nf_tables_msg_types {
   NFT_MSG_DESTROYSETELEM,
   NFT_MSG_DESTROYOBJ,
   NFT_MSG_DESTROYFLOWTABLE,
+  NFT_MSG_GETSETELEM_RESET,
   NFT_MSG_MAX,
 };
 enum nft_list_attributes {
@@ -448,6 +449,7 @@ enum nft_exthdr_op {
   NFT_EXTHDR_OP_TCPOPT,
   NFT_EXTHDR_OP_IPV4,
   NFT_EXTHDR_OP_SCTP,
+  NFT_EXTHDR_OP_DCCP,
   __NFT_EXTHDR_OP_MAX
 };
 #define NFT_EXTHDR_OP_MAX (__NFT_EXTHDR_OP_MAX - 1)

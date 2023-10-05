@@ -29,6 +29,7 @@
 #include <vector>
 
 #include "buffer_tests.h"
+#include "utils.h"
 
 #if defined(NOFORTIFY)
 #define STRING_TEST string_nofortify
@@ -123,7 +124,7 @@ TEST(STRING_TEST, gnu_strerror_r) {
   ASSERT_EQ(buf, strerror_r(4567, buf, 2));
   ASSERT_STREQ("U", buf);
   // The GNU strerror_r doesn't set errno (the POSIX one sets it to ERANGE).
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
 #else
   GTEST_SKIP() << "musl doesn't have GNU strerror_r";
 #endif
@@ -1483,7 +1484,7 @@ static void TestBasename(const char* in, const char* expected_out) {
   errno = 0;
   const char* out = basename(in);
   ASSERT_STREQ(expected_out, out) << in;
-  ASSERT_EQ(0, errno) << in;
+  ASSERT_ERRNO(0) << in;
 }
 #endif
 
@@ -1683,5 +1684,18 @@ TEST(STRING_TEST, memset_explicit_smoke) {
   ASSERT_TRUE(memcmp(buf, "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", sizeof(buf)) == 0);
 #else
   GTEST_SKIP() << "memset_explicit not available";
+#endif
+}
+
+TEST(STRING_TEST, strerrorname_np) {
+#if defined(__BIONIC__)
+  ASSERT_STREQ("0", strerrorname_np(0));
+  ASSERT_STREQ("EINVAL", strerrorname_np(EINVAL));
+  ASSERT_STREQ("ENOSYS", strerrorname_np(ENOSYS));
+
+  ASSERT_EQ(nullptr, strerrorname_np(-1));
+  ASSERT_EQ(nullptr, strerrorname_np(666));
+#else
+  GTEST_SKIP() << "strerrorname_np not available";
 #endif
 }

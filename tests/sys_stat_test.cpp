@@ -22,6 +22,8 @@
 #include <android-base/file.h>
 #include <gtest/gtest.h>
 
+#include "utils.h"
+
 #if defined(__BIONIC__)
 #define HAVE_STATX
 #elif defined(__GLIBC_PREREQ)
@@ -59,19 +61,19 @@ TEST(sys_stat, futimens_EBADF) {
   times[1].tv_sec = 456;
   times[1].tv_nsec = 0;
   ASSERT_EQ(-1, futimens(-1, times));
-  ASSERT_EQ(EBADF, errno);
+  ASSERT_ERRNO(EBADF);
 }
 
 TEST(sys_stat, mkfifo_failure) {
   errno = 0;
   ASSERT_EQ(-1, mkfifo("/", 0666));
-  ASSERT_EQ(EEXIST, errno);
+  ASSERT_ERRNO(EEXIST);
 }
 
 TEST(sys_stat, mkfifoat_failure) {
   errno = 0;
   ASSERT_EQ(-1, mkfifoat(-2, "x", 0666));
-  ASSERT_EQ(EBADF, errno);
+  ASSERT_ERRNO(EBADF);
 }
 
 TEST(sys_stat, mkfifo) {
@@ -107,9 +109,7 @@ TEST(sys_stat, statx) {
 #if defined(HAVE_STATX)
   struct statx sx;
   int rc = statx(AT_FDCWD, "/proc/version", AT_STATX_SYNC_AS_STAT, STATX_ALL, &sx);
-  if (rc == -1 && errno == ENOSYS) {
-    GTEST_SKIP() << "statx returned ENOSYS";
-  }
+  if (rc == -1 && errno == ENOSYS) GTEST_SKIP() << "no statx() in this kernel";
   ASSERT_EQ(0, rc);
   struct stat64 sb;
   ASSERT_EQ(0, stat64("/proc/version", &sb));
@@ -122,48 +122,48 @@ TEST(sys_stat, statx) {
 
 TEST(sys_stat, fchmod_EBADF) {
   ASSERT_EQ(-1, fchmod(-1, 0751));
-  ASSERT_EQ(EBADF, errno);
+  ASSERT_ERRNO(EBADF);
 }
 
 TEST(sys_stat, fchmodat_EFAULT_file) {
   ASSERT_EQ(-1, fchmodat(AT_FDCWD, (char *) 0x1, 0751, 0));
-  ASSERT_EQ(EFAULT, errno);
+  ASSERT_ERRNO(EFAULT);
 }
 
 TEST(sys_stat, fchmodat_AT_SYMLINK_NOFOLLOW_EFAULT_file) {
   ASSERT_EQ(-1, fchmodat(AT_FDCWD, (char *) 0x1, 0751, AT_SYMLINK_NOFOLLOW));
 #if defined(__BIONIC__)
-  ASSERT_EQ(EFAULT, errno);
+  ASSERT_ERRNO(EFAULT);
 #else
   // glibc 2.19 does not implement AT_SYMLINK_NOFOLLOW and always
   // returns ENOTSUP
-  ASSERT_EQ(ENOTSUP, errno);
+  ASSERT_ERRNO(ENOTSUP);
 #endif
 }
 
 TEST(sys_stat, fchmodat_bad_flags) {
   ASSERT_EQ(-1, fchmodat(AT_FDCWD, "/blah", 0751, ~AT_SYMLINK_NOFOLLOW));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(sys_stat, fchmodat_bad_flags_ALL) {
   ASSERT_EQ(-1, fchmodat(AT_FDCWD, "/blah", 0751, ~0));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(sys_stat, fchmodat_nonexistant_file) {
   ASSERT_EQ(-1, fchmodat(AT_FDCWD, "/blah", 0751, 0));
-  ASSERT_EQ(ENOENT, errno);
+  ASSERT_ERRNO(ENOENT);
 }
 
 TEST(sys_stat, fchmodat_AT_SYMLINK_NOFOLLOW_nonexistant_file) {
   ASSERT_EQ(-1, fchmodat(AT_FDCWD, "/blah", 0751, AT_SYMLINK_NOFOLLOW));
 #if defined(__BIONIC__)
-  ASSERT_EQ(ENOENT, errno);
+  ASSERT_ERRNO(ENOENT);
 #else
   // glibc 2.19 does not implement AT_SYMLINK_NOFOLLOW and always
   // returns ENOTSUP
-  ASSERT_EQ(ENOTSUP, errno);
+  ASSERT_ERRNO(ENOTSUP);
 #endif
 }
 
@@ -188,13 +188,13 @@ TEST(sys_stat, fchmodat_AT_SYMLINK_NOFOLLOW_file) {
 
 #if defined(__BIONIC__)
   ASSERT_EQ(0, result);
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
   AssertFileModeEquals(0751, tf.path);
 #else
   // glibc 2.19 does not implement AT_SYMLINK_NOFOLLOW and always
   // returns ENOTSUP
   ASSERT_EQ(-1, result);
-  ASSERT_EQ(ENOTSUP, errno);
+  ASSERT_ERRNO(ENOTSUP);
 #endif
 }
 
@@ -220,7 +220,7 @@ TEST(sys_stat, fchmodat_dangling_symlink) {
 
   ASSERT_EQ(0, symlink(target, linkname));
   ASSERT_EQ(-1, fchmodat(AT_FDCWD, linkname, 0751, 0));
-  ASSERT_EQ(ENOENT, errno);
+  ASSERT_ERRNO(ENOENT);
   unlink(linkname);
 }
 
@@ -246,7 +246,7 @@ TEST(sys_stat, fchmodat_AT_SYMLINK_NOFOLLOW_with_symlink) {
     AssertSymlinkModeEquals(0751, linkname);
   } else {
     ASSERT_EQ(-1, result);
-    ASSERT_EQ(ENOTSUP, errno);
+    ASSERT_ERRNO(ENOTSUP);
   }
 
   // Target file mode shouldn't be modified.
@@ -269,7 +269,7 @@ TEST(sys_stat, fchmodat_AT_SYMLINK_NOFOLLOW_with_dangling_symlink) {
     AssertSymlinkModeEquals(0751, linkname);
   } else {
     ASSERT_EQ(-1, result);
-    ASSERT_EQ(ENOTSUP, errno);
+    ASSERT_ERRNO(ENOTSUP);
   }
 
   unlink(linkname);
@@ -277,14 +277,14 @@ TEST(sys_stat, fchmodat_AT_SYMLINK_NOFOLLOW_with_dangling_symlink) {
 
 TEST(sys_stat, faccessat_EINVAL) {
   ASSERT_EQ(-1, faccessat(AT_FDCWD, "/dev/null", F_OK, ~AT_SYMLINK_NOFOLLOW));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 #if defined(__BIONIC__)
   ASSERT_EQ(-1, faccessat(AT_FDCWD, "/dev/null", ~(R_OK | W_OK | X_OK), 0));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 #else
   ASSERT_EQ(0, faccessat(AT_FDCWD, "/dev/null", ~(R_OK | W_OK | X_OK), AT_SYMLINK_NOFOLLOW));
   ASSERT_EQ(-1, faccessat(AT_FDCWD, "/dev/null", ~(R_OK | W_OK | X_OK), 0));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 #endif
 }
 
@@ -292,7 +292,7 @@ TEST(sys_stat, faccessat_AT_SYMLINK_NOFOLLOW_EINVAL) {
 #if defined(__BIONIC__)
   // Android doesn't support AT_SYMLINK_NOFOLLOW
   ASSERT_EQ(-1, faccessat(AT_FDCWD, "/dev/null", F_OK, AT_SYMLINK_NOFOLLOW));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 #else
   ASSERT_EQ(0, faccessat(AT_FDCWD, "/dev/null", F_OK, AT_SYMLINK_NOFOLLOW));
 #endif
@@ -309,8 +309,8 @@ TEST(sys_stat, faccessat_nonexistant) {
   ASSERT_EQ(-1, faccessat(AT_FDCWD, "/blah", F_OK, AT_SYMLINK_NOFOLLOW));
 #if defined(__BIONIC__)
   // Android doesn't support AT_SYMLINK_NOFOLLOW
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 #else
-  ASSERT_EQ(ENOENT, errno);
+  ASSERT_ERRNO(ENOENT);
 #endif
 }
