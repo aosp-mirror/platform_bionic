@@ -46,7 +46,7 @@ Assertion failures are probably the most innocuous result that can arise from th
 
 fdsan attempts to detect and/or prevent file descriptor mismanagement by enforcing file descriptor ownership. Like how most memory allocations can have their ownership handled by types such as `std::unique_ptr`, almost all file descriptors can be associated with a unique owner which is responsible for their closure. fdsan provides functions to associate a file descriptor with an owner; if someone tries to close a file descriptor that they don't own, depending on configuration, either a warning is emitted, or the process aborts.
 
-The way this is implemented is by providing functions to set a 64-bit closure tag on a file descriptor. The tag consists of an 8-bit type byte that identifies the type of the owner (`enum android_fdan_owner_type` in [`<android/fdsan.h>`](https://android.googlesource.com/platform/bionic/+/master/libc/include/android/fdsan.h)), and a 56-bit value. The value should ideally be something that uniquely identifies the object (object address for native objects and `System.identityHashCode` for Java objects), but in cases where it's hard to derive an identifier for the "owner" that should close a file descriptor, even using the same value for all file descriptors in the module can be useful, since it'll catch other code that closes your file descriptors.
+The way this is implemented is by providing functions to set a 64-bit closure tag on a file descriptor. The tag consists of an 8-bit type byte that identifies the type of the owner (`enum android_fdan_owner_type` in [`<android/fdsan.h>`](https://android.googlesource.com/platform/bionic/+/main/libc/include/android/fdsan.h)), and a 56-bit value. The value should ideally be something that uniquely identifies the object (object address for native objects and `System.identityHashCode` for Java objects), but in cases where it's hard to derive an identifier for the "owner" that should close a file descriptor, even using the same value for all file descriptors in the module can be useful, since it'll catch other code that closes your file descriptors.
 
 If a file descriptor that's been marked with a tag is closed with an incorrect tag, or without a tag, we know something has gone wrong, and can generate diagnostics or abort.
 
@@ -62,7 +62,7 @@ fdsan has four severity levels:
  - fatal (`ANDROID_FDSAN_ERROR_LEVEL_FATAL`)
    - Abort upon detecting an error.
 
-In Android Q, fdsan has a global default of warn-once. fdsan can be made more or less strict at runtime via the `android_fdsan_set_error_level` function in [`<android/fdsan.h>`](https://android.googlesource.com/platform/bionic/+/master/libc/include/android/fdsan.h).
+In Android Q, fdsan has a global default of warn-once. fdsan can be made more or less strict at runtime via the `android_fdsan_set_error_level` function in [`<android/fdsan.h>`](https://android.googlesource.com/platform/bionic/+/main/libc/include/android/fdsan.h).
 
 The likelihood of fdsan catching a file descriptor error is proportional to the percentage of file descriptors in your process that are tagged with an owner.
 
