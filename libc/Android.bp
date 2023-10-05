@@ -3123,3 +3123,10 @@ cc_genrule {
         },
     },
 }
+
+// headers that will be placed on the include path when running versioner in bazel
+// this module should be a no-op in soong
+filegroup {
+   name: "versioner-dependencies",
+   srcs: ["versioner-dependencies/**/*"],
+}
