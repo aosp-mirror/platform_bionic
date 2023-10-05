@@ -361,7 +361,7 @@ int mallopt(int __option, int __value) __INTRODUCED_IN(26);
  *
  * Available since API level 28.
  *
- * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/master/libc/malloc_hooks/README.md)
+ * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/main/libc/malloc_hooks/README.md)
  */
 extern void* _Nonnull (*volatile _Nonnull __malloc_hook)(size_t __byte_count, const void* _Nonnull __caller) __INTRODUCED_IN(28);
 
@@ -372,7 +372,7 @@ extern void* _Nonnull (*volatile _Nonnull __malloc_hook)(size_t __byte_count, co
  *
  * Available since API level 28.
  *
- * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/master/libc/malloc_hooks/README.md)
+ * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/main/libc/malloc_hooks/README.md)
  */
 extern void* _Nonnull (*volatile _Nonnull __realloc_hook)(void* _Nullable __ptr, size_t __byte_count, const void* _Nonnull __caller) __INTRODUCED_IN(28);
 
@@ -383,7 +383,7 @@ extern void* _Nonnull (*volatile _Nonnull __realloc_hook)(void* _Nullable __ptr,
  *
  * Available since API level 28.
  *
- * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/master/libc/malloc_hooks/README.md)
+ * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/main/libc/malloc_hooks/README.md)
  */
 extern void (*volatile _Nonnull __free_hook)(void* _Nullable __ptr, const void* _Nonnull __caller) __INTRODUCED_IN(28);
 
@@ -394,7 +394,7 @@ extern void (*volatile _Nonnull __free_hook)(void* _Nullable __ptr, const void* 
  *
  * Available since API level 28.
  *
- * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/master/libc/malloc_hooks/README.md)
+ * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/main/libc/malloc_hooks/README.md)
  */
 extern void* _Nonnull (*volatile _Nonnull __memalign_hook)(size_t __alignment, size_t __byte_count, const void* _Nonnull __caller) __INTRODUCED_IN(28);
 
