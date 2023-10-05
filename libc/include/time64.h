@@ -24,9 +24,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-Origin: http://code.google.com/p/y2038
-Modified for Bionic by the Android Open Source Project
-
 */
 #ifndef TIME64_H
 #define TIME64_H
