@@ -109,5 +109,4 @@ struct can_filter {
   canid_t can_mask;
 };
 #define CAN_INV_FILTER 0x20000000U
-#define CAN_RAW_FILTER_MAX 512
 #endif

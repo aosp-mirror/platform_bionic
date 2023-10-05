@@ -322,6 +322,7 @@ ssize_t vmsplice(int, const struct iovec*, size_t, unsigned int)  all
 int __epoll_create1:epoll_create1(int)  all
 int epoll_ctl(int, int op, int, struct epoll_event*)  all
 int __epoll_pwait:epoll_pwait(int, struct epoll_event*, int, int, const sigset64_t*, size_t)  all
+int __epoll_pwait2:epoll_pwait2(int, struct epoll_event*, int, const timespec64*, const sigset64_t*, size_t)  all
 
 int __eventfd:eventfd2(unsigned int, int)  all
 

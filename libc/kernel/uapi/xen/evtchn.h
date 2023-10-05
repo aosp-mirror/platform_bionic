@@ -43,4 +43,8 @@ struct ioctl_evtchn_notify {
 struct ioctl_evtchn_restrict_domid {
   domid_t domid;
 };
+#define IOCTL_EVTCHN_BIND_STATIC _IOC(_IOC_NONE, 'E', 7, sizeof(struct ioctl_evtchn_bind))
+struct ioctl_evtchn_bind {
+  unsigned int port;
+};
 #endif
