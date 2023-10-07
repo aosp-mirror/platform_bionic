@@ -185,4 +185,4 @@ Some devices have a `perf-setup.sh` script that locks CPU and GPU frequencies. S
 benchmarks appear to be using the script. For more information:
  * run `get_build_var BOARD_PERFSETUP_SCRIPT`
  * run `m perf-setup` to install the script into `${OUT}/data/local/tmp/perf-setup.sh`
- * see: https://android.googlesource.com/platform/platform_testing/+/refs/heads/master/scripts/perf-setup/
+ * see: https://android.googlesource.com/platform/platform_testing/+/refs/heads/main/scripts/perf-setup/
