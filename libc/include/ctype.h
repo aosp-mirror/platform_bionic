@@ -73,15 +73,6 @@ __BEGIN_DECLS
 /** Internal implementation detail. Do not use. */
 extern const char* _ctype_;
 
-/** Returns true if `ch` is in `[A-Za-z0-9]`. */
-__BIONIC_CTYPE_INLINE int isalnum(int __ch) {
-  // `isalnum(c)` is `isalpha(c) || isdigit(c)`, but there's no obvious way
-  // to simplify that, and the table lookup is just slightly faster...
-  // Note that this is unsafe for inputs less than -1 (EOF) or greater than
-  // 0xff. This is true of other C libraries too.
-  return (_ctype_[__ch + 1] & (_CTYPE_U|_CTYPE_L|_CTYPE_N));
-}
-
 /** Returns true if `ch` is in `[A-Za-z]`. */
 __BIONIC_CTYPE_INLINE int isalpha(int __ch) {
   return (__ch >= 'A' && __ch <= 'Z') || (__ch >= 'a' && __ch <= 'z');
@@ -117,15 +108,6 @@ __BIONIC_CTYPE_INLINE int isprint(int __ch) {
   return (__ch >= ' ' && __ch <= '~');
 }
 
-/** Returns true if `ch` is punctuation. */
-__BIONIC_CTYPE_INLINE int ispunct(int __ch) {
-  // `ispunct(c)` is `isgraph(c) && !isalnum(c)`, but there's no obvious way
-  // to simplify that, and the table lookup is just slightly faster...
-  // Note that this is unsafe for inputs less than -1 (EOF) or greater than
-  // 0xff. This is true of other C libraries too.
-  return (_ctype_[__ch + 1] & _CTYPE_P);
-}
-
 /** Returns true if `ch` is in `[ \f\n\r\t\v]`. */
 __BIONIC_CTYPE_INLINE int isspace(int __ch) {
   return __ch == ' ' || (__ch >= '\t' && __ch <= '\r');
@@ -139,6 +121,16 @@ __BIONIC_CTYPE_INLINE int isupper(int __ch) {
 /** Returns true if `ch` is in `[0-9A-Fa-f]`. */
 __BIONIC_CTYPE_INLINE int isxdigit(int __ch) {
   return (__ch >= '0' && __ch <= '9') || (__ch >= 'a' && __ch <= 'f') || (__ch >= 'A' && __ch <= 'F');
+}
+
+/** Returns true if `ch` is in `[A-Za-z0-9]`. */
+__BIONIC_CTYPE_INLINE int isalnum(int __ch) {
+  return isalpha(__ch) || isdigit(__ch);
+}
+
+/** Returns true if `ch` is punctuation. */
+__BIONIC_CTYPE_INLINE int ispunct(int __ch) {
+  return isgraph(__ch) && !isalnum(__ch);
 }
 
 /**
