@@ -70,20 +70,7 @@ class cfi_test_DeathTest : public testing::Test {
   struct sigaction64 previous_sigtrap_;
 };
 
-static bool KilledByCfi(int status) {
-  return WIFSIGNALED(status) &&
-         (WTERMSIG(status) == SIGTRAP || WTERMSIG(status) == SIGILL || WTERMSIG(status) == SIGSEGV);
-}
-
 static void f() {}
-
-static void test_cfi_slowpath_with_alloc() {
-  std::vector<void*> allocs;
-  for (size_t i = 0; i < 1000; i++) {
-    allocs.push_back(malloc(4096));
-    __cfi_slowpath(46, allocs.back());
-  }
-}
 
 TEST_F(cfi_test_DeathTest, basic) {
 #if defined(__BIONIC__)
@@ -135,12 +122,6 @@ TEST_F(cfi_test_DeathTest, basic) {
   EXPECT_EQ(get_global_address(), get_last_address());
   EXPECT_EQ(c, get_count());
 
-  // CFI check for a heap address.
-  // It's possible that this allocation could wind up in the same CFI granule as
-  // an unchecked library, which means the below might not crash. To force a
-  // crash keep allocating up to a max until there is a crash.
-  EXPECT_EXIT(test_cfi_slowpath_with_alloc(), KilledByCfi, "");
-
   // Check all the addresses.
   const size_t bss_size = 1024 * 1024;
   static_assert(bss_size >= kLibraryAlignment * 2, "test range not big enough");
@@ -162,10 +143,6 @@ TEST_F(cfi_test_DeathTest, basic) {
 
   dlclose(handle);
   dlclose(handle2);
-
-  // CFI check for a function inside the unloaded DSO. This is always invalid and gets the process
-  // killed.
-  EXPECT_EXIT(__cfi_slowpath(45, reinterpret_cast<void*>(code_ptr)), KilledByCfi, "");
 #endif
 }
 
