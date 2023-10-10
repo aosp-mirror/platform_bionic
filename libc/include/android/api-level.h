@@ -40,7 +40,7 @@
  * @brief Functions and constants for dealing with multiple API levels.
  *
  * See
- * https://android.googlesource.com/platform/bionic/+/master/docs/defines.md.
+ * https://android.googlesource.com/platform/bionic/+/main/docs/defines.md.
  */
 
 #include <sys/cdefs.h>
@@ -50,7 +50,7 @@ __BEGIN_DECLS
 /**
  * Magic version number for an Android OS build which has not yet turned
  * into an official release, for comparison against `__ANDROID_API__`. See
- * https://android.googlesource.com/platform/bionic/+/master/docs/defines.md.
+ * https://android.googlesource.com/platform/bionic/+/main/docs/defines.md.
  */
 #define __ANDROID_API_FUTURE__ 10000
 
@@ -91,7 +91,7 @@ __BEGIN_DECLS
  *
  * See android_get_device_api_level(),
  * android_get_application_target_sdk_version() and
- * https://android.googlesource.com/platform/bionic/+/master/docs/defines.md.
+ * https://android.googlesource.com/platform/bionic/+/main/docs/defines.md.
  */
 #define __ANDROID_API__ __ANDROID_API_FUTURE__
 #endif

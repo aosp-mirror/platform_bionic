@@ -38,7 +38,7 @@
 
 __BEGIN_DECLS
 
-/* See https://android.googlesource.com/platform/bionic/+/master/docs/32-bit-abi.md */
+/* See https://android.googlesource.com/platform/bionic/+/main/docs/32-bit-abi.md */
 #if defined(__USE_FILE_OFFSET64)
 ssize_t sendfile(int __out_fd, int __in_fd, off_t* _Nullable __offset, size_t __count) __RENAME(sendfile64);
 #else
