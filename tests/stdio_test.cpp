@@ -2153,6 +2153,27 @@ TEST(STDIO_TEST, fread_from_write_only_stream_fast_path) {
   test_fread_from_write_only_stream(64*1024);
 }
 
+TEST(STDIO_TEST, fwrite_to_read_only_stream) {
+  FILE* fp = fopen("/proc/version", "re");
+  ASSERT_FALSE(ferror(fp));
+  ASSERT_EQ(0U, fwrite("hello", 1, 5, fp));
+  ASSERT_TRUE(ferror(fp));
+}
+
+TEST(STDIO_TEST, fputc_to_read_only_stream) {
+  FILE* fp = fopen("/proc/version", "re");
+  ASSERT_FALSE(ferror(fp));
+  ASSERT_EQ(EOF, fputc('x', fp));
+  ASSERT_TRUE(ferror(fp));
+}
+
+TEST(STDIO_TEST, fprintf_to_read_only_stream) {
+  FILE* fp = fopen("/proc/version", "re");
+  ASSERT_FALSE(ferror(fp));
+  ASSERT_EQ(-1, fprintf(fp, "%s%d", "hello", 123));
+  ASSERT_TRUE(ferror(fp));
+}
+
 static void test_fwrite_after_fread(size_t n) {
   TemporaryFile tf;
 
