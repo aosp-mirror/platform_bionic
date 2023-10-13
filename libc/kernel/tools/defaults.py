@@ -63,6 +63,7 @@ kernel_token_replacements = {
     # The kernel usage of __unused for unused struct fields conflicts with the macro defined in <sys/cdefs.h>.
     "__unused": "__linux_unused",
     # The kernel usage of C++ keywords causes problems for C++ code so rename.
+    "class": "__linux_class",
     "private": "__linux_private",
     "virtual": "__linux_virtual",
     # The non-64 stuff is legacy; msqid64_ds/ipc64_perm is what userspace wants.
@@ -125,6 +126,8 @@ kernel_known_generic_statics = set(
           # These are required to support the above functions.
           "__fswahw32",
           "__fswahb32",
+          # This is used by various macros in <linux/ioprio.h>.
+          "ioprio_value",
         ]
     )
 
