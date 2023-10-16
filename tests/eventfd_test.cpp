@@ -34,7 +34,7 @@ TEST(eventfd, smoke) {
 
   // Reading clears the counter.
   ASSERT_EQ(-1, eventfd_read(fd, &value));
-  ASSERT_EQ(EAGAIN, errno);
+  ASSERT_ERRNO(EAGAIN);
 
   // Values written are added until the next read.
   ASSERT_EQ(0, eventfd_write(fd, 1));
@@ -88,7 +88,7 @@ TEST(eventfd, semaphore) {
 
   // The counter is cleared after the initial value decrements to 0.
   ASSERT_EQ(-1, eventfd_read(fd, &value));
-  ASSERT_EQ(EAGAIN, errno);
+  ASSERT_ERRNO(EAGAIN);
 
   close(fd);
 }

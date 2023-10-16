@@ -29,7 +29,7 @@ TEST(getcwd, auto_full) {
   errno = 0;
   char* cwd = getcwd(nullptr, 0);
   ASSERT_TRUE(cwd != nullptr);
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
   ASSERT_GE(strlen(cwd), 1U);
   free(cwd);
 }
@@ -39,7 +39,7 @@ TEST(getcwd, auto_reasonable) {
   errno = 0;
   char* cwd = getcwd(nullptr, PATH_MAX);
   ASSERT_TRUE(cwd != nullptr);
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
   ASSERT_GE(strlen(cwd), 1U);
   free(cwd);
 }
@@ -49,7 +49,7 @@ TEST(getcwd, auto_too_small) {
   errno = 0;
   char* cwd = getcwd(nullptr, 1);
   ASSERT_TRUE(cwd == nullptr);
-  ASSERT_EQ(ERANGE, errno);
+  ASSERT_ERRNO(ERANGE);
 }
 
 TEST(getcwd, auto_too_large) {
@@ -58,7 +58,7 @@ TEST(getcwd, auto_too_large) {
   errno = 0;
   char* cwd = getcwd(nullptr, static_cast<size_t>(-1));
   ASSERT_TRUE(cwd == nullptr);
-  ASSERT_EQ(ENOMEM, errno);
+  ASSERT_ERRNO(ENOMEM);
 }
 
 TEST(getcwd, manual_too_small) {
@@ -67,7 +67,7 @@ TEST(getcwd, manual_too_small) {
   errno = 0;
   char* cwd = getcwd(tiny_buf, sizeof(tiny_buf));
   ASSERT_TRUE(cwd == nullptr);
-  ASSERT_EQ(ERANGE, errno);
+  ASSERT_ERRNO(ERANGE);
 }
 
 TEST(getcwd, manual_zero) {
@@ -76,7 +76,7 @@ TEST(getcwd, manual_zero) {
   errno = 0;
   char* cwd = getcwd(tiny_buf, 0);
   ASSERT_TRUE(cwd == nullptr);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(getcwd, manual_path_max) {
@@ -84,7 +84,7 @@ TEST(getcwd, manual_path_max) {
   errno = 0;
   char* cwd = getcwd(buf, PATH_MAX);
   ASSERT_TRUE(cwd == buf);
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
   ASSERT_GE(strlen(cwd), 1U);
   delete[] cwd;
 }

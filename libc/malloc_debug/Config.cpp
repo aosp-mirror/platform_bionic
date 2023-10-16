@@ -409,7 +409,8 @@ bool Config::VerifyValueEmpty(const std::string& option, const std::string& valu
 
 void Config::LogUsage() const {
   error_log("For malloc debug option descriptions go to:");
-  error_log("  https://android.googlesource.com/platform/bionic/+/master/libc/malloc_debug/README.md");
+  error_log(
+      "  https://android.googlesource.com/platform/bionic/+/main/libc/malloc_debug/README.md");
 }
 
 bool Config::GetOption(const char** options_str, std::string* option, std::string* value) {

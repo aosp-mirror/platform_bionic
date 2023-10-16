@@ -24,6 +24,8 @@
 #include <locale.h>
 #include <stdint.h>
 
+#include "utils.h"
+
 // Modern versions of UTF-8 (https://datatracker.ietf.org/doc/html/rfc3629 and
 // newer) explicitly disallow code points beyond U+10FFFF, which exclude all 5-
 // and 6-byte sequences. Earlier versions of UTF-8 allowed the wider range:
@@ -77,7 +79,7 @@ TEST(uchar, start_state) {
   EXPECT_EQ(static_cast<size_t>(-2), mbrtoc32(nullptr, "\xc2", 1, &ps));
   errno = 0;
   EXPECT_EQ(static_cast<size_t>(-1), c32rtomb(out, 0x00a2, &ps));
-  EXPECT_EQ(EILSEQ, errno);
+  EXPECT_ERRNO(EILSEQ);
 
   // Similarly (but not in compliance with the standard afaict), musl seems to
   // ignore the state entirely for the UTF-32 functions rather than reset it.
@@ -217,11 +219,11 @@ TEST(uchar, mbrtoc16_long_sequences) {
   auto result = mbrtoc16(&out, "\xf8\xa1\xa2\xa3\xa4", 5, nullptr);
   if (kLibcRejectsOverLongUtf8Sequences) {
     EXPECT_EQ(static_cast<size_t>(-1), result);
-    EXPECT_EQ(EILSEQ, errno);
+    EXPECT_ERRNO(EILSEQ);
     EXPECT_EQ(u'\0', out);
   } else {
     EXPECT_EQ(5U, result);
-    EXPECT_EQ(0, errno);
+    EXPECT_ERRNO(0);
     EXPECT_EQ(u'\uf94a', out);
   }
 }
@@ -234,7 +236,7 @@ TEST(uchar, mbrtoc16_reserved_range) {
   char16_t out = u'\0';
   EXPECT_EQ(static_cast<size_t>(-1), mbrtoc16(&out, "\xf0\x80\xbf\xbf", 6, nullptr));
   EXPECT_EQ(u'\0', out);
-  EXPECT_EQ(EILSEQ, errno);
+  EXPECT_ERRNO(EILSEQ);
 }
 
 TEST(uchar, mbrtoc16_beyond_range) {
@@ -247,11 +249,11 @@ TEST(uchar, mbrtoc16_beyond_range) {
   if (kLibcRejectsOverLongUtf8Sequences) {
     EXPECT_EQ(static_cast<size_t>(-1), result);
     EXPECT_EQ(u'\0', out);
-    EXPECT_EQ(EILSEQ, errno);
+    EXPECT_ERRNO(EILSEQ);
   } else {
     EXPECT_EQ(4U, result);
     EXPECT_EQ(u'\xdcc0', out);
-    EXPECT_EQ(0, errno);
+    EXPECT_ERRNO(0);
   }
 }
 
@@ -290,7 +292,7 @@ void test_mbrtoc16_incomplete(mbstate_t* ps) {
   ASSERT_EQ(static_cast<size_t>(-2), mbrtoc16(&out, "\xc2", 1, ps));
   errno = 0;
   ASSERT_EQ(static_cast<size_t>(-1), mbrtoc16(&out, "\x20" "cdef", 5, ps));
-  ASSERT_EQ(EILSEQ, errno);
+  ASSERT_ERRNO(EILSEQ);
 }
 
 TEST(uchar, mbrtoc16_incomplete) {
@@ -347,7 +349,7 @@ TEST(uchar, c32rtomb) {
   // Invalid code point.
   errno = 0;
   EXPECT_EQ(static_cast<size_t>(-1), c32rtomb(bytes, 0xffffffff, nullptr));
-  EXPECT_EQ(EILSEQ, errno);
+  EXPECT_ERRNO(EILSEQ);
 }
 
 TEST(uchar, mbrtoc32_valid_non_characters) {
@@ -370,11 +372,11 @@ TEST(uchar, mbrtoc32_out_of_range) {
   auto result = mbrtoc32(&out, "\xf5\x80\x80\x80", 4, nullptr);
   if (kLibcRejectsOverLongUtf8Sequences) {
     EXPECT_EQ(static_cast<size_t>(-1), result);
-    EXPECT_EQ(EILSEQ, errno);
+    EXPECT_ERRNO(EILSEQ);
     EXPECT_EQ(U'\0', out);
   } else {
     EXPECT_EQ(4U, result);
-    EXPECT_EQ(0, errno);
+    EXPECT_ERRNO(0);
     EXPECT_EQ(U'\x140000', out);
   }
 }
@@ -428,7 +430,7 @@ TEST(uchar, mbrtoc32) {
                                               "\xf8\xa1\xa2\xa3\xa4"
                                               "f",
                                               6, nullptr));
-  EXPECT_EQ(EILSEQ, errno);
+  EXPECT_ERRNO(EILSEQ);
 #endif
   // Illegal over-long sequence.
   errno = 0;
@@ -436,7 +438,7 @@ TEST(uchar, mbrtoc32) {
                                               "\xf0\x82\x82\xac"
                                               "ef",
                                               6, nullptr));
-  EXPECT_EQ(EILSEQ, errno);
+  EXPECT_ERRNO(EILSEQ);
 }
 
 void test_mbrtoc32_incomplete(mbstate_t* ps) {
@@ -466,7 +468,7 @@ void test_mbrtoc32_incomplete(mbstate_t* ps) {
   ASSERT_EQ(static_cast<size_t>(-2), mbrtoc32(&out, "\xc2", 1, ps));
   errno = 0;
   ASSERT_EQ(static_cast<size_t>(-1), mbrtoc32(&out, "\x20" "cdef", 5, ps));
-  ASSERT_EQ(EILSEQ, errno);
+  ASSERT_ERRNO(EILSEQ);
 }
 
 TEST(uchar, mbrtoc32_incomplete) {

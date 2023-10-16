@@ -38,7 +38,7 @@
 
 /**
  * `__BIONIC__` is always defined if you're building with bionic. See
- * https://android.googlesource.com/platform/bionic/+/master/docs/defines.md.
+ * https://android.googlesource.com/platform/bionic/+/main/docs/defines.md.
  */
 #define __BIONIC__ 1
 
@@ -187,7 +187,7 @@
 
 /*
  * _FILE_OFFSET_BITS 64 support.
- * See https://android.googlesource.com/platform/bionic/+/master/docs/32-bit-abi.md
+ * See https://android.googlesource.com/platform/bionic/+/main/docs/32-bit-abi.md
  */
 #if !defined(__LP64__) && defined(_FILE_OFFSET_BITS) && _FILE_OFFSET_BITS == 64
 #  define __USE_FILE_OFFSET64 1

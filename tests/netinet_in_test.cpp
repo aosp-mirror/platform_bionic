@@ -23,6 +23,8 @@
 
 #include <android-base/macros.h>
 
+#include "utils.h"
+
 static constexpr uint16_t le16 = 0x1234;
 static constexpr uint32_t le32 = 0x12345678;
 static constexpr uint64_t le64 = 0x123456789abcdef0;
@@ -41,7 +43,7 @@ TEST(netinet_in, bindresvport) {
   sockaddr_in sin = {.sin_family = AF_INET6};
   errno = 0;
   ASSERT_EQ(-1, bindresvport(-1, &sin));
-  ASSERT_EQ(EPFNOSUPPORT, errno);
+  ASSERT_ERRNO(EPFNOSUPPORT);
 #else
   GTEST_SKIP() << "musl doesn't support bindresvport";
 #endif

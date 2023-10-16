@@ -32,12 +32,12 @@
 #include "bionic/pthread_internal.h"
 
 const char* const sys_siglist[NSIG] = {
-#define __BIONIC_SIGDEF(signal_number, signal_description) [ signal_number ] = signal_description,
+#define __BIONIC_SIGDEF(signal_number, signal_description) [signal_number] = signal_description,
 #include "private/bionic_sigdefs.h"
 };
 
 const char* const sys_signame[NSIG] = {
-#define __BIONIC_SIGDEF(signal_number, unused) [ signal_number ] = &(#signal_number)[3],
+#define __BIONIC_SIGDEF(signal_number, unused) [signal_number] = &(#signal_number)[3],
 #include "private/bionic_sigdefs.h"
 };
 

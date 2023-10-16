@@ -58,6 +58,11 @@ DEFINE_IFUNC_FOR(memset) {
   RETURN_FUNC(memset_func, memset_vext);
 }
 
+typedef char* stpcpy_func(char*, const char*);
+DEFINE_IFUNC_FOR(stpcpy) {
+  RETURN_FUNC(stpcpy_func, stpcpy_vext);
+}
+
 typedef char* strcat_func(char*, const char*);
 DEFINE_IFUNC_FOR(strcat) {
   RETURN_FUNC(strcat_func, strcat_vext);

@@ -55,6 +55,7 @@ libc_common_flags = [
     "-Wno-deprecated-declarations",
     "-Wno-gcc-compat",
     "-Wframe-larger-than=2048",
+    "-Wno-reorder-init-list",
 
     // Try to catch typical 32-bit assumptions that break with 64-bit pointers.
     "-Werror=pointer-to-int-cast",
@@ -950,6 +951,7 @@ cc_library_static {
                 "arch-riscv64/string/memcpy_vext.S",
                 "arch-riscv64/string/memmove_vext.S",
                 "arch-riscv64/string/memset_vext.S",
+                "arch-riscv64/string/stpcpy_vext.S",
                 "arch-riscv64/string/strcat_vext.S",
                 "arch-riscv64/string/strchr_vext.S",
                 "arch-riscv64/string/strcmp_vext.S",
@@ -2282,6 +2284,8 @@ cc_object {
         "bionic", // crtbegin.c includes bionic/libc_init_common.h
     ],
 
+    cflags: [ "-DCRTBEGIN_STATIC", ],
+
     srcs: ["arch-common/bionic/crtbegin.c"],
     objs: [
         "crtbrand",
@@ -3118,4 +3122,11 @@ cc_genrule {
             },
         },
     },
+}
+
+// headers that will be placed on the include path when running versioner in bazel
+// this module should be a no-op in soong
+filegroup {
+   name: "versioner-dependencies",
+   srcs: ["versioner-dependencies/**/*"],
 }

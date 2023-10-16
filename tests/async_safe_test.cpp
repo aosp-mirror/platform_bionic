@@ -45,6 +45,15 @@ TEST(async_safe_log, smoke) {
   async_safe_format_buffer(buf, sizeof(buf), "aa%scc", "bb");
   EXPECT_STREQ("aabbcc", buf);
 
+  async_safe_format_buffer(buf, sizeof(buf), "a%bb", 1234);
+  EXPECT_STREQ("a10011010010b", buf);
+
+  async_safe_format_buffer(buf, sizeof(buf), "a%#bb", 1234);
+  EXPECT_STREQ("a0b10011010010b", buf);
+
+  async_safe_format_buffer(buf, sizeof(buf), "a%#Bb", 1234);
+  EXPECT_STREQ("a0B10011010010b", buf);
+
   async_safe_format_buffer(buf, sizeof(buf), "a%cc", 'b');
   EXPECT_STREQ("abc", buf);
 
@@ -70,14 +79,32 @@ TEST(async_safe_log, smoke) {
   async_safe_format_buffer(buf, sizeof(buf), "a%mZ");
   EXPECT_STREQ("aInvalid argumentZ", buf);
 
+#if __ANDROID_API_LEVEL__ >= 35
+  errno = EINVAL;
+  async_safe_format_buffer(buf, sizeof(buf), "a%#mZ");
+  EXPECT_STREQ("aEINVALZ", buf);
+#endif
+
+#if __ANDROID_API_LEVEL__ >= 35
+  errno = -1;
+  async_safe_format_buffer(buf, sizeof(buf), "a%#mZ");
+  EXPECT_STREQ("a-1Z", buf);
+#endif
+
   async_safe_format_buffer(buf, sizeof(buf), "a%pb", reinterpret_cast<void*>(0xb0001234));
   EXPECT_STREQ("a0xb0001234b", buf);
 
   async_safe_format_buffer(buf, sizeof(buf), "a%xz", 0x12ab);
   EXPECT_STREQ("a12abz", buf);
 
+  async_safe_format_buffer(buf, sizeof(buf), "a%#xz", 0x12ab);
+  EXPECT_STREQ("a0x12abz", buf);
+
   async_safe_format_buffer(buf, sizeof(buf), "a%Xz", 0x12ab);
   EXPECT_STREQ("a12ABz", buf);
+
+  async_safe_format_buffer(buf, sizeof(buf), "a%#Xz", 0x12ab);
+  EXPECT_STREQ("a0X12ABz", buf);
 
   async_safe_format_buffer(buf, sizeof(buf), "a%08xz", 0x123456);
   EXPECT_STREQ("a00123456z", buf);

@@ -38,6 +38,10 @@ typedef struct {
   init_func_t** preinit_array;
   init_func_t** init_array;
   fini_func_t** fini_array;
+  // Below fields are only available in static executables.
+  size_t preinit_array_count;
+  size_t init_array_count;
+  size_t fini_array_count;
 } structors_array_t;
 
 __BEGIN_DECLS
