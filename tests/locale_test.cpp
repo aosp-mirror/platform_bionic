@@ -20,6 +20,8 @@
 #include <limits.h>
 #include <locale.h>
 
+#include "utils.h"
+
 TEST(locale, localeconv) {
   EXPECT_STREQ(".", localeconv()->decimal_point);
   EXPECT_STREQ("", localeconv()->thousands_sep);
@@ -53,10 +55,10 @@ TEST(locale, setlocale) {
 
   errno = 0;
   EXPECT_EQ(nullptr, setlocale(-1, nullptr));
-  EXPECT_EQ(EINVAL, errno);
+  EXPECT_ERRNO(EINVAL);
   errno = 0;
   EXPECT_EQ(nullptr, setlocale(13, nullptr));
-  EXPECT_EQ(EINVAL, errno);
+  EXPECT_ERRNO(EINVAL);
 
 #if defined(__BIONIC__)
   // The "" locale is implementation-defined. For bionic, it's the C.UTF-8 locale, which is
@@ -69,13 +71,13 @@ TEST(locale, setlocale) {
 
   errno = 0;
   EXPECT_EQ(nullptr, setlocale(LC_ALL, "this-is-not-a-locale"));
-  EXPECT_EQ(ENOENT, errno); // POSIX specified, not an implementation detail!
+  EXPECT_ERRNO(ENOENT);  // POSIX specified, not an implementation detail!
 }
 
 TEST(locale, newlocale_invalid_category_mask) {
   errno = 0;
   EXPECT_EQ(nullptr, newlocale(1 << 20, "C", nullptr));
-  EXPECT_EQ(EINVAL, errno);
+  EXPECT_ERRNO(EINVAL);
 }
 
 TEST(locale, newlocale_NULL_locale_name) {
@@ -83,14 +85,14 @@ TEST(locale, newlocale_NULL_locale_name) {
 #pragma clang diagnostic ignored "-Wnonnull"
   errno = 0;
   EXPECT_EQ(nullptr, newlocale(LC_ALL, nullptr, nullptr));
-  EXPECT_EQ(EINVAL, errno);
+  EXPECT_ERRNO(EINVAL);
 #pragma clang diagnostic pop
 }
 
 TEST(locale, newlocale_bad_locale_name) {
   errno = 0;
   EXPECT_EQ(nullptr, newlocale(LC_ALL, "this-is-not-a-locale", nullptr));
-  EXPECT_EQ(ENOENT, errno); // POSIX specified, not an implementation detail!
+  EXPECT_ERRNO(ENOENT);  // POSIX specified, not an implementation detail!
 }
 
 TEST(locale, newlocale) {

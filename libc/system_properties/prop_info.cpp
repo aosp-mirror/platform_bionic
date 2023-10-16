@@ -30,7 +30,7 @@
 
 #include <string.h>
 
-constexpr static const char kLongLegacyError[] =
+static constexpr const char kLongLegacyError[] =
     "Must use __system_property_read_callback() to read";
 static_assert(sizeof(kLongLegacyError) < prop_info::kLongLegacyErrorBufferSize,
               "Error message for long properties read by legacy libc must fit within 56 chars");

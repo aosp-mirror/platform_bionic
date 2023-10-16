@@ -1,0 +1,52 @@
+<!-- mmap tests -->
+<fn>
+  <name>BM_syscall_mmap_anon_rw</name>
+  <iterations>10</iterations>
+  <args>AT_All_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mmap_anon_noreserve</name>
+  <iterations>10</iterations>
+  <args>AT_All_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mmap_anon_none</name>
+  <iterations>10</iterations>
+  <args>AT_All_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mmap_anon_rw_fixed</name>
+  <iterations>10</iterations>
+  <args>AT_All_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mmap_anon_none_fixed</name>
+  <iterations>10</iterations>
+  <args>AT_All_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mmap_file_rd_priv</name>
+  <iterations>10</iterations>
+  <args>AT_All_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mmap_file_rw_shared</name>
+  <iterations>10</iterations>
+  <args>AT_All_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mmap_file_rw_priv_fixed_start</name>
+  <iterations>10</iterations>
+  <args>AT_All_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mmap_file_rw_priv_fixed_mid</name>
+  <iterations>10</iterations>
+  <args>AT_MULTI_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mmap_file_rw_priv_fixed_end</name>
+  <iterations>10</iterations>
+  <args>AT_MULTI_PAGE_SIZES</args>
+</fn>
+

@@ -60,6 +60,9 @@
 #if defined(__NR_brk)
   #define SYS_brk __NR_brk
 #endif
+#if defined(__NR_cachestat)
+  #define SYS_cachestat __NR_cachestat
+#endif
 #if defined(__NR_capget)
   #define SYS_capget __NR_capget
 #endif

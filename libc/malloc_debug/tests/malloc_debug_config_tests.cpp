@@ -40,8 +40,9 @@ class MallocDebugConfigTest : public ::testing::Test {
 };
 
 std::string usage_string(
-  "6 malloc_debug For malloc debug option descriptions go to:\n"
-  "6 malloc_debug   https://android.googlesource.com/platform/bionic/+/master/libc/malloc_debug/README.md\n");
+    "6 malloc_debug For malloc debug option descriptions go to:\n"
+    "6 malloc_debug   "
+    "https://android.googlesource.com/platform/bionic/+/main/libc/malloc_debug/README.md\n");
 
 TEST_F(MallocDebugConfigTest, unknown_option) {
 

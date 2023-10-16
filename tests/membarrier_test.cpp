@@ -22,13 +22,15 @@
 #include <linux/membarrier.h>
 #include <sys/syscall.h>
 
+#include "utils.h"
+
 class ScopedErrnoCleaner {
  public:
   ScopedErrnoCleaner() { errno = 0; }
   ~ScopedErrnoCleaner() { errno = 0; }
 };
 
-bool HasMembarrier(int membarrier_cmd) {
+static bool HasMembarrier(int membarrier_cmd) {
   ScopedErrnoCleaner errno_cleaner;
   int supported_cmds = syscall(__NR_membarrier, MEMBARRIER_CMD_QUERY, 0);
   return (supported_cmds > 0) && ((supported_cmds & membarrier_cmd) != 0);
@@ -37,11 +39,8 @@ bool HasMembarrier(int membarrier_cmd) {
 TEST(membarrier, query) {
   ScopedErrnoCleaner errno_cleaner;
   int supported = syscall(__NR_membarrier, MEMBARRIER_CMD_QUERY, 0);
-  if (errno == 0) {
-    ASSERT_TRUE(supported >= 0);
-  } else {
-    ASSERT_TRUE(errno == ENOSYS && supported == -1);
-  }
+  if (supported == -1 && errno == ENOSYS) GTEST_SKIP() << "no membarrier() in this kernel";
+  ASSERT_GE(supported, 0);
 }
 
 TEST(membarrier, global_barrier) {
@@ -92,7 +91,7 @@ static void TestRegisterAndBarrierCommands(int membarrier_cmd_register,
   } else {
     // Private barrier should fail.
     ASSERT_EQ(-1, syscall(__NR_membarrier, membarrier_cmd_barrier, 0));
-    ASSERT_EQ(EPERM, errno);
+    ASSERT_ERRNO(EPERM);
     errno = 0;
   }
 

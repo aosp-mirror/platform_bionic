@@ -28,7 +28,9 @@
 
 #include "utils.h"
 
+#include <string.h>
 #include <syscall.h>
+
 #include <string>
 
 #include <android-base/properties.h>
@@ -70,3 +72,23 @@ pid_t gettid() {
   return syscall(__NR_gettid);
 }
 #endif
+
+void PrintTo(const Errno& e, std::ostream* os) {
+  // Prefer EINVAL or whatever, but fall back to strerror() to print
+  // "Unknown error 666" for bogus values. Not that I've ever seen one,
+  // but we shouldn't be looking at an assertion failure unless something
+  // weird has happened!
+#if defined(__BIONIC__)
+  const char* errno_name = strerrorname_np(e.errno_);
+  if (errno_name != nullptr) {
+    *os << errno_name;
+  } else
+#endif
+  {
+    *os << strerror(e.errno_);
+  }
+}
+
+bool operator==(const Errno& lhs, const Errno& rhs) {
+  return lhs.errno_ == rhs.errno_;
+}
