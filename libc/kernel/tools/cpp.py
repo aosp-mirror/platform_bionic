@@ -2587,10 +2587,12 @@ struct fields {
         text = """\
 #define SIGRTMIN 32
 #define SIGRTMAX _NSIG
+#define SIGRTMAX(a,class) some_func(a, class)
 """
         expected = """\
 #define __SIGRTMIN 32
 #define __SIGRTMAX _KERNEL__NSIG
+#define __SIGRTMAX(a,__linux_class) some_func(a, __linux_class)
 """
         self.assertEqual(self.parse(text), expected)
 
