@@ -1471,9 +1471,18 @@ class BlockList(object):
                             made_change = True
                     i += 1
 
-                if b.isDefine() and b.define_id in replacements:
-                    b.define_id = replacements[b.define_id]
-                    made_change = True
+                if b.isDefine():
+                    tokens = CppStringTokenizer(b.define_id).tokens
+                    id_change = False
+                    for tok in tokens:
+                        if tok.kind == TokenKind.IDENTIFIER:
+                            if tok.id in replacements:
+                                tok.id = replacements[tok.id]
+                                id_change = True
+                    if id_change:
+                        b.define_id = ''.join([tok.id for tok in tokens])
+                        made_change = True
+
 
             if made_change and b.isIf():
                 # Keep 'expr' in sync with 'tokens'.
