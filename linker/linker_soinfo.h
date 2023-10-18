@@ -34,9 +34,11 @@
 #include <string>
 #include <vector>
 
-#include "private/bionic_elf_tls.h"
+#include "async_safe/CHECK.h"
 #include "linker_namespaces.h"
 #include "linker_tls.h"
+#include "private/bionic_elf_tls.h"
+#include "private/bionic_globals.h"
 
 #define FLAG_LINKED           0x00000001
 #define FLAG_EXE              0x00000004 // The main executable
@@ -351,6 +353,17 @@ struct soinfo {
   void set_gap_size(size_t gap_size);
   size_t get_gap_size() const;
 
+  const memtag_dynamic_entries_t* memtag_dynamic_entries() const {
+    CHECK(has_min_version(7));
+    return &memtag_dynamic_entries_;
+  }
+  void* memtag_globals() const { return memtag_dynamic_entries()->memtag_globals; }
+  size_t memtag_globalssz() const { return memtag_dynamic_entries()->memtag_globalssz; }
+  bool has_memtag_mode() const { return memtag_dynamic_entries()->has_memtag_mode; }
+  unsigned memtag_mode() const { return memtag_dynamic_entries()->memtag_mode; }
+  bool memtag_heap() const { return memtag_dynamic_entries()->memtag_heap; }
+  bool memtag_stack() const { return memtag_dynamic_entries()->memtag_stack; }
+
  private:
   bool is_image_linked() const;
   void set_image_linked();
@@ -433,6 +446,9 @@ struct soinfo {
   // version >= 6
   ElfW(Addr) gap_start_;
   size_t gap_size_;
+
+  // version >= 7
+  memtag_dynamic_entries_t memtag_dynamic_entries_;
 };
 
 // This function is used by dlvsym() to calculate hash of sym_ver

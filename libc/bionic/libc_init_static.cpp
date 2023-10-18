@@ -179,26 +179,10 @@ static void layout_static_tls(KernelArgumentBlock& args) {
 }
 
 #ifdef __aarch64__
-static bool __read_memtag_note(const ElfW(Nhdr)* note, const char* name, const char* desc,
-                               unsigned* result) {
-  if (note->n_type != NT_ANDROID_TYPE_MEMTAG) {
-    return false;
-  }
-  if (note->n_namesz != 8 || strncmp(name, "Android", 8) != 0) {
-    return false;
-  }
-  // Previously (in Android 12), if the note was != 4 bytes, we check-failed
-  // here. Let's be more permissive to allow future expansion.
-  if (note->n_descsz < 4) {
-    async_safe_fatal("unrecognized android.memtag note: n_descsz = %d, expected >= 4",
-                     note->n_descsz);
-  }
-  *result = *reinterpret_cast<const ElfW(Word)*>(desc);
-  return true;
-}
-
-static unsigned __get_memtag_note(const ElfW(Phdr)* phdr_start, size_t phdr_ct,
-                                  const ElfW(Addr) load_bias) {
+static bool __get_elf_note(const ElfW(Phdr) * phdr_start, size_t phdr_ct,
+                           const ElfW(Addr) load_bias, unsigned desired_type,
+                           const char* desired_name, const ElfW(Nhdr) * *note_out,
+                           const char** desc_out) {
   for (size_t i = 0; i < phdr_ct; ++i) {
     const ElfW(Phdr)* phdr = &phdr_start[i];
     if (phdr->p_type != PT_NOTE) {
@@ -216,13 +200,68 @@ static unsigned __get_memtag_note(const ElfW(Phdr)* phdr_start, size_t phdr_ct,
       if (p > note_end) {
         break;
       }
-      unsigned ret;
-      if (__read_memtag_note(note, name, desc, &ret)) {
-        return ret;
+      if (note->n_type != desired_type) {
+        continue;
       }
+      size_t desired_name_len = strlen(desired_name);
+      if (note->n_namesz != desired_name_len + 1 ||
+          strncmp(desired_name, name, desired_name_len) != 0) {
+        break;
+      }
+      *note_out = note;
+      *desc_out = desc;
+      return true;
     }
   }
-  return 0;
+  return false;
+}
+
+static HeapTaggingLevel __get_memtag_level_from_note(const ElfW(Phdr) * phdr_start, size_t phdr_ct,
+                                                     const ElfW(Addr) load_bias, bool* stack) {
+  const ElfW(Nhdr) * note;
+  const char* desc;
+  if (!__get_elf_note(phdr_start, phdr_ct, load_bias, NT_ANDROID_TYPE_MEMTAG, "Android", &note,
+                      &desc)) {
+    return M_HEAP_TAGGING_LEVEL_TBI;
+  }
+
+  // Previously (in Android 12), if the note was != 4 bytes, we check-failed
+  // here. Let's be more permissive to allow future expansion.
+  if (note->n_descsz < 4) {
+    async_safe_fatal("unrecognized android.memtag note: n_descsz = %d, expected >= 4",
+                     note->n_descsz);
+  }
+
+  // `desc` is always aligned due to ELF requirements, enforced in __get_elf_note().
+  ElfW(Word) note_val = *reinterpret_cast<const ElfW(Word)*>(desc);
+  *stack = (note_val & NT_MEMTAG_STACK) != 0;
+
+  // Warning: In Android 12, any value outside of bits [0..3] resulted in a check-fail.
+  if (!(note_val & (NT_MEMTAG_HEAP | NT_MEMTAG_STACK))) {
+    async_safe_format_log(ANDROID_LOG_INFO, "libc",
+                          "unrecognised memtag note_val did not specificy heap or stack: %u",
+                          note_val);
+    return M_HEAP_TAGGING_LEVEL_TBI;
+  }
+
+  unsigned mode = note_val & NT_MEMTAG_LEVEL_MASK;
+  switch (mode) {
+    case NT_MEMTAG_LEVEL_NONE:
+      // Note, previously (in Android 12), NT_MEMTAG_LEVEL_NONE was
+      // NT_MEMTAG_LEVEL_DEFAULT, which implied SYNC mode. This was never used
+      // by anyone, but we note it (heh) here for posterity, in case the zero
+      // level becomes meaningful, and binaries with this note can be executed
+      // on Android 12 devices.
+      return M_HEAP_TAGGING_LEVEL_TBI;
+    case NT_MEMTAG_LEVEL_ASYNC:
+      return M_HEAP_TAGGING_LEVEL_ASYNC;
+    case NT_MEMTAG_LEVEL_SYNC:
+    default:
+      // We allow future extensions to specify mode 3 (currently unused), with
+      // the idea that it might be used for ASYMM mode or something else. On
+      // this version of Android, it falls back to SYNC mode.
+      return M_HEAP_TAGGING_LEVEL_SYNC;
+  }
 }
 
 // Returns true if there's an environment setting (either sysprop or env var)
@@ -273,48 +312,57 @@ static bool get_environment_memtag_setting(HeapTaggingLevel* level) {
 // Returns the initial heap tagging level. Note: This function will never return
 // M_HEAP_TAGGING_LEVEL_NONE, if MTE isn't enabled for this process we enable
 // M_HEAP_TAGGING_LEVEL_TBI.
-static HeapTaggingLevel __get_heap_tagging_level(const void* phdr_start, size_t phdr_ct,
-                                                 uintptr_t load_bias, bool* stack) {
-  unsigned note_val =
-      __get_memtag_note(reinterpret_cast<const ElfW(Phdr)*>(phdr_start), phdr_ct, load_bias);
-  *stack = note_val & NT_MEMTAG_STACK;
+static HeapTaggingLevel __get_tagging_level(const memtag_dynamic_entries_t* memtag_dynamic_entries,
+                                            const void* phdr_start, size_t phdr_ct,
+                                            uintptr_t load_bias, bool* stack) {
+  HeapTaggingLevel level = M_HEAP_TAGGING_LEVEL_TBI;
 
-  HeapTaggingLevel level;
-  if (get_environment_memtag_setting(&level)) return level;
-
-  // Note, previously (in Android 12), any value outside of bits [0..3] resulted
-  // in a check-fail. In order to be permissive of further extensions, we
-  // relaxed this restriction.
-  if (!(note_val & (NT_MEMTAG_HEAP | NT_MEMTAG_STACK))) return M_HEAP_TAGGING_LEVEL_TBI;
-
-  unsigned mode = note_val & NT_MEMTAG_LEVEL_MASK;
-  switch (mode) {
-    case NT_MEMTAG_LEVEL_NONE:
-      // Note, previously (in Android 12), NT_MEMTAG_LEVEL_NONE was
-      // NT_MEMTAG_LEVEL_DEFAULT, which implied SYNC mode. This was never used
-      // by anyone, but we note it (heh) here for posterity, in case the zero
-      // level becomes meaningful, and binaries with this note can be executed
-      // on Android 12 devices.
-      return M_HEAP_TAGGING_LEVEL_TBI;
-    case NT_MEMTAG_LEVEL_ASYNC:
-      return M_HEAP_TAGGING_LEVEL_ASYNC;
-    case NT_MEMTAG_LEVEL_SYNC:
-    default:
-      // We allow future extensions to specify mode 3 (currently unused), with
-      // the idea that it might be used for ASYMM mode or something else. On
-      // this version of Android, it falls back to SYNC mode.
-      return M_HEAP_TAGGING_LEVEL_SYNC;
+  // If the dynamic entries exist, use those. Otherwise, fall back to the old
+  // Android note, which is still used for fully static executables. When
+  // -fsanitize=memtag* is used in newer toolchains, currently both the dynamic
+  // entries and the old note are created, but we'd expect to move to just the
+  // dynamic entries for dynamically linked executables in the future. In
+  // addition, there's still some cleanup of the build system (that uses a
+  // manually-constructed note) needed. For more information about the dynamic
+  // entries, see:
+  // https://github.com/ARM-software/abi-aa/blob/main/memtagabielf64/memtagabielf64.rst#dynamic-section
+  if (memtag_dynamic_entries && memtag_dynamic_entries->has_memtag_mode) {
+    switch (memtag_dynamic_entries->memtag_mode) {
+      case 0:
+        level = M_HEAP_TAGGING_LEVEL_SYNC;
+        break;
+      case 1:
+        level = M_HEAP_TAGGING_LEVEL_ASYNC;
+        break;
+      default:
+        async_safe_format_log(ANDROID_LOG_INFO, "libc",
+                              "unrecognised DT_AARCH64_MEMTAG_MODE value: %u",
+                              memtag_dynamic_entries->memtag_mode);
+    }
+    *stack = memtag_dynamic_entries->memtag_stack;
+  } else {
+    level = __get_memtag_level_from_note(reinterpret_cast<const ElfW(Phdr)*>(phdr_start), phdr_ct,
+                                         load_bias, stack);
   }
+
+  // We can't short-circuit the environment override, as `stack` is still inherited from the
+  // binary's settings.
+  if (get_environment_memtag_setting(&level)) {
+    if (level == M_HEAP_TAGGING_LEVEL_NONE || level == M_HEAP_TAGGING_LEVEL_TBI) {
+      *stack = false;
+    }
+  }
+  return level;
 }
 
 // Figure out the desired memory tagging mode (sync/async, heap/globals/stack) for this executable.
 // This function is called from the linker before the main executable is relocated.
-__attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const void* phdr_start,
-                                                                         size_t phdr_ct,
-                                                                         uintptr_t load_bias,
-                                                                         void* stack_top) {
-  bool memtag_stack;
-  HeapTaggingLevel level = __get_heap_tagging_level(phdr_start, phdr_ct, load_bias, &memtag_stack);
+__attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(
+    const memtag_dynamic_entries_t* memtag_dynamic_entries, const void* phdr_start, size_t phdr_ct,
+    uintptr_t load_bias, void* stack_top) {
+  bool memtag_stack = false;
+  HeapTaggingLevel level =
+      __get_tagging_level(memtag_dynamic_entries, phdr_start, phdr_ct, load_bias, &memtag_stack);
   char* env = getenv("BIONIC_MEMTAG_UPGRADE_SECS");
   static const char kAppProcessName[] = "app_process64";
   const char* progname = __libc_shared_globals()->init_progname;
@@ -385,7 +433,7 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const v
   __libc_shared_globals()->heap_tagging_upgrade_timer_sec = 0;
 }
 #else   // __aarch64__
-void __libc_init_mte(const void*, size_t, uintptr_t, void*) {}
+void __libc_init_mte(const memtag_dynamic_entries_t*, const void*, size_t, uintptr_t, void*) {}
 #endif  // __aarch64__
 
 void __libc_init_profiling_handlers() {
@@ -412,7 +460,8 @@ __attribute__((no_sanitize("memtag"))) __noreturn static void __real_libc_init(
   layout_static_tls(args);
   __libc_init_main_thread_final();
   __libc_init_common();
-  __libc_init_mte(reinterpret_cast<ElfW(Phdr)*>(getauxval(AT_PHDR)), getauxval(AT_PHNUM),
+  __libc_init_mte(/*memtag_dynamic_entries=*/nullptr,
+                  reinterpret_cast<ElfW(Phdr)*>(getauxval(AT_PHDR)), getauxval(AT_PHNUM),
                   /*load_bias = */ 0, /*stack_top = */ raw_args);
   __libc_init_scudo();
   __libc_init_profiling_handlers();
