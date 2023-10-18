@@ -66,6 +66,15 @@ struct libc_globals {
   MallocDispatch malloc_dispatch_table;
 };
 
+struct memtag_dynamic_entries_t {
+  void* memtag_globals;
+  size_t memtag_globalssz;
+  bool has_memtag_mode;
+  unsigned memtag_mode;
+  bool memtag_heap;
+  bool memtag_stack;
+};
+
 #ifdef __aarch64__
 static_assert(OFFSETOF_libc_globals_memtag_stack == offsetof(libc_globals, memtag_stack));
 #endif
