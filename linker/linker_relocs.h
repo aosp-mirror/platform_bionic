@@ -84,8 +84,7 @@
 #define R_GENERIC_TLS_DTPMOD    R_RISCV_TLS_DTPMOD64
 #define R_GENERIC_TLS_DTPREL    R_RISCV_TLS_DTPREL64
 #define R_GENERIC_TLS_TPREL     R_RISCV_TLS_TPREL64
-// TODO: https://github.com/riscv-non-isa/riscv-elf-psabi-doc/issues/94
-// #define R_GENERIC_TLSDESC       R_RISCV_TLS_DESC
+#define R_GENERIC_TLSDESC       R_RISCV_TLSDESC
 
 #elif defined (__x86_64__)
 
