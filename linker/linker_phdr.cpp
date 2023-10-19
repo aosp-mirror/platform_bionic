@@ -196,7 +196,7 @@ bool ElfReader::Load(address_space_params* address_space) {
     // For Armv8.5-A loaded executable segments may require PROT_BTI.
     if (note_gnu_property_.IsBTICompatible()) {
       did_load_ = (phdr_table_protect_segments(phdr_table_, phdr_num_, load_bias_,
-                                               &note_gnu_property_) == 0);
+                                               should_pad_segments_, &note_gnu_property_) == 0);
     }
 #endif
   }
@@ -747,6 +747,36 @@ bool ElfReader::ReadPadSegmentNote() {
   return true;
 }
 
+static inline void _extend_load_segment_vma(const ElfW(Phdr)* phdr_table, size_t phdr_count,
+                                             size_t phdr_idx, ElfW(Addr)* p_memsz,
+                                             ElfW(Addr)* p_filesz) {
+  const ElfW(Phdr)* phdr = &phdr_table[phdr_idx];
+  const ElfW(Phdr)* next = nullptr;
+  size_t next_idx = phdr_idx + 1;
+  if (next_idx < phdr_count && phdr_table[next_idx].p_type == PT_LOAD) {
+    next = &phdr_table[next_idx];
+  }
+
+  // If this is the last LOAD segment, no extension is needed
+  if (!next || *p_memsz != *p_filesz) {
+    return;
+  }
+
+  ElfW(Addr) next_start = page_start(next->p_vaddr);
+  ElfW(Addr) curr_end = page_end(phdr->p_vaddr + *p_memsz);
+
+  // If adjacent segment mappings overlap, no extension is needed.
+  if (curr_end >= next_start) {
+    return;
+  }
+
+  // Extend the LOAD segment mapping to be contiguous with that of
+  // the next LOAD segment.
+  ElfW(Addr) extend = next_start - curr_end;
+  *p_memsz += extend;
+  *p_filesz += extend;
+}
+
 bool ElfReader::LoadSegments() {
   for (size_t i = 0; i < phdr_num_; ++i) {
     const ElfW(Phdr)* phdr = &phdr_table_[i];
@@ -755,18 +785,24 @@ bool ElfReader::LoadSegments() {
       continue;
     }
 
+    ElfW(Addr) p_memsz = phdr->p_memsz;
+    ElfW(Addr) p_filesz = phdr->p_filesz;
+    if (phdr->p_align > kPageSize && should_pad_segments_) {
+      _extend_load_segment_vma(phdr_table_, phdr_num_, i, &p_memsz, &p_filesz);
+    }
+
     // Segment addresses in memory.
     ElfW(Addr) seg_start = phdr->p_vaddr + load_bias_;
-    ElfW(Addr) seg_end   = seg_start + phdr->p_memsz;
+    ElfW(Addr) seg_end = seg_start + p_memsz;
 
     ElfW(Addr) seg_page_start = page_start(seg_start);
     ElfW(Addr) seg_page_end = page_end(seg_end);
 
-    ElfW(Addr) seg_file_end   = seg_start + phdr->p_filesz;
+    ElfW(Addr) seg_file_end = seg_start + p_filesz;
 
     // File offsets.
     ElfW(Addr) file_start = phdr->p_offset;
-    ElfW(Addr) file_end   = file_start + phdr->p_filesz;
+    ElfW(Addr) file_end = file_start + p_filesz;
 
     ElfW(Addr) file_page_start = page_start(file_start);
     ElfW(Addr) file_length = file_end - file_page_start;
@@ -776,12 +812,12 @@ bool ElfReader::LoadSegments() {
       return false;
     }
 
-    if (file_end > static_cast<size_t>(file_size_)) {
+    if (file_start + phdr->p_filesz > static_cast<size_t>(file_size_)) {
       DL_ERR("invalid ELF file \"%s\" load segment[%zd]:"
           " p_offset (%p) + p_filesz (%p) ( = %p) past end of file (0x%" PRIx64 ")",
           name_.c_str(), i, reinterpret_cast<void*>(phdr->p_offset),
           reinterpret_cast<void*>(phdr->p_filesz),
-          reinterpret_cast<void*>(file_end), file_size_);
+          reinterpret_cast<void*>(file_start + phdr->p_filesz), file_size_);
       return false;
     }
 
@@ -821,8 +857,18 @@ bool ElfReader::LoadSegments() {
 
     // if the segment is writable, and does not end on a page boundary,
     // zero-fill it until the page limit.
-    if ((phdr->p_flags & PF_W) != 0 && page_offset(seg_file_end) > 0) {
-      memset(reinterpret_cast<void*>(seg_file_end), 0, page_size() - page_offset(seg_file_end));
+    //
+    // The intention is to zero the partial page at that may exist at the
+    // end of a file backed mapping. With the extended seg_file_end, this
+    // file offset as calculated from the mapping start can overrun the end
+    // of the file. However pages in that range cannot be touched by userspace
+    // because the kernel will not be able to handle a file map fault past the
+    // extent of the file. No need to try zeroing this untouchable region.
+    // Zero the partial page at the end of the original unextended seg_file_end.
+    ElfW(Addr) seg_file_end_orig = seg_start + phdr->p_filesz;
+    if ((phdr->p_flags & PF_W) != 0 && page_offset(seg_file_end_orig) > 0) {
+      memset(reinterpret_cast<void*>(seg_file_end_orig), 0,
+             kPageSize - page_offset(seg_file_end_orig));
     }
 
     seg_file_end = page_end(seg_file_end);
@@ -855,17 +901,23 @@ bool ElfReader::LoadSegments() {
  * phdr_table_protect_segments and phdr_table_unprotect_segments.
  */
 static int _phdr_table_set_load_prot(const ElfW(Phdr)* phdr_table, size_t phdr_count,
-                                     ElfW(Addr) load_bias, int extra_prot_flags) {
-  const ElfW(Phdr)* phdr = phdr_table;
-  const ElfW(Phdr)* phdr_limit = phdr + phdr_count;
+                                     ElfW(Addr) load_bias, int extra_prot_flags,
+                                     bool should_pad_segments) {
+  for (size_t i = 0; i < phdr_count; ++i) {
+    const ElfW(Phdr)* phdr = &phdr_table[i];
 
-  for (; phdr < phdr_limit; phdr++) {
     if (phdr->p_type != PT_LOAD || (phdr->p_flags & PF_W) != 0) {
       continue;
     }
 
-    ElfW(Addr) seg_page_start = page_start(phdr->p_vaddr) + load_bias;
-    ElfW(Addr) seg_page_end = page_end(phdr->p_vaddr + phdr->p_memsz) + load_bias;
+    ElfW(Addr) p_memsz = phdr->p_memsz;
+    ElfW(Addr) p_filesz = phdr->p_filesz;
+    if (phdr->p_align > kPageSize && should_pad_segments) {
+      _extend_load_segment_vma(phdr_table, phdr_count, i, &p_memsz, &p_filesz);
+    }
+
+    ElfW(Addr) seg_page_start = page_start(phdr->p_vaddr + load_bias);
+    ElfW(Addr) seg_page_end = page_end(phdr->p_vaddr + p_memsz + load_bias);
 
     int prot = PFLAGS_TO_PROT(phdr->p_flags) | extra_prot_flags;
     if ((prot & PROT_WRITE) != 0) {
@@ -900,19 +952,21 @@ static int _phdr_table_set_load_prot(const ElfW(Phdr)* phdr_table, size_t phdr_c
  *   phdr_table  -> program header table
  *   phdr_count  -> number of entries in tables
  *   load_bias   -> load bias
+ *   should_pad_segments -> Are segments extended to avoid gaps in the memory map
  *   prop        -> GnuPropertySection or nullptr
  * Return:
  *   0 on success, -1 on failure (error code in errno).
  */
 int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table, size_t phdr_count,
-                                ElfW(Addr) load_bias, const GnuPropertySection* prop __unused) {
+                                ElfW(Addr) load_bias, bool should_pad_segments,
+                                const GnuPropertySection* prop __unused) {
   int prot = 0;
 #if defined(__aarch64__)
   if ((prop != nullptr) && prop->IsBTICompatible()) {
     prot |= PROT_BTI;
   }
 #endif
-  return _phdr_table_set_load_prot(phdr_table, phdr_count, load_bias, prot);
+  return _phdr_table_set_load_prot(phdr_table, phdr_count, load_bias, prot, should_pad_segments);
 }
 
 /* Change the protection of all loaded segments in memory to writable.
@@ -928,12 +982,15 @@ int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table, size_t phdr_count,
  *   phdr_table  -> program header table
  *   phdr_count  -> number of entries in tables
  *   load_bias   -> load bias
+ *   should_pad_segments -> Are segments extended to avoid gaps in the memory map
  * Return:
  *   0 on success, -1 on failure (error code in errno).
  */
 int phdr_table_unprotect_segments(const ElfW(Phdr)* phdr_table,
-                                  size_t phdr_count, ElfW(Addr) load_bias) {
-  return _phdr_table_set_load_prot(phdr_table, phdr_count, load_bias, PROT_WRITE);
+                                  size_t phdr_count, ElfW(Addr) load_bias,
+                                  bool should_pad_segments) {
+  return _phdr_table_set_load_prot(phdr_table, phdr_count, load_bias, PROT_WRITE,
+                                   should_pad_segments);
 }
 
 /* Used internally by phdr_table_protect_gnu_relro and
