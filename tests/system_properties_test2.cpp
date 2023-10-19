@@ -28,10 +28,6 @@
 
 #if defined(__BIONIC__)
 #include <sys/system_properties.h>
-int64_t NanoTime() {
-  auto t = std::chrono::time_point_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now());
-  return t.time_since_epoch().count();
-}
 #endif
 
 // Note that this test affects global state of the system
