@@ -68,8 +68,8 @@ static void get_elf_base_from_phdr(const ElfW(Phdr)* phdr_table, size_t phdr_cou
 
 static void set_bss_vma_name(soinfo* si);
 
-void __libc_init_mte(const void* phdr_start, size_t phdr_count, uintptr_t load_bias,
-                     void* stack_top);
+void __libc_init_mte(const memtag_dynamic_entries_t* memtag_dynamic_entries, const void* phdr_start,
+                     size_t phdr_count, uintptr_t load_bias, void* stack_top);
 
 // These should be preserved static to avoid emitting
 // RELATIVE relocations for the part of the code running
@@ -405,7 +405,8 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
     }
   }
 
-  __libc_init_mte(somain->phdr, somain->phnum, somain->load_bias, args.argv);
+  __libc_init_mte(somain->memtag_dynamic_entries(), somain->phdr, somain->phnum, somain->load_bias,
+                  args.argv);
 #endif
 
   // Register the main executable and the linker upfront to have
