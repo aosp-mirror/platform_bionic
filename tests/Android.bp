@@ -785,6 +785,7 @@ cc_test_library {
     ],
     static_libs: [
         "libbase",
+        "libprocinfo",
     ],
     include_dirs: [
         "bionic/libc",
