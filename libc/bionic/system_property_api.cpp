@@ -45,7 +45,7 @@ prop_area* __system_property_area__ = nullptr;
 
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int __system_properties_init() {
-  return system_properties.Init(PROP_FILENAME) ? 0 : -1;
+  return system_properties.Init(PROP_DIRNAME) ? 0 : -1;
 }
 
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
@@ -55,8 +55,8 @@ int __system_property_set_filename(const char*) {
 
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int __system_property_area_init() {
-  bool fsetxattr_failed = false;
-  return system_properties.AreaInit(PROP_FILENAME, &fsetxattr_failed) && !fsetxattr_failed ? 0 : -1;
+  bool fsetxattr_fail = false;
+  return system_properties.AreaInit(PROP_DIRNAME, &fsetxattr_fail) && !fsetxattr_fail ? 0 : -1;
 }
 
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
@@ -128,4 +128,9 @@ const prop_info* __system_property_find_nth(unsigned n) {
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int __system_property_foreach(void (*propfn)(const prop_info* pi, void* cookie), void* cookie) {
   return system_properties.Foreach(propfn, cookie);
+}
+
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
+int __system_properties_reload() {
+  return system_properties.Reload(false) ? 0 : -1;
 }

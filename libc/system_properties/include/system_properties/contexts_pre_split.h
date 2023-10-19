@@ -38,7 +38,7 @@ class ContextsPreSplit : public Contexts {
   }
 
   // We'll never initialize this legacy option as writable, so don't even check the arg.
-  virtual bool Initialize(bool, const char* filename, bool*) override {
+  virtual bool Initialize(bool, const char* filename, bool*, bool) override {
     pre_split_prop_area_ = prop_area::map_prop_area(filename);
     return pre_split_prop_area_ != nullptr;
   }
