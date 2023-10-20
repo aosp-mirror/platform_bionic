@@ -849,7 +849,7 @@ static int _phdr_table_set_load_prot(const ElfW(Phdr)* phdr_table, size_t phdr_c
  *   load_bias   -> load bias
  *   prop        -> GnuPropertySection or nullptr
  * Return:
- *   0 on error, -1 on failure (error code in errno).
+ *   0 on success, -1 on failure (error code in errno).
  */
 int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                 ElfW(Addr) load_bias, const GnuPropertySection* prop __unused) {
@@ -876,7 +876,7 @@ int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table, size_t phdr_count,
  *   phdr_count  -> number of entries in tables
  *   load_bias   -> load bias
  * Return:
- *   0 on error, -1 on failure (error code in errno).
+ *   0 on success, -1 on failure (error code in errno).
  */
 int phdr_table_unprotect_segments(const ElfW(Phdr)* phdr_table,
                                   size_t phdr_count, ElfW(Addr) load_bias) {
@@ -939,7 +939,7 @@ static int _phdr_table_set_gnu_relro_prot(const ElfW(Phdr)* phdr_table, size_t p
  *   phdr_count  -> number of entries in tables
  *   load_bias   -> load bias
  * Return:
- *   0 on error, -1 on failure (error code in errno).
+ *   0 on success, -1 on failure (error code in errno).
  */
 int phdr_table_protect_gnu_relro(const ElfW(Phdr)* phdr_table,
                                  size_t phdr_count, ElfW(Addr) load_bias) {
@@ -957,7 +957,7 @@ int phdr_table_protect_gnu_relro(const ElfW(Phdr)* phdr_table,
  *   fd          -> writable file descriptor to use
  *   file_offset -> pointer to offset into file descriptor to use/update
  * Return:
- *   0 on error, -1 on failure (error code in errno).
+ *   0 on success, -1 on failure (error code in errno).
  */
 int phdr_table_serialize_gnu_relro(const ElfW(Phdr)* phdr_table,
                                    size_t phdr_count,
@@ -1005,7 +1005,7 @@ int phdr_table_serialize_gnu_relro(const ElfW(Phdr)* phdr_table,
  *   fd          -> readable file descriptor to use
  *   file_offset -> pointer to offset into file descriptor to use/update
  * Return:
- *   0 on error, -1 on failure (error code in errno).
+ *   0 on success, -1 on failure (error code in errno).
  */
 int phdr_table_map_gnu_relro(const ElfW(Phdr)* phdr_table,
                              size_t phdr_count,
@@ -1102,7 +1102,7 @@ int phdr_table_map_gnu_relro(const ElfW(Phdr)* phdr_table,
  *   arm_exidx       -> address of table in memory (null on failure).
  *   arm_exidx_count -> number of items in table (0 on failure).
  * Return:
- *   0 on error, -1 on failure (_no_ error code in errno)
+ *   0 on success, -1 on failure (_no_ error code in errno)
  */
 int phdr_table_get_arm_exidx(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                              ElfW(Addr) load_bias,
