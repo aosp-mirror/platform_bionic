@@ -266,4 +266,6 @@ typedef Elf64_Xword Elf64_Relr;
 /* TODO: upstream these to FreeBSD? */
 #define R_ARM_TLS_DESC 13
 #define R_ARM_IRELATIVE 160
-#define R_X86_64_JUMP_SLOT 7
+
+/* BSD spells this slightly differently to Linux. */
+#define R_X86_64_JUMP_SLOT R_X86_64_JMP_SLOT
