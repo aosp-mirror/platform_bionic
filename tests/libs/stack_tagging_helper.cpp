@@ -240,14 +240,14 @@ void test_longjmp() {
 }
 
 void test_longjmp_sigaltstack() {
-  constexpr size_t kAltStackSize = kStackAllocationSize + PAGE_SIZE * 16;
+  const size_t kAltStackSize = kStackAllocationSize + getpagesize() * 16;
   SigAltStackScoped sigAltStackScoped(kAltStackSize);
   SigActionScoped sigActionScoped(
       SIGUSR1, [](int, siginfo_t*, void*) { check_longjmp_restores_tags(); });
   raise(SIGUSR1);
 
   // same for a secondary thread
-  std::thread t([]() {
+  std::thread t([&]() {
     SigAltStackScoped sigAltStackScoped(kAltStackSize);
     raise(SIGUSR1);
   });
