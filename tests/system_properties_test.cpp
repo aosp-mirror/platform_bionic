@@ -25,6 +25,9 @@
 
 #include <android-base/file.h>
 #include <android-base/silent_death_test.h>
+#include <android-base/stringprintf.h>
+
+#include "utils.h"
 
 using namespace std::literals;
 
@@ -32,23 +35,33 @@ using namespace std::literals;
 
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
 #include <sys/_system_properties.h>
+#include <sys/mount.h>
 
 #include <system_properties/system_properties.h>
 
 class SystemPropertiesTest : public SystemProperties {
  public:
   SystemPropertiesTest() : SystemProperties(false) {
-    valid_ = AreaInit(dir_.path, nullptr);
+    appcompat_path = android::base::StringPrintf("%s/appcompat_override", dir_.path);
+    mkdir(appcompat_path.c_str(), S_IRWXU | S_IXGRP | S_IXOTH);
+    valid_ = AreaInit(dir_.path, nullptr, true);
   }
   ~SystemPropertiesTest() {
     if (valid_) {
       contexts_->FreeAndUnmap();
     }
+    umount(dir_.path);
   }
 
   bool valid() const {
     return valid_;
   }
+
+  const char* get_path() const { return dir_.path; }
+
+  const char* get_appcompat_path() const { return appcompat_path.c_str(); }
+
+  std::string appcompat_path;
 
  private:
   TemporaryDir dir_;
@@ -123,6 +136,58 @@ TEST(properties, __system_property_add) {
 #else // __BIONIC__
     GTEST_SKIP() << "bionic-only test";
 #endif // __BIONIC__
+}
+
+TEST(properties, __system_property_add_appcompat) {
+#if defined(__BIONIC__)
+    if (getuid() != 0) GTEST_SKIP() << "test requires root";
+    SystemPropertiesTest system_properties;
+    ASSERT_TRUE(system_properties.valid());
+
+    char name[] = "ro.property";
+    char override_name[] = "ro.appcompat_override.ro.property";
+    char name_not_written[] = "ro.property_other";
+    char override_with_no_real[] = "ro.appcompat_override.ro.property_other";
+    ASSERT_EQ(0, system_properties.Add(name, strlen(name), "value1", 6));
+    ASSERT_EQ(0, system_properties.Add(override_name, strlen(override_name), "value2", 6));
+    ASSERT_EQ(0, system_properties.Add(override_with_no_real, strlen(override_with_no_real),
+                                       "value3", 6));
+
+    char propvalue[PROP_VALUE_MAX];
+    ASSERT_EQ(6, system_properties.Get(name, propvalue));
+    ASSERT_STREQ(propvalue, "value1");
+
+    ASSERT_EQ(6, system_properties.Get(override_name, propvalue));
+    ASSERT_STREQ(propvalue, "value2");
+
+    ASSERT_EQ(0, system_properties.Get(name_not_written, propvalue));
+    ASSERT_STREQ(propvalue, "");
+
+    ASSERT_EQ(6, system_properties.Get(override_with_no_real, propvalue));
+    ASSERT_STREQ(propvalue, "value3");
+
+    int ret = mount(system_properties.get_appcompat_path(), system_properties.get_path(), nullptr,
+                    MS_BIND | MS_REC, nullptr);
+    if (ret != 0) {
+      ASSERT_ERRNO(0);
+    }
+    system_properties.Reload(true);
+
+    ASSERT_EQ(6, system_properties.Get(name, propvalue));
+    ASSERT_STREQ(propvalue, "value2");
+
+    ASSERT_EQ(0, system_properties.Get(override_name, propvalue));
+    ASSERT_STREQ(propvalue, "");
+
+    ASSERT_EQ(6, system_properties.Get(name_not_written, propvalue));
+    ASSERT_STREQ(propvalue, "value3");
+
+    ASSERT_EQ(0, system_properties.Get(override_with_no_real, propvalue));
+    ASSERT_STREQ(propvalue, "");
+
+#else   // __BIONIC__
+    GTEST_SKIP() << "bionic-only test";
+#endif  // __BIONIC__
 }
 
 TEST(properties, __system_property_update) {
@@ -432,7 +497,7 @@ TEST_F(properties_DeathTest, read_only) {
 
   // This test only makes sense if we're talking to the real system property service.
   struct stat sb;
-  ASSERT_FALSE(stat(PROP_FILENAME, &sb) == -1 && errno == ENOENT);
+  ASSERT_FALSE(stat(PROP_DIRNAME, &sb) == -1 && errno == ENOENT);
 
   ASSERT_EXIT(__system_property_add("property", 8, "value", 5), KilledByFault(), "");
 #else // __BIONIC__
