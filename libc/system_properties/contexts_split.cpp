@@ -281,7 +281,7 @@ bool ContextsSplit::InitializeProperties() {
   return true;
 }
 
-bool ContextsSplit::Initialize(bool writable, const char* filename, bool* fsetxattr_failed) {
+bool ContextsSplit::Initialize(bool writable, const char* filename, bool* fsetxattr_failed, bool) {
   filename_ = filename;
   if (!InitializeProperties()) {
     return false;
