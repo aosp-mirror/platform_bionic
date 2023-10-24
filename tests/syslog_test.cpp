@@ -26,6 +26,9 @@
  * SUCH DAMAGE.
  */
 
+#include <stddef.h>  // glibc's <syslog.h> breaks without this; musl seems fine.
+
+#define SYSLOG_NAMES
 #include <syslog.h>
 
 #include <errno.h>
@@ -71,4 +74,35 @@ TEST(syslog, syslog_truncation) {
         exit(0);
       },
       0, "bar: x{1023}\n");
+}
+
+static int by_name(const CODE* array, const char* name) {
+  for (auto c = array; c->c_name != nullptr; c++) {
+    if (!strcmp(c->c_name, name)) return c->c_val;
+  }
+  return -1;
+}
+
+static const char* by_value(const CODE* array, int value) {
+  for (auto c = array; c->c_name != nullptr; c++) {
+    if (c->c_val == value) return c->c_name;
+  }
+  return nullptr;
+}
+
+TEST(syslog, facilitynames) {
+  ASSERT_STREQ("auth", by_value(facilitynames, LOG_AUTH));
+  ASSERT_STREQ("local7", by_value(facilitynames, LOG_LOCAL7));
+  ASSERT_EQ(LOG_AUTH, by_name(facilitynames, "auth"));
+  ASSERT_EQ(LOG_LOCAL7, by_name(facilitynames, "local7"));
+}
+
+TEST(syslog, prioritynames) {
+  ASSERT_STREQ("alert", by_value(prioritynames, LOG_ALERT));
+  ASSERT_STREQ("err", by_value(prioritynames, LOG_ERR));
+  ASSERT_STREQ("warn", by_value(prioritynames, LOG_WARNING));
+  ASSERT_EQ(LOG_ALERT, by_name(prioritynames, "alert"));
+  ASSERT_EQ(LOG_ERR, by_name(prioritynames, "err"));
+  ASSERT_EQ(LOG_WARNING, by_name(prioritynames, "warn"));
+  ASSERT_EQ(LOG_WARNING, by_name(prioritynames, "warning"));
 }
