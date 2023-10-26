@@ -87,6 +87,12 @@ static const char* auxv_name(int at) {
 #if defined(AT_L2_CACHEGEOMETRY)
   case AT_L2_CACHEGEOMETRY: return "AT_L2_CACHEGEOMETRY";
 #endif
+#if defined(AT_L3_CACHESIZE)
+  case AT_L3_CACHESIZE: return "AT_L3_CACHESIZE";
+#endif
+#if defined(AT_L3_CACHEGEOMETRY)
+  case AT_L3_CACHEGEOMETRY: return "AT_L3_CACHEGEOMETRY";
+#endif
   }
   static char name[32];
   snprintf(name, sizeof(name), "AT_??? (%d)", at);
