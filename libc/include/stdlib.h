@@ -87,6 +87,22 @@ long atol(const char* _Nonnull __s) __attribute_pure__;
 long long atoll(const char* _Nonnull __s) __attribute_pure__;
 
 __wur char* _Nullable realpath(const char* _Nonnull __path, char* _Nullable __resolved);
+
+/**
+ * [system(3)](http://man7.org/linux/man-pages/man3/system.3.html) executes
+ * the given command in a new shell process.
+ *
+ * On Android, the special case of `system(NULL)` always returns 1,
+ * as specified by POSIX. Passing `NULL` to determine whether or
+ * not a shell is available is not portable. Callers should just try
+ * the command they actually want to run, since there are many reasons
+ * why it might fail, both temporarily (for lack of resources, say)
+ * or permanently (for lack of permission, say).
+ *
+ * Returns -1 and sets errno if process creation fails; returns a
+ * [waitpid(2)](http://man7.org/linux/man-pages/man2/waitpid.2.html)
+ * status otherwise.
+ */
 int system(const char* _Nonnull __command);
 
 void* _Nullable bsearch(const void* _Nonnull __key, const void* _Nullable __base, size_t __nmemb, size_t __size, int (* _Nonnull __comparator)(const void* _Nonnull __lhs, const void* _Nonnull __rhs));
