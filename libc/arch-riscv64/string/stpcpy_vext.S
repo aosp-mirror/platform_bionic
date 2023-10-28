@@ -83,8 +83,9 @@ L(stpcpy_loop):
     add pDstPtr, pDstPtr, iCurrentVL
     bltz iActiveElemPos, L(stpcpy_loop)
 
-    // stpcpy() returns a pointer to the '\0', not the byte after it.
-    addi pDstPtr, pDstPtr, -1
+    // stpcpy() returns a pointer to the '\0' in the destination.
+    sub pDstPtr, pDstPtr, iCurrentVL
+    add pDstPtr, pDstPtr, iActiveElemPos
     ret
 END(stpcpy_vext)
 
