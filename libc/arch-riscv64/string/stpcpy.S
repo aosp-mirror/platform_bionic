@@ -53,41 +53,36 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#if defined(__riscv_v)
-
 #include <private/bionic_asm.h>
 
-#define pStr a0
-#define pCopyStr a2
-#define iRetValue a0
-#define iMaxlen a1
-#define iCurrentVL a3
-#define iEndOffset a4
+#define pDstPtr a0
+#define pSrc a1
+
+#define iVL a3
+#define iCurrentVL a4
+#define iActiveElemPos a5
 
 #define ELEM_LMUL_SETTING m1
-#define vStr v0
-#define vMaskEnd v8
+#define vMask1 v0
+#define vMask2 v1
+#define vStr1 v8
+#define vStr2 v16
 
-ENTRY(strnlen_vext)
-
-    mv pCopyStr, pStr
-    mv iRetValue, iMaxlen
-L(strnlen_loop):
-    beqz iMaxlen, L(end_strnlen_loop)
-    vsetvli zero, iMaxlen, e8, ELEM_LMUL_SETTING, ta, ma
-    vle8ff.v vStr, (pCopyStr)
-    vmseq.vi vMaskEnd, vStr, 0
-    vfirst.m iEndOffset, vMaskEnd /* first occurrence of \0 */
+ENTRY(stpcpy)
+L(stpcpy_loop):
+    vsetvli iVL, zero, e8, ELEM_LMUL_SETTING, ta, ma
+    vle8ff.v vStr1, (pSrc)
+    vmseq.vx vMask2, vStr1, zero
     csrr iCurrentVL, vl
-    add pCopyStr, pCopyStr, iCurrentVL
-    sub iMaxlen, iMaxlen, iCurrentVL
-    bltz iEndOffset, L(strnlen_loop)
-    add iMaxlen, iMaxlen, iCurrentVL
-    sub iRetValue, iRetValue, iMaxlen
-    add iRetValue, iRetValue, iEndOffset
-L(end_strnlen_loop):
+    vfirst.m iActiveElemPos, vMask2
+    vmsif.m vMask1, vMask2
+    add pSrc, pSrc, iCurrentVL
+    vse8.v vStr1, (pDstPtr), vMask1.t
+    add pDstPtr, pDstPtr, iCurrentVL
+    bltz iActiveElemPos, L(stpcpy_loop)
+
+    // stpcpy() returns a pointer to the '\0' in the destination.
+    sub pDstPtr, pDstPtr, iCurrentVL
+    add pDstPtr, pDstPtr, iActiveElemPos
     ret
-
-END(strnlen_vext)
-
-#endif
+END(stpcpy)

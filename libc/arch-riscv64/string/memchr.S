@@ -53,39 +53,44 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#if defined(__riscv_v)
-
 #include <private/bionic_asm.h>
 
 #define iResult a0
-#define pStr a0
-#define pCopyStr a1
-#define iVL a2
-#define iCurrentVL a2
-#define iEndOffset a3
 
-#define ELEM_LMUL_SETTING m2
-#define vStr v0
-#define vMaskEnd v2
+#define pSrc a0
+#define iValue a1
+#define iNum a2
 
-ENTRY(strlen_vext)
+#define iVL a3
+#define iTemp a4
 
-    mv pCopyStr, pStr
+#define ELEM_LMUL_SETTING m8
+#define vData v0
+#define vMask v8
+
+ENTRY(memchr)
+
 L(loop):
-    vsetvli iVL, zero, e8, ELEM_LMUL_SETTING, ta, ma
-    vle8ff.v vStr, (pCopyStr)
-    csrr iCurrentVL, vl
-    vmseq.vi vMaskEnd, vStr, 0
-    vfirst.m iEndOffset, vMaskEnd
-    add pCopyStr, pCopyStr, iCurrentVL
-    bltz iEndOffset, L(loop)
+    vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
 
-    add pStr, pStr, iCurrentVL
-    add pCopyStr, pCopyStr, iEndOffset
-    sub iResult, pCopyStr, iResult
+    vle8ff.v vData, (pSrc)
+    vmseq.vx vMask, vData, iValue
+    vfirst.m iTemp, vMask
 
+    # skip the loop if we find the matched value.
+    bgez iTemp, L(found)
+
+    csrr iVL, vl
+    sub iNum, iNum, iVL
+    add pSrc, pSrc, iVL
+
+    bnez iNum, L(loop)
+
+    li iResult, 0
     ret
 
-END(strlen)
+L(found):
+    add iResult, pSrc, iTemp
+    ret
 
-#endif
+END(memchr)

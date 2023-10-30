@@ -53,46 +53,62 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#if defined(__riscv_v)
-
 #include <private/bionic_asm.h>
 
-#define pStr a0
-#define iCh a1
-#define iEndOffset a2
-#define iChOffset a3
-#define iTemp1 a4
-#define iTemp2 a5
-#define iCurrentVL a6
-#define iVL t0
+#define pDst a0
+#define pSrc a1
+#define iLength a2
+#define pDstPtr a3
+
+#define iVL a4
+#define iCurrentVL a5
+#define iActiveElemPos a6
 
 #define ELEM_LMUL_SETTING m1
-#define vStr v0
-#define vMaskEnd v8
-#define vMaskCh v9
+#define vMask1 v0
+#define vMask2 v1
+#define ZERO_FILL_ELEM_LMUL_SETTING m8
+#define vStr1 v8
+#define vStr2 v16
 
-ENTRY(strchr_vext)
+ENTRY(strncpy)
 
-L(strchr_loop):
-    vsetvli iVL, zero, e8, ELEM_LMUL_SETTING, ta, ma
-    vle8ff.v vStr, (pStr)
-    vmseq.vi vMaskEnd, vStr, 0
-    vmseq.vx vMaskCh, vStr, iCh
-    vfirst.m iEndOffset, vMaskEnd /* first occurrence of \0 */
-    vfirst.m iChOffset, vMaskCh /* first occurrence of ch */
-    sltz iTemp1, iChOffset
-    sltu iTemp2, iEndOffset, iChOffset
-    or iTemp1, iTemp1, iTemp2
-    beqz iTemp1, L(found_ch) /* Found ch, not preceded by \0? */
+    mv pDstPtr, pDst
+
+    // copy pSrc to pDstPtr
+L(strcpy_loop):
+    vsetvli iVL, iLength, e8, ELEM_LMUL_SETTING, ta, ma
+    vle8ff.v vStr1, (pSrc)
+    vmseq.vx vMask2, vStr1, zero
     csrr iCurrentVL, vl
-    add pStr, pStr, iCurrentVL
-    bltz iEndOffset, L(strchr_loop) /* Didn't find \0? */
-    li pStr, 0
-    ret
-L(found_ch):
-    add pStr, pStr, iChOffset
+    vfirst.m iActiveElemPos, vMask2
+    vmsif.m vMask1, vMask2
+    add pSrc, pSrc, iCurrentVL
+    sub iLength, iLength, iCurrentVL
+    vse8.v vStr1, (pDstPtr), vMask1.t
+    add pDstPtr, pDstPtr, iCurrentVL
+    bgez iActiveElemPos, L(fill_zero)
+    bnez iLength, L(strcpy_loop)
     ret
 
-END(strchr_vext)
+    # fill the tail zero.
+L(fill_zero):
+    sub iVL, iCurrentVL, iActiveElemPos
+    add iLength, iLength, iVL
+    bnez iLength, 1f
+    ret
+1:
+    sub pDstPtr, pDstPtr, iVL
+    vsetvli zero, iLength, e8, ZERO_FILL_ELEM_LMUL_SETTING, ta, ma
+    vmv.v.x vStr2, zero
 
-#endif
+L(fill_zero_loop):
+    vsetvli iVL, iLength, e8, ZERO_FILL_ELEM_LMUL_SETTING, ta, ma
+    vse8.v vStr2, (pDstPtr)
+    sub iLength, iLength, iVL
+    add pDstPtr, pDstPtr, iVL
+    bnez iLength, L(fill_zero_loop)
+
+    ret
+
+END(strncpy)

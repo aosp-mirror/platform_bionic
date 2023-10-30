@@ -53,58 +53,33 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#if defined(__riscv_v)
-
 #include <private/bionic_asm.h>
 
-#define iResult a0
-
-#define pSrc1 a0
-#define pSrc2 a1
+#define pDst a0
+#define iValue a1
 #define iNum a2
 
 #define iVL a3
 #define iTemp a4
-#define iTemp1 a5
-#define iTemp2 a6
+#define pDstPtr a5
 
 #define ELEM_LMUL_SETTING m8
-#define vData1 v0
-#define vData2 v8
-#define vMask v16
+#define vData v0
 
-ENTRY(memcmp_vext)
+ENTRY(memset)
+
+    mv pDstPtr, pDst
+
+    vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
+    vmv.v.x vData, iValue
 
 L(loop):
-    vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
-
-    vle8.v vData1, (pSrc1)
-    vle8.v vData2, (pSrc2)
-
-    vmsne.vv vMask, vData1, vData2
+    vse8.v vData, (pDstPtr)
     sub iNum, iNum, iVL
-    vfirst.m iTemp, vMask
-
-    /* skip the loop if we find the different
-       value between pSrc1 and pSrc2.  */
-    bgez iTemp, L(found)
-
-    add pSrc1, pSrc1, iVL
-    add pSrc2, pSrc2, iVL
-
+    add pDstPtr, pDstPtr, iVL
+    vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
     bnez iNum, L(loop)
 
-    li iResult, 0
     ret
 
-L(found):
-    add pSrc1, pSrc1, iTemp
-    add pSrc2, pSrc2, iTemp
-    lbu iTemp1, 0(pSrc1)
-    lbu iTemp2, 0(pSrc2)
-    sub iResult, iTemp1, iTemp2
-    ret
-
-END(memcmp_vext)
-
-#endif
+END(memset)

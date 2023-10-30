@@ -25,6 +25,8 @@
 
 #include "utils.h"
 
+static const size_t kPageSize = getpagesize();
+
 TEST(sys_mman, mmap_std) {
   void* map = mmap(nullptr, 4096, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
   ASSERT_NE(MAP_FAILED, map);
@@ -233,42 +235,42 @@ TEST(sys_mman, mmap_PTRDIFF_MAX) {
 }
 
 TEST(sys_mman, mremap_PTRDIFF_MAX) {
-  void* map = mmap(nullptr, PAGE_SIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  void* map = mmap(nullptr, kPageSize, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   ASSERT_NE(MAP_FAILED, map);
 
-  ASSERT_EQ(MAP_FAILED, mremap(map, PAGE_SIZE, kHuge, MREMAP_MAYMOVE));
+  ASSERT_EQ(MAP_FAILED, mremap(map, kPageSize, kHuge, MREMAP_MAYMOVE));
 
-  ASSERT_EQ(0, munmap(map, PAGE_SIZE));
+  ASSERT_EQ(0, munmap(map, kPageSize));
 }
 
 TEST(sys_mman, mmap_bug_27265969) {
-  char* base = reinterpret_cast<char*>(mmap(nullptr, PAGE_SIZE * 2, PROT_EXEC | PROT_READ,
-                                            MAP_ANONYMOUS | MAP_PRIVATE, -1, 0));
+  char* base = reinterpret_cast<char*>(
+      mmap(nullptr, kPageSize * 2, PROT_EXEC | PROT_READ, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0));
   // Some kernels had bugs that would cause segfaults here...
-  __builtin___clear_cache(base, base + (PAGE_SIZE * 2));
+  __builtin___clear_cache(base, base + (kPageSize * 2));
 }
 
 TEST(sys_mman, mlock) {
-  void* map = mmap(nullptr, PAGE_SIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  void* map = mmap(nullptr, kPageSize, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   ASSERT_NE(MAP_FAILED, map);
 
   // Not really anything we can assert about this.
-  mlock(map, PAGE_SIZE);
+  mlock(map, kPageSize);
 
-  ASSERT_EQ(0, munmap(map, PAGE_SIZE));
+  ASSERT_EQ(0, munmap(map, kPageSize));
 }
 
 TEST(sys_mman, mlock2) {
 #if defined(__GLIBC__)
   GTEST_SKIP() << "needs glibc 2.27";
 #else
-  void* map = mmap(nullptr, PAGE_SIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  void* map = mmap(nullptr, kPageSize, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   ASSERT_NE(MAP_FAILED, map);
 
   // Not really anything we can assert about this.
-  mlock2(map, PAGE_SIZE, MLOCK_ONFAULT);
+  mlock2(map, kPageSize, MLOCK_ONFAULT);
 
-  ASSERT_EQ(0, munmap(map, PAGE_SIZE));
+  ASSERT_EQ(0, munmap(map, kPageSize));
 #endif
 }
 

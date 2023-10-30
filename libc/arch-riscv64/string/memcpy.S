@@ -53,71 +53,33 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#if defined(__riscv_v)
-
 #include <private/bionic_asm.h>
 
-#define iResult a0
-
-#define pStr1 a0
-#define pStr2 a1
-#define iLength a2
+#define pDst a0
+#define pSrc a1
+#define iNum a2
 
 #define iVL a3
-#define iTemp1 a4
-#define iTemp2 a5
+#define pDstPtr a4
 
-#define ELEM_LMUL_SETTING m1
-#define vStr1 v0
-#define vStr2 v4
-#define vMask1 v8
-#define vMask2 v9
+#define ELEM_LMUL_SETTING m8
+#define vData v0
 
-ENTRY(strncmp_vext)
+ENTRY(memcpy)
 
-    beqz iLength, L(zero_length)
+    mv pDstPtr, pDst
 
 L(loop):
-    vsetvli iVL, iLength, e8, ELEM_LMUL_SETTING, ta, ma
+    vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
 
-    vle8ff.v vStr1, (pStr1)
-     # vStr1[i] == 0
-    vmseq.vx vMask1, vStr1, zero
+    vle8.v vData, (pSrc)
+    sub iNum, iNum, iVL
+    add pSrc, pSrc, iVL
+    vse8.v vData, (pDstPtr)
+    add pDstPtr, pDstPtr, iVL
 
-    vle8ff.v vStr2, (pStr2)
-    # vStr1[i] != vStr2[i]
-    vmsne.vv vMask2, vStr1, vStr2
+    bnez iNum, L(loop)
 
-    csrr iVL, vl
-
-    # r = mask1 | mask2
-    # We could use vfirst.m to get the first zero char or the
-    # first different char between str1 and str2.
-    vmor.mm vMask1, vMask1, vMask2
-
-    sub iLength, iLength, iVL
-
-    vfirst.m iTemp1, vMask1
-
-    bgez iTemp1, L(end_loop)
-
-    add pStr1, pStr1, iVL
-    add pStr2, pStr2, iVL
-    bnez iLength, L(loop)
-L(end_loop):
-
-    add pStr1, pStr1, iTemp1
-    add pStr2, pStr2, iTemp1
-    lbu iTemp1, 0(pStr1)
-    lbu iTemp2, 0(pStr2)
-
-    sub iResult, iTemp1, iTemp2
     ret
 
-L(zero_length):
-    li iResult, 0
-    ret
-
-END(strncmp_vext)
-
-#endif
+END(memcpy)
