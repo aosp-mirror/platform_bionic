@@ -53,8 +53,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#if defined(__riscv_v)
-
 #include <private/bionic_asm.h>
 
 #define pDstPtr a0
@@ -70,7 +68,7 @@
 #define vStr1 v8
 #define vStr2 v16
 
-ENTRY(stpcpy_vext)
+ENTRY(stpcpy)
 L(stpcpy_loop):
     vsetvli iVL, zero, e8, ELEM_LMUL_SETTING, ta, ma
     vle8ff.v vStr1, (pSrc)
@@ -87,6 +85,4 @@ L(stpcpy_loop):
     sub pDstPtr, pDstPtr, iCurrentVL
     add pDstPtr, pDstPtr, iActiveElemPos
     ret
-END(stpcpy_vext)
-
-#endif
+END(stpcpy)
