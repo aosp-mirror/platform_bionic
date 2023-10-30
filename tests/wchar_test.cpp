@@ -297,14 +297,20 @@ TEST(wchar, mbtowc) {
   // mbrtowc returns 0 "if the next n or fewer bytes complete the multibyte
   // character that corresponds to the null wide character"
   //
-  // mbrtoc says: "If s is not a null pointer, the mbtowc function either
-  // returns 0 (if s points to the null character)..."
+  // mbrtoc (C23 7.24.7.2.4) says:
   //
-  // So mbrtowc will not provide the correct mbtowc return value for "" and
-  // n = 0.
+  //     If s is not a null pointer, the mbtowc function either returns 0 (if s
+  //     points to the null character), or returns the number of bytes that are
+  //     contained in the converted multibyte character (if the next n or fewer
+  //     bytes form a valid multibyte character), or returns -1 (if they do not
+  //     form a valid multibyte character).
   //
-  // glibc gets this right, but all the BSDs (including macOS) and bionic (by
-  // way of openbsd) return -1 instead of 0.
+  // glibc's interpretation differs from all the BSDs (including macOS) and
+  // bionic (by way of openbsd). glibc returns 0 since s does point to the null
+  // character, whereas the BSDs return -1 because the next 0 bytes do not form
+  // a valid multibyte chatacter. glibc's interpretation is probably more
+  // correct from a strict interpretation of the spec, but considering the other
+  // APIs behave more like the BSD interpretation that may be a bug in the spec.
 #ifdef __GLIBC__
   int expected_result_for_zero_length_empty_string = 0;
 #else
