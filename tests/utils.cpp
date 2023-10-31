@@ -89,6 +89,11 @@ void PrintTo(const Errno& e, std::ostream* os) {
   }
 }
 
+int64_t NanoTime() {
+  auto t = std::chrono::time_point_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now());
+  return t.time_since_epoch().count();
+}
+
 bool operator==(const Errno& lhs, const Errno& rhs) {
   return lhs.errno_ == rhs.errno_;
 }
