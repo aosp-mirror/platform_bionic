@@ -72,6 +72,7 @@ cc_defaults {
 
     target: {
         android: {
+            header_libs: ["bionic_libc_platform_headers"],
             static_libs: [
                 "libmeminfo",
                 "libprocinfo",

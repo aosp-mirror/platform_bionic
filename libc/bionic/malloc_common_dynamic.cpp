@@ -543,6 +543,14 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
     *reinterpret_cast<bool*>(arg) = atomic_load(&__libc_globals->memtag_stack);
     return true;
   }
+  if (opcode == M_GET_DECAY_TIME_ENABLED) {
+    if (arg == nullptr || arg_size != sizeof(bool)) {
+      errno = EINVAL;
+      return false;
+    }
+    *reinterpret_cast<bool*>(arg) = atomic_load(&__libc_globals->decay_time_enabled);
+    return true;
+  }
   // Try heapprofd's mallopt, as it handles options not covered here.
   return HeapprofdMallopt(opcode, arg, arg_size);
 }
