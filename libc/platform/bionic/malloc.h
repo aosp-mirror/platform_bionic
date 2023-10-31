@@ -104,6 +104,13 @@ enum {
   // Query whether memtag stack is enabled for this process.
   M_MEMTAG_STACK_IS_ON = 11,
 #define M_MEMTAG_STACK_IS_ON M_MEMTAG_STACK_IS_ON
+  // Query whether the current process has the decay time enabled so that
+  // the memory from allocations are not immediately released to the OS.
+  // Result is assigned to the arg pointer's destination.
+  //   arg = bool*
+  //   arg_size = sizeof(bool)
+  M_GET_DECAY_TIME_ENABLED = 12,
+#define M_GET_DECAY_TIME_ENABLED M_GET_DECAY_TIME_ENABLED
 };
 
 #pragma clang diagnostic push

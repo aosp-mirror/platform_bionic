@@ -110,12 +110,27 @@ extern "C" int mallopt(int param, int value) {
   if (param == M_BIONIC_ZERO_INIT) {
     return SetHeapZeroInitialize(value);
   }
+
   // The rest we pass on...
+  int retval;
   auto dispatch_table = GetDispatchTable();
   if (__predict_false(dispatch_table != nullptr)) {
-    return dispatch_table->mallopt(param, value);
+    retval = dispatch_table->mallopt(param, value);
+  } else {
+    retval = Malloc(mallopt)(param, value);
   }
-  return Malloc(mallopt)(param, value);
+
+  // Track the M_DECAY_TIME mallopt calls.
+  if (param == M_DECAY_TIME && retval == 1) {
+    __libc_globals.mutate([value](libc_globals* globals) {
+      if (value == 0) {
+        atomic_store(&globals->decay_time_enabled, false);
+      } else {
+        atomic_store(&globals->decay_time_enabled, true);
+      }
+    });
+  }
+  return retval;
 }
 
 extern "C" void* malloc(size_t bytes) {
@@ -339,6 +354,14 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
       return false;
     }
     *reinterpret_cast<bool*>(arg) = atomic_load(&__libc_globals->memtag_stack);
+    return true;
+  }
+  if (opcode == M_GET_DECAY_TIME_ENABLED) {
+    if (arg == nullptr || arg_size != sizeof(bool)) {
+      errno = EINVAL;
+      return false;
+    }
+    *reinterpret_cast<bool*>(arg) = atomic_load(&__libc_globals->decay_time_enabled);
     return true;
   }
   errno = ENOTSUP;
