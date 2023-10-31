@@ -20,6 +20,9 @@
 #define _UAPI_ASM_RISCV_PTRACE_H
 #ifndef __ASSEMBLY__
 #include <linux/types.h>
+#define PTRACE_GETFDPIC 33
+#define PTRACE_GETFDPIC_EXEC 0
+#define PTRACE_GETFDPIC_INTERP 1
 struct user_regs_struct {
   unsigned long pc;
   unsigned long ra;
@@ -88,6 +91,14 @@ struct __riscv_v_ext_state {
   unsigned long vcsr;
   unsigned long vlenb;
   void * datap;
+};
+struct __riscv_v_regset_state {
+  unsigned long vstart;
+  unsigned long vl;
+  unsigned long vtype;
+  unsigned long vcsr;
+  unsigned long vlenb;
+  char vreg[];
 };
 #define RISCV_MAX_VLENB (8192)
 #endif

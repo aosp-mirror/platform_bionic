@@ -340,6 +340,7 @@ typedef struct elf64_shdr {
 #define NT_386_TLS 0x200
 #define NT_386_IOPERM 0x201
 #define NT_X86_XSTATE 0x202
+#define NT_X86_SHSTK 0x204
 #define NT_S390_HIGH_GPRS 0x300
 #define NT_S390_TIMER 0x301
 #define NT_S390_TODCMP 0x302
@@ -374,6 +375,8 @@ typedef struct elf64_shdr {
 #define NT_MIPS_DSP 0x800
 #define NT_MIPS_FP_MODE 0x801
 #define NT_MIPS_MSA 0x802
+#define NT_RISCV_CSR 0x900
+#define NT_RISCV_VECTOR 0x901
 #define NT_LOONGARCH_CPUCFG 0xa00
 #define NT_LOONGARCH_CSR 0xa01
 #define NT_LOONGARCH_LSX 0xa02
