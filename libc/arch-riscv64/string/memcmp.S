@@ -53,43 +53,54 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#if defined(__riscv_v)
-
 #include <private/bionic_asm.h>
 
-#define pDst a0
-#define pSrc a1
-#define pDstPtr a2
+#define iResult a0
+
+#define pSrc1 a0
+#define pSrc2 a1
+#define iNum a2
 
 #define iVL a3
-#define iCurrentVL a4
-#define iActiveElemPos a5
+#define iTemp a4
+#define iTemp1 a5
+#define iTemp2 a6
 
-#define ELEM_LMUL_SETTING m1
-#define vMask1 v0
-#define vMask2 v1
-#define vStr1 v8
-#define vStr2 v16
+#define ELEM_LMUL_SETTING m8
+#define vData1 v0
+#define vData2 v8
+#define vMask v16
 
-ENTRY(strcpy_vext)
+ENTRY(memcmp)
 
-    mv pDstPtr, pDst
+L(loop):
+    vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
 
-    // copy pSrc to pDstPtr
-L(strcpy_loop):
-    vsetvli iVL, zero, e8, ELEM_LMUL_SETTING, ta, ma
-    vle8ff.v vStr1, (pSrc)
-    vmseq.vx vMask2, vStr1, zero
-    csrr iCurrentVL, vl
-    vfirst.m iActiveElemPos, vMask2
-    vmsif.m vMask1, vMask2
-    add pSrc, pSrc, iCurrentVL
-    vse8.v vStr1, (pDstPtr), vMask1.t
-    add pDstPtr, pDstPtr, iCurrentVL
-    bltz iActiveElemPos, L(strcpy_loop)
+    vle8.v vData1, (pSrc1)
+    vle8.v vData2, (pSrc2)
 
+    vmsne.vv vMask, vData1, vData2
+    sub iNum, iNum, iVL
+    vfirst.m iTemp, vMask
+
+    /* skip the loop if we find the different
+       value between pSrc1 and pSrc2.  */
+    bgez iTemp, L(found)
+
+    add pSrc1, pSrc1, iVL
+    add pSrc2, pSrc2, iVL
+
+    bnez iNum, L(loop)
+
+    li iResult, 0
     ret
 
-END(strcpy_vext)
+L(found):
+    add pSrc1, pSrc1, iTemp
+    add pSrc2, pSrc2, iTemp
+    lbu iTemp1, 0(pSrc1)
+    lbu iTemp2, 0(pSrc2)
+    sub iResult, iTemp1, iTemp2
+    ret
 
-#endif
+END(memcmp)
