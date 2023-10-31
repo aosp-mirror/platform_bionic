@@ -29,6 +29,7 @@
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
 #include <sys/_system_properties.h>
 
+#include <async_safe/CHECK.h>
 #include <system_properties/prop_area.h>
 #include <system_properties/system_properties.h>
 
@@ -131,6 +132,7 @@ int __system_property_foreach(void (*propfn)(const prop_info* pi, void* cookie),
 }
 
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
-int __system_properties_reload() {
+int __system_properties_zygote_reload(void) {
+  CHECK(getpid() == gettid());
   return system_properties.Reload(false) ? 0 : -1;
 }

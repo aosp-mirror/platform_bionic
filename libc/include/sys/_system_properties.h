@@ -132,13 +132,15 @@ int __system_properties_init(void);
 
 /*
  * Reloads the system properties from disk.
+ * Not intended for use by any apps except the Zygote. Should only be called from the main thread.
  *
  * NOTE: Any pointers received from methods such as __system_property_find should be assumed to be
  * invalid after this method is called.
  *
- * Returns 0 on success, -1 otherwise
+ * Returns 0 on success, -1 if the system properties failed to re-initialize (same conditions as
+ * __system properties_init)
  */
-int __system_properties_reload();
+int __system_properties_zygote_reload(void); __INTRODUCED_IN(__ANDROID_API_V__)
 
 /* Deprecated: use __system_property_wait instead. */
 uint32_t __system_property_wait_any(uint32_t __old_serial);

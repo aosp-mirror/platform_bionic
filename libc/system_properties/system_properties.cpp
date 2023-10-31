@@ -382,8 +382,8 @@ int SystemProperties::Add(const char* name, unsigned int namelen, const char* va
     } else if (is_override) {
       // We already wrote the ro.*, but appcompat_override.ro.* should override that. We don't
       // need to do the usual dirty bit setting, as this only happens during the init process,
-      // before any readers are started.
-      CHECK(getpid() == 1);
+      // before any readers are started. Check that only init or root can write appcompat props.
+      CHECK(getpid() == 1 || getuid() == 0);
       atomic_thread_fence(memory_order_release);
       strlcpy(other_pi->value, value, valuelen + 1);
     }
