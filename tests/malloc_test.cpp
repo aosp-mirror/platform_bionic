@@ -1734,3 +1734,36 @@ TEST(malloc, zeroed_allocations_realloc) {
     }
   }
 }
+
+TEST(android_mallopt, get_decay_time_enabled_errors) {
+#if defined(__BIONIC__)
+  errno = 0;
+  EXPECT_FALSE(android_mallopt(M_GET_DECAY_TIME_ENABLED, nullptr, sizeof(bool)));
+  EXPECT_ERRNO(EINVAL);
+
+  errno = 0;
+  int value;
+  EXPECT_FALSE(android_mallopt(M_GET_DECAY_TIME_ENABLED, &value, sizeof(value)));
+  EXPECT_ERRNO(EINVAL);
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
+TEST(android_mallopt, get_decay_time_enabled) {
+#if defined(__BIONIC__)
+  SKIP_WITH_HWASAN << "hwasan does not implement mallopt";
+
+  EXPECT_EQ(1, mallopt(M_DECAY_TIME, 0));
+
+  bool value;
+  EXPECT_TRUE(android_mallopt(M_GET_DECAY_TIME_ENABLED, &value, sizeof(value)));
+  EXPECT_FALSE(value);
+
+  EXPECT_EQ(1, mallopt(M_DECAY_TIME, 1));
+  EXPECT_TRUE(android_mallopt(M_GET_DECAY_TIME_ENABLED, &value, sizeof(value)));
+  EXPECT_TRUE(value);
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
