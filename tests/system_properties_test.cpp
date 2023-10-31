@@ -34,6 +34,7 @@ using namespace std::literals;
 #if defined(__BIONIC__)
 
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
+#include <stdlib.h>
 #include <sys/_system_properties.h>
 #include <sys/mount.h>
 
@@ -43,6 +44,7 @@ class SystemPropertiesTest : public SystemProperties {
  public:
   SystemPropertiesTest() : SystemProperties(false) {
     appcompat_path = android::base::StringPrintf("%s/appcompat_override", dir_.path);
+    mount_path = android::base::StringPrintf("%s/__properties__", dir_.path);
     mkdir(appcompat_path.c_str(), S_IRWXU | S_IXGRP | S_IXOTH);
     valid_ = AreaInit(dir_.path, nullptr, true);
   }
@@ -50,7 +52,8 @@ class SystemPropertiesTest : public SystemProperties {
     if (valid_) {
       contexts_->FreeAndUnmap();
     }
-    umount(dir_.path);
+    umount2(dir_.path, MNT_DETACH);
+    umount2(real_sysprop_dir.c_str(), MNT_DETACH);
   }
 
   bool valid() const {
@@ -61,7 +64,13 @@ class SystemPropertiesTest : public SystemProperties {
 
   const char* get_appcompat_path() const { return appcompat_path.c_str(); }
 
+  const char* get_mount_path() const { return mount_path.c_str(); }
+
+  const char* get_real_sysprop_dir() const { return real_sysprop_dir.c_str(); }
+
   std::string appcompat_path;
+  std::string mount_path;
+  std::string real_sysprop_dir = "/dev/__properties__";
 
  private:
   TemporaryDir dir_;
@@ -586,6 +595,96 @@ TEST(properties, __system_property_extra_long_read_only_too_long) {
   auto name = "ro.super_long_property"s;
   auto value = std::string(128 * 1024 + 1, 'x');
   ASSERT_NE(0, system_properties.Add(name.c_str(), name.size(), value.c_str(), value.size()));
+
+#else   // __BIONIC__
+  GTEST_SKIP() << "bionic-only test";
+#endif  // __BIONIC__
+}
+
+// Note that this test affects global state of the system
+// this tests tries to mitigate this by using utime+pid
+// prefix for the property name. It is still results in
+// pollution of property service since properties cannot
+// be removed.
+//
+// Note that there is also possibility to run into "out-of-memory"
+// if this test if it is executed often enough without reboot.
+TEST(properties, __system_property_reload_no_op) {
+#if defined(__BIONIC__)
+  std::string property_name =
+      android::base::StringPrintf("debug.test.%d.%" PRId64 ".property", getpid(), NanoTime());
+  ASSERT_EQ(0, __system_property_find(property_name.c_str()));
+  ASSERT_EQ(0, __system_property_set(property_name.c_str(), "test value"));
+  ASSERT_EQ(0, __system_properties_zygote_reload());
+  const prop_info* readptr = __system_property_find(property_name.c_str());
+  std::string expected_name = property_name;
+  __system_property_read_callback(
+      readptr,
+      [](void*, const char*, const char* value, unsigned) { ASSERT_STREQ("test value", value); },
+      &expected_name);
+#else   // __BIONIC__
+  GTEST_SKIP() << "bionic-only test";
+#endif  // __BIONIC__
+}
+
+TEST(properties, __system_property_reload_invalid) {
+#if defined(__BIONIC__)
+  if (getuid() != 0) GTEST_SKIP() << "test requires root";
+  SystemPropertiesTest system_properties;
+
+  // Create an invalid property_info file, so the system will attempt to initialize a
+  // ContextSerialized
+  std::string property_info_file =
+      android::base::StringPrintf("%s/property_info", system_properties.get_path());
+  fclose(fopen(property_info_file.c_str(), "w"));
+  int ret = mount(system_properties.get_path(), system_properties.get_real_sysprop_dir(), nullptr,
+                  MS_BIND | MS_REC, nullptr);
+  if (ret != 0) {
+    ASSERT_ERRNO(0);
+  }
+
+  ASSERT_EQ(-1, __system_properties_zygote_reload());
+#else   // __BIONIC__
+  GTEST_SKIP() << "bionic-only test";
+#endif  // __BIONIC__
+}
+
+// Note that this test affects global state of the system
+// this tests tries to mitigate this by using utime+pid
+// prefix for the property name. It is still results in
+// pollution of property service since properties cannot
+// be removed.
+//
+// Note that there is also possibility to run into "out-of-memory"
+// if this test if it is executed often enough without reboot.
+TEST(properties, __system_property_reload_valid) {
+#if defined(__BIONIC__)
+  if (getuid() != 0) GTEST_SKIP() << "test requires root";
+  SystemPropertiesTest system_properties;
+
+  // Copy the system properties files into the temp directory
+  std::string shell_cmd = android::base::StringPrintf(
+      "cp -r %s %s", system_properties.get_real_sysprop_dir(), system_properties.get_path());
+  system(shell_cmd.c_str());
+
+  // Write a system property to the current set of system properties
+  std::string property_name =
+      android::base::StringPrintf("debug.test.%d.%" PRId64 ".property", getpid(), NanoTime());
+  ASSERT_EQ(0, __system_property_find(property_name.c_str()));
+  ASSERT_EQ(0, __system_property_set(property_name.c_str(), "test value"));
+
+  // Mount the temp directory (which doesn't have the property we just wrote) in place of the
+  // real one
+  int ret = mount(system_properties.get_mount_path(), system_properties.get_real_sysprop_dir(),
+                  nullptr, MS_BIND | MS_REC, nullptr);
+  if (ret != 0) {
+    ASSERT_ERRNO(0);
+  }
+
+  // reload system properties in the new dir, and verify the property we wrote after we copied the
+  // files isn't there
+  ASSERT_EQ(0, __system_properties_zygote_reload());
+  ASSERT_EQ(0, __system_property_find(property_name.c_str()));
 
 #else   // __BIONIC__
   GTEST_SKIP() << "bionic-only test";
