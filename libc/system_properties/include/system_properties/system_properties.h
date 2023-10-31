@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include <stdint.h>
 #include <sys/param.h>
 #include <sys/system_properties.h>
 
@@ -36,26 +35,6 @@
 #include "contexts_pre_split.h"
 #include "contexts_serialized.h"
 #include "contexts_split.h"
-
-class PropertiesFilename {
- public:
-  PropertiesFilename() = default;
-  PropertiesFilename(const char* dir, const char* file) {
-    if (snprintf(filename_, sizeof(filename_), "%s/%s", dir, file) >=
-        static_cast<int>(sizeof(filename_))) {
-      abort();
-    }
-  }
-  void operator=(const char* value) {
-    if (strlen(value) >= sizeof(filename_)) abort();
-    strcpy(filename_, value);
-  }
-  const char* c_str() { return filename_; }
-
- private:
-  // Typically something like "/dev/__properties__/properties_serial".
-  char filename_[128];
-};
 
 class SystemProperties {
  public:
@@ -73,7 +52,9 @@ class SystemProperties {
   BIONIC_DISALLOW_COPY_AND_ASSIGN(SystemProperties);
 
   bool Init(const char* filename);
+  bool Reload(bool load_default_path);
   bool AreaInit(const char* filename, bool* fsetxattr_failed);
+  bool AreaInit(const char* filename, bool* fsetxattr_failed, bool load_default_path);
   uint32_t AreaSerial();
   const prop_info* Find(const char* name);
   int Read(const prop_info* pi, char* name, char* value);
@@ -101,8 +82,14 @@ class SystemProperties {
   static constexpr size_t kMaxContextsSize =
       MAX(sizeof(ContextsSerialized), MAX(sizeof(ContextsSplit), sizeof(ContextsPreSplit)));
   alignas(kMaxContextsAlign) char contexts_data_[kMaxContextsSize];
+  alignas(kMaxContextsAlign) char appcompat_override_contexts_data_[kMaxContextsSize];
   Contexts* contexts_;
+  // See http://b/291816546#comment#3 for more explanation of appcompat_override
+  Contexts* appcompat_override_contexts_;
+
+  bool InitContexts(bool load_default_path);
 
   bool initialized_;
   PropertiesFilename properties_filename_;
+  PropertiesFilename appcompat_filename_;
 };
