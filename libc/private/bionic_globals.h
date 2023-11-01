@@ -49,6 +49,7 @@ struct libc_globals {
   long setjmp_cookie;
   uintptr_t heap_pointer_tag;
   _Atomic(bool) memtag_stack;
+  _Atomic(bool) decay_time_enabled;
 
   // In order to allow a complete switch between dispatch tables without
   // the need for copying each function by function in the structure,
@@ -64,6 +65,15 @@ struct libc_globals {
   // limit is enabled and some other hook is enabled at the same time.
   _Atomic(const MallocDispatch*) default_dispatch_table;
   MallocDispatch malloc_dispatch_table;
+};
+
+struct memtag_dynamic_entries_t {
+  void* memtag_globals;
+  size_t memtag_globalssz;
+  bool has_memtag_mode;
+  unsigned memtag_mode;
+  bool memtag_heap;
+  bool memtag_stack;
 };
 
 #ifdef __aarch64__

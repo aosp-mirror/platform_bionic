@@ -36,11 +36,14 @@
 #include <vector>
 
 #include <benchmark/benchmark.h>
+#include "ScopedDecayTimeRestorer.h"
 #include "util.h"
 
 #if defined(__BIONIC__)
 
 static void RunMalloptPurge(benchmark::State& state, int purge_value) {
+  ScopedDecayTimeRestorer restorer;
+
   static size_t sizes[] = {8, 16, 32, 64, 128, 1024, 4096, 16384, 65536, 131072, 1048576};
   static int pagesize = getpagesize();
   mallopt(M_DECAY_TIME, 1);
@@ -69,7 +72,6 @@ static void RunMalloptPurge(benchmark::State& state, int purge_value) {
 
     mallopt(purge_value, 0);
   }
-  mallopt(M_DECAY_TIME, 0);
 }
 
 static void RunThreadsThroughput(benchmark::State& state, size_t size, size_t num_threads) {

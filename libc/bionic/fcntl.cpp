@@ -44,7 +44,7 @@ int fcntl(int fd, int cmd, ...) {
   va_end(args);
 
   if (cmd == F_SETFD && (reinterpret_cast<uintptr_t>(arg) & ~FD_CLOEXEC) != 0) {
-    __fortify_fatal("fcntl(F_SETFD) passed non-FD_CLOEXEC flag: %p", arg);
+    __fortify_fatal("fcntl(F_SETFD) only supports FD_CLOEXEC but was passed %p", arg);
   }
 
 #if defined(__LP64__)

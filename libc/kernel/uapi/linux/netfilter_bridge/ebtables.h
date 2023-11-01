@@ -63,7 +63,7 @@ struct ebt_entries {
   unsigned int counter_offset;
   int policy;
   unsigned int nentries;
-  char data[0] __attribute__((aligned(__alignof__(struct ebt_replace))));
+  char data[] __attribute__((aligned(__alignof__(struct ebt_replace))));
 };
 #define EBT_ENTRY_OR_ENTRIES 0x01
 #define EBT_NOPROTO 0x02
@@ -88,7 +88,7 @@ struct ebt_entry_match {
     struct xt_match * match;
   } u;
   unsigned int match_size;
-  unsigned char data[0] __attribute__((aligned(__alignof__(struct ebt_replace))));
+  unsigned char data[] __attribute__((aligned(__alignof__(struct ebt_replace))));
 };
 struct ebt_entry_watcher {
   union {
@@ -99,7 +99,7 @@ struct ebt_entry_watcher {
     struct xt_target * watcher;
   } u;
   unsigned int watcher_size;
-  unsigned char data[0] __attribute__((aligned(__alignof__(struct ebt_replace))));
+  unsigned char data[] __attribute__((aligned(__alignof__(struct ebt_replace))));
 };
 struct ebt_entry_target {
   union {
@@ -129,10 +129,11 @@ struct ebt_entry {
   unsigned char sourcemsk[ETH_ALEN];
   unsigned char destmac[ETH_ALEN];
   unsigned char destmsk[ETH_ALEN];
-  unsigned int watchers_offset;
+  __struct_group(, offsets,, unsigned int watchers_offset;
   unsigned int target_offset;
   unsigned int next_offset;
-  unsigned char elems[0] __attribute__((aligned(__alignof__(struct ebt_replace))));
+ );
+  unsigned char elems[] __attribute__((aligned(__alignof__(struct ebt_replace))));
 };
 #define EBT_BASE_CTL 128
 #define EBT_SO_SET_ENTRIES (EBT_BASE_CTL)

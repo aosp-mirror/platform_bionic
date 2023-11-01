@@ -319,33 +319,34 @@ TEST(STRING_TEST, strcpy4) {
 // one byte target with "\0" source
 TEST(STRING_TEST, stpcpy2) {
   char buf[1];
+  memset(buf, 'A', sizeof(buf));
   char* orig = strdup("");
-  ASSERT_EQ(buf, stpcpy(buf, orig));
-  ASSERT_EQ('\0', buf[0]);
+  EXPECT_EQ(buf, stpcpy(buf, orig));
+  EXPECT_EQ('\0', buf[0]);
   free(orig);
 }
 
 // multibyte target where we under fill target
 TEST(STRING_TEST, stpcpy3) {
   char buf[10];
-  char* orig = strdup("12345");
   memset(buf, 'A', sizeof(buf));
-  ASSERT_EQ(buf+strlen(orig), stpcpy(buf, orig));
-  ASSERT_STREQ("12345", buf);
-  ASSERT_EQ('A',  buf[6]);
-  ASSERT_EQ('A',  buf[7]);
-  ASSERT_EQ('A',  buf[8]);
-  ASSERT_EQ('A',  buf[9]);
+  char* orig = strdup("12345");
+  EXPECT_EQ(buf+strlen(orig), stpcpy(buf, orig));
+  EXPECT_STREQ("12345", buf);
+  EXPECT_EQ('A',  buf[6]);
+  EXPECT_EQ('A',  buf[7]);
+  EXPECT_EQ('A',  buf[8]);
+  EXPECT_EQ('A',  buf[9]);
   free(orig);
 }
 
 // multibyte target where we fill target exactly
 TEST(STRING_TEST, stpcpy4) {
   char buf[10];
-  char* orig = strdup("123456789");
   memset(buf, 'A', sizeof(buf));
-  ASSERT_EQ(buf+strlen(orig), stpcpy(buf, orig));
-  ASSERT_STREQ("123456789", buf);
+  char* orig = strdup("123456789");
+  EXPECT_EQ(buf+strlen(orig), stpcpy(buf, orig));
+  EXPECT_STREQ("123456789", buf);
   free(orig);
 }
 
