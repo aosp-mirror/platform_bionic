@@ -48,5 +48,6 @@ struct scom_access {
 #define FSI_SCOM_READ _IOWR('s', 0x01, struct scom_access)
 #define FSI_SCOM_WRITE _IOWR('s', 0x02, struct scom_access)
 #define FSI_SCOM_RESET _IOW('s', 0x03, __u32)
+#define FSI_SBEFIFO_CMD_TIMEOUT_SECONDS _IOW('s', 0x01, __u32)
 #define FSI_SBEFIFO_READ_TIMEOUT_SECONDS _IOW('s', 0x00, __u32)
 #endif

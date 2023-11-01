@@ -26,31 +26,26 @@
  * SUCH DAMAGE.
  */
 
-#include <private/bionic_asm.h>
+#pragma once
 
-#define FUNCTION_DELEGATE(name, impl) \
-ENTRY(name); \
-    j impl; \
-END(name)
+#include <stdint.h>
 
-#if defined(__riscv_v)
+class PropertiesFilename {
+ public:
+  PropertiesFilename() = default;
+  PropertiesFilename(const char* dir, const char* file) {
+    if (snprintf(filename_, sizeof(filename_), "%s/%s", dir, file) >=
+        static_cast<int>(sizeof(filename_))) {
+      abort();
+    }
+  }
+  void operator=(const char* value) {
+    if (strlen(value) >= sizeof(filename_)) abort();
+    strcpy(filename_, value);
+  }
+  const char* c_str() { return filename_; }
 
-FUNCTION_DELEGATE(memchr, memchr_vext)
-FUNCTION_DELEGATE(memcmp, memcmp_vext)
-FUNCTION_DELEGATE(memcpy, memcpy_vext)
-FUNCTION_DELEGATE(memmove, memmove_vext)
-FUNCTION_DELEGATE(memset, memset_vext)
-FUNCTION_DELEGATE(stpcpy, stpcpy_vext)
-FUNCTION_DELEGATE(strcat, strcat_vext)
-FUNCTION_DELEGATE(strchr, strchr_vext)
-FUNCTION_DELEGATE(strcmp, strcmp_vext)
-FUNCTION_DELEGATE(strcpy, strcpy_vext)
-FUNCTION_DELEGATE(strlen, strlen_vext)
-FUNCTION_DELEGATE(strncat, strncat_vext)
-FUNCTION_DELEGATE(strncmp, strncmp_vext)
-FUNCTION_DELEGATE(strncpy, strncpy_vext)
-FUNCTION_DELEGATE(strnlen, strnlen_vext)
-
-#endif
-
-NOTE_GNU_PROPERTY()
+ private:
+  // Typically something like "/dev/__properties__/properties_serial".
+  char filename_[128];
+};

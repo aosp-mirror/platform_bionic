@@ -61,6 +61,10 @@ enum {
   IOPRIO_HINT_DEV_DURATION_LIMIT_7 = 7,
 };
 #define IOPRIO_BAD_VALUE(val,max) ((val) < 0 || (val) >= (max))
-#define IOPRIO_PRIO_VALUE(class,level) ioprio_value(class, level, IOPRIO_HINT_NONE)
-#define IOPRIO_PRIO_VALUE_HINT(class,level,hint) ioprio_value(class, level, hint)
+static __always_inline __u16 ioprio_value(int prioclass, int priolevel, int priohint) {
+  if(IOPRIO_BAD_VALUE(prioclass, IOPRIO_NR_CLASSES) || IOPRIO_BAD_VALUE(priolevel, IOPRIO_NR_LEVELS) || IOPRIO_BAD_VALUE(priohint, IOPRIO_NR_HINTS)) return IOPRIO_CLASS_INVALID << IOPRIO_CLASS_SHIFT;
+  return(prioclass << IOPRIO_CLASS_SHIFT) | (priohint << IOPRIO_HINT_SHIFT) | priolevel;
+}
+#define IOPRIO_PRIO_VALUE(prioclass,priolevel) ioprio_value(prioclass, priolevel, IOPRIO_HINT_NONE)
+#define IOPRIO_PRIO_VALUE_HINT(prioclass,priolevel,priohint) ioprio_value(prioclass, priolevel, priohint)
 #endif

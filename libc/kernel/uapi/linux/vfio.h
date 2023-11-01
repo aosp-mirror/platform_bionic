@@ -66,6 +66,7 @@ struct vfio_device_info {
   __u32 num_regions;
   __u32 num_irqs;
   __u32 cap_offset;
+  __u32 pad;
 };
 #define VFIO_DEVICE_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 7)
 #define VFIO_DEVICE_API_PCI_STRING "vfio-pci"
@@ -232,7 +233,12 @@ enum {
   VFIO_AP_NUM_IRQS
 };
 struct vfio_pci_dependent_device {
-  __u32 group_id;
+  union {
+    __u32 group_id;
+    __u32 devid;
+#define VFIO_PCI_DEVID_OWNED 0
+#define VFIO_PCI_DEVID_NOT_OWNED - 1
+  };
   __u16 segment;
   __u8 bus;
   __u8 devfn;
@@ -240,6 +246,8 @@ struct vfio_pci_dependent_device {
 struct vfio_pci_hot_reset_info {
   __u32 argsz;
   __u32 flags;
+#define VFIO_PCI_HOT_RESET_FLAG_DEV_ID (1 << 0)
+#define VFIO_PCI_HOT_RESET_FLAG_DEV_ID_OWNED (1 << 1)
   __u32 count;
   struct vfio_pci_dependent_device devices[];
 };
@@ -298,6 +306,24 @@ struct vfio_device_feature {
   __u8 data[];
 };
 #define VFIO_DEVICE_FEATURE _IO(VFIO_TYPE, VFIO_BASE + 17)
+struct vfio_device_bind_iommufd {
+  __u32 argsz;
+  __u32 flags;
+  __s32 iommufd;
+  __u32 out_devid;
+};
+#define VFIO_DEVICE_BIND_IOMMUFD _IO(VFIO_TYPE, VFIO_BASE + 18)
+struct vfio_device_attach_iommufd_pt {
+  __u32 argsz;
+  __u32 flags;
+  __u32 pt_id;
+};
+#define VFIO_DEVICE_ATTACH_IOMMUFD_PT _IO(VFIO_TYPE, VFIO_BASE + 19)
+struct vfio_device_detach_iommufd_pt {
+  __u32 argsz;
+  __u32 flags;
+};
+#define VFIO_DEVICE_DETACH_IOMMUFD_PT _IO(VFIO_TYPE, VFIO_BASE + 20)
 #define VFIO_DEVICE_FEATURE_PCI_VF_TOKEN (0)
 struct vfio_device_feature_migration {
   __aligned_u64 flags;
@@ -365,6 +391,7 @@ struct vfio_iommu_type1_info {
 #define VFIO_IOMMU_INFO_CAPS (1 << 1)
   __u64 iova_pgsizes;
   __u32 cap_offset;
+  __u32 pad;
 };
 #define VFIO_IOMMU_TYPE1_INFO_CAP_IOVA_RANGE 1
 struct vfio_iova_range {

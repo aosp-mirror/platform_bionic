@@ -53,54 +53,65 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#if defined(__riscv_v)
-
 #include <private/bionic_asm.h>
 
 #define pDst a0
 #define pSrc a1
-#define iNum a2
+#define iLength a2
+#define pDstPtr a3
 
-#define iVL a3
-#define pDstPtr a4
-#define pSrcBackwardPtr a5
-#define pDstBackwardPtr a6
+#define iVL a4
+#define iCurrentVL a5
+#define iActiveElemPos a6
 
-#define ELEM_LMUL_SETTING m8
-#define vData v0
+#define ELEM_LMUL_SETTING m1
+#define vMask1 v0
+#define vMask2 v1
+#define vStr1 v8
+#define vStr2 v16
 
-ENTRY(memmove_vext)
+ENTRY(strncat)
 
     mv pDstPtr, pDst
 
-    bgeu pSrc, pDst, L(forward_copy_loop)
-    add pSrcBackwardPtr, pSrc, iNum
-    add pDstBackwardPtr, pDst, iNum
-    bltu pDst, pSrcBackwardPtr, L(backward_copy_loop)
+    // the strlen of dst
+L(strlen_loop):
+    vsetvli iVL, zero, e8, ELEM_LMUL_SETTING, ta, ma
 
-L(forward_copy_loop):
-    vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
+    vle8ff.v vStr1, (pDstPtr)
+    // find the '\0'
+    vmseq.vx vMask1, vStr1, zero
+    csrr iCurrentVL, vl
+    vfirst.m iActiveElemPos, vMask1
+    add pDstPtr, pDstPtr, iCurrentVL
+    bltz iActiveElemPos, L(strlen_loop)
 
-    vle8.v vData, (pSrc)
-    sub iNum, iNum, iVL
-    add pSrc, pSrc, iVL
-    vse8.v vData, (pDstPtr)
-    add pDstPtr, pDstPtr, iVL
+    sub pDstPtr, pDstPtr, iCurrentVL
+    add pDstPtr, pDstPtr, iActiveElemPos
 
-    bnez iNum, L(forward_copy_loop)
+    // copy pSrc to pDstPtr
+L(strcpy_loop):
+    vsetvli iVL, iLength, e8, ELEM_LMUL_SETTING, ta, ma
+
+    vle8ff.v vStr1, (pSrc)
+    vmseq.vx vMask2, vStr1, zero
+    csrr iCurrentVL, vl
+    vfirst.m iActiveElemPos, vMask2
+    vmsif.m vMask1, vMask2
+    add pSrc, pSrc, iCurrentVL
+    sub iLength, iLength, iCurrentVL
+    vse8.v vStr1, (pDstPtr), vMask1.t
+    add pDstPtr, pDstPtr, iCurrentVL
+    beqz iLength, L(fill_zero)
+    bltz iActiveElemPos, L(strcpy_loop)
+
     ret
 
-L(backward_copy_loop):
-    vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
+L(fill_zero):
+    bgez iActiveElemPos, L(fill_zero_end)
+    sb zero, (pDstPtr)
 
-    sub pSrcBackwardPtr, pSrcBackwardPtr, iVL
-    vle8.v vData, (pSrcBackwardPtr)
-    sub iNum, iNum, iVL
-    sub pDstBackwardPtr, pDstBackwardPtr, iVL
-    vse8.v vData, (pDstBackwardPtr)
-    bnez iNum, L(backward_copy_loop)
+L(fill_zero_end):
     ret
 
-END(memmove_vext)
-
-#endif
+END(strncat)

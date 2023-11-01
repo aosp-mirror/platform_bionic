@@ -53,41 +53,33 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#if defined(__riscv_v)
-
 #include <private/bionic_asm.h>
 
-#define pStr a0
-#define pCopyStr a2
-#define iRetValue a0
-#define iMaxlen a1
-#define iCurrentVL a3
-#define iEndOffset a4
+#define pDst a0
+#define pSrc a1
+#define iNum a2
 
-#define ELEM_LMUL_SETTING m1
-#define vStr v0
-#define vMaskEnd v8
+#define iVL a3
+#define pDstPtr a4
 
-ENTRY(strnlen_vext)
+#define ELEM_LMUL_SETTING m8
+#define vData v0
 
-    mv pCopyStr, pStr
-    mv iRetValue, iMaxlen
-L(strnlen_loop):
-    beqz iMaxlen, L(end_strnlen_loop)
-    vsetvli zero, iMaxlen, e8, ELEM_LMUL_SETTING, ta, ma
-    vle8ff.v vStr, (pCopyStr)
-    vmseq.vi vMaskEnd, vStr, 0
-    vfirst.m iEndOffset, vMaskEnd /* first occurrence of \0 */
-    csrr iCurrentVL, vl
-    add pCopyStr, pCopyStr, iCurrentVL
-    sub iMaxlen, iMaxlen, iCurrentVL
-    bltz iEndOffset, L(strnlen_loop)
-    add iMaxlen, iMaxlen, iCurrentVL
-    sub iRetValue, iRetValue, iMaxlen
-    add iRetValue, iRetValue, iEndOffset
-L(end_strnlen_loop):
+ENTRY(memcpy)
+
+    mv pDstPtr, pDst
+
+L(loop):
+    vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
+
+    vle8.v vData, (pSrc)
+    sub iNum, iNum, iVL
+    add pSrc, pSrc, iVL
+    vse8.v vData, (pDstPtr)
+    add pDstPtr, pDstPtr, iVL
+
+    bnez iNum, L(loop)
+
     ret
 
-END(strnlen_vext)
-
-#endif
+END(memcpy)

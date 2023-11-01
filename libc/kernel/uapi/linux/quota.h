@@ -42,6 +42,7 @@
 #define QFMT_VFS_V0 2
 #define QFMT_OCFS2 3
 #define QFMT_VFS_V1 4
+#define QFMT_SHMEM 5
 #define QIF_DQBLKSIZE_BITS 10
 #define QIF_DQBLKSIZE (1 << QIF_DQBLKSIZE_BITS)
 enum {

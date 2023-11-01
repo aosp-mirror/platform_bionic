@@ -53,48 +53,50 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#if defined(__riscv_v)
-
 #include <private/bionic_asm.h>
 
-#define iResult a0
-
-#define pSrc a0
-#define iValue a1
+#define pDst a0
+#define pSrc a1
 #define iNum a2
 
 #define iVL a3
-#define iTemp a4
+#define pDstPtr a4
+#define pSrcBackwardPtr a5
+#define pDstBackwardPtr a6
 
 #define ELEM_LMUL_SETTING m8
 #define vData v0
-#define vMask v8
 
-ENTRY(memchr_vext)
+ENTRY(memmove)
 
-L(loop):
+    mv pDstPtr, pDst
+
+    bgeu pSrc, pDst, L(forward_copy_loop)
+    add pSrcBackwardPtr, pSrc, iNum
+    add pDstBackwardPtr, pDst, iNum
+    bltu pDst, pSrcBackwardPtr, L(backward_copy_loop)
+
+L(forward_copy_loop):
     vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
 
-    vle8ff.v vData, (pSrc)
-    vmseq.vx vMask, vData, iValue
-    vfirst.m iTemp, vMask
-
-    # skip the loop if we find the matched value.
-    bgez iTemp, L(found)
-
-    csrr iVL, vl
+    vle8.v vData, (pSrc)
     sub iNum, iNum, iVL
     add pSrc, pSrc, iVL
+    vse8.v vData, (pDstPtr)
+    add pDstPtr, pDstPtr, iVL
 
-    bnez iNum, L(loop)
-
-    li iResult, 0
+    bnez iNum, L(forward_copy_loop)
     ret
 
-L(found):
-    add iResult, pSrc, iTemp
+L(backward_copy_loop):
+    vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
+
+    sub pSrcBackwardPtr, pSrcBackwardPtr, iVL
+    vle8.v vData, (pSrcBackwardPtr)
+    sub iNum, iNum, iVL
+    sub pDstBackwardPtr, pDstBackwardPtr, iVL
+    vse8.v vData, (pDstBackwardPtr)
+    bnez iNum, L(backward_copy_loop)
     ret
 
-END(memchr_vext)
-
-#endif
+END(memmove)

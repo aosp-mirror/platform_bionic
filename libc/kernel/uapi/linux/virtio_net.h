@@ -45,6 +45,7 @@
 #define VIRTIO_NET_F_GUEST_ANNOUNCE 21
 #define VIRTIO_NET_F_MQ 22
 #define VIRTIO_NET_F_CTRL_MAC_ADDR 23
+#define VIRTIO_NET_F_VQ_NOTF_COAL 52
 #define VIRTIO_NET_F_NOTF_COAL 53
 #define VIRTIO_NET_F_GUEST_USO4 54
 #define VIRTIO_NET_F_GUEST_USO6 55
@@ -141,7 +142,7 @@ struct virtio_net_hdr_mrg_rxbuf {
 };
 #endif
 struct virtio_net_ctrl_hdr {
-  __u8 class;
+  __u8 __linux_class;
   __u8 cmd;
 } __attribute__((packed));
 typedef __u8 virtio_net_ctrl_ack;
@@ -203,4 +204,15 @@ struct virtio_net_ctrl_coal_rx {
   __le32 rx_usecs;
 };
 #define VIRTIO_NET_CTRL_NOTF_COAL_RX_SET 1
+#define VIRTIO_NET_CTRL_NOTF_COAL_VQ_SET 2
+#define VIRTIO_NET_CTRL_NOTF_COAL_VQ_GET 3
+struct virtio_net_ctrl_coal {
+  __le32 max_packets;
+  __le32 max_usecs;
+};
+struct virtio_net_ctrl_coal_vq {
+  __le16 vqn;
+  __le16 reserved;
+  struct virtio_net_ctrl_coal coal;
+};
 #endif

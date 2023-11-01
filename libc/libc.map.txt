@@ -1600,6 +1600,7 @@ LIBC_V { # introduced=VanillaIceCream
     tzalloc;
     tzfree;
     wcsrtombs_l;
+    __system_properties_zygote_reload; # apex
 } LIBC_U;
 
 LIBC_PRIVATE {
