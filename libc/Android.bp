@@ -641,6 +641,7 @@ cc_library_static {
 // automatically included.
 cc_library_static {
     defaults: ["libc_defaults"],
+    tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: [
         // These two depend on getentropy, which isn't in libc_ndk.a.
         "upstream-openbsd/lib/libc/crypt/arc4random.c",
@@ -910,11 +911,14 @@ cc_library_static {
                 "arch-riscv64/bionic/syscall.S",
                 "arch-riscv64/bionic/vfork.S",
 
+                // TODO(b/306514350): Remove this and replace with the optimized
+                // version once the bug is resolved.
+                "upstream-freebsd/lib/libc/string/memcmp.c",
+
                 "bionic/strchrnul.cpp",
                 "bionic/strrchr.cpp",
 
                 "arch-riscv64/string/memchr.S",
-                "arch-riscv64/string/memcmp.S",
                 "arch-riscv64/string/memcpy.S",
                 "arch-riscv64/string/memmove.S",
                 "arch-riscv64/string/memset.S",
