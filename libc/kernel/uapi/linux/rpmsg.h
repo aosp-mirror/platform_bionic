@@ -30,4 +30,6 @@ struct rpmsg_endpoint_info {
 #define RPMSG_DESTROY_EPT_IOCTL _IO(0xb5, 0x2)
 #define RPMSG_CREATE_DEV_IOCTL _IOW(0xb5, 0x3, struct rpmsg_endpoint_info)
 #define RPMSG_RELEASE_DEV_IOCTL _IOW(0xb5, 0x4, struct rpmsg_endpoint_info)
+#define RPMSG_GET_OUTGOING_FLOWCONTROL _IOR(0xb5, 0x5, int)
+#define RPMSG_SET_INCOMING_FLOWCONTROL _IOR(0xb5, 0x6, int)
 #endif
