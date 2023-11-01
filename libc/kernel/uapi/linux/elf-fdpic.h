@@ -31,4 +31,15 @@ struct elf32_fdpic_loadmap {
   struct elf32_fdpic_loadseg segs[];
 };
 #define ELF32_FDPIC_LOADMAP_VERSION 0x0000
+struct elf64_fdpic_loadseg {
+  Elf64_Addr addr;
+  Elf64_Addr p_vaddr;
+  Elf64_Word p_memsz;
+};
+struct elf64_fdpic_loadmap {
+  Elf64_Half version;
+  Elf64_Half nsegs;
+  struct elf64_fdpic_loadseg segs[];
+};
+#define ELF64_FDPIC_LOADMAP_VERSION 0x0000
 #endif
