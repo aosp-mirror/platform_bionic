@@ -32,10 +32,7 @@ struct sockaddr_ll {
   unsigned short sll_hatype;
   unsigned char sll_pkttype;
   unsigned char sll_halen;
-  union {
-    unsigned char sll_addr[8];
-    __DECLARE_FLEX_ARRAY(unsigned char, sll_addr_flex);
-  };
+  unsigned char sll_addr[8];
 };
 #define PACKET_HOST 0
 #define PACKET_BROADCAST 1

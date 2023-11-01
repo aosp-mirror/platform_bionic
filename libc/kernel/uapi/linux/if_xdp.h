@@ -23,6 +23,7 @@
 #define XDP_COPY (1 << 1)
 #define XDP_ZEROCOPY (1 << 2)
 #define XDP_USE_NEED_WAKEUP (1 << 3)
+#define XDP_USE_SG (1 << 4)
 #define XDP_UMEM_UNALIGNED_CHUNK_FLAG (1 << 0)
 struct sockaddr_xdp {
   __u16 sxdp_family;
@@ -82,4 +83,5 @@ struct xdp_desc {
   __u32 len;
   __u32 options;
 };
+#define XDP_PKT_CONTD (1 << 0)
 #endif

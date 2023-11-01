@@ -18,9 +18,11 @@
  ****************************************************************************/
 #ifndef _LINUX_GSMMUX_H
 #define _LINUX_GSMMUX_H
+#include <linux/const.h>
 #include <linux/if.h>
 #include <linux/ioctl.h>
 #include <linux/types.h>
+#define GSM_FL_RESTART _BITUL(0)
 struct gsm_config {
   unsigned int adaption;
   unsigned int encapsulation;
@@ -50,7 +52,8 @@ struct gsm_netconfig {
 struct gsm_config_ext {
   __u32 keep_alive;
   __u32 wait_config;
-  __u32 reserved[6];
+  __u32 flags;
+  __u32 reserved[5];
 };
 #define GSMIOC_GETCONF_EXT _IOR('G', 5, struct gsm_config_ext)
 #define GSMIOC_SETCONF_EXT _IOW('G', 6, struct gsm_config_ext)
@@ -61,7 +64,8 @@ struct gsm_dlci_config {
   __u32 priority;
   __u32 i;
   __u32 k;
-  __u32 reserved[8];
+  __u32 flags;
+  __u32 reserved[7];
 };
 #define GSMIOC_GETCONF_DLCI _IOWR('G', 7, struct gsm_dlci_config)
 #define GSMIOC_SETCONF_DLCI _IOW('G', 8, struct gsm_dlci_config)
