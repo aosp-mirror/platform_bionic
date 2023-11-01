@@ -82,7 +82,11 @@ __attribute__((no_sanitize("address", "hwaddress"))) size_t android_unsafe_frame
     auto* frame = reinterpret_cast<frame_record*>(begin);
 #endif
     if (num_frames < num_entries) {
-      buf[num_frames] = __bionic_clear_pac_bits(frame->return_addr);
+      uintptr_t addr = __bionic_clear_pac_bits(frame->return_addr);
+      if (addr == 0) {
+        break;
+      }
+      buf[num_frames] = addr;
     }
     ++num_frames;
     if (frame->next_frame < begin + sizeof(frame_record) || frame->next_frame >= end ||
