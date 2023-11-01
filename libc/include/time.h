@@ -115,7 +115,7 @@ time_t time(time_t* _Nullable __t);
  * was interrupted by a signal, `errno` will be `EINTR` and `remainder` will be
  * the amount of time remaining.
  */
-int nanosleep(const struct timespec* _Nonnull __request, struct timespec* _Nullable __remainder);
+int nanosleep(const struct timespec* _Nonnull __duration, struct timespec* _Nullable __remainder);
 
 /**
  * [asctime(3)](http://man7.org/linux/man-pages/man3/asctime.3p.html) formats
@@ -371,7 +371,7 @@ int clock_gettime(clockid_t __clock, struct timespec* _Nonnull __ts);
  * If the sleep was interrupted by a signal, the return value will be `EINTR`
  * and `remainder` will be the amount of time remaining.
  */
-int clock_nanosleep(clockid_t __clock, int __flags, const struct timespec* _Nonnull __request, struct timespec* _Nullable __remainder);
+int clock_nanosleep(clockid_t __clock, int __flags, const struct timespec* _Nonnull __duration, struct timespec* _Nullable __remainder);
 
 /**
  * [clock_settime(2)](http://man7.org/linux/man-pages/man2/clock_settime.2.html)
