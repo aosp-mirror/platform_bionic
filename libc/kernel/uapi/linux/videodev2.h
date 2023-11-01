@@ -422,6 +422,8 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_Z16 v4l2_fourcc('Z', '1', '6', ' ')
 #define V4L2_PIX_FMT_MT21C v4l2_fourcc('M', 'T', '2', '1')
 #define V4L2_PIX_FMT_MM21 v4l2_fourcc('M', 'M', '2', '1')
+#define V4L2_PIX_FMT_MT2110T v4l2_fourcc('M', 'T', '2', 'T')
+#define V4L2_PIX_FMT_MT2110R v4l2_fourcc('M', 'T', '2', 'R')
 #define V4L2_PIX_FMT_INZI v4l2_fourcc('I', 'N', 'Z', 'I')
 #define V4L2_PIX_FMT_CNF4 v4l2_fourcc('C', 'N', 'F', '4')
 #define V4L2_PIX_FMT_HI240 v4l2_fourcc('H', 'I', '2', '4')

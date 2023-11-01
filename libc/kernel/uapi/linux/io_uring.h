@@ -120,6 +120,7 @@ enum {
 #define IORING_SETUP_DEFER_TASKRUN (1U << 13)
 #define IORING_SETUP_NO_MMAP (1U << 14)
 #define IORING_SETUP_REGISTERED_FD_ONLY (1U << 15)
+#define IORING_SETUP_NO_SQARRAY (1U << 16)
 enum io_uring_op {
   IORING_OP_NOP,
   IORING_OP_READV,
@@ -193,6 +194,8 @@ enum io_uring_op {
 #define IORING_ASYNC_CANCEL_FD (1U << 1)
 #define IORING_ASYNC_CANCEL_ANY (1U << 2)
 #define IORING_ASYNC_CANCEL_FD_FIXED (1U << 3)
+#define IORING_ASYNC_CANCEL_USERDATA (1U << 4)
+#define IORING_ASYNC_CANCEL_OP (1U << 5)
 #define IORING_RECVSEND_POLL_FIRST (1U << 0)
 #define IORING_RECV_MULTISHOT (1U << 1)
 #define IORING_RECVSEND_FIXED_BUF (1U << 2)
@@ -411,7 +414,9 @@ struct io_uring_sync_cancel_reg {
   __s32 fd;
   __u32 flags;
   struct __kernel_timespec timeout;
-  __u64 pad[4];
+  __u8 opcode;
+  __u8 pad[7];
+  __u64 pad2[3];
 };
 struct io_uring_file_index_range {
   __u32 off;
@@ -423,6 +428,10 @@ struct io_uring_recvmsg_out {
   __u32 controllen;
   __u32 payloadlen;
   __u32 flags;
+};
+enum {
+  SOCKET_URING_OP_SIOCINQ = 0,
+  SOCKET_URING_OP_SIOCOUTQ,
 };
 #ifdef __cplusplus
 }

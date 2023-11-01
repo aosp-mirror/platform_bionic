@@ -18,6 +18,7 @@
  ****************************************************************************/
 #ifndef SCSI_BSG_UFS_H
 #define SCSI_BSG_UFS_H
+#include <asm/byteorder.h>
 #include <linux/types.h>
 #define UFS_CDB_SIZE 16
 #define UIC_CMD_SIZE (sizeof(__u32) * 4)
@@ -37,9 +38,37 @@ enum ufs_rpmb_op_type {
   UFS_RPMB_PURGE_STATUS_READ = 0x09,
 };
 struct utp_upiu_header {
-  __be32 dword_0;
-  __be32 dword_1;
-  __be32 dword_2;
+  union {
+    struct {
+      __be32 dword_0;
+      __be32 dword_1;
+      __be32 dword_2;
+    };
+    struct {
+      __u8 transaction_code;
+      __u8 flags;
+      __u8 lun;
+      __u8 task_tag;
+#ifdef __BIG_ENDIAN
+      __u8 iid : 4;
+      __u8 command_set_type : 4;
+#elif defined(__LITTLE_ENDIAN)
+      __u8 command_set_type : 4;
+      __u8 iid : 4;
+#else
+#error 
+#endif
+      union {
+        __u8 tm_function;
+        __u8 query_function;
+      } __attribute__((packed));
+      __u8 response;
+      __u8 status;
+      __u8 ehs_length;
+      __u8 device_information;
+      __be16 data_segment_length;
+    };
+  };
 };
 struct utp_upiu_query {
   __u8 opcode;
