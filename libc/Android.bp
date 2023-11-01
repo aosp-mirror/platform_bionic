@@ -641,7 +641,6 @@ cc_library_static {
 // automatically included.
 cc_library_static {
     defaults: ["libc_defaults"],
-    tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: [
         // These two depend on getentropy, which isn't in libc_ndk.a.
         "upstream-openbsd/lib/libc/crypt/arc4random.c",
