@@ -100,8 +100,7 @@ kernel_token_replacements = {
     }
 
 
-# This is the set of known static inline functions that we want to keep
-# in the final kernel headers.
+# Static inline functions that we want to keep.
 kernel_known_generic_statics = set(
         [
           "ipt_get_target",  # uapi/linux/netfilter_ipv4/ip_tables.h
@@ -128,28 +127,7 @@ kernel_known_generic_statics = set(
           "__fswahb32",
           # This is used by various macros in <linux/ioprio.h>.
           "ioprio_value",
+
+          # Contact opensource-licensing@ before adding to this set.
         ]
     )
-
-# this is the standard disclaimer
-#
-kernel_disclaimer = """\
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
-"""
