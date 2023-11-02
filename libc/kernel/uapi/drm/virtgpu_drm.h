@@ -42,6 +42,13 @@ struct drm_virtgpu_map {
   __u32 handle;
   __u32 pad;
 };
+#define VIRTGPU_EXECBUF_SYNCOBJ_RESET 0x01
+#define VIRTGPU_EXECBUF_SYNCOBJ_FLAGS (VIRTGPU_EXECBUF_SYNCOBJ_RESET | 0)
+struct drm_virtgpu_execbuffer_syncobj {
+  __u32 handle;
+  __u32 flags;
+  __u64 point;
+};
 struct drm_virtgpu_execbuffer {
   __u32 flags;
   __u32 size;
@@ -50,7 +57,11 @@ struct drm_virtgpu_execbuffer {
   __u32 num_bo_handles;
   __s32 fence_fd;
   __u32 ring_idx;
-  __u32 pad;
+  __u32 syncobj_stride;
+  __u32 num_in_syncobjs;
+  __u32 num_out_syncobjs;
+  __u64 in_syncobjs;
+  __u64 out_syncobjs;
 };
 #define VIRTGPU_PARAM_3D_FEATURES 1
 #define VIRTGPU_PARAM_CAPSET_QUERY_FIX 2

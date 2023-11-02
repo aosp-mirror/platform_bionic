@@ -414,8 +414,9 @@
 #define __NR_futex_waitv 449
 #define __NR_set_mempolicy_home_node 450
 #define __NR_cachestat 451
+#define __NR_fchmodat2 452
 #undef __NR_syscalls
-#define __NR_syscalls 452
+#define __NR_syscalls 453
 #if __BITS_PER_LONG == 64 && !defined(__SYSCALL_COMPAT)
 #define __NR_fcntl __NR3264_fcntl
 #define __NR_statfs __NR3264_statfs
