@@ -75,6 +75,7 @@
 #define UBLK_F_UNPRIVILEGED_DEV (1UL << 5)
 #define UBLK_F_CMD_IOCTL_ENCODE (1UL << 6)
 #define UBLK_F_USER_COPY (1UL << 7)
+#define UBLK_F_ZONED (1ULL << 8)
 #define UBLK_S_DEV_DEAD 0
 #define UBLK_S_DEV_LIVE 1
 #define UBLK_S_DEV_QUIESCED 2
@@ -110,6 +111,13 @@ struct ublksrv_ctrl_dev_info {
 #define UBLK_IO_OP_DISCARD 3
 #define UBLK_IO_OP_WRITE_SAME 4
 #define UBLK_IO_OP_WRITE_ZEROES 5
+#define UBLK_IO_OP_ZONE_OPEN 10
+#define UBLK_IO_OP_ZONE_CLOSE 11
+#define UBLK_IO_OP_ZONE_FINISH 12
+#define UBLK_IO_OP_ZONE_APPEND 13
+#define UBLK_IO_OP_ZONE_RESET_ALL 14
+#define UBLK_IO_OP_ZONE_RESET 15
+#define UBLK_IO_OP_REPORT_ZONES 18
 #define UBLK_IO_F_FAILFAST_DEV (1U << 8)
 #define UBLK_IO_F_FAILFAST_TRANSPORT (1U << 9)
 #define UBLK_IO_F_FAILFAST_DRIVER (1U << 10)
@@ -119,7 +127,10 @@ struct ublksrv_ctrl_dev_info {
 #define UBLK_IO_F_SWAP (1U << 16)
 struct ublksrv_io_desc {
   __u32 op_flags;
-  __u32 nr_sectors;
+  union {
+    __u32 nr_sectors;
+    __u32 nr_zones;
+  };
   __u64 start_sector;
   __u64 addr;
 };
@@ -127,7 +138,10 @@ struct ublksrv_io_cmd {
   __u16 q_id;
   __u16 tag;
   __s32 result;
-  __u64 addr;
+  union {
+    __u64 addr;
+    __u64 zone_append_lba;
+  };
 };
 struct ublk_param_basic {
 #define UBLK_ATTR_READ_ONLY (1 << 0)
@@ -158,14 +172,22 @@ struct ublk_param_devt {
   __u32 disk_major;
   __u32 disk_minor;
 };
+struct ublk_param_zoned {
+  __u32 max_open_zones;
+  __u32 max_active_zones;
+  __u32 max_zone_append_sectors;
+  __u8 reserved[20];
+};
 struct ublk_params {
   __u32 len;
 #define UBLK_PARAM_TYPE_BASIC (1 << 0)
 #define UBLK_PARAM_TYPE_DISCARD (1 << 1)
 #define UBLK_PARAM_TYPE_DEVT (1 << 2)
+#define UBLK_PARAM_TYPE_ZONED (1 << 3)
   __u32 types;
   struct ublk_param_basic basic;
   struct ublk_param_discard discard;
   struct ublk_param_devt devt;
+  struct ublk_param_zoned zoned;
 };
 #endif

@@ -23,11 +23,43 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#define NOUVEAU_GETPARAM_PCI_VENDOR 3
+#define NOUVEAU_GETPARAM_PCI_DEVICE 4
+#define NOUVEAU_GETPARAM_BUS_TYPE 5
+#define NOUVEAU_GETPARAM_FB_SIZE 8
+#define NOUVEAU_GETPARAM_AGP_SIZE 9
+#define NOUVEAU_GETPARAM_CHIPSET_ID 11
+#define NOUVEAU_GETPARAM_VM_VRAM_BASE 12
+#define NOUVEAU_GETPARAM_GRAPH_UNITS 13
+#define NOUVEAU_GETPARAM_PTIMER_TIME 14
+#define NOUVEAU_GETPARAM_HAS_BO_USAGE 15
+#define NOUVEAU_GETPARAM_HAS_PAGEFLIP 16
+#define NOUVEAU_GETPARAM_EXEC_PUSH_MAX 17
+struct drm_nouveau_getparam {
+  __u64 param;
+  __u64 value;
+};
+struct drm_nouveau_channel_alloc {
+  __u32 fb_ctxdma_handle;
+  __u32 tt_ctxdma_handle;
+  __s32 channel;
+  __u32 pushbuf_domains;
+  __u32 notifier_handle;
+  struct {
+    __u32 handle;
+    __u32 grclass;
+  } subchan[8];
+  __u32 nr_subchan;
+};
+struct drm_nouveau_channel_free {
+  __s32 channel;
+};
 #define NOUVEAU_GEM_DOMAIN_CPU (1 << 0)
 #define NOUVEAU_GEM_DOMAIN_VRAM (1 << 1)
 #define NOUVEAU_GEM_DOMAIN_GART (1 << 2)
 #define NOUVEAU_GEM_DOMAIN_MAPPABLE (1 << 3)
 #define NOUVEAU_GEM_DOMAIN_COHERENT (1 << 4)
+#define NOUVEAU_GEM_DOMAIN_NO_SHARE (1 << 5)
 #define NOUVEAU_GEM_TILE_COMP 0x00030000
 #define NOUVEAU_GEM_TILE_LAYOUT_MASK 0x0000ff00
 #define NOUVEAU_GEM_TILE_16BPP 0x00000001
@@ -81,6 +113,7 @@ struct drm_nouveau_gem_pushbuf_push {
   __u32 pad;
   __u64 offset;
   __u64 length;
+#define NOUVEAU_GEM_PUSHBUF_NO_PREFETCH (1 << 23)
 };
 struct drm_nouveau_gem_pushbuf {
   __u32 channel;
@@ -105,6 +138,55 @@ struct drm_nouveau_gem_cpu_prep {
 struct drm_nouveau_gem_cpu_fini {
   __u32 handle;
 };
+struct drm_nouveau_sync {
+  __u32 flags;
+#define DRM_NOUVEAU_SYNC_SYNCOBJ 0x0
+#define DRM_NOUVEAU_SYNC_TIMELINE_SYNCOBJ 0x1
+#define DRM_NOUVEAU_SYNC_TYPE_MASK 0xf
+  __u32 handle;
+  __u64 timeline_value;
+};
+struct drm_nouveau_vm_init {
+  __u64 kernel_managed_addr;
+  __u64 kernel_managed_size;
+};
+struct drm_nouveau_vm_bind_op {
+  __u32 op;
+#define DRM_NOUVEAU_VM_BIND_OP_MAP 0x0
+#define DRM_NOUVEAU_VM_BIND_OP_UNMAP 0x1
+  __u32 flags;
+#define DRM_NOUVEAU_VM_BIND_SPARSE (1 << 8)
+  __u32 handle;
+  __u32 pad;
+  __u64 addr;
+  __u64 bo_offset;
+  __u64 range;
+};
+struct drm_nouveau_vm_bind {
+  __u32 op_count;
+  __u32 flags;
+#define DRM_NOUVEAU_VM_BIND_RUN_ASYNC 0x1
+  __u32 wait_count;
+  __u32 sig_count;
+  __u64 wait_ptr;
+  __u64 sig_ptr;
+  __u64 op_ptr;
+};
+struct drm_nouveau_exec_push {
+  __u64 va;
+  __u32 va_len;
+  __u32 flags;
+#define DRM_NOUVEAU_EXEC_PUSH_NO_PREFETCH 0x1
+};
+struct drm_nouveau_exec {
+  __u32 channel;
+  __u32 push_count;
+  __u32 wait_count;
+  __u32 sig_count;
+  __u64 wait_ptr;
+  __u64 sig_ptr;
+  __u64 push_ptr;
+};
 #define DRM_NOUVEAU_GETPARAM 0x00
 #define DRM_NOUVEAU_SETPARAM 0x01
 #define DRM_NOUVEAU_CHANNEL_ALLOC 0x02
@@ -115,6 +197,9 @@ struct drm_nouveau_gem_cpu_fini {
 #define DRM_NOUVEAU_NVIF 0x07
 #define DRM_NOUVEAU_SVM_INIT 0x08
 #define DRM_NOUVEAU_SVM_BIND 0x09
+#define DRM_NOUVEAU_VM_INIT 0x10
+#define DRM_NOUVEAU_VM_BIND 0x11
+#define DRM_NOUVEAU_EXEC 0x12
 #define DRM_NOUVEAU_GEM_NEW 0x40
 #define DRM_NOUVEAU_GEM_PUSHBUF 0x41
 #define DRM_NOUVEAU_GEM_CPU_PREP 0x42
@@ -147,6 +232,9 @@ struct drm_nouveau_svm_bind {
 #define NOUVEAU_SVM_BIND_VALID_MASK ((1ULL << NOUVEAU_SVM_BIND_VALID_BITS) - 1)
 #define NOUVEAU_SVM_BIND_COMMAND__MIGRATE 0
 #define NOUVEAU_SVM_BIND_TARGET__GPU_VRAM (1UL << 31)
+#define DRM_IOCTL_NOUVEAU_GETPARAM DRM_IOWR(DRM_COMMAND_BASE + DRM_NOUVEAU_GETPARAM, struct drm_nouveau_getparam)
+#define DRM_IOCTL_NOUVEAU_CHANNEL_ALLOC DRM_IOWR(DRM_COMMAND_BASE + DRM_NOUVEAU_CHANNEL_ALLOC, struct drm_nouveau_channel_alloc)
+#define DRM_IOCTL_NOUVEAU_CHANNEL_FREE DRM_IOW(DRM_COMMAND_BASE + DRM_NOUVEAU_CHANNEL_FREE, struct drm_nouveau_channel_free)
 #define DRM_IOCTL_NOUVEAU_SVM_INIT DRM_IOWR(DRM_COMMAND_BASE + DRM_NOUVEAU_SVM_INIT, struct drm_nouveau_svm_init)
 #define DRM_IOCTL_NOUVEAU_SVM_BIND DRM_IOWR(DRM_COMMAND_BASE + DRM_NOUVEAU_SVM_BIND, struct drm_nouveau_svm_bind)
 #define DRM_IOCTL_NOUVEAU_GEM_NEW DRM_IOWR(DRM_COMMAND_BASE + DRM_NOUVEAU_GEM_NEW, struct drm_nouveau_gem_new)
@@ -154,6 +242,9 @@ struct drm_nouveau_svm_bind {
 #define DRM_IOCTL_NOUVEAU_GEM_CPU_PREP DRM_IOW(DRM_COMMAND_BASE + DRM_NOUVEAU_GEM_CPU_PREP, struct drm_nouveau_gem_cpu_prep)
 #define DRM_IOCTL_NOUVEAU_GEM_CPU_FINI DRM_IOW(DRM_COMMAND_BASE + DRM_NOUVEAU_GEM_CPU_FINI, struct drm_nouveau_gem_cpu_fini)
 #define DRM_IOCTL_NOUVEAU_GEM_INFO DRM_IOWR(DRM_COMMAND_BASE + DRM_NOUVEAU_GEM_INFO, struct drm_nouveau_gem_info)
+#define DRM_IOCTL_NOUVEAU_VM_INIT DRM_IOWR(DRM_COMMAND_BASE + DRM_NOUVEAU_VM_INIT, struct drm_nouveau_vm_init)
+#define DRM_IOCTL_NOUVEAU_VM_BIND DRM_IOWR(DRM_COMMAND_BASE + DRM_NOUVEAU_VM_BIND, struct drm_nouveau_vm_bind)
+#define DRM_IOCTL_NOUVEAU_EXEC DRM_IOWR(DRM_COMMAND_BASE + DRM_NOUVEAU_EXEC, struct drm_nouveau_exec)
 #ifdef __cplusplus
 }
 #endif
