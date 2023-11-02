@@ -470,6 +470,7 @@ union perf_mem_data_src {
 #define PERF_MEM_LVLNUM_L2 0x02
 #define PERF_MEM_LVLNUM_L3 0x03
 #define PERF_MEM_LVLNUM_L4 0x04
+#define PERF_MEM_LVLNUM_UNC 0x08
 #define PERF_MEM_LVLNUM_CXL 0x09
 #define PERF_MEM_LVLNUM_IO 0x0a
 #define PERF_MEM_LVLNUM_ANY_CACHE 0x0b

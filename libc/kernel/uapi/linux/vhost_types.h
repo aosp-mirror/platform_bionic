@@ -114,4 +114,5 @@ struct vhost_vdpa_iova_range {
 #define VHOST_BACKEND_F_IOTLB_ASID 0x3
 #define VHOST_BACKEND_F_SUSPEND 0x4
 #define VHOST_BACKEND_F_RESUME 0x5
+#define VHOST_BACKEND_F_ENABLE_AFTER_DRIVER_OK 0x6
 #endif
