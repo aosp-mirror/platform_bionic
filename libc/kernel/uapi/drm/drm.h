@@ -430,6 +430,13 @@ struct drm_syncobj_timeline_wait {
   __u32 first_signaled;
   __u32 pad;
 };
+struct drm_syncobj_eventfd {
+  __u32 handle;
+  __u32 flags;
+  __u64 point;
+  __s32 fd;
+  __u32 pad;
+};
 struct drm_syncobj_array {
   __u64 handles;
   __u32 count_handles;
@@ -574,6 +581,7 @@ extern "C" {
 #define DRM_IOCTL_SYNCOBJ_TRANSFER DRM_IOWR(0xCC, struct drm_syncobj_transfer)
 #define DRM_IOCTL_SYNCOBJ_TIMELINE_SIGNAL DRM_IOWR(0xCD, struct drm_syncobj_timeline_array)
 #define DRM_IOCTL_MODE_GETFB2 DRM_IOWR(0xCE, struct drm_mode_fb_cmd2)
+#define DRM_IOCTL_SYNCOBJ_EVENTFD DRM_IOWR(0xCF, struct drm_syncobj_eventfd)
 #define DRM_COMMAND_BASE 0x40
 #define DRM_COMMAND_END 0xA0
 struct drm_event {
