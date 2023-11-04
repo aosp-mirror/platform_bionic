@@ -229,6 +229,8 @@ typedef Elf64_Xword Elf64_Relr;
 #undef SHT_NUM
 #define SHT_NUM 20
 
+#define SHT_RISCV_ATTRIBUTES 0x70000003
+
 /*
  * Experimental support for SHT_RELR sections. For details, see proposal
  * at https://groups.google.com/forum/#!topic/generic-abi/bX460iggiKg.
