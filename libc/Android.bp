@@ -664,8 +664,9 @@ cc_library_static {
         },
         arm64: {
             srcs: [
-                "upstream-openbsd/lib/libc/string/stpncpy.c",
+                "upstream-openbsd/lib/libc/string/memrchr.c",
                 "upstream-openbsd/lib/libc/string/strcat.c",
+                "upstream-openbsd/lib/libc/string/stpncpy.c",
                 "upstream-openbsd/lib/libc/string/strlcat.c",
                 "upstream-openbsd/lib/libc/string/strlcpy.c",
                 "upstream-openbsd/lib/libc/string/strncat.c",
@@ -681,7 +682,9 @@ cc_library_static {
             ],
         },
         x86: {
-            // This space intentionally left blank.
+            srcs: [
+                // x86 has custom implementations of all of these.
+            ],
         },
         x86_64: {
             srcs: [
@@ -849,29 +852,6 @@ cc_library_static {
                 "arch-arm/bionic/syscall.S",
                 "arch-arm/bionic/vfork.S",
 
-                "bionic/strchr.cpp",
-                "bionic/strchrnul.cpp",
-                "bionic/strnlen.c",
-                "bionic/strrchr.cpp",
-
-                "arch-arm/generic/bionic/memcmp.S",
-                "arch-arm/generic/bionic/memmove.S",
-                "arch-arm/generic/bionic/memset.S",
-                "arch-arm/generic/bionic/stpcpy.c",
-                "arch-arm/generic/bionic/strcat.c",
-                "arch-arm/generic/bionic/strcmp.S",
-                "arch-arm/generic/bionic/strcpy.S",
-                "arch-arm/generic/bionic/strlen.c",
-
-                "arch-arm/cortex-a15/bionic/memcpy.S",
-                "arch-arm/cortex-a15/bionic/memmove.S",
-                "arch-arm/cortex-a15/bionic/memset.S",
-                "arch-arm/cortex-a15/bionic/stpcpy.S",
-                "arch-arm/cortex-a15/bionic/strcat.S",
-                "arch-arm/cortex-a15/bionic/strcmp.S",
-                "arch-arm/cortex-a15/bionic/strcpy.S",
-                "arch-arm/cortex-a15/bionic/strlen.S",
-
                 "arch-arm/cortex-a7/bionic/memcpy.S",
                 "arch-arm/cortex-a7/bionic/memset.S",
 
@@ -882,14 +862,37 @@ cc_library_static {
                 "arch-arm/cortex-a9/bionic/strcpy.S",
                 "arch-arm/cortex-a9/bionic/strlen.S",
 
-                "arch-arm/krait/bionic/memcpy.S",
-                "arch-arm/krait/bionic/memset.S",
+                "arch-arm/cortex-a15/bionic/memcpy.S",
+                "arch-arm/cortex-a15/bionic/memmove.S",
+                "arch-arm/cortex-a15/bionic/memset.S",
+                "arch-arm/cortex-a15/bionic/stpcpy.S",
+                "arch-arm/cortex-a15/bionic/strcat.S",
+                "arch-arm/cortex-a15/bionic/strcmp.S",
+                "arch-arm/cortex-a15/bionic/strcpy.S",
+                "arch-arm/cortex-a15/bionic/strlen.S",
 
                 "arch-arm/cortex-a53/bionic/memcpy.S",
 
                 "arch-arm/cortex-a55/bionic/memcpy.S",
 
+                "arch-arm/generic/bionic/memcmp.S",
+                "arch-arm/generic/bionic/memmove.S",
+                "arch-arm/generic/bionic/memset.S",
+                "arch-arm/generic/bionic/stpcpy.c",
+                "arch-arm/generic/bionic/strcat.c",
+                "arch-arm/generic/bionic/strcmp.S",
+                "arch-arm/generic/bionic/strcpy.S",
+                "arch-arm/generic/bionic/strlen.c",
+
+                "arch-arm/krait/bionic/memcpy.S",
+                "arch-arm/krait/bionic/memset.S",
+
                 "arch-arm/kryo/bionic/memcpy.S",
+
+                "bionic/strchr.cpp",
+                "bionic/strchrnul.cpp",
+                "bionic/strnlen.cpp",
+                "bionic/strrchr.cpp",
             ],
         },
         arm64: {
@@ -910,27 +913,40 @@ cc_library_static {
                 "arch-riscv64/bionic/syscall.S",
                 "arch-riscv64/bionic/vfork.S",
 
-                // TODO(b/306514350): Remove this and replace with the optimized
-                // version once the bug is resolved.
-                "upstream-freebsd/lib/libc/string/memcmp.c",
+                "arch-riscv64/string/memchr_v.S",
+                "arch-riscv64/string/memcmp_v.S",
+                "arch-riscv64/string/memcpy_v.S",
+                "arch-riscv64/string/memmove_v.S",
+                "arch-riscv64/string/memset_v.S",
+                "arch-riscv64/string/stpcpy_v.S",
+                "arch-riscv64/string/strcat_v.S",
+                "arch-riscv64/string/strchr_v.S",
+                "arch-riscv64/string/strcmp_v.S",
+                "arch-riscv64/string/strcpy_v.S",
+                "arch-riscv64/string/strlen_v.S",
+                "arch-riscv64/string/strncat_v.S",
+                "arch-riscv64/string/strncmp_v.S",
+                "arch-riscv64/string/strncpy_v.S",
+                "arch-riscv64/string/strnlen_v.S",
+
+                "arch-riscv64/string/memchr.c",
+                "arch-riscv64/string/memcmp.c",
+                "arch-riscv64/string/memcpy.c",
+                "arch-riscv64/string/memmove.c",
+                "arch-riscv64/string/memset.c",
+                "arch-riscv64/string/stpcpy.c",
+                "arch-riscv64/string/strcat.c",
+                "arch-riscv64/string/strchr.c",
+                "arch-riscv64/string/strcmp.c",
+                "arch-riscv64/string/strcpy.c",
+                "arch-riscv64/string/strlen.c",
+                "arch-riscv64/string/strncat.c",
+                "arch-riscv64/string/strncmp.c",
+                "arch-riscv64/string/strncpy.c",
+                "arch-riscv64/string/strnlen.c",
 
                 "bionic/strchrnul.cpp",
                 "bionic/strrchr.cpp",
-
-                "arch-riscv64/string/memchr.S",
-                "arch-riscv64/string/memcpy.S",
-                "arch-riscv64/string/memmove.S",
-                "arch-riscv64/string/memset.S",
-                "arch-riscv64/string/stpcpy.S",
-                "arch-riscv64/string/strcat.S",
-                "arch-riscv64/string/strchr.S",
-                "arch-riscv64/string/strcmp.S",
-                "arch-riscv64/string/strcpy.S",
-                "arch-riscv64/string/strlen.S",
-                "arch-riscv64/string/strncat.S",
-                "arch-riscv64/string/strncmp.S",
-                "arch-riscv64/string/strncpy.S",
-                "arch-riscv64/string/strnlen.S",
             ],
         },
 
@@ -944,8 +960,6 @@ cc_library_static {
                 "arch-x86/bionic/syscall.S",
                 "arch-x86/bionic/vfork.S",
                 "arch-x86/bionic/__x86.get_pc_thunk.S",
-
-                "bionic/strchrnul.cpp",
 
                 "arch-x86/generic/string/memcmp.S",
                 "arch-x86/generic/string/strcmp.S",
@@ -994,6 +1008,8 @@ cc_library_static {
 
                 "arch-x86/string/sse4-memcmp-slm.S",
                 "arch-x86/string/sse4-wmemcmp-slm.S",
+
+                "bionic/strchrnul.cpp",
             ],
         },
         x86_64: {
@@ -1004,11 +1020,6 @@ cc_library_static {
                 "arch-x86_64/bionic/setjmp.S",
                 "arch-x86_64/bionic/syscall.S",
                 "arch-x86_64/bionic/vfork.S",
-
-                "bionic/strchr.cpp",
-                "bionic/strchrnul.cpp",
-                "bionic/strnlen.c",
-                "bionic/strrchr.cpp",
 
                 "arch-x86_64/string/avx2-memset-kbl.S",
                 "arch-x86_64/string/sse2-memmove-slm.S",
@@ -1023,6 +1034,11 @@ cc_library_static {
                 "arch-x86_64/string/sse4-memcmp-slm.S",
                 "arch-x86_64/string/ssse3-strcmp-slm.S",
                 "arch-x86_64/string/ssse3-strncmp-slm.S",
+
+                "bionic/strchr.cpp",
+                "bionic/strchrnul.cpp",
+                "bionic/strnlen.cpp",
+                "bionic/strrchr.cpp",
             ],
         },
     },
@@ -1540,6 +1556,9 @@ cc_library_static {
         arm64: {
             srcs: ["arch-arm64/static_function_dispatch.S"],
         },
+        riscv64: {
+            srcs: ["arch-riscv64/static_function_dispatch.S"]
+        },
     },
 }
 
@@ -1567,6 +1586,9 @@ cc_library_static {
         },
         arm64: {
             srcs: ["arch-arm64/dynamic_function_dispatch.cpp"],
+        },
+        riscv64: {
+            srcs: ["arch-riscv64/dynamic_function_dispatch.cpp"]
         },
     },
 }
