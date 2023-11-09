@@ -40,9 +40,10 @@ struct LocalPropertyTestState {
       : nprops(nprops), valid(false), system_properties_(false) {
     static const char prop_name_chars[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_.";
 
-    valid = system_properties_.AreaInit(dir_.path, nullptr);
+    valid = system_properties_.AreaInit(dir_.path, nullptr, true);
     if (!valid) {
-      return;
+      printf("Failed to initialize properties, terminating...\n");
+      exit(1);
     }
 
     names = new char* [nprops];
