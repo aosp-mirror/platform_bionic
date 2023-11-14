@@ -53,6 +53,7 @@
 
 #include "Config.h"
 #include "DebugData.h"
+#include "LogAllocatorStats.h"
 #include "Unreachable.h"
 #include "UnwindBacktrace.h"
 #include "backtrace.h"
@@ -517,10 +518,14 @@ size_t debug_malloc_usable_size(void* pointer) {
 }
 
 static TimedResult InternalMalloc(size_t size) {
-  if ((g_debug->config().options() & BACKTRACE) && g_debug->pointer->ShouldDumpAndReset()) {
+  uint64_t options = g_debug->config().options();
+  if ((options & BACKTRACE) && g_debug->pointer->ShouldDumpAndReset()) {
     debug_dump_heap(android::base::StringPrintf(
                         "%s.%d.txt", g_debug->config().backtrace_dump_prefix().c_str(), getpid())
                         .c_str());
+  }
+  if (options & LOG_ALLOCATOR_STATS_ON_SIGNAL) {
+    LogAllocatorStats::CheckIfShouldLog();
   }
 
   if (size == 0) {
@@ -593,10 +598,14 @@ void* debug_malloc(size_t size) {
 }
 
 static TimedResult InternalFree(void* pointer) {
-  if ((g_debug->config().options() & BACKTRACE) && g_debug->pointer->ShouldDumpAndReset()) {
+  uint64_t options = g_debug->config().options();
+  if ((options & BACKTRACE) && g_debug->pointer->ShouldDumpAndReset()) {
     debug_dump_heap(android::base::StringPrintf(
                         "%s.%d.txt", g_debug->config().backtrace_dump_prefix().c_str(), getpid())
                         .c_str());
+  }
+  if (options & LOG_ALLOCATOR_STATS_ON_SIGNAL) {
+    LogAllocatorStats::CheckIfShouldLog();
   }
 
   void* free_pointer = pointer;
