@@ -40,9 +40,10 @@ struct LocalPropertyTestState {
       : nprops(nprops), valid(false), system_properties_(false) {
     static const char prop_name_chars[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_.";
 
-    valid = system_properties_.AreaInit(dir_.path, nullptr);
+    valid = system_properties_.AreaInit(dir_.path, nullptr, true);
     if (!valid) {
-      return;
+      printf("Failed to initialize properties, terminating...\n");
+      exit(1);
     }
 
     names = new char* [nprops];
@@ -100,6 +101,9 @@ struct LocalPropertyTestState {
     }
 
     system_properties_.contexts_->FreeAndUnmap();
+    if (system_properties_.appcompat_override_contexts_) {
+      system_properties_.appcompat_override_contexts_->FreeAndUnmap();
+    }
 
     for (int i = 0; i < nprops; i++) {
       delete names[i];
