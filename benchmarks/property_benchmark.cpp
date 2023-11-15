@@ -101,6 +101,9 @@ struct LocalPropertyTestState {
     }
 
     system_properties_.contexts_->FreeAndUnmap();
+    if (system_properties_.appcompat_override_contexts_) {
+      system_properties_.appcompat_override_contexts_->FreeAndUnmap();
+    }
 
     for (int i = 0; i < nprops; i++) {
       delete names[i];
