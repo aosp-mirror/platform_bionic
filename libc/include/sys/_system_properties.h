@@ -139,7 +139,7 @@ int __system_properties_init(void);
  * Returns 0 on success, -1 if the system properties failed to re-initialize (same conditions as
  * __system properties_init)
  */
-int __system_properties_zygote_reload(void); __INTRODUCED_IN(__ANDROID_API_V__)
+int __system_properties_zygote_reload(void) __INTRODUCED_IN(__ANDROID_API_V__);
 
 /* Deprecated: use __system_property_wait instead. */
 uint32_t __system_property_wait_any(uint32_t __old_serial);
