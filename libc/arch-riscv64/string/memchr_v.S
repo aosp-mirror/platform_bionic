@@ -55,48 +55,42 @@
 
 #include <private/bionic_asm.h>
 
-#define pDst a0
-#define pSrc a1
+#define iResult a0
+
+#define pSrc a0
+#define iValue a1
 #define iNum a2
 
 #define iVL a3
-#define pDstPtr a4
-#define pSrcBackwardPtr a5
-#define pDstBackwardPtr a6
+#define iTemp a4
 
 #define ELEM_LMUL_SETTING m8
 #define vData v0
+#define vMask v8
 
-ENTRY(memmove)
+ENTRY(memchr_v)
 
-    mv pDstPtr, pDst
-
-    bgeu pSrc, pDst, L(forward_copy_loop)
-    add pSrcBackwardPtr, pSrc, iNum
-    add pDstBackwardPtr, pDst, iNum
-    bltu pDst, pSrcBackwardPtr, L(backward_copy_loop)
-
-L(forward_copy_loop):
+L(loop):
     vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
 
-    vle8.v vData, (pSrc)
+    vle8ff.v vData, (pSrc)
+    vmseq.vx vMask, vData, iValue
+    vfirst.m iTemp, vMask
+
+    # skip the loop if we find the matched value.
+    bgez iTemp, L(found)
+
+    csrr iVL, vl
     sub iNum, iNum, iVL
     add pSrc, pSrc, iVL
-    vse8.v vData, (pDstPtr)
-    add pDstPtr, pDstPtr, iVL
 
-    bnez iNum, L(forward_copy_loop)
+    bnez iNum, L(loop)
+
+    li iResult, 0
     ret
 
-L(backward_copy_loop):
-    vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
-
-    sub pSrcBackwardPtr, pSrcBackwardPtr, iVL
-    vle8.v vData, (pSrcBackwardPtr)
-    sub iNum, iNum, iVL
-    sub pDstBackwardPtr, pDstBackwardPtr, iVL
-    vse8.v vData, (pDstBackwardPtr)
-    bnez iNum, L(backward_copy_loop)
+L(found):
+    add iResult, pSrc, iTemp
     ret
 
-END(memmove)
+END(memchr_v)
