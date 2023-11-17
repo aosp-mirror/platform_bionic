@@ -57,11 +57,12 @@
 
 #define pDst a0
 #define pSrc a1
-#define pDstPtr a2
+#define iLength a2
+#define pDstPtr a3
 
-#define iVL a3
-#define iCurrentVL a4
-#define iActiveElemPos a5
+#define iVL a4
+#define iCurrentVL a5
+#define iActiveElemPos a6
 
 #define ELEM_LMUL_SETTING m1
 #define vMask1 v0
@@ -69,23 +70,48 @@
 #define vStr1 v8
 #define vStr2 v16
 
-ENTRY(strcpy)
+ENTRY(strncat_v)
 
     mv pDstPtr, pDst
 
+    // the strlen of dst
+L(strlen_loop):
+    vsetvli iVL, zero, e8, ELEM_LMUL_SETTING, ta, ma
+
+    vle8ff.v vStr1, (pDstPtr)
+    // find the '\0'
+    vmseq.vx vMask1, vStr1, zero
+    csrr iCurrentVL, vl
+    vfirst.m iActiveElemPos, vMask1
+    add pDstPtr, pDstPtr, iCurrentVL
+    bltz iActiveElemPos, L(strlen_loop)
+
+    sub pDstPtr, pDstPtr, iCurrentVL
+    add pDstPtr, pDstPtr, iActiveElemPos
+
     // copy pSrc to pDstPtr
 L(strcpy_loop):
-    vsetvli iVL, zero, e8, ELEM_LMUL_SETTING, ta, ma
+    vsetvli iVL, iLength, e8, ELEM_LMUL_SETTING, ta, ma
+
     vle8ff.v vStr1, (pSrc)
     vmseq.vx vMask2, vStr1, zero
     csrr iCurrentVL, vl
     vfirst.m iActiveElemPos, vMask2
     vmsif.m vMask1, vMask2
     add pSrc, pSrc, iCurrentVL
+    sub iLength, iLength, iCurrentVL
     vse8.v vStr1, (pDstPtr), vMask1.t
     add pDstPtr, pDstPtr, iCurrentVL
+    beqz iLength, L(fill_zero)
     bltz iActiveElemPos, L(strcpy_loop)
 
     ret
 
-END(strcpy)
+L(fill_zero):
+    bgez iActiveElemPos, L(fill_zero_end)
+    sb zero, (pDstPtr)
+
+L(fill_zero_end):
+    ret
+
+END(strncat_v)
