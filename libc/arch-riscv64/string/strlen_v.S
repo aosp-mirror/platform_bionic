@@ -55,31 +55,33 @@
 
 #include <private/bionic_asm.h>
 
-#define pDst a0
-#define pSrc a1
-#define iNum a2
+#define iResult a0
+#define pStr a0
+#define pCopyStr a1
+#define iVL a2
+#define iCurrentVL a2
+#define iEndOffset a3
 
-#define iVL a3
-#define pDstPtr a4
+#define ELEM_LMUL_SETTING m2
+#define vStr v0
+#define vMaskEnd v2
 
-#define ELEM_LMUL_SETTING m8
-#define vData v0
+ENTRY(strlen_v)
 
-ENTRY(memcpy)
-
-    mv pDstPtr, pDst
-
+    mv pCopyStr, pStr
 L(loop):
-    vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
+    vsetvli iVL, zero, e8, ELEM_LMUL_SETTING, ta, ma
+    vle8ff.v vStr, (pCopyStr)
+    csrr iCurrentVL, vl
+    vmseq.vi vMaskEnd, vStr, 0
+    vfirst.m iEndOffset, vMaskEnd
+    add pCopyStr, pCopyStr, iCurrentVL
+    bltz iEndOffset, L(loop)
 
-    vle8.v vData, (pSrc)
-    sub iNum, iNum, iVL
-    add pSrc, pSrc, iVL
-    vse8.v vData, (pDstPtr)
-    add pDstPtr, pDstPtr, iVL
-
-    bnez iNum, L(loop)
+    add pStr, pStr, iCurrentVL
+    add pCopyStr, pCopyStr, iEndOffset
+    sub iResult, pCopyStr, iResult
 
     ret
 
-END(memcpy)
+END(strlen_v)
