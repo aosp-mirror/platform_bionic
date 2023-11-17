@@ -55,42 +55,31 @@
 
 #include <private/bionic_asm.h>
 
-#define iResult a0
-
-#define pSrc a0
-#define iValue a1
+#define pDst a0
+#define pSrc a1
 #define iNum a2
 
 #define iVL a3
-#define iTemp a4
+#define pDstPtr a4
 
 #define ELEM_LMUL_SETTING m8
 #define vData v0
-#define vMask v8
 
-ENTRY(memchr)
+ENTRY(memcpy_v)
+
+    mv pDstPtr, pDst
 
 L(loop):
     vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
 
-    vle8ff.v vData, (pSrc)
-    vmseq.vx vMask, vData, iValue
-    vfirst.m iTemp, vMask
-
-    # skip the loop if we find the matched value.
-    bgez iTemp, L(found)
-
-    csrr iVL, vl
+    vle8.v vData, (pSrc)
     sub iNum, iNum, iVL
     add pSrc, pSrc, iVL
+    vse8.v vData, (pDstPtr)
+    add pDstPtr, pDstPtr, iVL
 
     bnez iNum, L(loop)
 
-    li iResult, 0
     ret
 
-L(found):
-    add iResult, pSrc, iTemp
-    ret
-
-END(memchr)
+END(memcpy_v)
