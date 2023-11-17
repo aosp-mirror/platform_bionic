@@ -55,40 +55,48 @@
 
 #include <private/bionic_asm.h>
 
-#define pStr a0
-#define iCh a1
-#define iEndOffset a2
-#define iChOffset a3
-#define iTemp1 a4
-#define iTemp2 a5
-#define iCurrentVL a6
-#define iVL t0
+#define pDst a0
+#define pSrc a1
+#define iNum a2
 
-#define ELEM_LMUL_SETTING m1
-#define vStr v0
-#define vMaskEnd v8
-#define vMaskCh v9
+#define iVL a3
+#define pDstPtr a4
+#define pSrcBackwardPtr a5
+#define pDstBackwardPtr a6
 
-ENTRY(strchr)
+#define ELEM_LMUL_SETTING m8
+#define vData v0
 
-L(strchr_loop):
-    vsetvli iVL, zero, e8, ELEM_LMUL_SETTING, ta, ma
-    vle8ff.v vStr, (pStr)
-    vmseq.vi vMaskEnd, vStr, 0
-    vmseq.vx vMaskCh, vStr, iCh
-    vfirst.m iEndOffset, vMaskEnd /* first occurrence of \0 */
-    vfirst.m iChOffset, vMaskCh /* first occurrence of ch */
-    sltz iTemp1, iChOffset
-    sltu iTemp2, iEndOffset, iChOffset
-    or iTemp1, iTemp1, iTemp2
-    beqz iTemp1, L(found_ch) /* Found ch, not preceded by \0? */
-    csrr iCurrentVL, vl
-    add pStr, pStr, iCurrentVL
-    bltz iEndOffset, L(strchr_loop) /* Didn't find \0? */
-    li pStr, 0
-    ret
-L(found_ch):
-    add pStr, pStr, iChOffset
+ENTRY(memmove_v)
+
+    mv pDstPtr, pDst
+
+    bgeu pSrc, pDst, L(forward_copy_loop)
+    add pSrcBackwardPtr, pSrc, iNum
+    add pDstBackwardPtr, pDst, iNum
+    bltu pDst, pSrcBackwardPtr, L(backward_copy_loop)
+
+L(forward_copy_loop):
+    vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
+
+    vle8.v vData, (pSrc)
+    sub iNum, iNum, iVL
+    add pSrc, pSrc, iVL
+    vse8.v vData, (pDstPtr)
+    add pDstPtr, pDstPtr, iVL
+
+    bnez iNum, L(forward_copy_loop)
     ret
 
-END(strchr)
+L(backward_copy_loop):
+    vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
+
+    sub pSrcBackwardPtr, pSrcBackwardPtr, iVL
+    vle8.v vData, (pSrcBackwardPtr)
+    sub iNum, iNum, iVL
+    sub pDstBackwardPtr, pDstBackwardPtr, iVL
+    vse8.v vData, (pDstBackwardPtr)
+    bnez iNum, L(backward_copy_loop)
+    ret
+
+END(memmove_v)
