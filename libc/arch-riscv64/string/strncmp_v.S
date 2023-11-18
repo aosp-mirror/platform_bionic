@@ -55,53 +55,65 @@
 
 #include <private/bionic_asm.h>
 
-#define pDst a0
-#define pSrc a1
-#define pDstPtr a2
+#define iResult a0
+
+#define pStr1 a0
+#define pStr2 a1
+#define iLength a2
 
 #define iVL a3
-#define iCurrentVL a4
-#define iActiveElemPos a5
+#define iTemp1 a4
+#define iTemp2 a5
 
 #define ELEM_LMUL_SETTING m1
-#define vMask1 v0
-#define vMask2 v1
-#define vStr1 v8
-#define vStr2 v16
+#define vStr1 v0
+#define vStr2 v4
+#define vMask1 v8
+#define vMask2 v9
 
-ENTRY(strcat)
+ENTRY(strncmp_v)
 
-    mv pDstPtr, pDst
+    beqz iLength, L(zero_length)
 
-    // the strlen of dst
-L(strlen_loop):
-    vsetvli iVL, zero, e8, ELEM_LMUL_SETTING, ta, ma
+L(loop):
+    vsetvli iVL, iLength, e8, ELEM_LMUL_SETTING, ta, ma
 
-    vle8ff.v vStr1, (pDstPtr)
-    // find the '\0'
+    vle8ff.v vStr1, (pStr1)
+     # vStr1[i] == 0
     vmseq.vx vMask1, vStr1, zero
-    csrr iCurrentVL, vl
-    vfirst.m iActiveElemPos, vMask1
-    add pDstPtr, pDstPtr, iCurrentVL
-    bltz iActiveElemPos, L(strlen_loop)
 
-    sub pDstPtr, pDstPtr, iCurrentVL
-    add pDstPtr, pDstPtr, iActiveElemPos
+    vle8ff.v vStr2, (pStr2)
+    # vStr1[i] != vStr2[i]
+    vmsne.vv vMask2, vStr1, vStr2
 
-    // copy pSrc to pDstPtr
-L(strcpy_loop):
-    vsetvli iVL, zero, e8, ELEM_LMUL_SETTING, ta, ma
+    csrr iVL, vl
 
-    vle8ff.v vStr1, (pSrc)
-    vmseq.vx vMask2, vStr1, zero
-    csrr iCurrentVL, vl
-    vfirst.m iActiveElemPos, vMask2
-    vmsif.m vMask1, vMask2
-    add pSrc, pSrc, iCurrentVL
-    vse8.v vStr1, (pDstPtr), vMask1.t
-    add pDstPtr, pDstPtr, iCurrentVL
-    bltz iActiveElemPos, L(strcpy_loop)
+    # r = mask1 | mask2
+    # We could use vfirst.m to get the first zero char or the
+    # first different char between str1 and str2.
+    vmor.mm vMask1, vMask1, vMask2
 
+    sub iLength, iLength, iVL
+
+    vfirst.m iTemp1, vMask1
+
+    bgez iTemp1, L(end_loop)
+
+    add pStr1, pStr1, iVL
+    add pStr2, pStr2, iVL
+    bnez iLength, L(loop)
+L(end_loop):
+
+    add pStr1, pStr1, iTemp1
+    add pStr2, pStr2, iTemp1
+    lbu iTemp1, 0(pStr1)
+    lbu iTemp2, 0(pStr2)
+
+    sub iResult, iTemp1, iTemp2
     ret
 
-END(strcat)
+L(zero_length):
+    li iResult, 0
+    ret
+
+END(strncmp_v)
