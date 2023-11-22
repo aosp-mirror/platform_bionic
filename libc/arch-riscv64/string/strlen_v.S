@@ -55,34 +55,33 @@
 
 #include <private/bionic_asm.h>
 
-#define pDstPtr a0
-#define pSrc a1
+#define iResult a0
+#define pStr a0
+#define pCopyStr a1
+#define iVL a2
+#define iCurrentVL a2
+#define iEndOffset a3
 
-#define iVL a3
-#define iCurrentVL a4
-#define iActiveElemPos a5
+#define ELEM_LMUL_SETTING m2
+#define vStr v0
+#define vMaskEnd v2
 
-#define ELEM_LMUL_SETTING m1
-#define vMask1 v0
-#define vMask2 v1
-#define vStr1 v8
-#define vStr2 v16
+ENTRY(strlen_v)
 
-ENTRY(stpcpy)
-L(stpcpy_loop):
+    mv pCopyStr, pStr
+L(loop):
     vsetvli iVL, zero, e8, ELEM_LMUL_SETTING, ta, ma
-    vle8ff.v vStr1, (pSrc)
-    vmseq.vx vMask2, vStr1, zero
+    vle8ff.v vStr, (pCopyStr)
     csrr iCurrentVL, vl
-    vfirst.m iActiveElemPos, vMask2
-    vmsif.m vMask1, vMask2
-    add pSrc, pSrc, iCurrentVL
-    vse8.v vStr1, (pDstPtr), vMask1.t
-    add pDstPtr, pDstPtr, iCurrentVL
-    bltz iActiveElemPos, L(stpcpy_loop)
+    vmseq.vi vMaskEnd, vStr, 0
+    vfirst.m iEndOffset, vMaskEnd
+    add pCopyStr, pCopyStr, iCurrentVL
+    bltz iEndOffset, L(loop)
 
-    // stpcpy() returns a pointer to the '\0' in the destination.
-    sub pDstPtr, pDstPtr, iCurrentVL
-    add pDstPtr, pDstPtr, iActiveElemPos
+    add pStr, pStr, iCurrentVL
+    add pCopyStr, pCopyStr, iEndOffset
+    sub iResult, pCopyStr, iResult
+
     ret
-END(stpcpy)
+
+END(strlen_v)

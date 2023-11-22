@@ -37,7 +37,7 @@
 
 __BEGIN_DECLS
 
-#if defined(__USE_BSD)
+#if defined(__USE_BSD) || defined(__USE_GNU)
 #include <strings.h>
 #endif
 

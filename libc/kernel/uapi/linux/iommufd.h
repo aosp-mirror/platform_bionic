@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_IOMMUFD_H
 #define _UAPI_IOMMUFD_H
 #include <linux/types.h>
@@ -32,6 +20,8 @@ enum {
   IOMMUFD_CMD_IOAS_UNMAP,
   IOMMUFD_CMD_OPTION,
   IOMMUFD_CMD_VFIO_IOAS,
+  IOMMUFD_CMD_HWPT_ALLOC,
+  IOMMUFD_CMD_GET_HW_INFO,
 };
 struct iommu_destroy {
   __u32 size;
@@ -126,4 +116,33 @@ struct iommu_vfio_ioas {
   __u16 __reserved;
 };
 #define IOMMU_VFIO_IOAS _IO(IOMMUFD_TYPE, IOMMUFD_CMD_VFIO_IOAS)
+struct iommu_hwpt_alloc {
+  __u32 size;
+  __u32 flags;
+  __u32 dev_id;
+  __u32 pt_id;
+  __u32 out_hwpt_id;
+  __u32 __reserved;
+};
+#define IOMMU_HWPT_ALLOC _IO(IOMMUFD_TYPE, IOMMUFD_CMD_HWPT_ALLOC)
+struct iommu_hw_info_vtd {
+  __u32 flags;
+  __u32 __reserved;
+  __aligned_u64 cap_reg;
+  __aligned_u64 ecap_reg;
+};
+enum iommu_hw_info_type {
+  IOMMU_HW_INFO_TYPE_NONE,
+  IOMMU_HW_INFO_TYPE_INTEL_VTD,
+};
+struct iommu_hw_info {
+  __u32 size;
+  __u32 flags;
+  __u32 dev_id;
+  __u32 data_len;
+  __aligned_u64 data_uptr;
+  __u32 out_data_type;
+  __u32 __reserved;
+};
+#define IOMMU_GET_HW_INFO _IO(IOMMUFD_TYPE, IOMMUFD_CMD_GET_HW_INFO)
 #endif

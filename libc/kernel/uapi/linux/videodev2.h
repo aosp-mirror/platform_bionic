@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI__LINUX_VIDEODEV2_H
 #define _UAPI__LINUX_VIDEODEV2_H
 #include <sys/time.h>
@@ -422,6 +410,8 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_Z16 v4l2_fourcc('Z', '1', '6', ' ')
 #define V4L2_PIX_FMT_MT21C v4l2_fourcc('M', 'T', '2', '1')
 #define V4L2_PIX_FMT_MM21 v4l2_fourcc('M', 'M', '2', '1')
+#define V4L2_PIX_FMT_MT2110T v4l2_fourcc('M', 'T', '2', 'T')
+#define V4L2_PIX_FMT_MT2110R v4l2_fourcc('M', 'T', '2', 'R')
 #define V4L2_PIX_FMT_INZI v4l2_fourcc('I', 'N', 'Z', 'I')
 #define V4L2_PIX_FMT_CNF4 v4l2_fourcc('C', 'N', 'F', '4')
 #define V4L2_PIX_FMT_HI240 v4l2_fourcc('H', 'I', '2', '4')

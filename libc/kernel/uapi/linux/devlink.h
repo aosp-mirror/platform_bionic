@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_LINUX_DEVLINK_H_
 #define _UAPI_LINUX_DEVLINK_H_
 #include <linux/const.h>
@@ -462,10 +450,14 @@ enum devlink_resource_unit {
 enum devlink_port_fn_attr_cap {
   DEVLINK_PORT_FN_ATTR_CAP_ROCE_BIT,
   DEVLINK_PORT_FN_ATTR_CAP_MIGRATABLE_BIT,
+  DEVLINK_PORT_FN_ATTR_CAP_IPSEC_CRYPTO_BIT,
+  DEVLINK_PORT_FN_ATTR_CAP_IPSEC_PACKET_BIT,
   __DEVLINK_PORT_FN_ATTR_CAPS_MAX,
 };
 #define DEVLINK_PORT_FN_CAP_ROCE _BITUL(DEVLINK_PORT_FN_ATTR_CAP_ROCE_BIT)
 #define DEVLINK_PORT_FN_CAP_MIGRATABLE _BITUL(DEVLINK_PORT_FN_ATTR_CAP_MIGRATABLE_BIT)
+#define DEVLINK_PORT_FN_CAP_IPSEC_CRYPTO _BITUL(DEVLINK_PORT_FN_ATTR_CAP_IPSEC_CRYPTO_BIT)
+#define DEVLINK_PORT_FN_CAP_IPSEC_PACKET _BITUL(DEVLINK_PORT_FN_ATTR_CAP_IPSEC_PACKET_BIT)
 enum devlink_port_function_attr {
   DEVLINK_PORT_FUNCTION_ATTR_UNSPEC,
   DEVLINK_PORT_FUNCTION_ATTR_HW_ADDR,

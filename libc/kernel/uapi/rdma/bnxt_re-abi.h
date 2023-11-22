@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef __BNXT_RE_UVERBS_ABI_H__
 #define __BNXT_RE_UVERBS_ABI_H__
 #include <linux/types.h>
@@ -28,6 +16,7 @@ enum {
   BNXT_RE_UCNTX_CMASK_HAVE_CCTX = 0x1ULL,
   BNXT_RE_UCNTX_CMASK_HAVE_MODE = 0x02ULL,
   BNXT_RE_UCNTX_CMASK_WC_DPI_ENABLED = 0x04ULL,
+  BNXT_RE_UCNTX_CMASK_DBR_PACING_ENABLED = 0x08ULL,
 };
 enum bnxt_re_wqe_mode {
   BNXT_QPLIB_WQE_MODE_STATIC = 0x00,
@@ -89,9 +78,12 @@ enum bnxt_re_shpg_offt {
 };
 enum bnxt_re_objects {
   BNXT_RE_OBJECT_ALLOC_PAGE = (1U << UVERBS_ID_NS_SHIFT),
+  BNXT_RE_OBJECT_NOTIFY_DRV,
 };
 enum bnxt_re_alloc_page_type {
   BNXT_RE_ALLOC_WC_PAGE = 0,
+  BNXT_RE_ALLOC_DBR_BAR_PAGE,
+  BNXT_RE_ALLOC_DBR_PAGE,
 };
 enum bnxt_re_var_alloc_page_attrs {
   BNXT_RE_ALLOC_PAGE_HANDLE = (1U << UVERBS_ID_NS_SHIFT),
@@ -106,5 +98,8 @@ enum bnxt_re_alloc_page_attrs {
 enum bnxt_re_alloc_page_methods {
   BNXT_RE_METHOD_ALLOC_PAGE = (1U << UVERBS_ID_NS_SHIFT),
   BNXT_RE_METHOD_DESTROY_PAGE,
+};
+enum bnxt_re_notify_drv_methods {
+  BNXT_RE_METHOD_NOTIFY_DRV = (1U << UVERBS_ID_NS_SHIFT),
 };
 #endif

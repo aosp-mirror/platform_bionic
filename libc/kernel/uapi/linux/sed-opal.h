@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_SED_OPAL_H
 #define _UAPI_SED_OPAL_H
 #include <linux/types.h>
@@ -49,11 +37,19 @@ enum opal_lock_state {
 enum opal_lock_flags {
   OPAL_SAVE_FOR_LOCK = 0x01,
 };
+enum opal_key_type {
+  OPAL_INCLUDED = 0,
+  OPAL_KEYRING,
+};
 struct opal_key {
   __u8 lr;
   __u8 key_len;
-  __u8 __align[6];
+  __u8 key_type;
+  __u8 __align[5];
   __u8 key[OPAL_KEY_MAX];
+};
+enum opal_revert_lsp_opts {
+  OPAL_PRESERVE = 0x01,
 };
 struct opal_lr_act {
   struct opal_key key;
@@ -143,6 +139,15 @@ struct opal_geometry {
   __u64 lowest_aligned_lba;
   __u8 __align[3];
 };
+struct opal_discovery {
+  __u64 data;
+  __u64 size;
+};
+struct opal_revert_lsp {
+  struct opal_key key;
+  __u32 options;
+  __u32 __pad;
+};
 #define IOC_OPAL_SAVE _IOW('p', 220, struct opal_lock_unlock)
 #define IOC_OPAL_LOCK_UNLOCK _IOW('p', 221, struct opal_lock_unlock)
 #define IOC_OPAL_TAKE_OWNERSHIP _IOW('p', 222, struct opal_key)
@@ -162,4 +167,6 @@ struct opal_geometry {
 #define IOC_OPAL_GET_STATUS _IOR('p', 236, struct opal_status)
 #define IOC_OPAL_GET_LR_STATUS _IOW('p', 237, struct opal_lr_status)
 #define IOC_OPAL_GET_GEOMETRY _IOR('p', 238, struct opal_geometry)
+#define IOC_OPAL_DISCOVERY _IOW('p', 239, struct opal_discovery)
+#define IOC_OPAL_REVERT_LSP _IOW('p', 240, struct opal_revert_lsp)
 #endif

@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef __AMDGPU_DRM_H__
 #define __AMDGPU_DRM_H__
 #include "drm.h"
@@ -60,7 +48,8 @@ extern "C" {
 #define AMDGPU_GEM_DOMAIN_GDS 0x8
 #define AMDGPU_GEM_DOMAIN_GWS 0x10
 #define AMDGPU_GEM_DOMAIN_OA 0x20
-#define AMDGPU_GEM_DOMAIN_MASK (AMDGPU_GEM_DOMAIN_CPU | AMDGPU_GEM_DOMAIN_GTT | AMDGPU_GEM_DOMAIN_VRAM | AMDGPU_GEM_DOMAIN_GDS | AMDGPU_GEM_DOMAIN_GWS | AMDGPU_GEM_DOMAIN_OA)
+#define AMDGPU_GEM_DOMAIN_DOORBELL 0x40
+#define AMDGPU_GEM_DOMAIN_MASK (AMDGPU_GEM_DOMAIN_CPU | AMDGPU_GEM_DOMAIN_GTT | AMDGPU_GEM_DOMAIN_VRAM | AMDGPU_GEM_DOMAIN_GDS | AMDGPU_GEM_DOMAIN_GWS | AMDGPU_GEM_DOMAIN_OA | AMDGPU_GEM_DOMAIN_DOORBELL)
 #define AMDGPU_GEM_CREATE_CPU_ACCESS_REQUIRED (1 << 0)
 #define AMDGPU_GEM_CREATE_NO_CPU_ACCESS (1 << 1)
 #define AMDGPU_GEM_CREATE_CPU_GTT_USWC (1 << 2)

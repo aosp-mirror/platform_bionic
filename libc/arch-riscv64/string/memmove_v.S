@@ -61,15 +61,22 @@
 
 #define iVL a3
 #define pDstPtr a4
+#define pSrcBackwardPtr a5
+#define pDstBackwardPtr a6
 
 #define ELEM_LMUL_SETTING m8
 #define vData v0
 
-ENTRY(memcpy)
+ENTRY(memmove_v)
 
     mv pDstPtr, pDst
 
-L(loop):
+    bgeu pSrc, pDst, L(forward_copy_loop)
+    add pSrcBackwardPtr, pSrc, iNum
+    add pDstBackwardPtr, pDst, iNum
+    bltu pDst, pSrcBackwardPtr, L(backward_copy_loop)
+
+L(forward_copy_loop):
     vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
 
     vle8.v vData, (pSrc)
@@ -78,8 +85,18 @@ L(loop):
     vse8.v vData, (pDstPtr)
     add pDstPtr, pDstPtr, iVL
 
-    bnez iNum, L(loop)
-
+    bnez iNum, L(forward_copy_loop)
     ret
 
-END(memcpy)
+L(backward_copy_loop):
+    vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
+
+    sub pSrcBackwardPtr, pSrcBackwardPtr, iVL
+    vle8.v vData, (pSrcBackwardPtr)
+    sub iNum, iNum, iVL
+    sub pDstBackwardPtr, pDstBackwardPtr, iVL
+    vse8.v vData, (pDstBackwardPtr)
+    bnez iNum, L(backward_copy_loop)
+    ret
+
+END(memmove_v)

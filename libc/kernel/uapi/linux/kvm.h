@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef __LINUX_KVM_H
 #define __LINUX_KVM_H
 #include <linux/const.h>
@@ -1108,9 +1096,12 @@ struct kvm_device_attr {
   __u64 attr;
   __u64 addr;
 };
-#define KVM_DEV_VFIO_GROUP 1
-#define KVM_DEV_VFIO_GROUP_ADD 1
-#define KVM_DEV_VFIO_GROUP_DEL 2
+#define KVM_DEV_VFIO_FILE 1
+#define KVM_DEV_VFIO_FILE_ADD 1
+#define KVM_DEV_VFIO_FILE_DEL 2
+#define KVM_DEV_VFIO_GROUP KVM_DEV_VFIO_FILE
+#define KVM_DEV_VFIO_GROUP_ADD KVM_DEV_VFIO_FILE_ADD
+#define KVM_DEV_VFIO_GROUP_DEL KVM_DEV_VFIO_FILE_DEL
 #define KVM_DEV_VFIO_GROUP_SET_SPAPR_TCE 3
 enum kvm_device_type {
   KVM_DEV_TYPE_FSL_MPIC_20 = 1,

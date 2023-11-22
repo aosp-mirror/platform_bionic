@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_LINUX_IOPRIO_H
 #define _UAPI_LINUX_IOPRIO_H
 #include <linux/stddef.h>
@@ -61,10 +49,10 @@ enum {
   IOPRIO_HINT_DEV_DURATION_LIMIT_7 = 7,
 };
 #define IOPRIO_BAD_VALUE(val,max) ((val) < 0 || (val) >= (max))
-static __always_inline __u16 ioprio_value(int __linux_class, int level, int hint) {
-  if(IOPRIO_BAD_VALUE(__linux_class, IOPRIO_NR_CLASSES) || IOPRIO_BAD_VALUE(level, IOPRIO_NR_LEVELS) || IOPRIO_BAD_VALUE(hint, IOPRIO_NR_HINTS)) return IOPRIO_CLASS_INVALID << IOPRIO_CLASS_SHIFT;
-  return(__linux_class << IOPRIO_CLASS_SHIFT) | (hint << IOPRIO_HINT_SHIFT) | level;
+static __always_inline __u16 ioprio_value(int prioclass, int priolevel, int priohint) {
+  if(IOPRIO_BAD_VALUE(prioclass, IOPRIO_NR_CLASSES) || IOPRIO_BAD_VALUE(priolevel, IOPRIO_NR_LEVELS) || IOPRIO_BAD_VALUE(priohint, IOPRIO_NR_HINTS)) return IOPRIO_CLASS_INVALID << IOPRIO_CLASS_SHIFT;
+  return(prioclass << IOPRIO_CLASS_SHIFT) | (priohint << IOPRIO_HINT_SHIFT) | priolevel;
 }
-#define IOPRIO_PRIO_VALUE(__linux_class,level) ioprio_value(__linux_class, level, IOPRIO_HINT_NONE)
-#define IOPRIO_PRIO_VALUE_HINT(__linux_class,level,hint) ioprio_value(__linux_class, level, hint)
+#define IOPRIO_PRIO_VALUE(prioclass,priolevel) ioprio_value(prioclass, priolevel, IOPRIO_HINT_NONE)
+#define IOPRIO_PRIO_VALUE_HINT(prioclass,priolevel,priohint) ioprio_value(prioclass, priolevel, priohint)
 #endif

@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_LINUX_FSI_H
 #define _UAPI_LINUX_FSI_H
 #include <linux/types.h>
@@ -48,5 +36,6 @@ struct scom_access {
 #define FSI_SCOM_READ _IOWR('s', 0x01, struct scom_access)
 #define FSI_SCOM_WRITE _IOWR('s', 0x02, struct scom_access)
 #define FSI_SCOM_RESET _IOW('s', 0x03, __u32)
+#define FSI_SBEFIFO_CMD_TIMEOUT_SECONDS _IOW('s', 0x01, __u32)
 #define FSI_SBEFIFO_READ_TIMEOUT_SECONDS _IOW('s', 0x00, __u32)
 #endif
