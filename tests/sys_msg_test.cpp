@@ -56,16 +56,17 @@ TEST(sys_msg, smoke) {
     long type;
     char data[32];
   } msg = { 1, "hello world" };
-  ASSERT_EQ(0, msgsnd(id, &msg, sizeof(msg), 0));
+  ASSERT_EQ(0, msgsnd(id, &msg, sizeof(msg.data), 0));
 
   // Queue should be non-empty.
   ASSERT_EQ(0, msgctl(id, IPC_STAT, &ds));
   ASSERT_EQ(1U, ds.msg_qnum);
-  ASSERT_EQ(sizeof(msg), ds.msg_cbytes);
+  ASSERT_EQ(sizeof(msg.data), ds.msg_cbytes);
 
   // Read the message.
   memset(&msg, 0, sizeof(msg));
-  ASSERT_EQ(static_cast<ssize_t>(sizeof(msg)), msgrcv(id, &msg, sizeof(msg), 0, 0));
+  ASSERT_EQ(static_cast<ssize_t>(sizeof(msg.data)),
+            msgrcv(id, &msg, sizeof(msg.data), 0, 0));
   ASSERT_EQ(1, msg.type);
   ASSERT_STREQ("hello world", msg.data);
 
@@ -98,7 +99,11 @@ TEST(sys_msg, msgrcv_failure) {
 }
 
 TEST(sys_msg, msgsnd_failure) {
+  struct {
+    long type;
+    char data[1];
+  } msg = { 1, "" };
   errno = 0;
-  ASSERT_EQ(-1, msgsnd(-1, "", 0, 0));
+  ASSERT_EQ(-1, msgsnd(-1, &msg, sizeof(msg.data), 0));
   ASSERT_TRUE(errno == EINVAL || errno == ENOSYS);
 }

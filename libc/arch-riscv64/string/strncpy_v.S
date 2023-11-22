@@ -57,46 +57,58 @@
 
 #define pDst a0
 #define pSrc a1
-#define iNum a2
+#define iLength a2
+#define pDstPtr a3
 
-#define iVL a3
-#define pDstPtr a4
-#define pSrcBackwardPtr a5
-#define pDstBackwardPtr a6
+#define iVL a4
+#define iCurrentVL a5
+#define iActiveElemPos a6
 
-#define ELEM_LMUL_SETTING m8
-#define vData v0
+#define ELEM_LMUL_SETTING m1
+#define vMask1 v0
+#define vMask2 v1
+#define ZERO_FILL_ELEM_LMUL_SETTING m8
+#define vStr1 v8
+#define vStr2 v16
 
-ENTRY(memmove)
+ENTRY(strncpy_v)
 
     mv pDstPtr, pDst
 
-    bgeu pSrc, pDst, L(forward_copy_loop)
-    add pSrcBackwardPtr, pSrc, iNum
-    add pDstBackwardPtr, pDst, iNum
-    bltu pDst, pSrcBackwardPtr, L(backward_copy_loop)
+    // copy pSrc to pDstPtr
+L(strcpy_loop):
+    vsetvli iVL, iLength, e8, ELEM_LMUL_SETTING, ta, ma
+    vle8ff.v vStr1, (pSrc)
+    vmseq.vx vMask2, vStr1, zero
+    csrr iCurrentVL, vl
+    vfirst.m iActiveElemPos, vMask2
+    vmsif.m vMask1, vMask2
+    add pSrc, pSrc, iCurrentVL
+    sub iLength, iLength, iCurrentVL
+    vse8.v vStr1, (pDstPtr), vMask1.t
+    add pDstPtr, pDstPtr, iCurrentVL
+    bgez iActiveElemPos, L(fill_zero)
+    bnez iLength, L(strcpy_loop)
+    ret
 
-L(forward_copy_loop):
-    vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
+    # fill the tail zero.
+L(fill_zero):
+    sub iVL, iCurrentVL, iActiveElemPos
+    add iLength, iLength, iVL
+    bnez iLength, 1f
+    ret
+1:
+    sub pDstPtr, pDstPtr, iVL
+    vsetvli zero, iLength, e8, ZERO_FILL_ELEM_LMUL_SETTING, ta, ma
+    vmv.v.x vStr2, zero
 
-    vle8.v vData, (pSrc)
-    sub iNum, iNum, iVL
-    add pSrc, pSrc, iVL
-    vse8.v vData, (pDstPtr)
+L(fill_zero_loop):
+    vsetvli iVL, iLength, e8, ZERO_FILL_ELEM_LMUL_SETTING, ta, ma
+    vse8.v vStr2, (pDstPtr)
+    sub iLength, iLength, iVL
     add pDstPtr, pDstPtr, iVL
+    bnez iLength, L(fill_zero_loop)
 
-    bnez iNum, L(forward_copy_loop)
     ret
 
-L(backward_copy_loop):
-    vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
-
-    sub pSrcBackwardPtr, pSrcBackwardPtr, iVL
-    vle8.v vData, (pSrcBackwardPtr)
-    sub iNum, iNum, iVL
-    sub pDstBackwardPtr, pDstBackwardPtr, iVL
-    vse8.v vData, (pDstBackwardPtr)
-    bnez iNum, L(backward_copy_loop)
-    ret
-
-END(memmove)
+END(strncpy_v)

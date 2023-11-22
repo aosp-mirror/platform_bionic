@@ -46,8 +46,31 @@ typedef struct {
 } Dl_info;
 
 void* _Nullable dlopen(const char* _Nullable __filename, int __flag);
+
+/**
+ * [dlclose(3)](http://man7.org/linux/man-pages/man3/dlclose.3.html)
+ * decrements the reference count for the given shared library (and
+ * any libraries brought in by that library's DT_NEEDED entries).
+ *
+ * If a library's reference count hits zero, it may be unloaded.
+ * Code that relies on this is not portable, and may not work on
+ * future versions of Android.
+ *
+ * dlclose() is dangerous because function pointers may or may not
+ * be rendered invalid, global data may or may not be rendered invalid,
+ * and memory may or may not leak. Code with global constructors is
+ * especially problematic. Instead of dlclose, prefer to leave the
+ * library open or, if cleanup is necessary, dlopen() the library in
+ * a child process which can later be killed by the parent or call
+ * exit() itself.
+ *
+ * Returns 0 on success, and returns -1 on failure, in which case
+ * dlerror() can be used to retrieve the specific error.
+ */
 int dlclose(void* _Nonnull __handle);
+
 char* _Nullable dlerror(void);
+
 /* (RTLD_DEFAULT is null for LP64, but -1 for LP32) */
 void* _Nullable dlsym(void* __BIONIC_COMPLICATED_NULLNESS __handle, const char* _Nullable __symbol);
 /* (RTLD_DEFAULT is null for LP64, but -1 for LP32) */

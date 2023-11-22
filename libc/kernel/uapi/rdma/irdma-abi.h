@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef IRDMA_ABI_H
 #define IRDMA_ABI_H
 #include <linux/types.h>
@@ -25,10 +13,15 @@ enum irdma_memreg_type {
   IRDMA_MEMREG_TYPE_QP = 1,
   IRDMA_MEMREG_TYPE_CQ = 2,
 };
+enum {
+  IRDMA_ALLOC_UCTX_USE_RAW_ATTR = 1 << 0,
+  IRDMA_ALLOC_UCTX_MIN_HW_WQ_SIZE = 1 << 1,
+};
 struct irdma_alloc_ucontext_req {
   __u32 rsvd32;
   __u8 userspace_ver;
   __u8 rsvd8[3];
+  __aligned_u64 comp_mask;
 };
 struct irdma_alloc_ucontext_resp {
   __u32 max_pds;
@@ -48,6 +41,9 @@ struct irdma_alloc_ucontext_resp {
   __u16 max_hw_sq_chunk;
   __u8 hw_rev;
   __u8 rsvd2;
+  __aligned_u64 comp_mask;
+  __u16 min_hw_wq_size;
+  __u8 rsvd3[6];
 };
 struct irdma_alloc_pd_resp {
   __u32 pd_id;

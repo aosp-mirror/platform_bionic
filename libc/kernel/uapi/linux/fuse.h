@@ -1,26 +1,14 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _LINUX_FUSE_H
 #define _LINUX_FUSE_H
 #include <stdint.h>
 #define FUSE_KERNEL_VERSION 7
-#define FUSE_KERNEL_MINOR_VERSION 38
+#define FUSE_KERNEL_MINOR_VERSION 39
 #define FUSE_ROOT_ID 1
 struct fuse_attr {
   uint64_t ino;
@@ -39,6 +27,34 @@ struct fuse_attr {
   uint32_t rdev;
   uint32_t blksize;
   uint32_t flags;
+};
+struct fuse_sx_time {
+  int64_t tv_sec;
+  uint32_t tv_nsec;
+  int32_t __reserved;
+};
+struct fuse_statx {
+  uint32_t mask;
+  uint32_t blksize;
+  uint64_t attributes;
+  uint32_t nlink;
+  uint32_t uid;
+  uint32_t gid;
+  uint16_t mode;
+  uint16_t __spare0[1];
+  uint64_t ino;
+  uint64_t size;
+  uint64_t blocks;
+  uint64_t attributes_mask;
+  struct fuse_sx_time atime;
+  struct fuse_sx_time btime;
+  struct fuse_sx_time ctime;
+  struct fuse_sx_time mtime;
+  uint32_t rdev_major;
+  uint32_t rdev_minor;
+  uint32_t dev_major;
+  uint32_t dev_minor;
+  uint64_t __spare2[14];
 };
 struct fuse_kstatfs {
   uint64_t blocks;
@@ -113,6 +129,7 @@ struct fuse_file_lock {
 #define FUSE_HAS_INODE_DAX (1ULL << 33)
 #define FUSE_CREATE_SUPP_GROUP (1ULL << 34)
 #define FUSE_HAS_EXPIRE_ONLY (1ULL << 35)
+#define FUSE_DIRECT_IO_RELAX (1ULL << 36)
 #if FUSE_KERNEL_VERSION > 7 || FUSE_KERNEL_VERSION == 7 && FUSE_KERNEL_MINOR_VERSION >= 36
 #define FUSE_PASSTHROUGH (1ULL << 63)
 #else
@@ -196,6 +213,7 @@ enum fuse_opcode {
   FUSE_REMOVEMAPPING = 49,
   FUSE_SYNCFS = 50,
   FUSE_TMPFILE = 51,
+  FUSE_STATX = 52,
   FUSE_CANONICAL_PATH = 2016,
   CUSE_INIT = 4096,
   CUSE_INIT_BSWAP_RESERVED = 1048576,
@@ -243,6 +261,20 @@ struct fuse_attr_out {
   uint32_t attr_valid_nsec;
   uint32_t dummy;
   struct fuse_attr attr;
+};
+struct fuse_statx_in {
+  uint32_t getattr_flags;
+  uint32_t reserved;
+  uint64_t fh;
+  uint32_t sx_flags;
+  uint32_t sx_mask;
+};
+struct fuse_statx_out {
+  uint64_t attr_valid;
+  uint32_t attr_valid_nsec;
+  uint32_t flags;
+  uint64_t spare[2];
+  struct fuse_statx stat;
 };
 #define FUSE_COMPAT_MKNOD_IN_SIZE 8
 struct fuse_mknod_in {

@@ -55,35 +55,52 @@
 
 #include <private/bionic_asm.h>
 
-#define pStr a0
-#define pCopyStr a2
-#define iRetValue a0
-#define iMaxlen a1
-#define iCurrentVL a3
-#define iEndOffset a4
+#define iResult a0
 
-#define ELEM_LMUL_SETTING m1
-#define vStr v0
-#define vMaskEnd v8
+#define pSrc1 a0
+#define pSrc2 a1
+#define iNum a2
 
-ENTRY(strnlen)
+#define iVL a3
+#define iTemp a4
+#define iTemp1 a5
+#define iTemp2 a6
 
-    mv pCopyStr, pStr
-    mv iRetValue, iMaxlen
-L(strnlen_loop):
-    beqz iMaxlen, L(end_strnlen_loop)
-    vsetvli zero, iMaxlen, e8, ELEM_LMUL_SETTING, ta, ma
-    vle8ff.v vStr, (pCopyStr)
-    vmseq.vi vMaskEnd, vStr, 0
-    vfirst.m iEndOffset, vMaskEnd /* first occurrence of \0 */
-    csrr iCurrentVL, vl
-    add pCopyStr, pCopyStr, iCurrentVL
-    sub iMaxlen, iMaxlen, iCurrentVL
-    bltz iEndOffset, L(strnlen_loop)
-    add iMaxlen, iMaxlen, iCurrentVL
-    sub iRetValue, iRetValue, iMaxlen
-    add iRetValue, iRetValue, iEndOffset
-L(end_strnlen_loop):
+#define ELEM_LMUL_SETTING m8
+#define vData1 v0
+#define vData2 v8
+#define vMask v16
+
+ENTRY(memcmp_v)
+
+L(loop):
+    vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
+
+    vle8.v vData1, (pSrc1)
+    vle8.v vData2, (pSrc2)
+
+    vmsne.vv vMask, vData1, vData2
+    sub iNum, iNum, iVL
+    vfirst.m iTemp, vMask
+
+    /* skip the loop if we find the different
+       value between pSrc1 and pSrc2.  */
+    bgez iTemp, L(found)
+
+    add pSrc1, pSrc1, iVL
+    add pSrc2, pSrc2, iVL
+
+    bnez iNum, L(loop)
+
+    li iResult, 0
     ret
 
-END(strnlen)
+L(found):
+    add pSrc1, pSrc1, iTemp
+    add pSrc2, pSrc2, iTemp
+    lbu iTemp1, 0(pSrc1)
+    lbu iTemp2, 0(pSrc2)
+    sub iResult, iTemp1, iTemp2
+    ret
+
+END(memcmp_v)

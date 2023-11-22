@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef __INCLUDE_UAPI_SOF_TOPOLOGY_H__
 #define __INCLUDE_UAPI_SOF_TOPOLOGY_H__
 #define SOF_TPLG_KCTL_VOL_ID 256
@@ -66,6 +54,7 @@
 #define SOF_TKN_COMP_OUTPUT_PIN_BINDING_WNAME 414
 #define SOF_TKN_COMP_NUM_INPUT_AUDIO_FORMATS 415
 #define SOF_TKN_COMP_NUM_OUTPUT_AUDIO_FORMATS 416
+#define SOF_TKN_COMP_NO_WNAME_IN_KCONTROL_NAME 417
 #define SOF_TKN_INTEL_SSP_CLKS_CONTROL 500
 #define SOF_TKN_INTEL_SSP_MCLK_ID 501
 #define SOF_TKN_INTEL_SSP_SAMPLE_BITS 502

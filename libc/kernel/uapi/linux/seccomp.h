@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_LINUX_SECCOMP_H
 #define _UAPI_LINUX_SECCOMP_H
 #include <linux/compiler.h>
@@ -69,6 +57,7 @@ struct seccomp_notif_resp {
   __s32 error;
   __u32 flags;
 };
+#define SECCOMP_USER_NOTIF_FD_SYNC_WAKE_UP (1UL << 0)
 #define SECCOMP_ADDFD_FLAG_SETFD (1UL << 0)
 #define SECCOMP_ADDFD_FLAG_SEND (1UL << 1)
 struct seccomp_notif_addfd {
@@ -87,4 +76,5 @@ struct seccomp_notif_addfd {
 #define SECCOMP_IOCTL_NOTIF_SEND SECCOMP_IOWR(1, struct seccomp_notif_resp)
 #define SECCOMP_IOCTL_NOTIF_ID_VALID SECCOMP_IOW(2, __u64)
 #define SECCOMP_IOCTL_NOTIF_ADDFD SECCOMP_IOW(3, struct seccomp_notif_addfd)
+#define SECCOMP_IOCTL_NOTIF_SET_FLAGS SECCOMP_IOW(4, __u64)
 #endif
