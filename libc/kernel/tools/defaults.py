@@ -43,6 +43,7 @@ kernel_structs_to_remove = {
     "in_addr": False,
     "ip_mreq_source": False,
     "ip_msfilter": False,
+    "tcphdr": False,
     "timespec": False,
     }
 
