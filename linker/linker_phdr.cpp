@@ -36,10 +36,12 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include "android-base/unique_fd.h"
 #include "linker.h"
+#include "linker_debug.h"
 #include "linker_dlwarning.h"
 #include "linker_globals.h"
-#include "linker_debug.h"
+#include "linker_main.h"
 #include "linker_utils.h"
 
 #include "private/CFIShadow.h" // For kLibraryAlignment
@@ -860,6 +862,108 @@ int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table, size_t phdr_count,
   }
 #endif
   return _phdr_table_set_load_prot(phdr_table, phdr_count, load_bias, prot);
+}
+
+static bool segment_needs_memtag_globals_remapping(const ElfW(Phdr) * phdr) {
+  // For now, MTE globals is only supported on writeable data segments.
+  return phdr->p_type == PT_LOAD && !(phdr->p_flags & PF_X) && (phdr->p_flags & PF_W);
+}
+
+/* When MTE globals are requested by the binary, and when the hardware supports
+ * it, remap the executable's PT_LOAD data pages to have PROT_MTE.
+ *
+ * Input:
+ *   phdr_table  -> program header table
+ *   phdr_count  -> number of entries in tables
+ *   load_bias   -> load bias
+ * Return:
+ *   0 on success, -1 on failure (error code in errno).
+ */
+int remap_memtag_globals_segments(const ElfW(Phdr) * phdr_table, size_t phdr_count,
+                                  ElfW(Addr) load_bias) {
+  for (const ElfW(Phdr)* phdr = phdr_table; phdr < phdr_table + phdr_count; phdr++) {
+    if (!segment_needs_memtag_globals_remapping(phdr)) {
+      continue;
+    }
+
+    uintptr_t seg_page_start = page_start(phdr->p_vaddr) + load_bias;
+    uintptr_t seg_page_end = page_end(phdr->p_vaddr + phdr->p_memsz) + load_bias;
+    size_t seg_page_aligned_size = seg_page_end - seg_page_start;
+
+    int prot = PFLAGS_TO_PROT(phdr->p_flags);
+    // For anonymous private mappings, it may be possible to simply mprotect()
+    // the PROT_MTE flag over the top. For file-based mappings, this will fail,
+    // and we'll need to fall back. We also allow PROT_WRITE here to allow
+    // writing memory tags (in `soinfo::tag_globals()`), and set these sections
+    // back to read-only after tags are applied (similar to RELRO).
+#if defined(__aarch64__)
+    prot |= PROT_MTE;
+#endif  // defined(__aarch64__)
+    if (mprotect(reinterpret_cast<void*>(seg_page_start), seg_page_aligned_size,
+                 prot | PROT_WRITE) == 0) {
+      continue;
+    }
+
+    void* mapping_copy = mmap(nullptr, seg_page_aligned_size, PROT_READ | PROT_WRITE,
+                              MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    linker_memcpy(mapping_copy, reinterpret_cast<void*>(seg_page_start), seg_page_aligned_size);
+
+    void* seg_addr = mmap(reinterpret_cast<void*>(seg_page_start), seg_page_aligned_size,
+                          prot | PROT_WRITE, MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    if (seg_addr == MAP_FAILED) return -1;
+
+    linker_memcpy(seg_addr, mapping_copy, seg_page_aligned_size);
+    munmap(mapping_copy, seg_page_aligned_size);
+  }
+
+  return 0;
+}
+
+void protect_memtag_globals_ro_segments(const ElfW(Phdr) * phdr_table, size_t phdr_count,
+                                        ElfW(Addr) load_bias) {
+  for (const ElfW(Phdr)* phdr = phdr_table; phdr < phdr_table + phdr_count; phdr++) {
+    int prot = PFLAGS_TO_PROT(phdr->p_flags);
+    if (!segment_needs_memtag_globals_remapping(phdr) || (prot & PROT_WRITE)) {
+      continue;
+    }
+
+#if defined(__aarch64__)
+    prot |= PROT_MTE;
+#endif  // defined(__aarch64__)
+
+    uintptr_t seg_page_start = page_start(phdr->p_vaddr) + load_bias;
+    uintptr_t seg_page_end = page_end(phdr->p_vaddr + phdr->p_memsz) + load_bias;
+    size_t seg_page_aligned_size = seg_page_end - seg_page_start;
+    mprotect(reinterpret_cast<void*>(seg_page_start), seg_page_aligned_size, prot);
+  }
+}
+
+void name_memtag_globals_segments(const ElfW(Phdr) * phdr_table, size_t phdr_count,
+                                  ElfW(Addr) load_bias, const char* soname) {
+  for (const ElfW(Phdr)* phdr = phdr_table; phdr < phdr_table + phdr_count; phdr++) {
+    if (!segment_needs_memtag_globals_remapping(phdr)) {
+      continue;
+    }
+
+    uintptr_t seg_page_start = page_start(phdr->p_vaddr) + load_bias;
+    uintptr_t seg_page_end = page_end(phdr->p_vaddr + phdr->p_memsz) + load_bias;
+    size_t seg_page_aligned_size = seg_page_end - seg_page_start;
+
+    // For file-based mappings that we're now forcing to be anonymous mappings, set the VMA name to
+    // make debugging easier. The previous Android-kernel specific implementation captured the name
+    // by pointer from userspace, which meant we had to persist the name permanently in memory.
+    // Since Android13-5.10 (https://android-review.git.corp.google.com/c/kernel/common/+/1934723)
+    // though, we use the upstream-kernel implementation
+    // (https://github.com/torvalds/linux/commit/9a10064f5625d5572c3626c1516e0bebc6c9fe9b), which
+    // copies the name into kernel memory. It's a safe bet that any devices with Android 14 are
+    // using a kernel >= 5.10.
+    constexpr unsigned kVmaNameLimit = 80;
+    char vma_name[kVmaNameLimit];
+    async_safe_format_buffer(vma_name, kVmaNameLimit, "memtag:%s+0x%" PRIxPTR, soname,
+                             page_start(phdr->p_vaddr));
+    prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, reinterpret_cast<void*>(seg_page_start),
+          seg_page_aligned_size, vma_name);
+  }
 }
 
 /* Change the protection of all loaded segments in memory to writable.
