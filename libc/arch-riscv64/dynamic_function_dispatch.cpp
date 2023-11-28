@@ -48,7 +48,7 @@ static bool have_fast_v() {
   static bool result = []() {
     // We don't want to do a full "bogomips" test, so just check for the
     // presence of a file that would indicate that we're running in qemu.
-    return ifunc_faccessat(AT_FDCWD, "/dev/hvc0", F_OK) == 0;
+    return ifunc_faccessat(AT_FDCWD, "/dev/hvc0", F_OK) != 0;
   }();
   return result;
 }
