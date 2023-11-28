@@ -91,17 +91,6 @@ static void call_fini_array(void* arg) {
 extern __LIBC_HIDDEN__ __attribute__((weak)) ElfW(Rel) __rel_iplt_start[], __rel_iplt_end[];
 
 static void call_ifunc_resolvers() {
-  if (__rel_iplt_start == nullptr || __rel_iplt_end == nullptr) {
-    // These symbols were not emitted by gold. Gold has code to do so, but for
-    // whatever reason it is not being run. In these cases ifuncs cannot be
-    // resolved, so we do not support using ifuncs in static executables linked
-    // with gold.
-    //
-    // Since they are weak, they will be non-null when linked with bfd/lld and
-    // null when linked with gold.
-    return;
-  }
-
   for (ElfW(Rel)* r = __rel_iplt_start; r != __rel_iplt_end; ++r) {
     ElfW(Addr)* offset = reinterpret_cast<ElfW(Addr)*>(r->r_offset);
     ElfW(Addr) resolver = *offset;
@@ -112,17 +101,6 @@ static void call_ifunc_resolvers() {
 extern __LIBC_HIDDEN__ __attribute__((weak)) ElfW(Rela) __rela_iplt_start[], __rela_iplt_end[];
 
 static void call_ifunc_resolvers() {
-  if (__rela_iplt_start == nullptr || __rela_iplt_end == nullptr) {
-    // These symbols were not emitted by gold. Gold has code to do so, but for
-    // whatever reason it is not being run. In these cases ifuncs cannot be
-    // resolved, so we do not support using ifuncs in static executables linked
-    // with gold.
-    //
-    // Since they are weak, they will be non-null when linked with bfd/lld and
-    // null when linked with gold.
-    return;
-  }
-
   for (ElfW(Rela)* r = __rela_iplt_start; r != __rela_iplt_end; ++r) {
     ElfW(Addr)* offset = reinterpret_cast<ElfW(Addr)*>(r->r_offset);
     ElfW(Addr) resolver = r->r_addend;

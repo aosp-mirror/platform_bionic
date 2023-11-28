@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2023 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,14 +25,8 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <string.h>
 
-size_t  strnlen(const char*  str, size_t  maxlen)
-{
-    char*  p = memchr(str, 0, maxlen);
+#include <upstream-openbsd/android/include/openbsd-compat.h>
 
-    if (p == NULL)
-        return maxlen;
-    else
-        return (p - str);
-}
+#define stpcpy stpcpy_gc
+#include <upstream-openbsd/lib/libc/string/stpcpy.c>
