@@ -97,3 +97,17 @@ template <typename T>
 static inline T* _Nonnull untag_address(T* _Nonnull p) {
   return reinterpret_cast<T*>(untag_address(reinterpret_cast<uintptr_t>(p)));
 }
+
+// MTE globals protects internal and external global variables. One of the main
+// things that MTE globals does is force all global variables accesses to go
+// through the GOT. In the linker though, some global variables are accessed (or
+// address-taken) prior to relocations being processed. Because relocations
+// haven't run yet, the GOT entry hasn't been populated, and this leads to
+// crashes. Thus, any globals used by the linker prior to relocation should be
+// annotated with this attribute, which suppresses tagging of this global
+// variable, restoring the pc-relative address computation.
+#if __has_feature(memtag_globals)
+#define BIONIC_USED_BEFORE_LINKER_RELOCATES __attribute__((no_sanitize("memtag")))
+#else  // __has_feature(memtag_globals)
+#define BIONIC_USED_BEFORE_LINKER_RELOCATES
+#endif  // __has_feature(memtag_globals)
