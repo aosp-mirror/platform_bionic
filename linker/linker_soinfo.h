@@ -66,9 +66,10 @@
                                          // soinfo is executed and this flag is
                                          // unset.
 #define FLAG_PRELINKED        0x00000400 // prelink_image has successfully processed this soinfo
+#define FLAG_GLOBALS_TAGGED 0x00000800   // globals have been tagged by MTE.
 #define FLAG_NEW_SOINFO       0x40000000 // new soinfo format
 
-#define SOINFO_VERSION 6
+#define SOINFO_VERSION 7
 
 ElfW(Addr) call_ifunc_resolver(ElfW(Addr) resolver_addr);
 
@@ -256,6 +257,8 @@ struct soinfo {
   bool link_image(const SymbolLookupList& lookup_list, soinfo* local_group_root,
                   const android_dlextinfo* extinfo, size_t* relro_fd_offset);
   bool protect_relro();
+
+  void tag_globals();
 
   void add_child(soinfo* child);
   void remove_all_links();
