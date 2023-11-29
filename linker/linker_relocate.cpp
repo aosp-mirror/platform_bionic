@@ -44,6 +44,8 @@
 #include "linker_soinfo.h"
 #include "private/bionic_globals.h"
 
+#include <platform/bionic/mte.h>
+
 static bool is_tls_reloc(ElfW(Word) type) {
   switch (type) {
     case R_GENERIC_TLS_DTPMOD:
@@ -157,12 +159,19 @@ void print_linker_stats() {
 
 static bool process_relocation_general(Relocator& relocator, const rel_t& reloc);
 
+static ElfW(Addr) apply_memtag(ElfW(Addr) sym_addr) {
+  if (sym_addr == 0) return sym_addr;  // Handle undefined weak symbols.
+
+  return reinterpret_cast<ElfW(Addr)>(get_tagged_address(reinterpret_cast<void*>(sym_addr)));
+}
+
 template <RelocMode Mode>
 __attribute__((always_inline))
 static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
   constexpr bool IsGeneral = Mode == RelocMode::General;
 
-  void* const rel_target = reinterpret_cast<void*>(reloc.r_offset + relocator.si->load_bias);
+  void* const rel_target =
+      reinterpret_cast<void*>(apply_memtag(reloc.r_offset + relocator.si->load_bias));
   const uint32_t r_type = ELFW(R_TYPE)(reloc.r_info);
   const uint32_t r_sym = ELFW(R_SYM)(reloc.r_info);
 
@@ -325,7 +334,7 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
     // common in non-platform binaries.
     if (r_type == R_GENERIC_ABSOLUTE) {
       count_relocation_if<IsGeneral>(kRelocAbsolute);
-      const ElfW(Addr) result = sym_addr + get_addend_rel();
+      const ElfW(Addr) result = apply_memtag(sym_addr) + get_addend_rel();
       trace_reloc("RELO ABSOLUTE %16p <- %16p %s",
                   rel_target, reinterpret_cast<void*>(result), sym_name);
       *static_cast<ElfW(Addr)*>(rel_target) = result;
@@ -335,16 +344,29 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
       // document (IHI0044F) specifies that R_ARM_GLOB_DAT has an addend, but Bionic isn't adding
       // it.
       count_relocation_if<IsGeneral>(kRelocAbsolute);
-      const ElfW(Addr) result = sym_addr + get_addend_norel();
-      trace_reloc("RELO GLOB_DAT %16p <- %16p %s",
-                  rel_target, reinterpret_cast<void*>(result), sym_name);
+      ElfW(Addr) result = apply_memtag(sym_addr) + get_addend_norel();
+      trace_reloc("RELO GLOB_DAT %16p <- %16p %s", rel_target, reinterpret_cast<void*>(result),
+                  sym_name);
       *static_cast<ElfW(Addr)*>(rel_target) = result;
       return true;
     } else if (r_type == R_GENERIC_RELATIVE) {
       // In practice, r_sym is always zero, but if it weren't, the linker would still look up the
       // referenced symbol (and abort if the symbol isn't found), even though it isn't used.
       count_relocation_if<IsGeneral>(kRelocRelative);
-      const ElfW(Addr) result = relocator.si->load_bias + get_addend_rel();
+      ElfW(Addr) result;
+      // MTE globals reuses the place bits for additional tag-derivation metadata for
+      // R_AARCH64_RELATIVE relocations, which makes it incompatible with
+      // `-Wl,--apply-dynamic-relocs`. This is enforced by lld, however there's nothing stopping
+      // Android binaries (particularly prebuilts) from building with this linker flag if they're
+      // not built with MTE globals. Thus, don't use the new relocation semantics if this DSO
+      // doesn't have MTE globals.
+      if (relocator.si->memtag_globals() && relocator.si->memtag_globalssz()) {
+        int64_t* place = static_cast<int64_t*>(rel_target);
+        int64_t offset = *place;
+        result = apply_memtag(relocator.si->load_bias + get_addend_rel() + offset) - offset;
+      } else {
+        result = relocator.si->load_bias + get_addend_rel();
+      }
       trace_reloc("RELO RELATIVE %16p <- %16p",
                   rel_target, reinterpret_cast<void*>(result));
       *static_cast<ElfW(Addr)*>(rel_target) = result;

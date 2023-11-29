@@ -51,6 +51,7 @@
 #include <android-base/scopeguard.h>
 #include <async_safe/log.h>
 #include <bionic/pthread_internal.h>
+#include <platform/bionic/mte.h>
 
 // Private C library headers.
 
@@ -2339,7 +2340,7 @@ bool do_dlsym(void* handle,
         void* tls_block = get_tls_block_for_this_thread(tls_module, /*should_alloc=*/true);
         *symbol = static_cast<char*>(tls_block) + sym->st_value;
       } else {
-        *symbol = reinterpret_cast<void*>(found->resolve_symbol_address(sym));
+        *symbol = get_tagged_address(reinterpret_cast<void*>(found->resolve_symbol_address(sym)));
       }
       failure_guard.Disable();
       LD_LOG(kLogDlsym,
@@ -2770,8 +2771,11 @@ bool soinfo::lookup_version_info(const VersionTracker& version_tracker, ElfW(Wor
 }
 
 void soinfo::apply_relr_reloc(ElfW(Addr) offset) {
-  ElfW(Addr) address = offset + load_bias;
-  *reinterpret_cast<ElfW(Addr)*>(address) += load_bias;
+  ElfW(Addr)* tagged_address = reinterpret_cast<ElfW(Addr)*>(
+      get_tagged_address(reinterpret_cast<void*>(offset + load_bias)));
+  ElfW(Addr) tagged_result = reinterpret_cast<ElfW(Addr)>(
+      get_tagged_address(reinterpret_cast<void*>(*tagged_address + load_bias)));
+  *tagged_address = tagged_result;
 }
 
 // Process relocations in SHT_RELR section (experimental).
@@ -3304,6 +3308,18 @@ bool soinfo::prelink_image() {
   // it each time we look up a symbol with a version.
   if (!validate_verdef_section(this)) return false;
 
+  // MTE globals requires remapping data segments with PROT_MTE as anonymous mappings, because file
+  // based mappings may not be backed by tag-capable memory (see "MAP_ANONYMOUS" on
+  // https://www.kernel.org/doc/html/latest/arch/arm64/memory-tagging-extension.html). This is only
+  // done if the binary has MTE globals (evidenced by the dynamic table entries), as it destroys
+  // page sharing. It's also only done on devices that support MTE, because the act of remapping
+  // pages is unnecessary on non-MTE devices (where we might still run MTE-globals enabled code).
+  if (mte_supported() && memtag_globals() && memtag_globalssz() &&
+      remap_memtag_globals_segments(phdr, phnum, base) == 0) {
+    tag_globals();
+    protect_memtag_globals_ro_segments(phdr, phnum, base);
+  }
+
   flags_ |= FLAG_PRELINKED;
   return true;
 }
@@ -3375,6 +3391,14 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
     return false;
   }
 
+  if (mte_supported() && memtag_globals() && memtag_globalssz()) {
+    // The linker's full path is not available until the main executable is loaded, as it's obtained
+    // from DT_INTERP. We manually rename the linker's segments later, but have a best-effort name
+    // in case we find a bug prior to loading the main executable.
+    const char* soname = is_linker() ? "linker" : get_realpath();
+    name_memtag_globals_segments(phdr, phnum, base, soname);
+  }
+
   /* Handle serializing/sharing the RELRO segment */
   if (extinfo && (extinfo->flags & ANDROID_DLEXT_WRITE_RELRO)) {
     if (phdr_table_serialize_gnu_relro(phdr, phnum, load_bias,
@@ -3405,6 +3429,47 @@ bool soinfo::protect_relro() {
     return false;
   }
   return true;
+}
+
+// https://github.com/ARM-software/abi-aa/blob/main/memtagabielf64/memtagabielf64.rst#global-variable-tagging
+void soinfo::tag_globals() {
+  if (is_linked()) return;
+  if (flags_ & FLAG_GLOBALS_TAGGED) return;
+  flags_ |= FLAG_GLOBALS_TAGGED;
+
+  constexpr size_t kTagGranuleSize = 16;
+  const uint8_t* descriptor_stream = reinterpret_cast<const uint8_t*>(memtag_globals());
+
+  if (memtag_globalssz() == 0) {
+    DL_ERR("Invalid memtag descriptor pool size: %zu", memtag_globalssz());
+  }
+
+  uint64_t addr = 0;
+  uleb128_decoder decoder(descriptor_stream, memtag_globalssz());
+  // Don't ever generate tag zero, to easily distinguish between tagged and
+  // untagged globals in register/tag dumps.
+  uint64_t last_tag_mask = 1;
+  constexpr uint64_t kMemtagStepVarintReservedBits = 3;
+
+  while (decoder.has_bytes()) {
+    uint64_t value = decoder.pop_front();
+    uint64_t step = value >> kMemtagStepVarintReservedBits;
+    uint64_t granules_to_tag = value & ((1 << kMemtagStepVarintReservedBits) - 1);
+    if (granules_to_tag == 0) {
+      granules_to_tag = decoder.pop_front() + 1;
+    }
+
+    addr += step * kTagGranuleSize;
+    void* tagged_addr = insert_random_tag(reinterpret_cast<void*>(addr + load_bias), last_tag_mask);
+    uint64_t tag = (reinterpret_cast<uint64_t>(tagged_addr) >> 56) & 0x0f;
+    last_tag_mask = 1 | (1 << tag);
+
+    for (size_t k = 0; k < granules_to_tag; k++) {
+      auto* granule = static_cast<uint8_t*>(tagged_addr) + k * kTagGranuleSize;
+      set_memory_tag(static_cast<void*>(granule));
+    }
+    addr += granules_to_tag * kTagGranuleSize;
+  }
 }
 
 static std::vector<android_namespace_t*> init_default_namespace_no_config(bool is_asan, bool is_hwasan) {
