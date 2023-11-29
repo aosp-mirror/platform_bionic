@@ -56,7 +56,7 @@ typedef unsigned long sigset_t;
 #include <asm-generic/signal-defs.h>
 #ifndef __ASSEMBLY__
 #ifdef __i386__
-struct sigaction {
+struct __kernel_sigaction {
   union {
     __sighandler_t _sa_handler;
     void(* _sa_sigaction) (int, struct siginfo *, void *);
@@ -68,7 +68,7 @@ struct sigaction {
 #define sa_handler _u._sa_handler
 #define sa_sigaction _u._sa_sigaction
 #else
-struct sigaction {
+struct __kernel_sigaction {
   __sighandler_t sa_handler;
   unsigned long sa_flags;
   __sigrestore_t sa_restorer;
