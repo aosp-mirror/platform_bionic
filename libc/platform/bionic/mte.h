@@ -28,6 +28,7 @@
 
 #pragma once
 
+#include <stddef.h>
 #include <sys/auxv.h>
 #include <sys/prctl.h>
 
@@ -44,6 +45,36 @@ inline bool mte_supported() {
   static bool supported = false;
 #endif
   return supported;
+}
+
+inline void* get_tagged_address(const void* ptr) {
+#if defined(__aarch64__)
+  if (mte_supported()) {
+    __asm__ __volatile__(".arch_extension mte; ldg %0, [%0]" : "+r"(ptr));
+  }
+#endif  // aarch64
+  return const_cast<void*>(ptr);
+}
+
+// Inserts a random tag tag to `ptr`, using any of the set lower 16 bits in
+// `mask` to exclude the corresponding tag from being generated. Note: This does
+// not tag memory.
+inline void* insert_random_tag(const void* ptr, __attribute__((unused)) uint64_t mask = 0) {
+#if defined(__aarch64__)
+  if (mte_supported() && ptr) {
+    __asm__ __volatile__(".arch_extension mte; irg %0, %0, %1" : "+r"(ptr) : "r"(mask));
+  }
+#endif  // aarch64
+  return const_cast<void*>(ptr);
+}
+
+// Stores the address tag in `ptr` to memory, at `ptr`.
+inline void set_memory_tag(__attribute__((unused)) void* ptr) {
+#if defined(__aarch64__)
+  if (mte_supported()) {
+    __asm__ __volatile__(".arch_extension mte; stg %0, [%0]" : "+r"(ptr));
+  }
+#endif  // aarch64
 }
 
 #ifdef __aarch64__
