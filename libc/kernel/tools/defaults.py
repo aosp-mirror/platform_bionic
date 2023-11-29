@@ -97,6 +97,9 @@ kernel_token_replacements = {
     # Remove unused macros (http://b/262917450).
     "__force": "",
     "__user": "",
+    # Rename the kernel's sigaction so we can expose our POSIX one publicly,
+    # but translate to the kernel's one internally.
+    "sigaction": "__kernel_sigaction",
     }
 
 
