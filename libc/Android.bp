@@ -1052,8 +1052,8 @@ genrule {
     name: "generated_android_ids",
     out: ["generated_android_ids.h"],
     srcs: [":android_filesystem_config_header"],
-    tool_files: ["fs_config_generator.py"],
-    cmd: "$(location fs_config_generator.py) aidarray $(in) > $(out)",
+    tools: ["fs_config_generator"],
+    cmd: "$(location fs_config_generator) aidarray $(in) > $(out)",
 }
 
 // ========================================================
