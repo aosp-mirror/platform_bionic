@@ -26,35 +26,15 @@
  * SUCH DAMAGE.
  */
 
-#include <gtest/gtest.h>
+#pragma once
 
-#if defined(__BIONIC__)
-#include "gtest_globals.h"
-#include "platform/bionic/mte.h"
-#include "utils.h"
-#endif
+// Forward declarations
+class ConfigData;
 
-#include <android-base/test_utils.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <string>
+namespace LogAllocatorStats {
 
-TEST(MemtagGlobalsTest, test) {
-    SKIP_WITH_HWASAN << "b/313613493";
-#if defined(__BIONIC__) && defined(__aarch64__)
-  std::string binary = GetPrebuiltElfDir() + "/memtag_globals_binary.so";
-  chmod(binary.c_str(), 0755);
-  ExecTestHelper eth;
-  eth.SetArgs({binary.c_str(), nullptr});
-  eth.Run(
-      [&]() {
-        execve(binary.c_str(), eth.GetArgs(), eth.GetEnv());
-        GTEST_FAIL() << "Failed to execve: " << strerror(errno) << "\n";
-      },
-      // We catch the global-buffer-overflow and crash only when MTE is
-      // supported.
-      mte_supported() ? -SIGSEGV : 0, "Assertions were passed");
-#else
-  GTEST_SKIP() << "bionic/arm64 only";
-#endif
-}
+bool Initialize(const Config& config);
+
+void CheckIfShouldLog();
+
+}  // namespace LogAllocatorStats
