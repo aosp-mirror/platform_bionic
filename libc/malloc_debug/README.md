@@ -340,6 +340,16 @@ Example leak error found in the log:
     04-15 12:35:33.305  7412  7412 E malloc_debug:           #02  pc 000a9e38  /system/lib/libc++.so
     04-15 12:35:33.305  7412  7412 E malloc_debug:           #03  pc 000a28a8  /system/lib/libc++.so
 
+### log\_allocator\_stats\_on\_signal
+As of Android V, this option will trigger a call to:
+
+    mallopt(M_LOG_STATS, 0);
+
+When a process receives the signal SIGRTMAX - 15 (which is 49 on Android
+devices). The mallopt call is not async safe and is not called from the
+signal handler directly. Instead, the next time any allocation call occurs,
+the mallopt is called.
+
 ### record\_allocs[=TOTAL\_ENTRIES]
 Keep track of every allocation/free made on every thread and dump them
 to a file when the signal SIGRTMAX - 18 (which is 46 on Android devices)
