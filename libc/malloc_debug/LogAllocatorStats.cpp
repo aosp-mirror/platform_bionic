@@ -26,35 +26,48 @@
  * SUCH DAMAGE.
  */
 
-#include <gtest/gtest.h>
-
-#if defined(__BIONIC__)
-#include "gtest_globals.h"
-#include "platform/bionic/mte.h"
-#include "utils.h"
-#endif
-
-#include <android-base/test_utils.h>
-#include <sys/stat.h>
+#include <errno.h>
+#include <malloc.h>
+#include <signal.h>
 #include <unistd.h>
-#include <string>
 
-TEST(MemtagGlobalsTest, test) {
-    SKIP_WITH_HWASAN << "b/313613493";
-#if defined(__BIONIC__) && defined(__aarch64__)
-  std::string binary = GetPrebuiltElfDir() + "/memtag_globals_binary.so";
-  chmod(binary.c_str(), 0755);
-  ExecTestHelper eth;
-  eth.SetArgs({binary.c_str(), nullptr});
-  eth.Run(
-      [&]() {
-        execve(binary.c_str(), eth.GetArgs(), eth.GetEnv());
-        GTEST_FAIL() << "Failed to execve: " << strerror(errno) << "\n";
-      },
-      // We catch the global-buffer-overflow and crash only when MTE is
-      // supported.
-      mte_supported() ? -SIGSEGV : 0, "Assertions were passed");
-#else
-  GTEST_SKIP() << "bionic/arm64 only";
-#endif
+#include "Config.h"
+#include "LogAllocatorStats.h"
+#include "debug_log.h"
+
+namespace LogAllocatorStats {
+
+static std::atomic_bool g_call_mallopt = {};
+
+static void CallMalloptLogStats(int, struct siginfo*, void*) {
+  g_call_mallopt = true;
 }
+
+void CheckIfShouldLog() {
+  bool expected = true;
+  if (g_call_mallopt.compare_exchange_strong(expected, false)) {
+    info_log("Logging allocator stats...");
+    if (mallopt(M_LOG_STATS, 0) == 0) {
+      error_log("mallopt(M_LOG_STATS, 0) call failed.");
+    }
+  }
+}
+
+bool Initialize(const Config& config) {
+  struct sigaction64 log_stats_act = {};
+  log_stats_act.sa_sigaction = CallMalloptLogStats;
+  log_stats_act.sa_flags = SA_RESTART | SA_SIGINFO | SA_ONSTACK;
+  if (sigaction64(config.log_allocator_stats_signal(), &log_stats_act, nullptr) != 0) {
+    error_log("Unable to set up log allocator stats signal function: %s", strerror(errno));
+    return false;
+  }
+
+  if (config.options() & VERBOSE) {
+    info_log("%s: Run: 'kill -%d %d' to log allocator stats.", getprogname(),
+             config.log_allocator_stats_signal(), getpid());
+  }
+
+  return true;
+}
+
+}  // namespace LogAllocatorStats
