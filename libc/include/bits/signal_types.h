@@ -28,18 +28,11 @@
 
 #pragma once
 
-#include <limits.h>
 #include <sys/cdefs.h>
-#include <sys/types.h>
 
-/* For 64-bit, the kernel's struct sigaction doesn't match the POSIX one,
- * so we need to expose our own and translate behind the scenes.
- * For 32-bit, we're stuck with the definitions we already shipped,
- * even though they contain a sigset_t that's too small. See sigaction64.
- */
-#define sigaction __kernel_sigaction
+#include <limits.h>
 #include <linux/signal.h>
-#undef sigaction
+#include <sys/types.h>
 
 /* The arm and x86 kernel header files don't define _NSIG. */
 #ifndef _KERNEL__NSIG
@@ -64,7 +57,12 @@ typedef sigset_t sigset64_t;
 typedef struct { unsigned long __bits[_KERNEL__NSIG/(8*sizeof(long))]; } sigset64_t;
 #endif
 
+/* The kernel's struct sigaction doesn't match the POSIX one. */
+
 #if defined(__LP64__)
+
+/* For 64-bit, that's the only problem, and we only need two structs
+ * for source compatibility with 32-bit. */
 
 #define __SIGACTION_BODY \
   int sa_flags; \
@@ -82,6 +80,12 @@ struct sigaction64 { __SIGACTION_BODY };
 
 #else
 
+/* For 32-bit, Android's ABIs used a too-small sigset_t that doesn't
+ * support RT signals, so we need two different structs.
+ */
+
+/* The arm32 kernel headers also pollute the namespace with these,
+ * but our header scrubber doesn't know how to remove #defines. */
 #undef sa_handler
 #undef sa_sigaction
 
@@ -95,7 +99,6 @@ struct sigaction {
   void (*sa_restorer)(void);
 };
 
-/* This matches the kernel's internal structure. */
 struct sigaction64 {
   union {
     sighandler_t sa_handler;
