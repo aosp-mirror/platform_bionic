@@ -130,6 +130,7 @@ struct libc_shared_globals {
   const char* scudo_region_info = nullptr;
   const char* scudo_ring_buffer = nullptr;
   size_t scudo_ring_buffer_size = 0;
+  size_t scudo_stack_depot_size = 0;
 
   HeapTaggingLevel initial_heap_tagging_level = M_HEAP_TAGGING_LEVEL_NONE;
   bool initial_memtag_stack = false;
