@@ -51,12 +51,7 @@ ElfW(Addr) __bionic_call_ifunc_resolver(ElfW(Addr) resolver_addr) {
   return reinterpret_cast<ifunc_resolver_t>(resolver_addr)(arg._hwcap | _IFUNC_ARG_HWCAP, &arg);
 #elif defined(__arm__)
   typedef ElfW(Addr) (*ifunc_resolver_t)(unsigned long);
-  static unsigned long hwcap;
-  static bool initialized = false;
-  if (!initialized) {
-    initialized = true;
-    hwcap = getauxval(AT_HWCAP);
-  }
+  static unsigned long hwcap = getauxval(AT_HWCAP);
   return reinterpret_cast<ifunc_resolver_t>(resolver_addr)(hwcap);
 #elif defined(__riscv)
   // The pointer argument is currently unused, but reserved for future
