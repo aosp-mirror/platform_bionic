@@ -148,12 +148,3 @@ void phdr_table_get_dynamic_section(const ElfW(Phdr)* phdr_table, size_t phdr_co
 
 const char* phdr_table_get_interpreter_name(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                             ElfW(Addr) load_bias);
-
-int remap_memtag_globals_segments(const ElfW(Phdr) * phdr_table, size_t phdr_count,
-                                  ElfW(Addr) load_bias);
-
-void protect_memtag_globals_ro_segments(const ElfW(Phdr) * phdr_table, size_t phdr_count,
-                                        ElfW(Addr) load_bias);
-
-void name_memtag_globals_segments(const ElfW(Phdr) * phdr_table, size_t phdr_count,
-                                  ElfW(Addr) load_bias, const char* soname);
