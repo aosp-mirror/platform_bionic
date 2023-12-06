@@ -53,6 +53,14 @@ __BEGIN_DECLS
  */
 int __riscv_hwprobe(struct riscv_hwprobe* _Nonnull __pairs, size_t __pair_count, size_t __cpu_count, unsigned long* _Nullable __cpus, unsigned __flags);
 
+/**
+ * The type of the second argument passed to riscv64 ifunc resolvers.
+ * This argument allows riscv64 ifunc resolvers to call __riscv_hwprobe()
+ * without worrying about whether that relocation is resolved before
+ * the ifunc resolver is called.
+ */
+typedef int (*__riscv_hwprobe_t)(struct riscv_hwprobe* _Nonnull __pairs, size_t __pair_count, size_t __cpu_count, unsigned long* _Nullable __cpus, unsigned __flags);
+
 __END_DECLS
 
 #endif
