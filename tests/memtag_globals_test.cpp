@@ -34,13 +34,11 @@
 #include "utils.h"
 #endif
 
-#include <android-base/test_utils.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <string>
 
 TEST(MemtagGlobalsTest, test) {
-    SKIP_WITH_HWASAN << "b/313613493";
 #if defined(__BIONIC__) && defined(__aarch64__)
   std::string binary = GetPrebuiltElfDir() + "/memtag_globals_binary.so";
   chmod(binary.c_str(), 0755);
