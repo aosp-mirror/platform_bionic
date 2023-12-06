@@ -77,12 +77,12 @@ enum {
 
 #if defined(__LP64__)
 #if defined(PAGE_SIZE)
-#define PTHREAD_STACK_MIN (4 * PAGE_SIZE)
+#define PTHREAD_STACK_MIN 16384
 #else
 #define PTHREAD_STACK_MIN 65536
 #endif
 #else
-#define PTHREAD_STACK_MIN (2 * PAGE_SIZE)
+#define PTHREAD_STACK_MIN 8192
 #endif
 
 #define PTHREAD_CREATE_DETACHED 1
