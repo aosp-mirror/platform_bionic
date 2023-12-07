@@ -44,9 +44,7 @@
 #include "linker_tls.h"
 #include "linker_utils.h"
 
-#include "platform/bionic/macros.h"
 #include "private/KernelArgumentBlock.h"
-#include "private/bionic_auxv.h"
 #include "private/bionic_call_ifunc_resolver.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_tls.h"
@@ -80,8 +78,7 @@ void __libc_init_mte(const memtag_dynamic_entries_t* memtag_dynamic_entries, con
 // TODO (dimtiry): remove somain, rename solist to solist_head
 static soinfo* solist;
 static soinfo* sonext;
-// main process, always the one after libdl_info
-BIONIC_USED_BEFORE_LINKER_RELOCATES static soinfo* somain;
+static soinfo* somain; // main process, always the one after libdl_info
 static soinfo* solinker;
 static soinfo* vdso; // vdso if present
 
@@ -393,16 +390,9 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
     interp = kFallbackLinkerPath;
   }
   solinker->set_realpath(interp);
-  if (solinker->memtag_globals() && solinker->memtag_globalssz()) {
-    name_memtag_globals_segments(solinker->phdr, solinker->phnum, solinker->load_bias,
-                                 solinker->get_realpath());
-  }
   init_link_map_head(*solinker);
 
 #if defined(__aarch64__)
-  __libc_init_mte(somain->memtag_dynamic_entries(), somain->phdr, somain->phnum, somain->load_bias,
-                  args.argv);
-
   if (exe_to_load == nullptr) {
     // Kernel does not add PROT_BTI to executable pages of the loaded ELF.
     // Apply appropriate protections here if it is needed.
@@ -414,6 +404,9 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
                      strerror(errno));
     }
   }
+
+  __libc_init_mte(somain->memtag_dynamic_entries(), somain->phdr, somain->phnum, somain->load_bias,
+                  args.argv);
 #endif
 
   // Register the main executable and the linker upfront to have
@@ -612,7 +605,7 @@ const unsigned kRelTag = DT_REL;
 const unsigned kRelSzTag = DT_RELSZ;
 #endif
 
-BIONIC_USED_BEFORE_LINKER_RELOCATES extern __LIBC_HIDDEN__ ElfW(Ehdr) __ehdr_start;
+extern __LIBC_HIDDEN__ ElfW(Ehdr) __ehdr_start;
 
 static void call_ifunc_resolvers_for_section(RelType* begin, RelType* end) {
   auto ehdr = reinterpret_cast<ElfW(Addr)>(&__ehdr_start);
@@ -667,16 +660,6 @@ static void call_ifunc_resolvers() {
 static void linker_memclr(void* dst, size_t cnt) {
   for (size_t i = 0; i < cnt; ++i) {
     reinterpret_cast<char*>(dst)[i] = '\0';
-  }
-}
-
-// Remapping MTE globals segments happens before the linker relocates itself, and so can't use
-// memcpy() from string.h. This function is compiled with -ffreestanding.
-void linker_memcpy(void* dest, const void* src, size_t n) {
-  char* dest_bytes = reinterpret_cast<char*>(dest);
-  const char* src_bytes = reinterpret_cast<const char*>(src);
-  for (size_t i = 0; i < n; ++i) {
-    dest_bytes[i] = src_bytes[i];
   }
 }
 
