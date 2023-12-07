@@ -353,89 +353,6 @@ cc_prebuilt_test_library_shared {
     },
 }
 
-cc_defaults {
-    name: "memtag_globals_defaults",
-    defaults: [
-        "bionic_testlib_defaults",
-        "bionic_targets_only"
-    ],
-    cflags: [
-        "-Wno-array-bounds",
-        "-Wno-unused-variable",
-    ],
-    header_libs: ["bionic_libc_platform_headers"],
-    sanitize: {
-        hwaddress: false,
-        memtag_heap: true,
-        memtag_globals: true,
-        diag: {
-            memtag_heap: true,
-        }
-    },
-    relative_install_path: "bionic-loader-test-libs/prebuilt-elf-files",
-}
-
-/// The following library and binary is to be used for testing the bionic linker
-/// against memtag globals. While we wait for the compiler to be updated, the
-/// files come as prebuilts (built using) the corresponding 'regular'
-/// cc_test_library and cc_test rules below, just with a tip-of-tree version of
-/// LLVM.
-///
-/// Updating the prebuilts can be done by installing a tip-of-tree compiler, and
-/// running:
-///  - m memtag_globals_binary memtag_globals_dso
-///  - cp $ANDROID_PRODUCT_OUT/symbols/data/nativetest64/bionic-loader-test-libs/prebuilt-elf-files/memtag_globals_* \
-///    $ANDROID_BUILD_TOP/bionic/tests/prebuilt-elf-files/arm64/
-///
-// cc_test_library {
-//     name: "memtag_globals_dso",
-//     defaults: [ "memtag_globals_defaults" ],
-//     srcs: ["prebuilt-elf-files/arm64/src/memtag_globals_dso.cpp"],
-// }
-//
-// cc_test {
-//     name: "memtag_globals_binary",
-//     // Not actually a '.so' file, this is an executable; but the only way to
-//     // get soong to be able to produce a properly located and linked prebuilt
-//     // variant of this binary was through the cc_prebuilt_test_library_shared
-//     // rule, which appends '.so' to the end. Once the prebuilts are removed,
-//     // the suffix can be removed.
-//     suffix: ".so",
-//     defaults: [ "memtag_globals_defaults" ],
-//     srcs: ["prebuilt-elf-files/arm64/src/memtag_globals_binary.cpp"],
-//     shared_libs: [ "memtag_globals_dso" ],
-//     // This binary is used in the bionic-unit-tests as a data dependency, and is
-//     // in the same folder as memtag_globals_dso. But, the default cc_test rules
-//     // make this binary (when just explicitly built and shoved in
-//     // /data/nativetest64/) end up in a subfolder called
-//     // 'memtag_globals_binary'. When this happens, the explicit build fails to
-//     // find the DSO because the default rpath is just ${ORIGIN}, and because we
-//     // want this to be usable both from bionic-unit-tests and explicit builds,
-//     // let's just not put it in a subdirectory.
-//     no_named_install_directory: true,
-// }
-
-cc_prebuilt_test_library_shared {
-    name: "memtag_globals_dso",
-    defaults: [ "memtag_globals_defaults" ],
-    arch: {
-        arm64: {
-            srcs: ["prebuilt-elf-files/arm64/memtag_globals_dso.so"],
-        },
-    }
-}
-
-cc_prebuilt_test_library_shared {
-    name: "memtag_globals_binary",
-    defaults: [ "memtag_globals_defaults" ],
-    arch: {
-        arm64: {
-            srcs: ["prebuilt-elf-files/arm64/memtag_globals_binary.so"],
-            shared_libs: [ "memtag_globals_dso" ],
-        },
-    }
-}
-
 // -----------------------------------------------------------------------------
 // All standard tests.
 // -----------------------------------------------------------------------------
@@ -510,7 +427,6 @@ cc_test_library {
         "math_test.cpp",
         "membarrier_test.cpp",
         "memtag_stack_test.cpp",
-        "memtag_globals_test.cpp",
         "mntent_test.cpp",
         "mte_test.cpp",
         "netdb_test.cpp",
@@ -966,8 +882,6 @@ cc_defaults {
         "preinit_syscall_test_helper",
         "thread_exit_cb_helper",
         "tls_properties_helper",
-        "memtag_globals_binary",
-        "memtag_globals_dso",
     ],
     data_libs: [
         "libatest_simple_zip",
