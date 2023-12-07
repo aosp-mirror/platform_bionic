@@ -29,6 +29,7 @@ cc_defaults {
         "-Wl,--rpath,${ORIGIN}",
         "-Wl,--enable-new-dtags",
     ],
+    static_libs: ["libbase"],
     relative_install_path: "bionic-loader-test-libs",
     gtest: false,
     sanitize: {
