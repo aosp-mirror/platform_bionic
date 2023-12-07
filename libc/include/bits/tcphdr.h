@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 The Android Open Source Project
+ * Copyright (C) 2008 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,33 +26,46 @@
  * SUCH DAMAGE.
  */
 
-#include <gtest/gtest.h>
+#pragma once
 
-#if defined(__BIONIC__)
-#include "gtest_globals.h"
-#include "platform/bionic/mte.h"
-#include "utils.h"
-#endif
+#include <sys/cdefs.h>
+#include <stdint.h>
 
-#include <sys/stat.h>
-#include <unistd.h>
-#include <string>
+__BEGIN_DECLS
 
-TEST(MemtagGlobalsTest, test) {
-#if defined(__BIONIC__) && defined(__aarch64__)
-  std::string binary = GetPrebuiltElfDir() + "/memtag_globals_binary.so";
-  chmod(binary.c_str(), 0755);
-  ExecTestHelper eth;
-  eth.SetArgs({binary.c_str(), nullptr});
-  eth.Run(
-      [&]() {
-        execve(binary.c_str(), eth.GetArgs(), eth.GetEnv());
-        GTEST_FAIL() << "Failed to execve: " << strerror(errno) << "\n";
-      },
-      // We catch the global-buffer-overflow and crash only when MTE is
-      // supported.
-      mte_supported() ? -SIGSEGV : 0, "Assertions were passed");
-#else
-  GTEST_SKIP() << "bionic/arm64 only";
-#endif
-}
+struct tcphdr {
+  __extension__ union {
+    struct {
+      uint16_t th_sport;
+      uint16_t th_dport;
+      uint32_t th_seq;
+      uint32_t th_ack;
+      uint8_t th_x2:4;
+      uint8_t th_off:4;
+      uint8_t th_flags;
+      uint16_t th_win;
+      uint16_t th_sum;
+      uint16_t th_urp;
+    };
+    struct {
+      uint16_t source;
+      uint16_t dest;
+      uint32_t seq;
+      uint32_t ack_seq;
+      uint16_t res1:4;
+      uint16_t doff:4;
+      uint16_t fin:1;
+      uint16_t syn:1;
+      uint16_t rst:1;
+      uint16_t psh:1;
+      uint16_t ack:1;
+      uint16_t urg:1;
+      uint16_t res2:2;
+      uint16_t window;
+      uint16_t check;
+      uint16_t urg_ptr;
+    };
+  };
+};
+
+__END_DECLS
