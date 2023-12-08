@@ -53,14 +53,12 @@ cc_test_library {
     name: "libtest_elftls_shared_var",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["elftls_shared_var.cpp"],
-    cflags: ["-fno-emulated-tls"],
 }
 
 cc_test_library {
     name: "libtest_elftls_shared_var_ie",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["elftls_shared_var_ie.cpp"],
-    cflags: ["-fno-emulated-tls"],
     shared_libs: ["libtest_elftls_shared_var"],
 }
 
@@ -68,7 +66,6 @@ cc_test_library {
     name: "libtest_elftls_tprel",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["elftls_tprel.cpp"],
-    cflags: ["-fno-emulated-tls"],
 }
 
 cc_test {
@@ -82,7 +79,6 @@ cc_test_library {
     name: "libtest_elftls_dynamic",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["elftls_dynamic.cpp"],
-    cflags: ["-fno-emulated-tls"],
     shared_libs: ["libtest_elftls_shared_var"],
 }
 
@@ -90,14 +86,12 @@ cc_test {
    name: "thread_exit_cb_helper",
    defaults: ["bionic_testlib_defaults"],
    srcs: ["thread_exit_cb_helper.cpp"],
-   cflags: ["-fno-emulated-tls"],
 }
 
 cc_test {
    name: "tls_properties_helper",
    defaults: ["bionic_testlib_defaults"],
    srcs: ["tls_properties_helper.cpp"],
-   cflags: ["-fno-emulated-tls"],
    shared_libs: ["libtest_elftls_shared_var"],
 }
 
@@ -107,7 +101,6 @@ cc_test_library {
     defaults: ["bionic_testlib_defaults"],
     srcs: ["elftls_dynamic_filler.cpp"],
     cflags: [
-        "-fno-emulated-tls",
         "-DTLS_FILLER=100",
     ],
 }
@@ -117,7 +110,6 @@ cc_test_library {
     defaults: ["bionic_testlib_defaults"],
     srcs: ["elftls_dynamic_filler.cpp"],
     cflags: [
-        "-fno-emulated-tls",
         "-DTLS_FILLER=200",
     ],
 }
@@ -127,7 +119,6 @@ cc_test_library {
     defaults: ["bionic_testlib_defaults"],
     srcs: ["elftls_dynamic_filler.cpp"],
     cflags: [
-        "-fno-emulated-tls",
         "-DTLS_FILLER=300",
     ],
 }
