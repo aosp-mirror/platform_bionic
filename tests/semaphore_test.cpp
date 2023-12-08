@@ -52,7 +52,7 @@ TEST(semaphore, sem_init) {
 
   // Too large an initial value.
   errno = 0;
-  ASSERT_EQ(-1, sem_init(&s, 0, SEM_VALUE_MAX + 1));
+  ASSERT_EQ(-1, sem_init(&s, 0, static_cast<unsigned>(SEM_VALUE_MAX) + 1));
   ASSERT_ERRNO(EINVAL);
 
   ASSERT_EQ(0, sem_destroy(&s));
