@@ -34,7 +34,6 @@ cc_defaults {
     gtest: false,
     sanitize: {
         address: false,
-        fuzzer: false,
     },
     stl: "libc++_static",
     target: {
@@ -637,7 +636,6 @@ cc_test_library {
     ],
     sanitize: {
         address: false,
-        fuzzer: false,
     },
     stl: "libc++_static",
     target: {
