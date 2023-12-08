@@ -410,7 +410,6 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(
   // We did not enable MTE, so we do not need to arm the upgrade timer.
   __libc_shared_globals()->heap_tagging_upgrade_timer_sec = 0;
 }
-
 #else   // __aarch64__
 void __libc_init_mte(const memtag_dynamic_entries_t*, const void*, size_t, uintptr_t, void*) {}
 #endif  // __aarch64__
@@ -505,6 +504,6 @@ extern "C" void android_set_application_target_sdk_version(int target) {
 // compiled with -ffreestanding to avoid implicit string.h function calls. (It shouldn't strictly
 // be necessary, though.)
 __LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals() {
-  BIONIC_USED_BEFORE_LINKER_RELOCATES static libc_shared_globals globals;
+  static libc_shared_globals globals;
   return &globals;
 }
