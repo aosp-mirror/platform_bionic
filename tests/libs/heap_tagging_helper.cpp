@@ -16,11 +16,14 @@
 
 #include <signal.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/auxv.h>
 #include <sys/cdefs.h>
 #include <sys/mman.h>
 #include <unistd.h>
 #include <memory>
+
+#include <android-base/stringprintf.h>
 
 void action(int signo, siginfo_t* info __unused, void*) {
 #ifdef __ANDROID__
@@ -88,6 +91,13 @@ __attribute__((optnone)) int main() {
     munmap(p, page_size);
   }
 #endif  // __aarch64__
+
+  // In fact, make sure that there are no tagged mappings at all.
+  auto cmd = android::base::StringPrintf("cat /proc/%d/smaps | grep -E 'VmFlags:.* mt'", getpid());
+  if (system(cmd.c_str()) == 0) {
+    fprintf(stderr, "unexpected PROT_MTE mappings found\n");
+    return 1;
+  }
 
   fprintf(stderr, "normal exit\n");
   return 0;
