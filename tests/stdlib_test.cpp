@@ -901,6 +901,12 @@ static void CheckStrToInt(T fn(const char* s, char** end, int base)) {
   ASSERT_ERRNO(ERANGE);
   ASSERT_EQ('\0', *end_p);
 
+  // Junk at the end of a valid conversion.
+  errno = 0;
+  ASSERT_EQ(static_cast<T>(123), fn("123abc", &end_p, 0));
+  ASSERT_ERRNO(0);
+  ASSERT_STREQ("abc", end_p);
+
   // In case of overflow, strto* leaves us pointing past the end of the number,
   // not at the digit that overflowed.
   end_p = nullptr;
