@@ -235,3 +235,6 @@ BIONIC_TRIVIAL_BENCHMARK(BM_stdlib_strtol, strtol(" -123", nullptr, 0));
 BIONIC_TRIVIAL_BENCHMARK(BM_stdlib_strtoll, strtoll(" -123", nullptr, 0));
 BIONIC_TRIVIAL_BENCHMARK(BM_stdlib_strtoul, strtoul(" -123", nullptr, 0));
 BIONIC_TRIVIAL_BENCHMARK(BM_stdlib_strtoull, strtoull(" -123", nullptr, 0));
+
+BIONIC_TRIVIAL_BENCHMARK(BM_stdlib_strtol_hex, strtol("0xdeadbeef", nullptr, 0));
+BIONIC_TRIVIAL_BENCHMARK(BM_stdlib_strtoul_hex, strtoul("0xdeadbeef", nullptr, 0));

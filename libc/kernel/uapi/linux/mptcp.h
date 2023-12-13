@@ -163,13 +163,13 @@ struct mptcp_subflow_addrs {
     struct sockaddr sa_local;
     struct sockaddr_in sin_local;
     struct sockaddr_in6 sin6_local;
-    struct __kernel_sockaddr_storage ss_local;
+    struct sockaddr_storage ss_local;
   };
   union {
     struct sockaddr sa_remote;
     struct sockaddr_in sin_remote;
     struct sockaddr_in6 sin6_remote;
-    struct __kernel_sockaddr_storage ss_remote;
+    struct sockaddr_storage ss_remote;
   };
 };
 struct mptcp_subflow_info {
