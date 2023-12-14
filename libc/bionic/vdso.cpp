@@ -131,6 +131,7 @@ void __libc_init_vdso(libc_globals* globals) {
   for (size_t i = 0; i < vdso_ehdr->e_shnum; ++i) {
     if (vdso_shdr[i].sh_type == SHT_DYNSYM) {
       symbol_count = vdso_shdr[i].sh_size / sizeof(ElfW(Sym));
+      break;
     }
   }
   if (symbol_count == 0) {
@@ -147,6 +148,7 @@ void __libc_init_vdso(libc_globals* globals) {
     } else if (vdso_phdr[i].p_type == PT_LOAD) {
       vdso_addr = vdso_ehdr_addr + vdso_phdr[i].p_offset - vdso_phdr[i].p_vaddr;
     }
+    if (vdso_addr && vdso_dyn) break;
   }
   if (vdso_addr == 0 || vdso_dyn == nullptr) {
     return;
@@ -161,16 +163,18 @@ void __libc_init_vdso(libc_globals* globals) {
     } else if (d->d_tag == DT_SYMTAB) {
       symtab = reinterpret_cast<ElfW(Sym)*>(vdso_addr + d->d_un.d_ptr);
     }
+    if (strtab && symtab) break;
   }
   if (strtab == nullptr || symtab == nullptr) {
     return;
   }
 
   // Are there any symbols we want?
-  for (size_t i = 0; i < symbol_count; ++i) {
-    for (size_t j = 0; j < VDSO_END; ++j) {
-      if (strcmp(vdso[j].name, strtab + symtab[i].st_name) == 0) {
-        vdso[j].fn = reinterpret_cast<void*>(vdso_addr + symtab[i].st_value);
+  for (size_t i = 0; i < VDSO_END; ++i) {
+    for (size_t j = 0; j < symbol_count; ++j) {
+      if (strcmp(vdso[i].name, strtab + symtab[j].st_name) == 0) {
+        vdso[i].fn = reinterpret_cast<void*>(vdso_addr + symtab[j].st_value);
+        break;
       }
     }
   }
