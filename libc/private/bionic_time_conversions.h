@@ -45,6 +45,9 @@ __LIBC_HIDDEN__ void timeval_from_timespec(timeval& tv, const timespec& ts);
 __LIBC_HIDDEN__ void monotonic_time_from_realtime_time(timespec& monotonic_time,
                                                        const timespec& realtime_time);
 
+__LIBC_HIDDEN__ void realtime_time_from_monotonic_time(timespec& realtime_time,
+                                                       const timespec& monotonic_time);
+
 __END_DECLS
 
 static inline int check_timespec(const timespec* ts, bool null_allowed) {

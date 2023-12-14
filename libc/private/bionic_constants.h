@@ -16,7 +16,7 @@
 
 #pragma once
 
-#define NS_PER_S 1000000000
+#define NS_PER_S 1'000'000'000LL
 
 // Size of the shadow call stack. This can be small because these stacks only
 // contain return addresses. This must be a power of 2 so the mask trick works.
