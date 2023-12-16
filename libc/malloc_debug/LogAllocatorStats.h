@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2023 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,30 +28,13 @@
 
 #pragma once
 
-#include <endian.h>
-#include <netinet/in6.h>
-#include <sys/cdefs.h>
-#include <sys/socket.h>
+// Forward declarations
+class ConfigData;
 
-#include <linux/in.h>
-#include <linux/in6.h>
-#include <linux/ipv6.h>
-#include <linux/socket.h>
+namespace LogAllocatorStats {
 
-__BEGIN_DECLS
+bool Initialize(const Config& config);
 
-#define INET_ADDRSTRLEN 16
+void CheckIfShouldLog();
 
-typedef uint16_t in_port_t;
-
-int bindresvport(int __fd, struct sockaddr_in* _Nullable __sin);
-
-#if __ANDROID_API__ >= 24
-extern const struct in6_addr in6addr_any __INTRODUCED_IN(24);
-extern const struct in6_addr in6addr_loopback __INTRODUCED_IN(24);
-#else
-static const struct in6_addr in6addr_any = IN6ADDR_ANY_INIT;
-static const struct in6_addr in6addr_loopback = IN6ADDR_LOOPBACK_INIT;
-#endif
-
-__END_DECLS
+}  // namespace LogAllocatorStats

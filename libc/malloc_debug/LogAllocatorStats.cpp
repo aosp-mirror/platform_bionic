@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2023 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,32 +26,48 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <errno.h>
+#include <malloc.h>
+#include <signal.h>
+#include <unistd.h>
 
-#include <endian.h>
-#include <netinet/in6.h>
-#include <sys/cdefs.h>
-#include <sys/socket.h>
+#include "Config.h"
+#include "LogAllocatorStats.h"
+#include "debug_log.h"
 
-#include <linux/in.h>
-#include <linux/in6.h>
-#include <linux/ipv6.h>
-#include <linux/socket.h>
+namespace LogAllocatorStats {
 
-__BEGIN_DECLS
+static std::atomic_bool g_call_mallopt = {};
 
-#define INET_ADDRSTRLEN 16
+static void CallMalloptLogStats(int, struct siginfo*, void*) {
+  g_call_mallopt = true;
+}
 
-typedef uint16_t in_port_t;
+void CheckIfShouldLog() {
+  bool expected = true;
+  if (g_call_mallopt.compare_exchange_strong(expected, false)) {
+    info_log("Logging allocator stats...");
+    if (mallopt(M_LOG_STATS, 0) == 0) {
+      error_log("mallopt(M_LOG_STATS, 0) call failed.");
+    }
+  }
+}
 
-int bindresvport(int __fd, struct sockaddr_in* _Nullable __sin);
+bool Initialize(const Config& config) {
+  struct sigaction64 log_stats_act = {};
+  log_stats_act.sa_sigaction = CallMalloptLogStats;
+  log_stats_act.sa_flags = SA_RESTART | SA_SIGINFO | SA_ONSTACK;
+  if (sigaction64(config.log_allocator_stats_signal(), &log_stats_act, nullptr) != 0) {
+    error_log("Unable to set up log allocator stats signal function: %s", strerror(errno));
+    return false;
+  }
 
-#if __ANDROID_API__ >= 24
-extern const struct in6_addr in6addr_any __INTRODUCED_IN(24);
-extern const struct in6_addr in6addr_loopback __INTRODUCED_IN(24);
-#else
-static const struct in6_addr in6addr_any = IN6ADDR_ANY_INIT;
-static const struct in6_addr in6addr_loopback = IN6ADDR_LOOPBACK_INIT;
-#endif
+  if (config.options() & VERBOSE) {
+    info_log("%s: Run: 'kill -%d %d' to log allocator stats.", getprogname(),
+             config.log_allocator_stats_signal(), getpid());
+  }
 
-__END_DECLS
+  return true;
+}
+
+}  // namespace LogAllocatorStats

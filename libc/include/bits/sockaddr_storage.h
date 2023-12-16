@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2023 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,30 +28,30 @@
 
 #pragma once
 
-#include <endian.h>
-#include <netinet/in6.h>
+/**
+ * @file bits/sockaddr_storage.h
+ * @brief The `sockaddr_storage` struct.
+ */
+
 #include <sys/cdefs.h>
-#include <sys/socket.h>
 
-#include <linux/in.h>
-#include <linux/in6.h>
-#include <linux/ipv6.h>
-#include <linux/socket.h>
+#include <bits/sa_family_t.h>
 
-__BEGIN_DECLS
-
-#define INET_ADDRSTRLEN 16
-
-typedef uint16_t in_port_t;
-
-int bindresvport(int __fd, struct sockaddr_in* _Nullable __sin);
-
-#if __ANDROID_API__ >= 24
-extern const struct in6_addr in6addr_any __INTRODUCED_IN(24);
-extern const struct in6_addr in6addr_loopback __INTRODUCED_IN(24);
-#else
-static const struct in6_addr in6addr_any = IN6ADDR_ANY_INIT;
-static const struct in6_addr in6addr_loopback = IN6ADDR_LOOPBACK_INIT;
-#endif
-
-__END_DECLS
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnullability-completeness"
+/**
+ * [sockaddr_storage](https://man7.org/linux/man-pages/man3/sockaddr.3type.html)
+ * is a structure large enough to contain any other `sockaddr_*` type, used to
+ * pass socket addresses without needing to know what kind of socket address
+ * you're passing.
+ */
+struct sockaddr_storage {
+  union {
+    struct {
+      sa_family_t ss_family;
+      char __data[128 - sizeof(sa_family_t)];
+    };
+    void* __align;
+  };
+};
+#pragma clang diagnostic pop

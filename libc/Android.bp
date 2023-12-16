@@ -67,9 +67,6 @@ libc_common_flags = [
     // __dso_handle needs to have default visibility on ARM32. See b/73485611.
     "-Wexit-time-destructors",
 
-    // GWP-ASan requires platform TLS.
-    "-fno-emulated-tls",
-
     // We know clang does a lot of harm by rewriting what we've said, and sadly
     // never see any good it does, so let's just ask it to do what we say...
     // (The specific motivating example was clang turning a loop that would only
@@ -1052,8 +1049,8 @@ genrule {
     name: "generated_android_ids",
     out: ["generated_android_ids.h"],
     srcs: [":android_filesystem_config_header"],
-    tool_files: ["fs_config_generator.py"],
-    cmd: "$(location fs_config_generator.py) aidarray $(in) > $(out)",
+    tools: ["fs_config_generator"],
+    cmd: "$(location fs_config_generator) aidarray $(in) > $(out)",
 }
 
 // ========================================================

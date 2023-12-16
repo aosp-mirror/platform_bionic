@@ -28,30 +28,44 @@
 
 #pragma once
 
-#include <endian.h>
-#include <netinet/in6.h>
 #include <sys/cdefs.h>
-#include <sys/socket.h>
-
-#include <linux/in.h>
-#include <linux/in6.h>
-#include <linux/ipv6.h>
-#include <linux/socket.h>
+#include <stdint.h>
 
 __BEGIN_DECLS
 
-#define INET_ADDRSTRLEN 16
-
-typedef uint16_t in_port_t;
-
-int bindresvport(int __fd, struct sockaddr_in* _Nullable __sin);
-
-#if __ANDROID_API__ >= 24
-extern const struct in6_addr in6addr_any __INTRODUCED_IN(24);
-extern const struct in6_addr in6addr_loopback __INTRODUCED_IN(24);
-#else
-static const struct in6_addr in6addr_any = IN6ADDR_ANY_INIT;
-static const struct in6_addr in6addr_loopback = IN6ADDR_LOOPBACK_INIT;
-#endif
+struct tcphdr {
+  __extension__ union {
+    struct {
+      uint16_t th_sport;
+      uint16_t th_dport;
+      uint32_t th_seq;
+      uint32_t th_ack;
+      uint8_t th_x2:4;
+      uint8_t th_off:4;
+      uint8_t th_flags;
+      uint16_t th_win;
+      uint16_t th_sum;
+      uint16_t th_urp;
+    };
+    struct {
+      uint16_t source;
+      uint16_t dest;
+      uint32_t seq;
+      uint32_t ack_seq;
+      uint16_t res1:4;
+      uint16_t doff:4;
+      uint16_t fin:1;
+      uint16_t syn:1;
+      uint16_t rst:1;
+      uint16_t psh:1;
+      uint16_t ack:1;
+      uint16_t urg:1;
+      uint16_t res2:2;
+      uint16_t window;
+      uint16_t check;
+      uint16_t urg_ptr;
+    };
+  };
+};
 
 __END_DECLS

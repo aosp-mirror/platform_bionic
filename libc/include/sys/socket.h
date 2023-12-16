@@ -39,6 +39,7 @@
 #include <linux/types.h>
 #include <linux/compiler.h>
 
+#include <bits/sockaddr_storage.h>
 #include <bits/sa_family_t.h>
 
 __BEGIN_DECLS
@@ -72,15 +73,6 @@ struct sockaddr {
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wnullability-completeness"
-struct sockaddr_storage {
-  union {
-    struct {
-      sa_family_t ss_family;
-      char __data[128 - sizeof(sa_family_t)];
-    };
-    void* __align;
-  };
-};
 
 struct linger {
   int l_onoff;
