@@ -32,6 +32,9 @@ cc_library_static {
         "bionic/libstdc++/include",
     ],
     export_include_dirs: ["include"],
+    apex_available: [
+        "com.android.runtime",
+    ],
 }
 
 cc_benchmark {
