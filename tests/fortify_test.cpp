@@ -1026,8 +1026,6 @@ TEST_F(DEATHTEST, open_O_CREAT_without_mode_fortified) {
 }
 
 TEST_F(DEATHTEST, open_O_TMPFILE_without_mode_fortified) {
-#if defined(__BIONIC__)  // Our glibc is too old for O_TMPFILE.
   int flags = O_TMPFILE; // Fool the compiler.
   ASSERT_FORTIFY(open("", flags));
-#endif
 }

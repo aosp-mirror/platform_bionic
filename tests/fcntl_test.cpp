@@ -320,7 +320,6 @@ TEST(fcntl, falloc_punch) {
 }
 
 TEST(fcntl, open_O_TMPFILE_mode) {
-#if defined(__BIONIC__)  // Our glibc is too old for O_TMPFILE.
   TemporaryDir dir;
   // Without O_EXCL, we're allowed to give this a name later.
   // (This is unrelated to the O_CREAT interaction with O_EXCL.)
@@ -359,7 +358,6 @@ TEST(fcntl, open_O_TMPFILE_mode) {
                        AT_SYMLINK_FOLLOW));
   ASSERT_ERRNO(ENOENT);
   ASSERT_EQ(0, close(fd));
-#endif
 }
 
 TEST_F(fcntl_DeathTest, fcntl_F_SETFD) {
