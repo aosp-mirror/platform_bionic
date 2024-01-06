@@ -41,7 +41,7 @@
 
 #include <async_safe/log.h>
 
-constexpr size_t PA_SIZE = 256 * 1024;
+constexpr size_t PA_SIZE = 128 * 1024;
 constexpr uint32_t PROP_AREA_MAGIC = 0x504f5250;
 constexpr uint32_t PROP_AREA_VERSION = 0xfc6ed0ab;
 

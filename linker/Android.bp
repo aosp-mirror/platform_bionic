@@ -146,12 +146,18 @@ cc_library_static {
 
     // Ensure that the compiler won't insert string function calls before ifuncs are resolved.
     cflags: ["-ffreestanding"],
+    apex_available: [
+        "com.android.runtime",
+    ],
 }
 
 cc_library_static {
     name: "liblinker_malloc",
     defaults: ["linker_defaults", "linker_all_targets"],
     srcs: ["linker_memory.cpp"],
+    apex_available: [
+        "com.android.runtime",
+    ],
 }
 
 cc_library_static {
