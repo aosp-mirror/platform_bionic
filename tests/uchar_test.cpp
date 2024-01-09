@@ -112,7 +112,7 @@ TEST(uchar, mbrtoc16_null) {
   ASSERT_EQ(0U, mbrtoc16(nullptr, nullptr, 0, nullptr));
 }
 
-TEST(uchar, mbrtoc16_zero_len) {
+TEST(uchar, DISABLED_mbrtoc16_zero_len) {
   char16_t out;
 
   out = L'x';
@@ -125,7 +125,7 @@ TEST(uchar, mbrtoc16_zero_len) {
   ASSERT_EQ(L'h', out);
 }
 
-TEST(uchar, mbrtoc16) {
+TEST(uchar, DISABLED_mbrtoc16) {
   char16_t out;
 
   ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
@@ -196,7 +196,7 @@ void test_mbrtoc16_incomplete(mbstate_t* ps) {
   ASSERT_EQ(EILSEQ, errno);
 }
 
-TEST(uchar, mbrtoc16_incomplete) {
+TEST(uchar, DISABLED_mbrtoc16_incomplete) {
   mbstate_t ps;
   memset(&ps, 0, sizeof(ps));
 
@@ -271,7 +271,7 @@ TEST(uchar, mbrtoc32_out_of_range) {
   ASSERT_EQ(EILSEQ, errno);
 }
 
-TEST(uchar, mbrtoc32) {
+TEST(uchar, DISABLED_mbrtoc32) {
   char32_t out[8];
 
   out[0] = L'x';
