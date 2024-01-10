@@ -101,10 +101,18 @@ libc/
   upstream-freebsd/
   upstream-netbsd/
   upstream-openbsd/
-    # These directories contain unmolested upstream source. Any time we can
-    # just use a BSD implementation of something unmodified, we should.
-    # The structure under these directories mimics the upstream tree,
-    # but there's also...
+    # These directories contain upstream source with no local changes.
+    # Any time we can just use a BSD implementation of something unmodified,
+    # we should. Ideally these should probably have been three separate git
+    # projects in external/, but they're here instead mostly by historical
+    # accident (because it wouldn't have been easy to import just the tiny
+    # subset of these operating systems that -- unlike Android -- just have
+    # one huge repository rather than lots of little ones and a mechanism
+    # like our `repo` tool).
+    # The structure under these directories mimics the relevant upstream tree,
+    # but in order to actually be able to compile this code in our tree
+    # _without_ making modifications to the source files directly, we also
+    # have the following subdirectories in each one that aren't upstream:
     android/
       include/
         # This is where we keep the hacks necessary to build BSD source
