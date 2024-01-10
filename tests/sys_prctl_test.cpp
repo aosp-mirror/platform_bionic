@@ -35,7 +35,6 @@
 
 // http://b/20017123.
 TEST(sys_prctl, bug_20017123) {
-#if defined(PR_SET_VMA) // PR_SET_VMA is only available in Android kernels.
   size_t page_size = static_cast<size_t>(sysconf(_SC_PAGESIZE));
   void* p = mmap(NULL, page_size * 3, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   ASSERT_NE(MAP_FAILED, p);
@@ -62,15 +61,9 @@ TEST(sys_prctl, bug_20017123) {
   }
 
   ASSERT_EQ(0, munmap(p, page_size * 3));
-#else
-  GTEST_SKIP() << "PR_SET_VMA not available";
-#endif
 }
 
 TEST(sys_prctl, pr_cap_ambient) {
-// PR_CAP_AMBIENT was introduced in v4.3.  Android devices should always
-// have a backport, but we can't guarantee it's available on the host.
-#if defined(__ANDROID__) || defined(PR_CAP_AMBIENT)
   const std::string caps_sha =
       "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/"
       "?id=58319057b7847667f0c9585b9de0e8932b0fdb08";
@@ -113,7 +106,4 @@ TEST(sys_prctl, pr_cap_ambient) {
   err = prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_LOWER, ULONG_MAX, 0, 0);
   EXPECT_EQ(-1, err);
   EXPECT_ERRNO(EINVAL);
-#else
-  GTEST_SKIP() << "PR_CAP_AMBIENT not available";
-#endif
 }
