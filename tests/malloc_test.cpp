@@ -935,7 +935,8 @@ void __attribute__((optnone)) VerifyAlignment(Type* floating) {
   size_t expected_alignment = alignof(Type);
   if (expected_alignment != 0) {
     ASSERT_EQ(0U, (expected_alignment - 1) & reinterpret_cast<uintptr_t>(floating))
-        << "Expected alignment " << expected_alignment << " ptr value " << floating;
+        << "Expected alignment " << expected_alignment << " ptr value "
+        << static_cast<void*>(floating);
   }
 }
 
