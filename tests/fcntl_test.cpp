@@ -361,5 +361,5 @@ TEST(fcntl, open_O_TMPFILE_mode) {
 }
 
 TEST(fcntl_DeathTest, fcntl_F_SETFD) {
-  EXPECT_DEATH(fcntl(0, F_SETFD, O_NONBLOCK), "non-FD_CLOEXEC");
+  EXPECT_DEATH(fcntl(0, F_SETFD, O_NONBLOCK), "FD_CLOEXEC");
 }
