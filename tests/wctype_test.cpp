@@ -35,20 +35,24 @@ static void TestIsWideFn(int fn(wint_t),
                          const wchar_t* falses) {
   UtfLocale l;
   for (const wchar_t* p = trues; *p; ++p) {
-    if (!have_dl() && *p > 0x7f) {
-      GTEST_LOG_(INFO) << "skipping unicode test " << *p;
+    const wchar_t val_ch = *p;
+    const int val_int = static_cast<int>(val_ch);
+    if (!have_dl() && val_ch > 0x7f) {
+      GTEST_LOG_(INFO) << "skipping unicode test " << val_int;
       continue;
     }
-    EXPECT_TRUE(fn(*p)) << *p;
-    EXPECT_TRUE(fn_l(*p, l.l)) << *p;
+    EXPECT_TRUE(fn(val_ch)) << val_int;
+    EXPECT_TRUE(fn_l(val_ch, l.l)) << val_int;
   }
   for (const wchar_t* p = falses; *p; ++p) {
-    if (!have_dl() && *p > 0x7f) {
-      GTEST_LOG_(INFO) << "skipping unicode test " << *p;
+    const wchar_t val_ch = *p;
+    const int val_int = static_cast<int>(val_ch);
+    if (!have_dl() && val_ch > 0x7f) {
+      GTEST_LOG_(INFO) << "skipping unicode test " << val_int;
       continue;
     }
-    EXPECT_FALSE(fn(*p)) << *p;
-    EXPECT_FALSE(fn_l(*p, l.l)) << *p;
+    EXPECT_FALSE(fn(val_ch)) << val_int;
+    EXPECT_FALSE(fn_l(val_ch, l.l)) << val_int;
   }
 }
 
