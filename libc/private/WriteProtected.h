@@ -44,7 +44,6 @@ class WriteProtected {
  public:
   static_assert(sizeof(T) < max_page_size(),
                 "WriteProtected only supports contents up to max_page_size()");
-  static_assert(__is_pod(T), "WriteProtected only supports POD contents");
 
   WriteProtected() = default;
   BIONIC_DISALLOW_COPY_AND_ASSIGN(WriteProtected);
