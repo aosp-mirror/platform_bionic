@@ -24,6 +24,12 @@
 
 #include "util.h"
 
+enum BenchmarkType : uint8_t {
+  kBenchmarkMmapOnly,
+  kBenchmarkMunmapOnly,
+  kBenchmarkAll,
+};
+
 static size_t page_sz = getpagesize();
 
 struct MmapParams {
@@ -32,31 +38,49 @@ struct MmapParams {
   int64_t size;
 };
 
-// mmap syscall benchmarks
-static void MmapBenchmark(benchmark::State& state, const struct MmapParams& params, int fd,
-                          void* area = nullptr) {
+template <BenchmarkType type>
+void MmapBenchmarkImpl(benchmark::State& state, const struct MmapParams& params, int fd,
+                       void* area = nullptr) {
   for (auto _ : state) {
+    if (type == kBenchmarkMunmapOnly) state.PauseTiming();
     void* addr = mmap(area, params.size, params.prot, params.flags, fd, 0);
     if (addr == MAP_FAILED) {
       state.SkipWithError(android::base::StringPrintf("mmap failed: %s", strerror(errno)).c_str());
       break;
     }
 
+    if (type == kBenchmarkMmapOnly) state.PauseTiming();
+
     if (params.prot & PROT_WRITE) {
       MakeAllocationResident(addr, params.size, page_sz);
     }
+
+    if (type == kBenchmarkMunmapOnly) state.ResumeTiming();
 
     if (munmap(addr, params.size) != 0) {
       state.SkipWithError(
           android::base::StringPrintf("munmap failed: %s", strerror(errno)).c_str());
       break;
     }
+    if (type == kBenchmarkMmapOnly) state.ResumeTiming();
   }
+}
+
+static void MmapBenchmark(benchmark::State& state, const struct MmapParams& params, int fd,
+                          void* area = nullptr) {
+  MmapBenchmarkImpl<kBenchmarkAll>(state, params, fd, area);
 }
 
 static void MmapFixedBenchmark(benchmark::State& state, const struct MmapParams& params, int fd,
                                size_t area_size, size_t offs) {
-  uint8_t* area = reinterpret_cast<uint8_t*>(mmap(0, area_size, params.prot, params.flags, fd, 0));
+  if ((params.flags & MAP_FIXED) == 0) {
+    state.SkipWithError("MmapFixedBenchmark called without MAP_FIXED set");
+    return;
+  }
+
+  // Create the mmap that will be used for the fixed mmaps.
+  uint8_t* area = reinterpret_cast<uint8_t*>(
+      mmap(nullptr, area_size, params.prot, params.flags & ~MAP_FIXED, fd, 0));
   if (area == MAP_FAILED) {
     state.SkipWithError(android::base::StringPrintf("mmap failed: %s", strerror(errno)).c_str());
     return;
@@ -136,7 +160,7 @@ static void BM_syscall_mmap_anon_rw_fixed(benchmark::State& state) {
       .size = state.range(0),
   };
 
-  MmapFixedBenchmark(state, params, 0, params.size, 0);
+  MmapFixedBenchmark(state, params, -1, params.size, 0);
 }
 BIONIC_BENCHMARK_WITH_ARG(BM_syscall_mmap_anon_rw_fixed, "AT_All_PAGE_SIZES");
 
@@ -147,7 +171,7 @@ static void BM_syscall_mmap_anon_none_fixed(benchmark::State& state) {
       .size = state.range(0),
   };
 
-  MmapFixedBenchmark(state, params, 0, params.size, 0);
+  MmapFixedBenchmark(state, params, -1, params.size, 0);
 }
 BIONIC_BENCHMARK_WITH_ARG(BM_syscall_mmap_anon_none_fixed, "AT_All_PAGE_SIZES");
 
@@ -212,3 +236,74 @@ static void BM_syscall_mmap_file_rw_priv_fixed_end(benchmark::State& state) {
 }
 // mapping at sub-page size offset is not supported, so run only for AT_MULTI_PAGE_SIZES
 BIONIC_BENCHMARK_WITH_ARG(BM_syscall_mmap_file_rw_priv_fixed_end, "AT_MULTI_PAGE_SIZES");
+
+static void BM_syscall_mmap_anon_mmap_only(benchmark::State& state) {
+  struct MmapParams params = {
+      .prot = PROT_READ | PROT_WRITE,
+      .flags = MAP_PRIVATE | MAP_ANONYMOUS,
+      .size = state.range(0),
+  };
+  MmapBenchmarkImpl<kBenchmarkMmapOnly>(state, params, 0);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_syscall_mmap_anon_mmap_only, "AT_MULTI_PAGE_SIZES");
+
+static void BM_syscall_mmap_anon_munmap_only(benchmark::State& state) {
+  struct MmapParams params = {
+      .prot = PROT_READ | PROT_WRITE,
+      .flags = MAP_PRIVATE | MAP_ANONYMOUS,
+      .size = state.range(0),
+  };
+  MmapBenchmarkImpl<kBenchmarkMunmapOnly>(state, params, 0);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_syscall_mmap_anon_munmap_only, "AT_MULTI_PAGE_SIZES");
+
+void MadviseBenchmark(benchmark::State& state, const struct MmapParams& params, int madvise_flags) {
+  void* addr = mmap(nullptr, params.size, params.prot, params.flags, 0, 0);
+  if (addr == MAP_FAILED) {
+    state.SkipWithError(android::base::StringPrintf("mmap failed: %s", strerror(errno)).c_str());
+    return;
+  }
+  for (auto _ : state) {
+    state.PauseTiming();
+    if (params.prot & PROT_WRITE) {
+      MakeAllocationResident(addr, params.size, page_sz);
+    }
+    state.ResumeTiming();
+
+    madvise(addr, params.size, madvise_flags);
+  }
+
+  if (munmap(addr, params.size) != 0) {
+    state.SkipWithError(android::base::StringPrintf("munmap failed: %s", strerror(errno)).c_str());
+  }
+}
+
+static void BM_syscall_mmap_anon_madvise_dontneed(benchmark::State& state) {
+  struct MmapParams params = {
+      .prot = PROT_READ | PROT_WRITE,
+      .flags = MAP_PRIVATE | MAP_ANONYMOUS,
+      .size = state.range(0),
+  };
+  MadviseBenchmark(state, params, MADV_DONTNEED);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_syscall_mmap_anon_madvise_dontneed, "AT_MULTI_PAGE_SIZES");
+
+static void BM_syscall_mmap_anon_madvise_pageout(benchmark::State& state) {
+  struct MmapParams params = {
+      .prot = PROT_READ | PROT_WRITE,
+      .flags = MAP_PRIVATE | MAP_ANONYMOUS,
+      .size = state.range(0),
+  };
+  MadviseBenchmark(state, params, MADV_PAGEOUT);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_syscall_mmap_anon_madvise_pageout, "AT_MULTI_PAGE_SIZES");
+
+static void BM_syscall_mmap_anon_madvise_free(benchmark::State& state) {
+  struct MmapParams params = {
+      .prot = PROT_READ | PROT_WRITE,
+      .flags = MAP_PRIVATE | MAP_ANONYMOUS,
+      .size = state.range(0),
+  };
+  MadviseBenchmark(state, params, MADV_FREE);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_syscall_mmap_anon_madvise_free, "AT_MULTI_PAGE_SIZES");
