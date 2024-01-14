@@ -2319,6 +2319,17 @@ cc_object {
     defaults: ["crt_defaults"],
 }
 
+cc_object {
+    name: "crt_pad_segment",
+    local_include_dirs: [
+        "include",
+        "private",  // crt_pad_segment.S depends on private/bionic_asm_note.h
+    ],
+    srcs: ["arch-common/bionic/crt_pad_segment.S"],
+
+    defaults: ["crt_defaults"],
+}
+
 cc_library_static {
     name: "note_memtag_heap_async",
     arch: {
