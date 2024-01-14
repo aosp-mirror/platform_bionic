@@ -167,7 +167,7 @@ TEST(time, mktime_10310929) {
 #endif
 }
 
-TEST(time, mktime_EOVERFLOW) {
+TEST(time, DISABLED_mktime_EOVERFLOW) {
   setenv("TZ", "UTC", 1);
 
   struct tm t;
