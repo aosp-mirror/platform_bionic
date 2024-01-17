@@ -84,14 +84,14 @@ struct vfio_region_info {
 #define VFIO_REGION_INFO_FLAG_CAPS (1 << 3)
   __u32 index;
   __u32 cap_offset;
-  __u64 size;
-  __u64 offset;
+  __aligned_u64 size;
+  __aligned_u64 offset;
 };
 #define VFIO_DEVICE_GET_REGION_INFO _IO(VFIO_TYPE, VFIO_BASE + 8)
 #define VFIO_REGION_INFO_CAP_SPARSE_MMAP 1
 struct vfio_region_sparse_mmap_area {
-  __u64 offset;
-  __u64 size;
+  __aligned_u64 offset;
+  __aligned_u64 size;
 };
 struct vfio_region_info_cap_sparse_mmap {
   struct vfio_info_cap_header header;
@@ -141,15 +141,15 @@ struct vfio_device_migration_info {
 #define VFIO_DEVICE_STATE_IS_ERROR(state) ((state & VFIO_DEVICE_STATE_MASK) == (VFIO_DEVICE_STATE_V1_SAVING | VFIO_DEVICE_STATE_V1_RESUMING))
 #define VFIO_DEVICE_STATE_SET_ERROR(state) ((state & ~VFIO_DEVICE_STATE_MASK) | VFIO_DEVICE_STATE_V1_SAVING | VFIO_DEVICE_STATE_V1_RESUMING)
   __u32 reserved;
-  __u64 pending_bytes;
-  __u64 data_offset;
-  __u64 data_size;
+  __aligned_u64 pending_bytes;
+  __aligned_u64 data_offset;
+  __aligned_u64 data_size;
 };
 #define VFIO_REGION_INFO_CAP_MSIX_MAPPABLE 3
 #define VFIO_REGION_INFO_CAP_NVLINK2_SSATGT 4
 struct vfio_region_info_cap_nvlink2_ssatgt {
   struct vfio_info_cap_header header;
-  __u64 tgt;
+  __aligned_u64 tgt;
 };
 #define VFIO_REGION_INFO_CAP_NVLINK2_LNKSPD 5
 struct vfio_region_info_cap_nvlink2_lnkspd {
@@ -255,7 +255,7 @@ struct vfio_device_gfx_plane_info {
 #define VFIO_GFX_PLANE_TYPE_REGION (1 << 2)
   __u32 drm_plane_type;
   __u32 drm_format;
-  __u64 drm_format_mod;
+  __aligned_u64 drm_format_mod;
   __u32 width;
   __u32 height;
   __u32 stride;
@@ -268,6 +268,7 @@ struct vfio_device_gfx_plane_info {
     __u32 region_index;
     __u32 dmabuf_id;
   };
+  __u32 reserved;
 };
 #define VFIO_DEVICE_QUERY_GFX_PLANE _IO(VFIO_TYPE, VFIO_BASE + 14)
 #define VFIO_DEVICE_GET_GFX_DMABUF _IO(VFIO_TYPE, VFIO_BASE + 15)
@@ -279,9 +280,10 @@ struct vfio_device_ioeventfd {
 #define VFIO_DEVICE_IOEVENTFD_32 (1 << 2)
 #define VFIO_DEVICE_IOEVENTFD_64 (1 << 3)
 #define VFIO_DEVICE_IOEVENTFD_SIZE_MASK (0xf)
-  __u64 offset;
-  __u64 data;
+  __aligned_u64 offset;
+  __aligned_u64 data;
   __s32 fd;
+  __u32 reserved;
 };
 #define VFIO_DEVICE_IOEVENTFD _IO(VFIO_TYPE, VFIO_BASE + 16)
 struct vfio_device_feature {
@@ -372,12 +374,18 @@ struct vfio_device_feature_mig_data_size {
   __aligned_u64 stop_copy_length;
 };
 #define VFIO_DEVICE_FEATURE_MIG_DATA_SIZE 9
+struct vfio_device_feature_bus_master {
+  __u32 op;
+#define VFIO_DEVICE_FEATURE_CLEAR_MASTER 0
+#define VFIO_DEVICE_FEATURE_SET_MASTER 1
+};
+#define VFIO_DEVICE_FEATURE_BUS_MASTER 10
 struct vfio_iommu_type1_info {
   __u32 argsz;
   __u32 flags;
 #define VFIO_IOMMU_INFO_PGSIZES (1 << 0)
 #define VFIO_IOMMU_INFO_CAPS (1 << 1)
-  __u64 iova_pgsizes;
+  __aligned_u64 iova_pgsizes;
   __u32 cap_offset;
   __u32 pad;
 };
