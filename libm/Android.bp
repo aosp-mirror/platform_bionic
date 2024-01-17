@@ -290,6 +290,8 @@ cc_library {
                 // For backwards-compatibility, some arm32 builtins are exported from libm.so.
                 static_libs: ["libclang_rt.builtins-exported"],
             },
+            // "#pragma STDC FENV_ACCESS ON" in e_sqrtl.c is not supported for arm32.
+            cflags: ["-Wno-ignored-pragmas"],
         },
 
         arm64: {
@@ -408,7 +410,6 @@ cc_library {
         "-fno-math-errno",
         "-Wall",
         "-Werror",
-        "-Wno-ignored-pragmas",
         "-Wno-missing-braces",
         "-Wno-parentheses",
         "-Wno-sign-compare",
