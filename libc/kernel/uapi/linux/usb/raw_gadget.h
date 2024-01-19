@@ -19,6 +19,10 @@ enum usb_raw_event_type {
   USB_RAW_EVENT_INVALID = 0,
   USB_RAW_EVENT_CONNECT = 1,
   USB_RAW_EVENT_CONTROL = 2,
+  USB_RAW_EVENT_SUSPEND = 3,
+  USB_RAW_EVENT_RESUME = 4,
+  USB_RAW_EVENT_RESET = 5,
+  USB_RAW_EVENT_DISCONNECT = 6,
 };
 struct usb_raw_event {
   __u32 type;
