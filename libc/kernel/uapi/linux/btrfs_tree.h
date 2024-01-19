@@ -24,6 +24,7 @@
 #define BTRFS_UUID_TREE_OBJECTID 9ULL
 #define BTRFS_FREE_SPACE_TREE_OBJECTID 10ULL
 #define BTRFS_BLOCK_GROUP_TREE_OBJECTID 11ULL
+#define BTRFS_RAID_STRIPE_TREE_OBJECTID 12ULL
 #define BTRFS_DEV_STATS_OBJECTID 0ULL
 #define BTRFS_BALANCE_OBJECTID - 4ULL
 #define BTRFS_ORPHAN_OBJECTID - 5ULL
@@ -60,6 +61,7 @@
 #define BTRFS_ROOT_REF_KEY 156
 #define BTRFS_EXTENT_ITEM_KEY 168
 #define BTRFS_METADATA_ITEM_KEY 169
+#define BTRFS_EXTENT_OWNER_REF_KEY 172
 #define BTRFS_TREE_BLOCK_REF_KEY 176
 #define BTRFS_EXTENT_DATA_REF_KEY 178
 #define BTRFS_SHARED_BLOCK_REF_KEY 182
@@ -71,6 +73,7 @@
 #define BTRFS_DEV_EXTENT_KEY 204
 #define BTRFS_DEV_ITEM_KEY 216
 #define BTRFS_CHUNK_ITEM_KEY 228
+#define BTRFS_RAID_STRIPE_KEY 230
 #define BTRFS_QGROUP_STATUS_KEY 240
 #define BTRFS_QGROUP_INFO_KEY 242
 #define BTRFS_QGROUP_LIMIT_KEY 244
@@ -272,6 +275,23 @@ struct btrfs_free_space_header {
   __le64 num_entries;
   __le64 num_bitmaps;
 } __attribute__((__packed__));
+struct btrfs_raid_stride {
+  __le64 devid;
+  __le64 physical;
+} __attribute__((__packed__));
+#define BTRFS_STRIPE_RAID0 1
+#define BTRFS_STRIPE_RAID1 2
+#define BTRFS_STRIPE_DUP 3
+#define BTRFS_STRIPE_RAID10 4
+#define BTRFS_STRIPE_RAID5 5
+#define BTRFS_STRIPE_RAID6 6
+#define BTRFS_STRIPE_RAID1C3 7
+#define BTRFS_STRIPE_RAID1C4 8
+struct btrfs_stripe_extent {
+  __u8 encoding;
+  __u8 reserved[7];
+  struct btrfs_raid_stride strides[];
+} __attribute__((__packed__));
 #define BTRFS_HEADER_FLAG_WRITTEN (1ULL << 0)
 #define BTRFS_HEADER_FLAG_RELOC (1ULL << 1)
 #define BTRFS_SUPER_FLAG_ERROR (1ULL << 2)
@@ -309,6 +329,9 @@ struct btrfs_extent_data_ref {
 } __attribute__((__packed__));
 struct btrfs_shared_data_ref {
   __le32 count;
+} __attribute__((__packed__));
+struct btrfs_extent_owner_ref {
+  __le64 root_id;
 } __attribute__((__packed__));
 struct btrfs_extent_inline_ref {
   __u8 type;
@@ -502,13 +525,15 @@ struct btrfs_free_space_info {
 #define BTRFS_QGROUP_STATUS_FLAG_ON (1ULL << 0)
 #define BTRFS_QGROUP_STATUS_FLAG_RESCAN (1ULL << 1)
 #define BTRFS_QGROUP_STATUS_FLAG_INCONSISTENT (1ULL << 2)
-#define BTRFS_QGROUP_STATUS_FLAGS_MASK (BTRFS_QGROUP_STATUS_FLAG_ON | BTRFS_QGROUP_STATUS_FLAG_RESCAN | BTRFS_QGROUP_STATUS_FLAG_INCONSISTENT)
+#define BTRFS_QGROUP_STATUS_FLAG_SIMPLE_MODE (1ULL << 3)
+#define BTRFS_QGROUP_STATUS_FLAGS_MASK (BTRFS_QGROUP_STATUS_FLAG_ON | BTRFS_QGROUP_STATUS_FLAG_RESCAN | BTRFS_QGROUP_STATUS_FLAG_INCONSISTENT | BTRFS_QGROUP_STATUS_FLAG_SIMPLE_MODE)
 #define BTRFS_QGROUP_STATUS_VERSION 1
 struct btrfs_qgroup_status_item {
   __le64 version;
   __le64 generation;
   __le64 flags;
   __le64 rescan;
+  __le64 enable_gen;
 } __attribute__((__packed__));
 struct btrfs_qgroup_info_item {
   __le64 generation;
