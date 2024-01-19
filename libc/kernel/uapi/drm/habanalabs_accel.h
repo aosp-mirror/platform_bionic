@@ -6,8 +6,7 @@
  */
 #ifndef HABANALABS_H_
 #define HABANALABS_H_
-#include <linux/types.h>
-#include <linux/ioctl.h>
+#include <drm/drm.h>
 #define GOYA_KMD_SRAM_RESERVED_SIZE_FROM_START 0x8000
 #define GAUDI_DRIVER_SRAM_RESERVED_SIZE_FROM_START 0x80
 #define GAUDI_FIRST_AVAILABLE_W_S_SYNC_OBJECT 144
@@ -656,6 +655,7 @@ enum hl_server_type {
 #define HL_INFO_FW_GENERIC_REQ 35
 #define HL_INFO_HW_ERR_EVENT 36
 #define HL_INFO_FW_ERR_EVENT 37
+#define HL_INFO_USER_ENGINE_ERR_EVENT 38
 #define HL_INFO_VERSION_MAX_LEN 128
 #define HL_INFO_CARD_NAME_MAX_LEN 16
 #define HL_ENGINES_DATA_MAX_SIZE SZ_1M
@@ -729,6 +729,7 @@ struct hl_info_reset_count {
 struct hl_info_time_sync {
   __u64 device_time;
   __u64 host_time;
+  __u64 tsc_time;
 };
 struct hl_info_pci_counters {
   __u64 rx_throughput;
@@ -832,6 +833,12 @@ struct hl_info_fw_err_event {
   __s64 timestamp;
   __u16 err_type;
   __u16 event_id;
+  __u32 pad;
+};
+struct hl_info_engine_err_event {
+  __s64 timestamp;
+  __u16 engine_id;
+  __u16 error_count;
   __u32 pad;
 };
 struct hl_info_dev_memalloc_page_sizes {
@@ -1183,12 +1190,18 @@ struct hl_debug_args {
   __u32 enable;
   __u32 ctx_id;
 };
-#define HL_IOCTL_INFO _IOWR('H', 0x01, struct hl_info_args)
-#define HL_IOCTL_CB _IOWR('H', 0x02, union hl_cb_args)
-#define HL_IOCTL_CS _IOWR('H', 0x03, union hl_cs_args)
-#define HL_IOCTL_WAIT_CS _IOWR('H', 0x04, union hl_wait_cs_args)
-#define HL_IOCTL_MEMORY _IOWR('H', 0x05, union hl_mem_args)
-#define HL_IOCTL_DEBUG _IOWR('H', 0x06, struct hl_debug_args)
-#define HL_COMMAND_START 0x01
-#define HL_COMMAND_END 0x07
+#define HL_IOCTL_INFO 0x00
+#define HL_IOCTL_CB 0x01
+#define HL_IOCTL_CS 0x02
+#define HL_IOCTL_WAIT_CS 0x03
+#define HL_IOCTL_MEMORY 0x04
+#define HL_IOCTL_DEBUG 0x05
+#define DRM_IOCTL_HL_INFO DRM_IOWR(DRM_COMMAND_BASE + HL_IOCTL_INFO, struct hl_info_args)
+#define DRM_IOCTL_HL_CB DRM_IOWR(DRM_COMMAND_BASE + HL_IOCTL_CB, union hl_cb_args)
+#define DRM_IOCTL_HL_CS DRM_IOWR(DRM_COMMAND_BASE + HL_IOCTL_CS, union hl_cs_args)
+#define DRM_IOCTL_HL_WAIT_CS DRM_IOWR(DRM_COMMAND_BASE + HL_IOCTL_WAIT_CS, union hl_wait_cs_args)
+#define DRM_IOCTL_HL_MEMORY DRM_IOWR(DRM_COMMAND_BASE + HL_IOCTL_MEMORY, union hl_mem_args)
+#define DRM_IOCTL_HL_DEBUG DRM_IOWR(DRM_COMMAND_BASE + HL_IOCTL_DEBUG, struct hl_debug_args)
+#define HL_COMMAND_START (DRM_COMMAND_BASE + HL_IOCTL_INFO)
+#define HL_COMMAND_END (DRM_COMMAND_BASE + HL_IOCTL_DEBUG + 1)
 #endif

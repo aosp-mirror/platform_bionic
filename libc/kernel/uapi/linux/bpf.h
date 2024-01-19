@@ -147,7 +147,8 @@ enum bpf_map_type {
   BPF_MAP_TYPE_CGROUP_STORAGE_DEPRECATED,
   BPF_MAP_TYPE_CGROUP_STORAGE = BPF_MAP_TYPE_CGROUP_STORAGE_DEPRECATED,
   BPF_MAP_TYPE_REUSEPORT_SOCKARRAY,
-  BPF_MAP_TYPE_PERCPU_CGROUP_STORAGE,
+  BPF_MAP_TYPE_PERCPU_CGROUP_STORAGE_DEPRECATED,
+  BPF_MAP_TYPE_PERCPU_CGROUP_STORAGE = BPF_MAP_TYPE_PERCPU_CGROUP_STORAGE_DEPRECATED,
   BPF_MAP_TYPE_QUEUE,
   BPF_MAP_TYPE_STACK,
   BPF_MAP_TYPE_SK_STORAGE,
@@ -245,6 +246,13 @@ enum bpf_attach_type {
   BPF_TCX_INGRESS,
   BPF_TCX_EGRESS,
   BPF_TRACE_UPROBE_MULTI,
+  BPF_CGROUP_UNIX_CONNECT,
+  BPF_CGROUP_UNIX_SENDMSG,
+  BPF_CGROUP_UNIX_RECVMSG,
+  BPF_CGROUP_UNIX_GETPEERNAME,
+  BPF_CGROUP_UNIX_GETSOCKNAME,
+  BPF_NETKIT_PRIMARY,
+  BPF_NETKIT_PEER,
   __MAX_BPF_ATTACH_TYPE
 };
 #define MAX_BPF_ATTACH_TYPE __MAX_BPF_ATTACH_TYPE
@@ -262,6 +270,7 @@ enum bpf_link_type {
   BPF_LINK_TYPE_NETFILTER = 10,
   BPF_LINK_TYPE_TCX = 11,
   BPF_LINK_TYPE_UPROBE_MULTI = 12,
+  BPF_LINK_TYPE_NETKIT = 13,
   MAX_BPF_LINK_TYPE,
 };
 enum bpf_perf_event_type {
@@ -562,6 +571,13 @@ union bpf_attr {
         __u32 flags;
         __u32 pid;
       } uprobe_multi;
+      struct {
+        union {
+          __u32 relative_fd;
+          __u32 relative_id;
+        };
+        __u64 expected_revision;
+      } netkit;
     };
   } link_create;
   struct {
@@ -1044,6 +1060,7 @@ struct bpf_link_info {
       __aligned_u64 addrs;
       __u32 count;
       __u32 flags;
+      __u64 missed;
     } kprobe_multi;
     struct {
       __u32 type;
@@ -1059,6 +1076,7 @@ struct bpf_link_info {
           __u32 name_len;
           __u32 offset;
           __u64 addr;
+          __u64 missed;
         } kprobe;
         struct {
           __aligned_u64 tp_name;
@@ -1074,6 +1092,10 @@ struct bpf_link_info {
       __u32 ifindex;
       __u32 attach_type;
     } tcx;
+    struct {
+      __u32 ifindex;
+      __u32 attach_type;
+    } netkit;
   };
 } __attribute__((aligned(8)));
 struct bpf_sock_addr {
@@ -1221,6 +1243,7 @@ enum {
   BPF_FIB_LOOKUP_OUTPUT = (1U << 1),
   BPF_FIB_LOOKUP_SKIP_NEIGH = (1U << 2),
   BPF_FIB_LOOKUP_TBID = (1U << 3),
+  BPF_FIB_LOOKUP_SRC = (1U << 4),
 };
 enum {
   BPF_FIB_LKUP_RET_SUCCESS,
@@ -1232,6 +1255,7 @@ enum {
   BPF_FIB_LKUP_RET_UNSUPP_LWT,
   BPF_FIB_LKUP_RET_NO_NEIGH,
   BPF_FIB_LKUP_RET_FRAG_NEEDED,
+  BPF_FIB_LKUP_RET_NO_SRC_ADDR,
 };
 struct bpf_fib_lookup {
   __u8 family;
@@ -1430,6 +1454,7 @@ struct bpf_core_relo {
 };
 enum {
   BPF_F_TIMER_ABS = (1ULL << 0),
+  BPF_F_TIMER_CPU_PIN = (1ULL << 1),
 };
 struct bpf_iter_num {
   __u64 __opaque[1];
