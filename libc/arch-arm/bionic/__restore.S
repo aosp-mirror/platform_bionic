@@ -47,7 +47,7 @@
   .save {r0-r15}
   .pad #32
   nop
-ENTRY_PRIVATE_NO_DWARF(__restore)
+ENTRY_NO_DWARF_PRIVATE(__restore)
   // This function must have exactly this instruction sequence.
   mov r7, #__NR_sigreturn
   swi #0
@@ -57,7 +57,7 @@ END_NO_DWARF(__restore)
   .save {r0-r15}
   .pad #160
   nop
-ENTRY_PRIVATE_NO_DWARF(__restore_rt)
+ENTRY_NO_DWARF_PRIVATE(__restore_rt)
   // This function must have exactly this instruction sequence.
   mov r7, #__NR_rt_sigreturn
   swi #0
