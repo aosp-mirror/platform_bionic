@@ -119,6 +119,8 @@ extern "C" {
 #define DRM_FORMAT_NV24 fourcc_code('N', 'V', '2', '4')
 #define DRM_FORMAT_NV42 fourcc_code('N', 'V', '4', '2')
 #define DRM_FORMAT_NV15 fourcc_code('N', 'V', '1', '5')
+#define DRM_FORMAT_NV20 fourcc_code('N', 'V', '2', '0')
+#define DRM_FORMAT_NV30 fourcc_code('N', 'V', '3', '0')
 #define DRM_FORMAT_P210 fourcc_code('P', '2', '1', '0')
 #define DRM_FORMAT_P010 fourcc_code('P', '0', '1', '0')
 #define DRM_FORMAT_P012 fourcc_code('P', '0', '1', '2')

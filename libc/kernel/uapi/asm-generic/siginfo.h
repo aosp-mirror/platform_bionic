@@ -47,11 +47,6 @@ union __sifields {
   } _sigchld;
   struct {
     void  * _addr;
-#ifdef __ia64__
-    int _imm;
-    unsigned int _flags;
-    unsigned long _isr;
-#endif
 #define __ADDR_BND_PKEY_PAD (__alignof__(void *) < sizeof(short) ? sizeof(short) : __alignof__(void *))
     union {
       int _trapno;

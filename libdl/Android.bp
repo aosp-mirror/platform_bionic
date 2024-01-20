@@ -193,7 +193,7 @@ cc_library {
         },
     },
 
-    srcs: [ "libdl_android.cpp" ],
+    srcs: ["libdl_android.cpp"],
     version_script: "libdl_android.map.txt",
 
     cflags: [

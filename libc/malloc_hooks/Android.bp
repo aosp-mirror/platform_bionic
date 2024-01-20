@@ -75,7 +75,7 @@ cc_test {
     local_include_dirs: ["tests"],
     include_dirs: [
         "bionic/libc",
-        "bionic"
+        "bionic",
     ],
     header_libs: [
         "bionic_libc_platform_headers",
@@ -84,7 +84,7 @@ cc_test {
     cflags: [
         "-Wall",
         "-Werror",
-        "-O1",  // FIXME: http://b/169206016 - issues with aligned_alloc and -O2
+        "-O1", // FIXME: http://b/169206016 - issues with aligned_alloc and -O2
     ],
     test_suites: ["general-tests"],
 }

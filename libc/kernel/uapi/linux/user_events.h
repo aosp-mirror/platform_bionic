@@ -11,6 +11,10 @@
 #define USER_EVENTS_SYSTEM "user_events"
 #define USER_EVENTS_PREFIX "u:"
 #define DYN_LOC(offset,size) ((size) << 16 | (offset))
+enum user_reg_flag {
+  USER_EVENT_REG_PERSIST = 1U << 0,
+  USER_EVENT_REG_MAX = 1U << 1,
+};
 struct user_reg {
   __u32 size;
   __u8 enable_bit;

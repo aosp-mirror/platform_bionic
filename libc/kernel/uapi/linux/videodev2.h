@@ -418,6 +418,7 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_QC08C v4l2_fourcc('Q', '0', '8', 'C')
 #define V4L2_PIX_FMT_QC10C v4l2_fourcc('Q', '1', '0', 'C')
 #define V4L2_PIX_FMT_AJPG v4l2_fourcc('A', 'J', 'P', 'G')
+#define V4L2_PIX_FMT_HEXTILE v4l2_fourcc('H', 'X', 'T', 'L')
 #define V4L2_PIX_FMT_IPU3_SBGGR10 v4l2_fourcc('i', 'p', '3', 'b')
 #define V4L2_PIX_FMT_IPU3_SGBRG10 v4l2_fourcc('i', 'p', '3', 'g')
 #define V4L2_PIX_FMT_IPU3_SGRBG10 v4l2_fourcc('i', 'p', '3', 'G')
