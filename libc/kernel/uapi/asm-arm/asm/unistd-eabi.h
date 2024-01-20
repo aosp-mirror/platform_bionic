@@ -411,4 +411,8 @@
 #define __NR_set_mempolicy_home_node (__NR_SYSCALL_BASE + 450)
 #define __NR_cachestat (__NR_SYSCALL_BASE + 451)
 #define __NR_fchmodat2 (__NR_SYSCALL_BASE + 452)
+#define __NR_map_shadow_stack (__NR_SYSCALL_BASE + 453)
+#define __NR_futex_wake (__NR_SYSCALL_BASE + 454)
+#define __NR_futex_wait (__NR_SYSCALL_BASE + 455)
+#define __NR_futex_requeue (__NR_SYSCALL_BASE + 456)
 #endif

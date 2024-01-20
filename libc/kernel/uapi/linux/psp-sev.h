@@ -46,6 +46,7 @@ typedef enum {
   SEV_RET_INVALID_PARAM,
   SEV_RET_RESOURCE_LIMIT,
   SEV_RET_SECURE_DATA_INVALID,
+  SEV_RET_INVALID_KEY = 0x27,
   SEV_RET_MAX,
 } sev_ret_code;
 struct sev_user_data_status {

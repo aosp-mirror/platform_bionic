@@ -105,7 +105,7 @@ typedef __s64 Elf64_Sxword;
 #define ELF32_ST_TYPE(x) ELF_ST_TYPE(x)
 #define ELF64_ST_BIND(x) ELF_ST_BIND(x)
 #define ELF64_ST_TYPE(x) ELF_ST_TYPE(x)
-typedef struct dynamic {
+typedef struct {
   Elf32_Sword d_tag;
   union {
     Elf32_Sword d_val;

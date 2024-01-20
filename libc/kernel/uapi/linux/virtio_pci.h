@@ -74,6 +74,11 @@ struct virtio_pci_common_cfg {
   __le32 queue_used_lo;
   __le32 queue_used_hi;
 };
+struct virtio_pci_modern_common_cfg {
+  struct virtio_pci_common_cfg cfg;
+  __le16 queue_notify_data;
+  __le16 queue_reset;
+};
 struct virtio_pci_cfg_cap {
   struct virtio_pci_cap cap;
   __u8 pci_cfg_data[4];

@@ -8,6 +8,7 @@
 #define _LINUX_XFRM_H
 #include <linux/in6.h>
 #include <linux/types.h>
+#include <linux/stddef.h>
 typedef union {
   __be32 a4;
   __be32 a6[4];
@@ -23,7 +24,7 @@ struct xfrm_sec_ctx {
   __u8 ctx_alg;
   __u16 ctx_len;
   __u32 ctx_sid;
-  char ctx_str[];
+  char ctx_str[] __counted_by(ctx_len);
 };
 #define XFRM_SC_DOI_RESERVED 0
 #define XFRM_SC_DOI_LSM 1
