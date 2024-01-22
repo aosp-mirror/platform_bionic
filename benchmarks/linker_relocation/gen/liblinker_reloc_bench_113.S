@@ -28,7 +28,7 @@ b__MGFQf:
 b__MGFl:
 .space __SIZEOF_POINTER__
 .text
-.globl b__MqnCiEXFg9abguebj_g
+.weak b__MqnCiEXFg9abguebj_g
 .type b__MqnCiEXFg9abguebj_g,%function
 b__MqnCiEXFg9abguebj_g:
 nop
@@ -43,7 +43,7 @@ b__MGVCXQh:
 b__MGVCa:
 .space __SIZEOF_POINTER__
 .text
-.globl b___fnavgvmre_pbi_genpr_pbafg_pzc1
+.weak b___fnavgvmre_pbi_genpr_pbafg_pzc1
 .type b___fnavgvmre_pbi_genpr_pbafg_pzc1,%function
 b___fnavgvmre_pbi_genpr_pbafg_pzc1:
 nop
@@ -68,7 +68,7 @@ b__MGFQh:
 b___pkn_pnyy_harkcrpgrq:
 nop
 .text
-.globl b___fnavgvmre_pbi_genpr_pbafg_pzc2
+.weak b___fnavgvmre_pbi_genpr_pbafg_pzc2
 .type b___fnavgvmre_pbi_genpr_pbafg_pzc2,%function
 b___fnavgvmre_pbi_genpr_pbafg_pzc2:
 nop
@@ -78,7 +78,7 @@ nop
 b__MAFg10onq_glcrvqP2Ri:
 nop
 .text
-.globl b___fnavgvmre_pbi_genpr_pbafg_pzc4
+.weak b___fnavgvmre_pbi_genpr_pbafg_pzc4
 .type b___fnavgvmre_pbi_genpr_pbafg_pzc4,%function
 b___fnavgvmre_pbi_genpr_pbafg_pzc4:
 nop
@@ -153,7 +153,7 @@ b__MGFA10__pkknovi116__rahz_glcr_vasbR:
 b__MGFA10__pkknovi116__fuvz_glcr_vasbR:
 .space __SIZEOF_POINTER__
 .text
-.globl b___fnavgvmre_pbi_genpr_pzc1
+.weak b___fnavgvmre_pbi_genpr_pzc1
 .type b___fnavgvmre_pbi_genpr_pzc1,%function
 b___fnavgvmre_pbi_genpr_pzc1:
 nop
@@ -163,12 +163,12 @@ nop
 b___hofna_unaqyr_glcr_zvfzngpu_i1_nobeg:
 nop
 .text
-.globl b___fnavgvmre_pbi_genpr_pzc2
+.weak b___fnavgvmre_pbi_genpr_pzc2
 .type b___fnavgvmre_pbi_genpr_pzc2,%function
 b___fnavgvmre_pbi_genpr_pzc2:
 nop
 .text
-.globl b___fnavgvmre_pbi_genpr_pbafg_pzc8
+.weak b___fnavgvmre_pbi_genpr_pbafg_pzc8
 .type b___fnavgvmre_pbi_genpr_pbafg_pzc8,%function
 b___fnavgvmre_pbi_genpr_pbafg_pzc8:
 nop
@@ -233,7 +233,7 @@ b__MGVCj:
 b__MGFA10__pkknovi117__neenl_glcr_vasbR:
 .space __SIZEOF_POINTER__
 .text
-.globl b___fnavgvmre_pbi_genpr_pzc4
+.weak b___fnavgvmre_pbi_genpr_pzc4
 .type b___fnavgvmre_pbi_genpr_pzc4,%function
 b___fnavgvmre_pbi_genpr_pzc4:
 nop
@@ -248,7 +248,7 @@ b__MGVCXo:
 b__MGVCk:
 .space __SIZEOF_POINTER__
 .text
-.globl b__MqnCizFg11nyvta_iny_g
+.weak b__MqnCizFg11nyvta_iny_g
 .type b__MqnCizFg11nyvta_iny_g,%function
 b__MqnCizFg11nyvta_iny_g:
 nop
@@ -268,7 +268,7 @@ b__MGVCXp:
 b__MGVCl:
 .space __SIZEOF_POINTER__
 .text
-.globl b__MqnCi
+.weak b__MqnCi
 .type b__MqnCi,%function
 b__MqnCi:
 nop
@@ -288,7 +288,7 @@ nop
 b__MGVCXq:
 .space __SIZEOF_POINTER__
 .text
-.globl b__MqnCiFg11nyvta_iny_g
+.weak b__MqnCiFg11nyvta_iny_g
 .type b__MqnCiFg11nyvta_iny_g,%function
 b__MqnCiFg11nyvta_iny_g:
 nop
@@ -303,7 +303,7 @@ b___hofna_icge_glcr_pnpur:
 b__MGVCXr:
 .space __SIZEOF_POINTER__
 .text
-.globl b___fnavgvmre_pbi_genpr_pzc8
+.weak b___fnavgvmre_pbi_genpr_pzc8
 .type b___fnavgvmre_pbi_genpr_pzc8,%function
 b___fnavgvmre_pbi_genpr_pzc8:
 nop
@@ -363,7 +363,7 @@ nop
 b__MGVCXv:
 .space __SIZEOF_POINTER__
 .text
-.globl b___fnavgvmre_pbi_genpr_cp_thneq_vavg
+.weak b___fnavgvmre_pbi_genpr_cp_thneq_vavg
 .type b___fnavgvmre_pbi_genpr_cp_thneq_vavg,%function
 b___fnavgvmre_pbi_genpr_cp_thneq_vavg:
 nop
@@ -413,7 +413,7 @@ nop
 b___hofna_unaqyr_qlanzvp_glcr_pnpur_zvff:
 nop
 .text
-.globl b__MqyCi
+.weak b__MqyCi
 .type b__MqyCi,%function
 b__MqyCi:
 nop
@@ -423,7 +423,7 @@ nop
 b__MGVCXy:
 .space __SIZEOF_POINTER__
 .text
-.globl b__ManzEXFg9abguebj_g
+.weak b__ManzEXFg9abguebj_g
 .type b__ManzEXFg9abguebj_g,%function
 b__ManzEXFg9abguebj_g:
 nop
@@ -448,7 +448,7 @@ nop
 b___fnavgvmre_frg_ercbeg_sq:
 nop
 .text
-.globl b___fnavgvmre_pbi_genpr_cp_vaqve
+.weak b___fnavgvmre_pbi_genpr_cp_vaqve
 .type b___fnavgvmre_pbi_genpr_cp_vaqve,%function
 b___fnavgvmre_pbi_genpr_cp_vaqve:
 nop
@@ -468,7 +468,7 @@ b__MGIA10__pkknovi119__cbvagre_glcr_vasbR:
 b___fnavgvmre_vafgnyy_znyybp_naq_serr_ubbxf:
 nop
 .text
-.globl b___fnavgvmre_fnaqobk_ba_abgvsl
+.weak b___fnavgvmre_fnaqobk_ba_abgvsl
 .type b___fnavgvmre_fnaqobk_ba_abgvsl,%function
 b___fnavgvmre_fnaqobk_ba_abgvsl:
 nop
@@ -658,7 +658,7 @@ nop
 b__MGVA10__pkknovi123__shaqnzragny_glcr_vasbR:
 .space __SIZEOF_POINTER__
 .text
-.globl b___fnavgvmre_pbi_cpf_vavg
+.weak b___fnavgvmre_pbi_cpf_vavg
 .type b___fnavgvmre_pbi_cpf_vavg,%function
 b___fnavgvmre_pbi_cpf_vavg:
 nop
@@ -838,17 +838,17 @@ b__MGIFg9onq_nyybp:
 b__MAFg9glcr_vasbQ1Ri:
 nop
 .text
-.globl b__MqyCiz
+.weak b__MqyCiz
 .type b__MqyCiz,%function
 b__MqyCiz:
 nop
 .text
-.globl b__ManzFg11nyvta_iny_gEXFg9abguebj_g
+.weak b__ManzFg11nyvta_iny_gEXFg9abguebj_g
 .type b__ManzFg11nyvta_iny_gEXFg9abguebj_g,%function
 b__ManzFg11nyvta_iny_gEXFg9abguebj_g:
 nop
 .text
-.globl b__MAFg13onq_rkprcgvbaP2REXF_
+.weak b__MAFg13onq_rkprcgvbaP2REXF_
 .type b__MAFg13onq_rkprcgvbaP2REXF_,%function
 b__MAFg13onq_rkprcgvbaP2REXF_:
 nop
@@ -888,7 +888,7 @@ b__MGIA10__pkknovi117__neenl_glcr_vasbR:
 b__MA10__pkknovi119__trgRkprcgvbaPynffRCX17_Hajvaq_Rkprcgvba:
 nop
 .text
-.globl b___fnavgvmre_ercbeg_reebe_fhzznel
+.weak b___fnavgvmre_ercbeg_reebe_fhzznel
 .type b___fnavgvmre_ercbeg_reebe_fhzznel,%function
 b___fnavgvmre_ercbeg_reebe_fhzznel:
 nop
@@ -903,7 +903,7 @@ b__MGVFg10onq_glcrvq:
 b__MGIFg10onq_glcrvq:
 .space __SIZEOF_POINTER__
 .text
-.globl b___fnavgvmre_pbi_8ovg_pbhagref_vavg
+.weak b___fnavgvmre_pbi_8ovg_pbhagref_vavg
 .type b___fnavgvmre_pbi_8ovg_pbhagref_vavg,%function
 b___fnavgvmre_pbi_8ovg_pbhagref_vavg:
 nop
@@ -998,7 +998,7 @@ nop
 b___fnavgvmre_frg_ercbeg_cngu:
 nop
 .text
-.globl b___fnavgvmre_pbi_genpr_fjvgpu
+.weak b___fnavgvmre_pbi_genpr_fjvgpu
 .type b___fnavgvmre_pbi_genpr_fjvgpu,%function
 b___fnavgvmre_pbi_genpr_fjvgpu:
 nop
@@ -1048,7 +1048,7 @@ nop
 b__MGFCo:
 .space __SIZEOF_POINTER__
 .text
-.globl b__MqyCiEXFg9abguebj_g
+.weak b__MqyCiEXFg9abguebj_g
 .type b__MqyCiEXFg9abguebj_g,%function
 b__MqyCiEXFg9abguebj_g:
 nop
@@ -1073,12 +1073,12 @@ b__MGVn:
 b__MGFCq:
 .space __SIZEOF_POINTER__
 .text
-.globl b___fnapbi_qrsnhyg_bcgvbaf
+.weak b___fnapbi_qrsnhyg_bcgvbaf
 .type b___fnapbi_qrsnhyg_bcgvbaf,%function
 b___fnapbi_qrsnhyg_bcgvbaf:
 nop
 .text
-.globl b___fnavgvmre_pbi_genpr_cp_thneq
+.weak b___fnavgvmre_pbi_genpr_cp_thneq
 .type b___fnavgvmre_pbi_genpr_cp_thneq,%function
 b___fnavgvmre_pbi_genpr_cp_thneq:
 nop
@@ -1193,7 +1193,7 @@ b__MGFCXn:
 b__MGFCu:
 .space __SIZEOF_POINTER__
 .text
-.globl b__MqnCiz
+.weak b__MqnCiz
 .type b__MqnCiz,%function
 b__MqnCiz:
 nop
@@ -1288,7 +1288,7 @@ b__MGFCXr:
 b__MGFCy:
 .space __SIZEOF_POINTER__
 .text
-.globl b__MajzEXFg9abguebj_g
+.weak b__MajzEXFg9abguebj_g
 .type b__MajzEXFg9abguebj_g,%function
 b__MajzEXFg9abguebj_g:
 nop
@@ -1313,7 +1313,7 @@ b__MGFCXs:
 b__MGFCz:
 .space __SIZEOF_POINTER__
 .text
-.globl b__ManzFg11nyvta_iny_g
+.weak b__ManzFg11nyvta_iny_g
 .type b__ManzFg11nyvta_iny_g,%function
 b__ManzFg11nyvta_iny_g:
 nop
@@ -1428,12 +1428,12 @@ b__MGIA10__pkknovi117__confr_glcr_vasbR:
 b___qrertvfgre_senzr_vasb:
 nop
 .data
-.globl b___rzhgyf_i.__fnapbi_ybjrfg_fgnpx
+.weak b___rzhgyf_i.__fnapbi_ybjrfg_fgnpx
 .type b___rzhgyf_i.__fnapbi_ybjrfg_fgnpx,%object
 b___rzhgyf_i.__fnapbi_ybjrfg_fgnpx:
 .space __SIZEOF_POINTER__
 .text
-.globl b___fnavgvmre_pbi_genpr_qvi4
+.weak b___fnavgvmre_pbi_genpr_qvi4
 .type b___fnavgvmre_pbi_genpr_qvi4,%function
 b___fnavgvmre_pbi_genpr_qvi4:
 nop
@@ -1483,7 +1483,7 @@ b__MGFCf:
 b__MGFn:
 .space __SIZEOF_POINTER__
 .text
-.globl b__MqyCiFg11nyvta_iny_gEXFg9abguebj_g
+.weak b__MqyCiFg11nyvta_iny_gEXFg9abguebj_g
 .type b__MqyCiFg11nyvta_iny_gEXFg9abguebj_g,%function
 b__MqyCiFg11nyvta_iny_gEXFg9abguebj_g:
 nop
@@ -1518,7 +1518,7 @@ b__MGFCXa:
 b__MGFp:
 .space __SIZEOF_POINTER__
 .text
-.globl b___fnavgvmre_pbi_genpr_qvi8
+.weak b___fnavgvmre_pbi_genpr_qvi8
 .type b___fnavgvmre_pbi_genpr_qvi8,%function
 b___fnavgvmre_pbi_genpr_qvi8:
 nop
@@ -1568,7 +1568,7 @@ b__MGFCi:
 b__MGFq:
 .space __SIZEOF_POINTER__
 .text
-.globl b__MqyCizFg11nyvta_iny_g
+.weak b__MqyCizFg11nyvta_iny_g
 .type b__MqyCizFg11nyvta_iny_g,%function
 b__MqyCizFg11nyvta_iny_g:
 nop
@@ -1608,7 +1608,7 @@ b__MGFCk:
 b__MGFs:
 .space __SIZEOF_POINTER__
 .text
-.globl b__MqnCiFg11nyvta_iny_gEXFg9abguebj_g
+.weak b__MqnCiFg11nyvta_iny_gEXFg9abguebj_g
 .type b__MqnCiFg11nyvta_iny_gEXFg9abguebj_g,%function
 b__MqnCiFg11nyvta_iny_gEXFg9abguebj_g:
 nop
@@ -1638,7 +1638,7 @@ b__MGFCl:
 b__MGFt:
 .space __SIZEOF_POINTER__
 .text
-.globl b_BaCevag
+.weak b_BaCevag
 .type b_BaCevag,%function
 b_BaCevag:
 nop
@@ -1708,12 +1708,12 @@ b__MGVl:
 b__MGFw:
 .space __SIZEOF_POINTER__
 .text
-.globl b__MqyCiFg11nyvta_iny_g
+.weak b__MqyCiFg11nyvta_iny_g
 .type b__MqyCiFg11nyvta_iny_g,%function
 b__MqyCiFg11nyvta_iny_g:
 nop
 .text
-.globl b__Majz
+.weak b__Majz
 .type b__Majz,%function
 b__Majz:
 nop
@@ -1758,7 +1758,7 @@ b__MGFCXi:
 b__MGIA10__pkknovi129__cbvagre_gb_zrzore_glcr_vasbR:
 .space __SIZEOF_POINTER__
 .text
-.globl b__MAFg9rkprcgvbaP2REXF_
+.weak b__MAFg9rkprcgvbaP2REXF_
 .type b__MAFg9rkprcgvbaP2REXF_,%function
 b__MAFg9rkprcgvbaP2REXF_:
 nop
@@ -1928,7 +1928,7 @@ b__MGFA10__pkknovi119__cbvagre_glcr_vasbR:
 b__MGFA10__pkknovi121__izv_pynff_glcr_vasbR:
 .space __SIZEOF_POINTER__
 .text
-.globl b___hofna_ba_ercbeg
+.weak b___hofna_ba_ercbeg
 .type b___hofna_ba_ercbeg,%function
 b___hofna_ba_ercbeg:
 nop
@@ -1948,7 +1948,7 @@ b__MGVCr:
 b__MGVCs:
 .space __SIZEOF_POINTER__
 .text
-.globl b__MajzFg11nyvta_iny_g
+.weak b__MajzFg11nyvta_iny_g
 .type b__MajzFg11nyvta_iny_g,%function
 b__MajzFg11nyvta_iny_g:
 nop
@@ -1983,12 +1983,12 @@ b__MGVCt:
 b__MGFf:
 .space __SIZEOF_POINTER__
 .text
-.globl b__Manz
+.weak b__Manz
 .type b__Manz,%function
 b__Manz:
 nop
 .text
-.globl b__MajzFg11nyvta_iny_gEXFg9abguebj_g
+.weak b__MajzFg11nyvta_iny_gEXFg9abguebj_g
 .type b__MajzFg11nyvta_iny_gEXFg9abguebj_g,%function
 b__MajzFg11nyvta_iny_gEXFg9abguebj_g:
 nop
@@ -1998,7 +1998,7 @@ nop
 b___ertvfgre_senzr_vasb:
 nop
 .text
-.globl b___fnavgvmre_pbi_genpr_trc
+.weak b___fnavgvmre_pbi_genpr_trc
 .type b___fnavgvmre_pbi_genpr_trc,%function
 b___fnavgvmre_pbi_genpr_trc:
 nop
@@ -2058,7 +2058,7 @@ b__MGFA10__pkknovi123__shaqnzragny_glcr_vasbR:
 b__MGFi:
 .space __SIZEOF_POINTER__
 .text
-.globl b___fnavgvmre_pbi_genpr_pzc
+.weak b___fnavgvmre_pbi_genpr_pzc
 .type b___fnavgvmre_pbi_genpr_pzc,%function
 b___fnavgvmre_pbi_genpr_pzc:
 nop
@@ -2073,7 +2073,7 @@ b__MGFFg9glcr_vasb:
 b__MGFj:
 .space __SIZEOF_POINTER__
 .text
-.globl b___hofna_qrsnhyg_bcgvbaf
+.weak b___hofna_qrsnhyg_bcgvbaf
 .type b___hofna_qrsnhyg_bcgvbaf,%function
 b___hofna_qrsnhyg_bcgvbaf:
 nop
