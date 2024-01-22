@@ -85,12 +85,29 @@ libc/
     # files written by us and files taken from BSD.
 
   kernel/
-    # The kernel uapi header files. These are scrubbed copies of the originals
-    # in external/kernel-headers/. These files must not be edited directly. The
-    # generate_uapi_headers.sh script should be used to go from a kernel tree to
-    # external/kernel-headers/ --- this takes care of the architecture-specific
-    # details. The update_all.py script should be used to regenerate bionic's
-    # scrubbed headers from external/kernel-headers/.
+    # The kernel uapi header files. The "libc" headers that developers actually
+    # use are a mixture of headers provided by the C library itself (which,
+    # for bionic, are in bionic/libc/include/) and headers provided by the
+    # kernel. This is because ISO C and POSIX will say things like "there is
+    # a constant called PROT_NONE" or "there is a type called struct stat,
+    # and it contains a field called st_size", but they won't necessarily say
+    # what _value_ that constant has, or what _order_ the fields in a type
+    # are in. Those are left to individual kernels' ABIs. In an effort to --
+    # amongst other things, see https://lwn.net/Articles/507794/ for more
+    # background -- reduce copy & paste, the Linux kernel makes all the types
+    # and constants that make up the "userspace API" (uapi) available as
+    # headers separate from their internal-use headers (which contain all kinds
+    # of extra stuff that isn't available to userspace). We import the latest
+    # released kernel's uapi headers in external/kernel-headers/, but we don't
+    # use those headers directly in bionic. The bionic/libc/kernel/ directory
+    # contains scrubbed copies of the originals from external/kernel-headers/.
+    # The generate_uapi_headers.sh script should be used to go from a kernel
+    # tree to external/kernel-headers/ --- this takes care of the
+    # architecture-specific details. The update_all.py script should then be
+    # used to regenerate bionic's copy from external/kernel-headers/.
+    # The files in bionic must not be edited directly because any local changes
+    # will be overwritten by the next update. "Updating kernel header files"
+    # below has more information on this process.
 
   private/
     # These are private header files meant for use within bionic itself.
@@ -101,10 +118,18 @@ libc/
   upstream-freebsd/
   upstream-netbsd/
   upstream-openbsd/
-    # These directories contain unmolested upstream source. Any time we can
-    # just use a BSD implementation of something unmodified, we should.
-    # The structure under these directories mimics the upstream tree,
-    # but there's also...
+    # These directories contain upstream source with no local changes.
+    # Any time we can just use a BSD implementation of something unmodified,
+    # we should. Ideally these should probably have been three separate git
+    # projects in external/, but they're here instead mostly by historical
+    # accident (because it wouldn't have been easy to import just the tiny
+    # subset of these operating systems that -- unlike Android -- just have
+    # one huge repository rather than lots of little ones and a mechanism
+    # like our `repo` tool).
+    # The structure under these directories mimics the relevant upstream tree,
+    # but in order to actually be able to compile this code in our tree
+    # _without_ making modifications to the source files directly, we also
+    # have the following subdirectories in each one that aren't upstream:
     android/
       include/
         # This is where we keep the hacks necessary to build BSD source
