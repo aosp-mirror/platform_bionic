@@ -61,6 +61,7 @@ cc_library {
         "DebugData.cpp",
         "debug_disable.cpp",
         "GuardData.cpp",
+        "LogAllocatorStats.cpp",
         "malloc_debug.cpp",
         "PointerData.cpp",
         "RecordData.cpp",

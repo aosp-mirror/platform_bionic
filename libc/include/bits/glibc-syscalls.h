@@ -306,11 +306,20 @@
 #if defined(__NR_futex)
   #define SYS_futex __NR_futex
 #endif
+#if defined(__NR_futex_requeue)
+  #define SYS_futex_requeue __NR_futex_requeue
+#endif
 #if defined(__NR_futex_time64)
   #define SYS_futex_time64 __NR_futex_time64
 #endif
+#if defined(__NR_futex_wait)
+  #define SYS_futex_wait __NR_futex_wait
+#endif
 #if defined(__NR_futex_waitv)
   #define SYS_futex_waitv __NR_futex_waitv
+#endif
+#if defined(__NR_futex_wake)
+  #define SYS_futex_wake __NR_futex_wake
 #endif
 #if defined(__NR_futimesat)
   #define SYS_futimesat __NR_futimesat

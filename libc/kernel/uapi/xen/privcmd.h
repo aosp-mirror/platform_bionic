@@ -57,9 +57,22 @@ struct privcmd_mmap_resource {
 };
 #define PRIVCMD_IRQFD_FLAG_DEASSIGN (1 << 0)
 struct privcmd_irqfd {
-  void  * dm_op;
+  __u64 dm_op;
   __u32 size;
   __u32 fd;
+  __u32 flags;
+  domid_t dom;
+  __u8 pad[2];
+};
+#define PRIVCMD_IOEVENTFD_FLAG_DEASSIGN (1 << 0)
+struct privcmd_ioeventfd {
+  __u64 ioreq;
+  __u64 ports;
+  __u64 addr;
+  __u32 addr_len;
+  __u32 event_fd;
+  __u32 vcpus;
+  __u32 vq;
   __u32 flags;
   domid_t dom;
   __u8 pad[2];
@@ -71,5 +84,6 @@ struct privcmd_irqfd {
 #define IOCTL_PRIVCMD_DM_OP _IOC(_IOC_NONE, 'P', 5, sizeof(struct privcmd_dm_op))
 #define IOCTL_PRIVCMD_RESTRICT _IOC(_IOC_NONE, 'P', 6, sizeof(domid_t))
 #define IOCTL_PRIVCMD_MMAP_RESOURCE _IOC(_IOC_NONE, 'P', 7, sizeof(struct privcmd_mmap_resource))
-#define IOCTL_PRIVCMD_IRQFD _IOC(_IOC_NONE, 'P', 8, sizeof(struct privcmd_irqfd))
+#define IOCTL_PRIVCMD_IRQFD _IOW('P', 8, struct privcmd_irqfd)
+#define IOCTL_PRIVCMD_IOEVENTFD _IOW('P', 9, struct privcmd_ioeventfd)
 #endif

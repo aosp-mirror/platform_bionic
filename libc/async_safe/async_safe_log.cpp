@@ -48,9 +48,7 @@
 #include <android/set_abort_message.h>
 #include <async_safe/log.h>
 
-#include "private/CachedProperty.h"
 #include "private/ErrnoRestorer.h"
-#include "private/ScopedPthreadMutexLocker.h"
 
 // Don't call libc's close or socket, since it might call back into us as a result of fdsan/fdtrack.
 #pragma GCC poison close
