@@ -62,4 +62,5 @@
 #define VHOST_VDPA_SET_GROUP_ASID _IOW(VHOST_VIRTIO, 0x7C, struct vhost_vring_state)
 #define VHOST_VDPA_SUSPEND _IO(VHOST_VIRTIO, 0x7D)
 #define VHOST_VDPA_RESUME _IO(VHOST_VIRTIO, 0x7E)
+#define VHOST_VDPA_GET_VRING_DESC_GROUP _IOWR(VHOST_VIRTIO, 0x7F, struct vhost_vring_state)
 #endif

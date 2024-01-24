@@ -23,7 +23,10 @@ cc_library_static {
     native_bridge_supported: true,
 
     include_dirs: ["bionic/libc"],
-    header_libs: ["libc_headers", "liblog_headers"],
+    header_libs: [
+        "libc_headers",
+        "liblog_headers",
+    ],
 
     export_include_dirs: ["include"],
     export_header_lib_headers: ["liblog_headers"],

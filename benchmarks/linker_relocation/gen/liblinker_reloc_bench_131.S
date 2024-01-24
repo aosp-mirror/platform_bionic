@@ -18,7 +18,7 @@ nop
 b__MA7naqebvq20ergevrirUnyVagresnprREXAF_8uneqjner8uvqy_irpVuRR:
 nop
 .text
-.globl b__MA7naqebvq2fcVAF_4uvqy5gbxra4I1_013VGbxraZnantreRRQ2Ri
+.weak b__MA7naqebvq2fcVAF_4uvqy5gbxra4I1_013VGbxraZnantreRRQ2Ri
 .type b__MA7naqebvq2fcVAF_4uvqy5gbxra4I1_013VGbxraZnantreRRQ2Ri,%function
 b__MA7naqebvq2fcVAF_4uvqy5gbxra4I1_013VGbxraZnantreRRQ2Ri:
 nop
