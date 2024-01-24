@@ -29,8 +29,7 @@
 #include <platform/bionic/tls_defines.h>
 #include <private/bionic_asm.h>
 
-ENTRY(vfork)
-__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
+ENTRY_WEAK_FOR_NATIVE_BRIDGE(vfork)
     // r3 = &__get_tls()[TLS_SLOT_THREAD_ID]
     mrc     p15, 0, r3, c13, c0, 3
     ldr     r3, [r3, #(TLS_SLOT_THREAD_ID * 4)]
