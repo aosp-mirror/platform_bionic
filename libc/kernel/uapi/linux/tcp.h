@@ -66,6 +66,11 @@ enum {
 #define TCP_INQ 36
 #define TCP_CM_INQ TCP_INQ
 #define TCP_TX_DELAY 37
+#define TCP_AO_ADD_KEY 38
+#define TCP_AO_DEL_KEY 39
+#define TCP_AO_INFO 40
+#define TCP_AO_GET_KEYS 41
+#define TCP_AO_REPAIR 42
 #define TCP_REPAIR_ON 1
 #define TCP_REPAIR_OFF 0
 #define TCP_REPAIR_OFF_NO_WP - 1
@@ -98,6 +103,7 @@ enum tcp_fastopen_client_fail {
 #define TCPI_OPT_ECN 8
 #define TCPI_OPT_ECN_SEEN 16
 #define TCPI_OPT_SYN_DATA 32
+#define TCPI_OPT_USEC_TS 64
 enum tcp_ca_state {
   TCP_CA_Open = 0,
 #define TCPF_CA_Open (1 << TCP_CA_Open)
@@ -167,6 +173,9 @@ struct tcp_info {
   __u32 tcpi_snd_wnd;
   __u32 tcpi_rcv_wnd;
   __u32 tcpi_rehash;
+  __u16 tcpi_total_rto;
+  __u16 tcpi_total_rto_recoveries;
+  __u32 tcpi_total_rto_time;
 };
 enum {
   TCP_NLA_PAD,
@@ -216,6 +225,68 @@ struct tcp_diag_md5sig {
   __be32 tcpm_addr[4];
   __u8 tcpm_key[TCP_MD5SIG_MAXKEYLEN];
 };
+#define TCP_AO_MAXKEYLEN 80
+#define TCP_AO_KEYF_IFINDEX (1 << 0)
+#define TCP_AO_KEYF_EXCLUDE_OPT (1 << 1)
+struct tcp_ao_add {
+  struct sockaddr_storage addr;
+  char alg_name[64];
+  __s32 ifindex;
+  __u32 set_current : 1, set_rnext : 1, reserved : 30;
+  __u16 reserved2;
+  __u8 prefix;
+  __u8 sndid;
+  __u8 rcvid;
+  __u8 maclen;
+  __u8 keyflags;
+  __u8 keylen;
+  __u8 key[TCP_AO_MAXKEYLEN];
+} __attribute__((aligned(8)));
+struct tcp_ao_del {
+  struct sockaddr_storage addr;
+  __s32 ifindex;
+  __u32 set_current : 1, set_rnext : 1, del_async : 1, reserved : 29;
+  __u16 reserved2;
+  __u8 prefix;
+  __u8 sndid;
+  __u8 rcvid;
+  __u8 current_key;
+  __u8 rnext;
+  __u8 keyflags;
+} __attribute__((aligned(8)));
+struct tcp_ao_info_opt {
+  __u32 set_current : 1, set_rnext : 1, ao_required : 1, set_counters : 1, accept_icmps : 1, reserved : 27;
+  __u16 reserved2;
+  __u8 current_key;
+  __u8 rnext;
+  __u64 pkt_good;
+  __u64 pkt_bad;
+  __u64 pkt_key_not_found;
+  __u64 pkt_ao_required;
+  __u64 pkt_dropped_icmp;
+} __attribute__((aligned(8)));
+struct tcp_ao_getsockopt {
+  struct sockaddr_storage addr;
+  char alg_name[64];
+  __u8 key[TCP_AO_MAXKEYLEN];
+  __u32 nkeys;
+  __u16 is_current : 1, is_rnext : 1, get_all : 1, reserved : 13;
+  __u8 sndid;
+  __u8 rcvid;
+  __u8 prefix;
+  __u8 maclen;
+  __u8 keyflags;
+  __u8 keylen;
+  __s32 ifindex;
+  __u64 pkt_good;
+  __u64 pkt_bad;
+} __attribute__((aligned(8)));
+struct tcp_ao_repair {
+  __be32 snt_isn;
+  __be32 rcv_isn;
+  __u32 snd_sne;
+  __u32 rcv_sne;
+} __attribute__((aligned(8)));
 #define TCP_RECEIVE_ZEROCOPY_FLAG_TLB_CLEAN_HINT 0x1
 struct tcp_zerocopy_receive {
   __u64 address;

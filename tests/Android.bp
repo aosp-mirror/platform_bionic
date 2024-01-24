@@ -67,7 +67,7 @@ cc_defaults {
     ],
     header_libs: [
         "libcutils_headers",
-        "gwp_asan_headers"
+        "gwp_asan_headers",
     ],
     stl: "libc++",
 
@@ -1101,7 +1101,10 @@ cc_test {
     shared_libs: [
         "libbase",
     ],
-    data_libs: ["libtest_simple_hwasan", "libtest_simple_hwasan_nohwasan"],
+    data_libs: [
+        "libtest_simple_hwasan",
+        "libtest_simple_hwasan_nohwasan",
+    ],
     header_libs: ["bionic_libc_platform_headers"],
     test_suites: ["device-tests"],
 }
