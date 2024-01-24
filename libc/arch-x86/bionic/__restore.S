@@ -74,18 +74,18 @@
   .cfi_signal_frame
   RESTORE_GPRS(4)
   nop   // See comment in libc/arch-x86_64/bionic/__restore_rt.S about this nop.
-ENTRY_PRIVATE_NO_DWARF(__restore)
+ENTRY_NO_DWARF_PRIVATE(__restore)
   popl %eax
   RESTORE_GPRS(0)
   movl $__NR_sigreturn, %eax
   int $0x80
-END(__restore)
+END(__restore)  // Not END_NO_DWARF because we _manually_ set up CFI.
 
   .cfi_startproc
   .cfi_signal_frame
   RESTORE_GPRS(160)
   nop   // See comment in libc/arch-x86_64/bionic/__restore_rt.S about this nop.
-ENTRY_PRIVATE_NO_DWARF(__restore_rt)
+ENTRY_NO_DWARF_PRIVATE(__restore_rt)
   movl $__NR_rt_sigreturn, %eax
   int $0x80
-END(__restore_rt)
+END(__restore_rt)  // Not END_NO_DWARF because we _manually_ set up CFI.
