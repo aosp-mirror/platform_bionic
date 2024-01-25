@@ -51,44 +51,63 @@
 #include <private/bionic_asm_x86_64.h>
 #endif
 
-#define ENTRY_NO_DWARF(f) \
-    .text; \
-    .globl f; \
-    .balign __bionic_asm_align; \
-    .type f, __bionic_asm_function_type; \
-    f: \
-    __bionic_asm_custom_entry(f); \
+// Starts a normal assembler routine.
+#define ENTRY(__f) __ENTRY_WITH_BINDING(__f, .globl)
 
-#define ENTRY(f) \
-    ENTRY_NO_DWARF(f) \
-    .cfi_startproc \
+// Starts an assembler routine with hidden visibility.
+#define ENTRY_PRIVATE(__f)           \
+  __ENTRY_WITH_BINDING(__f, .globl); \
+  .hidden __f;
 
-#define END_NO_DWARF(f) \
-    .size f, .-f; \
-    __bionic_asm_custom_end(f) \
+// Starts an assembler routine that's weak so native bridges can override it.
+#define ENTRY_WEAK_FOR_NATIVE_BRIDGE(__f) __ENTRY_WITH_BINDING(__f, .weak)
 
-#define END(f) \
-    .cfi_endproc; \
-    END_NO_DWARF(f) \
+// Starts an assembler routine with hidden visibility and no DWARF information.
+// Only used for internal functions passed via sa_restorer.
+// TODO: can't we just delete all those and let the kernel do its thing?
+#define ENTRY_NO_DWARF_PRIVATE(__f) \
+  __ENTRY_NO_DWARF(__f, .globl);    \
+  .hidden __f;
 
-/* Like ENTRY, but with hidden visibility. */
-#define ENTRY_PRIVATE(f) \
-    ENTRY(f); \
-    .hidden f \
+// (Implementation detail.)
+#define __ENTRY_NO_DWARF(__f, __binding) \
+  .text;                                 \
+  __binding __f;                         \
+  .balign __bionic_asm_align;            \
+  .type __f, __bionic_asm_function_type; \
+  __f:                                   \
+  __bionic_asm_custom_entry(__f);
 
-/* Like ENTRY_NO_DWARF, but with hidden visibility. */
-#define ENTRY_PRIVATE_NO_DWARF(f) \
-    ENTRY_NO_DWARF(f); \
-    .hidden f \
+// (Implementation detail.)
+#define __ENTRY_WITH_BINDING(__f, __binding) \
+  __ENTRY_NO_DWARF(__f, __binding);          \
+  .cfi_startproc;
 
-#define __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(f) \
-    .weak f; \
+// Ends a normal assembler routine.
+#define END(__f) \
+  .cfi_endproc;  \
+  END_NO_DWARF(__f)
 
+// Ends an assembler routine with no DWARF information.
+// Only used for internal functions passed via sa_restorer.
+// TODO: can't we just delete all those and let the kernel do its thing?
+#define END_NO_DWARF(__f) \
+  .size __f, .- __f;      \
+  __bionic_asm_custom_end(__f)
+
+// Creates an alias `alias` for the symbol `original`.
 #define ALIAS_SYMBOL(alias, original) \
-    .globl alias; \
-    .equ alias, original
+  .globl alias;                       \
+  .equ alias, original
 
-#define NOTE_GNU_PROPERTY() \
-    __bionic_asm_custom_note_gnu_section()
+// Creates an alias `alias` for the symbol `original` that's weak so it can be
+// separately overridden by native bridges.
+#define ALIAS_SYMBOL_WEAK_FOR_NATIVE_BRIDGE(alias, original) \
+  .weak alias;                                               \
+  .equ alias, original
 
+// Adds a GNU property ELF note. Important on arm64 to declare PAC/BTI support.
+#define NOTE_GNU_PROPERTY() __bionic_asm_custom_note_gnu_section()
+
+// Gives local labels a more convenient and readable syntax.
 #define L(__label) .L##__label
