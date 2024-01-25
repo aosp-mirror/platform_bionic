@@ -71,21 +71,18 @@
   .endr
 .endm
 
-ENTRY(setjmp)
-__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(setjmp)
+ENTRY_WEAK_FOR_NATIVE_BRIDGE(setjmp)
   movl $1,%esi
   jmp PIC_PLT(sigsetjmp)
 END(setjmp)
 
-ENTRY(_setjmp)
-__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(_setjmp)
+ENTRY_WEAK_FOR_NATIVE_BRIDGE(_setjmp)
   movl $0,%esi
   jmp PIC_PLT(sigsetjmp)
 END(_setjmp)
 
 // int sigsetjmp(sigjmp_buf env, int save_signal_mask);
-ENTRY(sigsetjmp)
-__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(sigsetjmp)
+ENTRY_WEAK_FOR_NATIVE_BRIDGE(sigsetjmp)
   pushq %rdi
   movq %rsi,%rdi
   call PIC_PLT(__bionic_setjmp_cookie_get)
@@ -137,8 +134,7 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(sigsetjmp)
 END(sigsetjmp)
 
 // void siglongjmp(sigjmp_buf env, int value);
-ENTRY(siglongjmp)
-__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(siglongjmp)
+ENTRY_WEAK_FOR_NATIVE_BRIDGE(siglongjmp)
   movq %rdi,%r12
   pushq %rsi // Push 'value'.
 
@@ -203,7 +199,5 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(siglongjmp)
   call PIC_PLT(__bionic_setjmp_checksum_mismatch)
 END(siglongjmp)
 
-ALIAS_SYMBOL(longjmp, siglongjmp)
-__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(longjmp)
-ALIAS_SYMBOL(_longjmp, siglongjmp)
-__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(_longjmp)
+ALIAS_SYMBOL_WEAK_FOR_NATIVE_BRIDGE(longjmp, siglongjmp)
+ALIAS_SYMBOL_WEAK_FOR_NATIVE_BRIDGE(_longjmp, siglongjmp)
