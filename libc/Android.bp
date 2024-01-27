@@ -954,7 +954,6 @@ cc_library_static {
                 "arch-x86/bionic/__bionic_clone.S",
                 "arch-x86/bionic/_exit_with_stack_teardown.S",
                 "arch-x86/bionic/libcrt_compat.c",
-                "arch-x86/bionic/__restore.S",
                 "arch-x86/bionic/setjmp.S",
                 "arch-x86/bionic/syscall.S",
                 "arch-x86/bionic/vfork.S",
@@ -1080,6 +1079,7 @@ cc_library_static {
         "bionic/bionic_arc4random.cpp",
         "bionic/bionic_futex.cpp",
         "bionic/bionic_netlink.cpp",
+        "bionic/bionic_systrace.cpp",
         "bionic/bionic_time_conversions.cpp",
         "bionic/brk.cpp",
         "bionic/c16rtomb.cpp",
@@ -1252,7 +1252,6 @@ cc_library_static {
         },
     },
     whole_static_libs: [
-        "libc_bionic_systrace",
         "libsystemproperties",
     ],
     cppflags: ["-Wold-style-cast"],
@@ -1260,18 +1259,6 @@ cc_library_static {
     include_dirs: ["bionic/libstdc++/include"],
     name: "libc_bionic_ndk",
     generated_headers: ["generated_android_ids"],
-}
-
-// ========================================================
-// libc_bionic_systrace.a
-// ========================================================
-
-cc_library_static {
-    name: "libc_bionic_systrace",
-    defaults: ["libc_defaults"],
-    srcs: [
-        "bionic/bionic_systrace.cpp",
-    ],
 }
 
 // ========================================================
