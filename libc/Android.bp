@@ -825,14 +825,39 @@ cc_library_static {
 cc_library_static {
     defaults: ["libc_defaults"],
     srcs: [
-        // These require getauxval, which isn't available on older platforms.
-        "bionic/sysconf.cpp",
-        "bionic/vdso.cpp",
-        "bionic/setjmp_cookie.cpp",
-
-        // The following must not be statically linked into libc_ndk.a, because
-        // debuggerd will look for the abort message in libc.so's copy.
         "bionic/android_set_abort_message.cpp",
+        "bionic/android_unsafe_frame_pointer_chase.cpp",
+        "bionic/atexit.cpp",
+        "bionic/bionic_elf_tls.cpp",
+        "bionic/__cxa_thread_atexit_impl.cpp",
+        "bionic/fork.cpp",
+        "bionic/pthread_atfork.cpp",
+        "bionic/pthread_attr.cpp",
+        "bionic/pthread_barrier.cpp",
+        "bionic/pthread_cond.cpp",
+        "bionic/pthread_create.cpp",
+        "bionic/pthread_detach.cpp",
+        "bionic/pthread_equal.cpp",
+        "bionic/pthread_exit.cpp",
+        "bionic/pthread_getcpuclockid.cpp",
+        "bionic/pthread_getschedparam.cpp",
+        "bionic/pthread_gettid_np.cpp",
+        "bionic/pthread_internal.cpp",
+        "bionic/pthread_join.cpp",
+        "bionic/pthread_key.cpp",
+        "bionic/pthread_kill.cpp",
+        "bionic/pthread_mutex.cpp",
+        "bionic/pthread_once.cpp",
+        "bionic/pthread_rwlock.cpp",
+        "bionic/pthread_sigqueue.cpp",
+        "bionic/pthread_self.cpp",
+        "bionic/pthread_setname_np.cpp",
+        "bionic/pthread_setschedparam.cpp",
+        "bionic/pthread_spinlock.cpp",
+        "bionic/setjmp_cookie.cpp",
+        "bionic/sysconf.cpp",
+        "bionic/sys_thread_properties.cpp",
+        "bionic/vdso.cpp",
     ],
 
     arch: {
@@ -1262,57 +1287,6 @@ cc_library_static {
 }
 
 // ========================================================
-// libc_pthread.a - pthreads parts that previously lived in
-// libc_bionic.a. Relocated to their own library because
-// they can't be included in libc_ndk.a (as the layout of
-// pthread_t has changed over the years and has ABI
-// compatibility issues).
-// ========================================================
-
-cc_library_static {
-    defaults: ["libc_defaults"],
-    srcs: [
-        "bionic/bionic_elf_tls.cpp",
-        "bionic/pthread_atfork.cpp",
-        "bionic/pthread_attr.cpp",
-        "bionic/pthread_barrier.cpp",
-        "bionic/pthread_cond.cpp",
-        "bionic/pthread_create.cpp",
-        "bionic/pthread_detach.cpp",
-        "bionic/pthread_equal.cpp",
-        "bionic/pthread_exit.cpp",
-        "bionic/pthread_getcpuclockid.cpp",
-        "bionic/pthread_getschedparam.cpp",
-        "bionic/pthread_gettid_np.cpp",
-        "bionic/pthread_internal.cpp",
-        "bionic/pthread_join.cpp",
-        "bionic/pthread_key.cpp",
-        "bionic/pthread_kill.cpp",
-        "bionic/pthread_mutex.cpp",
-        "bionic/pthread_once.cpp",
-        "bionic/pthread_rwlock.cpp",
-        "bionic/pthread_sigqueue.cpp",
-        "bionic/pthread_self.cpp",
-        "bionic/pthread_setname_np.cpp",
-        "bionic/pthread_setschedparam.cpp",
-        "bionic/pthread_spinlock.cpp",
-        "bionic/sys_thread_properties.cpp",
-
-        // The following implementations depend on pthread data or implementation,
-        // so we can't include them in libc_ndk.a.
-        "bionic/__cxa_thread_atexit_impl.cpp",
-        "bionic/android_unsafe_frame_pointer_chase.cpp",
-        "bionic/atexit.cpp",
-        "bionic/fork.cpp",
-    ],
-
-    cppflags: ["-Wold-style-cast"],
-    include_dirs: ["bionic/libstdc++/include"],
-    header_libs: ["bionic_libc_platform_headers"],
-    name: "libc_pthread",
-}
-
-// ========================================================
 // libc_syscalls.a
 // ========================================================
 
@@ -1436,7 +1410,6 @@ cc_library_static {
                 "arch-arm/bionic/atexit_legacy.c",
                 "arch-common/bionic/crtend_so.S",
             ],
-            whole_static_libs: ["libc_aeabi"],
         },
     },
 
@@ -1468,17 +1441,19 @@ cc_library_static {
 }
 
 // ========================================================
-// libc_nopthread.a
+// libc_common.a
 // ========================================================
+
 cc_library_static {
     defaults: ["libc_defaults"],
+    name: "libc_common",
+
     srcs: libc_common_src_files,
     multilib: {
         lib32: {
             srcs: libc_common_src_files_32,
         },
     },
-    name: "libc_nopthread",
 
     whole_static_libs: [
         "libarm-optimized-routines-string",
@@ -1506,20 +1481,6 @@ cc_library_static {
             whole_static_libs: ["libc_aeabi"],
         },
     },
-}
-
-// ========================================================
-// libc_common.a
-// ========================================================
-
-cc_library_static {
-    defaults: ["libc_defaults"],
-    name: "libc_common",
-
-    whole_static_libs: [
-        "libc_nopthread",
-        "libc_pthread",
-    ],
 }
 
 // ========================================================
