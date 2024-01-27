@@ -30,9 +30,20 @@ template <typename StatFsT> void Check(StatFsT& sb) {
   EXPECT_EQ(4096, static_cast<int>(sb.f_bsize));
   EXPECT_EQ(0U, sb.f_bfree);
   EXPECT_EQ(0U, sb.f_ffree);
-  EXPECT_EQ(0, sb.f_fsid.__val[0]);
-  EXPECT_EQ(0, sb.f_fsid.__val[1]);
   EXPECT_EQ(255, static_cast<int>(sb.f_namelen));
+
+  // Linux 6.7 requires that all filesystems have a non-zero fsid.
+  if (sb.f_fsid.__val[0] != 0U) {
+    // fs/libfs.c reuses the filesystem's device number.
+    struct stat proc_sb;
+    ASSERT_EQ(0, stat("/proc", &proc_sb));
+    EXPECT_EQ(static_cast<int>(proc_sb.st_dev), sb.f_fsid.__val[0]);
+    EXPECT_EQ(0, sb.f_fsid.__val[1]);
+  } else {
+    // Prior to that, the fsid for /proc was just 0.
+    EXPECT_EQ(0, sb.f_fsid.__val[0]);
+    EXPECT_EQ(0, sb.f_fsid.__val[1]);
+  }
 
   // The kernel sets a private bit to indicate that f_flags is valid.
   // This flag is not supposed to be exposed to libc clients.
