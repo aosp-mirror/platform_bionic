@@ -49,21 +49,34 @@
 #include "private/ScopedFd.h"
 
 static const char property_service_socket[] = "/dev/socket/" PROP_SERVICE_NAME;
+static const char property_service_for_system_socket[] =
+    "/dev/socket/" PROP_SERVICE_FOR_SYSTEM_NAME;
 static const char* kServiceVersionPropertyName = "ro.property_service.version";
 
 class PropertyServiceConnection {
  public:
-  PropertyServiceConnection() : last_error_(0) {
+  PropertyServiceConnection(const char* name) : last_error_(0) {
     socket_.reset(::socket(AF_LOCAL, SOCK_STREAM | SOCK_CLOEXEC, 0));
     if (socket_.get() == -1) {
       last_error_ = errno;
       return;
     }
 
-    const size_t namelen = strlen(property_service_socket);
+    // If we're trying to set "sys.powerctl" from a privileged process, use the special
+    // socket. Because this socket is only accessible to privileged processes, it can't
+    // be DoSed directly by malicious apps. (The shell user should be able to reboot,
+    // though, so we don't just always use the special socket for "sys.powerctl".)
+    // See b/262237198 for context
+    const char* socket = property_service_socket;
+    if (strcmp(name, "sys.powerctl") == 0 &&
+        access(property_service_for_system_socket, W_OK) == 0) {
+      socket = property_service_for_system_socket;
+    }
+
+    const size_t namelen = strlen(socket);
     sockaddr_un addr;
     memset(&addr, 0, sizeof(addr));
-    strlcpy(addr.sun_path, property_service_socket, sizeof(addr.sun_path));
+    strlcpy(addr.sun_path, socket, sizeof(addr.sun_path));
     addr.sun_family = AF_LOCAL;
     socklen_t alen = namelen + offsetof(sockaddr_un, sun_path) + 1;
 
@@ -176,7 +189,7 @@ struct prop_msg {
 };
 
 static int send_prop_msg(const prop_msg* msg) {
-  PropertyServiceConnection connection;
+  PropertyServiceConnection connection(msg->name);
   if (!connection.IsValid()) {
     return connection.GetLastError();
   }
@@ -269,7 +282,7 @@ int __system_property_set(const char* key, const char* value) {
     // New protocol only allows long values for ro. properties only.
     if (strlen(value) >= PROP_VALUE_MAX && strncmp(key, "ro.", 3) != 0) return -1;
     // Use proper protocol
-    PropertyServiceConnection connection;
+    PropertyServiceConnection connection(key);
     if (!connection.IsValid()) {
       errno = connection.GetLastError();
       async_safe_format_log(ANDROID_LOG_WARN, "libc",
