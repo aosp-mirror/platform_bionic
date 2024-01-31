@@ -92,6 +92,7 @@ sdk {
         "crtbegin_so",
         "crtend_android",
         "crtend_so",
+        "crt_pad_segment",
     ],
 }
 
