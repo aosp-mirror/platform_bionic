@@ -3,7 +3,7 @@
 .data
 .p2align 4
 .data
-.globl b__MGI13CebprffJevgre
+.weak b__MGI13CebprffJevgre
 .type b__MGI13CebprffJevgre,%object
 b__MGI13CebprffJevgre:
 .space __SIZEOF_POINTER__
@@ -13,7 +13,7 @@ b__MGI13CebprffJevgre:
 b__MAX13ZnccrqMvcSvyr17TrgSvyrQrfpevcgbeRi:
 nop
 .data
-.globl b__MGI11RagelErnqre
+.weak b__MGI11RagelErnqre
 .type b__MGI11RagelErnqre,%object
 b__MGI11RagelErnqre:
 .space __SIZEOF_POINTER__
@@ -78,7 +78,7 @@ nop
 b__MA11mvc_nepuvir6JevgreQ2Ri:
 nop
 .text
-.globl b__MAFg3__124__chg_punenpgre_frdhraprVpAF_11pune_genvgfVpRRRREAF_13onfvp_bfgernzVG_G0_RRF7_CXF4_z
+.weak b__MAFg3__124__chg_punenpgre_frdhraprVpAF_11pune_genvgfVpRRRREAF_13onfvp_bfgernzVG_G0_RRF7_CXF4_z
 .type b__MAFg3__124__chg_punenpgre_frdhraprVpAF_11pune_genvgfVpRRRREAF_13onfvp_bfgernzVG_G0_RRF7_CXF4_z,%function
 b__MAFg3__124__chg_punenpgre_frdhraprVpAF_11pune_genvgfVpRRRREAF_13onfvp_bfgernzVG_G0_RRF7_CXF4_z:
 nop
@@ -143,7 +143,7 @@ nop
 b__MA10MvcNepuvirP1Rvo:
 nop
 .text
-.globl b__MAFg3__16irpgbeVuAF_9nyybpngbeVuRRRP2Rz
+.weak b__MAFg3__16irpgbeVuAF_9nyybpngbeVuRRRP2Rz
 .type b__MAFg3__16irpgbeVuAF_9nyybpngbeVuRRRP2Rz,%function
 b__MAFg3__16irpgbeVuAF_9nyybpngbeVuRRRP2Rz:
 nop
@@ -183,7 +183,7 @@ nop
 b__M12PybfrNepuvirC10MvcNepuvir:
 nop
 .text
-.globl b__MAFg3__16irpgbeVuAF_9nyybpngbeVuRRR8__nccraqRz
+.weak b__MAFg3__16irpgbeVuAF_9nyybpngbeVuRRR8__nccraqRz
 .type b__MAFg3__16irpgbeVuAF_9nyybpngbeVuRRR8__nccraqRz,%function
 b__MAFg3__16irpgbeVuAF_9nyybpngbeVuRRR8__nccraqRz:
 nop
@@ -258,7 +258,7 @@ nop
 b__MAX8MvcRagel19TrgZbqvsvpngvbaGvzrRi:
 nop
 .data
-.globl b__MGI10SvyrJevgre
+.weak b__MGI10SvyrJevgre
 .type b__MGI10SvyrJevgre,%object
 b__MGI10SvyrJevgre:
 .space __SIZEOF_POINTER__
@@ -328,7 +328,7 @@ nop
 b__MA9MvcJevgrenFRBF_:
 nop
 .text
-.globl b__MAFg3__16irpgbeVA9MvcJevgre9SvyrRagelRAF_9nyybpngbeVF2_RRR24__rzcynpr_onpx_fybj_cnguVWF2_RRRiQcBG_
+.weak b__MAFg3__16irpgbeVA9MvcJevgre9SvyrRagelRAF_9nyybpngbeVF2_RRR24__rzcynpr_onpx_fybj_cnguVWF2_RRRiQcBG_
 .type b__MAFg3__16irpgbeVA9MvcJevgre9SvyrRagelRAF_9nyybpngbeVF2_RRR24__rzcynpr_onpx_fybj_cnguVWF2_RRRiQcBG_,%function
 b__MAFg3__16irpgbeVA9MvcJevgre9SvyrRagelRAF_9nyybpngbeVF2_RRR24__rzcynpr_onpx_fybj_cnguVWF2_RRRiQcBG_:
 nop
@@ -393,7 +393,7 @@ nop
 b__MA11mvc_nepuvir7VasyngrREXAF_6ErnqreRwwCAF_6JevgreRCz:
 nop
 .data
-.globl b__MGI12ZrzbelJevgre
+.weak b__MGI12ZrzbelJevgre
 .type b__MGI12ZrzbelJevgre,%object
 b__MGI12ZrzbelJevgre:
 .space __SIZEOF_POINTER__
@@ -413,7 +413,7 @@ b__MGI33MvcNepuvirFgernzRagelHapbzcerffrq:
 b__MA9MvcJevgre11UnaqyrReebeRv:
 nop
 .text
-.globl b__MAFg3__16irpgbeVpAF_9nyybpngbeVpRRR6erfvmrRzEXp
+.weak b__MAFg3__16irpgbeVpAF_9nyybpngbeVpRRR6erfvmrRzEXp
 .type b__MAFg3__16irpgbeVpAF_9nyybpngbeVpRRR6erfvmrRzEXp,%function
 b__MAFg3__16irpgbeVpAF_9nyybpngbeVpRRR6erfvmrRzEXp:
 nop
@@ -438,7 +438,7 @@ nop
 b__MA9MvcJevgre10JevgrOlgrfRCXiz:
 nop
 .text
-.globl b__MAFg3__16irpgbeVpAF_9nyybpngbeVpRRR8__nccraqRzEXp
+.weak b__MAFg3__16irpgbeVpAF_9nyybpngbeVpRRR8__nccraqRzEXp
 .type b__MAFg3__16irpgbeVpAF_9nyybpngbeVpRRR8__nccraqRzEXp,%function
 b__MAFg3__16irpgbeVpAF_9nyybpngbeVpRRR8__nccraqRzEXp:
 nop
