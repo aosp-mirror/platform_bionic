@@ -41,19 +41,10 @@ TEST(sys_hwprobe, __riscv_hwprobe) {
   EXPECT_EQ(RISCV_HWPROBE_KEY_IMA_EXT_0, probes[0].key);
   EXPECT_TRUE((probes[0].value & RISCV_HWPROBE_IMA_FD) != 0);
   EXPECT_TRUE((probes[0].value & RISCV_HWPROBE_IMA_C) != 0);
-  // TODO: remove #define when our uapi headers are new enough.
-#define RISCV_HWPROBE_IMA_V (1 << 2)
   EXPECT_TRUE((probes[0].value & RISCV_HWPROBE_IMA_V) != 0);
-  // TODO: remove #ifs when our kernel is new enough.
-#if defined(RISCV_HWPROBE_EXT_ZBA)
   EXPECT_TRUE((probes[0].value & RISCV_HWPROBE_EXT_ZBA) != 0);
-#endif
-#if defined(RISCV_HWPROBE_EXT_ZBB)
   EXPECT_TRUE((probes[0].value & RISCV_HWPROBE_EXT_ZBB) != 0);
-#endif
-#if defined(RISCV_HWPROBE_EXT_ZBS)
   EXPECT_TRUE((probes[0].value & RISCV_HWPROBE_EXT_ZBS) != 0);
-#endif
 
   EXPECT_EQ(RISCV_HWPROBE_KEY_CPUPERF_0, probes[1].key);
   EXPECT_TRUE((probes[1].value & RISCV_HWPROBE_MISALIGNED_MASK) == RISCV_HWPROBE_MISALIGNED_FAST);

@@ -103,7 +103,7 @@ struct v4l2_subdev_routing {
   __u64 routes;
   __u32 reserved[6];
 };
-#define V4L2_SUBDEV_CLIENT_CAP_STREAMS (1U << 0)
+#define V4L2_SUBDEV_CLIENT_CAP_STREAMS (1ULL << 0)
 struct v4l2_subdev_client_capability {
   __u64 capabilities;
 };

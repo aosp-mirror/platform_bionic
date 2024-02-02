@@ -28,7 +28,7 @@ b__MGPA7naqebvq14UrvsQngnFbheprR0_AF_11VQngnFbheprR:
 b__M17perngrUrvsQrpbqrei:
 nop
 .text
-.globl b__MA7naqebvq11OaVagresnprVAF_11VQngnFbheprRR10baNfOvaqreRi
+.weak b__MA7naqebvq11OaVagresnprVAF_11VQngnFbheprRR10baNfOvaqreRi
 .type b__MA7naqebvq11OaVagresnprVAF_11VQngnFbheprRR10baNfOvaqreRi,%function
 b__MA7naqebvq11OaVagresnprVAF_11VQngnFbheprRR10baNfOvaqreRi:
 nop

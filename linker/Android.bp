@@ -141,22 +141,37 @@ cc_defaults {
 
 cc_library_static {
     name: "liblinker_main",
-    defaults: ["linker_defaults", "linker_all_targets"],
+    defaults: [
+        "linker_defaults",
+        "linker_all_targets",
+    ],
     srcs: ["linker_main.cpp"],
 
     // Ensure that the compiler won't insert string function calls before ifuncs are resolved.
     cflags: ["-ffreestanding"],
+    apex_available: [
+        "com.android.runtime",
+    ],
 }
 
 cc_library_static {
     name: "liblinker_malloc",
-    defaults: ["linker_defaults", "linker_all_targets"],
+    defaults: [
+        "linker_defaults",
+        "linker_all_targets",
+    ],
     srcs: ["linker_memory.cpp"],
+    apex_available: [
+        "com.android.runtime",
+    ],
 }
 
 cc_library_static {
     name: "liblinker_debuggerd_stub",
-    defaults: ["linker_defaults", "linker_all_targets"],
+    defaults: [
+        "linker_defaults",
+        "linker_all_targets",
+    ],
     srcs: ["linker_debuggerd_stub.cpp"],
 }
 
@@ -235,11 +250,21 @@ filegroup {
 cc_defaults {
     name: "linker_version_script_overlay",
     arch: {
-        arm:     { version_script: "linker.arm.map"      },
-        arm64:   { version_script: "linker.generic.map"  },
-        riscv64: { version_script: "linker.generic.map"  },
-        x86:     { version_script: "linker.generic.map"  },
-        x86_64:  { version_script: "linker.generic.map"  },
+        arm: {
+            version_script: "linker.arm.map",
+        },
+        arm64: {
+            version_script: "linker.generic.map",
+        },
+        riscv64: {
+            version_script: "linker.generic.map",
+        },
+        x86: {
+            version_script: "linker.generic.map",
+        },
+        x86_64: {
+            version_script: "linker.generic.map",
+        },
     },
 }
 
@@ -477,7 +502,10 @@ cc_library {
     stl: "none",
 
     name: "ld-android",
-    defaults: ["linux_bionic_supported", "linker_version_script_overlay"],
+    defaults: [
+        "linux_bionic_supported",
+        "linker_version_script_overlay",
+    ],
     ramdisk_available: true,
     vendor_ramdisk_available: true,
     recovery_available: true,
@@ -498,10 +526,6 @@ cc_library {
         "//apex_available:platform",
         "com.android.runtime",
     ],
-
-    lto: {
-        never: true,
-    },
 }
 
 cc_test {
