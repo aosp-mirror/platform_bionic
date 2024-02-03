@@ -67,9 +67,6 @@ libc_common_flags = [
     // __dso_handle needs to have default visibility on ARM32. See b/73485611.
     "-Wexit-time-destructors",
 
-    // GWP-ASan requires platform TLS.
-    "-fno-emulated-tls",
-
     // We know clang does a lot of harm by rewriting what we've said, and sadly
     // never see any good it does, so let's just ask it to do what we say...
     // (The specific motivating example was clang turning a loop that would only
@@ -96,7 +93,7 @@ cc_defaults {
 
     header_libs: [
         "libc_headers",
-        "liblog_headers",  // needed by bionic/libc/async_safe/include
+        "liblog_headers", // needed by bionic/libc/async_safe/include
     ],
     export_header_lib_headers: [
         "libc_headers",
@@ -218,7 +215,10 @@ cc_library_static {
     },
 
     defaults: ["libc_defaults"],
-    cflags: ["-fno-stack-protector", "-ffreestanding"],
+    cflags: [
+        "-fno-stack-protector",
+        "-ffreestanding",
+    ],
     name: "libc_bootstrap",
 }
 
@@ -664,7 +664,6 @@ cc_library_static {
         },
         arm64: {
             srcs: [
-                "upstream-openbsd/lib/libc/string/memrchr.c",
                 "upstream-openbsd/lib/libc/string/strcat.c",
                 "upstream-openbsd/lib/libc/string/stpncpy.c",
                 "upstream-openbsd/lib/libc/string/strlcat.c",
@@ -812,8 +811,8 @@ cc_library_static {
         },
         riscv64: {
             srcs: [
-               "arch-riscv64/string/__memset_chk.S",
-               "arch-riscv64/string/__memcpy_chk.S",
+                "arch-riscv64/string/__memset_chk.S",
+                "arch-riscv64/string/__memcpy_chk.S",
             ],
         },
     },
@@ -826,14 +825,39 @@ cc_library_static {
 cc_library_static {
     defaults: ["libc_defaults"],
     srcs: [
-        // These require getauxval, which isn't available on older platforms.
-        "bionic/sysconf.cpp",
-        "bionic/vdso.cpp",
-        "bionic/setjmp_cookie.cpp",
-
-        // The following must not be statically linked into libc_ndk.a, because
-        // debuggerd will look for the abort message in libc.so's copy.
         "bionic/android_set_abort_message.cpp",
+        "bionic/android_unsafe_frame_pointer_chase.cpp",
+        "bionic/atexit.cpp",
+        "bionic/bionic_elf_tls.cpp",
+        "bionic/__cxa_thread_atexit_impl.cpp",
+        "bionic/fork.cpp",
+        "bionic/pthread_atfork.cpp",
+        "bionic/pthread_attr.cpp",
+        "bionic/pthread_barrier.cpp",
+        "bionic/pthread_cond.cpp",
+        "bionic/pthread_create.cpp",
+        "bionic/pthread_detach.cpp",
+        "bionic/pthread_equal.cpp",
+        "bionic/pthread_exit.cpp",
+        "bionic/pthread_getcpuclockid.cpp",
+        "bionic/pthread_getschedparam.cpp",
+        "bionic/pthread_gettid_np.cpp",
+        "bionic/pthread_internal.cpp",
+        "bionic/pthread_join.cpp",
+        "bionic/pthread_key.cpp",
+        "bionic/pthread_kill.cpp",
+        "bionic/pthread_mutex.cpp",
+        "bionic/pthread_once.cpp",
+        "bionic/pthread_rwlock.cpp",
+        "bionic/pthread_sigqueue.cpp",
+        "bionic/pthread_self.cpp",
+        "bionic/pthread_setname_np.cpp",
+        "bionic/pthread_setschedparam.cpp",
+        "bionic/pthread_spinlock.cpp",
+        "bionic/setjmp_cookie.cpp",
+        "bionic/sysconf.cpp",
+        "bionic/sys_thread_properties.cpp",
+        "bionic/vdso.cpp",
     ],
 
     arch: {
@@ -955,7 +979,6 @@ cc_library_static {
                 "arch-x86/bionic/__bionic_clone.S",
                 "arch-x86/bionic/_exit_with_stack_teardown.S",
                 "arch-x86/bionic/libcrt_compat.c",
-                "arch-x86/bionic/__restore.S",
                 "arch-x86/bionic/setjmp.S",
                 "arch-x86/bionic/syscall.S",
                 "arch-x86/bionic/vfork.S",
@@ -1052,8 +1075,8 @@ genrule {
     name: "generated_android_ids",
     out: ["generated_android_ids.h"],
     srcs: [":android_filesystem_config_header"],
-    tool_files: ["fs_config_generator.py"],
-    cmd: "$(location fs_config_generator.py) aidarray $(in) > $(out)",
+    tools: ["fs_config_generator"],
+    cmd: "$(location fs_config_generator) aidarray $(in) > $(out)",
 }
 
 // ========================================================
@@ -1081,6 +1104,7 @@ cc_library_static {
         "bionic/bionic_arc4random.cpp",
         "bionic/bionic_futex.cpp",
         "bionic/bionic_netlink.cpp",
+        "bionic/bionic_systrace.cpp",
         "bionic/bionic_time_conversions.cpp",
         "bionic/brk.cpp",
         "bionic/c16rtomb.cpp",
@@ -1253,7 +1277,6 @@ cc_library_static {
         },
     },
     whole_static_libs: [
-        "libc_bionic_systrace",
         "libsystemproperties",
     ],
     cppflags: ["-Wold-style-cast"],
@@ -1261,69 +1284,6 @@ cc_library_static {
     include_dirs: ["bionic/libstdc++/include"],
     name: "libc_bionic_ndk",
     generated_headers: ["generated_android_ids"],
-}
-
-// ========================================================
-// libc_bionic_systrace.a
-// ========================================================
-
-cc_library_static {
-    name: "libc_bionic_systrace",
-    defaults: ["libc_defaults"],
-    srcs: [
-        "bionic/bionic_systrace.cpp",
-    ],
-}
-
-// ========================================================
-// libc_pthread.a - pthreads parts that previously lived in
-// libc_bionic.a. Relocated to their own library because
-// they can't be included in libc_ndk.a (as the layout of
-// pthread_t has changed over the years and has ABI
-// compatibility issues).
-// ========================================================
-
-cc_library_static {
-    defaults: ["libc_defaults"],
-    srcs: [
-        "bionic/bionic_elf_tls.cpp",
-        "bionic/pthread_atfork.cpp",
-        "bionic/pthread_attr.cpp",
-        "bionic/pthread_barrier.cpp",
-        "bionic/pthread_cond.cpp",
-        "bionic/pthread_create.cpp",
-        "bionic/pthread_detach.cpp",
-        "bionic/pthread_equal.cpp",
-        "bionic/pthread_exit.cpp",
-        "bionic/pthread_getcpuclockid.cpp",
-        "bionic/pthread_getschedparam.cpp",
-        "bionic/pthread_gettid_np.cpp",
-        "bionic/pthread_internal.cpp",
-        "bionic/pthread_join.cpp",
-        "bionic/pthread_key.cpp",
-        "bionic/pthread_kill.cpp",
-        "bionic/pthread_mutex.cpp",
-        "bionic/pthread_once.cpp",
-        "bionic/pthread_rwlock.cpp",
-        "bionic/pthread_sigqueue.cpp",
-        "bionic/pthread_self.cpp",
-        "bionic/pthread_setname_np.cpp",
-        "bionic/pthread_setschedparam.cpp",
-        "bionic/pthread_spinlock.cpp",
-        "bionic/sys_thread_properties.cpp",
-
-        // The following implementations depend on pthread data or implementation,
-        // so we can't include them in libc_ndk.a.
-        "bionic/__cxa_thread_atexit_impl.cpp",
-        "bionic/android_unsafe_frame_pointer_chase.cpp",
-        "bionic/atexit.cpp",
-        "bionic/fork.cpp",
-    ],
-
-    cppflags: ["-Wold-style-cast"],
-    include_dirs: ["bionic/libstdc++/include"],
-    header_libs: ["bionic_libc_platform_headers"],
-    name: "libc_pthread",
 }
 
 // ========================================================
@@ -1412,87 +1372,19 @@ cc_library_static {
 }
 
 // ========================================================
-// libc_ndk.a
-// Compatibility library for the NDK. This library contains
-// all the parts of libc that are safe to statically link.
-// We can't safely statically link things that can only run
-// on a certain version of the OS. Examples include
-// anything that talks to netd (a large portion of the DNS
-// code) and anything that is dependent on the layout of a
-// data structure that has changed across releases (such as
-// pthread_t).
+// libc_common.a
 // ========================================================
 
-cc_library_static {
-    name: "libc_ndk",
-    defaults: [
-        "libc_defaults",
-        "libc_native_allocator_defaults",
-    ],
-    ramdisk_available: false,
-    vendor_ramdisk_available: false,
-    srcs: libc_common_src_files + [
-        "bionic/gwp_asan_wrappers.cpp",
-        "bionic/heap_tagging.cpp",
-        "bionic/malloc_common.cpp",
-        "bionic/malloc_limit.cpp",
-    ],
-    multilib: {
-        lib32: {
-            srcs: libc_common_src_files_32,
-        },
-    },
-    arch: {
-        arm: {
-            srcs: [
-                "arch-arm/bionic/exidx_dynamic.c",
-                "arch-common/bionic/crtbegin_so.c",
-                "arch-arm/bionic/atexit_legacy.c",
-                "arch-common/bionic/crtend_so.S",
-            ],
-            whole_static_libs: ["libc_aeabi"],
-        },
-    },
-
-    cflags: [
-        "-fvisibility=hidden",
-        "-DLIBC_STATIC",
-    ],
-
-    whole_static_libs: [
-        "gwp_asan",
-        "gwp_asan_crash_handler",
-        "libarm-optimized-routines-string",
-        "libasync_safe",
-        "libc_bionic_ndk",
-        "libc_bootstrap",
-        "libc_fortify",
-        "libc_freebsd",
-        "libc_freebsd_large_stack",
-        "libc_freebsd_ldexp",
-        "libc_gdtoa",
-        "libc_netbsd",
-        "libc_openbsd_large_stack",
-        "libc_openbsd_ndk",
-        "libc_syscalls",
-        "libc_tzcode",
-        "libm",
-        "libstdc++",
-    ],
-}
-
-// ========================================================
-// libc_nopthread.a
-// ========================================================
 cc_library_static {
     defaults: ["libc_defaults"],
+    name: "libc_common",
+
     srcs: libc_common_src_files,
     multilib: {
         lib32: {
             srcs: libc_common_src_files_32,
         },
     },
-    name: "libc_nopthread",
 
     whole_static_libs: [
         "libarm-optimized-routines-string",
@@ -1523,20 +1415,6 @@ cc_library_static {
 }
 
 // ========================================================
-// libc_common.a
-// ========================================================
-
-cc_library_static {
-    defaults: ["libc_defaults"],
-    name: "libc_common",
-
-    whole_static_libs: [
-        "libc_nopthread",
-        "libc_pthread",
-    ],
-}
-
-// ========================================================
 // libc_static_dispatch.a
 // ========================================================
 cc_library_static {
@@ -1557,7 +1435,7 @@ cc_library_static {
             srcs: ["arch-arm64/static_function_dispatch.S"],
         },
         riscv64: {
-            srcs: ["arch-riscv64/static_function_dispatch.S"]
+            srcs: ["arch-riscv64/static_function_dispatch.S"],
         },
     },
 }
@@ -1588,7 +1466,7 @@ cc_library_static {
             srcs: ["arch-arm64/dynamic_function_dispatch.cpp"],
         },
         riscv64: {
-            srcs: ["arch-riscv64/dynamic_function_dispatch.cpp"]
+            srcs: ["arch-riscv64/dynamic_function_dispatch.cpp"],
         },
     },
 }
@@ -1707,7 +1585,7 @@ cc_defaults {
         },
     },
     static: {
-        srcs: [ ":libc_sources_static" ],
+        srcs: [":libc_sources_static"],
         cflags: ["-DLIBC_STATIC"],
         whole_static_libs: [
             "gwp_asan",
@@ -1718,7 +1596,7 @@ cc_defaults {
         ],
     },
     shared: {
-        srcs: [ ":libc_sources_shared" ],
+        srcs: [":libc_sources_shared"],
         whole_static_libs: [
             "gwp_asan",
             "gwp_asan_crash_handler",
@@ -1848,7 +1726,7 @@ cc_defaults {
 
 cc_library {
     name: "libc",
-      defaults: [
+    defaults: [
         "libc_library_defaults",
     ],
     stubs: {
@@ -1870,7 +1748,7 @@ cc_library {
 
 cc_library {
     name: "libc_hwasan",
-      defaults: [
+    defaults: [
         "libc_library_defaults",
     ],
     sanitize: {
@@ -2261,7 +2139,7 @@ cc_object {
     name: "crtend_so",
     local_include_dirs: [
         "include",
-        "private",  // crtend_so.S depends on private/bionic_asm_arm64.h
+        "private", // crtend_so.S depends on private/bionic_asm_arm64.h
     ],
     srcs: ["arch-common/bionic/crtend_so.S"],
 
@@ -2276,7 +2154,7 @@ cc_object {
         "bionic", // crtbegin.c includes bionic/libc_init_common.h
     ],
 
-    cflags: [ "-DCRTBEGIN_STATIC", ],
+    cflags: ["-DCRTBEGIN_STATIC"],
 
     srcs: ["arch-common/bionic/crtbegin.c"],
     objs: [
@@ -2315,9 +2193,20 @@ cc_object {
     name: "crtend_android",
     local_include_dirs: [
         "include",
-        "private",  // crtend.S depends on private/bionic_asm_arm64.h
+        "private", // crtend.S depends on private/bionic_asm_arm64.h
     ],
     srcs: ["arch-common/bionic/crtend.S"],
+
+    defaults: ["crt_defaults"],
+}
+
+cc_object {
+    name: "crt_pad_segment",
+    local_include_dirs: [
+        "include",
+        "private", // crt_pad_segment.S depends on private/bionic_asm_note.h
+    ],
+    srcs: ["arch-common/bionic/crt_pad_segment.S"],
 
     defaults: ["crt_defaults"],
 }
@@ -2325,9 +2214,9 @@ cc_object {
 cc_library_static {
     name: "note_memtag_heap_async",
     arch: {
-      arm64: {
-        srcs: ["arch-arm64/bionic/note_memtag_heap_async.S"],
-      }
+        arm64: {
+            srcs: ["arch-arm64/bionic/note_memtag_heap_async.S"],
+        },
     },
     sdk_version: "minimum",
 
@@ -2337,9 +2226,9 @@ cc_library_static {
 cc_library_static {
     name: "note_memtag_heap_sync",
     arch: {
-      arm64: {
-        srcs: ["arch-arm64/bionic/note_memtag_heap_sync.S"],
-      }
+        arm64: {
+            srcs: ["arch-arm64/bionic/note_memtag_heap_sync.S"],
+        },
     },
     sdk_version: "minimum",
 
@@ -2377,7 +2266,7 @@ cc_library_static {
         },
         riscv64: {
             srcs: [
-               "arch-riscv64/string/__memcpy_chk.S",
+                "arch-riscv64/string/__memcpy_chk.S",
             ],
         },
     },
@@ -2581,13 +2470,12 @@ filegroup {
     srcs: ["kernel/uapi/**/*.h"],
 }
 
-
 cc_genrule {
     name: "func_to_syscall_nrs",
     recovery_available: true,
     cmd: "$(location genfunctosyscallnrs) --out-dir=$(genDir) $(in)",
 
-    tools: [ "genfunctosyscallnrs" ],
+    tools: ["genfunctosyscallnrs"],
 
     srcs: [
         "SYSCALLS.TXT",
@@ -2675,7 +2563,7 @@ cc_genrule {
     name: "libseccomp_policy_app_zygote_sources_x86",
     recovery_available: true,
     cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=app_zygote $(in)",
-    tools: [ "genseccomp" ],
+    tools: ["genseccomp"],
     srcs: [
         ":seccomp_syscalls_sources_zygote",
         ":libseccomp_gen_syscall_nrs_x86",
@@ -2687,8 +2575,12 @@ cc_genrule {
     ],
     enabled: false,
     arch: {
-        x86: { enabled: true },
-        x86_64: { enabled: true },
+        x86: {
+            enabled: true,
+        },
+        x86_64: {
+            enabled: true,
+        },
     },
 }
 
@@ -2696,7 +2588,7 @@ cc_genrule {
     name: "libseccomp_policy_app_zygote_sources_arm",
     recovery_available: true,
     cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=app_zygote $(in)",
-    tools: [ "genseccomp" ],
+    tools: ["genseccomp"],
     srcs: [
         ":seccomp_syscalls_sources_zygote",
         ":libseccomp_gen_syscall_nrs_arm",
@@ -2708,8 +2600,12 @@ cc_genrule {
     ],
     enabled: false,
     arch: {
-        arm: { enabled: true },
-        arm64: { enabled: true },
+        arm: {
+            enabled: true,
+        },
+        arm64: {
+            enabled: true,
+        },
     },
 }
 
@@ -2717,7 +2613,7 @@ cc_genrule {
     name: "libseccomp_policy_app_zygote_sources_riscv64",
     recovery_available: true,
     cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=app_zygote $(in)",
-    tools: [ "genseccomp" ],
+    tools: ["genseccomp"],
     srcs: [
         ":seccomp_syscalls_sources_zygote",
         ":libseccomp_gen_syscall_nrs_riscv64",
@@ -2727,7 +2623,9 @@ cc_genrule {
     ],
     enabled: false,
     arch: {
-        riscv64: { enabled: true },
+        riscv64: {
+            enabled: true,
+        },
     },
 }
 
@@ -2735,7 +2633,7 @@ cc_genrule {
     name: "libseccomp_policy_app_sources_x86",
     recovery_available: true,
     cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=app $(in)",
-    tools: [ "genseccomp" ],
+    tools: ["genseccomp"],
     srcs: [
         ":seccomp_syscalls_sources_app",
         ":libseccomp_gen_syscall_nrs_x86",
@@ -2747,8 +2645,12 @@ cc_genrule {
     ],
     enabled: false,
     arch: {
-        x86: { enabled: true },
-        x86_64: { enabled: true },
+        x86: {
+            enabled: true,
+        },
+        x86_64: {
+            enabled: true,
+        },
     },
 }
 
@@ -2756,7 +2658,7 @@ cc_genrule {
     name: "libseccomp_policy_app_sources_arm",
     recovery_available: true,
     cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=app $(in)",
-    tools: [ "genseccomp" ],
+    tools: ["genseccomp"],
     srcs: [
         ":seccomp_syscalls_sources_app",
         ":libseccomp_gen_syscall_nrs_arm",
@@ -2768,8 +2670,12 @@ cc_genrule {
     ],
     enabled: false,
     arch: {
-        arm: { enabled: true },
-        arm64: { enabled: true },
+        arm: {
+            enabled: true,
+        },
+        arm64: {
+            enabled: true,
+        },
     },
 }
 
@@ -2777,7 +2683,7 @@ cc_genrule {
     name: "libseccomp_policy_app_sources_riscv64",
     recovery_available: true,
     cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=app $(in)",
-    tools: [ "genseccomp" ],
+    tools: ["genseccomp"],
     srcs: [
         ":seccomp_syscalls_sources_app",
         ":libseccomp_gen_syscall_nrs_riscv64",
@@ -2787,7 +2693,9 @@ cc_genrule {
     ],
     enabled: false,
     arch: {
-        riscv64: { enabled: true },
+        riscv64: {
+            enabled: true,
+        },
     },
 }
 
@@ -2795,7 +2703,7 @@ cc_genrule {
     name: "libseccomp_policy_system_sources_x86",
     recovery_available: true,
     cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=system $(in)",
-    tools: [ "genseccomp" ],
+    tools: ["genseccomp"],
     srcs: [
         ":seccomp_syscalls_sources_system",
         ":libseccomp_gen_syscall_nrs_x86",
@@ -2807,8 +2715,12 @@ cc_genrule {
     ],
     enabled: false,
     arch: {
-        x86: { enabled: true },
-        x86_64: { enabled: true },
+        x86: {
+            enabled: true,
+        },
+        x86_64: {
+            enabled: true,
+        },
     },
 }
 
@@ -2816,7 +2728,7 @@ cc_genrule {
     name: "libseccomp_policy_system_sources_arm",
     recovery_available: true,
     cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=system $(in)",
-    tools: [ "genseccomp" ],
+    tools: ["genseccomp"],
     srcs: [
         ":seccomp_syscalls_sources_system",
         ":libseccomp_gen_syscall_nrs_arm",
@@ -2828,8 +2740,12 @@ cc_genrule {
     ],
     enabled: false,
     arch: {
-        arm: { enabled: true },
-        arm64: { enabled: true },
+        arm: {
+            enabled: true,
+        },
+        arm64: {
+            enabled: true,
+        },
     },
 }
 
@@ -2837,7 +2753,7 @@ cc_genrule {
     name: "libseccomp_policy_system_sources_riscv64",
     recovery_available: true,
     cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=system $(in)",
-    tools: [ "genseccomp" ],
+    tools: ["genseccomp"],
     srcs: [
         ":seccomp_syscalls_sources_system",
         ":libseccomp_gen_syscall_nrs_riscv64",
@@ -2847,7 +2763,9 @@ cc_genrule {
     ],
     enabled: false,
     arch: {
-        riscv64: { enabled: true },
+        riscv64: {
+            enabled: true,
+        },
     },
 }
 
@@ -2859,37 +2777,37 @@ cc_library {
     arch: {
         arm: {
             generated_sources: [
-               "libseccomp_policy_app_sources_arm",
-               "libseccomp_policy_app_zygote_sources_arm",
-               "libseccomp_policy_system_sources_arm",
+                "libseccomp_policy_app_sources_arm",
+                "libseccomp_policy_app_zygote_sources_arm",
+                "libseccomp_policy_system_sources_arm",
             ],
         },
         arm64: {
             generated_sources: [
-               "libseccomp_policy_app_sources_arm",
-               "libseccomp_policy_app_zygote_sources_arm",
-               "libseccomp_policy_system_sources_arm",
+                "libseccomp_policy_app_sources_arm",
+                "libseccomp_policy_app_zygote_sources_arm",
+                "libseccomp_policy_system_sources_arm",
             ],
         },
         riscv64: {
             generated_sources: [
-               "libseccomp_policy_app_sources_riscv64",
-               "libseccomp_policy_app_zygote_sources_riscv64",
-               "libseccomp_policy_system_sources_riscv64",
+                "libseccomp_policy_app_sources_riscv64",
+                "libseccomp_policy_app_zygote_sources_riscv64",
+                "libseccomp_policy_system_sources_riscv64",
             ],
         },
         x86: {
             generated_sources: [
-               "libseccomp_policy_app_sources_x86",
-               "libseccomp_policy_app_zygote_sources_x86",
-               "libseccomp_policy_system_sources_x86",
+                "libseccomp_policy_app_sources_x86",
+                "libseccomp_policy_app_zygote_sources_x86",
+                "libseccomp_policy_system_sources_x86",
             ],
         },
         x86_64: {
             generated_sources: [
-               "libseccomp_policy_app_sources_x86",
-               "libseccomp_policy_app_zygote_sources_x86",
-               "libseccomp_policy_system_sources_x86",
+                "libseccomp_policy_app_sources_x86",
+                "libseccomp_policy_app_zygote_sources_x86",
+                "libseccomp_policy_system_sources_x86",
             ],
         },
     },
@@ -3117,6 +3035,6 @@ cc_genrule {
 // headers that will be placed on the include path when running versioner in bazel
 // this module should be a no-op in soong
 filegroup {
-   name: "versioner-dependencies",
-   srcs: ["versioner-dependencies/**/*"],
+    name: "versioner-dependencies",
+    srcs: ["versioner-dependencies/**/*"],
 }

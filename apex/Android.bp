@@ -43,7 +43,10 @@ apex {
     ],
     arch: {
         arm64: {
-            native_shared_libs: ["libc_hwasan", "libclang_rt.hwasan"],
+            native_shared_libs: [
+                "libc_hwasan",
+                "libclang_rt.hwasan",
+            ],
         },
     },
     binaries: [
@@ -89,6 +92,7 @@ sdk {
         "crtbegin_so",
         "crtend_android",
         "crtend_so",
+        "crt_pad_segment",
     ],
 }
 

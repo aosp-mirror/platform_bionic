@@ -32,8 +32,7 @@
 #include <asm/signal.h>
 #include <linux/sched.h>
 
-ENTRY(vfork)
-__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
+ENTRY_WEAK_FOR_NATIVE_BRIDGE(vfork)
     // x9 = __get_tls()[TLS_SLOT_THREAD_ID]
     mrs     x9, tpidr_el0
     ldr     x9, [x9, #(TLS_SLOT_THREAD_ID * 8)]

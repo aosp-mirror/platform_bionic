@@ -40,4 +40,6 @@ struct sockaddr_vm {
   unsigned char svm_zero[sizeof(struct sockaddr) - sizeof(sa_family_t) - sizeof(unsigned short) - sizeof(unsigned int) - sizeof(unsigned int) - sizeof(__u8)];
 };
 #define IOCTL_VM_SOCKETS_GET_LOCAL_CID _IO(7, 0xb9)
+#define SOL_VSOCK 287
+#define VSOCK_RECVERR 1
 #endif

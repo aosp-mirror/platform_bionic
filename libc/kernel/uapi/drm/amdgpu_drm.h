@@ -64,6 +64,7 @@ extern "C" {
 #define AMDGPU_GEM_CREATE_DISCARDABLE (1 << 12)
 #define AMDGPU_GEM_CREATE_COHERENT (1 << 13)
 #define AMDGPU_GEM_CREATE_UNCACHED (1 << 14)
+#define AMDGPU_GEM_CREATE_EXT_COHERENT (1 << 15)
 struct drm_amdgpu_gem_create_in {
   __u64 bo_size;
   __u64 alignment;
@@ -331,7 +332,8 @@ struct drm_amdgpu_gem_va {
 #define AMDGPU_HW_IP_VCN_DEC 6
 #define AMDGPU_HW_IP_VCN_ENC 7
 #define AMDGPU_HW_IP_VCN_JPEG 8
-#define AMDGPU_HW_IP_NUM 9
+#define AMDGPU_HW_IP_VPE 9
+#define AMDGPU_HW_IP_NUM 10
 #define AMDGPU_HW_IP_INSTANCE_MAX_COUNT 1
 #define AMDGPU_CHUNK_ID_IB 0x01
 #define AMDGPU_CHUNK_ID_FENCE 0x02
@@ -459,6 +461,7 @@ struct drm_amdgpu_cs_chunk_cp_gfx_shadow {
 #define AMDGPU_INFO_FW_MES_KIQ 0x19
 #define AMDGPU_INFO_FW_MES 0x1a
 #define AMDGPU_INFO_FW_IMU 0x1b
+#define AMDGPU_INFO_FW_VPE 0x1c
 #define AMDGPU_INFO_NUM_BYTES_MOVED 0x0f
 #define AMDGPU_INFO_VRAM_USAGE 0x10
 #define AMDGPU_INFO_GTT_USAGE 0x11
@@ -508,6 +511,7 @@ struct drm_amdgpu_cs_chunk_cp_gfx_shadow {
 #define AMDGPU_INFO_VIDEO_CAPS_DECODE 0
 #define AMDGPU_INFO_VIDEO_CAPS_ENCODE 1
 #define AMDGPU_INFO_MAX_IBS 0x22
+#define AMDGPU_INFO_GPUVM_FAULT 0x23
 #define AMDGPU_INFO_MMR_SE_INDEX_SHIFT 0
 #define AMDGPU_INFO_MMR_SE_INDEX_MASK 0xff
 #define AMDGPU_INFO_MMR_SH_INDEX_SHIFT 8
@@ -711,6 +715,18 @@ struct drm_amdgpu_info_video_codec_info {
 struct drm_amdgpu_info_video_caps {
   struct drm_amdgpu_info_video_codec_info codec_info[AMDGPU_INFO_VIDEO_CAPS_CODEC_IDX_COUNT];
 };
+#define AMDGPU_VMHUB_TYPE_MASK 0xff
+#define AMDGPU_VMHUB_TYPE_SHIFT 0
+#define AMDGPU_VMHUB_TYPE_GFX 0
+#define AMDGPU_VMHUB_TYPE_MM0 1
+#define AMDGPU_VMHUB_TYPE_MM1 2
+#define AMDGPU_VMHUB_IDX_MASK 0xff00
+#define AMDGPU_VMHUB_IDX_SHIFT 8
+struct drm_amdgpu_info_gpuvm_fault {
+  __u64 addr;
+  __u32 status;
+  __u32 vmhub;
+};
 #define AMDGPU_FAMILY_UNKNOWN 0
 #define AMDGPU_FAMILY_SI 110
 #define AMDGPU_FAMILY_CI 120
@@ -726,6 +742,7 @@ struct drm_amdgpu_info_video_caps {
 #define AMDGPU_FAMILY_GC_11_0_1 148
 #define AMDGPU_FAMILY_GC_10_3_6 149
 #define AMDGPU_FAMILY_GC_10_3_7 151
+#define AMDGPU_FAMILY_GC_11_5_0 150
 #ifdef __cplusplus
 }
 #endif

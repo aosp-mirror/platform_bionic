@@ -28,22 +28,23 @@ kernel_known_macros = {
     }
 
 # This is the set of known kernel data structures we want to remove from
-# the final headers. If the map value is False, that means that in
-# addition to removing the structure, add an #include <bits/STRUCT.h>
-# to the file.
+# the final headers. If the map value is non-empty, that means that in
+# addition to removing the structure, add a #include to the file.
 kernel_structs_to_remove = {
-    # Remove the structures since they are still the same as
+    # Remove these structures since they are still the same as
     # timeval, itimerval.
-    "__kernel_old_timeval": True,
-    "__kernel_old_itimerval": True,
+    "__kernel_old_timeval": None,
+    "__kernel_old_itimerval": None,
     # Replace all of the below structures with #include <bits/STRUCT.h>
-    "epoll_event": False,
-    "flock": False,
-    "flock64": False,
-    "in_addr": False,
-    "ip_mreq_source": False,
-    "ip_msfilter": False,
-    "timespec": False,
+    "__kernel_sockaddr_storage": "bits/sockaddr_storage.h",
+    "epoll_event": "bits/epoll_event.h",
+    "flock": "bits/flock.h",
+    "flock64": "bits/flock64.h",
+    "in_addr": "bits/in_addr.h",
+    "ip_mreq_source": "bits/ip_mreq_source.h",
+    "ip_msfilter": "bits/ip_msfilter.h",
+    "tcphdr": "bits/tcphdr.h",
+    "timespec": "bits/timespec.h",
     }
 
 # define to true if you want to remove all defined(CONFIG_FOO) tests
@@ -91,12 +92,17 @@ kernel_token_replacements = {
     "__kernel_old_timeval": "timeval",
     # Do the same for __kernel_old_itimerval as for timeval.
     "__kernel_old_itimerval": "itimerval",
+    # Do the same for __kernel_sockaddr_storage.
+    "__kernel_sockaddr_storage": "sockaddr_storage",
     # Replace __packed with __attribute__((__packed__)) to avoid depending
     # on sys/cdefs.h
     "__packed": "__attribute__((__packed__))",
     # Remove unused macros (http://b/262917450).
     "__force": "",
     "__user": "",
+    # Rename the kernel's sigaction so we can expose our POSIX one publicly,
+    # but translate to the kernel's one internally.
+    "sigaction": "__kernel_sigaction",
     }
 
 

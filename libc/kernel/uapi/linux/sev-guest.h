@@ -7,8 +7,9 @@
 #ifndef __UAPI_LINUX_SEV_GUEST_H_
 #define __UAPI_LINUX_SEV_GUEST_H_
 #include <linux/types.h>
+#define SNP_REPORT_USER_DATA_SIZE 64
 struct snp_report_req {
-  __u8 user_data[64];
+  __u8 user_data[SNP_REPORT_USER_DATA_SIZE];
   __u32 vmpl;
   __u8 rsvd[28];
 };

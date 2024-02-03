@@ -168,6 +168,8 @@ enum netlink_attribute_type {
   NL_ATTR_TYPE_NESTED,
   NL_ATTR_TYPE_NESTED_ARRAY,
   NL_ATTR_TYPE_BITFIELD32,
+  NL_ATTR_TYPE_SINT,
+  NL_ATTR_TYPE_UINT,
 };
 enum netlink_policy_type_attr {
   NL_POLICY_TYPE_ATTR_UNSPEC,

@@ -678,9 +678,13 @@ enum {
   TCA_FQ_TIMER_SLACK,
   TCA_FQ_HORIZON,
   TCA_FQ_HORIZON_DROP,
+  TCA_FQ_PRIOMAP,
+  TCA_FQ_WEIGHTS,
   __TCA_FQ_MAX
 };
 #define TCA_FQ_MAX (__TCA_FQ_MAX - 1)
+#define FQ_BANDS 3
+#define FQ_MIN_WEIGHT 16384
 struct tc_fq_qd_stats {
   __u64 gc_flows;
   __u64 highprio_packets;
@@ -697,6 +701,10 @@ struct tc_fq_qd_stats {
   __u64 ce_mark;
   __u64 horizon_drops;
   __u64 horizon_caps;
+  __u64 fastpath_packets;
+  __u64 band_drops[FQ_BANDS];
+  __u32 band_pkt_count[FQ_BANDS];
+  __u32 pad;
 };
 enum {
   TCA_HHF_UNSPEC,
