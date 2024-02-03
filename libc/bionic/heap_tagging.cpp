@@ -90,10 +90,7 @@ static bool set_tcf_on_all_threads(int tcf) {
         }
 
         tagged_addr_ctrl = (tagged_addr_ctrl & ~PR_MTE_TCF_MASK) | tcf;
-        if (prctl(PR_SET_TAGGED_ADDR_CTRL, tagged_addr_ctrl, 0, 0, 0) < 0) {
-          return false;
-        }
-        return true;
+        return prctl(PR_SET_TAGGED_ADDR_CTRL, tagged_addr_ctrl, 0, 0, 0) >= 0;
       },
       &tcf);
 }
