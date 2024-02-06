@@ -37,6 +37,10 @@
 // We assume that the compiler is not smart enough to optimize away fences in a single-threaded
 // program. If that changes, we'll need to add a second thread.
 
+// We're going to use `++` on this volatile in all the tests. This is
+// fine, because we're only using `volatile` in the "don't optimize this out"
+// sense, and don't care whether the increment is atomic or not.
+#pragma clang diagnostic ignored "-Wdeprecated-volatile"
 static volatile unsigned counter;
 
 std::atomic<int> test_loc(0);
