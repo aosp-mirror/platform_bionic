@@ -25,6 +25,7 @@
 // SUCH DAMAGE.
 
 package {
+    default_team: "trendy_team_native_tools_libraries",
     default_applicable_licenses: ["bionic_benchmarks_license"],
 }
 

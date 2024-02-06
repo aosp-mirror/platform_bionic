@@ -57,6 +57,7 @@ void SetDefaultHeapTaggingLevel() {
         break;
       case M_HEAP_TAGGING_LEVEL_SYNC:
       case M_HEAP_TAGGING_LEVEL_ASYNC:
+        atomic_store(&globals->memtag, true);
         atomic_store(&globals->memtag_stack, __libc_shared_globals()->initial_memtag_stack);
         break;
       default:
@@ -90,10 +91,7 @@ static bool set_tcf_on_all_threads(int tcf) {
         }
 
         tagged_addr_ctrl = (tagged_addr_ctrl & ~PR_MTE_TCF_MASK) | tcf;
-        if (prctl(PR_SET_TAGGED_ADDR_CTRL, tagged_addr_ctrl, 0, 0, 0) < 0) {
-          return false;
-        }
-        return true;
+        return prctl(PR_SET_TAGGED_ADDR_CTRL, tagged_addr_ctrl, 0, 0, 0) >= 0;
       },
       &tcf);
 }
@@ -116,6 +114,7 @@ bool SetHeapTaggingLevel(HeapTaggingLevel tag_level) {
           globals->heap_pointer_tag = static_cast<uintptr_t>(0xffull << UNTAG_SHIFT);
         }
         atomic_store(&globals->memtag_stack, false);
+        atomic_store(&globals->memtag, false);
       });
 
       if (heap_tagging_level != M_HEAP_TAGGING_LEVEL_TBI) {
