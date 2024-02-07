@@ -40,20 +40,12 @@ static const char* init_sh_path() {
   // For the host Bionic, use the standard /bin/sh
   return "/bin/sh";
 #else
-  /* If the device is not treble enabled, return the path to the system shell.
-   * Vendor code, on non-treble enabled devices could use system() / popen()
-   * with relative paths for executables on /system. Since /system will not be
-   * in $PATH for the vendor shell, simply return the system shell.
-   */
-
-#ifdef TREBLE_LINKER_NAMESPACES
-  /* look for /system or /vendor prefix */
+  // Look for /system or /vendor prefix.
   char exe_path[strlen(VENDOR_PREFIX)];
   ssize_t len = readlink("/proc/self/exe", exe_path, sizeof(exe_path));
   if (len != -1 && !strncmp(exe_path, VENDOR_PREFIX, strlen(VENDOR_PREFIX))) {
     return "/vendor/bin/sh";
   }
-#endif
   return "/system/bin/sh";
 #endif  // if !defined(__ANDROID__)
 }
