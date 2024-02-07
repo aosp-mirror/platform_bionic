@@ -639,6 +639,7 @@ class LoadTask {
     si_->phdr = elf_reader.loaded_phdr();
     si_->set_gap_start(elf_reader.gap_start());
     si_->set_gap_size(elf_reader.gap_size());
+    si_->set_should_pad_segments(elf_reader.should_pad_segments());
 
     return true;
   }

@@ -51,6 +51,7 @@
 #include "private/bionic_elf_tls.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_tls.h"
+#include "private/elf_note.h"
 #include "pthread_internal.h"
 #include "sys/system_properties.h"
 #include "sysprop_helpers.h"
@@ -157,49 +158,12 @@ static void layout_static_tls(KernelArgumentBlock& args) {
 }
 
 #ifdef __aarch64__
-static bool __get_elf_note(const ElfW(Phdr) * phdr_start, size_t phdr_ct,
-                           const ElfW(Addr) load_bias, unsigned desired_type,
-                           const char* desired_name, const ElfW(Nhdr) * *note_out,
-                           const char** desc_out) {
-  for (size_t i = 0; i < phdr_ct; ++i) {
-    const ElfW(Phdr)* phdr = &phdr_start[i];
-    if (phdr->p_type != PT_NOTE) {
-      continue;
-    }
-    ElfW(Addr) p = load_bias + phdr->p_vaddr;
-    ElfW(Addr) note_end = load_bias + phdr->p_vaddr + phdr->p_memsz;
-    while (p + sizeof(ElfW(Nhdr)) <= note_end) {
-      const ElfW(Nhdr)* note = reinterpret_cast<const ElfW(Nhdr)*>(p);
-      p += sizeof(ElfW(Nhdr));
-      const char* name = reinterpret_cast<const char*>(p);
-      p += align_up(note->n_namesz, 4);
-      const char* desc = reinterpret_cast<const char*>(p);
-      p += align_up(note->n_descsz, 4);
-      if (p > note_end) {
-        break;
-      }
-      if (note->n_type != desired_type) {
-        continue;
-      }
-      size_t desired_name_len = strlen(desired_name);
-      if (note->n_namesz != desired_name_len + 1 ||
-          strncmp(desired_name, name, desired_name_len) != 0) {
-        break;
-      }
-      *note_out = note;
-      *desc_out = desc;
-      return true;
-    }
-  }
-  return false;
-}
-
 static HeapTaggingLevel __get_memtag_level_from_note(const ElfW(Phdr) * phdr_start, size_t phdr_ct,
                                                      const ElfW(Addr) load_bias, bool* stack) {
   const ElfW(Nhdr) * note;
   const char* desc;
-  if (!__get_elf_note(phdr_start, phdr_ct, load_bias, NT_ANDROID_TYPE_MEMTAG, "Android", &note,
-                      &desc)) {
+  if (!__find_elf_note(NT_ANDROID_TYPE_MEMTAG, "Android", phdr_start, phdr_ct, &note, &desc,
+                       load_bias)) {
     return M_HEAP_TAGGING_LEVEL_TBI;
   }
 
@@ -210,7 +174,7 @@ static HeapTaggingLevel __get_memtag_level_from_note(const ElfW(Phdr) * phdr_sta
                      note->n_descsz);
   }
 
-  // `desc` is always aligned due to ELF requirements, enforced in __get_elf_note().
+  // `desc` is always aligned due to ELF requirements, enforced in __find_elf_note().
   ElfW(Word) note_val = *reinterpret_cast<const ElfW(Word)*>(desc);
   *stack = (note_val & NT_MEMTAG_STACK) != 0;
 
