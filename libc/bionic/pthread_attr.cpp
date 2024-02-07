@@ -155,36 +155,6 @@ int pthread_attr_setstack(pthread_attr_t* attr, void* stack_base, size_t stack_s
   return 0;
 }
 
-static uintptr_t __get_main_stack_startstack() {
-  FILE* fp = fopen("/proc/self/stat", "re");
-  if (fp == nullptr) {
-    async_safe_fatal("couldn't open /proc/self/stat: %m");
-  }
-
-  char line[BUFSIZ];
-  if (fgets(line, sizeof(line), fp) == nullptr) {
-    async_safe_fatal("couldn't read /proc/self/stat: %m");
-  }
-
-  fclose(fp);
-
-  // See man 5 proc. There's no reason comm can't contain ' ' or ')',
-  // so we search backwards for the end of it. We're looking for this field:
-  //
-  //  startstack %lu (28) The address of the start (i.e., bottom) of the stack.
-  uintptr_t startstack = 0;
-  const char* end_of_comm = strrchr(line, ')');
-  if (sscanf(end_of_comm + 1, " %*c "
-             "%*d %*d %*d %*d %*d "
-             "%*u %*u %*u %*u %*u %*u %*u "
-             "%*d %*d %*d %*d %*d %*d "
-             "%*u %*u %*d %*u %*u %*u %" SCNuPTR, &startstack) != 1) {
-    async_safe_fatal("couldn't parse /proc/self/stat");
-  }
-
-  return startstack;
-}
-
 static int __pthread_attr_getstack_main_thread(void** stack_base, size_t* stack_size) {
   ErrnoRestorer errno_restorer;
 
@@ -198,28 +168,11 @@ static int __pthread_attr_getstack_main_thread(void** stack_base, size_t* stack_
   if (stack_limit.rlim_cur == RLIM_INFINITY) {
     stack_limit.rlim_cur = 8 * 1024 * 1024;
   }
-
-  // Ask the kernel where our main thread's stack started.
-  uintptr_t startstack = __get_main_stack_startstack();
-
-  // Hunt for the region that contains that address.
-  FILE* fp = fopen("/proc/self/maps", "re");
-  if (fp == nullptr) {
-    async_safe_fatal("couldn't open /proc/self/maps: %m");
-  }
-  char line[BUFSIZ];
-  while (fgets(line, sizeof(line), fp) != nullptr) {
-    uintptr_t lo, hi;
-    if (sscanf(line, "%" SCNxPTR "-%" SCNxPTR, &lo, &hi) == 2) {
-      if (lo <= startstack && startstack <= hi) {
-        *stack_size = stack_limit.rlim_cur;
-        *stack_base = reinterpret_cast<void*>(hi - *stack_size);
-        fclose(fp);
-        return 0;
-      }
-    }
-  }
-  async_safe_fatal("stack not found in /proc/self/maps");
+  uintptr_t lo, hi;
+  __find_main_stack_limits(&lo, &hi);
+  *stack_size = stack_limit.rlim_cur;
+  *stack_base = reinterpret_cast<void*>(hi - *stack_size);
+  return 0;
 }
 
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
