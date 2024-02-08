@@ -717,13 +717,20 @@ bool ElfReader::ReadPadSegmentNote() {
       continue;
     }
 
+    // Some obfuscated ELFs may contain "empty" PT_NOTE program headers that don't
+    // point to any part of the ELF (p_memsz == 0). Skip these since there is
+    // nothing to decode. See: b/324468126
+    if (phdr->p_memsz == 0) {
+      continue;
+    }
+
     // note_fragment is scoped to within the loop so that there is
     // at most 1 PT_NOTE mapped at anytime during this search.
     MappedFileFragment note_fragment;
     if (!note_fragment.Map(fd_, file_offset_, phdr->p_offset, phdr->p_memsz)) {
-      DL_WARN("\"%s\" note mmap failed: %s", name_.c_str(), strerror(errno));
-      // If mmap failed, skip the optimization but don't block ELF loading
-      return true;
+      DL_ERR("\"%s\": PT_NOTE mmap(nullptr, %zu, PROT_READ, MAP_PRIVATE, %d, %p) failed: %m",
+             name_.c_str(), phdr->p_memsz, fd_, page_start(file_offset_ + phdr->p_offset));
+      return false;
     }
 
     const ElfW(Nhdr)* note_hdr = nullptr;
