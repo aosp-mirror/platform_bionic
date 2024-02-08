@@ -15,6 +15,7 @@
 //
 
 package {
+    default_team: "trendy_team_native_tools_libraries",
     default_applicable_licenses: ["bionic_tests_license"],
 }
 
@@ -61,9 +62,6 @@ cc_defaults {
 
         // This warning does not provide any benefit to the tests.
         "-Wno-reorder-init-list",
-
-        // For glibc.
-        "-D__STDC_LIMIT_MACROS",
     ],
     header_libs: [
         "libcutils_headers",
@@ -1105,6 +1103,31 @@ cc_test {
         "libtest_simple_hwasan",
         "libtest_simple_hwasan_nohwasan",
     ],
+    header_libs: ["bionic_libc_platform_headers"],
+    test_suites: ["device-tests"],
+}
+
+cc_test {
+    name: "memtag_stack_dlopen_test",
+    enabled: false,
+    // This does not use bionic_tests_defaults because it is not supported on
+    // host.
+    arch: {
+        arm64: {
+            enabled: true,
+        },
+    },
+    sanitize: {
+        memtag_heap: true,
+        memtag_stack: false,
+    },
+    srcs: [
+        "memtag_stack_dlopen_test.cpp",
+    ],
+    shared_libs: [
+        "libbase",
+    ],
+    data_libs: ["libtest_simple_memtag_stack"],
     header_libs: ["bionic_libc_platform_headers"],
     test_suites: ["device-tests"],
 }
