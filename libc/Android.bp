@@ -1271,11 +1271,6 @@ cc_library_static {
             srcs: ["bionic/mmap.cpp"],
         },
     },
-    product_variables: {
-        treble_linker_namespaces: {
-            cflags: ["-DTREBLE_LINKER_NAMESPACES"],
-        },
-    },
     whole_static_libs: [
         "libsystemproperties",
     ],
