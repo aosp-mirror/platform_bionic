@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,31 +26,17 @@
  * SUCH DAMAGE.
  */
 
-#include "private/__bionic_get_shell_path.h"
+#pragma once
 
-#include <errno.h>
-#include <string.h>
-#include <sys/cdefs.h>
-#include <unistd.h>
+#include <elf.h>
+#include <link.h>
 
-#define VENDOR_PREFIX "/vendor/"
+// Get desired ELF note (Nhdr/desc) from mmapped PT_NOTE
+bool __get_elf_note(unsigned note_type, const char* note_name, const ElfW(Addr) note_addr,
+                    const ElfW(Phdr)* phdr_note, const ElfW(Nhdr)** note_hdr,
+                    const char** note_desc);
 
-static const char* init_sh_path() {
-#if !defined(__ANDROID__)
-  // For the host Bionic, use the standard /bin/sh
-  return "/bin/sh";
-#else
-  // Look for /system or /vendor prefix.
-  char exe_path[strlen(VENDOR_PREFIX)];
-  ssize_t len = readlink("/proc/self/exe", exe_path, sizeof(exe_path));
-  if (len != -1 && !strncmp(exe_path, VENDOR_PREFIX, strlen(VENDOR_PREFIX))) {
-    return "/vendor/bin/sh";
-  }
-  return "/system/bin/sh";
-#endif  // if !defined(__ANDROID__)
-}
-
-const char* __bionic_get_shell_path() {
-  static const char* sh_path = init_sh_path();
-  return sh_path;
-}
+// Search all mapped PT_NOTE's for the desired ELF note (Nhdr/desc)
+bool __find_elf_note(unsigned int note_type, const char* note_name, const ElfW(Phdr)* phdr_start,
+                     size_t phdr_ct, const ElfW(Nhdr)** note_hdr, const char** note_desc,
+                     const ElfW(Addr) load_bias);
