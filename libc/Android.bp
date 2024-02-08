@@ -491,18 +491,16 @@ cc_library_static {
 }
 
 // ========================================================
-// libc_openbsd_ndk.a - upstream OpenBSD C library code
-// that can be safely included in the libc_ndk.a (doesn't
-// contain any troublesome global data or constructors).
+// libc_openbsd.a - upstream OpenBSD C library code
 // ========================================================
 //
 // These files are built with the openbsd-compat.h header file
 // automatically included.
-
 cc_library_static {
-    name: "libc_openbsd_ndk",
     defaults: ["libc_defaults"],
     srcs: [
+        "upstream-openbsd/lib/libc/crypt/arc4random.c",
+        "upstream-openbsd/lib/libc/crypt/arc4random_uniform.c",
         "upstream-openbsd/lib/libc/gen/alarm.c",
         "upstream-openbsd/lib/libc/gen/ctype_.c",
         "upstream-openbsd/lib/libc/gen/daemon.c",
@@ -599,60 +597,8 @@ cc_library_static {
 
         // This file is originally from OpenBSD, and benefits from
         // being compiled with openbsd-compat.h.
+        // TODO: clean this up instead.
         "bionic/fts.c",
-    ],
-
-    cflags: [
-        "-Wno-sign-compare",
-        "-Wno-unused-parameter",
-        "-include openbsd-compat.h",
-    ],
-
-    local_include_dirs: [
-        "private",
-        "stdio",
-        "upstream-openbsd/android/include",
-        "upstream-openbsd/lib/libc/include",
-        "upstream-openbsd/lib/libc/gdtoa/",
-    ],
-}
-
-cc_library_static {
-    name: "libc_openbsd_large_stack",
-    defaults: ["libc_defaults"],
-    srcs: [
-        "stdio/vfprintf.cpp",
-        "stdio/vfwprintf.cpp",
-        "upstream-openbsd/lib/libc/string/memmem.c",
-        "upstream-openbsd/lib/libc/string/strstr.c",
-    ],
-    cflags: [
-        "-include openbsd-compat.h",
-        "-Wno-sign-compare",
-        "-Wframe-larger-than=5000",
-    ],
-
-    local_include_dirs: [
-        "private",
-        "upstream-openbsd/android/include/",
-        "upstream-openbsd/lib/libc/include/",
-        "upstream-openbsd/lib/libc/gdtoa/",
-        "upstream-openbsd/lib/libc/stdio/",
-    ],
-}
-
-// ========================================================
-// libc_openbsd.a - upstream OpenBSD C library code
-// ========================================================
-//
-// These files are built with the openbsd-compat.h header file
-// automatically included.
-cc_library_static {
-    defaults: ["libc_defaults"],
-    srcs: [
-        // These two depend on getentropy, which isn't in libc_ndk.a.
-        "upstream-openbsd/lib/libc/crypt/arc4random.c",
-        "upstream-openbsd/lib/libc/crypt/arc4random_uniform.c",
     ],
 
     // Each architecture has optimized versions of some routines,
@@ -712,9 +658,35 @@ cc_library_static {
     local_include_dirs: [
         "private",
         "upstream-openbsd/android/include",
+        "stdio",
+        "upstream-openbsd/lib/libc/include",
     ],
 
     name: "libc_openbsd",
+}
+
+cc_library_static {
+    name: "libc_openbsd_large_stack",
+    defaults: ["libc_defaults"],
+    srcs: [
+        "stdio/vfprintf.cpp",
+        "stdio/vfwprintf.cpp",
+        "upstream-openbsd/lib/libc/string/memmem.c",
+        "upstream-openbsd/lib/libc/string/strstr.c",
+    ],
+    cflags: [
+        "-include openbsd-compat.h",
+        "-Wno-sign-compare",
+        "-Wframe-larger-than=5000",
+    ],
+
+    local_include_dirs: [
+        "private",
+        "upstream-openbsd/android/include/",
+        "upstream-openbsd/lib/libc/gdtoa/",
+        "upstream-openbsd/lib/libc/include/",
+        "upstream-openbsd/lib/libc/stdio/",
+    ],
 }
 
 // ========================================================
@@ -1392,7 +1364,6 @@ cc_library_static {
         "libc_netbsd",
         "libc_openbsd",
         "libc_openbsd_large_stack",
-        "libc_openbsd_ndk",
         "libc_syscalls",
         "libc_tzcode",
         "libstdc++",
