@@ -50,7 +50,6 @@ struct libc_globals {
   uintptr_t heap_pointer_tag;
   _Atomic(bool) memtag_stack;
   _Atomic(bool) decay_time_enabled;
-  _Atomic(bool) memtag;
 
   // In order to allow a complete switch between dispatch tables without
   // the need for copying each function by function in the structure,
@@ -136,8 +135,6 @@ struct libc_shared_globals {
   HeapTaggingLevel initial_heap_tagging_level = M_HEAP_TAGGING_LEVEL_NONE;
   bool initial_memtag_stack = false;
   int64_t heap_tagging_upgrade_timer_sec = 0;
-
-  void (*memtag_stack_dlopen_callback)() = nullptr;
 };
 
 __LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals();
