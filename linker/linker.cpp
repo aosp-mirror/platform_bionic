@@ -2213,6 +2213,14 @@ void* do_dlopen(const char* name, int flags,
   loading_trace.End();
 
   if (si != nullptr) {
+    if (si->has_min_version(7) && si->memtag_stack()) {
+      LD_LOG(kLogDlopen, "... dlopen enabling MTE for: realpath=\"%s\", soname=\"%s\"",
+             si->get_realpath(), si->get_soname());
+      if (auto* cb = __libc_shared_globals()->memtag_stack_dlopen_callback) {
+        cb();
+      }
+    }
+
     void* handle = si->to_handle();
     LD_LOG(kLogDlopen,
            "... dlopen calling constructors: realpath=\"%s\", soname=\"%s\", handle=%p",

@@ -178,6 +178,7 @@ class pthread_internal_t {
   bionic_tls* bionic_tls;
 
   int errno_value;
+  bool is_main() { return start_routine == nullptr; }
 };
 
 struct ThreadMapping {
@@ -207,6 +208,7 @@ __LIBC_HIDDEN__ pthread_internal_t* __pthread_internal_find(pthread_t pthread_id
 __LIBC_HIDDEN__ pid_t __pthread_internal_gettid(pthread_t pthread_id, const char* caller);
 __LIBC_HIDDEN__ void __pthread_internal_remove(pthread_internal_t* thread);
 __LIBC_HIDDEN__ void __pthread_internal_remove_and_free(pthread_internal_t* thread);
+__LIBC_HIDDEN__ void __find_main_stack_limits(uintptr_t* low, uintptr_t* high);
 
 static inline __always_inline bionic_tcb* __get_bionic_tcb() {
   return reinterpret_cast<bionic_tcb*>(&__get_tls()[MIN_TLS_SLOT]);
@@ -265,6 +267,9 @@ __LIBC_HIDDEN__ void pthread_key_clean_all(void);
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_prepare();
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_child();
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_parent();
+
+// Re-map all threads and successively launched threads with PROT_MTE.
+__LIBC_HIDDEN__ void __pthread_internal_remap_stack_with_mte();
 
 extern "C" bool android_run_on_all_threads(bool (*func)(void*), void* arg);
 
