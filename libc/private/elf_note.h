@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,11 +26,17 @@
  * SUCH DAMAGE.
  */
 
-// To enable logging
-int g_ld_debug_verbosity = 0;
+#pragma once
 
-// Stub some symbols to avoid linking issues
-void DL_WARN_documented_change(int api_level [[maybe_unused]],
-                               const char* doc_link [[maybe_unused]],
-                               const char* fmt [[maybe_unused]], ...) {}
+#include <elf.h>
+#include <link.h>
 
+// Get desired ELF note (Nhdr/desc) from mmapped PT_NOTE
+bool __get_elf_note(unsigned note_type, const char* note_name, const ElfW(Addr) note_addr,
+                    const ElfW(Phdr)* phdr_note, const ElfW(Nhdr)** note_hdr,
+                    const char** note_desc);
+
+// Search all mapped PT_NOTE's for the desired ELF note (Nhdr/desc)
+bool __find_elf_note(unsigned int note_type, const char* note_name, const ElfW(Phdr)* phdr_start,
+                     size_t phdr_ct, const ElfW(Nhdr)** note_hdr, const char** note_desc,
+                     const ElfW(Addr) load_bias);

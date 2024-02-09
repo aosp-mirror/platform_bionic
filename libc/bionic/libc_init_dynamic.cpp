@@ -39,12 +39,11 @@
  *   all dynamic linking has been performed.
  */
 
-#include <elf.h>
 #include <stddef.h>
-#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "bionic/pthread_internal.h"
+#include <stdint.h>
+#include <elf.h>
 #include "libc_init_common.h"
 
 #include "private/bionic_defs.h"
@@ -59,10 +58,6 @@ extern "C" {
   extern void netdClientInit(void);
   extern int __cxa_atexit(void (*)(void *), void *, void *);
 };
-
-void memtag_stack_dlopen_callback() {
-  __pthread_internal_remap_stack_with_mte();
-}
 
 // Use an initializer so __libc_sysinfo will have a fallback implementation
 // while .preinit_array constructors run.
@@ -160,10 +155,6 @@ __noreturn void __libc_init(void* raw_args,
   }
 
   __libc_init_mte_late();
-
-  // This roundabout way is needed so we don't use the static libc linked into the linker, which
-  // will not affect the process.
-  __libc_shared_globals()->memtag_stack_dlopen_callback = memtag_stack_dlopen_callback;
 
   exit(slingshot(args.argc - __libc_shared_globals()->initial_linker_arg_count,
                  args.argv + __libc_shared_globals()->initial_linker_arg_count,

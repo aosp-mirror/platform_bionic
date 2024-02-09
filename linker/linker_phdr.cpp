@@ -42,7 +42,9 @@
 #include "linker_debug.h"
 #include "linker_utils.h"
 
+#include "private/bionic_asm_note.h"
 #include "private/CFIShadow.h" // For kLibraryAlignment
+#include "private/elf_note.h"
 
 static int GetTargetElfMachine() {
 #if defined(__arm__)
@@ -140,8 +142,18 @@ static int GetTargetElfMachine() {
                                       MAYBE_MAP_FLAG((x), PF_R, PROT_READ) | \
                                       MAYBE_MAP_FLAG((x), PF_W, PROT_WRITE))
 
-// Default PMD size for x86_64 and aarch64 (2MB).
-static constexpr size_t kPmdSize = (1UL << 21);
+static const size_t kPageSize = page_size();
+
+/*
+ * Generic PMD size calculation:
+ *    - Each page table (PT) is of size 1 page.
+ *    - Each page table entry (PTE) is of size 64 bits.
+ *    - Each PTE locates one physical page frame (PFN) of size 1 page.
+ *    - A PMD entry locates 1 page table (PT)
+ *
+ *   PMD size = Num entries in a PT * page_size
+ */
+static const size_t kPmdSize = (kPageSize / sizeof(uint64_t)) * kPageSize;
 
 ElfReader::ElfReader()
     : did_read_(false), did_load_(false), fd_(-1), file_offset_(0), file_size_(0), phdr_num_(0),
@@ -163,7 +175,8 @@ bool ElfReader::Read(const char* name, int fd, off64_t file_offset, off64_t file
       VerifyElfHeader() &&
       ReadProgramHeaders() &&
       ReadSectionHeaders() &&
-      ReadDynamicSection()) {
+      ReadDynamicSection() &&
+      ReadPadSegmentNote()) {
     did_read_ = true;
   }
 
@@ -691,6 +704,47 @@ bool ElfReader::ReserveAddressSpace(address_space_params* address_space) {
 
   load_start_ = start;
   load_bias_ = reinterpret_cast<uint8_t*>(start) - addr;
+  return true;
+}
+
+// Find the ELF note of type NT_ANDROID_TYPE_PAD_SEGMENT and check that the desc value is 1.
+bool ElfReader::ReadPadSegmentNote() {
+  // The ELF can have multiple PT_NOTE's, check them all
+  for (size_t i = 0; i < phdr_num_; ++i) {
+    const ElfW(Phdr)* phdr = &phdr_table_[i];
+
+    if (phdr->p_type != PT_NOTE) {
+      continue;
+    }
+
+    // note_fragment is scoped to within the loop so that there is
+    // at most 1 PT_NOTE mapped at anytime during this search.
+    MappedFileFragment note_fragment;
+    if (!note_fragment.Map(fd_, file_offset_, phdr->p_offset, phdr->p_memsz)) {
+      DL_WARN("\"%s\" note mmap failed: %s", name_.c_str(), strerror(errno));
+      // If mmap failed, skip the optimization but don't block ELF loading
+      return true;
+    }
+
+    const ElfW(Nhdr)* note_hdr = nullptr;
+    const char* note_desc = nullptr;
+    if (!__get_elf_note(NT_ANDROID_TYPE_PAD_SEGMENT, "Android",
+                        reinterpret_cast<ElfW(Addr)>(note_fragment.data()),
+                        phdr, &note_hdr, &note_desc)) {
+      continue;
+    }
+
+    if (note_hdr->n_descsz != sizeof(ElfW(Word))) {
+      DL_ERR("\"%s\" NT_ANDROID_TYPE_PAD_SEGMENT note has unexpected n_descsz: %u",
+             name_.c_str(), reinterpret_cast<unsigned int>(note_hdr->n_descsz));
+      return false;
+    }
+
+    // 1 == enabled, 0 == disabled
+    should_pad_segments_ = *reinterpret_cast<const ElfW(Word)*>(note_desc) == 1;
+    return true;
+  }
+
   return true;
 }
 

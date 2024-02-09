@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,11 +26,8 @@
  * SUCH DAMAGE.
  */
 
-// To enable logging
-int g_ld_debug_verbosity = 0;
+#include <stdio.h>
 
-// Stub some symbols to avoid linking issues
-void DL_WARN_documented_change(int api_level [[maybe_unused]],
-                               const char* doc_link [[maybe_unused]],
-                               const char* fmt [[maybe_unused]], ...) {}
-
+void hello_world(void) {
+    printf("Hello world\n");
+}
