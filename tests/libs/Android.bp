@@ -234,6 +234,17 @@ cc_test_library {
 }
 
 // -----------------------------------------------------------------------------
+// Library used by memtag_stack_dlopen_test tests
+// -----------------------------------------------------------------------------
+cc_test_library {
+    name: "libtest_simple_memtag_stack",
+    sanitize: {
+        memtag_stack: true,
+    },
+    srcs: ["dlopen_testlib_simple.cpp"],
+}
+
+// -----------------------------------------------------------------------------
 // Libraries used by hwasan_test
 // -----------------------------------------------------------------------------
 cc_test_library {
