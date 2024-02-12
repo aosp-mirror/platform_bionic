@@ -1897,6 +1897,7 @@ cc_library_headers {
         "//external/gwp_asan",
         "//external/jemalloc_new",
         "//external/libunwind_llvm",
+        "//external/llvm-libc",
         "//external/scudo",
         "//system/core/property_service/libpropertyinfoparser",
         "//system/extras/toolchain-extras",
