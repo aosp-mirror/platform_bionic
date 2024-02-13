@@ -109,3 +109,15 @@ but 32-bit bionic's `pthread_mutex` is a total of 32 bits, leaving just
 mutexes for tids that don't fit in 16 bits. This typically manifests as
 a hang in `pthread_mutex_lock` if the libc startup code doesn't detect
 this condition and abort.
+
+
+## `getuid()` and friends wrongly set errno for very large results
+
+This doesn't generally affect Android devices, because we don't have any
+uids/gids/pids large enough, but 32-bit Android doesn't take into account
+that functions like getuid() potentially have return values that cover the
+entire 32-bit, and can't fail. This means that the usual "if the result is
+between -1 and -4096, set errno and return -1" code is inappropriate for
+these functions. Since LP32 is unlikely to be still supported long before
+those limits could ever matter, although -- unlike the others in this
+document -- this defect is actually fixable, it doesn't seem worth fixing.
