@@ -3354,7 +3354,7 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
                               "\"%s\" has text relocations",
                               get_realpath());
     add_dlwarning(get_realpath(), "text relocations");
-    if (phdr_table_unprotect_segments(phdr, phnum, load_bias, should_pad_segments_) < 0) {
+    if (phdr_table_unprotect_segments(phdr, phnum, load_bias) < 0) {
       DL_ERR("can't unprotect loadable segments for \"%s\": %s", get_realpath(), strerror(errno));
       return false;
     }
@@ -3370,7 +3370,7 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
 #if !defined(__LP64__)
   if (has_text_relocations) {
     // All relocations are done, we can protect our segments back to read-only.
-    if (phdr_table_protect_segments(phdr, phnum, load_bias, should_pad_segments_) < 0) {
+    if (phdr_table_protect_segments(phdr, phnum, load_bias) < 0) {
       DL_ERR("can't protect segments for \"%s\": %s",
              get_realpath(), strerror(errno));
       return false;
