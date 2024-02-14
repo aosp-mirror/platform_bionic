@@ -82,7 +82,7 @@
 #define CT_FLOAT 4   // Float: strtod
 
 #define to_digit(c) static_cast<int>((c) - '0')
-#define is_digit(c) ((unsigned)to_digit(c) <= 9)
+#define is_digit(c) (static_cast<unsigned>(to_digit(c)) <= 9)
 
 // Append a digit to a value and check for overflow.
 #define APPEND_DIGIT(val, dig)               \

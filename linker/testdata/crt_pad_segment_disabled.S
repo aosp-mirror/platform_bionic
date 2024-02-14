@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,11 +26,18 @@
  * SUCH DAMAGE.
  */
 
-// To enable logging
-int g_ld_debug_verbosity = 0;
+#include <private/bionic_asm_note.h>
 
-// Stub some symbols to avoid linking issues
-void DL_WARN_documented_change(int api_level [[maybe_unused]],
-                               const char* doc_link [[maybe_unused]],
-                               const char* fmt [[maybe_unused]], ...) {}
-
+  .section ".note.android.pad_segment", "a", %note
+  .balign 4
+  .long 1f - 0f                       // int32_t namesz
+  .long 3f - 2f                       // int32_t descsz
+  .long NT_ANDROID_TYPE_PAD_SEGMENT   // int32_t type
+0:
+  .asciz "Android"                    // char name[]
+1:
+  .balign 2
+2:
+  .long 0    // Disabled
+3:
+  .balign 2
