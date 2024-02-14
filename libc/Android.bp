@@ -20,31 +20,6 @@ license {
     ],
 }
 
-libc_common_src_files = [
-    "bionic/ether_aton.c",
-    "bionic/ether_ntoa.c",
-    "bionic/exit.cpp",
-    "bionic/initgroups.c",
-    "bionic/isatty.c",
-    "bionic/sched_cpualloc.c",
-    "bionic/sched_cpucount.c",
-    "bionic/sysprop_helpers.cpp",
-    "stdio/fmemopen.cpp",
-    "stdio/parsefloat.c",
-    "stdio/refill.c",
-    "stdio/stdio.cpp",
-    "stdio/stdio_ext.cpp",
-    "stdio/vfscanf.cpp",
-    "stdio/vfwscanf.cpp",
-]
-
-// off64_t/time64_t support on LP32.
-// ========================================================
-libc_common_src_files_32 = [
-    "bionic/legacy_32_bit_support.cpp",
-    "bionic/time64.c",
-]
-
 libc_common_flags = [
     "-D_LIBC=1",
     "-D__BIONIC_LP32_USE_STAT64",
@@ -844,9 +819,12 @@ cc_library_static {
         "bionic/dup.cpp",
         "bionic/environ.cpp",
         "bionic/error.cpp",
+        "bionic/ether_aton.c",
+        "bionic/ether_ntoa.c",
         "bionic/eventfd.cpp",
         "bionic/exec.cpp",
         "bionic/execinfo.cpp",
+        "bionic/exit.cpp",
         "bionic/faccessat.cpp",
         "bionic/fchmod.cpp",
         "bionic/fchmodat.cpp",
@@ -879,8 +857,10 @@ cc_library_static {
         "bionic/iconv.cpp",
         "bionic/icu_wrappers.cpp",
         "bionic/ifaddrs.cpp",
+        "bionic/initgroups.c",
         "bionic/inotify_init.cpp",
         "bionic/ioctl.cpp",
+        "bionic/isatty.c",
         "bionic/killpg.cpp",
         "bionic/langinfo.cpp",
         "bionic/lchown.cpp",
@@ -951,6 +931,8 @@ cc_library_static {
         "bionic/rename.cpp",
         "bionic/rmdir.cpp",
         "bionic/scandir.cpp",
+        "bionic/sched_cpualloc.c",
+        "bionic/sched_cpucount.c",
         "bionic/sched_getaffinity.cpp",
         "bionic/sched_getcpu.cpp",
         "bionic/semaphore.cpp",
@@ -988,6 +970,7 @@ cc_library_static {
         "bionic/sys_time.cpp",
         "bionic/sysinfo.cpp",
         "bionic/syslog.cpp",
+        "bionic/sysprop_helpers.cpp",
         "bionic/system.cpp",
         "bionic/system_property_api.cpp",
         "bionic/system_property_set.cpp",
@@ -1010,6 +993,16 @@ cc_library_static {
         "bionic/wctype.cpp",
         "bionic/wcwidth.cpp",
         "bionic/wmempcpy.cpp",
+
+        // Forked but not yet cleaned up/rewritten stdio code.
+        // TODO: finish cleanup.
+        "stdio/fmemopen.cpp",
+        "stdio/parsefloat.c",
+        "stdio/refill.c",
+        "stdio/stdio.cpp",
+        "stdio/stdio_ext.cpp",
+        "stdio/vfscanf.cpp",
+        "stdio/vfwscanf.cpp",
 
         // TODO: why isn't this in a static-libc-only module?
         // This contains a weak stub implementation of __find_icu_symbol for wctype.cpp,
@@ -1223,10 +1216,16 @@ cc_library_static {
         },
     },
 
-    // TODO: move to libc/bionic/legacy_32_bit_support.cpp or #if __LP64__ instead.
     multilib: {
         lib32: {
-            srcs: ["bionic/mmap.cpp"],
+            srcs: [
+                // off64_t/time64_t support on LP32.
+                "bionic/legacy_32_bit_support.cpp",
+                "bionic/time64.c",
+
+                // TODO: move to libc/bionic/legacy_32_bit_support.cpp or #if __LP64__ instead.
+                "bionic/mmap.cpp",
+            ],
         },
     },
 
@@ -1336,19 +1335,12 @@ cc_library_static {
 }
 
 // ========================================================
-// libc_common.a
+// libc_common.a --- everything shared by libc.a and libc.so
 // ========================================================
 
 cc_library_static {
     defaults: ["libc_defaults"],
     name: "libc_common",
-
-    srcs: libc_common_src_files,
-    multilib: {
-        lib32: {
-            srcs: libc_common_src_files_32,
-        },
-    },
 
     whole_static_libs: [
         "libarm-optimized-routines-string",
@@ -1377,7 +1369,7 @@ cc_library_static {
 }
 
 // ========================================================
-// libc_static_dispatch.a
+// libc_static_dispatch.a --- libc.a ifuncs
 // ========================================================
 cc_library_static {
     defaults: ["libc_defaults"],
@@ -1403,7 +1395,7 @@ cc_library_static {
 }
 
 // ========================================================
-// libc_dynamic_dispatch.a
+// libc_dynamic_dispatch.a --- libc.so ifuncs
 // ========================================================
 cc_library_static {
     defaults: ["libc_defaults"],
@@ -1897,6 +1889,7 @@ cc_library_headers {
         "//external/gwp_asan",
         "//external/jemalloc_new",
         "//external/libunwind_llvm",
+        "//external/llvm-libc",
         "//external/scudo",
         "//system/core/property_service/libpropertyinfoparser",
         "//system/extras/toolchain-extras",
