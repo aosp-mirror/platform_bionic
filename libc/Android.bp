@@ -816,6 +816,7 @@ cc_library_static {
         "bionic/abort.cpp",
         "bionic/accept.cpp",
         "bionic/access.cpp",
+        "bionic/android_crash_detail.cpp",
         "bionic/android_set_abort_message.cpp",
         "bionic/android_unsafe_frame_pointer_chase.cpp",
         "bionic/arpa_inet.cpp",
