@@ -26,14 +26,10 @@
  * SUCH DAMAGE.
  */
 
-#include <unistd.h>
 #include <termios.h>
-#include <errno.h>
+#include <unistd.h>
 
-int
-isatty (int  fd)
-{
-  struct termios term;
-
-  return tcgetattr (fd, &term) == 0;
+int isatty(int fd) {
+  termios term;
+  return tcgetattr(fd, &term) == 0;
 }
