@@ -728,8 +728,9 @@ bool ElfReader::ReadPadSegmentNote() {
     // at most 1 PT_NOTE mapped at anytime during this search.
     MappedFileFragment note_fragment;
     if (!note_fragment.Map(fd_, file_offset_, phdr->p_offset, phdr->p_memsz)) {
-      DL_ERR("\"%s\": PT_NOTE mmap(nullptr, %zu, PROT_READ, MAP_PRIVATE, %d, %p) failed: %m",
-             name_.c_str(), phdr->p_memsz, fd_, page_start(file_offset_ + phdr->p_offset));
+      DL_ERR("\"%s\": PT_NOTE mmap(nullptr, %p, PROT_READ, MAP_PRIVATE, %d, %p) failed: %m",
+             name_.c_str(), reinterpret_cast<void*>(phdr->p_memsz), fd_,
+             reinterpret_cast<void*>(page_start(file_offset_ + phdr->p_offset)));
       return false;
     }
 
