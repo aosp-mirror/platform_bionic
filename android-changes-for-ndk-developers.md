@@ -227,7 +227,7 @@ doesn't really help because it is possible to reconstruct the stripped
 information using widely-available tools.)
 
 ```
-$ readelf --header libBroken.so | grep 'section headers'
+$ readelf --headers libBroken.so | grep 'section headers'
   Start of section headers:          0 (bytes into file)
   Size of section headers:           0 (bytes)
   Number of section headers:         0
