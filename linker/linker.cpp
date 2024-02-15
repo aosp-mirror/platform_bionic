@@ -2213,14 +2213,6 @@ void* do_dlopen(const char* name, int flags,
   loading_trace.End();
 
   if (si != nullptr) {
-    if (si->has_min_version(7) && si->memtag_stack()) {
-      LD_LOG(kLogDlopen, "... dlopen enabling MTE for: realpath=\"%s\", soname=\"%s\"",
-             si->get_realpath(), si->get_soname());
-      if (auto* cb = __libc_shared_globals()->memtag_stack_dlopen_callback) {
-        cb();
-      }
-    }
-
     void* handle = si->to_handle();
     LD_LOG(kLogDlopen,
            "... dlopen calling constructors: realpath=\"%s\", soname=\"%s\", handle=%p",
@@ -3354,7 +3346,7 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
                               "\"%s\" has text relocations",
                               get_realpath());
     add_dlwarning(get_realpath(), "text relocations");
-    if (phdr_table_unprotect_segments(phdr, phnum, load_bias, should_pad_segments_) < 0) {
+    if (phdr_table_unprotect_segments(phdr, phnum, load_bias) < 0) {
       DL_ERR("can't unprotect loadable segments for \"%s\": %s", get_realpath(), strerror(errno));
       return false;
     }
@@ -3370,7 +3362,7 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
 #if !defined(__LP64__)
   if (has_text_relocations) {
     // All relocations are done, we can protect our segments back to read-only.
-    if (phdr_table_protect_segments(phdr, phnum, load_bias, should_pad_segments_) < 0) {
+    if (phdr_table_protect_segments(phdr, phnum, load_bias) < 0) {
       DL_ERR("can't protect segments for \"%s\": %s",
              get_realpath(), strerror(errno));
       return false;
@@ -3408,7 +3400,7 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
 }
 
 bool soinfo::protect_relro() {
-  if (phdr_table_protect_gnu_relro(phdr, phnum, load_bias, should_pad_segments_) < 0) {
+  if (phdr_table_protect_gnu_relro(phdr, phnum, load_bias) < 0) {
     DL_ERR("can't enable GNU RELRO protection for \"%s\": %s",
            get_realpath(), strerror(errno));
     return false;

@@ -41,6 +41,16 @@
 #include "platform/bionic/page.h"
 #include "private/bionic_tls.h"
 
+static long __sysconf_fread_long(const char* path) {
+  long result = 0;
+  FILE* fp = fopen(path, "re");
+  if (fp != nullptr) {
+    fscanf(fp, "%ld", &result);
+    fclose(fp);
+  }
+  return result;
+}
+
 struct sysconf_cache {
   long size, assoc, linesize;
 
@@ -89,16 +99,6 @@ static sysconf_caches* __sysconf_caches() {
 }
 
 #else
-
-long __sysconf_fread_long(const char* path) {
-  long result = 0;
-  FILE* fp = fopen(path, "re");
-  if (fp != nullptr) {
-    fscanf(fp, "%ld", &result);
-    fclose(fp);
-  }
-  return result;
-}
 
 static sysconf_caches* __sysconf_caches() {
   static sysconf_caches cached = []{
@@ -183,6 +183,7 @@ long sysconf(int name) {
     case _SC_AVPHYS_PAGES:      return get_avphys_pages();
     case _SC_CHILD_MAX:         return __sysconf_rlimit(RLIMIT_NPROC);
     case _SC_CLK_TCK:           return static_cast<long>(getauxval(AT_CLKTCK));
+    case _SC_NGROUPS_MAX:       return __sysconf_fread_long("/proc/sys/kernel/ngroups_max");
     case _SC_NPROCESSORS_CONF:  return get_nprocs_conf();
     case _SC_NPROCESSORS_ONLN:  return get_nprocs();
     case _SC_OPEN_MAX:          return __sysconf_rlimit(RLIMIT_NOFILE);
@@ -204,7 +205,6 @@ long sysconf(int name) {
     case _SC_COLL_WEIGHTS_MAX:  return _POSIX2_COLL_WEIGHTS_MAX;  // Minimum requirement.
     case _SC_EXPR_NEST_MAX:     return _POSIX2_EXPR_NEST_MAX;     // Minimum requirement.
     case _SC_LINE_MAX:          return _POSIX2_LINE_MAX;          // Minimum requirement.
-    case _SC_NGROUPS_MAX:       return NGROUPS_MAX;
     case _SC_PASS_MAX:          return PASS_MAX;
     case _SC_2_C_BIND:          return _POSIX2_C_BIND;
     case _SC_2_C_DEV:           return _POSIX2_C_DEV;
