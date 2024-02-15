@@ -851,6 +851,11 @@ TEST(grp, getgrouplist) {
 #endif
 }
 
+TEST(grp, initgroups) {
+  if (getuid() != 0) GTEST_SKIP() << "test requires root";
+  ASSERT_EQ(0, initgroups("root", 0));
+}
+
 #if defined(__BIONIC__)
 static void TestAidNamePrefix(const std::string& file_path) {
   std::string file_contents;
