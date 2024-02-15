@@ -857,7 +857,6 @@ cc_library_static {
         "bionic/iconv.cpp",
         "bionic/icu_wrappers.cpp",
         "bionic/ifaddrs.cpp",
-        "bionic/initgroups.c",
         "bionic/inotify_init.cpp",
         "bionic/ioctl.cpp",
         "bionic/isatty.cpp",
