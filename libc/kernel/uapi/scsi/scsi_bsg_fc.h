@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef SCSI_BSG_FC_H
 #define SCSI_BSG_FC_H
 #include <linux/types.h>
@@ -69,7 +57,7 @@ struct fc_bsg_host_vendor {
   __u32 vendor_cmd[];
 };
 struct fc_bsg_host_vendor_reply {
-  __u32 vendor_rsp[0];
+  __DECLARE_FLEX_ARRAY(__u32, vendor_rsp);
 };
 struct fc_bsg_rport_els {
   __u8 els_code;

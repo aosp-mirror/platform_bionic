@@ -229,6 +229,8 @@ typedef Elf64_Xword Elf64_Relr;
 #undef SHT_NUM
 #define SHT_NUM 20
 
+#define SHT_RISCV_ATTRIBUTES 0x70000003
+
 /*
  * Experimental support for SHT_RELR sections. For details, see proposal
  * at https://groups.google.com/forum/#!topic/generic-abi/bX460iggiKg.
@@ -266,4 +268,6 @@ typedef Elf64_Xword Elf64_Relr;
 /* TODO: upstream these to FreeBSD? */
 #define R_ARM_TLS_DESC 13
 #define R_ARM_IRELATIVE 160
-#define R_X86_64_JUMP_SLOT 7
+
+/* BSD spells this slightly differently to Linux. */
+#define R_X86_64_JUMP_SLOT R_X86_64_JMP_SLOT

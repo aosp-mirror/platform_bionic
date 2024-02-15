@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_ASM_RISCV_ELF_H
 #define _UAPI_ASM_RISCV_ELF_H
 #include <asm/ptrace.h>
@@ -44,6 +32,7 @@ typedef union __riscv_fp_state elf_fpregset_t;
 #define R_RISCV_TLS_DTPREL64 9
 #define R_RISCV_TLS_TPREL32 10
 #define R_RISCV_TLS_TPREL64 11
+#define R_RISCV_IRELATIVE 58
 #define R_RISCV_BRANCH 16
 #define R_RISCV_JAL 17
 #define R_RISCV_CALL 18
@@ -74,7 +63,6 @@ typedef union __riscv_fp_state elf_fpregset_t;
 #define R_RISCV_ALIGN 43
 #define R_RISCV_RVC_BRANCH 44
 #define R_RISCV_RVC_JUMP 45
-#define R_RISCV_LUI 46
 #define R_RISCV_GPREL_I 47
 #define R_RISCV_GPREL_S 48
 #define R_RISCV_TPREL_I 49
@@ -86,4 +74,7 @@ typedef union __riscv_fp_state elf_fpregset_t;
 #define R_RISCV_SET16 55
 #define R_RISCV_SET32 56
 #define R_RISCV_32_PCREL 57
+#define R_RISCV_PLT32 59
+#define R_RISCV_SET_ULEB128 60
+#define R_RISCV_SUB_ULEB128 61
 #endif

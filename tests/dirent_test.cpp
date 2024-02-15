@@ -29,6 +29,8 @@
 #include <set>
 #include <string>
 
+#include "utils.h"
+
 static void CheckProcSelf(std::set<std::string>& names) {
   // We have a good idea of what should be in /proc/self.
   ASSERT_TRUE(names.find(".") != names.end());
@@ -124,7 +126,6 @@ static int is_version_filter(const dirent* de) {
 
 TEST(dirent, scandir_filter) {
   dirent** entries;
-  errno = 0;
   ASSERT_EQ(1, scandir("/proc", &entries, is_version_filter, nullptr));
   ASSERT_STREQ("version", entries[0]->d_name);
   free(entries);
@@ -134,14 +135,14 @@ TEST(dirent, scandir_ENOENT) {
   dirent** entries;
   errno = 0;
   ASSERT_EQ(-1, scandir("/does-not-exist", &entries, nullptr, nullptr));
-  ASSERT_EQ(ENOENT, errno);
+  ASSERT_ERRNO(ENOENT);
 }
 
 TEST(dirent, scandir64_ENOENT) {
   dirent64** entries;
   errno = 0;
   ASSERT_EQ(-1, scandir64("/does-not-exist", &entries, nullptr, nullptr));
-  ASSERT_EQ(ENOENT, errno);
+  ASSERT_ERRNO(ENOENT);
 }
 
 TEST(dirent, scandirat_ENOENT) {
@@ -151,7 +152,7 @@ TEST(dirent, scandirat_ENOENT) {
   dirent** entries;
   errno = 0;
   ASSERT_EQ(-1, scandirat(root_fd, "does-not-exist", &entries, nullptr, nullptr));
-  ASSERT_EQ(ENOENT, errno);
+  ASSERT_ERRNO(ENOENT);
   close(root_fd);
 #else
   GTEST_SKIP() << "musl doesn't have scandirat or scandirat64";
@@ -165,7 +166,7 @@ TEST(dirent, scandirat64_ENOENT) {
   dirent64** entries;
   errno = 0;
   ASSERT_EQ(-1, scandirat64(root_fd, "does-not-exist", &entries, nullptr, nullptr));
-  ASSERT_EQ(ENOENT, errno);
+  ASSERT_ERRNO(ENOENT);
   close(root_fd);
 #else
   GTEST_SKIP() << "musl doesn't have scandirat or scandirat64";
@@ -174,12 +175,12 @@ TEST(dirent, scandirat64_ENOENT) {
 
 TEST(dirent, fdopendir_invalid) {
   ASSERT_TRUE(fdopendir(-1) == nullptr);
-  ASSERT_EQ(EBADF, errno);
+  ASSERT_ERRNO(EBADF);
 
   int fd = open("/dev/null", O_RDONLY);
   ASSERT_NE(fd, -1);
   ASSERT_TRUE(fdopendir(fd) == nullptr);
-  ASSERT_EQ(ENOTDIR, errno);
+  ASSERT_ERRNO(ENOTDIR);
   close(fd);
 }
 
@@ -193,15 +194,17 @@ TEST(dirent, fdopendir) {
 
   // fdopendir(3) took ownership, so closedir(3) closed our fd.
   ASSERT_EQ(close(fd), -1);
-  ASSERT_EQ(EBADF, errno);
+  ASSERT_ERRNO(EBADF);
 }
 
 TEST(dirent, opendir_invalid) {
+  errno = 0;
   ASSERT_TRUE(opendir("/does/not/exist") == nullptr);
-  ASSERT_EQ(ENOENT, errno);
+  ASSERT_ERRNO(ENOENT);
 
+  errno = 0;
   ASSERT_TRUE(opendir("/dev/null") == nullptr);
-  ASSERT_EQ(ENOTDIR, errno);
+  ASSERT_ERRNO(ENOTDIR);
 }
 
 TEST(dirent, opendir) {
@@ -215,7 +218,7 @@ TEST(dirent, opendir) {
 TEST(dirent, closedir_invalid) {
   DIR* d = nullptr;
   ASSERT_EQ(closedir(d), -1);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(dirent, closedir) {
@@ -235,7 +238,7 @@ TEST(dirent, readdir) {
   }
   // Reading to the end of the directory is not an error.
   // readdir(3) returns NULL, but leaves errno as 0.
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
   ASSERT_EQ(closedir(d), 0);
 
   CheckProcSelf(name_set);
@@ -252,7 +255,7 @@ TEST(dirent, readdir64_smoke) {
   }
   // Reading to the end of the directory is not an error.
   // readdir64(3) returns NULL, but leaves errno as 0.
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
   ASSERT_EQ(closedir(d), 0);
 
   CheckProcSelf(name_set);
@@ -270,7 +273,7 @@ TEST(dirent, readdir_r) {
   }
   // Reading to the end of the directory is not an error.
   // readdir_r(3) returns NULL, but leaves errno as 0.
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
   ASSERT_EQ(closedir(d), 0);
 
   CheckProcSelf(name_set);
@@ -288,7 +291,7 @@ TEST(dirent, readdir64_r_smoke) {
   }
   // Reading to the end of the directory is not an error.
   // readdir64_r(3) returns NULL, but leaves errno as 0.
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
   ASSERT_EQ(closedir(d), 0);
 
   CheckProcSelf(name_set);
@@ -365,7 +368,7 @@ TEST(dirent, seekdir_telldir) {
   ASSERT_EQ(end_offset, telldir(d));
   errno = 0;
   ASSERT_EQ(nullptr, readdir(d));
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
 
   ASSERT_EQ(0, closedir(d));
 }

@@ -37,11 +37,16 @@ int multiple_archs() __INTRODUCED_IN(14);
 #endif
 
 // __INTRODUCED_IN_64(21) should be ignored.
-int multiple_introduced_1() __INTRODUCED_IN_ARM(13) __INTRODUCED_IN_X86(13) __INTRODUCED_IN_64(21);
+int multiple_introduced_1() __INTRODUCED_IN_32(24) __INTRODUCED_IN_64(21);
 
-int multiple_introduced_2() __INTRODUCED_IN_ARM(13) __INTRODUCED_IN_X86(13) __INTRODUCED_IN_64(22);
+// This needs different guards for 32 vs 64.
+int multiple_introduced_2() __INTRODUCED_IN_32(24) __INTRODUCED_IN_64(26);
 
-int group_lp32() __INTRODUCED_IN_ARM(12) __INTRODUCED_IN_X86(12);
+// This produces both an LP64 and a not-LP64 check, but it doesn't need to check for all 64-bit
+// targets separately.
+int multiple_introduced_3() __INTRODUCED_IN_32(23) __INTRODUCED_IN_64(23);
+
+int added_to_lp64_late() __INTRODUCED_IN_64(28);
 
 #if defined(__cplusplus)
 }

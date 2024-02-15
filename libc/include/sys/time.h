@@ -38,21 +38,34 @@
 
 __BEGIN_DECLS
 
-int gettimeofday(struct timeval* __tv, struct timezone* __tz);
-int settimeofday(const struct timeval* __tv, const struct timezone* __tz);
+int gettimeofday(struct timeval* _Nullable __tv, struct timezone* _Nullable __tz);
+int settimeofday(const struct timeval* _Nullable __tv, const struct timezone* _Nullable __tz);
 
-int getitimer(int __which, struct itimerval* __current_value);
-int setitimer(int __which, const struct itimerval* __new_value, struct itimerval* __old_value);
+int getitimer(int __which, struct itimerval* _Nonnull __current_value);
+int setitimer(int __which, const struct itimerval* _Nonnull __new_value, struct itimerval* _Nullable __old_value);
 
-int utimes(const char* __path, const struct timeval __times[2]);
+int utimes(const char* _Nonnull __path, const struct timeval __times[_Nullable 2]);
 
 #if defined(__USE_BSD)
-int futimes(int __fd, const struct timeval __times[2]) __INTRODUCED_IN(26);
-int lutimes(const char* __path, const struct timeval __times[2]) __INTRODUCED_IN(26);
+int futimes(int __fd, const struct timeval __times[_Nullable 2]) __INTRODUCED_IN(26);
+int lutimes(const char* _Nonnull __path, const struct timeval __times[_Nullable 2]) __INTRODUCED_IN(26);
 #endif
 
 #if defined(__USE_GNU)
-int futimesat(int __dir_fd, const char* __path, const struct timeval __times[2]) __INTRODUCED_IN(26);
+/**
+ * [futimesat(2)](https://man7.org/linux/man-pages/man2/futimesat.2.html) sets
+ * file timestamps.
+ *
+ * Note: Linux supports `__path` being NULL (in which case `__dir_fd` need not
+ * be a directory), allowing futimensat() to be implemented with utimensat().
+ * Most callers should just use utimensat() directly, especially on Android
+ * where utimensat() has been available for longer than futimesat().
+ *
+ * Returns 0 on success and -1 and sets `errno` on failure.
+ *
+ * Available since API level 26.
+ */
+int futimesat(int __dir_fd, const char* __BIONIC_COMPLICATED_NULLNESS __path, const struct timeval __times[_Nullable 2]) __INTRODUCED_IN(26);
 #endif
 
 #define timerclear(a)   \

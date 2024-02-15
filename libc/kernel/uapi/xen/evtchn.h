@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef __LINUX_PUBLIC_EVTCHN_H__
 #define __LINUX_PUBLIC_EVTCHN_H__
 #define IOCTL_EVTCHN_BIND_VIRQ _IOC(_IOC_NONE, 'E', 0, sizeof(struct ioctl_evtchn_bind_virq))
@@ -42,5 +30,9 @@ struct ioctl_evtchn_notify {
 #define IOCTL_EVTCHN_RESTRICT_DOMID _IOC(_IOC_NONE, 'E', 6, sizeof(struct ioctl_evtchn_restrict_domid))
 struct ioctl_evtchn_restrict_domid {
   domid_t domid;
+};
+#define IOCTL_EVTCHN_BIND_STATIC _IOC(_IOC_NONE, 'E', 7, sizeof(struct ioctl_evtchn_bind))
+struct ioctl_evtchn_bind {
+  unsigned int port;
 };
 #endif

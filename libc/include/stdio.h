@@ -118,8 +118,8 @@ int fscanf(FILE* _Nonnull __fp, const char* _Nonnull __fmt, ...) __scanflike(2, 
 size_t fwrite(const void* _Nonnull __buf, size_t __size, size_t __count, FILE* _Nonnull __fp);
 int getc(FILE* _Nonnull __fp);
 int getchar(void);
-ssize_t getdelim(char* _Nullable * _Nonnull __line_ptr, size_t* _Nonnull __line_length_ptr, int __delimiter, FILE* _Nonnull __fp) __INTRODUCED_IN(18);
-ssize_t getline(char* _Nullable * _Nonnull __line_ptr, size_t* _Nonnull __line_length_ptr, FILE* _Nonnull __fp) __INTRODUCED_IN(18);
+ssize_t getdelim(char* _Nullable * _Nonnull __line_ptr, size_t* _Nonnull __line_length_ptr, int __delimiter, FILE* _Nonnull __fp);
+ssize_t getline(char* _Nullable * _Nonnull __line_ptr, size_t* _Nonnull __line_length_ptr, FILE* _Nonnull __fp);
 
 void perror(const char* _Nullable __msg);
 int printf(const char* _Nonnull __fmt, ...) __printflike(1, 2);
@@ -136,16 +136,16 @@ int ungetc(int __ch, FILE* _Nonnull __fp);
 int vfprintf(FILE* _Nonnull __fp, const char* _Nonnull __fmt, va_list __args) __printflike(2, 0);
 int vprintf(const char* _Nonnull __fp, va_list __args) __printflike(1, 0);
 
-int dprintf(int __fd, const char* _Nonnull __fmt, ...) __printflike(2, 3) __INTRODUCED_IN(21);
-int vdprintf(int __fd, const char* _Nonnull __fmt, va_list __args) __printflike(2, 0) __INTRODUCED_IN(21);
+int dprintf(int __fd, const char* _Nonnull __fmt, ...) __printflike(2, 3);
+int vdprintf(int __fd, const char* _Nonnull __fmt, va_list __args) __printflike(2, 0);
 
 #if (defined(__STDC_VERSION__) && __STDC_VERSION__ < 201112L) || \
     (defined(__cplusplus) && __cplusplus <= 201103L)
 char* _Nullable gets(char* _Nonnull __buf) __attribute__((deprecated("gets is unsafe, use fgets instead")));
 #endif
-int sprintf(char* _Nonnull __s, const char* _Nonnull __fmt, ...)
+int sprintf(char* __BIONIC_COMPLICATED_NULLNESS __s, const char* _Nonnull __fmt, ...)
     __printflike(2, 3) __warnattr_strict("sprintf is often misused; please use snprintf");
-int vsprintf(char* _Nonnull __s, const char* _Nonnull __fmt, va_list __args)
+int vsprintf(char* __BIONIC_COMPLICATED_NULLNESS __s, const char* _Nonnull __fmt, va_list __args)
     __printflike(2, 0) __warnattr_strict("vsprintf is often misused; please use vsnprintf");
 char* _Nullable tmpnam(char* _Nullable __s)
     __warnattr("tmpnam is unsafe, use mkstemp or tmpfile instead");
@@ -203,7 +203,7 @@ int renameat2(int __old_dir_fd, const char* _Nonnull __old_path, int __new_dir_f
 int fseek(FILE* _Nonnull __fp, long __offset, int __whence);
 long ftell(FILE* _Nonnull __fp);
 
-/* See https://android.googlesource.com/platform/bionic/+/master/docs/32-bit-abi.md */
+/* See https://android.googlesource.com/platform/bionic/+/main/docs/32-bit-abi.md */
 #if defined(__USE_FILE_OFFSET64)
 int fgetpos(FILE* _Nonnull __fp, fpos_t* _Nonnull __pos) __RENAME(fgetpos64) __INTRODUCED_IN(24);
 int fsetpos(FILE* _Nonnull __fp, const fpos_t* _Nonnull __pos) __RENAME(fsetpos64) __INTRODUCED_IN(24);
@@ -251,10 +251,10 @@ FILE* _Nullable freopen64(const char* _Nullable __path, const char* _Nonnull __m
 FILE* _Nullable tmpfile(void);
 FILE* _Nullable tmpfile64(void) __INTRODUCED_IN(24);
 
-int snprintf(char* _Nullable __buf, size_t __size, const char* _Nonnull __fmt, ...) __printflike(3, 4);
+int snprintf(char* __BIONIC_COMPLICATED_NULLNESS __buf, size_t __size, const char* _Nonnull __fmt, ...) __printflike(3, 4);
 int vfscanf(FILE* _Nonnull __fp, const char* _Nonnull __fmt, va_list __args) __scanflike(2, 0);
 int vscanf(const char* _Nonnull __fmt , va_list __args) __scanflike(1, 0);
-int vsnprintf(char* _Nullable __buf, size_t __size, const char* _Nonnull __fmt, va_list __args) __printflike(3, 0);
+int vsnprintf(char* __BIONIC_COMPLICATED_NULLNESS __buf, size_t __size, const char* _Nonnull __fmt, va_list __args) __printflike(3, 0);
 int vsscanf(const char* _Nonnull __s, const char* _Nonnull __fmt, va_list __args) __scanflike(2, 0);
 
 #define L_ctermid 1024 /* size for ctermid() */

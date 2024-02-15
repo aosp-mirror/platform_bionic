@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI__SOUND_ASOUND_H
 #define _UAPI__SOUND_ASOUND_H
 #ifdef __linux__
@@ -219,6 +207,7 @@ typedef int __bitwise snd_pcm_subformat_t;
 #define SNDRV_PCM_INFO_DOUBLE 0x00000004
 #define SNDRV_PCM_INFO_BATCH 0x00000010
 #define SNDRV_PCM_INFO_SYNC_APPLPTR 0x00000020
+#define SNDRV_PCM_INFO_PERFECT_DRAIN 0x00000040
 #define SNDRV_PCM_INFO_INTERLEAVED 0x00000100
 #define SNDRV_PCM_INFO_NONINTERLEAVED 0x00000200
 #define SNDRV_PCM_INFO_COMPLEX 0x00000400
@@ -310,6 +299,7 @@ typedef int snd_pcm_hw_param_t;
 #define SNDRV_PCM_HW_PARAMS_NORESAMPLE (1 << 0)
 #define SNDRV_PCM_HW_PARAMS_EXPORT_BUFFER (1 << 1)
 #define SNDRV_PCM_HW_PARAMS_NO_PERIOD_WAKEUP (1 << 2)
+#define SNDRV_PCM_HW_PARAMS_NO_DRAIN_SILENCE (1 << 3)
 struct snd_interval {
   unsigned int min, max;
   unsigned int openmin : 1, openmax : 1, integer : 1, empty : 1;
@@ -565,7 +555,7 @@ enum {
 #define SNDRV_PCM_IOCTL_READN_FRAMES _IOR('A', 0x53, struct snd_xfern)
 #define SNDRV_PCM_IOCTL_LINK _IOW('A', 0x60, int)
 #define SNDRV_PCM_IOCTL_UNLINK _IO('A', 0x61)
-#define SNDRV_RAWMIDI_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 2)
+#define SNDRV_RAWMIDI_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 4)
 enum {
   SNDRV_RAWMIDI_STREAM_OUTPUT = 0,
   SNDRV_RAWMIDI_STREAM_INPUT,
@@ -574,6 +564,7 @@ enum {
 #define SNDRV_RAWMIDI_INFO_OUTPUT 0x00000001
 #define SNDRV_RAWMIDI_INFO_INPUT 0x00000002
 #define SNDRV_RAWMIDI_INFO_DUPLEX 0x00000004
+#define SNDRV_RAWMIDI_INFO_UMP 0x00000008
 struct snd_rawmidi_info {
   unsigned int device;
   unsigned int subdevice;
@@ -622,6 +613,56 @@ struct snd_rawmidi_status {
   size_t xruns;
   unsigned char reserved[16];
 };
+#define SNDRV_UMP_EP_INFO_STATIC_BLOCKS 0x01
+#define SNDRV_UMP_EP_INFO_PROTO_MIDI_MASK 0x0300
+#define SNDRV_UMP_EP_INFO_PROTO_MIDI1 0x0100
+#define SNDRV_UMP_EP_INFO_PROTO_MIDI2 0x0200
+#define SNDRV_UMP_EP_INFO_PROTO_JRTS_MASK 0x0003
+#define SNDRV_UMP_EP_INFO_PROTO_JRTS_TX 0x0001
+#define SNDRV_UMP_EP_INFO_PROTO_JRTS_RX 0x0002
+struct snd_ump_endpoint_info {
+  int card;
+  int device;
+  unsigned int flags;
+  unsigned int protocol_caps;
+  unsigned int protocol;
+  unsigned int num_blocks;
+  unsigned short version;
+  unsigned short family_id;
+  unsigned short model_id;
+  unsigned int manufacturer_id;
+  unsigned char sw_revision[4];
+  unsigned short padding;
+  unsigned char name[128];
+  unsigned char product_id[128];
+  unsigned char reserved[32];
+} __attribute__((__packed__));
+#define SNDRV_UMP_DIR_INPUT 0x01
+#define SNDRV_UMP_DIR_OUTPUT 0x02
+#define SNDRV_UMP_DIR_BIDIRECTION 0x03
+#define SNDRV_UMP_BLOCK_IS_MIDI1 (1U << 0)
+#define SNDRV_UMP_BLOCK_IS_LOWSPEED (1U << 1)
+#define SNDRV_UMP_BLOCK_UI_HINT_UNKNOWN 0x00
+#define SNDRV_UMP_BLOCK_UI_HINT_RECEIVER 0x01
+#define SNDRV_UMP_BLOCK_UI_HINT_SENDER 0x02
+#define SNDRV_UMP_BLOCK_UI_HINT_BOTH 0x03
+#define SNDRV_UMP_MAX_GROUPS 16
+#define SNDRV_UMP_MAX_BLOCKS 32
+struct snd_ump_block_info {
+  int card;
+  int device;
+  unsigned char block_id;
+  unsigned char direction;
+  unsigned char active;
+  unsigned char first_group;
+  unsigned char num_groups;
+  unsigned char midi_ci_version;
+  unsigned char sysex8_streams;
+  unsigned char ui_hint;
+  unsigned int flags;
+  unsigned char name[128];
+  unsigned char reserved[32];
+} __attribute__((__packed__));
 #define SNDRV_RAWMIDI_IOCTL_PVERSION _IOR('W', 0x00, int)
 #define SNDRV_RAWMIDI_IOCTL_INFO _IOR('W', 0x01, struct snd_rawmidi_info)
 #define SNDRV_RAWMIDI_IOCTL_USER_PVERSION _IOW('W', 0x02, int)
@@ -629,6 +670,8 @@ struct snd_rawmidi_status {
 #define SNDRV_RAWMIDI_IOCTL_STATUS _IOWR('W', 0x20, struct snd_rawmidi_status)
 #define SNDRV_RAWMIDI_IOCTL_DROP _IOW('W', 0x30, int)
 #define SNDRV_RAWMIDI_IOCTL_DRAIN _IOW('W', 0x31, int)
+#define SNDRV_UMP_IOCTL_ENDPOINT_INFO _IOR('W', 0x40, struct snd_ump_endpoint_info)
+#define SNDRV_UMP_IOCTL_BLOCK_INFO _IOR('W', 0x41, struct snd_ump_block_info)
 #define SNDRV_TIMER_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 7)
 enum {
   SNDRV_TIMER_CLASS_NONE = - 1,
@@ -763,7 +806,7 @@ struct snd_timer_tread {
   unsigned int val;
   __time_pad pad2;
 };
-#define SNDRV_CTL_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 8)
+#define SNDRV_CTL_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 9)
 struct snd_ctl_card_info {
   int card;
   int pad;
@@ -909,6 +952,9 @@ struct snd_ctl_tlv {
 #define SNDRV_CTL_IOCTL_RAWMIDI_NEXT_DEVICE _IOWR('U', 0x40, int)
 #define SNDRV_CTL_IOCTL_RAWMIDI_INFO _IOWR('U', 0x41, struct snd_rawmidi_info)
 #define SNDRV_CTL_IOCTL_RAWMIDI_PREFER_SUBDEVICE _IOW('U', 0x42, int)
+#define SNDRV_CTL_IOCTL_UMP_NEXT_DEVICE _IOWR('U', 0x43, int)
+#define SNDRV_CTL_IOCTL_UMP_ENDPOINT_INFO _IOWR('U', 0x44, struct snd_ump_endpoint_info)
+#define SNDRV_CTL_IOCTL_UMP_BLOCK_INFO _IOWR('U', 0x45, struct snd_ump_block_info)
 #define SNDRV_CTL_IOCTL_POWER _IOWR('U', 0xd0, int)
 #define SNDRV_CTL_IOCTL_POWER_STATE _IOR('U', 0xd1, int)
 enum sndrv_ctl_event_type {

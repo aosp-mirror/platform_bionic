@@ -824,6 +824,8 @@ TEST(dlfcn, dlopen_failure) {
 }
 
 TEST(dlfcn, dlclose_unload) {
+  const size_t kPageSize = getpagesize();
+
   void* handle = dlopen("libtest_simple.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
   uint32_t* taxicab_number = static_cast<uint32_t*>(dlsym(handle, "dlopen_testlib_taxicab_number"));
@@ -833,9 +835,9 @@ TEST(dlfcn, dlclose_unload) {
   // Making sure that the library has been unmapped as part of library unload
   // process. Note that mprotect somewhat counter-intuitively returns ENOMEM in
   // this case.
-  uintptr_t page_start = reinterpret_cast<uintptr_t>(taxicab_number) & ~(PAGE_SIZE - 1);
-  ASSERT_TRUE(mprotect(reinterpret_cast<void*>(page_start), PAGE_SIZE, PROT_NONE) != 0);
-  ASSERT_EQ(ENOMEM, errno) << strerror(errno);
+  uintptr_t page_start = reinterpret_cast<uintptr_t>(taxicab_number) & ~(kPageSize - 1);
+  ASSERT_TRUE(mprotect(reinterpret_cast<void*>(page_start), kPageSize, PROT_NONE) != 0);
+  ASSERT_ERRNO(ENOMEM);
 }
 
 static void ConcurrentDlErrorFn(std::string& error) {

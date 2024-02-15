@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_LINUX_VIRTIO_NET_H
 #define _UAPI_LINUX_VIRTIO_NET_H
 #include <linux/types.h>
@@ -45,11 +33,13 @@
 #define VIRTIO_NET_F_GUEST_ANNOUNCE 21
 #define VIRTIO_NET_F_MQ 22
 #define VIRTIO_NET_F_CTRL_MAC_ADDR 23
+#define VIRTIO_NET_F_VQ_NOTF_COAL 52
 #define VIRTIO_NET_F_NOTF_COAL 53
 #define VIRTIO_NET_F_GUEST_USO4 54
 #define VIRTIO_NET_F_GUEST_USO6 55
 #define VIRTIO_NET_F_HOST_USO 56
 #define VIRTIO_NET_F_HASH_REPORT 57
+#define VIRTIO_NET_F_GUEST_HDRLEN 59
 #define VIRTIO_NET_F_RSS 60
 #define VIRTIO_NET_F_RSC_EXT 61
 #define VIRTIO_NET_F_STANDBY 62
@@ -140,7 +130,7 @@ struct virtio_net_hdr_mrg_rxbuf {
 };
 #endif
 struct virtio_net_ctrl_hdr {
-  __u8 class;
+  __u8 __linux_class;
   __u8 cmd;
 } __attribute__((packed));
 typedef __u8 virtio_net_ctrl_ack;
@@ -202,4 +192,15 @@ struct virtio_net_ctrl_coal_rx {
   __le32 rx_usecs;
 };
 #define VIRTIO_NET_CTRL_NOTF_COAL_RX_SET 1
+#define VIRTIO_NET_CTRL_NOTF_COAL_VQ_SET 2
+#define VIRTIO_NET_CTRL_NOTF_COAL_VQ_GET 3
+struct virtio_net_ctrl_coal {
+  __le32 max_packets;
+  __le32 max_usecs;
+};
+struct virtio_net_ctrl_coal_vq {
+  __le16 vqn;
+  __le16 reserved;
+  struct virtio_net_ctrl_coal coal;
+};
 #endif

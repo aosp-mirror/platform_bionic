@@ -17,12 +17,6 @@
 #include <stdio.h>
 
 /*
-** Some systems only handle "%.2d"; others only handle "%02d";
-** "%02.2d" makes (most) everybody happy.
-** At least some versions of gcc warn about the %02.2d;
-** we conditionalize below to avoid the warning.
-*/
-/*
 ** All years associated with 32-bit time_t values are exactly four digits long;
 ** some years associated with 64-bit time_t values are not.
 ** Vintage programs are coded for years that are always four digits long
@@ -34,24 +28,16 @@
 ** The ISO C and POSIX standards prohibit padding the year,
 ** but many implementations pad anyway; most likely the standards are buggy.
 */
-#ifdef __GNUC__
-#define ASCTIME_FMT	"%s %s%3d %2.2d:%2.2d:%2.2d %-4s\n"
-#else /* !defined __GNUC__ */
-#define ASCTIME_FMT	"%s %s%3d %02.2d:%02.2d:%02.2d %-4s\n"
-#endif /* !defined __GNUC__ */
+static char const ASCTIME_FMT[] = "%s %s%3d %.2d:%.2d:%.2d %-4s\n";
 /*
 ** For years that are more than four digits we put extra spaces before the year
 ** so that code trying to overwrite the newline won't end up overwriting
 ** a digit within a year and truncating the year (operating on the assumption
 ** that no output is better than wrong output).
 */
-#ifdef __GNUC__
-#define ASCTIME_FMT_B	"%s %s%3d %2.2d:%2.2d:%2.2d     %s\n"
-#else /* !defined __GNUC__ */
-#define ASCTIME_FMT_B	"%s %s%3d %02.2d:%02.2d:%02.2d     %s\n"
-#endif /* !defined __GNUC__ */
+static char const ASCTIME_FMT_B[] = "%s %s%3d %.2d:%.2d:%.2d     %s\n";
 
-#define STD_ASCTIME_BUF_SIZE	26
+enum { STD_ASCTIME_BUF_SIZE = 26 };
 /*
 ** Big enough for something such as
 ** ??? ???-2147483648 -2147483648:-2147483648:-2147483648     -2147483648\n
@@ -59,15 +45,23 @@
 ** seven explicit spaces, two explicit colons, a newline,
 ** and a trailing NUL byte).
 ** The values above are for systems where an int is 32 bits and are provided
-** as an example; the define below calculates the maximum for the system at
+** as an example; the size expression below is a bound for the system at
 ** hand.
 */
-#define MAX_ASCTIME_BUF_SIZE	(2*3+5*INT_STRLEN_MAXIMUM(int)+7+2+1+1)
+static char buf_asctime[2*3 + 5*INT_STRLEN_MAXIMUM(int) + 7 + 2 + 1 + 1];
 
-static char	buf_asctime[MAX_ASCTIME_BUF_SIZE];
+/* A similar buffer for ctime.
+   C89 requires that they be the same buffer.
+   This requirement was removed in C99, so support it only if requested,
+   as support is more likely to lead to bugs in badly written programs.  */
+#if SUPPORT_C89
+# define buf_ctime buf_asctime
+#else
+static char buf_ctime[sizeof buf_asctime];
+#endif
 
 char *
-asctime_r(register const struct tm *timeptr, char *buf)
+asctime_r(struct tm const *restrict timeptr, char *restrict buf)
 {
 	static const char	wday_name[][4] = {
 		"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
@@ -79,7 +73,7 @@ asctime_r(register const struct tm *timeptr, char *buf)
 	register const char *	wn;
 	register const char *	mn;
 	char			year[INT_STRLEN_MAXIMUM(int) + 2];
-	char			result[MAX_ASCTIME_BUF_SIZE];
+	char result[sizeof buf_asctime];
 
 	if (timeptr == NULL) {
 		errno = EINVAL;
@@ -107,7 +101,8 @@ asctime_r(register const struct tm *timeptr, char *buf)
 		timeptr->tm_mday, timeptr->tm_hour,
 		timeptr->tm_min, timeptr->tm_sec,
 		year);
-	if (strlen(result) < STD_ASCTIME_BUF_SIZE || buf == buf_asctime)
+	if (strlen(result) < STD_ASCTIME_BUF_SIZE
+	    || buf == buf_ctime || buf == buf_asctime)
 		return strcpy(buf, result);
 	else {
 		errno = EOVERFLOW;
@@ -119,4 +114,18 @@ char *
 asctime(register const struct tm *timeptr)
 {
 	return asctime_r(timeptr, buf_asctime);
+}
+
+char *
+ctime_r(const time_t *timep, char *buf)
+{
+  struct tm mytm;
+  struct tm *tmp = localtime_r(timep, &mytm);
+  return tmp ? asctime_r(tmp, buf) : NULL;
+}
+
+char *
+ctime(const time_t *timep)
+{
+  return ctime_r(timep, buf_ctime);
 }

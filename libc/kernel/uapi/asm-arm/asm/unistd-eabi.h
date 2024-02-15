@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_ASM_UNISTD_EABI_H
 #define _UAPI_ASM_UNISTD_EABI_H
 #define __NR_restart_syscall (__NR_SYSCALL_BASE + 0)
@@ -421,4 +409,10 @@
 #define __NR_process_mrelease (__NR_SYSCALL_BASE + 448)
 #define __NR_futex_waitv (__NR_SYSCALL_BASE + 449)
 #define __NR_set_mempolicy_home_node (__NR_SYSCALL_BASE + 450)
+#define __NR_cachestat (__NR_SYSCALL_BASE + 451)
+#define __NR_fchmodat2 (__NR_SYSCALL_BASE + 452)
+#define __NR_map_shadow_stack (__NR_SYSCALL_BASE + 453)
+#define __NR_futex_wake (__NR_SYSCALL_BASE + 454)
+#define __NR_futex_wait (__NR_SYSCALL_BASE + 455)
+#define __NR_futex_requeue (__NR_SYSCALL_BASE + 456)
 #endif

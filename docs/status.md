@@ -11,7 +11,7 @@ for changes related to native code loading in various Android releases.
 ### POSIX
 
 You can see the current status with respect to POSIX in the form of tests:
-https://android.googlesource.com/platform/bionic/+/master/tests/headers/posix/
+https://android.googlesource.com/platform/bionic/+/main/tests/headers/posix/
 
 Some POSIX functionality is not supported by the Linux kernel, and
 is guarded with tests for `__linux__`. Other functionality is not
@@ -53,7 +53,25 @@ list of POSIX functions implemented by glibc but not by bionic.
 
 ### libc
 
-Current libc symbols: https://android.googlesource.com/platform/bionic/+/master/libc/libc.map.txt
+Current libc symbols: https://android.googlesource.com/platform/bionic/+/main/libc/libc.map.txt
+
+New libc functions in V (API level 35):
+  * `tcgetwinsize`, `tcsetwinsize` (POSIX Issue 8 additions).
+  * `timespec_getres` (C23 addition).
+  * `localtime_rz`, `mktime_z`, `tzalloc`, and `tzfree` (NetBSD
+    extensions implemented in tzcode, and the "least non-standard"
+    functions for avoiding $TZ if you need to use multiple timezones in
+    multi-threaded C).
+  * `mbsrtowcs_l` and `wcsrtombs_l` aliases for `mbsrtowcs` and `wcsrtombs`.
+  * GNU extensions `strerrordesc_np` and `strerrorname_np`.
+  * New system call wrappers: `__riscv_flush_icache` (`<sys/cachectl.h>`),
+    `__riscv_hwprobe` (`<sys/hwprobe.h>`), `epoll_pwait2`/`epoll_pwait2_64` (`<sys/epoll.h>`).
+
+New libc behavior in V (API level 35):
+  * Added `LD_SHOW_AUXV` to the dynamic linker to dump the ELF auxiliary
+    vector if the environment variable is set.
+  * The printf family now supports `%#m` to print the name of the errno
+    constant (rather than the description printed by `%m`).
 
 New libc functions in U (API level 34):
   * `close_range` and `copy_file_range` (Linux-specific GNU extensions).
@@ -281,7 +299,7 @@ ndk-r21$ for i in `ls -1v platforms/android-*/arch-arm/usr/lib/libc.so` ; do \
 
 ### libm
 
-Current libm symbols: https://android.googlesource.com/platform/bionic/+/master/libm/libm.map.txt
+Current libm symbols: https://android.googlesource.com/platform/bionic/+/main/libm/libm.map.txt
 
 0 remaining missing C11/POSIX libm functions.
 

@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef __UAPI_SOUND_INTEL_AVS_TOKENS_H
 #define __UAPI_SOUND_INTEL_AVS_TOKENS_H
 enum avs_tplg_token {
@@ -100,6 +88,7 @@ enum avs_tplg_token {
   AVS_TKN_MOD_CORE_ID_U8 = 1704,
   AVS_TKN_MOD_PROC_DOMAIN_U8 = 1705,
   AVS_TKN_MOD_MODCFG_EXT_ID_U32 = 1706,
+  AVS_TKN_MOD_KCONTROL_ID_U32 = 1707,
   AVS_TKN_PATH_TMPL_ID_U32 = 1801,
   AVS_TKN_PATH_ID_U32 = 1901,
   AVS_TKN_PATH_FE_FMT_ID_U32 = 1902,
@@ -107,5 +96,6 @@ enum avs_tplg_token {
   AVS_TKN_PIN_FMT_INDEX_U32 = 2201,
   AVS_TKN_PIN_FMT_IOBS_U32 = 2202,
   AVS_TKN_PIN_FMT_AFMT_ID_U32 = 2203,
+  AVS_TKN_KCONTROL_ID_U32 = 2301,
 };
 #endif

@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_ASM_UNISTD_X32_H
 #define _UAPI_ASM_UNISTD_X32_H
 #define __NR_read (__X32_SYSCALL_BIT + 0)
@@ -333,6 +321,11 @@
 #define __NR_process_mrelease (__X32_SYSCALL_BIT + 448)
 #define __NR_futex_waitv (__X32_SYSCALL_BIT + 449)
 #define __NR_set_mempolicy_home_node (__X32_SYSCALL_BIT + 450)
+#define __NR_cachestat (__X32_SYSCALL_BIT + 451)
+#define __NR_fchmodat2 (__X32_SYSCALL_BIT + 452)
+#define __NR_futex_wake (__X32_SYSCALL_BIT + 454)
+#define __NR_futex_wait (__X32_SYSCALL_BIT + 455)
+#define __NR_futex_requeue (__X32_SYSCALL_BIT + 456)
 #define __NR_rt_sigaction (__X32_SYSCALL_BIT + 512)
 #define __NR_rt_sigreturn (__X32_SYSCALL_BIT + 513)
 #define __NR_ioctl (__X32_SYSCALL_BIT + 514)

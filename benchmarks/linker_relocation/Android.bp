@@ -25,6 +25,7 @@
 // SUCH DAMAGE.
 
 package {
+    default_team: "trendy_team_native_tools_libraries",
     default_applicable_licenses: ["bionic_benchmarks_license"],
 }
 
@@ -68,8 +69,12 @@ cc_defaults {
 
     compile_multilib: "both",
     multilib: {
-        lib32: { suffix: "32" },
-        lib64: { suffix: "64" },
+        lib32: {
+            suffix: "32",
+        },
+        lib64: {
+            suffix: "64",
+        },
     },
 }
 

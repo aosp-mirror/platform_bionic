@@ -29,7 +29,7 @@
 
 #include <android-base/silent_death_test.h>
 
-#if __BIONIC__
+#if defined(__BIONIC__)
 #define ASSERT_FORTIFY(expr) ASSERT_EXIT(expr, testing::KilledBySignal(SIGABRT), "FORTIFY")
 #else
 #define ASSERT_FORTIFY(expr) ASSERT_EXIT(expr, testing::KilledBySignal(SIGABRT), "")
@@ -412,9 +412,6 @@ TEST_F(DEATHTEST, sprintf_fortified) {
   ASSERT_FORTIFY(sprintf(buf, "%s", source_buf));
 }
 
-#if !__has_attribute(alloc_size)
-// TODO: remove this after Clang prebuilt rebase.
-#else
 TEST_F(DEATHTEST, sprintf_malloc_fortified) {
   char* buf = (char *) malloc(10);
   char source_buf[11];
@@ -422,7 +419,6 @@ TEST_F(DEATHTEST, sprintf_malloc_fortified) {
   ASSERT_FORTIFY(sprintf(buf, "%s", source_buf));
   free(buf);
 }
-#endif
 
 TEST_F(DEATHTEST, sprintf2_fortified) {
   char buf[5];
@@ -668,6 +664,10 @@ TEST_F(DEATHTEST, readlinkat_fortified) {
   char buf[1];
   size_t ct = atoi("2"); // prevent optimizations
   ASSERT_FORTIFY(readlinkat(AT_FDCWD, "/dev/null", buf, ct));
+}
+
+TEST(TEST_NAME, snprintf_nullptr_valid) {
+  ASSERT_EQ(10, snprintf(nullptr, 0, "0123456789"));
 }
 
 extern "C" char* __strncat_chk(char*, const char*, size_t, size_t);
@@ -1010,7 +1010,7 @@ TEST_F(DEATHTEST, ppoll_fortified) {
 }
 
 TEST_F(DEATHTEST, ppoll64_fortified) {
-#if __BIONIC__ // glibc doesn't have ppoll64.
+#if defined(__BIONIC__)        // glibc doesn't have ppoll64.
   nfds_t fd_count = atoi("2"); // suppress compiler optimizations
   pollfd buf[1] = {{0, POLLIN, 0}};
   // Set timeout to zero to prevent waiting in ppoll when fortify test fails.
@@ -1026,8 +1026,6 @@ TEST_F(DEATHTEST, open_O_CREAT_without_mode_fortified) {
 }
 
 TEST_F(DEATHTEST, open_O_TMPFILE_without_mode_fortified) {
-#if __BIONIC__ // Our glibc is too old for O_TMPFILE.
   int flags = O_TMPFILE; // Fool the compiler.
   ASSERT_FORTIFY(open("", flags));
-#endif
 }

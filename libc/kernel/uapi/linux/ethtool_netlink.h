@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_LINUX_ETHTOOL_NETLINK_H_
 #define _UAPI_LINUX_ETHTOOL_NETLINK_H_
 #include <linux/ethtool.h>
@@ -59,6 +47,11 @@ enum {
   ETHTOOL_MSG_PSE_GET,
   ETHTOOL_MSG_PSE_SET,
   ETHTOOL_MSG_RSS_GET,
+  ETHTOOL_MSG_PLCA_GET_CFG,
+  ETHTOOL_MSG_PLCA_SET_CFG,
+  ETHTOOL_MSG_PLCA_GET_STATUS,
+  ETHTOOL_MSG_MM_GET,
+  ETHTOOL_MSG_MM_SET,
   __ETHTOOL_MSG_USER_CNT,
   ETHTOOL_MSG_USER_MAX = __ETHTOOL_MSG_USER_CNT - 1
 };
@@ -102,6 +95,11 @@ enum {
   ETHTOOL_MSG_MODULE_NTF,
   ETHTOOL_MSG_PSE_GET_REPLY,
   ETHTOOL_MSG_RSS_GET_REPLY,
+  ETHTOOL_MSG_PLCA_GET_CFG_REPLY,
+  ETHTOOL_MSG_PLCA_GET_STATUS_REPLY,
+  ETHTOOL_MSG_PLCA_NTF,
+  ETHTOOL_MSG_MM_GET_REPLY,
+  ETHTOOL_MSG_MM_NTF,
   __ETHTOOL_MSG_KERNEL_CNT,
   ETHTOOL_MSG_KERNEL_MAX = __ETHTOOL_MSG_KERNEL_CNT - 1
 };
@@ -266,6 +264,9 @@ enum {
   ETHTOOL_A_RINGS_TCP_DATA_SPLIT,
   ETHTOOL_A_RINGS_CQE_SIZE,
   ETHTOOL_A_RINGS_TX_PUSH,
+  ETHTOOL_A_RINGS_RX_PUSH,
+  ETHTOOL_A_RINGS_TX_PUSH_BUF_LEN,
+  ETHTOOL_A_RINGS_TX_PUSH_BUF_LEN_MAX,
   __ETHTOOL_A_RINGS_CNT,
   ETHTOOL_A_RINGS_MAX = (__ETHTOOL_A_RINGS_CNT - 1)
 };
@@ -310,6 +311,9 @@ enum {
   ETHTOOL_A_COALESCE_RATE_SAMPLE_INTERVAL,
   ETHTOOL_A_COALESCE_USE_CQE_MODE_TX,
   ETHTOOL_A_COALESCE_USE_CQE_MODE_RX,
+  ETHTOOL_A_COALESCE_TX_AGGR_MAX_BYTES,
+  ETHTOOL_A_COALESCE_TX_AGGR_MAX_FRAMES,
+  ETHTOOL_A_COALESCE_TX_AGGR_TIME_USECS,
   __ETHTOOL_A_COALESCE_CNT,
   ETHTOOL_A_COALESCE_MAX = (__ETHTOOL_A_COALESCE_CNT - 1)
 };
@@ -320,6 +324,7 @@ enum {
   ETHTOOL_A_PAUSE_RX,
   ETHTOOL_A_PAUSE_TX,
   ETHTOOL_A_PAUSE_STATS,
+  ETHTOOL_A_PAUSE_STATS_SRC,
   __ETHTOOL_A_PAUSE_CNT,
   ETHTOOL_A_PAUSE_MAX = (__ETHTOOL_A_PAUSE_CNT - 1)
 };
@@ -538,6 +543,7 @@ enum {
   ETHTOOL_A_STATS_HEADER,
   ETHTOOL_A_STATS_GROUPS,
   ETHTOOL_A_STATS_GRP,
+  ETHTOOL_A_STATS_SRC,
   __ETHTOOL_A_STATS_CNT,
   ETHTOOL_A_STATS_MAX = (__ETHTOOL_A_STATS_CNT - 1)
 };
@@ -560,7 +566,7 @@ enum {
   ETHTOOL_A_STATS_GRP_HIST_BKT_HI,
   ETHTOOL_A_STATS_GRP_HIST_VAL,
   __ETHTOOL_A_STATS_GRP_CNT,
-  ETHTOOL_A_STATS_GRP_MAX = (__ETHTOOL_A_STATS_CNT - 1)
+  ETHTOOL_A_STATS_GRP_MAX = (__ETHTOOL_A_STATS_GRP_CNT - 1)
 };
 enum {
   ETHTOOL_A_STATS_ETH_PHY_5_SYM_ERR,
@@ -634,6 +640,48 @@ enum {
   ETHTOOL_A_RSS_HKEY,
   __ETHTOOL_A_RSS_CNT,
   ETHTOOL_A_RSS_MAX = (__ETHTOOL_A_RSS_CNT - 1),
+};
+enum {
+  ETHTOOL_A_PLCA_UNSPEC,
+  ETHTOOL_A_PLCA_HEADER,
+  ETHTOOL_A_PLCA_VERSION,
+  ETHTOOL_A_PLCA_ENABLED,
+  ETHTOOL_A_PLCA_STATUS,
+  ETHTOOL_A_PLCA_NODE_CNT,
+  ETHTOOL_A_PLCA_NODE_ID,
+  ETHTOOL_A_PLCA_TO_TMR,
+  ETHTOOL_A_PLCA_BURST_CNT,
+  ETHTOOL_A_PLCA_BURST_TMR,
+  __ETHTOOL_A_PLCA_CNT,
+  ETHTOOL_A_PLCA_MAX = (__ETHTOOL_A_PLCA_CNT - 1)
+};
+enum {
+  ETHTOOL_A_MM_STAT_UNSPEC,
+  ETHTOOL_A_MM_STAT_PAD,
+  ETHTOOL_A_MM_STAT_REASSEMBLY_ERRORS,
+  ETHTOOL_A_MM_STAT_SMD_ERRORS,
+  ETHTOOL_A_MM_STAT_REASSEMBLY_OK,
+  ETHTOOL_A_MM_STAT_RX_FRAG_COUNT,
+  ETHTOOL_A_MM_STAT_TX_FRAG_COUNT,
+  ETHTOOL_A_MM_STAT_HOLD_COUNT,
+  __ETHTOOL_A_MM_STAT_CNT,
+  ETHTOOL_A_MM_STAT_MAX = (__ETHTOOL_A_MM_STAT_CNT - 1)
+};
+enum {
+  ETHTOOL_A_MM_UNSPEC,
+  ETHTOOL_A_MM_HEADER,
+  ETHTOOL_A_MM_PMAC_ENABLED,
+  ETHTOOL_A_MM_TX_ENABLED,
+  ETHTOOL_A_MM_TX_ACTIVE,
+  ETHTOOL_A_MM_TX_MIN_FRAG_SIZE,
+  ETHTOOL_A_MM_RX_MIN_FRAG_SIZE,
+  ETHTOOL_A_MM_VERIFY_ENABLED,
+  ETHTOOL_A_MM_VERIFY_STATUS,
+  ETHTOOL_A_MM_VERIFY_TIME,
+  ETHTOOL_A_MM_MAX_VERIFY_TIME,
+  ETHTOOL_A_MM_STATS,
+  __ETHTOOL_A_MM_CNT,
+  ETHTOOL_A_MM_MAX = (__ETHTOOL_A_MM_CNT - 1)
 };
 #define ETHTOOL_GENL_NAME "ethtool"
 #define ETHTOOL_GENL_VERSION 1

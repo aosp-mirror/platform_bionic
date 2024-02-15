@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _LINUX_DM_IOCTL_V4_H
 #define _LINUX_DM_IOCTL_V4_H
 #include <linux/types.h>
@@ -106,9 +94,9 @@ enum {
 #define DM_TARGET_MSG _IOWR(DM_IOCTL, DM_TARGET_MSG_CMD, struct dm_ioctl)
 #define DM_DEV_SET_GEOMETRY _IOWR(DM_IOCTL, DM_DEV_SET_GEOMETRY_CMD, struct dm_ioctl)
 #define DM_VERSION_MAJOR 4
-#define DM_VERSION_MINOR 47
+#define DM_VERSION_MINOR 48
 #define DM_VERSION_PATCHLEVEL 0
-#define DM_VERSION_EXTRA "-ioctl(2022-07-28)"
+#define DM_VERSION_EXTRA "-ioctl(2023-03-01)"
 #define DM_READONLY_FLAG (1 << 0)
 #define DM_SUSPEND_FLAG (1 << 1)
 #define DM_PERSISTENT_DEV_FLAG (1 << 3)

@@ -35,8 +35,8 @@
 __BEGIN_DECLS
 
 // Avoid circular dependencies since this is exposed from <sys/cdefs.h>.
-int __system_property_get(const char* __name, char* __value);
-int atoi(const char* __s) __attribute_pure__;
+int __system_property_get(const char* _Nonnull __name, char*  _Nonnull __value);
+int atoi(const char* _Nonnull __s) __attribute_pure__;
 
 __BIONIC_GET_DEVICE_API_LEVEL_INLINE int android_get_device_api_level() {
   char value[92] = { 0 };

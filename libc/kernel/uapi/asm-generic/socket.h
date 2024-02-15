@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef __ASM_GENERIC_SOCKET_H
 #define __ASM_GENERIC_SOCKET_H
 #include <linux/posix_types.h>
@@ -102,6 +90,8 @@
 #define SO_RESERVE_MEM 73
 #define SO_TXREHASH 74
 #define SO_RCVMARK 75
+#define SO_PASSPIDFD 76
+#define SO_PEERPIDFD 77
 #if __BITS_PER_LONG == 64 || defined(__x86_64__) && defined(__ILP32__)
 #define SO_TIMESTAMP SO_TIMESTAMP_OLD
 #define SO_TIMESTAMPNS SO_TIMESTAMPNS_OLD

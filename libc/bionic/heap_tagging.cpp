@@ -57,6 +57,7 @@ void SetDefaultHeapTaggingLevel() {
         break;
       case M_HEAP_TAGGING_LEVEL_SYNC:
       case M_HEAP_TAGGING_LEVEL_ASYNC:
+        atomic_store(&globals->memtag, true);
         atomic_store(&globals->memtag_stack, __libc_shared_globals()->initial_memtag_stack);
         break;
       default:
@@ -90,10 +91,7 @@ static bool set_tcf_on_all_threads(int tcf) {
         }
 
         tagged_addr_ctrl = (tagged_addr_ctrl & ~PR_MTE_TCF_MASK) | tcf;
-        if (prctl(PR_SET_TAGGED_ADDR_CTRL, tagged_addr_ctrl, 0, 0, 0) < 0) {
-          return false;
-        }
-        return true;
+        return prctl(PR_SET_TAGGED_ADDR_CTRL, tagged_addr_ctrl, 0, 0, 0) >= 0;
       },
       &tcf);
 }
@@ -116,6 +114,7 @@ bool SetHeapTaggingLevel(HeapTaggingLevel tag_level) {
           globals->heap_pointer_tag = static_cast<uintptr_t>(0xffull << UNTAG_SHIFT);
         }
         atomic_store(&globals->memtag_stack, false);
+        atomic_store(&globals->memtag, false);
       });
 
       if (heap_tagging_level != M_HEAP_TAGGING_LEVEL_TBI) {
@@ -208,33 +207,10 @@ extern "C" __LIBC_HIDDEN__ __attribute__((no_sanitize("memtag"))) void memtag_ha
   }
 #endif  // __aarch64__
 
+  // We can use __has_feature here rather than __hwasan_handle_longjmp as a
+  // weak symbol because this is part of libc which is always sanitized for a
+  // hwasan enabled process.
 #if __has_feature(hwaddress_sanitizer)
   __hwasan_handle_longjmp(sp_dst);
-#endif  // __has_feature(hwaddress_sanitizer)
-}
-
-extern "C" __LIBC_HIDDEN__ __attribute__((no_sanitize("memtag"), no_sanitize("hwaddress"))) void
-memtag_handle_vfork(void* sp __unused) {
-#ifdef __aarch64__
-  if (__libc_globals->memtag_stack) {
-    void* child_sp = __get_thread()->vfork_child_stack_bottom;
-    __get_thread()->vfork_child_stack_bottom = nullptr;
-    if (child_sp) {
-      size_t distance = reinterpret_cast<uintptr_t>(sp) - reinterpret_cast<uintptr_t>(child_sp);
-      if (distance > kUntagLimit) {
-        async_safe_fatal(
-            "memtag_handle_vfork: stack adjustment too large! %p -> %p, distance %zx > %zx\n",
-            child_sp, sp, distance, kUntagLimit);
-      } else {
-        untag_memory(child_sp, sp);
-      }
-    } else {
-      async_safe_fatal("memtag_handle_vfork: child SP unknown\n");
-    }
-  }
-#endif  // __aarch64__
-
-#if __has_feature(hwaddress_sanitizer)
-  __hwasan_handle_vfork(sp);
 #endif  // __has_feature(hwaddress_sanitizer)
 }

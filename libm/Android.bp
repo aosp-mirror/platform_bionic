@@ -290,6 +290,8 @@ cc_library {
                 // For backwards-compatibility, some arm32 builtins are exported from libm.so.
                 static_libs: ["libclang_rt.builtins-exported"],
             },
+            // "#pragma STDC FENV_ACCESS ON" in e_sqrtl.c is not supported for arm32.
+            cflags: ["-Wno-ignored-pragmas"],
         },
 
         arm64: {
@@ -400,7 +402,6 @@ cc_library {
     ],
 
     cflags: [
-        "-D__BIONIC_LP32_USE_LONG_DOUBLE",
         "-D_BSD_SOURCE",
         "-DFLT_EVAL_METHOD=0",
         "-include freebsd-compat.h",
@@ -409,7 +410,6 @@ cc_library {
         "-fno-math-errno",
         "-Wall",
         "-Werror",
-        "-Wno-ignored-pragmas",
         "-Wno-missing-braces",
         "-Wno-parentheses",
         "-Wno-sign-compare",
@@ -467,8 +467,6 @@ ndk_library {
     name: "libm",
     symbol_file: "libm.map.txt",
     first_version: "9",
-    // APIs implemented in asm don't have debug info: http://b/190554910.
-    allow_untyped_symbols: true,
 }
 
 genrule {
@@ -509,4 +507,9 @@ genrule {
     srcs: ["libm.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) x86_64 $(in) $(out)",
+}
+
+filegroup {
+    name: "libc_ldexp_srcs",
+    srcs: ["upstream-freebsd/lib/msun/src/s_scalbn.c"],
 }

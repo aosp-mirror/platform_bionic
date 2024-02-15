@@ -34,6 +34,7 @@
  */
 
 #include <limits.h>
+#include <bits/page_size.h>
 #include <bits/pthread_types.h>
 #include <sched.h>
 #include <sys/cdefs.h>
@@ -74,9 +75,9 @@ enum {
 #endif
 
 #if defined(__LP64__)
-#define PTHREAD_STACK_MIN (4 * PAGE_SIZE)
+#define PTHREAD_STACK_MIN 16384
 #else
-#define PTHREAD_STACK_MIN (2 * PAGE_SIZE)
+#define PTHREAD_STACK_MIN 8192
 #endif
 
 #define PTHREAD_CREATE_DETACHED 1
@@ -116,10 +117,10 @@ int pthread_attr_setstack(pthread_attr_t* _Nonnull __attr, void* _Nonnull __addr
 int pthread_attr_setstacksize(pthread_attr_t* _Nonnull __addr, size_t __size);
 
 int pthread_condattr_destroy(pthread_condattr_t* _Nonnull __attr);
-int pthread_condattr_getclock(const pthread_condattr_t* _Nonnull __attr, clockid_t* _Nonnull __clock) __INTRODUCED_IN(21);
+int pthread_condattr_getclock(const pthread_condattr_t* _Nonnull __attr, clockid_t* _Nonnull __clock);
 int pthread_condattr_getpshared(const pthread_condattr_t* _Nonnull __attr, int* _Nonnull __shared);
 int pthread_condattr_init(pthread_condattr_t* _Nonnull __attr);
-int pthread_condattr_setclock(pthread_condattr_t* _Nonnull __attr, clockid_t __clock) __INTRODUCED_IN(21);
+int pthread_condattr_setclock(pthread_condattr_t* _Nonnull __attr, clockid_t __clock);
 int pthread_condattr_setpshared(pthread_condattr_t* _Nonnull __attr, int __shared);
 
 int pthread_cond_broadcast(pthread_cond_t* _Nonnull __cond);
@@ -169,7 +170,7 @@ int pthread_getcpuclockid(pthread_t __pthread, clockid_t* _Nonnull __clock);
 
 void* _Nullable pthread_getspecific(pthread_key_t __key);
 
-pid_t pthread_gettid_np(pthread_t __pthread) __INTRODUCED_IN(21);
+pid_t pthread_gettid_np(pthread_t __pthread);
 
 int pthread_join(pthread_t __pthread, void* _Nullable * _Nullable __return_value_ptr);
 
@@ -190,8 +191,7 @@ int pthread_mutex_clocklock(pthread_mutex_t* _Nonnull __mutex, clockid_t __clock
 int pthread_mutex_destroy(pthread_mutex_t* _Nonnull __mutex);
 int pthread_mutex_init(pthread_mutex_t* _Nonnull __mutex, const pthread_mutexattr_t* _Nullable __attr);
 int pthread_mutex_lock(pthread_mutex_t* _Nonnull __mutex);
-int pthread_mutex_timedlock(pthread_mutex_t* _Nonnull __mutex, const struct timespec* _Nullable __timeout)
-  __INTRODUCED_IN(21);
+int pthread_mutex_timedlock(pthread_mutex_t* _Nonnull __mutex, const struct timespec* _Nullable __timeout);
 
 /*
  * POSIX historically only supported using pthread_mutex_timedlock() with CLOCK_REALTIME, however

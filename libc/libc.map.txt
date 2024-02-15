@@ -74,28 +74,28 @@ LIBC {
     __memrchr_chk; # introduced=23
     __memset_chk; # introduced-arm=17 introduced-arm64=21 introduced-x86=17 introduced-x86_64=21
     __mmap2; # arm x86
-    __ns_format_ttl; # arm x86
-    __ns_get16; # arm x86
-    __ns_get32; # arm x86
-    __ns_initparse; # arm x86
-    __ns_makecanon; # arm x86
-    __ns_msg_getflag; # arm x86
-    __ns_name_compress; # arm x86
-    __ns_name_ntol; # arm x86
-    __ns_name_ntop; # arm x86
-    __ns_name_pack; # arm x86
-    __ns_name_pton; # arm x86
-    __ns_name_rollback; # arm x86
-    __ns_name_skip; # arm x86
-    __ns_name_uncompress; # arm x86
-    __ns_name_unpack; # arm x86
-    __ns_parserr; # arm x86
-    __ns_put16; # arm x86
-    __ns_put32; # arm x86
-    __ns_samename; # arm x86
-    __ns_skiprr; # arm x86
-    __ns_sprintrr; # arm x86
-    __ns_sprintrrf; # arm x86
+    __ns_format_ttl; # arm x86 introduced=22
+    __ns_get16; # arm x86 introduced=22
+    __ns_get32; # arm x86 introduced=22
+    __ns_initparse; # arm x86 introduced=22
+    __ns_makecanon; # arm x86 introduced=22
+    __ns_msg_getflag; # arm x86 introduced=22
+    __ns_name_compress; # arm x86 introduced=22
+    __ns_name_ntol; # arm x86 introduced=22
+    __ns_name_ntop; # arm x86 introduced=22
+    __ns_name_pack; # arm x86 introduced=22
+    __ns_name_pton; # arm x86 introduced=22
+    __ns_name_rollback; # arm x86 introduced=22
+    __ns_name_skip; # arm x86 introduced=22
+    __ns_name_uncompress; # arm x86 introduced=22
+    __ns_name_unpack; # arm x86 introduced=22
+    __ns_parserr; # arm x86 introduced=22
+    __ns_put16; # arm x86 introduced=22
+    __ns_put32; # arm x86 introduced=22
+    __ns_samename; # arm x86 introduced=22
+    __ns_skiprr; # arm x86 introduced=22
+    __ns_sprintrr; # arm x86 introduced=22
+    __ns_sprintrrf; # arm x86 introduced=22
     __open_2; # introduced-arm=17 introduced-arm64=21 introduced-x86=17 introduced-x86_64=21
     __openat; # arm x86
     __openat_2; # introduced-arm=17 introduced-arm64=21 introduced-x86=17 introduced-x86_64=21
@@ -955,7 +955,7 @@ LIBC {
     sigaction;
     sigaddset; # introduced=21
     sigaltstack;
-    sigblock;
+    sigblock; # arm x86 arm64 x86_64
     sigdelset; # introduced=21
     sigemptyset; # introduced=21
     sigfillset; # introduced=21
@@ -968,7 +968,7 @@ LIBC {
     sigprocmask;
     sigqueue; # introduced=23
     sigsetjmp; # introduced-arm=9 introduced-arm64=21 introduced-x86=12 introduced-x86_64=21
-    sigsetmask;
+    sigsetmask; # arm x86 arm64 x86_64
     sigsuspend;
     sigtimedwait; # introduced=23
     sigwait;
@@ -1583,6 +1583,25 @@ LIBC_U { # introduced=UpsideDownCake
     posix_spawn_file_actions_addchdir_np;
     posix_spawn_file_actions_addfchdir_np;
 } LIBC_T;
+
+LIBC_V { # introduced=VanillaIceCream
+  global:
+    epoll_pwait2;
+    epoll_pwait2_64;
+    localtime_rz;
+    mbsrtowcs_l;
+    mktime_z;
+    __riscv_flush_icache; # riscv64
+    __riscv_hwprobe; # riscv64
+    strerrorname_np;
+    tcgetwinsize;
+    tcsetwinsize;
+    timespec_getres;
+    tzalloc;
+    tzfree;
+    wcsrtombs_l;
+    __system_properties_zygote_reload; # apex
+} LIBC_U;
 
 LIBC_PRIVATE {
   global:

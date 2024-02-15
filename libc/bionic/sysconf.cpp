@@ -38,7 +38,109 @@
 #include <time.h>
 #include <unistd.h>
 
+#include "platform/bionic/page.h"
 #include "private/bionic_tls.h"
+
+struct sysconf_cache {
+  long size, assoc, linesize;
+
+  static sysconf_cache from_size_and_geometry(int size_id, int geometry_id) {
+    sysconf_cache result;
+    result.size = getauxval(size_id);
+    unsigned long geometry = getauxval(geometry_id);
+    result.assoc = geometry >> 16;
+    result.linesize = geometry & 0xffff;
+    return result;
+  }
+};
+
+struct sysconf_caches {
+  sysconf_cache l1_i, l1_d, l2, l3, l4;
+};
+
+#if defined(__riscv)
+
+static sysconf_caches* __sysconf_caches() {
+  static sysconf_caches cached = []{
+    sysconf_caches info = {};
+    // riscv64 kernels conveniently hand us all this information.
+    info.l1_i = sysconf_cache::from_size_and_geometry(AT_L1I_CACHESIZE, AT_L1I_CACHEGEOMETRY);
+    info.l1_d = sysconf_cache::from_size_and_geometry(AT_L1D_CACHESIZE, AT_L1D_CACHEGEOMETRY);
+    info.l2 = sysconf_cache::from_size_and_geometry(AT_L2_CACHESIZE, AT_L2_CACHEGEOMETRY);
+    info.l3 = sysconf_cache::from_size_and_geometry(AT_L3_CACHESIZE, AT_L3_CACHEGEOMETRY);
+    return info;
+  }();
+  return &cached;
+}
+
+#elif defined(__aarch64__)
+
+static sysconf_caches* __sysconf_caches() {
+  static sysconf_caches cached = []{
+    sysconf_caches info = {};
+    // arm64 is especially limited. We can infer the L1 line sizes, but that's it.
+    uint64_t ctr_el0;
+    __asm__ __volatile__("mrs %0, ctr_el0" : "=r"(ctr_el0));
+    info.l1_i.linesize = 4 << (ctr_el0 & 0xf);
+    info.l1_d.linesize = 4 << ((ctr_el0 >> 16) & 0xf);
+    return info;
+  }();
+  return &cached;
+}
+
+#else
+
+long __sysconf_fread_long(const char* path) {
+  long result = 0;
+  FILE* fp = fopen(path, "re");
+  if (fp != nullptr) {
+    fscanf(fp, "%ld", &result);
+    fclose(fp);
+  }
+  return result;
+}
+
+static sysconf_caches* __sysconf_caches() {
+  static sysconf_caches cached = []{
+    sysconf_caches info = {};
+    char path[64];
+    for (int i = 0; i < 4; i++) {
+      sysconf_cache c;
+
+      snprintf(path, sizeof(path), "/sys/devices/system/cpu/cpu0/cache/index%d/size", i);
+      c.size = __sysconf_fread_long(path) * 1024;
+      if (c.size == 0) break;
+
+      snprintf(path, sizeof(path), "/sys/devices/system/cpu/cpu0/cache/index%d/ways_of_associativity", i);
+      c.assoc = __sysconf_fread_long(path);
+
+      snprintf(path, sizeof(path), "/sys/devices/system/cpu/cpu0/cache/index%d/coherency_line_size", i);
+      c.linesize = __sysconf_fread_long(path);
+
+      snprintf(path, sizeof(path), "/sys/devices/system/cpu/cpu0/cache/index%d/level", i);
+      int level = __sysconf_fread_long(path);
+      if (level == 1) {
+        snprintf(path, sizeof(path), "/sys/devices/system/cpu/cpu0/cache/index%d/type", i);
+        FILE* fp = fopen(path, "re");
+        char type = fgetc(fp);
+        fclose(fp);
+        if (type == 'D') {
+          info.l1_d = c;
+        } else if (type == 'I') {
+          info.l1_i = c;
+        }
+      } else if (level == 2) {
+        info.l2 = c;
+      } else if (level == 3) {
+        info.l3 = c;
+      }
+    }
+    return info;
+  }();
+  return &cached;
+}
+
+#endif
 
 static long __sysconf_rlimit(int resource) {
   rlimit rl;
@@ -217,23 +319,21 @@ long sysconf(int name) {
     case _SC_XOPEN_STREAMS:     return -1;            // Obsolescent in POSIX.1-2008.
     case _SC_XOPEN_UUCP:        return -1;
 
-    // We do not have actual implementations for cache queries.
-    // It's valid to return 0 as the result is unknown.
-    case _SC_LEVEL1_ICACHE_SIZE:      return 0;
-    case _SC_LEVEL1_ICACHE_ASSOC:     return 0;
-    case _SC_LEVEL1_ICACHE_LINESIZE:  return 0;
-    case _SC_LEVEL1_DCACHE_SIZE:      return 0;
-    case _SC_LEVEL1_DCACHE_ASSOC:     return 0;
-    case _SC_LEVEL1_DCACHE_LINESIZE:  return 0;
-    case _SC_LEVEL2_CACHE_SIZE:       return 0;
-    case _SC_LEVEL2_CACHE_ASSOC:      return 0;
-    case _SC_LEVEL2_CACHE_LINESIZE:   return 0;
-    case _SC_LEVEL3_CACHE_SIZE:       return 0;
-    case _SC_LEVEL3_CACHE_ASSOC:      return 0;
-    case _SC_LEVEL3_CACHE_LINESIZE:   return 0;
-    case _SC_LEVEL4_CACHE_SIZE:       return 0;
-    case _SC_LEVEL4_CACHE_ASSOC:      return 0;
-    case _SC_LEVEL4_CACHE_LINESIZE:   return 0;
+    case _SC_LEVEL1_ICACHE_SIZE:      return __sysconf_caches()->l1_i.size;
+    case _SC_LEVEL1_ICACHE_ASSOC:     return __sysconf_caches()->l1_i.assoc;
+    case _SC_LEVEL1_ICACHE_LINESIZE:  return __sysconf_caches()->l1_i.linesize;
+    case _SC_LEVEL1_DCACHE_SIZE:      return __sysconf_caches()->l1_d.size;
+    case _SC_LEVEL1_DCACHE_ASSOC:     return __sysconf_caches()->l1_d.assoc;
+    case _SC_LEVEL1_DCACHE_LINESIZE:  return __sysconf_caches()->l1_d.linesize;
+    case _SC_LEVEL2_CACHE_SIZE:       return __sysconf_caches()->l2.size;
+    case _SC_LEVEL2_CACHE_ASSOC:      return __sysconf_caches()->l2.assoc;
+    case _SC_LEVEL2_CACHE_LINESIZE:   return __sysconf_caches()->l2.linesize;
+    case _SC_LEVEL3_CACHE_SIZE:       return __sysconf_caches()->l3.size;
+    case _SC_LEVEL3_CACHE_ASSOC:      return __sysconf_caches()->l3.assoc;
+    case _SC_LEVEL3_CACHE_LINESIZE:   return __sysconf_caches()->l3.linesize;
+    case _SC_LEVEL4_CACHE_SIZE:       return __sysconf_caches()->l4.size;
+    case _SC_LEVEL4_CACHE_ASSOC:      return __sysconf_caches()->l4.assoc;
+    case _SC_LEVEL4_CACHE_LINESIZE:   return __sysconf_caches()->l4.linesize;
 
     default:
       errno = EINVAL;

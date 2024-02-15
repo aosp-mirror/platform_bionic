@@ -336,16 +336,36 @@ args_vector_t* ResolveArgs(args_vector_t* to_populate, std::string args,
     return to_populate;
   }
 
-  to_populate->push_back(std::vector<int64_t>());
-  std::stringstream sstream(args);
-  std::string argstr;
-  while (sstream >> argstr) {
-    char* check_null;
-    int converted = static_cast<int>(strtol(argstr.c_str(), &check_null, 10));
-    if (*check_null) {
-      errx(1, "ERROR: Args str %s contains an invalid macro or int.", args.c_str());
+  std::string trimmed_args = android::base::Trim(args);
+  if (!trimmed_args.empty()) {
+    std::stringstream sstream(trimmed_args);
+    std::string argstr;
+    while (sstream >> argstr) {
+      char* check_null;
+      int converted = static_cast<int>(strtol(argstr.c_str(), &check_null, 10));
+      if (*check_null == '\0') {
+        to_populate->emplace_back(std::vector<int64_t>{converted});
+        continue;
+      } else if (*check_null == '/') {
+        // The only supported format with a / is \d+(/\d+)\s*. Example 8/8/8 or 16/23.
+        std::vector<int64_t> test_args{converted};
+        while (true) {
+          converted = static_cast<int>(strtol(check_null + 1, &check_null, 10));
+          test_args.push_back(converted);
+          if (*check_null == '\0') {
+            to_populate->emplace_back(std::move(test_args));
+            break;
+          } else if (*check_null != '/') {
+            errx(1, "ERROR: Args str %s contains an invalid macro or int.", args.c_str());
+          }
+        }
+      } else {
+        errx(1, "ERROR: Args str %s contains an invalid macro or int.", args.c_str());
+      }
     }
-    (*to_populate)[0].push_back(converted);
+  } else {
+    // No arguments, only the base benchmark.
+    to_populate->emplace_back(std::vector<int64_t>{});
   }
   return to_populate;
 }
@@ -501,12 +521,22 @@ std::map<std::string, args_vector_t> GetShorthand() {
   all_sizes.insert(all_sizes.end(), kMediumSizes.begin(), kMediumSizes.end());
   all_sizes.insert(all_sizes.end(), kLargeSizes.begin(), kLargeSizes.end());
 
+  int page_sz = getpagesize();
+  std::vector<int> sub_page_sizes = {page_sz / 2, page_sz / 4, page_sz / 8};
+  std::vector<int> multi_page_sizes = {page_sz, page_sz * 2, page_sz * 3, page_sz * 10,
+                                       page_sz * 100};
+  std::vector<int> all_page_sizes(sub_page_sizes);
+  all_page_sizes.insert(all_page_sizes.end(), multi_page_sizes.begin(), multi_page_sizes.end());
+
   std::map<std::string, args_vector_t> args_shorthand {
     {"AT_COMMON_SIZES", GetArgs(kCommonSizes)},
     {"AT_SMALL_SIZES", GetArgs(kSmallSizes)},
     {"AT_MEDIUM_SIZES", GetArgs(kMediumSizes)},
     {"AT_LARGE_SIZES", GetArgs(kLargeSizes)},
     {"AT_ALL_SIZES", GetArgs(all_sizes)},
+    {"AT_SUB_PAGE_SIZES", GetArgs(sub_page_sizes)},
+    {"AT_MULTI_PAGE_SIZES", GetArgs(multi_page_sizes)},
+    {"AT_All_PAGE_SIZES", GetArgs(all_page_sizes)},
 
     {"AT_ALIGNED_ONEBUF", GetArgs(kCommonSizes, 0)},
     {"AT_ALIGNED_ONEBUF_SMALL", GetArgs(kSmallSizes, 0)},

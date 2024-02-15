@@ -28,6 +28,8 @@
 #include "SignalUtils.h"
 #include "private/bionic_constants.h"
 
+#include "utils.h"
+
 using semaphore_DeathTest = SilentDeathTest;
 
 TEST(semaphore, sem_init) {
@@ -41,7 +43,7 @@ TEST(semaphore, sem_init) {
   // Too small an initial value.
   errno = 0;
   ASSERT_EQ(-1, sem_init(&s, 0, -1));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 
   ASSERT_EQ(SEM_VALUE_MAX, sysconf(_SC_SEM_VALUE_MAX));
 
@@ -50,8 +52,8 @@ TEST(semaphore, sem_init) {
 
   // Too large an initial value.
   errno = 0;
-  ASSERT_EQ(-1, sem_init(&s, 0, SEM_VALUE_MAX + 1));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_EQ(-1, sem_init(&s, 0, static_cast<unsigned>(SEM_VALUE_MAX) + 1));
+  ASSERT_ERRNO(EINVAL);
 
   ASSERT_EQ(0, sem_destroy(&s));
 }
@@ -64,7 +66,7 @@ TEST(semaphore, sem_trywait) {
   ASSERT_EQ(0, sem_trywait(&s));
   errno = 0;
   ASSERT_EQ(-1, sem_trywait(&s));
-  ASSERT_EQ(EAGAIN, errno);
+  ASSERT_ERRNO(EAGAIN);
   ASSERT_EQ(0, sem_destroy(&s));
 }
 
@@ -116,23 +118,23 @@ static void sem_timedwait_helper(clockid_t clock,
 
   errno = 0;
   ASSERT_EQ(-1, wait_function(&s, &ts));
-  ASSERT_EQ(ETIMEDOUT, errno);
+  ASSERT_ERRNO(ETIMEDOUT);
 
   // A negative timeout is an error.
   errno = 0;
   ts.tv_nsec = -1;
   ASSERT_EQ(-1, wait_function(&s, &ts));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   errno = 0;
   ts.tv_nsec = NS_PER_S;
   ASSERT_EQ(-1, wait_function(&s, &ts));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 
   errno = 0;
   ts.tv_nsec = NS_PER_S - 1;
   ts.tv_sec = -1;
   ASSERT_EQ(-1, wait_function(&s, &ts));
-  ASSERT_EQ(ETIMEDOUT, errno);
+  ASSERT_ERRNO(ETIMEDOUT);
 
   ASSERT_EQ(0, sem_destroy(&s));
 }

@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef __MSM_DRM_H__
 #define __MSM_DRM_H__
 #include "drm.h"
@@ -85,7 +73,8 @@ struct drm_msm_gem_info {
 #define MSM_PREP_READ 0x01
 #define MSM_PREP_WRITE 0x02
 #define MSM_PREP_NOSYNC 0x04
-#define MSM_PREP_FLAGS (MSM_PREP_READ | MSM_PREP_WRITE | MSM_PREP_NOSYNC)
+#define MSM_PREP_BOOST 0x08
+#define MSM_PREP_FLAGS (MSM_PREP_READ | MSM_PREP_WRITE | MSM_PREP_NOSYNC | MSM_PREP_BOOST | 0)
 struct drm_msm_gem_cpu_prep {
   __u32 handle;
   __u32 op;
@@ -96,7 +85,11 @@ struct drm_msm_gem_cpu_fini {
 };
 struct drm_msm_gem_submit_reloc {
   __u32 submit_offset;
+#ifdef __cplusplus
+  __u32 _or;
+#else
   __u32 or;
+#endif
   __s32 shift;
   __u32 reloc_idx;
   __u64 reloc_offset;
@@ -116,7 +109,8 @@ struct drm_msm_gem_submit_cmd {
 #define MSM_SUBMIT_BO_READ 0x0001
 #define MSM_SUBMIT_BO_WRITE 0x0002
 #define MSM_SUBMIT_BO_DUMP 0x0004
-#define MSM_SUBMIT_BO_FLAGS (MSM_SUBMIT_BO_READ | MSM_SUBMIT_BO_WRITE | MSM_SUBMIT_BO_DUMP)
+#define MSM_SUBMIT_BO_NO_IMPLICIT 0x0008
+#define MSM_SUBMIT_BO_FLAGS (MSM_SUBMIT_BO_READ | MSM_SUBMIT_BO_WRITE | MSM_SUBMIT_BO_DUMP | MSM_SUBMIT_BO_NO_IMPLICIT)
 struct drm_msm_gem_submit_bo {
   __u32 flags;
   __u32 handle;
@@ -153,9 +147,11 @@ struct drm_msm_gem_submit {
   __u32 syncobj_stride;
   __u32 pad;
 };
+#define MSM_WAIT_FENCE_BOOST 0x00000001
+#define MSM_WAIT_FENCE_FLAGS (MSM_WAIT_FENCE_BOOST | 0)
 struct drm_msm_wait_fence {
   __u32 fence;
-  __u32 pad;
+  __u32 flags;
   struct drm_msm_timespec timeout;
   __u32 queueid;
 };

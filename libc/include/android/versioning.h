@@ -26,9 +26,6 @@
 #define __REMOVED_IN(api_level) __attribute__((annotate("obsoleted_in=" #api_level)))
 #define __INTRODUCED_IN_32(api_level) __attribute__((annotate("introduced_in_32=" #api_level)))
 #define __INTRODUCED_IN_64(api_level) __attribute__((annotate("introduced_in_64=" #api_level)))
-#define __INTRODUCED_IN_ARM(api_level) __attribute__((annotate("introduced_in_arm=" #api_level)))
-#define __INTRODUCED_IN_X86(api_level) __attribute__((annotate("introduced_in_x86=" #api_level)))
-#define __INTRODUCED_IN_X86_NO_GUARD_FOR_NDK(api_level) __attribute__((annotate("introduced_in_x86=" #api_level))) __VERSIONER_NO_GUARD
 
 #define __VERSIONER_NO_GUARD __attribute__((annotate("versioner_no_guard")))
 #define __VERSIONER_FORTIFY_INLINE __attribute__((annotate("versioner_fortify_inline")))
@@ -52,11 +49,9 @@
 #if defined(__ANDROID_UNAVAILABLE_SYMBOLS_ARE_WEAK__)
 #define __BIONIC_AVAILABILITY(__what) __attribute__((__availability__(android,__what)))
 #define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level) __INTRODUCED_IN(api_level)
-#define __INTRODUCED_IN_X86_NO_GUARD_FOR_NDK(api_level) __INTRODUCED_IN_X86(api_level)
 #else
 #define __BIONIC_AVAILABILITY(__what) __attribute__((__availability__(android,strict,__what)))
 #define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level)
-#define __INTRODUCED_IN_X86_NO_GUARD_FOR_NDK(api_level)
 #endif
 
 #define __INTRODUCED_IN(api_level) __BIONIC_AVAILABILITY(introduced=api_level)
@@ -69,29 +64,12 @@
 //
 // void foo() __INTRODUCED_IN_32(30) __INTRODUCED_IN_64(31);
 //
-// This also takes the advantage of the fact that we never use bitness-specific macro with
-// arch-specific macro. In other words,
-//
-// void foo() __INTRODUCED_IN_ARM(30) __INTRODUCED_IN_64(31);
-//
-// hasn't been supported and won't be.
 #if !defined(__LP64__)
 #define __INTRODUCED_IN_32(api_level) __BIONIC_AVAILABILITY(introduced=api_level)
 #define __INTRODUCED_IN_64(api_level)
 #else
 #define __INTRODUCED_IN_32(api_level)
 #define __INTRODUCED_IN_64(api_level) __BIONIC_AVAILABILITY(introduced=api_level)
-#endif
-
-#if defined(__arm__) || defined(__aarch64__)
-#define __INTRODUCED_IN_ARM(api_level) __BIONIC_AVAILABILITY(introduced=api_level)
-#define __INTRODUCED_IN_X86(api_level)
-#elif defined(__i386__) || defined(__x86_64__)
-#define __INTRODUCED_IN_ARM(api_level)
-#define __INTRODUCED_IN_X86(api_level) __BIONIC_AVAILABILITY(introduced=api_level)
-#else
-#define __INTRODUCED_IN_ARM(api_level)
-#define __INTRODUCED_IN_X86(api_level)
 #endif
 
 #define __VERSIONER_NO_GUARD

@@ -1,4 +1,5 @@
 package {
+    default_team: "trendy_team_native_tools_libraries",
     // See: http://go/android-license-faq
     // A large-scale-change added 'default_applicable_licenses' to import
     // all of the 'license_kinds' from "bionic_libc_license"
@@ -10,7 +11,10 @@ package {
 
 cc_library_static {
     name: "libsystemproperties",
-    defaults: ["libc_defaults"],
+    defaults: [
+        "libc_defaults",
+        "large_system_property_node_defaults",
+    ],
     native_bridge_supported: true,
     srcs: [
         "context_node.cpp",
@@ -32,6 +36,9 @@ cc_library_static {
         "bionic/libstdc++/include",
     ],
     export_include_dirs: ["include"],
+    apex_available: [
+        "com.android.runtime",
+    ],
 }
 
 cc_benchmark {
@@ -49,4 +56,29 @@ cc_benchmark {
         "libsystemproperties",
         "libasync_safe",
     ],
+}
+
+soong_config_module_type {
+    name: "large_system_property_node_cc_defaults",
+    module_type: "cc_defaults",
+    config_namespace: "bionic",
+    bool_variables: [
+        "large_system_property_node",
+    ],
+    properties: [
+        "cflags",
+    ],
+}
+
+soong_config_bool_variable {
+    name: "large_system_property_node",
+}
+
+large_system_property_node_cc_defaults {
+    name: "large_system_property_node_defaults",
+    soong_config_variables: {
+        large_system_property_node: {
+            cflags: ["-DLARGE_SYSTEM_PROPERTY_NODE=1"]
+        }
+    }
 }

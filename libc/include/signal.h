@@ -51,8 +51,8 @@ __BEGIN_DECLS
 /* We take a few real-time signals for ourselves. May as well use the same names as glibc. */
 #define SIGRTMIN (__libc_current_sigrtmin())
 #define SIGRTMAX (__libc_current_sigrtmax())
-int __libc_current_sigrtmin(void) __INTRODUCED_IN(21);
-int __libc_current_sigrtmax(void) __INTRODUCED_IN(21);
+int __libc_current_sigrtmin(void);
+int __libc_current_sigrtmax(void);
 
 extern const char* _Nonnull const sys_siglist[_NSIG];
 extern const char* _Nonnull const sys_signame[_NSIG]; /* BSD compatibility. */
@@ -64,16 +64,16 @@ int sigaction64(int __signal, const struct sigaction64* _Nullable __new_action, 
 
 int siginterrupt(int __signal, int __flag);
 
-sighandler_t _Nonnull signal(int __signal, sighandler_t _Nullable __handler) __INTRODUCED_IN(21);
-int sigaddset(sigset_t* _Nonnull __set, int __signal) __INTRODUCED_IN(21);
+sighandler_t _Nonnull signal(int __signal, sighandler_t _Nullable __handler);
+int sigaddset(sigset_t* _Nonnull __set, int __signal);
 int sigaddset64(sigset64_t* _Nonnull __set, int __signal) __INTRODUCED_IN(28);
-int sigdelset(sigset_t* _Nonnull __set, int __signal) __INTRODUCED_IN(21);
+int sigdelset(sigset_t* _Nonnull __set, int __signal);
 int sigdelset64(sigset64_t* _Nonnull __set, int __signal) __INTRODUCED_IN(28);
-int sigemptyset(sigset_t* _Nonnull __set) __INTRODUCED_IN(21);
+int sigemptyset(sigset_t* _Nonnull __set);
 int sigemptyset64(sigset64_t* _Nonnull __set) __INTRODUCED_IN(28);
-int sigfillset(sigset_t* _Nonnull __set) __INTRODUCED_IN(21);
+int sigfillset(sigset_t* _Nonnull __set);
 int sigfillset64(sigset64_t* _Nonnull __set) __INTRODUCED_IN(28);
-int sigismember(const sigset_t* _Nonnull __set, int __signal) __INTRODUCED_IN(21);
+int sigismember(const sigset_t* _Nonnull __set, int __signal);
 int sigismember64(const sigset64_t* _Nonnull __set, int __signal) __INTRODUCED_IN(28);
 
 int sigpending(sigset_t* _Nonnull __set);
@@ -105,8 +105,8 @@ int tgkill(int __tgid, int __tid, int __signal);
 
 int sigaltstack(const stack_t* _Nullable __new_signal_stack, stack_t*  _Nullable __old_signal_stack);
 
-void psiginfo(const siginfo_t* _Nonnull __info, const char* _Nullable __msg) __INTRODUCED_IN(17);
-void psignal(int __signal, const char* _Nullable __msg) __INTRODUCED_IN(17);
+void psiginfo(const siginfo_t* _Nonnull __info, const char* _Nullable __msg);
+void psignal(int __signal, const char* _Nullable __msg);
 
 int pthread_kill(pthread_t __pthread, int __signal);
 #if defined(__USE_GNU)

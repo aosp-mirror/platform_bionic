@@ -29,6 +29,7 @@
 #include "system_properties/system_properties.h"
 
 #include <errno.h>
+#include <private/android_filesystem_config.h>
 #include <stdatomic.h>
 #include <stdlib.h>
 #include <string.h>
@@ -38,6 +39,7 @@
 
 #include <new>
 
+#include <async_safe/CHECK.h>
 #include <async_safe/log.h>
 
 #include "private/ErrnoRestorer.h"
@@ -49,6 +51,7 @@
 
 #define SERIAL_DIRTY(serial) ((serial)&1)
 #define SERIAL_VALUE_LEN(serial) ((serial) >> 24)
+#define APPCOMPAT_PREFIX "ro.appcompat_override."
 
 static bool is_dir(const char* pathname) {
   struct stat info;
@@ -67,45 +70,75 @@ bool SystemProperties::Init(const char* filename) {
     return true;
   }
 
-  if (strlen(filename) >= PROP_FILENAME_MAX) {
+  properties_filename_ = filename;
+
+  if (!InitContexts(false)) {
     return false;
   }
-  strcpy(property_filename_, filename);
 
-  if (is_dir(property_filename_)) {
-    if (access("/dev/__properties__/property_info", R_OK) == 0) {
-      contexts_ = new (contexts_data_) ContextsSerialized();
-      if (!contexts_->Initialize(false, property_filename_, nullptr)) {
+  initialized_ = true;
+  return true;
+}
+
+bool SystemProperties::InitContexts(bool load_default_path) {
+  if (is_dir(properties_filename_.c_str())) {
+    if (access(PROP_TREE_FILE, R_OK) == 0) {
+      auto serial_contexts = new (contexts_data_) ContextsSerialized();
+      contexts_ = serial_contexts;
+      if (!serial_contexts->Initialize(false, properties_filename_.c_str(), nullptr,
+                                       load_default_path)) {
         return false;
       }
     } else {
       contexts_ = new (contexts_data_) ContextsSplit();
-      if (!contexts_->Initialize(false, property_filename_, nullptr)) {
+      if (!contexts_->Initialize(false, properties_filename_.c_str(), nullptr)) {
         return false;
       }
     }
   } else {
     contexts_ = new (contexts_data_) ContextsPreSplit();
-    if (!contexts_->Initialize(false, property_filename_, nullptr)) {
+    if (!contexts_->Initialize(false, properties_filename_.c_str(), nullptr)) {
       return false;
     }
   }
-  initialized_ = true;
   return true;
 }
 
 bool SystemProperties::AreaInit(const char* filename, bool* fsetxattr_failed) {
-  if (strlen(filename) >= PROP_FILENAME_MAX) {
-    return false;
-  }
-  strcpy(property_filename_, filename);
+  return AreaInit(filename, fsetxattr_failed, false);
+}
 
-  contexts_ = new (contexts_data_) ContextsSerialized();
-  if (!contexts_->Initialize(true, property_filename_, fsetxattr_failed)) {
+// Note: load_default_path is only used for testing, as it will cause properties to be loaded from
+// one file (specified by PropertyInfoAreaFile.LoadDefaultPath), but be written to "filename".
+bool SystemProperties::AreaInit(const char* filename, bool* fsetxattr_failed,
+                                bool load_default_path) {
+  properties_filename_ = filename;
+  auto serial_contexts = new (contexts_data_) ContextsSerialized();
+  contexts_ = serial_contexts;
+  if (!serial_contexts->Initialize(true, properties_filename_.c_str(), fsetxattr_failed,
+                                   load_default_path)) {
     return false;
   }
+
+  auto* appcompat_contexts = new (appcompat_override_contexts_data_) ContextsSerialized();
+  appcompat_filename_ = PropertiesFilename(properties_filename_.c_str(), "appcompat_override");
+  if (!appcompat_contexts->Initialize(true, appcompat_filename_.c_str(), fsetxattr_failed,
+                                      load_default_path)) {
+    appcompat_override_contexts_ = nullptr;
+    return false;
+  }
+  appcompat_override_contexts_ = appcompat_contexts;
+
   initialized_ = true;
   return true;
+}
+
+bool SystemProperties::Reload(bool load_default_path) {
+  if (!initialized_) {
+    return true;
+  }
+
+  return InitContexts(load_default_path);
 }
 
 uint32_t SystemProperties::AreaSerial() {
@@ -134,6 +167,10 @@ const prop_info* SystemProperties::Find(const char* name) {
   }
 
   return pa->find(name);
+}
+
+static bool is_appcompat_override(const char* name) {
+  return strncmp(name, APPCOMPAT_PREFIX, strlen(APPCOMPAT_PREFIX)) == 0;
 }
 
 static bool is_read_only(const char* name) {
@@ -234,16 +271,24 @@ int SystemProperties::Update(prop_info* pi, const char* value, unsigned int len)
   if (!initialized_) {
     return -1;
   }
+  bool have_override = appcompat_override_contexts_ != nullptr;
 
   prop_area* serial_pa = contexts_->GetSerialPropArea();
+  prop_area* override_serial_pa =
+      have_override ? appcompat_override_contexts_->GetSerialPropArea() : nullptr;
   if (!serial_pa) {
     return -1;
   }
   prop_area* pa = contexts_->GetPropAreaForName(pi->name);
+  prop_area* override_pa =
+      have_override ? appcompat_override_contexts_->GetPropAreaForName(pi->name) : nullptr;
   if (__predict_false(!pa)) {
     async_safe_format_log(ANDROID_LOG_ERROR, "libc", "Could not find area for \"%s\"", pi->name);
     return -1;
   }
+  CHECK(!have_override || (override_pa && override_serial_pa));
+
+  auto* override_pi = const_cast<prop_info*>(have_override ? override_pa->find(pi->name) : nullptr);
 
   uint32_t serial = atomic_load_explicit(&pi->serial, memory_order_relaxed);
   unsigned int old_len = SERIAL_VALUE_LEN(serial);
@@ -253,18 +298,34 @@ int SystemProperties::Update(prop_info* pi, const char* value, unsigned int len)
   // that we publish our dirty area update before allowing readers to see a
   // dirty serial.
   memcpy(pa->dirty_backup_area(), pi->value, old_len + 1);
+  if (have_override) {
+    memcpy(override_pa->dirty_backup_area(), override_pi->value, old_len + 1);
+  }
   atomic_thread_fence(memory_order_release);
   serial |= 1;
   atomic_store_explicit(&pi->serial, serial, memory_order_relaxed);
   strlcpy(pi->value, value, len + 1);
+  if (have_override) {
+    atomic_store_explicit(&override_pi->serial, serial, memory_order_relaxed);
+    strlcpy(override_pi->value, value, len + 1);
+  }
   // Now the primary value property area is up-to-date. Let readers know that they should
   // look at the property value instead of the backup area.
   atomic_thread_fence(memory_order_release);
-  atomic_store_explicit(&pi->serial, (len << 24) | ((serial + 1) & 0xffffff), memory_order_relaxed);
+  int new_serial = (len << 24) | ((serial + 1) & 0xffffff);
+  atomic_store_explicit(&pi->serial, new_serial, memory_order_relaxed);
+  if (have_override) {
+    atomic_store_explicit(&override_pi->serial, new_serial, memory_order_relaxed);
+  }
   __futex_wake(&pi->serial, INT32_MAX);  // Fence by side effect
   atomic_store_explicit(serial_pa->serial(),
                         atomic_load_explicit(serial_pa->serial(), memory_order_relaxed) + 1,
                         memory_order_release);
+  if (have_override) {
+    atomic_store_explicit(override_serial_pa->serial(),
+                          atomic_load_explicit(serial_pa->serial(), memory_order_relaxed) + 1,
+                          memory_order_release);
+  }
   __futex_wake(serial_pa->serial(), INT32_MAX);
 
   return 0;
@@ -298,6 +359,34 @@ int SystemProperties::Add(const char* name, unsigned int namelen, const char* va
   bool ret = pa->add(name, namelen, value, valuelen);
   if (!ret) {
     return -1;
+  }
+
+  if (appcompat_override_contexts_ != nullptr) {
+    bool is_override = is_appcompat_override(name);
+    const char* override_name = name;
+    if (is_override) override_name += strlen(APPCOMPAT_PREFIX);
+    prop_area* other_pa = appcompat_override_contexts_->GetPropAreaForName(override_name);
+    prop_area* other_serial_pa = appcompat_override_contexts_->GetSerialPropArea();
+    CHECK(other_pa && other_serial_pa);
+    // We may write a property twice to overrides, once for the ro.*, and again for the
+    // ro.appcompat_override.ro.* property. If we've already written, then we should essentially
+    // perform an Update, not an Add.
+    auto other_pi = const_cast<prop_info*>(other_pa->find(override_name));
+    if (!other_pi) {
+      if (other_pa->add(override_name, strlen(override_name), value, valuelen)) {
+        atomic_store_explicit(
+            other_serial_pa->serial(),
+            atomic_load_explicit(other_serial_pa->serial(), memory_order_relaxed) + 1,
+            memory_order_release);
+      }
+    } else if (is_override) {
+      // We already wrote the ro.*, but appcompat_override.ro.* should override that. We don't
+      // need to do the usual dirty bit setting, as this only happens during the init process,
+      // before any readers are started. Check that only init or root can write appcompat props.
+      CHECK(getpid() == 1 || getuid() == 0);
+      atomic_thread_fence(memory_order_release);
+      strlcpy(other_pi->value, value, valuelen + 1);
+    }
   }
 
   // There is only a single mutator, but we want to make sure that

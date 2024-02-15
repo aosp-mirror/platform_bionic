@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPIVFIO_H
 #define _UAPIVFIO_H
 #include <linux/types.h>
@@ -62,9 +50,11 @@ struct vfio_device_info {
 #define VFIO_DEVICE_FLAGS_AP (1 << 5)
 #define VFIO_DEVICE_FLAGS_FSL_MC (1 << 6)
 #define VFIO_DEVICE_FLAGS_CAPS (1 << 7)
+#define VFIO_DEVICE_FLAGS_CDX (1 << 8)
   __u32 num_regions;
   __u32 num_irqs;
   __u32 cap_offset;
+  __u32 pad;
 };
 #define VFIO_DEVICE_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 7)
 #define VFIO_DEVICE_API_PCI_STRING "vfio-pci"
@@ -76,6 +66,15 @@ struct vfio_device_info {
 #define VFIO_DEVICE_INFO_CAP_ZPCI_GROUP 2
 #define VFIO_DEVICE_INFO_CAP_ZPCI_UTIL 3
 #define VFIO_DEVICE_INFO_CAP_ZPCI_PFIP 4
+#define VFIO_DEVICE_INFO_CAP_PCI_ATOMIC_COMP 5
+struct vfio_device_info_cap_pci_atomic_comp {
+  struct vfio_info_cap_header header;
+  __u32 flags;
+#define VFIO_PCI_ATOMIC_COMP32 (1 << 0)
+#define VFIO_PCI_ATOMIC_COMP64 (1 << 1)
+#define VFIO_PCI_ATOMIC_COMP128 (1 << 2)
+  __u32 reserved;
+};
 struct vfio_region_info {
   __u32 argsz;
   __u32 flags;
@@ -85,14 +84,14 @@ struct vfio_region_info {
 #define VFIO_REGION_INFO_FLAG_CAPS (1 << 3)
   __u32 index;
   __u32 cap_offset;
-  __u64 size;
-  __u64 offset;
+  __aligned_u64 size;
+  __aligned_u64 offset;
 };
 #define VFIO_DEVICE_GET_REGION_INFO _IO(VFIO_TYPE, VFIO_BASE + 8)
 #define VFIO_REGION_INFO_CAP_SPARSE_MMAP 1
 struct vfio_region_sparse_mmap_area {
-  __u64 offset;
-  __u64 size;
+  __aligned_u64 offset;
+  __aligned_u64 size;
 };
 struct vfio_region_info_cap_sparse_mmap {
   struct vfio_info_cap_header header;
@@ -142,15 +141,15 @@ struct vfio_device_migration_info {
 #define VFIO_DEVICE_STATE_IS_ERROR(state) ((state & VFIO_DEVICE_STATE_MASK) == (VFIO_DEVICE_STATE_V1_SAVING | VFIO_DEVICE_STATE_V1_RESUMING))
 #define VFIO_DEVICE_STATE_SET_ERROR(state) ((state & ~VFIO_DEVICE_STATE_MASK) | VFIO_DEVICE_STATE_V1_SAVING | VFIO_DEVICE_STATE_V1_RESUMING)
   __u32 reserved;
-  __u64 pending_bytes;
-  __u64 data_offset;
-  __u64 data_size;
+  __aligned_u64 pending_bytes;
+  __aligned_u64 data_offset;
+  __aligned_u64 data_size;
 };
 #define VFIO_REGION_INFO_CAP_MSIX_MAPPABLE 3
 #define VFIO_REGION_INFO_CAP_NVLINK2_SSATGT 4
 struct vfio_region_info_cap_nvlink2_ssatgt {
   struct vfio_info_cap_header header;
-  __u64 tgt;
+  __aligned_u64 tgt;
 };
 #define VFIO_REGION_INFO_CAP_NVLINK2_LNKSPD 5
 struct vfio_region_info_cap_nvlink2_lnkspd {
@@ -217,8 +216,17 @@ enum {
   VFIO_CCW_REQ_IRQ_INDEX,
   VFIO_CCW_NUM_IRQS
 };
+enum {
+  VFIO_AP_REQ_IRQ_INDEX,
+  VFIO_AP_NUM_IRQS
+};
 struct vfio_pci_dependent_device {
-  __u32 group_id;
+  union {
+    __u32 group_id;
+    __u32 devid;
+#define VFIO_PCI_DEVID_OWNED 0
+#define VFIO_PCI_DEVID_NOT_OWNED - 1
+  };
   __u16 segment;
   __u8 bus;
   __u8 devfn;
@@ -226,6 +234,8 @@ struct vfio_pci_dependent_device {
 struct vfio_pci_hot_reset_info {
   __u32 argsz;
   __u32 flags;
+#define VFIO_PCI_HOT_RESET_FLAG_DEV_ID (1 << 0)
+#define VFIO_PCI_HOT_RESET_FLAG_DEV_ID_OWNED (1 << 1)
   __u32 count;
   struct vfio_pci_dependent_device devices[];
 };
@@ -245,7 +255,7 @@ struct vfio_device_gfx_plane_info {
 #define VFIO_GFX_PLANE_TYPE_REGION (1 << 2)
   __u32 drm_plane_type;
   __u32 drm_format;
-  __u64 drm_format_mod;
+  __aligned_u64 drm_format_mod;
   __u32 width;
   __u32 height;
   __u32 stride;
@@ -258,6 +268,7 @@ struct vfio_device_gfx_plane_info {
     __u32 region_index;
     __u32 dmabuf_id;
   };
+  __u32 reserved;
 };
 #define VFIO_DEVICE_QUERY_GFX_PLANE _IO(VFIO_TYPE, VFIO_BASE + 14)
 #define VFIO_DEVICE_GET_GFX_DMABUF _IO(VFIO_TYPE, VFIO_BASE + 15)
@@ -269,9 +280,10 @@ struct vfio_device_ioeventfd {
 #define VFIO_DEVICE_IOEVENTFD_32 (1 << 2)
 #define VFIO_DEVICE_IOEVENTFD_64 (1 << 3)
 #define VFIO_DEVICE_IOEVENTFD_SIZE_MASK (0xf)
-  __u64 offset;
-  __u64 data;
+  __aligned_u64 offset;
+  __aligned_u64 data;
   __s32 fd;
+  __u32 reserved;
 };
 #define VFIO_DEVICE_IOEVENTFD _IO(VFIO_TYPE, VFIO_BASE + 16)
 struct vfio_device_feature {
@@ -284,6 +296,24 @@ struct vfio_device_feature {
   __u8 data[];
 };
 #define VFIO_DEVICE_FEATURE _IO(VFIO_TYPE, VFIO_BASE + 17)
+struct vfio_device_bind_iommufd {
+  __u32 argsz;
+  __u32 flags;
+  __s32 iommufd;
+  __u32 out_devid;
+};
+#define VFIO_DEVICE_BIND_IOMMUFD _IO(VFIO_TYPE, VFIO_BASE + 18)
+struct vfio_device_attach_iommufd_pt {
+  __u32 argsz;
+  __u32 flags;
+  __u32 pt_id;
+};
+#define VFIO_DEVICE_ATTACH_IOMMUFD_PT _IO(VFIO_TYPE, VFIO_BASE + 19)
+struct vfio_device_detach_iommufd_pt {
+  __u32 argsz;
+  __u32 flags;
+};
+#define VFIO_DEVICE_DETACH_IOMMUFD_PT _IO(VFIO_TYPE, VFIO_BASE + 20)
 #define VFIO_DEVICE_FEATURE_PCI_VF_TOKEN (0)
 struct vfio_device_feature_migration {
   __aligned_u64 flags;
@@ -344,13 +374,20 @@ struct vfio_device_feature_mig_data_size {
   __aligned_u64 stop_copy_length;
 };
 #define VFIO_DEVICE_FEATURE_MIG_DATA_SIZE 9
+struct vfio_device_feature_bus_master {
+  __u32 op;
+#define VFIO_DEVICE_FEATURE_CLEAR_MASTER 0
+#define VFIO_DEVICE_FEATURE_SET_MASTER 1
+};
+#define VFIO_DEVICE_FEATURE_BUS_MASTER 10
 struct vfio_iommu_type1_info {
   __u32 argsz;
   __u32 flags;
 #define VFIO_IOMMU_INFO_PGSIZES (1 << 0)
 #define VFIO_IOMMU_INFO_CAPS (1 << 1)
-  __u64 iova_pgsizes;
+  __aligned_u64 iova_pgsizes;
   __u32 cap_offset;
+  __u32 pad;
 };
 #define VFIO_IOMMU_TYPE1_INFO_CAP_IOVA_RANGE 1
 struct vfio_iova_range {

@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef EFA_ABI_USER_H
 #define EFA_ABI_USER_H
 #include <linux/types.h>
@@ -104,6 +92,8 @@ enum {
   EFA_QUERY_DEVICE_CAPS_RNR_RETRY = 1 << 1,
   EFA_QUERY_DEVICE_CAPS_CQ_NOTIFICATIONS = 1 << 2,
   EFA_QUERY_DEVICE_CAPS_CQ_WITH_SGID = 1 << 3,
+  EFA_QUERY_DEVICE_CAPS_DATA_POLLING_128 = 1 << 4,
+  EFA_QUERY_DEVICE_CAPS_RDMA_WRITE = 1 << 5,
 };
 struct efa_ibv_ex_query_device_resp {
   __u32 comp_mask;

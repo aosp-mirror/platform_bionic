@@ -45,18 +45,18 @@ __BEGIN_DECLS
 
 union semun {
   int val;
-  struct semid_ds* buf;
-  unsigned short* array;
-  struct seminfo* __buf;
-  void* __pad;
+  struct semid_ds* _Nullable buf;
+  unsigned short* _Nullable array;
+  struct seminfo* _Nullable __buf;
+  void* _Nullable __pad;
 };
 
 int semctl(int __sem_id, int __sem_num, int __cmd, ...) __INTRODUCED_IN(26);
 int semget(key_t __key, int __sem_count, int __flags) __INTRODUCED_IN(26);
-int semop(int __sem_id, struct sembuf* __ops, size_t __op_count) __INTRODUCED_IN(26);
+int semop(int __sem_id, struct sembuf* _Nonnull __ops, size_t __op_count) __INTRODUCED_IN(26);
 
 #if defined(__USE_GNU)
-int semtimedop(int __sem_id, struct sembuf* __ops, size_t __op_count, const struct timespec* __timeout) __INTRODUCED_IN(26);
+int semtimedop(int __sem_id, struct sembuf* _Nonnull __ops, size_t __op_count, const struct timespec* _Nullable __timeout) __INTRODUCED_IN(26);
 #endif
 
 __END_DECLS

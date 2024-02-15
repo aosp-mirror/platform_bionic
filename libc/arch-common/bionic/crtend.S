@@ -34,18 +34,6 @@
 __bionic_asm_custom_note_gnu_section()
 #endif
 
-	.section .preinit_array, "aw"
-	ASM_ALIGN_TO_PTR_SIZE
-	ASM_PTR_SIZE(0)
-
-	.section .init_array, "aw"
-	ASM_ALIGN_TO_PTR_SIZE
-	ASM_PTR_SIZE(0)
-
-	.section .fini_array, "aw"
-	ASM_ALIGN_TO_PTR_SIZE
-	ASM_PTR_SIZE(0)
-
 	.section .note.GNU-stack, "", %progbits
 
 #if !defined(__arm__)

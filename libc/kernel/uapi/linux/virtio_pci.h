@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _LINUX_VIRTIO_PCI_H
 #define _LINUX_VIRTIO_PCI_H
 #include <linux/types.h>
@@ -85,6 +73,11 @@ struct virtio_pci_common_cfg {
   __le32 queue_avail_hi;
   __le32 queue_used_lo;
   __le32 queue_used_hi;
+};
+struct virtio_pci_modern_common_cfg {
+  struct virtio_pci_common_cfg cfg;
+  __le16 queue_notify_data;
+  __le16 queue_reset;
 };
 struct virtio_pci_cfg_cap {
   struct virtio_pci_cap cap;

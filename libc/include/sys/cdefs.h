@@ -38,7 +38,7 @@
 
 /**
  * `__BIONIC__` is always defined if you're building with bionic. See
- * https://android.googlesource.com/platform/bionic/+/master/docs/defines.md.
+ * https://android.googlesource.com/platform/bionic/+/main/docs/defines.md.
  */
 #define __BIONIC__ 1
 
@@ -187,7 +187,7 @@
 
 /*
  * _FILE_OFFSET_BITS 64 support.
- * See https://android.googlesource.com/platform/bionic/+/master/docs/32-bit-abi.md
+ * See https://android.googlesource.com/platform/bionic/+/main/docs/32-bit-abi.md
  */
 #if !defined(__LP64__) && defined(_FILE_OFFSET_BITS) && _FILE_OFFSET_BITS == 64
 #  define __USE_FILE_OFFSET64 1
@@ -199,39 +199,6 @@
 #  define __RENAME_IF_FILE_OFFSET64(func) __RENAME(func)
 #else
 #  define __RENAME_IF_FILE_OFFSET64(func)
-#endif
-
-/*
- * For LP32, `long double` == `double`. Historically many `long double` functions were incorrect
- * on x86, missing on most architectures, and even if they are present and correct, linking to
- * them just bloats your ELF file by adding extra relocations. The __BIONIC_LP32_USE_LONG_DOUBLE
- * macro lets us test the headers both ways (and adds an escape valve).
- *
- * Note that some functions have their __RENAME_LDBL commented out as a sign that although we could
- * use __RENAME_LDBL it would actually cause the function to be introduced later because the
- * `long double` variant appeared before the `double` variant.
- *
- * The _NO_GUARD_FOR_NDK variants keep the __VERSIONER_NO_GUARD behavior working for the NDK. This
- * allows libc++ to refer to these functions in inlines without needing to guard them, needed since
- * libc++ doesn't currently guard these calls. There's no risk to the apps though because using
- * those APIs will still cause a link error.
- */
-#if defined(__LP64__) || defined(__BIONIC_LP32_USE_LONG_DOUBLE)
-#define __RENAME_LDBL(rewrite,rewrite_api_level,regular_api_level) __INTRODUCED_IN(regular_api_level)
-#define __RENAME_LDBL_NO_GUARD_FOR_NDK(rewrite,rewrite_api_level,regular_api_level) __INTRODUCED_IN_NO_GUARD_FOR_NDK(regular_api_level)
-#else
-#define __RENAME_LDBL(rewrite,rewrite_api_level,regular_api_level) __RENAME(rewrite) __INTRODUCED_IN(rewrite_api_level)
-#define __RENAME_LDBL_NO_GUARD_FOR_NDK(rewrite,rewrite_api_level,regular_api_level) __RENAME(rewrite) __INTRODUCED_IN_NO_GUARD_FOR_NDK(rewrite_api_level)
-#endif
-
-/*
- * On all architectures, `struct stat` == `struct stat64`, but LP32 didn't gain the *64 functions
- * until API level 21.
- */
-#if defined(__LP64__) || defined(__BIONIC_LP32_USE_STAT64)
-#define __RENAME_STAT64(rewrite,rewrite_api_level,regular_api_level) __INTRODUCED_IN(regular_api_level)
-#else
-#define __RENAME_STAT64(rewrite,rewrite_api_level,regular_api_level) __RENAME(rewrite) __INTRODUCED_IN(rewrite_api_level)
 #endif
 
 /* glibc compatibility. */

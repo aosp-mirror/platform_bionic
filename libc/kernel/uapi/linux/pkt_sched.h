@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef __LINUX_PKT_SCHED_H
 #define __LINUX_PKT_SCHED_H
 #include <linux/const.h>
@@ -443,6 +431,7 @@ enum {
   TCA_NETEM_JITTER64,
   TCA_NETEM_SLOT,
   TCA_NETEM_SLOT_DIST,
+  TCA_NETEM_PRNG_SEED,
   __TCA_NETEM_MAX,
 };
 #define TCA_NETEM_MAX (__TCA_NETEM_MAX - 1)
@@ -532,6 +521,10 @@ enum {
   __TC_MQPRIO_SHAPER_MAX
 };
 #define __TC_MQPRIO_SHAPER_MAX (__TC_MQPRIO_SHAPER_MAX - 1)
+enum {
+  TC_FP_EXPRESS = 1,
+  TC_FP_PREEMPTIBLE = 2,
+};
 struct tc_mqprio_qopt {
   __u8 num_tc;
   __u8 prio_tc_map[TC_QOPT_BITMASK + 1];
@@ -544,11 +537,19 @@ struct tc_mqprio_qopt {
 #define TC_MQPRIO_F_MIN_RATE 0x4
 #define TC_MQPRIO_F_MAX_RATE 0x8
 enum {
+  TCA_MQPRIO_TC_ENTRY_UNSPEC,
+  TCA_MQPRIO_TC_ENTRY_INDEX,
+  TCA_MQPRIO_TC_ENTRY_FP,
+  __TCA_MQPRIO_TC_ENTRY_CNT,
+  TCA_MQPRIO_TC_ENTRY_MAX = (__TCA_MQPRIO_TC_ENTRY_CNT - 1)
+};
+enum {
   TCA_MQPRIO_UNSPEC,
   TCA_MQPRIO_MODE,
   TCA_MQPRIO_SHAPER,
   TCA_MQPRIO_MIN_RATE64,
   TCA_MQPRIO_MAX_RATE64,
+  TCA_MQPRIO_TC_ENTRY,
   __TCA_MQPRIO_MAX,
 };
 #define TCA_MQPRIO_MAX (__TCA_MQPRIO_MAX - 1)
@@ -677,9 +678,13 @@ enum {
   TCA_FQ_TIMER_SLACK,
   TCA_FQ_HORIZON,
   TCA_FQ_HORIZON_DROP,
+  TCA_FQ_PRIOMAP,
+  TCA_FQ_WEIGHTS,
   __TCA_FQ_MAX
 };
 #define TCA_FQ_MAX (__TCA_FQ_MAX - 1)
+#define FQ_BANDS 3
+#define FQ_MIN_WEIGHT 16384
 struct tc_fq_qd_stats {
   __u64 gc_flows;
   __u64 highprio_packets;
@@ -696,6 +701,10 @@ struct tc_fq_qd_stats {
   __u64 ce_mark;
   __u64 horizon_drops;
   __u64 horizon_caps;
+  __u64 fastpath_packets;
+  __u64 band_drops[FQ_BANDS];
+  __u32 band_pkt_count[FQ_BANDS];
+  __u32 pad;
 };
 enum {
   TCA_HHF_UNSPEC,
@@ -927,8 +936,16 @@ enum {
   TCA_TAPRIO_TC_ENTRY_UNSPEC,
   TCA_TAPRIO_TC_ENTRY_INDEX,
   TCA_TAPRIO_TC_ENTRY_MAX_SDU,
+  TCA_TAPRIO_TC_ENTRY_FP,
   __TCA_TAPRIO_TC_ENTRY_CNT,
   TCA_TAPRIO_TC_ENTRY_MAX = (__TCA_TAPRIO_TC_ENTRY_CNT - 1)
+};
+enum {
+  TCA_TAPRIO_OFFLOAD_STATS_PAD = 1,
+  TCA_TAPRIO_OFFLOAD_STATS_WINDOW_DROPS,
+  TCA_TAPRIO_OFFLOAD_STATS_TX_OVERRUNS,
+  __TCA_TAPRIO_OFFLOAD_STATS_CNT,
+  TCA_TAPRIO_OFFLOAD_STATS_MAX = (__TCA_TAPRIO_OFFLOAD_STATS_CNT - 1)
 };
 enum {
   TCA_TAPRIO_ATTR_UNSPEC,

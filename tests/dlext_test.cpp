@@ -85,6 +85,7 @@ protected:
   }
 
   void* handle_;
+  const size_t kPageSize = getpagesize();
 };
 
 TEST_F(DlExtTest, ExtInfoNull) {
@@ -159,12 +160,12 @@ TEST_F(DlExtTest, ExtInfoUseFdWithInvalidOffset) {
   ASSERT_STREQ("dlopen failed: file offset for the library \"libname_placeholder\" is not page-aligned: 17", dlerror());
 
   // Test an address above 2^44, for http://b/18178121 .
-  extinfo.library_fd_offset = (5LL<<48) + PAGE_SIZE;
+  extinfo.library_fd_offset = (5LL << 48) + kPageSize;
   handle_ = android_dlopen_ext("libname_placeholder", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle_ == nullptr);
   ASSERT_SUBSTR("dlopen failed: file offset for the library \"libname_placeholder\" >= file size", dlerror());
 
-  extinfo.library_fd_offset = 0LL - PAGE_SIZE;
+  extinfo.library_fd_offset = 0LL - kPageSize;
   handle_ = android_dlopen_ext("libname_placeholder", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle_ == nullptr);
   ASSERT_SUBSTR("dlopen failed: file offset for the library \"libname_placeholder\" is negative", dlerror());
@@ -340,17 +341,17 @@ TEST_F(DlExtTest, Reserved) {
   dlclose(handle_);
   handle_ = nullptr;
 
-  void* new_start = mmap(start, PAGE_SIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  void* new_start = mmap(start, kPageSize, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   ASSERT_NE(start, new_start) << "dlclose unmapped reserved space";
 }
 
 TEST_F(DlExtTest, ReservedTooSmall) {
-  void* start = mmap(nullptr, PAGE_SIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  void* start = mmap(nullptr, kPageSize, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   ASSERT_TRUE(start != MAP_FAILED);
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_RESERVED_ADDRESS;
   extinfo.reserved_addr = start;
-  extinfo.reserved_size = PAGE_SIZE;
+  extinfo.reserved_size = kPageSize;
   handle_ = android_dlopen_ext(kLibName, RTLD_NOW, &extinfo);
   EXPECT_EQ(nullptr, handle_);
 }
@@ -389,12 +390,12 @@ TEST_F(DlExtTest, ReservedRecursive) {
 }
 
 TEST_F(DlExtTest, ReservedRecursiveTooSmall) {
-  void* start = mmap(nullptr, PAGE_SIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  void* start = mmap(nullptr, kPageSize, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   ASSERT_TRUE(start != MAP_FAILED);
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_RESERVED_ADDRESS | ANDROID_DLEXT_RESERVED_ADDRESS_RECURSIVE;
   extinfo.reserved_addr = start;
-  extinfo.reserved_size = PAGE_SIZE;
+  extinfo.reserved_size = kPageSize;
   handle_ = android_dlopen_ext(kLibNameRecursive, RTLD_NOW, &extinfo);
   EXPECT_EQ(nullptr, handle_);
 }
@@ -417,19 +418,18 @@ TEST_F(DlExtTest, ReservedHint) {
 }
 
 TEST_F(DlExtTest, ReservedHintTooSmall) {
-  void* start = mmap(nullptr, PAGE_SIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  void* start = mmap(nullptr, kPageSize, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   ASSERT_TRUE(start != MAP_FAILED);
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_RESERVED_ADDRESS_HINT;
   extinfo.reserved_addr = start;
-  extinfo.reserved_size = PAGE_SIZE;
+  extinfo.reserved_size = kPageSize;
   handle_ = android_dlopen_ext(kLibName, RTLD_NOW, &extinfo);
   ASSERT_DL_NOTNULL(handle_);
   fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
   ASSERT_DL_NOTNULL(f);
   EXPECT_TRUE(reinterpret_cast<void*>(f) < start ||
-              (reinterpret_cast<void*>(f) >=
-               reinterpret_cast<char*>(start) + PAGE_SIZE));
+              (reinterpret_cast<void*>(f) >= reinterpret_cast<char*>(start) + kPageSize));
   EXPECT_EQ(4, f());
 }
 
@@ -964,10 +964,7 @@ TEST(dlext, dlopen_ext_use_memfd) {
 
   // create memfd
   int memfd = memfd_create("foobar", MFD_CLOEXEC);
-  if (memfd == -1 && errno == ENOSYS) {
-    return;
-  }
-
+  if (memfd == -1 && errno == ENOSYS) GTEST_SKIP() << "no memfd_create() in this kernel";
   ASSERT_TRUE(memfd != -1) << strerror(errno);
 
   // Check st.f_type is TMPFS_MAGIC for memfd

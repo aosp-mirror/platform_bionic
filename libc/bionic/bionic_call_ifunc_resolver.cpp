@@ -28,6 +28,7 @@
 
 #include "private/bionic_call_ifunc_resolver.h"
 #include <sys/auxv.h>
+#include <sys/hwprobe.h>
 #include <sys/ifunc.h>
 
 #include "private/bionic_auxv.h"
@@ -50,13 +51,15 @@ ElfW(Addr) __bionic_call_ifunc_resolver(ElfW(Addr) resolver_addr) {
   return reinterpret_cast<ifunc_resolver_t>(resolver_addr)(arg._hwcap | _IFUNC_ARG_HWCAP, &arg);
 #elif defined(__arm__)
   typedef ElfW(Addr) (*ifunc_resolver_t)(unsigned long);
-  static unsigned long hwcap;
-  static bool initialized = false;
-  if (!initialized) {
-    initialized = true;
-    hwcap = getauxval(AT_HWCAP);
-  }
+  static unsigned long hwcap = getauxval(AT_HWCAP);
   return reinterpret_cast<ifunc_resolver_t>(resolver_addr)(hwcap);
+#elif defined(__riscv)
+  // The third argument is currently unused, but reserved for future
+  // expansion. If we pass nullptr from the beginning, it'll be easier
+  // to recognize if/when we pass actual data (and matches glibc).
+  typedef ElfW(Addr) (*ifunc_resolver_t)(uint64_t, __riscv_hwprobe_t, void*);
+  static uint64_t hwcap = getauxval(AT_HWCAP);
+  return reinterpret_cast<ifunc_resolver_t>(resolver_addr)(hwcap, __riscv_hwprobe, nullptr);
 #else
   typedef ElfW(Addr) (*ifunc_resolver_t)(void);
   return reinterpret_cast<ifunc_resolver_t>(resolver_addr)();

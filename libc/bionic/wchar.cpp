@@ -27,10 +27,10 @@
  */
 
 #include <errno.h>
-#include <sys/param.h>
 #include <string.h>
-#include <wchar.h>
+#include <sys/param.h>
 #include <uchar.h>
+#include <wchar.h>
 
 #include "private/bionic_mbstate.h"
 
@@ -88,10 +88,10 @@ size_t mbsnrtowcs(wchar_t* dst, const char** src, size_t nmc, size_t len, mbstat
         r = 1;
       } else {
         r = mbrtowc(nullptr, *src + i, nmc - i, state);
-        if (r == __MB_ERR_ILLEGAL_SEQUENCE) {
+        if (r == BIONIC_MULTIBYTE_RESULT_ILLEGAL_SEQUENCE) {
           return mbstate_reset_and_return_illegal(EILSEQ, state);
         }
-        if (r == __MB_ERR_INCOMPLETE_SEQUENCE) {
+        if (r == BIONIC_MULTIBYTE_RESULT_INCOMPLETE_SEQUENCE) {
           return mbstate_reset_and_return_illegal(EILSEQ, state);
         }
         if (r == 0) {
@@ -114,11 +114,11 @@ size_t mbsnrtowcs(wchar_t* dst, const char** src, size_t nmc, size_t len, mbstat
       }
     } else {
       r = mbrtowc(dst + o, *src + i, nmc - i, state);
-      if (r == __MB_ERR_ILLEGAL_SEQUENCE) {
+      if (r == BIONIC_MULTIBYTE_RESULT_ILLEGAL_SEQUENCE) {
         *src += i;
         return mbstate_reset_and_return_illegal(EILSEQ, state);
       }
-      if (r == __MB_ERR_INCOMPLETE_SEQUENCE) {
+      if (r == BIONIC_MULTIBYTE_RESULT_INCOMPLETE_SEQUENCE) {
         *src += nmc;
         return mbstate_reset_and_return_illegal(EILSEQ, state);
       }
@@ -135,6 +135,7 @@ size_t mbsnrtowcs(wchar_t* dst, const char** src, size_t nmc, size_t len, mbstat
 size_t mbsrtowcs(wchar_t* dst, const char** src, size_t len, mbstate_t* ps) {
   return mbsnrtowcs(dst, src, SIZE_MAX, len, ps);
 }
+__strong_alias(mbsrtowcs_l, mbsrtowcs);
 
 size_t wcrtomb(char* s, wchar_t wc, mbstate_t* ps) {
   static mbstate_t __private_state;
@@ -165,7 +166,7 @@ size_t wcsnrtombs(char* dst, const wchar_t** src, size_t nwc, size_t len, mbstat
         r = 1;
       } else {
         r = wcrtomb(buf, wc, state);
-        if (r == __MB_ERR_ILLEGAL_SEQUENCE) {
+        if (r == BIONIC_MULTIBYTE_RESULT_ILLEGAL_SEQUENCE) {
           return r;
         }
       }
@@ -186,14 +187,14 @@ size_t wcsnrtombs(char* dst, const wchar_t** src, size_t nwc, size_t len, mbstat
     } else if (len - o >= sizeof(buf)) {
       // Enough space to translate in-place.
       r = wcrtomb(dst + o, wc, state);
-      if (r == __MB_ERR_ILLEGAL_SEQUENCE) {
+      if (r == BIONIC_MULTIBYTE_RESULT_ILLEGAL_SEQUENCE) {
         *src += i;
         return r;
       }
     } else {
       // May not be enough space; use temp buffer.
       r = wcrtomb(buf, wc, state);
-      if (r == __MB_ERR_ILLEGAL_SEQUENCE) {
+      if (r == BIONIC_MULTIBYTE_RESULT_ILLEGAL_SEQUENCE) {
         *src += i;
         return r;
       }
@@ -210,3 +211,4 @@ size_t wcsnrtombs(char* dst, const wchar_t** src, size_t nwc, size_t len, mbstat
 size_t wcsrtombs(char* dst, const wchar_t** src, size_t len, mbstate_t* ps) {
   return wcsnrtombs(dst, src, SIZE_MAX, len, ps);
 }
+__strong_alias(wcsrtombs_l, wcsrtombs);

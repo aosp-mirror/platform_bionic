@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_ASM_X86_MTRR_H
 #define _UAPI_ASM_X86_MTRR_H
 #include <linux/types.h>
@@ -57,13 +45,6 @@ struct mtrr_var_range {
 typedef __u8 mtrr_type;
 #define MTRR_NUM_FIXED_RANGES 88
 #define MTRR_MAX_VAR_RANGES 256
-struct mtrr_state_type {
-  struct mtrr_var_range var_ranges[MTRR_MAX_VAR_RANGES];
-  mtrr_type fixed_ranges[MTRR_NUM_FIXED_RANGES];
-  unsigned char enabled;
-  unsigned char have_fixed;
-  mtrr_type def_type;
-};
 #define MTRRphysBase_MSR(reg) (0x200 + 2 * (reg))
 #define MTRRphysMask_MSR(reg) (0x200 + 2 * (reg) + 1)
 #define MTRRIOC_ADD_ENTRY _IOW(MTRR_IOCTL_BASE, 0, struct mtrr_sentry)

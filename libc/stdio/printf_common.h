@@ -528,17 +528,29 @@ static int __find_arguments(const CHAR_TYPE* fmt0, va_list ap, union arg** argta
       case 'b':
         ADDUARG();
         break;
-      case 'w':
+      case 'w': {
         n = 0;
+        bool fast = false;
         ch = *fmt++;
+        if (ch == 'f') {
+          fast = true;
+          ch = *fmt++;
+        }
         while (is_digit(ch)) {
           APPEND_DIGIT(n, ch);
           ch = *fmt++;
         }
         if (n == 64) {
           flags |= LLONGINT;
+        } else {
+          if (n != 8 && fast) {
+#if defined(__LP64__)
+            flags |= LLONGINT;
+#endif
+          }
         }
         goto reswitch;
+      }
       default: /* "%?" prints ?, unless ? is NUL */
         if (ch == '\0') goto done;
         break;
@@ -774,7 +786,7 @@ struct helpers {
   //
   // Returns NULL on failure.
   // To find out what happened check errno for ENOMEM, EILSEQ and EINVAL.
-  static wchar_t* mbsconv(char* mbsarg, int prec) {
+  static wchar_t* mbsconv(const char* mbsarg, int prec) {
     mbstate_t mbs;
     const char* p;
     size_t insize, nchars, nconv;
@@ -824,4 +836,15 @@ struct helpers {
     return convbuf;
   }
 
+  // Trasnlate a fixed size integer argument for the %w/%wf format to a
+  // flag representation. Supported sizes are 8, 16, 32, and 64 so far.
+  // See details in bionic/libc/include/stdint.h
+  static int w_to_flag(int size, bool fast) {
+    static constexpr int fast_size = sizeof(void*) == 8 ? LLONGINT : 0;
+    if (size == 8) return CHARINT;
+    if (size == 16) return fast ? fast_size : SHORTINT;
+    if (size == 32) return fast ? fast_size : 0;
+    if (size == 64) return LLONGINT;
+    __fortify_fatal("%%w%s%d is unsupported", fast ? "f" : "", size);
+  }
 };

@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_LINUX_CAPABILITY_H
 #define _UAPI_LINUX_CAPABILITY_H
 #include <linux/types.h>
@@ -29,11 +17,12 @@ typedef struct __user_cap_header_struct {
   __u32 version;
   int pid;
 }  * cap_user_header_t;
-typedef struct __user_cap_data_struct {
+struct __user_cap_data_struct {
   __u32 effective;
   __u32 permitted;
   __u32 inheritable;
-}  * cap_user_data_t;
+};
+typedef struct __user_cap_data_struct  * cap_user_data_t;
 #define VFS_CAP_REVISION_MASK 0xFF000000
 #define VFS_CAP_REVISION_SHIFT 24
 #define VFS_CAP_FLAGS_MASK ~VFS_CAP_REVISION_MASK

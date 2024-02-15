@@ -19,9 +19,19 @@
 #include <sys/param.h>
 #include <unistd.h>
 
+#include <async_safe/log.h>
 #include <private/MallocXmlElem.h>
 
 #include "jemalloc.h"
+
+__BEGIN_DECLS
+
+size_t je_mallinfo_narenas();
+size_t je_mallinfo_nbins();
+struct mallinfo je_mallinfo_arena_info(size_t);
+struct mallinfo je_mallinfo_bin_info(size_t, size_t);
+
+__END_DECLS
 
 void* je_pvalloc(size_t bytes) {
   size_t pagesize = getpagesize();
@@ -121,18 +131,35 @@ int je_mallopt(int param, int value) {
       return 0;
     }
     return 1;
+  } else if (param == M_LOG_STATS) {
+    for (size_t i = 0; i < je_mallinfo_narenas(); i++) {
+      struct mallinfo mi = je_mallinfo_arena_info(i);
+      if (mi.hblkhd != 0) {
+        async_safe_format_log(ANDROID_LOG_INFO, "jemalloc",
+                              "Arena %zu: large bytes %zu huge bytes %zu bin bytes %zu", i,
+                              mi.ordblks, mi.uordblks, mi.fsmblks);
+
+        for (size_t j = 0; j < je_mallinfo_nbins(); j++) {
+          struct mallinfo mi = je_mallinfo_bin_info(i, j);
+          if (mi.ordblks != 0) {
+            size_t total_allocs = 1;
+            if (mi.uordblks > mi.fordblks) {
+              total_allocs = mi.uordblks - mi.fordblks;
+            }
+            size_t bin_size = mi.ordblks / total_allocs;
+            async_safe_format_log(
+                ANDROID_LOG_INFO, "jemalloc",
+                "  Bin %zu (%zu bytes): allocated bytes %zu nmalloc %zu ndalloc %zu", j, bin_size,
+                mi.ordblks, mi.uordblks, mi.fordblks);
+          }
+        }
+      }
+    }
+    return 1;
   }
+
   return 0;
 }
-
-__BEGIN_DECLS
-
-size_t je_mallinfo_narenas();
-size_t je_mallinfo_nbins();
-struct mallinfo je_mallinfo_arena_info(size_t);
-struct mallinfo je_mallinfo_bin_info(size_t, size_t);
-
-__END_DECLS
 
 int je_malloc_info(int options, FILE* fp) {
   if (options != 0) {

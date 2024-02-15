@@ -11,11 +11,14 @@ int	ioprio_set(int, int, int)	lp64
 # Syscalls used internally by bionic, but not exposed directly.
 pid_t	gettid()	all
 int	futex(int*, int, int, const timespec*, int*, int)	all
-int	clone(int (*)(void*), void*, int, void*, ...) all
+pid_t	clone(int (*)(void*), void*, int, void*, ...) all
 int	sigreturn(unsigned long)	lp32
 int	rt_sigreturn(unsigned long)	all
 int	rt_tgsigqueueinfo(pid_t, pid_t, int, siginfo_t*)	all
 int	restart_syscall()	all
+
+# The public API doesn't set errno, so we call this via inline assembler.
+int riscv_hwprobe(riscv_hwprobe*, size_t, size_t, unsigned long*, unsigned) riscv64
 
 # vfork is used by bionic (and java.lang.ProcessBuilder) on some
 # architectures. (The others use clone(2) directly instead.)
@@ -53,6 +56,7 @@ int sched_setattr(pid_t, sched_attr*, unsigned, unsigned) all
 int execveat(int, const char*, char* const*, char* const*, int)  all
 # Since Linux 4.3, not in glibc. Probed for and conditionally used by ART.
 int membarrier(int, int) all
+int userfaultfd(int) all
 # Since Linux 5.1, not in glibc. Not used by bionic, and not likely ever
 # to be (because the last thing anyone needs is a new 32-bit ABI in the
 # 2020s!) but http://b/138781460 showed cuttlefish needed at least the
@@ -73,5 +77,8 @@ int recvmmsg_time64(int, mmsghdr*, unsigned int, int, const timespec64*) lp32
 int rt_sigtimedwait_time64(const sigset64_t*, siginfo_t*, const timespec64*, size_t) lp32
 int futex_time64(int*, int, int, const timespec64*, int*, int) lp32
 int sched_rr_get_interval_time64(pid_t, timespec64*) lp32
-# Since Linux 5.4, not in glibc. Probed for and conditionally used by ART.
-int userfaultfd(int) all
+# Since Linux 5.3, not in glibc. Not used by bionic, but increasingly
+# likely to be useful as new features are added. In particular, cgroups
+# support seems potentially useful for Android (though the struct that
+# changes size over time is obviously problematic).
+pid_t clone3(clone_args*, size_t) all

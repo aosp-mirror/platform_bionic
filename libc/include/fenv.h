@@ -29,6 +29,11 @@
 
 #pragma once
 
+/**
+ * @file fenv.h
+ * @brief Floating-point environment.
+ */
+
 #include <sys/cdefs.h>
 
 #if defined(__aarch64__) || defined(__arm__)
@@ -43,33 +48,135 @@
 
 __BEGIN_DECLS
 
-int feclearexcept(int __exceptions) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_X86(9);
-int fegetexceptflag(fexcept_t* _Nonnull __flag_ptr, int __exceptions) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_X86(9);
-int feraiseexcept(int __exceptions) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_X86(9);
-int fesetexceptflag(const fexcept_t* _Nonnull __flag_ptr, int __exceptions) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_X86(9);
-int fetestexcept(int __exceptions) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_X86(9);
+/**
+ * [feclearexcept(3)](http://man7.org/linux/man-pages/man3/feclearexcept.3.html)
+ * clears the given `exceptions` in hardware.
+ *
+ * Returns 0 on success, and returns non-zero on failure.
+ */
+int feclearexcept(int __exceptions);
 
-int fegetround(void) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_X86(9);
-int fesetround(int __rounding_mode) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_X86(9);
+/**
+ * [fegetexceptflag(3)](http://man7.org/linux/man-pages/man3/fegetexceptflag.3.html)
+ * copies the state of the given `exceptions` from hardware into `*flag_ptr`.
+ * See fesetexceptflag().
+ *
+ * Returns 0 on success, and returns non-zero on failure.
+ */
+int fegetexceptflag(fexcept_t* _Nonnull __flag_ptr, int __exceptions);
 
-int fegetenv(fenv_t* _Nonnull __env) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_X86(9);
-int feholdexcept(fenv_t* _Nonnull __env) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_X86(9);
-int fesetenv(const fenv_t* _Nonnull __env) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_X86(9);
-int feupdateenv(const fenv_t* _Nonnull __env) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_X86(9);
+/**
+ * [feraiseexcept(3)](http://man7.org/linux/man-pages/man3/feraiseexcept.3.html)
+ * raises the given `exceptions` in hardware.
+ *
+ * Returns 0 on success, and returns non-zero on failure.
+ */
+int feraiseexcept(int __exceptions);
 
-int feenableexcept(int __exceptions) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_X86(9);
-int fedisableexcept(int __exceptions) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_X86(9);
-int fegetexcept(void) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_X86(9);
+/**
+ * [fesetexceptflag(3)](http://man7.org/linux/man-pages/man3/fesetexceptflag.3.html)
+ * copies the state of the given `exceptions` from `*flag_ptr` into hardware.
+ * See fesetexceptflag().
+ *
+ * Returns 0 on success, and returns non-zero on failure.
+ */
+int fesetexceptflag(const fexcept_t* _Nonnull __flag_ptr, int __exceptions);
 
-/*
- * The following constant represents the default floating-point environment
- * (that is, the one installed at program startup) and has type pointer to
- * const-qualified fenv_t.
+/**
+ * [fetestexcept(3)](http://man7.org/linux/man-pages/man3/fetestexcept.3.html)
+ * tests whether the given `exceptions` are set in hardware.
+ *
+ * Returns the currently-set subset of `exceptions`.
+ */
+int fetestexcept(int __exceptions);
+
+/**
+ * [fegetround(3)](http://man7.org/linux/man-pages/man3/fegetround.3.html)
+ * returns the current rounding mode.
+ *
+ * Returns the rounding mode on success, and returns a negative value on failure.
+ */
+int fegetround(void);
+
+/**
+ * [fesetround(3)](http://man7.org/linux/man-pages/man3/fesetround.3.html)
+ * sets the current rounding mode.
+ *
+ * Returns 0 on success, and returns non-zero on failure.
+ */
+int fesetround(int __rounding_mode);
+
+/**
+ * [fegetenv(3)](http://man7.org/linux/man-pages/man3/fegetenv.3.html)
+ * gets the current floating-point environment. See fesetenv().
+ *
+ * Returns 0 on success, and returns non-zero on failure.
+ */
+int fegetenv(fenv_t* _Nonnull __env);
+
+/**
+ * [feholdexcept(3)](http://man7.org/linux/man-pages/man3/feholdexcept.3.html)
+ * gets the current floating-point environment, clears the status flags, and
+ * ignores floating point exceptions. See fesetenv()/feupdateenv().
+ *
+ * Returns 0 on success, and returns non-zero on failure.
+ */
+int feholdexcept(fenv_t* _Nonnull __env);
+
+/**
+ * [fesetenv(3)](http://man7.org/linux/man-pages/man3/fesetenv.3.html)
+ * sets the current floating-point environment. See fegetenv().
+ *
+ * Returns 0 on success, and returns non-zero on failure.
+ */
+int fesetenv(const fenv_t* _Nonnull __env);
+
+/**
+ * [feupdateenv(3)](http://man7.org/linux/man-pages/man3/feupdateenv.3.html)
+ * sets the current floating-point environment to `*env` but with currently-raised
+ * exceptions still raised. See fesetenv().
+ *
+ * Returns 0 on success, and returns non-zero on failure.
+ */
+int feupdateenv(const fenv_t* _Nonnull __env);
+
+/**
+ * [feenableexcept(3)](http://man7.org/linux/man-pages/man3/feenableexcept.3.html)
+ * sets the given `exceptions` to trap, if the hardware supports it. This is not
+ * generally useful on Android, because only x86/x86-64 can trap.
+ *
+ * Returns the previous set of enabled exceptions on success, and returns -1 on failure.
+ */
+int feenableexcept(int __exceptions);
+
+/**
+ * [fedisableexcept(3)](http://man7.org/linux/man-pages/man3/fedisableexcept.3.html)
+ * sets the given `exceptions` to not trap, if the hardware supports it. This is not
+ * generally useful on Android, because only x86/x86-64 can trap.
+ *
+ * Returns the previous set of enabled exceptions on success, and returns -1 on failure.
+ */
+int fedisableexcept(int __exceptions);
+
+/**
+ * [fegetexcept(3)](http://man7.org/linux/man-pages/man3/fegetexcept.3.html)
+ * returns the exceptions that currently trap. This is not generally useful on
+ * Android, because only x86/x86-64 can trap.
+ *
+ * Returns the exceptions that currently trap.
+ */
+int fegetexcept(void);
+
+/** See FE_DFL_ENV. */
+extern const fenv_t __fe_dfl_env;
+
+/**
+ * Constant representing the default floating-point environment
+ * (that is, the one installed at program startup).
  *
  * It can be used as an argument to the functions that manage the floating-point
  * environment, namely fesetenv() and feupdateenv().
  */
-extern const fenv_t __fe_dfl_env;
 #define FE_DFL_ENV (&__fe_dfl_env)
 
 __END_DECLS

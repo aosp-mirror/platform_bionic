@@ -43,19 +43,15 @@ __BEGIN_DECLS
  * filesystem checks.
  *
  * Returns the previous UID.
- *
- * Available since API level 21.
  */
-int setfsuid(uid_t __uid) __INTRODUCED_IN(21);
+int setfsuid(uid_t __uid);
 
 /**
  * [setfsgid(2)](http://man7.org/linux/man-pages/man2/setfsgid.2.html) sets the GID used for
  * filesystem checks.
  *
  * Returns the previous GID.
- *
- * Available since API level 21.
  */
-int setfsgid(gid_t __gid) __INTRODUCED_IN(21);
+int setfsgid(gid_t __gid);
 
 __END_DECLS

@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef DRM_FOURCC_H
 #define DRM_FOURCC_H
 #include "drm.h"
@@ -131,6 +119,8 @@ extern "C" {
 #define DRM_FORMAT_NV24 fourcc_code('N', 'V', '2', '4')
 #define DRM_FORMAT_NV42 fourcc_code('N', 'V', '4', '2')
 #define DRM_FORMAT_NV15 fourcc_code('N', 'V', '1', '5')
+#define DRM_FORMAT_NV20 fourcc_code('N', 'V', '2', '0')
+#define DRM_FORMAT_NV30 fourcc_code('N', 'V', '3', '0')
 #define DRM_FORMAT_P210 fourcc_code('P', '2', '1', '0')
 #define DRM_FORMAT_P010 fourcc_code('P', '0', '1', '0')
 #define DRM_FORMAT_P012 fourcc_code('P', '0', '1', '2')
@@ -179,6 +169,9 @@ extern "C" {
 #define I915_FORMAT_MOD_4_TILED_DG2_RC_CCS fourcc_mod_code(INTEL, 10)
 #define I915_FORMAT_MOD_4_TILED_DG2_MC_CCS fourcc_mod_code(INTEL, 11)
 #define I915_FORMAT_MOD_4_TILED_DG2_RC_CCS_CC fourcc_mod_code(INTEL, 12)
+#define I915_FORMAT_MOD_4_TILED_MTL_RC_CCS fourcc_mod_code(INTEL, 13)
+#define I915_FORMAT_MOD_4_TILED_MTL_MC_CCS fourcc_mod_code(INTEL, 14)
+#define I915_FORMAT_MOD_4_TILED_MTL_RC_CCS_CC fourcc_mod_code(INTEL, 15)
 #define DRM_FORMAT_MOD_SAMSUNG_64_32_TILE fourcc_mod_code(SAMSUNG, 1)
 #define DRM_FORMAT_MOD_SAMSUNG_16_16_TILE fourcc_mod_code(SAMSUNG, 2)
 #define DRM_FORMAT_MOD_QCOM_COMPRESSED fourcc_mod_code(QCOM, 1)

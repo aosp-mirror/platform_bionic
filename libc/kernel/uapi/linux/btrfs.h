@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_LINUX_BTRFS_H
 #define _UAPI_LINUX_BTRFS_H
 #ifdef __cplusplus
@@ -107,6 +95,7 @@ struct btrfs_scrub_progress {
   __u64 unverified_errors;
 };
 #define BTRFS_SCRUB_READONLY 1
+#define BTRFS_SCRUB_SUPPORTED_FLAGS (BTRFS_SCRUB_READONLY)
 struct btrfs_ioctl_scrub_args {
   __u64 devid;
   __u64 start;
@@ -157,7 +146,8 @@ struct btrfs_ioctl_dev_info_args {
   __u8 uuid[BTRFS_UUID_SIZE];
   __u64 bytes_used;
   __u64 total_bytes;
-  __u64 unused[379];
+  __u8 fsid[BTRFS_UUID_SIZE];
+  __u64 unused[377];
   __u8 path[BTRFS_DEVICE_PATH_NAME_MAX];
 };
 #define BTRFS_FS_INFO_FLAG_CSUM_INFO (1 << 0)
@@ -195,6 +185,8 @@ struct btrfs_ioctl_fs_info_args {
 #define BTRFS_FEATURE_INCOMPAT_RAID1C34 (1ULL << 11)
 #define BTRFS_FEATURE_INCOMPAT_ZONED (1ULL << 12)
 #define BTRFS_FEATURE_INCOMPAT_EXTENT_TREE_V2 (1ULL << 13)
+#define BTRFS_FEATURE_INCOMPAT_RAID_STRIPE_TREE (1ULL << 14)
+#define BTRFS_FEATURE_INCOMPAT_SIMPLE_QUOTA (1ULL << 16)
 struct btrfs_ioctl_feature_flags {
   __u64 compat_flags;
   __u64 compat_ro_flags;
@@ -392,6 +384,7 @@ struct btrfs_ioctl_get_dev_stats {
 #define BTRFS_QUOTA_CTL_ENABLE 1
 #define BTRFS_QUOTA_CTL_DISABLE 2
 #define BTRFS_QUOTA_CTL_RESCAN__NOTUSED 3
+#define BTRFS_QUOTA_CTL_ENABLE_SIMPLE_QUOTA 4
 struct btrfs_ioctl_quota_ctl_args {
   __u64 cmd;
   __u64 status;

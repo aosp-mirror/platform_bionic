@@ -39,6 +39,21 @@ __BEGIN_DECLS
  *
  * Returns a pointer to the allocated memory on success and returns a null
  * pointer and sets `errno` on failure.
+ *
+ * Note that Android (like most Unix systems) allows "overcommit". This
+ * allows processes to allocate more memory than the system has, provided
+ * they don't use it all. This works because only "dirty" pages that have
+ * been written to actually require physical memory. In practice, this
+ * means that it's rare to see memory allocation functions return a null
+ * pointer, and that a non-null pointer does not mean that you actually
+ * have all of the memory you asked for.
+ *
+ * Note also that the Linux Out Of Memory (OOM) killer behaves differently
+ * for code run via `adb shell`. The assumption is that if you ran
+ * something via `adb shell` you're a developer who actually wants the
+ * device to do what you're asking it to do _even if_ that means killing
+ * other processes. Obviously this is not the case for apps, which will
+ * be killed in preference to killing other processes.
  */
 void* _Nullable malloc(size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(1) __wur;
 
@@ -47,7 +62,7 @@ void* _Nullable malloc(size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(1) 
  * and clears memory on the heap.
  *
  * Returns a pointer to the allocated memory on success and returns a null
- * pointer and sets `errno` on failure.
+ * pointer and sets `errno` on failure (but see the notes for malloc()).
  */
 void* _Nullable calloc(size_t __item_count, size_t __item_size) __mallocfunc __BIONIC_ALLOC_SIZE(1,2) __wur;
 
@@ -56,7 +71,8 @@ void* _Nullable calloc(size_t __item_count, size_t __item_size) __mallocfunc __B
  * allocated memory on the heap.
  *
  * Returns a pointer (which may be different from `__ptr`) to the resized
- * memory on success and returns a null pointer and sets `errno` on failure.
+ * memory on success and returns a null pointer and sets `errno` on failure
+ * (but see the notes for malloc()).
  */
 void* _Nullable realloc(void* _Nullable __ptr, size_t __byte_count) __BIONIC_ALLOC_SIZE(2) __wur;
 
@@ -68,7 +84,8 @@ void* _Nullable realloc(void* _Nullable __ptr, size_t __byte_count) __BIONIC_ALL
  * multiplication overflows.
  *
  * Returns a pointer (which may be different from `__ptr`) to the resized
- * memory on success and returns a null pointer and sets `errno` on failure.
+ * memory on success and returns a null pointer and sets `errno` on failure
+ * (but see the notes for malloc()).
  */
 void* _Nullable reallocarray(void* _Nullable __ptr, size_t __item_count, size_t __item_size) __BIONIC_ALLOC_SIZE(2, 3) __wur __INTRODUCED_IN(29);
 
@@ -83,7 +100,7 @@ void free(void* _Nullable __ptr);
  * memory on the heap with the required alignment.
  *
  * Returns a pointer to the allocated memory on success and returns a null
- * pointer and sets `errno` on failure.
+ * pointer and sets `errno` on failure (but see the notes for malloc()).
  *
  * See also posix_memalign().
  */
@@ -92,10 +109,8 @@ void* _Nullable memalign(size_t __alignment, size_t __byte_count) __mallocfunc _
 /**
  * [malloc_usable_size(3)](http://man7.org/linux/man-pages/man3/malloc_usable_size.3.html)
  * returns the actual size of the given heap block.
- *
- * Available since API level 17.
  */
-size_t malloc_usable_size(const void* _Nullable __ptr) __INTRODUCED_IN(17);
+size_t malloc_usable_size(const void* _Nullable __ptr);
 
 #define __MALLINFO_BODY \
   /** Total number of non-mmapped bytes currently allocated from OS. */ \
@@ -232,8 +247,9 @@ int malloc_info(int __must_be_zero, FILE* _Nonnull __fp) __INTRODUCED_IN(23);
 /**
  * mallopt() option for per-thread memory initialization tuning.
  * The value argument should be one of:
- * 1: Disable automatic heap initialization and, where possible, memory tagging,
- *    on this thread.
+ * 1: Disable automatic heap initialization on this thread only.
+ *    If memory tagging is enabled, disable as much as possible of the
+ *    memory tagging initialization for this thread.
  * 0: Normal behavior.
  *
  * Available since API level 31.
@@ -319,6 +335,16 @@ enum HeapTaggingLevel {
 };
 
 /**
+ * mallopt() option to print human readable statistics about the memory
+ * allocator to the log. There is no format for this data, each allocator
+ * can use a different format, and the data that is printed can
+ * change at any time. This is expected to be used as a debugging aid.
+ *
+ * Available since API level 35.
+ */
+#define M_LOG_STATS (-205)
+
+/**
  * [mallopt(3)](http://man7.org/linux/man-pages/man3/mallopt.3.html) modifies
  * heap behavior. Values of `__option` are the `M_` constants from this header.
  *
@@ -335,7 +361,7 @@ int mallopt(int __option, int __value) __INTRODUCED_IN(26);
  *
  * Available since API level 28.
  *
- * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/master/libc/malloc_hooks/README.md)
+ * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/main/libc/malloc_hooks/README.md)
  */
 extern void* _Nonnull (*volatile _Nonnull __malloc_hook)(size_t __byte_count, const void* _Nonnull __caller) __INTRODUCED_IN(28);
 
@@ -346,7 +372,7 @@ extern void* _Nonnull (*volatile _Nonnull __malloc_hook)(size_t __byte_count, co
  *
  * Available since API level 28.
  *
- * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/master/libc/malloc_hooks/README.md)
+ * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/main/libc/malloc_hooks/README.md)
  */
 extern void* _Nonnull (*volatile _Nonnull __realloc_hook)(void* _Nullable __ptr, size_t __byte_count, const void* _Nonnull __caller) __INTRODUCED_IN(28);
 
@@ -357,7 +383,7 @@ extern void* _Nonnull (*volatile _Nonnull __realloc_hook)(void* _Nullable __ptr,
  *
  * Available since API level 28.
  *
- * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/master/libc/malloc_hooks/README.md)
+ * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/main/libc/malloc_hooks/README.md)
  */
 extern void (*volatile _Nonnull __free_hook)(void* _Nullable __ptr, const void* _Nonnull __caller) __INTRODUCED_IN(28);
 
@@ -368,7 +394,7 @@ extern void (*volatile _Nonnull __free_hook)(void* _Nullable __ptr, const void* 
  *
  * Available since API level 28.
  *
- * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/master/libc/malloc_hooks/README.md)
+ * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/main/libc/malloc_hooks/README.md)
  */
 extern void* _Nonnull (*volatile _Nonnull __memalign_hook)(size_t __alignment, size_t __byte_count, const void* _Nonnull __caller) __INTRODUCED_IN(28);
 

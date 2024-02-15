@@ -18,6 +18,8 @@
 
 #include <search.h>
 
+#include "utils.h"
+
 static int int_cmp(const void* lhs, const void* rhs) {
   return *reinterpret_cast<const int*>(rhs) - *reinterpret_cast<const int*>(lhs);
 }
@@ -276,7 +278,7 @@ TEST(search, hcreate_r_hsearch_r_hdestroy_r) {
   // Check missing.
   errno = 0;
   ASSERT_EQ(0, hsearch_r(ENTRY{.key = const_cast<char*>("b"), .data = nullptr}, FIND, &e, &h1));
-  ASSERT_EQ(ESRCH, errno);
+  ASSERT_ERRNO(ESRCH);
 
   // Check present.
   ASSERT_EQ(1, hsearch_r(ENTRY{.key = const_cast<char*>("a"), .data = nullptr}, FIND, &e, &h1));

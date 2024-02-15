@@ -169,12 +169,6 @@ bool parse_zip_path(const char* input_path, std::string* zip_path, std::string* 
   return true;
 }
 
-constexpr off64_t kPageMask = ~static_cast<off64_t>(PAGE_SIZE-1);
-
-off64_t page_start(off64_t offset) {
-  return offset & kPageMask;
-}
-
 bool safe_add(off64_t* out, off64_t a, size_t b) {
   CHECK(a >= 0);
   if (static_cast<uint64_t>(INT64_MAX - a) < b) {
@@ -183,10 +177,6 @@ bool safe_add(off64_t* out, off64_t a, size_t b) {
 
   *out = a + b;
   return true;
-}
-
-size_t page_offset(off64_t offset) {
-  return static_cast<size_t>(offset & (PAGE_SIZE-1));
 }
 
 void split_path(const char* path, const char* delimiters,

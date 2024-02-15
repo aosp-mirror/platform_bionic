@@ -37,8 +37,9 @@
 
 #include "linker_debug.h"
 
-static constexpr size_t kAllocateSize = PAGE_SIZE * 100;
-static_assert(kAllocateSize % PAGE_SIZE == 0, "Invalid kAllocateSize.");
+static constexpr size_t kMaxPageSize = 65536;
+static constexpr size_t kAllocateSize = kMaxPageSize * 6;
+static_assert(kAllocateSize % kMaxPageSize == 0, "Invalid kAllocateSize.");
 
 struct LinkerBlockAllocatorPage {
   LinkerBlockAllocatorPage* next;

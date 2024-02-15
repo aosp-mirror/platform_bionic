@@ -54,13 +54,19 @@ If your code can be built with a variety of different NDK versions, and needs to
 work around issues with some of them, use these macros to detect the versinon of
 the NDK you're being built with. Usually only `__NDK_MAJOR__` will be necessary.
 
-## `__arm__`, `__aarch64__`, `__i386__`, `__x86_64__`
+## `__arm__`/`__aarch64__`, `__i386__`/`__x86_64__`, `__riscv`
 
-If your code is specific to a particular processor architecture, use these
-macros to conditionally compile. Note that the ABI usually called `arm64` uses
-the macro `__aarch64__` and the ABI usually called `x86` uses `__i386__`.
+If your code is specific to a particular processor architecture, use
+these macros to conditionally compile. Note that the ABI usually called
+`arm64` uses the macro `__aarch64__` and the ABI usually called `x86` uses
+`__i386__`. Android only supports riscv64, so `__riscv` is a sufficient
+check for Android-only code. If you need to write code portable to other
+operating systems that do support riscv32, you'll also need to check
+whether `__riscv_xlen` is 32 or 64.
 
-## `__LP32__` and `__LP64__`
+## `__ILP32__` and `__LP64__`
 
-If your code depends on "bitness" -- whether `long` and pointers are 32- or
-64-bit -- use these macros to conditionally compile.
+If your code depends on "bitness" -- whether `long` and pointers are 32-
+or 64-bit -- use these macros to conditionally compile. Note the extra
+"I" in the 32-bit macro (since `int`, `long`, and pointers are all 32-bit
+on such systems, with `long long` being needed for a 64-bit type).

@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_LINUX_FUTEX_H
 #define _UAPI_LINUX_FUTEX_H
 #include <linux/compiler.h>
@@ -50,7 +38,14 @@
 #define FUTEX_WAKE_BITSET_PRIVATE (FUTEX_WAKE_BITSET | FUTEX_PRIVATE_FLAG)
 #define FUTEX_WAIT_REQUEUE_PI_PRIVATE (FUTEX_WAIT_REQUEUE_PI | FUTEX_PRIVATE_FLAG)
 #define FUTEX_CMP_REQUEUE_PI_PRIVATE (FUTEX_CMP_REQUEUE_PI | FUTEX_PRIVATE_FLAG)
-#define FUTEX_32 2
+#define FUTEX2_SIZE_U8 0x00
+#define FUTEX2_SIZE_U16 0x01
+#define FUTEX2_SIZE_U32 0x02
+#define FUTEX2_SIZE_U64 0x03
+#define FUTEX2_NUMA 0x04
+#define FUTEX2_PRIVATE FUTEX_PRIVATE_FLAG
+#define FUTEX2_SIZE_MASK 0x03
+#define FUTEX_32 FUTEX2_SIZE_U32
 #define FUTEX_WAITV_MAX 128
 struct futex_waitv {
   __u64 val;

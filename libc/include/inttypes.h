@@ -327,12 +327,12 @@ typedef struct {
 } imaxdiv_t;
 
 __BEGIN_DECLS
-intmax_t imaxabs(intmax_t __i) __attribute_const__ __INTRODUCED_IN(19);
-imaxdiv_t imaxdiv(intmax_t __numerator, intmax_t __denominator) __attribute_const__ __INTRODUCED_IN(19);
+intmax_t imaxabs(intmax_t __i) __attribute_const__;
+imaxdiv_t imaxdiv(intmax_t __numerator, intmax_t __denominator) __attribute_const__;
 intmax_t strtoimax(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base);
 uintmax_t strtoumax(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base);
-intmax_t wcstoimax(const wchar_t* _Nonnull __s, wchar_t* _Nullable * _Nullable __end_ptr, int __base) __INTRODUCED_IN(21);
-uintmax_t wcstoumax(const wchar_t* _Nonnull __s, wchar_t* _Nullable * _Nullable __end_ptr, int __base) __INTRODUCED_IN(21);
+intmax_t wcstoimax(const wchar_t* _Nonnull __s, wchar_t* _Nullable * _Nullable __end_ptr, int __base);
+uintmax_t wcstoumax(const wchar_t* _Nonnull __s, wchar_t* _Nullable * _Nullable __end_ptr, int __base);
 __END_DECLS
 
 #endif

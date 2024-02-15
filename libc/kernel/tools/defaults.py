@@ -28,22 +28,23 @@ kernel_known_macros = {
     }
 
 # This is the set of known kernel data structures we want to remove from
-# the final headers. If the map value is False, that means that in
-# addition to removing the structure, add an #include <bits/STRUCT.h>
-# to the file.
+# the final headers. If the map value is non-empty, that means that in
+# addition to removing the structure, add a #include to the file.
 kernel_structs_to_remove = {
-    # Remove the structures since they are still the same as
+    # Remove these structures since they are still the same as
     # timeval, itimerval.
-    "__kernel_old_timeval": True,
-    "__kernel_old_itimerval": True,
+    "__kernel_old_timeval": None,
+    "__kernel_old_itimerval": None,
     # Replace all of the below structures with #include <bits/STRUCT.h>
-    "epoll_event": False,
-    "flock": False,
-    "flock64": False,
-    "in_addr": False,
-    "ip_mreq_source": False,
-    "ip_msfilter": False,
-    "timespec": False,
+    "__kernel_sockaddr_storage": "bits/sockaddr_storage.h",
+    "epoll_event": "bits/epoll_event.h",
+    "flock": "bits/flock.h",
+    "flock64": "bits/flock64.h",
+    "in_addr": "bits/in_addr.h",
+    "ip_mreq_source": "bits/ip_mreq_source.h",
+    "ip_msfilter": "bits/ip_msfilter.h",
+    "tcphdr": "bits/tcphdr.h",
+    "timespec": "bits/timespec.h",
     }
 
 # define to true if you want to remove all defined(CONFIG_FOO) tests
@@ -63,6 +64,7 @@ kernel_token_replacements = {
     # The kernel usage of __unused for unused struct fields conflicts with the macro defined in <sys/cdefs.h>.
     "__unused": "__linux_unused",
     # The kernel usage of C++ keywords causes problems for C++ code so rename.
+    "class": "__linux_class",
     "private": "__linux_private",
     "virtual": "__linux_virtual",
     # The non-64 stuff is legacy; msqid64_ds/ipc64_perm is what userspace wants.
@@ -90,17 +92,21 @@ kernel_token_replacements = {
     "__kernel_old_timeval": "timeval",
     # Do the same for __kernel_old_itimerval as for timeval.
     "__kernel_old_itimerval": "itimerval",
+    # Do the same for __kernel_sockaddr_storage.
+    "__kernel_sockaddr_storage": "sockaddr_storage",
     # Replace __packed with __attribute__((__packed__)) to avoid depending
     # on sys/cdefs.h
     "__packed": "__attribute__((__packed__))",
     # Remove unused macros (http://b/262917450).
     "__force": "",
     "__user": "",
+    # Rename the kernel's sigaction so we can expose our POSIX one publicly,
+    # but translate to the kernel's one internally.
+    "sigaction": "__kernel_sigaction",
     }
 
 
-# This is the set of known static inline functions that we want to keep
-# in the final kernel headers.
+# Static inline functions that we want to keep.
 kernel_known_generic_statics = set(
         [
           "ipt_get_target",  # uapi/linux/netfilter_ipv4/ip_tables.h
@@ -125,28 +131,9 @@ kernel_known_generic_statics = set(
           # These are required to support the above functions.
           "__fswahw32",
           "__fswahb32",
+          # This is used by various macros in <linux/ioprio.h>.
+          "ioprio_value",
+
+          # Contact opensource-licensing@ before adding to this set.
         ]
     )
-
-# this is the standard disclaimer
-#
-kernel_disclaimer = """\
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
-"""

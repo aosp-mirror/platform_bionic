@@ -55,7 +55,5 @@ void split_path(const char* path, const char* delimiters, std::vector<std::strin
 
 std::string dirname(const char* path);
 
-off64_t page_start(off64_t offset);
-size_t page_offset(off64_t offset);
 bool safe_add(off64_t* out, off64_t a, size_t b);
 bool is_first_stage_init();

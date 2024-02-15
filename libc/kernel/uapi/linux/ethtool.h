@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_LINUX_ETHTOOL_H
 #define _UAPI_LINUX_ETHTOOL_H
 #include <linux/const.h>
@@ -269,6 +257,11 @@ enum ethtool_stringset {
   ETH_SS_STATS_RMON,
   ETH_SS_COUNT
 };
+enum ethtool_mac_stats_src {
+  ETHTOOL_MAC_STATS_SRC_AGGREGATE,
+  ETHTOOL_MAC_STATS_SRC_EMAC,
+  ETHTOOL_MAC_STATS_SRC_PMAC,
+};
 enum ethtool_module_power_mode_policy {
   ETHTOOL_MODULE_POWER_MODE_POLICY_HIGH = 1,
   ETHTOOL_MODULE_POWER_MODE_POLICY_AUTO,
@@ -290,6 +283,14 @@ enum ethtool_podl_pse_pw_d_status {
   ETHTOOL_PODL_PSE_PW_D_STATUS_SLEEP,
   ETHTOOL_PODL_PSE_PW_D_STATUS_IDLE,
   ETHTOOL_PODL_PSE_PW_D_STATUS_ERROR,
+};
+enum ethtool_mm_verify_status {
+  ETHTOOL_MM_VERIFY_STATUS_UNKNOWN,
+  ETHTOOL_MM_VERIFY_STATUS_INITIAL,
+  ETHTOOL_MM_VERIFY_STATUS_VERIFYING,
+  ETHTOOL_MM_VERIFY_STATUS_SUCCEEDED,
+  ETHTOOL_MM_VERIFY_STATUS_FAILED,
+  ETHTOOL_MM_VERIFY_STATUS_DISABLED,
 };
 struct ethtool_gstrings {
   __u32 cmd;
@@ -419,7 +420,7 @@ struct ethtool_rxnfc {
     __u32 rule_cnt;
     __u32 rss_context;
   };
-  __u32 rule_locs[0];
+  __u32 rule_locs[];
 };
 struct ethtool_rxfh_indir {
   __u32 cmd;
@@ -725,6 +726,9 @@ enum ethtool_link_mode_bit_indices {
   ETHTOOL_LINK_MODE_800000baseDR8_2_Full_BIT = 96,
   ETHTOOL_LINK_MODE_800000baseSR8_Full_BIT = 97,
   ETHTOOL_LINK_MODE_800000baseVR8_Full_BIT = 98,
+  ETHTOOL_LINK_MODE_10baseT1S_Full_BIT = 99,
+  ETHTOOL_LINK_MODE_10baseT1S_Half_BIT = 100,
+  ETHTOOL_LINK_MODE_10baseT1S_P2MP_Half_BIT = 101,
   __ETHTOOL_LINK_MODE_MASK_NBITS
 };
 #define __ETHTOOL_LINK_MODE_LEGACY_MASK(base_name) (1UL << (ETHTOOL_LINK_MODE_ ##base_name ##_BIT))

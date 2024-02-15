@@ -1,23 +1,12 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef __LINUX_V4L2_SUBDEV_H
 #define __LINUX_V4L2_SUBDEV_H
+#include <linux/const.h>
 #include <linux/ioctl.h>
 #include <linux/types.h>
 #include <linux/v4l2-common.h>
@@ -30,13 +19,15 @@ struct v4l2_subdev_format {
   __u32 which;
   __u32 pad;
   struct v4l2_mbus_framefmt format;
-  __u32 reserved[8];
+  __u32 stream;
+  __u32 reserved[7];
 };
 struct v4l2_subdev_crop {
   __u32 which;
   __u32 pad;
   struct v4l2_rect rect;
-  __u32 reserved[8];
+  __u32 stream;
+  __u32 reserved[7];
 };
 #define V4L2_SUBDEV_MBUS_CODE_CSC_COLORSPACE 0x00000001
 #define V4L2_SUBDEV_MBUS_CODE_CSC_XFER_FUNC 0x00000002
@@ -49,7 +40,8 @@ struct v4l2_subdev_mbus_code_enum {
   __u32 code;
   __u32 which;
   __u32 flags;
-  __u32 reserved[7];
+  __u32 stream;
+  __u32 reserved[6];
 };
 struct v4l2_subdev_frame_size_enum {
   __u32 index;
@@ -60,12 +52,14 @@ struct v4l2_subdev_frame_size_enum {
   __u32 min_height;
   __u32 max_height;
   __u32 which;
-  __u32 reserved[8];
+  __u32 stream;
+  __u32 reserved[7];
 };
 struct v4l2_subdev_frame_interval {
   __u32 pad;
   struct v4l2_fract interval;
-  __u32 reserved[9];
+  __u32 stream;
+  __u32 reserved[8];
 };
 struct v4l2_subdev_frame_interval_enum {
   __u32 index;
@@ -75,7 +69,8 @@ struct v4l2_subdev_frame_interval_enum {
   __u32 height;
   struct v4l2_fract interval;
   __u32 which;
-  __u32 reserved[8];
+  __u32 stream;
+  __u32 reserved[7];
 };
 struct v4l2_subdev_selection {
   __u32 which;
@@ -83,7 +78,8 @@ struct v4l2_subdev_selection {
   __u32 target;
   __u32 flags;
   struct v4l2_rect r;
-  __u32 reserved[8];
+  __u32 stream;
+  __u32 reserved[7];
 };
 struct v4l2_subdev_capability {
   __u32 version;
@@ -91,6 +87,26 @@ struct v4l2_subdev_capability {
   __u32 reserved[14];
 };
 #define V4L2_SUBDEV_CAP_RO_SUBDEV 0x00000001
+#define V4L2_SUBDEV_CAP_STREAMS 0x00000002
+#define V4L2_SUBDEV_ROUTE_FL_ACTIVE (1U << 0)
+struct v4l2_subdev_route {
+  __u32 sink_pad;
+  __u32 sink_stream;
+  __u32 source_pad;
+  __u32 source_stream;
+  __u32 flags;
+  __u32 reserved[5];
+};
+struct v4l2_subdev_routing {
+  __u32 which;
+  __u32 num_routes;
+  __u64 routes;
+  __u32 reserved[6];
+};
+#define V4L2_SUBDEV_CLIENT_CAP_STREAMS (1ULL << 0)
+struct v4l2_subdev_client_capability {
+  __u64 capabilities;
+};
 #define v4l2_subdev_edid v4l2_edid
 #define VIDIOC_SUBDEV_QUERYCAP _IOR('V', 0, struct v4l2_subdev_capability)
 #define VIDIOC_SUBDEV_G_FMT _IOWR('V', 4, struct v4l2_subdev_format)
@@ -104,6 +120,10 @@ struct v4l2_subdev_capability {
 #define VIDIOC_SUBDEV_S_CROP _IOWR('V', 60, struct v4l2_subdev_crop)
 #define VIDIOC_SUBDEV_G_SELECTION _IOWR('V', 61, struct v4l2_subdev_selection)
 #define VIDIOC_SUBDEV_S_SELECTION _IOWR('V', 62, struct v4l2_subdev_selection)
+#define VIDIOC_SUBDEV_G_ROUTING _IOWR('V', 38, struct v4l2_subdev_routing)
+#define VIDIOC_SUBDEV_S_ROUTING _IOWR('V', 39, struct v4l2_subdev_routing)
+#define VIDIOC_SUBDEV_G_CLIENT_CAP _IOR('V', 101, struct v4l2_subdev_client_capability)
+#define VIDIOC_SUBDEV_S_CLIENT_CAP _IOWR('V', 102, struct v4l2_subdev_client_capability)
 #define VIDIOC_SUBDEV_G_STD _IOR('V', 23, v4l2_std_id)
 #define VIDIOC_SUBDEV_S_STD _IOW('V', 24, v4l2_std_id)
 #define VIDIOC_SUBDEV_ENUMSTD _IOWR('V', 25, struct v4l2_standard)

@@ -42,7 +42,9 @@
 #include "linker_debug.h"
 #include "linker_utils.h"
 
+#include "private/bionic_asm_note.h"
 #include "private/CFIShadow.h" // For kLibraryAlignment
+#include "private/elf_note.h"
 
 static int GetTargetElfMachine() {
 #if defined(__arm__)
@@ -116,7 +118,7 @@ static int GetTargetElfMachine() {
   can only memory-map at page boundaries, this means that the bias is
   computed as:
 
-       load_bias = phdr0_load_address - PAGE_START(phdr0->p_vaddr)
+       load_bias = phdr0_load_address - page_start(phdr0->p_vaddr)
 
   (NOTE: The value must be used as a 32-bit unsigned integer, to deal with
           possible wrap around UINT32_MAX for possible large p_vaddr values).
@@ -124,11 +126,11 @@ static int GetTargetElfMachine() {
   And that the phdr0_load_address must start at a page boundary, with
   the segment's real content starting at:
 
-       phdr0_load_address + PAGE_OFFSET(phdr0->p_vaddr)
+       phdr0_load_address + page_offset(phdr0->p_vaddr)
 
   Note that ELF requires the following condition to make the mmap()-ing work:
 
-      PAGE_OFFSET(phdr0->p_vaddr) == PAGE_OFFSET(phdr0->p_offset)
+      page_offset(phdr0->p_vaddr) == page_offset(phdr0->p_offset)
 
   The load_bias must be added to any p_vaddr value read from the ELF file to
   determine the corresponding memory address.
@@ -140,8 +142,18 @@ static int GetTargetElfMachine() {
                                       MAYBE_MAP_FLAG((x), PF_R, PROT_READ) | \
                                       MAYBE_MAP_FLAG((x), PF_W, PROT_WRITE))
 
-// Default PMD size for x86_64 and aarch64 (2MB).
-static constexpr size_t kPmdSize = (1UL << 21);
+static const size_t kPageSize = page_size();
+
+/*
+ * Generic PMD size calculation:
+ *    - Each page table (PT) is of size 1 page.
+ *    - Each page table entry (PTE) is of size 64 bits.
+ *    - Each PTE locates one physical page frame (PFN) of size 1 page.
+ *    - A PMD entry locates 1 page table (PT)
+ *
+ *   PMD size = Num entries in a PT * page_size
+ */
+static const size_t kPmdSize = (kPageSize / sizeof(uint64_t)) * kPageSize;
 
 ElfReader::ElfReader()
     : did_read_(false), did_load_(false), fd_(-1), file_offset_(0), file_size_(0), phdr_num_(0),
@@ -163,7 +175,8 @@ bool ElfReader::Read(const char* name, int fd, off64_t file_offset, off64_t file
       VerifyElfHeader() &&
       ReadProgramHeaders() &&
       ReadSectionHeaders() &&
-      ReadDynamicSection()) {
+      ReadDynamicSection() &&
+      ReadPadSegmentNote()) {
     did_read_ = true;
   }
 
@@ -529,8 +542,8 @@ size_t phdr_table_get_load_size(const ElfW(Phdr)* phdr_table, size_t phdr_count,
     min_vaddr = 0;
   }
 
-  min_vaddr = PAGE_START(min_vaddr);
-  max_vaddr = PAGE_END(max_vaddr);
+  min_vaddr = page_start(min_vaddr);
+  max_vaddr = page_end(max_vaddr);
 
   if (out_min_vaddr != nullptr) {
     *out_min_vaddr = min_vaddr;
@@ -545,7 +558,7 @@ size_t phdr_table_get_load_size(const ElfW(Phdr)* phdr_table, size_t phdr_count,
 // program header table. Used to determine whether the file should be loaded at
 // a specific virtual address alignment for use with huge pages.
 size_t phdr_table_get_maximum_alignment(const ElfW(Phdr)* phdr_table, size_t phdr_count) {
-  size_t maximum_alignment = PAGE_SIZE;
+  size_t maximum_alignment = page_size();
 
   for (size_t i = 0; i < phdr_count; ++i) {
     const ElfW(Phdr)* phdr = &phdr_table[i];
@@ -563,7 +576,7 @@ size_t phdr_table_get_maximum_alignment(const ElfW(Phdr)* phdr_table, size_t phd
 #if defined(__LP64__)
   return maximum_alignment;
 #else
-  return PAGE_SIZE;
+  return page_size();
 #endif
 }
 
@@ -574,7 +587,7 @@ static void* ReserveWithAlignmentPadding(size_t size, size_t mapping_align, size
   int mmap_flags = MAP_PRIVATE | MAP_ANONYMOUS;
   // Reserve enough space to properly align the library's start address.
   mapping_align = std::max(mapping_align, start_align);
-  if (mapping_align == PAGE_SIZE) {
+  if (mapping_align == page_size()) {
     void* mmap_ptr = mmap(nullptr, size, PROT_NONE, mmap_flags, -1, 0);
     if (mmap_ptr == MAP_FAILED) {
       return nullptr;
@@ -593,7 +606,7 @@ static void* ReserveWithAlignmentPadding(size_t size, size_t mapping_align, size
   constexpr size_t kMaxGapUnits = 32;
   // Allocate enough space so that the end of the desired region aligned up is still inside the
   // mapping.
-  size_t mmap_size = align_up(size, mapping_align) + mapping_align - PAGE_SIZE;
+  size_t mmap_size = align_up(size, mapping_align) + mapping_align - page_size();
   uint8_t* mmap_ptr =
       reinterpret_cast<uint8_t*>(mmap(nullptr, mmap_size, PROT_NONE, mmap_flags, -1, 0));
   if (mmap_ptr == MAP_FAILED) {
@@ -610,7 +623,7 @@ static void* ReserveWithAlignmentPadding(size_t size, size_t mapping_align, size
     mapping_align = std::max(mapping_align, kGapAlignment);
     gap_size =
         kGapAlignment * (is_first_stage_init() ? 1 : arc4random_uniform(kMaxGapUnits - 1) + 1);
-    mmap_size = align_up(size + gap_size, mapping_align) + mapping_align - PAGE_SIZE;
+    mmap_size = align_up(size + gap_size, mapping_align) + mapping_align - page_size();
     mmap_ptr = reinterpret_cast<uint8_t*>(mmap(nullptr, mmap_size, PROT_NONE, mmap_flags, -1, 0));
     if (mmap_ptr == MAP_FAILED) {
       return nullptr;
@@ -665,12 +678,12 @@ bool ElfReader::ReserveAddressSpace(address_space_params* address_space) {
              load_size_ - address_space->reserved_size, load_size_, name_.c_str());
       return false;
     }
-    size_t start_alignment = PAGE_SIZE;
+    size_t start_alignment = page_size();
     if (get_transparent_hugepages_supported() && get_application_target_sdk_version() >= 31) {
       size_t maximum_alignment = phdr_table_get_maximum_alignment(phdr_table_, phdr_num_);
       // Limit alignment to PMD size as other alignments reduce the number of
       // bits available for ASLR for no benefit.
-      start_alignment = maximum_alignment == kPmdSize ? kPmdSize : PAGE_SIZE;
+      start_alignment = maximum_alignment == kPmdSize ? kPmdSize : page_size();
     }
     start = ReserveWithAlignmentPadding(load_size_, kLibraryAlignment, start_alignment, &gap_start_,
                                         &gap_size_);
@@ -694,6 +707,55 @@ bool ElfReader::ReserveAddressSpace(address_space_params* address_space) {
   return true;
 }
 
+// Find the ELF note of type NT_ANDROID_TYPE_PAD_SEGMENT and check that the desc value is 1.
+bool ElfReader::ReadPadSegmentNote() {
+  // The ELF can have multiple PT_NOTE's, check them all
+  for (size_t i = 0; i < phdr_num_; ++i) {
+    const ElfW(Phdr)* phdr = &phdr_table_[i];
+
+    if (phdr->p_type != PT_NOTE) {
+      continue;
+    }
+
+    // Some obfuscated ELFs may contain "empty" PT_NOTE program headers that don't
+    // point to any part of the ELF (p_memsz == 0). Skip these since there is
+    // nothing to decode. See: b/324468126
+    if (phdr->p_memsz == 0) {
+      continue;
+    }
+
+    // note_fragment is scoped to within the loop so that there is
+    // at most 1 PT_NOTE mapped at anytime during this search.
+    MappedFileFragment note_fragment;
+    if (!note_fragment.Map(fd_, file_offset_, phdr->p_offset, phdr->p_memsz)) {
+      DL_ERR("\"%s\": PT_NOTE mmap(nullptr, %p, PROT_READ, MAP_PRIVATE, %d, %p) failed: %m",
+             name_.c_str(), reinterpret_cast<void*>(phdr->p_memsz), fd_,
+             reinterpret_cast<void*>(page_start(file_offset_ + phdr->p_offset)));
+      return false;
+    }
+
+    const ElfW(Nhdr)* note_hdr = nullptr;
+    const char* note_desc = nullptr;
+    if (!__get_elf_note(NT_ANDROID_TYPE_PAD_SEGMENT, "Android",
+                        reinterpret_cast<ElfW(Addr)>(note_fragment.data()),
+                        phdr, &note_hdr, &note_desc)) {
+      continue;
+    }
+
+    if (note_hdr->n_descsz != sizeof(ElfW(Word))) {
+      DL_ERR("\"%s\" NT_ANDROID_TYPE_PAD_SEGMENT note has unexpected n_descsz: %u",
+             name_.c_str(), reinterpret_cast<unsigned int>(note_hdr->n_descsz));
+      return false;
+    }
+
+    // 1 == enabled, 0 == disabled
+    should_pad_segments_ = *reinterpret_cast<const ElfW(Word)*>(note_desc) == 1;
+    return true;
+  }
+
+  return true;
+}
+
 bool ElfReader::LoadSegments() {
   for (size_t i = 0; i < phdr_num_; ++i) {
     const ElfW(Phdr)* phdr = &phdr_table_[i];
@@ -706,8 +768,8 @@ bool ElfReader::LoadSegments() {
     ElfW(Addr) seg_start = phdr->p_vaddr + load_bias_;
     ElfW(Addr) seg_end   = seg_start + phdr->p_memsz;
 
-    ElfW(Addr) seg_page_start = PAGE_START(seg_start);
-    ElfW(Addr) seg_page_end   = PAGE_END(seg_end);
+    ElfW(Addr) seg_page_start = page_start(seg_start);
+    ElfW(Addr) seg_page_end = page_end(seg_end);
 
     ElfW(Addr) seg_file_end   = seg_start + phdr->p_filesz;
 
@@ -715,7 +777,7 @@ bool ElfReader::LoadSegments() {
     ElfW(Addr) file_start = phdr->p_offset;
     ElfW(Addr) file_end   = file_start + phdr->p_filesz;
 
-    ElfW(Addr) file_page_start = PAGE_START(file_start);
+    ElfW(Addr) file_page_start = page_start(file_start);
     ElfW(Addr) file_length = file_end - file_page_start;
 
     if (file_size_ <= 0) {
@@ -768,11 +830,11 @@ bool ElfReader::LoadSegments() {
 
     // if the segment is writable, and does not end on a page boundary,
     // zero-fill it until the page limit.
-    if ((phdr->p_flags & PF_W) != 0 && PAGE_OFFSET(seg_file_end) > 0) {
-      memset(reinterpret_cast<void*>(seg_file_end), 0, PAGE_SIZE - PAGE_OFFSET(seg_file_end));
+    if ((phdr->p_flags & PF_W) != 0 && page_offset(seg_file_end) > 0) {
+      memset(reinterpret_cast<void*>(seg_file_end), 0, page_size() - page_offset(seg_file_end));
     }
 
-    seg_file_end = PAGE_END(seg_file_end);
+    seg_file_end = page_end(seg_file_end);
 
     // seg_file_end is now the first page address after the file
     // content. If seg_end is larger, we need to zero anything
@@ -811,8 +873,8 @@ static int _phdr_table_set_load_prot(const ElfW(Phdr)* phdr_table, size_t phdr_c
       continue;
     }
 
-    ElfW(Addr) seg_page_start = PAGE_START(phdr->p_vaddr) + load_bias;
-    ElfW(Addr) seg_page_end   = PAGE_END(phdr->p_vaddr + phdr->p_memsz) + load_bias;
+    ElfW(Addr) seg_page_start = page_start(phdr->p_vaddr) + load_bias;
+    ElfW(Addr) seg_page_end = page_end(phdr->p_vaddr + phdr->p_memsz) + load_bias;
 
     int prot = PFLAGS_TO_PROT(phdr->p_flags) | extra_prot_flags;
     if ((prot & PROT_WRITE) != 0) {
@@ -849,7 +911,7 @@ static int _phdr_table_set_load_prot(const ElfW(Phdr)* phdr_table, size_t phdr_c
  *   load_bias   -> load bias
  *   prop        -> GnuPropertySection or nullptr
  * Return:
- *   0 on error, -1 on failure (error code in errno).
+ *   0 on success, -1 on failure (error code in errno).
  */
 int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                 ElfW(Addr) load_bias, const GnuPropertySection* prop __unused) {
@@ -876,7 +938,7 @@ int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table, size_t phdr_count,
  *   phdr_count  -> number of entries in tables
  *   load_bias   -> load bias
  * Return:
- *   0 on error, -1 on failure (error code in errno).
+ *   0 on success, -1 on failure (error code in errno).
  */
 int phdr_table_unprotect_segments(const ElfW(Phdr)* phdr_table,
                                   size_t phdr_count, ElfW(Addr) load_bias) {
@@ -912,8 +974,8 @@ static int _phdr_table_set_gnu_relro_prot(const ElfW(Phdr)* phdr_table, size_t p
     //       the program is likely to fail at runtime. So in effect the
     //       linker must only emit a PT_GNU_RELRO segment if it ensures
     //       that it starts on a page boundary.
-    ElfW(Addr) seg_page_start = PAGE_START(phdr->p_vaddr) + load_bias;
-    ElfW(Addr) seg_page_end   = PAGE_END(phdr->p_vaddr + phdr->p_memsz) + load_bias;
+    ElfW(Addr) seg_page_start = page_start(phdr->p_vaddr) + load_bias;
+    ElfW(Addr) seg_page_end = page_end(phdr->p_vaddr + phdr->p_memsz) + load_bias;
 
     int ret = mprotect(reinterpret_cast<void*>(seg_page_start),
                        seg_page_end - seg_page_start,
@@ -939,7 +1001,7 @@ static int _phdr_table_set_gnu_relro_prot(const ElfW(Phdr)* phdr_table, size_t p
  *   phdr_count  -> number of entries in tables
  *   load_bias   -> load bias
  * Return:
- *   0 on error, -1 on failure (error code in errno).
+ *   0 on success, -1 on failure (error code in errno).
  */
 int phdr_table_protect_gnu_relro(const ElfW(Phdr)* phdr_table,
                                  size_t phdr_count, ElfW(Addr) load_bias) {
@@ -957,7 +1019,7 @@ int phdr_table_protect_gnu_relro(const ElfW(Phdr)* phdr_table,
  *   fd          -> writable file descriptor to use
  *   file_offset -> pointer to offset into file descriptor to use/update
  * Return:
- *   0 on error, -1 on failure (error code in errno).
+ *   0 on success, -1 on failure (error code in errno).
  */
 int phdr_table_serialize_gnu_relro(const ElfW(Phdr)* phdr_table,
                                    size_t phdr_count,
@@ -972,8 +1034,8 @@ int phdr_table_serialize_gnu_relro(const ElfW(Phdr)* phdr_table,
       continue;
     }
 
-    ElfW(Addr) seg_page_start = PAGE_START(phdr->p_vaddr) + load_bias;
-    ElfW(Addr) seg_page_end   = PAGE_END(phdr->p_vaddr + phdr->p_memsz) + load_bias;
+    ElfW(Addr) seg_page_start = page_start(phdr->p_vaddr) + load_bias;
+    ElfW(Addr) seg_page_end = page_end(phdr->p_vaddr + phdr->p_memsz) + load_bias;
     ssize_t size = seg_page_end - seg_page_start;
 
     ssize_t written = TEMP_FAILURE_RETRY(write(fd, reinterpret_cast<void*>(seg_page_start), size));
@@ -1005,7 +1067,7 @@ int phdr_table_serialize_gnu_relro(const ElfW(Phdr)* phdr_table,
  *   fd          -> readable file descriptor to use
  *   file_offset -> pointer to offset into file descriptor to use/update
  * Return:
- *   0 on error, -1 on failure (error code in errno).
+ *   0 on success, -1 on failure (error code in errno).
  */
 int phdr_table_map_gnu_relro(const ElfW(Phdr)* phdr_table,
                              size_t phdr_count,
@@ -1035,8 +1097,8 @@ int phdr_table_map_gnu_relro(const ElfW(Phdr)* phdr_table,
       continue;
     }
 
-    ElfW(Addr) seg_page_start = PAGE_START(phdr->p_vaddr) + load_bias;
-    ElfW(Addr) seg_page_end   = PAGE_END(phdr->p_vaddr + phdr->p_memsz) + load_bias;
+    ElfW(Addr) seg_page_start = page_start(phdr->p_vaddr) + load_bias;
+    ElfW(Addr) seg_page_end = page_end(phdr->p_vaddr + phdr->p_memsz) + load_bias;
 
     char* file_base = static_cast<char*>(temp_mapping) + *file_offset;
     char* mem_base = reinterpret_cast<char*>(seg_page_start);
@@ -1053,15 +1115,15 @@ int phdr_table_map_gnu_relro(const ElfW(Phdr)* phdr_table,
     while (match_offset < size) {
       // Skip over dissimilar pages.
       while (match_offset < size &&
-             memcmp(mem_base + match_offset, file_base + match_offset, PAGE_SIZE) != 0) {
-        match_offset += PAGE_SIZE;
+             memcmp(mem_base + match_offset, file_base + match_offset, page_size()) != 0) {
+        match_offset += page_size();
       }
 
       // Count similar pages.
       size_t mismatch_offset = match_offset;
       while (mismatch_offset < size &&
-             memcmp(mem_base + mismatch_offset, file_base + mismatch_offset, PAGE_SIZE) == 0) {
-        mismatch_offset += PAGE_SIZE;
+             memcmp(mem_base + mismatch_offset, file_base + mismatch_offset, page_size()) == 0) {
+        mismatch_offset += page_size();
       }
 
       // Map over similar pages.
@@ -1102,7 +1164,7 @@ int phdr_table_map_gnu_relro(const ElfW(Phdr)* phdr_table,
  *   arm_exidx       -> address of table in memory (null on failure).
  *   arm_exidx_count -> number of items in table (0 on failure).
  * Return:
- *   0 on error, -1 on failure (_no_ error code in errno)
+ *   0 on success, -1 on failure (_no_ error code in errno)
  */
 int phdr_table_get_arm_exidx(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                              ElfW(Addr) load_bias,
