@@ -56,4 +56,5 @@ TEST(netinet_ether, ether_aton_r_failures) {
   ASSERT_TRUE(ether_aton_r("12:34:56:78:9a:bc ", &addr) == nullptr);
   ASSERT_TRUE(ether_aton_r("g2:34:56:78:9a:bc ", &addr) == nullptr);
   ASSERT_TRUE(ether_aton_r("1G:34:56:78:9a:bc ", &addr) == nullptr);
+  ASSERT_TRUE(ether_aton_r("123:34:56:78:9a:bc ", &addr) == nullptr);
 }
