@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-#ifndef LIBS_UTILS_H
-#define LIBS_UTILS_H
+#pragma once
+
+// Tests proper can use libbase, but libraries for testing dlopen()
+// should probably avoid dependencies other than ones we're specifically
+// trying to test.
 
 #include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 #define CHECK(e) \
-    ((e) ? static_cast<void>(0) : __assert2(__FILE__, __LINE__, __PRETTY_FUNCTION__, #e))
-
-#endif  // LIBS_UTILS_H
+  ((e) ? static_cast<void>(0) : __assert2(__FILE__, __LINE__, __PRETTY_FUNCTION__, #e))
