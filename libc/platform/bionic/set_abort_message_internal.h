@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,14 +26,24 @@
  * SUCH DAMAGE.
  */
 
-#include <unistd.h>
-#include <termios.h>
-#include <errno.h>
+#pragma once
 
-int
-isatty (int  fd)
-{
-  struct termios term;
+#include <android/set_abort_message.h>
+#include <stddef.h>
+#include <sys/cdefs.h>
 
-  return tcgetattr (fd, &term) == 0;
-}
+struct crash_detail_t {
+  const char* name;
+  size_t name_size;
+  const char* data;
+  size_t data_size;
+  crash_detail_t* prev_free;
+};
+
+constexpr auto kNumCrashDetails = 128;
+
+struct crash_detail_page_t {
+  struct crash_detail_page_t* prev;
+  size_t used;
+  struct crash_detail_t crash_details[kNumCrashDetails];
+};
