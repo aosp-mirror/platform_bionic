@@ -29,8 +29,10 @@
 #include "private/__bionic_get_shell_path.h"
 
 #include <errno.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/cdefs.h>
+#include <sys/system_properties.h>
 #include <unistd.h>
 
 #define VENDOR_PREFIX "/vendor/"
@@ -40,6 +42,15 @@ static const char* init_sh_path() {
   // For the host Bionic, use the standard /bin/sh
   return "/bin/sh";
 #else
+  // Since 202404, we use /system/bin/sh for all domains.
+  char vendor_api_level[PROP_VALUE_MAX];
+  if (__system_property_get("ro.board.api_level", vendor_api_level) > 0) {
+    int api_level = atoi(vendor_api_level);
+    if (api_level >= 202404) {
+      return "/system/bin/sh";
+    }
+  }
+  // To keep the old behavior for devices under GRF.
   // Look for /system or /vendor prefix.
   char exe_path[strlen(VENDOR_PREFIX)];
   ssize_t len = readlink("/proc/self/exe", exe_path, sizeof(exe_path));
