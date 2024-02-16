@@ -33,7 +33,6 @@
 #include <android-base/silent_death_test.h>
 #include <android-base/unique_fd.h>
 
-#define FDSAN_TEST(test_name) TEST_F(FdsanTest, test_name)
 #define EXPECT_FDSAN_DEATH(expression, regex)                                                \
   EXPECT_DEATH((android_fdsan_set_error_level(ANDROID_FDSAN_ERROR_LEVEL_FATAL), expression), \
                (regex))
