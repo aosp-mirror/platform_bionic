@@ -1111,31 +1111,6 @@ cc_test {
 }
 
 cc_test {
-    name: "memtag_stack_dlopen_test",
-    enabled: false,
-    // This does not use bionic_tests_defaults because it is not supported on
-    // host.
-    arch: {
-        arm64: {
-            enabled: true,
-        },
-    },
-    sanitize: {
-        memtag_heap: true,
-        memtag_stack: false,
-    },
-    srcs: [
-        "memtag_stack_dlopen_test.cpp",
-    ],
-    shared_libs: [
-        "libbase",
-    ],
-    data_libs: ["libtest_simple_memtag_stack"],
-    header_libs: ["bionic_libc_platform_headers"],
-    test_suites: ["device-tests"],
-}
-
-cc_test {
     name: "bionic-stress-tests",
     defaults: [
         "bionic_tests_defaults",
