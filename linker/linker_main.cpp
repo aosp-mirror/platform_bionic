@@ -404,9 +404,6 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
                      strerror(errno));
     }
   }
-
-  __libc_init_mte(somain->memtag_dynamic_entries(), somain->phdr, somain->phnum, somain->load_bias,
-                  args.argv);
 #endif
 
   // Register the main executable and the linker upfront to have
@@ -496,6 +493,12 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
     }
     si->increment_ref_count();
   }
+#if defined(__aarch64__)
+  // This has to happen after the find_libraries, which will have collected any possible
+  // libraries that request memtag_stack in the dynamic section.
+  __libc_init_mte(somain->memtag_dynamic_entries(), somain->phdr, somain->phnum, somain->load_bias,
+                  args.argv);
+#endif
 
   linker_finalize_static_tls();
   __libc_init_main_thread_final();
