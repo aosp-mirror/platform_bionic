@@ -19,7 +19,7 @@
 #include <unistd.h>
 #include <sys/auxv.h>
 
-#include "libs_utils.h"
+#include "CHECK.h"
 
 static ssize_t g_result;
 static int g_errno;
