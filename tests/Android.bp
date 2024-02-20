@@ -1130,7 +1130,12 @@ cc_test {
     shared_libs: [
         "libbase",
     ],
-    data_libs: ["libtest_simple_memtag_stack"],
+    data_libs: ["libtest_simple_memtag_stack", "libtest_depends_on_simple_memtag_stack"],
+    data_bins: [
+        "testbinary_depends_on_simple_memtag_stack",
+        "testbinary_depends_on_depends_on_simple_memtag_stack",
+        "testbinary_is_stack_mte_after_dlopen"
+    ],
     header_libs: ["bionic_libc_platform_headers"],
     test_suites: ["device-tests"],
 }

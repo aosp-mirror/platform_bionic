@@ -35,113 +35,82 @@
 
 #include <android-base/silent_death_test.h>
 #include <android-base/test_utils.h>
+#include "mte_utils.h"
 #include "utils.h"
 
+TEST(MemtagStackDlopenTest, DependentBinaryGetsMemtagStack) {
 #if defined(__BIONIC__) && defined(__aarch64__)
-__attribute__((target("mte"))) bool is_stack_mte_on() {
-  alignas(16) int x = 0;
-  void* p = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(&x) + (1UL << 57));
-  void* p_cpy = p;
-  __builtin_arm_stg(p);
-  p = __builtin_arm_ldg(p);
-  __builtin_arm_stg(&x);
-  return p == p_cpy;
-}
+  if (!running_with_mte()) GTEST_SKIP() << "Test requires MTE.";
+  if (is_stack_mte_on())
+    GTEST_SKIP() << "Stack MTE needs to be off for this test. Are you running fullmte?";
 
-// We can't use pthread_getattr_np because that uses the rlimit rather than the actual mapping
-// bounds.
-static void find_main_stack_limits(uintptr_t* low, uintptr_t* high) {
-  uintptr_t startstack = reinterpret_cast<uintptr_t>(__builtin_frame_address(0));
-
-  // Hunt for the region that contains that address.
-  FILE* fp = fopen("/proc/self/maps", "re");
-  if (fp == nullptr) {
-    abort();
-  }
-  char line[BUFSIZ];
-  while (fgets(line, sizeof(line), fp) != nullptr) {
-    uintptr_t lo, hi;
-    if (sscanf(line, "%" SCNxPTR "-%" SCNxPTR, &lo, &hi) == 2) {
-      if (lo <= startstack && startstack <= hi) {
-        *low = lo;
-        *high = hi;
-        fclose(fp);
-        return;
-      }
-    }
-  }
-  abort();
-}
-
-template <typename Fn>
-unsigned int fault_new_stack_page(uintptr_t low, Fn f) {
-  uintptr_t new_low;
-  uintptr_t new_high;
-  volatile char buf[4096];
-  buf[4095] = 1;
-  find_main_stack_limits(&new_low, &new_high);
-  if (new_low < low) {
-    f();
-    return new_high;
-  }
-  // Useless, but should defeat TCO.
-  return new_low + fault_new_stack_page(low, f);
-}
-
+  std::string path =
+      android::base::GetExecutableDirectory() + "/testbinary_depends_on_simple_memtag_stack";
+  ExecTestHelper eth;
+  std::string ld_library_path = "LD_LIBRARY_PATH=" + android::base::GetExecutableDirectory();
+  eth.SetArgs({path.c_str(), nullptr});
+  eth.SetEnv({ld_library_path.c_str(), nullptr});
+  eth.Run([&]() { execve(path.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0, "RAN");
+#else
+  GTEST_SKIP() << "requires bionic arm64";
 #endif
+}
 
-enum State { kInit, kThreadStarted, kStackRemapped };
+TEST(MemtagStackDlopenTest, DependentBinaryGetsMemtagStack2) {
+#if defined(__BIONIC__) && defined(__aarch64__)
+  if (!running_with_mte()) GTEST_SKIP() << "Test requires MTE.";
+  if (is_stack_mte_on())
+    GTEST_SKIP() << "Stack MTE needs to be off for this test. Are you running fullmte?";
+
+  std::string path = android::base::GetExecutableDirectory() +
+                     "/testbinary_depends_on_depends_on_simple_memtag_stack";
+  ExecTestHelper eth;
+  std::string ld_library_path = "LD_LIBRARY_PATH=" + android::base::GetExecutableDirectory();
+  eth.SetArgs({path.c_str(), nullptr});
+  eth.SetEnv({ld_library_path.c_str(), nullptr});
+  eth.Run([&]() { execve(path.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0, "RAN");
+#else
+  GTEST_SKIP() << "requires bionic arm64";
+#endif
+}
 
 TEST(MemtagStackDlopenTest, DlopenRemapsStack) {
 #if defined(__BIONIC__) && defined(__aarch64__)
+  // If this test is failing, look at crash logcat for why the test binary died.
   if (!running_with_mte()) GTEST_SKIP() << "Test requires MTE.";
+  if (is_stack_mte_on())
+    GTEST_SKIP() << "Stack MTE needs to be off for this test. Are you running fullmte?";
 
-  std::string path = android::base::GetExecutableDirectory() + "/libtest_simple_memtag_stack.so";
-  ASSERT_EQ(0, access(path.c_str(), F_OK));  // Verify test setup.
-  EXPECT_FALSE(is_stack_mte_on());
-  std::mutex m;
-  std::condition_variable cv;
-  State state = kInit;
+  std::string path =
+      android::base::GetExecutableDirectory() + "/testbinary_is_stack_mte_after_dlopen";
+  std::string lib_path =
+      android::base::GetExecutableDirectory() + "/libtest_simple_memtag_stack.so";
+  ExecTestHelper eth;
+  std::string ld_library_path = "LD_LIBRARY_PATH=" + android::base::GetExecutableDirectory();
+  eth.SetArgs({path.c_str(), lib_path.c_str(), nullptr});
+  eth.SetEnv({ld_library_path.c_str(), nullptr});
+  eth.Run([&]() { execve(path.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0, "RAN");
+#else
+  GTEST_SKIP() << "requires bionic arm64";
+#endif
+}
 
-  bool is_early_thread_mte_on = false;
-  std::thread early_th([&] {
-    {
-      std::lock_guard lk(m);
-      state = kThreadStarted;
-    }
-    cv.notify_one();
-    {
-      std::unique_lock lk(m);
-      cv.wait(lk, [&] { return state == kStackRemapped; });
-    }
-    is_early_thread_mte_on = is_stack_mte_on();
-  });
-  {
-    std::unique_lock lk(m);
-    cv.wait(lk, [&] { return state == kThreadStarted; });
-  }
-  void* handle = dlopen(path.c_str(), RTLD_NOW);
-  {
-    std::lock_guard lk(m);
-    state = kStackRemapped;
-  }
-  cv.notify_one();
-  ASSERT_NE(handle, nullptr);
-  EXPECT_TRUE(is_stack_mte_on());
+TEST(MemtagStackDlopenTest, DlopenRemapsStack2) {
+#if defined(__BIONIC__) && defined(__aarch64__)
+  // If this test is failing, look at crash logcat for why the test binary died.
+  if (!running_with_mte()) GTEST_SKIP() << "Test requires MTE.";
+  if (is_stack_mte_on())
+    GTEST_SKIP() << "Stack MTE needs to be off for this test. Are you running fullmte?";
 
-  bool new_stack_page_mte_on = false;
-  uintptr_t low;
-  uintptr_t high;
-  find_main_stack_limits(&low, &high);
-  fault_new_stack_page(low, [&] { new_stack_page_mte_on = is_stack_mte_on(); });
-  EXPECT_TRUE(new_stack_page_mte_on);
-
-  bool is_late_thread_mte_on = false;
-  std::thread late_th([&] { is_late_thread_mte_on = is_stack_mte_on(); });
-  late_th.join();
-  early_th.join();
-  EXPECT_TRUE(is_early_thread_mte_on);
-  EXPECT_TRUE(is_late_thread_mte_on);
+  std::string path =
+      android::base::GetExecutableDirectory() + "/testbinary_is_stack_mte_after_dlopen";
+  std::string lib_path =
+      android::base::GetExecutableDirectory() + "/libtest_depends_on_simple_memtag_stack.so";
+  ExecTestHelper eth;
+  std::string ld_library_path = "LD_LIBRARY_PATH=" + android::base::GetExecutableDirectory();
+  eth.SetArgs({path.c_str(), lib_path.c_str(), nullptr});
+  eth.SetEnv({ld_library_path.c_str(), nullptr});
+  eth.Run([&]() { execve(path.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0, "RAN");
 #else
   GTEST_SKIP() << "requires bionic arm64";
 #endif
