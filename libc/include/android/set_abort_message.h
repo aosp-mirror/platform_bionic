@@ -78,13 +78,15 @@ void android_set_abort_message(const char* _Nullable __msg);
  *             this should generally be a human-readable debug string, but we are treating
  *             it as arbitrary bytes because it could be corrupted by the crash.
  * \param name_size number of bytes of the buffer pointed to by name
- * \param data a buffer containing the extra detail bytes
+ * \param data a buffer containing the extra detail bytes, if null the crash detail
+ *             is disabled until android_replace_crash_detail_data replaces it with
+ *             a non-null pointer.
  * \param data_size number of bytes of the buffer pointed to by data
  *
- * \return a handle to the extra crash detail for use with android_unregister_crash_detail.
+ * \return a handle to the extra crash detail.
  */
 crash_detail_t* _Nullable android_register_crash_detail(
-    const void* _Nonnull name, size_t name_size, const void* _Nonnull data, size_t data_size) __INTRODUCED_IN(35);
+    const void* _Nonnull name, size_t name_size, const void* _Nullable data, size_t data_size) __INTRODUCED_IN(35);
 
 /**
  * Unregister crash detail from being logged into tombstones.
@@ -97,5 +99,34 @@ crash_detail_t* _Nullable android_register_crash_detail(
  * \param crash_detail the crash_detail that should be removed.
  */
 void android_unregister_crash_detail(crash_detail_t* _Nonnull crash_detail) __INTRODUCED_IN(35);
+
+/**
+ * Replace data of crash detail.
+ *
+ * This is more efficient than using android_unregister_crash_detail followed by
+ * android_register_crash_detail. If you very frequently need to swap out the data,
+ * you can hold onto the crash_detail.
+ *
+ * Introduced in API 35.
+ *
+ * \param data the new buffer containing the extra detail bytes, or null to disable until
+ *             android_replace_crash_detail_data is called again with non-null data.
+ * \param data_size the number of bytes of the buffer pointed to by data.
+ */
+void android_replace_crash_detail_data(crash_detail_t* _Nonnull crash_detail, const void* _Nullable data, size_t data_size) __INTRODUCED_IN(35);
+
+/**
+ * Replace name of crash detail.
+ *
+ * This is more efficient than using android_unregister_crash_detail followed by
+ * android_register_crash_detail. If you very frequently need to swap out the name,
+ * you can hold onto the crash_detail.
+ *
+ * Introduced in API 35.
+ *
+ * \param name identifying name for this extra data.
+ * \param name_size number of bytes of the buffer pointed to by name
+ */
+void android_replace_crash_detail_name(crash_detail_t* _Nonnull crash_detail, const void* _Nonnull name, size_t name_size) __INTRODUCED_IN(35);
 
 __END_DECLS

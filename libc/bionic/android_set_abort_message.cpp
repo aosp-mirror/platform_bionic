@@ -165,3 +165,17 @@ void android_unregister_crash_detail(crash_detail_t* crash_detail) {
     } while (!atomic_compare_exchange_strong(&free_head, &prev, crash_detail));
   }
 }
+
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
+void android_replace_crash_detail_data(crash_detail_t* crash_detail, const void* data,
+                                       size_t data_size) {
+  crash_detail->data = reinterpret_cast<const char*>(data);
+  crash_detail->data_size = data_size;
+}
+
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
+void android_replace_crash_detail_name(crash_detail_t* crash_detail, const void* name,
+                                       size_t name_size) {
+  crash_detail->name = reinterpret_cast<const char*>(name);
+  crash_detail->name_size = name_size;
+}
