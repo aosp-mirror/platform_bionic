@@ -28,7 +28,7 @@
 
 #include <bionic/malloc.h>
 
-#include "libs_utils.h"
+#include "CHECK.h"
 
 #if defined(__aarch64__)
 

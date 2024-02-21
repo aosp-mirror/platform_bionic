@@ -1695,12 +1695,30 @@ bool find_libraries(android_namespace_t* ns,
   }
 
   // Step 3: pre-link all DT_NEEDED libraries in breadth first order.
+  bool any_memtag_stack = false;
   for (auto&& task : load_tasks) {
     soinfo* si = task->get_soinfo();
     if (!si->is_linked() && !si->prelink_image()) {
       return false;
     }
+    // si->memtag_stack() needs to be called after si->prelink_image() which populates
+    // the dynamic section.
+    if (si->has_min_version(7) && si->memtag_stack()) {
+      any_memtag_stack = true;
+      LD_LOG(kLogDlopen,
+             "... load_library requesting stack MTE for: realpath=\"%s\", soname=\"%s\"",
+             si->get_realpath(), si->get_soname());
+    }
     register_soinfo_tls(si);
+  }
+  if (any_memtag_stack) {
+    if (auto* cb = __libc_shared_globals()->memtag_stack_dlopen_callback) {
+      cb();
+    } else {
+      // find_library is used by the initial linking step, so we communicate that we
+      // want memtag_stack enabled to __libc_init_mte.
+      __libc_shared_globals()->initial_memtag_stack = true;
+    }
   }
 
   // Step 4: Construct the global group. DF_1_GLOBAL bit is force set for LD_PRELOADed libs because

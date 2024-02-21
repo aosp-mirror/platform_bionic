@@ -14,27 +14,13 @@
  * limitations under the License.
  */
 
-#include <errno.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/auxv.h>
+#pragma once
 
-#include "CHECK.h"
+// Tests proper can use libbase, but libraries for testing dlopen()
+// should probably avoid dependencies other than ones we're specifically
+// trying to test.
 
-static ssize_t g_result;
-static int g_errno;
+#include <assert.h>
 
-static void preinit_ctor() {
-  // Can we make a system call?
-  g_result = write(-1, "", 1);
-  g_errno = errno;
-}
-
-__attribute__((section(".preinit_array"), used)) void (*preinit_ctor_p)(void) = preinit_ctor;
-
-int main() {
-  // Did we get the expected failure?
-  CHECK(g_result == -1);
-  CHECK(g_errno == EBADF);
-  return 0;
-}
+#define CHECK(e) \
+  ((e) ? static_cast<void>(0) : __assert2(__FILE__, __LINE__, __PRETTY_FUNCTION__, #e))
