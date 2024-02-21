@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-#include <assert.h>
 #include <dlfcn.h>
 
-#include "libs_utils.h"
+#include "CHECK.h"
 
 int main(void) {
   void* handle;

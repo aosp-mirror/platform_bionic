@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,27 +14,25 @@
  * limitations under the License.
  */
 
-#include <errno.h>
+#include <stdint.h>
 #include <stdio.h>
-#include <unistd.h>
-#include <sys/auxv.h>
+#include <stdlib.h>
 
+#include "../mte_utils.h"
 #include "CHECK.h"
 
-static ssize_t g_result;
-static int g_errno;
+#if defined(__BIONIC__) && defined(__aarch64__)
 
-static void preinit_ctor() {
-  // Can we make a system call?
-  g_result = write(-1, "", 1);
-  g_errno = errno;
+extern "C" int main(int, char**) {
+  int ret = is_stack_mte_on() ? 0 : 1;
+  printf("RAN\n");
+  return ret;
 }
 
-__attribute__((section(".preinit_array"), used)) void (*preinit_ctor_p)(void) = preinit_ctor;
+#else
 
-int main() {
-  // Did we get the expected failure?
-  CHECK(g_result == -1);
-  CHECK(g_errno == EBADF);
-  return 0;
+extern "C" int main(int, char**) {
+  printf("RAN\n");
+  return 1;
 }
+#endif

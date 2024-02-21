@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-#ifndef LIBS_UTILS_H
-#define LIBS_UTILS_H
+#pragma once
 
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
+#if defined(__BIONIC__) && defined(__aarch64__)
 
-#define CHECK(e) \
-    ((e) ? static_cast<void>(0) : __assert2(__FILE__, __LINE__, __PRETTY_FUNCTION__, #e))
+__attribute__((target("mte"))) static bool is_stack_mte_on() {
+  alignas(16) int x = 0;
+  void* p = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(&x) + (1UL << 57));
+  void* p_cpy = p;
+  __builtin_arm_stg(p);
+  p = __builtin_arm_ldg(p);
+  __builtin_arm_stg(&x);
+  return p == p_cpy;
+}
 
-#endif  // LIBS_UTILS_H
+#endif
