@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include <android/set_abort_message.h>
+#include <android/crash_detail.h>
 #include <stddef.h>
 #include <sys/cdefs.h>
 
