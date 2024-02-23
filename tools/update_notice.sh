@@ -11,4 +11,4 @@ python3 ./libc/tools/generate_notice.py libstdc++ > libstdc++/NOTICE
 python3 ./libc/tools/generate_notice.py linker > linker/NOTICE
 python3 ./libc/tools/generate_notice.py tests > tests/NOTICE
 python3 ./libc/tools/generate_notice.py tools > tools/NOTICE
-git diff --exit-code HEAD libc/NOTICE
+git diff --exit-code HEAD */NOTICE

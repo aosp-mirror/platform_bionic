@@ -753,22 +753,36 @@ TEST(UNISTD_TEST, gethostname) {
 
 TEST(UNISTD_TEST, pathconf_fpathconf) {
   TemporaryFile tf;
-  long rc = 0L;
+  long l;
+
   // As a file system's block size is always power of 2, the configure values
   // for ALLOC and XFER should be power of 2 as well.
-  rc = pathconf(tf.path, _PC_ALLOC_SIZE_MIN);
-  ASSERT_TRUE(rc > 0 && powerof2(rc));
-  rc = pathconf(tf.path, _PC_REC_MIN_XFER_SIZE);
-  ASSERT_TRUE(rc > 0 && powerof2(rc));
-  rc = pathconf(tf.path, _PC_REC_XFER_ALIGN);
-  ASSERT_TRUE(rc > 0 && powerof2(rc));
+  l = pathconf(tf.path, _PC_ALLOC_SIZE_MIN);
+  ASSERT_TRUE(l > 0 && powerof2(l));
+  l = pathconf(tf.path, _PC_REC_MIN_XFER_SIZE);
+  ASSERT_TRUE(l > 0 && powerof2(l));
+  l = pathconf(tf.path, _PC_REC_XFER_ALIGN);
+  ASSERT_TRUE(l > 0 && powerof2(l));
 
-  rc = fpathconf(tf.fd, _PC_ALLOC_SIZE_MIN);
-  ASSERT_TRUE(rc > 0 && powerof2(rc));
-  rc = fpathconf(tf.fd, _PC_REC_MIN_XFER_SIZE);
-  ASSERT_TRUE(rc > 0 && powerof2(rc));
-  rc = fpathconf(tf.fd, _PC_REC_XFER_ALIGN);
-  ASSERT_TRUE(rc > 0 && powerof2(rc));
+  l = fpathconf(tf.fd, _PC_ALLOC_SIZE_MIN);
+  ASSERT_TRUE(l > 0 && powerof2(l));
+  l = fpathconf(tf.fd, _PC_REC_MIN_XFER_SIZE);
+  ASSERT_TRUE(l > 0 && powerof2(l));
+  l = fpathconf(tf.fd, _PC_REC_XFER_ALIGN);
+  ASSERT_TRUE(l > 0 && powerof2(l));
+
+  // Check that the "I can't answer that, you'll have to try it and see"
+  // cases don't set errno.
+  int names[] = {
+      _PC_ASYNC_IO, _PC_PRIO_IO, _PC_REC_INCR_XFER_SIZE, _PC_REC_MAX_XFER_SIZE, _PC_SYMLINK_MAX,
+      _PC_SYNC_IO,  -1};
+  for (size_t i = 0; names[i] != -1; i++) {
+    errno = 0;
+    ASSERT_EQ(-1, pathconf(tf.path, names[i])) << names[i];
+    ASSERT_ERRNO(0) << names[i];
+    ASSERT_EQ(-1, fpathconf(tf.fd, names[i])) << names[i];
+    ASSERT_ERRNO(0) << names[i];
+  }
 }
 
 TEST(UNISTD_TEST, _POSIX_constants) {
