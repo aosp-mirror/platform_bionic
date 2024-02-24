@@ -88,5 +88,10 @@
     {
       "name": "CtsBionicTestCases"
     }
+  ],
+  "postsubmit": [
+    {
+      "name": "CtsBionicAppTestCases"
+    }
   ]
 }
