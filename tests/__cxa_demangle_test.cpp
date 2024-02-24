@@ -28,11 +28,39 @@
 
 #include <cxxabi.h>
 #include <gtest/gtest.h>
+#include <string.h>
 
 TEST(__cxa_demangle, cxa_demangle_fuzz_152588929) {
 #if defined(__aarch64__)
+  // Test the C++ demangler on an invalid mangled string. libc++abi currently
+  // parses it like so:
+  //    (1 "\006") (I (L e "eeEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" E) E)
+  // There are a few interesting things about this mangled input:
+  //  - The IA64 C++ ABI specifies that an FP literal's hex chars are lowercase.
+  //    The libc++abi demangler currently accepts uppercase A-F digits, which is
+  //    confusing because 'E' is supposed to mark the end of the <expr-primary>.
+  //  - libc++abi uses snprintf("%a") which puts an unspecified number of bits
+  //    in the digit before the decimal point.
+  //  - The identifier name is "\006", and the IA64 C++ ABI spec is explicit
+  //    about not specifying the encoding for characters outside of
+  //    [_A-Za-z0-9].
+  //  - The 'e' type is documented as "long double, __float80", and in practice
+  //    the length of the literal depends on the arch. For arm64, it is a
+  //    128-bit FP type encoded using 32 hex chars. The situation with x86-64
+  //    Android OTOH is messy because Clang uses 'g' for its 128-bit
+  //    long double.
   char* p = abi::__cxa_demangle("1\006ILeeeEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE", 0, 0, 0);
-  ASSERT_STREQ("\x6<-0x1.cecececececececececececececep+11983", p);
+  if (p && !strcmp(p, "\x6<-0x1.cecececececececececececececep+11983")) {
+    // Prior to llvm.org/D77924, libc++abi left off the "L>" suffix.
+  } else if (p && !strcmp(p, "\x6<-0x1.cecececececececececececececep+11983L>")) {
+    // After llvm.org/D77924, the "L>" suffix is present. libc++abi
+    // accepts A-F digits but decodes each using (digit - 'a' + 10), turning 'E'
+    // into -18.
+  } else {
+    // TODO: Remove the other accepted outputs, because libc++abi probably
+    // should reject this input.
+    ASSERT_EQ(nullptr, p) << p;
+  }
   free(p);
 #endif
 }
