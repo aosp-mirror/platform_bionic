@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,17 +26,24 @@
  * SUCH DAMAGE.
  */
 
-#include "private/__bionic_get_shell_path.h"
+#pragma once
 
-const char* __bionic_get_shell_path() {
-  // For the host Bionic, we use the standard /bin/sh.
-  // Since P there's a /bin -> /system/bin symlink that means this will work
-  // for the device too, but as long as the NDK supports earlier API levels,
-  // we should probably make sure that this works in static binaries run on
-  // those OS versions too.
-#if !defined(__ANDROID__)
-  return "/bin/sh";
-#else
-  return "/system/bin/sh";
-#endif
-}
+#include <android/crash_detail.h>
+#include <stddef.h>
+#include <sys/cdefs.h>
+
+struct crash_detail_t {
+  const char* name;
+  size_t name_size;
+  const char* data;
+  size_t data_size;
+  crash_detail_t* prev_free;
+};
+
+constexpr auto kNumCrashDetails = 128;
+
+struct crash_detail_page_t {
+  struct crash_detail_page_t* prev;
+  size_t used;
+  struct crash_detail_t crash_details[kNumCrashDetails];
+};

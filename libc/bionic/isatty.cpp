@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2008 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,17 +26,10 @@
  * SUCH DAMAGE.
  */
 
-#include "private/__bionic_get_shell_path.h"
+#include <termios.h>
+#include <unistd.h>
 
-const char* __bionic_get_shell_path() {
-  // For the host Bionic, we use the standard /bin/sh.
-  // Since P there's a /bin -> /system/bin symlink that means this will work
-  // for the device too, but as long as the NDK supports earlier API levels,
-  // we should probably make sure that this works in static binaries run on
-  // those OS versions too.
-#if !defined(__ANDROID__)
-  return "/bin/sh";
-#else
-  return "/system/bin/sh";
-#endif
+int isatty(int fd) {
+  termios term;
+  return tcgetattr(fd, &term) == 0;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,14 +26,18 @@
  * SUCH DAMAGE.
  */
 
-#include <unistd.h>
-#include <termios.h>
-#include <errno.h>
+#pragma once
 
-int
-isatty (int  fd)
-{
-  struct termios term;
+#if defined(__BIONIC__) && defined(__aarch64__)
 
-  return tcgetattr (fd, &term) == 0;
+__attribute__((target("mte"))) static bool is_stack_mte_on() {
+  alignas(16) int x = 0;
+  void* p = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(&x) + (1UL << 57));
+  void* p_cpy = p;
+  __builtin_arm_stg(p);
+  p = __builtin_arm_ldg(p);
+  __builtin_arm_stg(&x);
+  return p == p_cpy;
 }
+
+#endif

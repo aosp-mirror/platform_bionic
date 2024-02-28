@@ -28,9 +28,12 @@
 
 #include <android/set_abort_message.h>
 
+#include <async_safe/log.h>
+
+#include <bits/stdatomic.h>
 #include <pthread.h>
-#include <stdint.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <string.h>
 #include <sys/mman.h>
 #include <sys/prctl.h>

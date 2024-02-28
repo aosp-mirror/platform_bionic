@@ -629,10 +629,10 @@ literal:
          * as `[-+]0`.
          */
         if (flags & NDIGITS) {
-          if (p > buf) (void)ungetc(*(u_char*)--p, fp);
+          if (p > buf) ungetc(*reinterpret_cast<u_char*>(--p), fp);
           goto match_failure;
         }
-        c = ((u_char*)p)[-1];
+        c = reinterpret_cast<u_char*>(p)[-1];
         if ((base == 2 && (c == 'b' || c == 'B')) || c == 'x' || c == 'X') {
           --p;
           (void)ungetc(c, fp);
@@ -647,7 +647,7 @@ literal:
             res = strtoimax(buf, nullptr, base);
           }
           if (flags & POINTER) {
-            *va_arg(ap, void**) = (void*)(uintptr_t)res;
+            *va_arg(ap, void**) = reinterpret_cast<void*>(res);
           } else if (flags & MAXINT) {
             *va_arg(ap, intmax_t*) = res;
           } else if (flags & LLONG) {
@@ -685,7 +685,7 @@ literal:
             float res = strtof(buf, &p);
             *va_arg(ap, float*) = res;
           }
-          if ((size_t)(p - buf) != width) abort();
+          if (static_cast<size_t>(p - buf) != width) abort();
           nassigned++;
         }
         nread += width;

@@ -234,7 +234,7 @@ cc_test_library {
 }
 
 // -----------------------------------------------------------------------------
-// Library used by memtag_stack_dlopen_test tests
+// Libraries and binaries used by memtag_stack_dlopen_test tests
 // -----------------------------------------------------------------------------
 cc_test_library {
     name: "libtest_simple_memtag_stack",
@@ -242,6 +242,50 @@ cc_test_library {
         memtag_stack: true,
     },
     srcs: ["dlopen_testlib_simple.cpp"],
+}
+
+cc_test_library {
+    name: "libtest_depends_on_simple_memtag_stack",
+    sanitize: {
+        memtag_stack: false,
+    },
+    shared_libs: [
+        "libtest_simple_memtag_stack",
+    ],
+    srcs: ["dlopen_testlib_depends_on_simple.cpp"],
+}
+
+cc_binary {
+    name: "testbinary_is_stack_mte_after_dlopen",
+    sanitize: {
+        memtag_stack: false,
+        memtag_heap: true,
+    },
+    srcs: ["testbinary_is_stack_mte_after_dlopen.cpp"],
+}
+
+cc_binary {
+    name: "testbinary_depends_on_simple_memtag_stack",
+    sanitize: {
+        memtag_stack: false,
+        memtag_heap: true,
+    },
+    shared_libs: [
+        "libtest_simple_memtag_stack",
+    ],
+    srcs: ["testbinary_is_stack_mte.cpp"],
+}
+
+cc_binary {
+    name: "testbinary_depends_on_depends_on_simple_memtag_stack",
+    sanitize: {
+        memtag_stack: false,
+        memtag_heap: true,
+    },
+    shared_libs: [
+        "libtest_depends_on_simple_memtag_stack",
+    ],
+    srcs: ["testbinary_is_stack_mte.cpp"],
 }
 
 // -----------------------------------------------------------------------------

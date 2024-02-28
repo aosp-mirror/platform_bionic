@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,17 +26,18 @@
  * SUCH DAMAGE.
  */
 
-#include "private/__bionic_get_shell_path.h"
+#include <private/bionic_asm_note.h>
 
-const char* __bionic_get_shell_path() {
-  // For the host Bionic, we use the standard /bin/sh.
-  // Since P there's a /bin -> /system/bin symlink that means this will work
-  // for the device too, but as long as the NDK supports earlier API levels,
-  // we should probably make sure that this works in static binaries run on
-  // those OS versions too.
-#if !defined(__ANDROID__)
-  return "/bin/sh";
-#else
-  return "/system/bin/sh";
-#endif
-}
+  .section ".note.android.pad_segment", "a", %note
+  .balign 4
+  .long 1f - 0f                       // int32_t namesz
+  .long 3f - 2f                       // int32_t descsz
+  .long NT_ANDROID_TYPE_PAD_SEGMENT   // int32_t type
+0:
+  .asciz "Android"                    // char name[]
+1:
+  .balign 2
+2:
+  .long 0    // Disabled
+3:
+  .balign 2
