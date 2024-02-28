@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2010 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,34 +25,38 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <grp.h>
-#include <unistd.h>
-#include <stdlib.h>
 
-#define  INIT_GROUPS  2
+#include <netinet/ether.h>
 
-int
-initgroups (const char *user, gid_t group)
-{
-    gid_t   groups0[ INIT_GROUPS ];
-    gid_t*  groups    = groups0;
-    int     ret       = -1;
-    int     numgroups = INIT_GROUPS;
+#include <stdio.h>
 
-    if (getgrouplist(user, group, groups, &numgroups) < 0) {
-        groups = malloc(numgroups*sizeof(groups[0]));
-        if (groups == NULL)
-            return -1;
-        if (getgrouplist(user,group,groups,&numgroups) < 0) {
-            goto EXIT;
-        }
-    }
+ether_addr* ether_aton_r(const char* asc, ether_addr* addr) {
+  int bytes[ETHER_ADDR_LEN], end;
+  int n = sscanf(asc, "%x:%x:%x:%x:%x:%x%n",
+                 &bytes[0], &bytes[1], &bytes[2],
+                 &bytes[3], &bytes[4], &bytes[5], &end);
+  if (n != ETHER_ADDR_LEN || asc[end] != '\0') return NULL;
+  for (int i = 0; i < ETHER_ADDR_LEN; i++) {
+    if (bytes[i] > 0xff) return NULL;
+    addr->ether_addr_octet[i] = bytes[i];
+  }
+  return addr;
+}
 
-    ret = setgroups(numgroups, groups);
+struct ether_addr* ether_aton(const char* asc) {
+  static ether_addr addr;
+  return ether_aton_r(asc, &addr);
+}
 
-EXIT:
-    if (groups != groups0)
-        free(groups);
+char* ether_ntoa_r(const ether_addr* addr, char* buf) {
+  snprintf(buf, 18, "%02x:%02x:%02x:%02x:%02x:%02x",
+           addr->ether_addr_octet[0], addr->ether_addr_octet[1],
+           addr->ether_addr_octet[2], addr->ether_addr_octet[3],
+           addr->ether_addr_octet[4], addr->ether_addr_octet[5]);
+  return buf;
+}
 
-    return ret;
+char* ether_ntoa(const ether_addr* addr) {
+  static char buf[18];
+  return ether_ntoa_r(addr, buf);
 }

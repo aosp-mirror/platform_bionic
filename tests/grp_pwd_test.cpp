@@ -444,16 +444,33 @@ static void expect_ids(T ids, bool is_group) {
     return result;
   };
 
-  // AID_PRNG_SEEDER (1092) was added in TM-QPR2, but CTS is shared
-  // across Android 13 versions so we may or may not find it in this
-  // test (b/253185870).
-  if (android::base::GetIntProperty("ro.build.version.sdk", 0) == __ANDROID_API_T__) {
-#ifndef AID_PRNG_SEEDER
-#define AID_PRNG_SEEDER 1092
+  // AID_UPROBESTATS (1093) was added in V, but "trunk stable" means
+  // that the 2024Q builds don't have branches like the QPR builds used
+  // to, and are tested with the _previous_ release's CTS.
+  if (android::base::GetIntProperty("ro.build.version.sdk", 0) == __ANDROID_API_U__) {
+#if !defined(AID_UPROBESTATS)
+#define AID_UPROBESTATS 1093
 #endif
-    ids.erase(AID_PRNG_SEEDER);
-    expected_ids.erase(AID_PRNG_SEEDER);
+    ids.erase(AID_UPROBESTATS);
+    expected_ids.erase(AID_UPROBESTATS);
+    if (getpwuid(AID_UPROBESTATS)) {
+      EXPECT_STREQ(getpwuid(AID_UPROBESTATS)->pw_name, "uprobestats");
+    }
   }
+  // AID_VIRTUALMACHINE (3013) was added in V, but "trunk stable" means
+  // that the 2024Q builds don't have branches like the QPR builds used
+  // to, and are tested with the _previous_ release's CTS.
+  if (android::base::GetIntProperty("ro.build.version.sdk", 0) == __ANDROID_API_U__) {
+#if !defined(AID_VIRTUALMACHINE)
+#define AID_VIRTUALMACHINE 3013
+#endif
+    ids.erase(AID_VIRTUALMACHINE);
+    expected_ids.erase(AID_VIRTUALMACHINE);
+    if (getpwuid(AID_VIRTUALMACHINE)) {
+      EXPECT_STREQ(getpwuid(AID_VIRTUALMACHINE)->pw_name, "virtualmachine");
+    }
+  }
+
   EXPECT_EQ(expected_ids, ids) << return_differences();
 }
 #endif
@@ -849,6 +866,11 @@ TEST(grp, getgrouplist) {
 #else
   GTEST_SKIP() << "bionic-only test (groups too unpredictable)";
 #endif
+}
+
+TEST(grp, initgroups) {
+  if (getuid() != 0) GTEST_SKIP() << "test requires root";
+  ASSERT_EQ(0, initgroups("root", 0));
 }
 
 #if defined(__BIONIC__)

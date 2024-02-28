@@ -29,3 +29,8 @@
 // To enable logging
 int g_ld_debug_verbosity = 0;
 
+// Stub some symbols to avoid linking issues
+void DL_WARN_documented_change(int api_level [[maybe_unused]],
+                               const char* doc_link [[maybe_unused]],
+                               const char* fmt [[maybe_unused]], ...) {}
+

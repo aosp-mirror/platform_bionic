@@ -25,17 +25,13 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#define _GNU_SOURCE 1
+
 #include <sched.h>
 
 int __sched_cpucount(size_t setsize, const cpu_set_t* set) {
-  int nn = 0;
-  int nn_max = setsize / sizeof(__CPU_BITTYPE);
   int count = 0;
-
-  for ( ; nn < nn_max; nn++ ) {
-    count += __builtin_popcountl(set->__bits[nn]);
+  for (size_t i = 0; i < setsize / sizeof(__CPU_BITTYPE); i++) {
+    count += __builtin_popcountl(set->__bits[i]);
   }
-
   return count;
 }

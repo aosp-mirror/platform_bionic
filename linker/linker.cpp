@@ -1695,12 +1695,30 @@ bool find_libraries(android_namespace_t* ns,
   }
 
   // Step 3: pre-link all DT_NEEDED libraries in breadth first order.
+  bool any_memtag_stack = false;
   for (auto&& task : load_tasks) {
     soinfo* si = task->get_soinfo();
     if (!si->is_linked() && !si->prelink_image()) {
       return false;
     }
+    // si->memtag_stack() needs to be called after si->prelink_image() which populates
+    // the dynamic section.
+    if (si->has_min_version(7) && si->memtag_stack()) {
+      any_memtag_stack = true;
+      LD_LOG(kLogDlopen,
+             "... load_library requesting stack MTE for: realpath=\"%s\", soname=\"%s\"",
+             si->get_realpath(), si->get_soname());
+    }
     register_soinfo_tls(si);
+  }
+  if (any_memtag_stack) {
+    if (auto* cb = __libc_shared_globals()->memtag_stack_dlopen_callback) {
+      cb();
+    } else {
+      // find_library is used by the initial linking step, so we communicate that we
+      // want memtag_stack enabled to __libc_init_mte.
+      __libc_shared_globals()->initial_memtag_stack = true;
+    }
   }
 
   // Step 4: Construct the global group. DF_1_GLOBAL bit is force set for LD_PRELOADed libs because
@@ -2213,14 +2231,6 @@ void* do_dlopen(const char* name, int flags,
   loading_trace.End();
 
   if (si != nullptr) {
-    if (si->has_min_version(7) && si->memtag_stack()) {
-      LD_LOG(kLogDlopen, "... dlopen enabling MTE for: realpath=\"%s\", soname=\"%s\"",
-             si->get_realpath(), si->get_soname());
-      if (auto* cb = __libc_shared_globals()->memtag_stack_dlopen_callback) {
-        cb();
-      }
-    }
-
     void* handle = si->to_handle();
     LD_LOG(kLogDlopen,
            "... dlopen calling constructors: realpath=\"%s\", soname=\"%s\", handle=%p",
@@ -3354,7 +3364,7 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
                               "\"%s\" has text relocations",
                               get_realpath());
     add_dlwarning(get_realpath(), "text relocations");
-    if (phdr_table_unprotect_segments(phdr, phnum, load_bias) < 0) {
+    if (phdr_table_unprotect_segments(phdr, phnum, load_bias, should_pad_segments_) < 0) {
       DL_ERR("can't unprotect loadable segments for \"%s\": %s", get_realpath(), strerror(errno));
       return false;
     }
@@ -3370,7 +3380,7 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
 #if !defined(__LP64__)
   if (has_text_relocations) {
     // All relocations are done, we can protect our segments back to read-only.
-    if (phdr_table_protect_segments(phdr, phnum, load_bias) < 0) {
+    if (phdr_table_protect_segments(phdr, phnum, load_bias, should_pad_segments_) < 0) {
       DL_ERR("can't protect segments for \"%s\": %s",
              get_realpath(), strerror(errno));
       return false;
@@ -3408,7 +3418,7 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
 }
 
 bool soinfo::protect_relro() {
-  if (phdr_table_protect_gnu_relro(phdr, phnum, load_bias) < 0) {
+  if (phdr_table_protect_gnu_relro(phdr, phnum, load_bias, should_pad_segments_) < 0) {
     DL_ERR("can't enable GNU RELRO protection for \"%s\": %s",
            get_realpath(), strerror(errno));
     return false;

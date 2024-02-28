@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,17 +26,25 @@
  * SUCH DAMAGE.
  */
 
-#include "private/__bionic_get_shell_path.h"
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-const char* __bionic_get_shell_path() {
-  // For the host Bionic, we use the standard /bin/sh.
-  // Since P there's a /bin -> /system/bin symlink that means this will work
-  // for the device too, but as long as the NDK supports earlier API levels,
-  // we should probably make sure that this works in static binaries run on
-  // those OS versions too.
-#if !defined(__ANDROID__)
-  return "/bin/sh";
-#else
-  return "/system/bin/sh";
-#endif
+#include "../mte_utils.h"
+#include "CHECK.h"
+
+#if defined(__BIONIC__) && defined(__aarch64__)
+
+extern "C" int main(int, char**) {
+  int ret = is_stack_mte_on() ? 0 : 1;
+  printf("RAN\n");
+  return ret;
 }
+
+#else
+
+extern "C" int main(int, char**) {
+  printf("RAN\n");
+  return 1;
+}
+#endif

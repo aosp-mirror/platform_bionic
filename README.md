@@ -336,7 +336,9 @@ either, as `make tests` covers a few additional modules, but generally speaking
 
 ## Running the tests
 
-The tests are all built from the tests/ directory.
+The tests are all built from the tests/ directory. There is a separate
+directory `benchmarks/` containing benchmarks, and that has its own
+documentation on [running the benchmarks](benchmarks/README.md).
 
 ### Device tests
 

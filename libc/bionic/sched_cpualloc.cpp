@@ -26,30 +26,13 @@
  * SUCH DAMAGE.
  */
 
-#include <stdio.h>
-#include <sys/types.h>
-#include <net/ethernet.h>
+#include <sched.h>
+#include <stdlib.h>
 
-/*
- * Convert Ethernet address to standard hex-digits-and-colons printable form.
- * Re-entrant version (GNU extensions).
- */
-char *
-ether_ntoa_r (const struct ether_addr *addr, char * buf)
-{
-    snprintf(buf, 18, "%02x:%02x:%02x:%02x:%02x:%02x",
-            addr->ether_addr_octet[0], addr->ether_addr_octet[1],
-            addr->ether_addr_octet[2], addr->ether_addr_octet[3],
-            addr->ether_addr_octet[4], addr->ether_addr_octet[5]);
-    return buf;
+cpu_set_t* __sched_cpualloc(size_t count) {
+  return static_cast<cpu_set_t*>(malloc(CPU_ALLOC_SIZE(count)));
 }
 
-/*
- * Convert Ethernet address to standard hex-digits-and-colons printable form.
- */
-char *
-ether_ntoa (const struct ether_addr *addr)
-{
-    static char buf[18];
-    return ether_ntoa_r(addr, buf);
+void __sched_cpufree(cpu_set_t* set) {
+  free(set);
 }
