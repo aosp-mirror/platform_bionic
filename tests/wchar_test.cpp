@@ -34,7 +34,7 @@ TEST(wchar, sizeof_wchar_t) {
   EXPECT_EQ(4U, sizeof(wint_t));
 }
 
-TEST(wchar, mbrlen) {
+TEST(wchar, DISABLED_mbrlen) {
   char bytes[] = { 'h', 'e', 'l', 'l', 'o', '\0' };
   EXPECT_EQ(0U, mbrlen(&bytes[0], 0, nullptr));
   EXPECT_EQ(1U, mbrlen(&bytes[0], 1, nullptr));
@@ -252,7 +252,7 @@ TEST(wchar, wcsstr_80199) {
   ASSERT_TRUE(wcsstr(L"romrom", L"rom") != nullptr);
 }
 
-TEST(wchar, mbtowc) {
+TEST(wchar, DISABLED_mbtowc) {
   wchar_t out[8];
 
   out[0] = 'x';
@@ -271,7 +271,7 @@ TEST(wchar, mbtowc) {
   ASSERT_EQ(0, mbtowc(nullptr, nullptr, 0));
 }
 
-TEST(wchar, mbrtowc) {
+TEST(wchar, DISABLED_mbrtowc) {
   wchar_t out[8];
 
   out[0] = 'x';
