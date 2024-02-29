@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,30 +26,24 @@
  * SUCH DAMAGE.
  */
 
-#include <stdio.h>
-#include <sys/types.h>
-#include <net/ethernet.h>
+#pragma once
 
-/*
- * Convert Ethernet address to standard hex-digits-and-colons printable form.
- * Re-entrant version (GNU extensions).
- */
-char *
-ether_ntoa_r (const struct ether_addr *addr, char * buf)
-{
-    snprintf(buf, 18, "%02x:%02x:%02x:%02x:%02x:%02x",
-            addr->ether_addr_octet[0], addr->ether_addr_octet[1],
-            addr->ether_addr_octet[2], addr->ether_addr_octet[3],
-            addr->ether_addr_octet[4], addr->ether_addr_octet[5]);
-    return buf;
-}
+#include <android/crash_detail.h>
+#include <stddef.h>
+#include <sys/cdefs.h>
 
-/*
- * Convert Ethernet address to standard hex-digits-and-colons printable form.
- */
-char *
-ether_ntoa (const struct ether_addr *addr)
-{
-    static char buf[18];
-    return ether_ntoa_r(addr, buf);
-}
+struct crash_detail_t {
+  const char* name;
+  size_t name_size;
+  const char* data;
+  size_t data_size;
+  crash_detail_t* prev_free;
+};
+
+constexpr auto kNumCrashDetails = 128;
+
+struct crash_detail_page_t {
+  struct crash_detail_page_t* prev;
+  size_t used;
+  struct crash_detail_t crash_details[kNumCrashDetails];
+};

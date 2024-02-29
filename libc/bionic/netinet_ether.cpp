@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 The Android Open Source Project
+ * Copyright (C) 2010 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,24 +26,37 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <netinet/ether.h>
 
-#include <android/set_abort_message.h>
-#include <stddef.h>
-#include <sys/cdefs.h>
+#include <stdio.h>
 
-struct crash_detail_t {
-  const char* name;
-  size_t name_size;
-  const char* data;
-  size_t data_size;
-  crash_detail_t* prev_free;
-};
+ether_addr* ether_aton_r(const char* asc, ether_addr* addr) {
+  int bytes[ETHER_ADDR_LEN], end;
+  int n = sscanf(asc, "%x:%x:%x:%x:%x:%x%n",
+                 &bytes[0], &bytes[1], &bytes[2],
+                 &bytes[3], &bytes[4], &bytes[5], &end);
+  if (n != ETHER_ADDR_LEN || asc[end] != '\0') return NULL;
+  for (int i = 0; i < ETHER_ADDR_LEN; i++) {
+    if (bytes[i] > 0xff) return NULL;
+    addr->ether_addr_octet[i] = bytes[i];
+  }
+  return addr;
+}
 
-constexpr auto kNumCrashDetails = 128;
+struct ether_addr* ether_aton(const char* asc) {
+  static ether_addr addr;
+  return ether_aton_r(asc, &addr);
+}
 
-struct crash_detail_page_t {
-  struct crash_detail_page_t* prev;
-  size_t used;
-  struct crash_detail_t crash_details[kNumCrashDetails];
-};
+char* ether_ntoa_r(const ether_addr* addr, char* buf) {
+  snprintf(buf, 18, "%02x:%02x:%02x:%02x:%02x:%02x",
+           addr->ether_addr_octet[0], addr->ether_addr_octet[1],
+           addr->ether_addr_octet[2], addr->ether_addr_octet[3],
+           addr->ether_addr_octet[4], addr->ether_addr_octet[5]);
+  return buf;
+}
+
+char* ether_ntoa(const ether_addr* addr) {
+  static char buf[18];
+  return ether_ntoa_r(addr, buf);
+}
