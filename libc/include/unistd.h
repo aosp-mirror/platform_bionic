@@ -78,8 +78,37 @@ extern char* _Nullable * _Nullable environ;
 
 __noreturn void _exit(int __status);
 
-pid_t  fork(void);
-pid_t  vfork(void) __returns_twice;
+/**
+ * [fork(2)](http://man7.org/linux/man-pages/man2/fork.2.html) creates a new
+ * process. fork() runs any handlers set by pthread_atfork().
+ *
+ * Returns 0 in the child, the pid of the child in the parent,
+ * and returns -1 and sets `errno` on failure.
+ */
+pid_t fork(void);
+
+/**
+ * _Fork() creates a new process. _Fork() differs from fork() in that it does
+ * not run any handlers set by pthread_atfork().
+ *
+ * Returns 0 in the child, the pid of the child in the parent,
+ * and returns -1 and sets `errno` on failure.
+ *
+ * Available since API level 35.
+ */
+pid_t _Fork(void) __INTRODUCED_IN(35);
+
+/**
+ * [vfork(2)](http://man7.org/linux/man-pages/man2/vfork.2.html) creates a new
+ * process. vfork() differs from fork() in that it does not run any handlers
+ * set by pthread_atfork(), and the parent is suspended until the child calls
+ * exec() or exits.
+ *
+ * Returns 0 in the child, the pid of the child in the parent,
+ * and returns -1 and sets `errno` on failure.
+ */
+pid_t vfork(void) __returns_twice;
+
 pid_t  getpid(void);
 pid_t  gettid(void) __attribute_const__;
 pid_t  getpgid(pid_t __pid);
