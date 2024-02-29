@@ -10,6 +10,9 @@
       "name": "linker-unit-tests"
     },
     {
+      "name": "CtsBionicAppTestCases"
+    },
+    {
       "name": "CtsBionicTestCases"
     },
     {
@@ -54,6 +57,9 @@
       "name": "linker-unit-tests"
     },
     {
+      "name": "CtsBionicAppTestCases"
+    },
+    {
       "name": "CtsBionicTestCases"
     },
     {
@@ -87,11 +93,6 @@
   "kernel-presubmit": [
     {
       "name": "CtsBionicTestCases"
-    }
-  ],
-  "postsubmit": [
-    {
-      "name": "CtsBionicAppTestCases"
     }
   ]
 }
