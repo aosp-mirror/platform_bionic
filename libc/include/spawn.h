@@ -55,7 +55,7 @@ typedef struct __posix_spawn_file_actions* posix_spawn_file_actions_t;
 int posix_spawn(pid_t* _Nullable __pid, const char* _Nonnull __path, const posix_spawn_file_actions_t _Nullable * _Nullable __actions, const posix_spawnattr_t _Nullable * _Nullable __attr, char* const _Nonnull __argv[_Nonnull], char* const _Nullable __env[_Nullable]) __INTRODUCED_IN(28);
 int posix_spawnp(pid_t* _Nullable __pid, const char* _Nonnull __file, const posix_spawn_file_actions_t _Nullable * _Nullable __actions, const posix_spawnattr_t _Nullable * _Nullable __attr, char* const _Nonnull __argv[_Nonnull], char* const _Nullable __env[_Nullable]) __INTRODUCED_IN(28);
 
-int posix_spawnattr_init(posix_spawnattr_t _Nonnull * _Nonnull __attr) __INTRODUCED_IN(28);
+int posix_spawnattr_init(posix_spawnattr_t _Nullable * _Nonnull __attr) __INTRODUCED_IN(28);
 int posix_spawnattr_destroy(posix_spawnattr_t _Nonnull * _Nonnull __attr) __INTRODUCED_IN(28);
 
 int posix_spawnattr_setflags(posix_spawnattr_t _Nonnull * _Nonnull __attr, short __flags) __INTRODUCED_IN(28);
