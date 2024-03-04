@@ -440,6 +440,22 @@ TEST(UNISTD_TEST, syncfs) {
   TestSyncFunction(syncfs);
 }
 
+TEST(UNISTD_TEST, _Fork) {
+#if defined(__BIONIC__)
+  pid_t rc = _Fork();
+  ASSERT_NE(-1, rc);
+  if (rc == 0) {
+    _exit(66);
+  }
+
+  int status;
+  pid_t wait_result = waitpid(rc, &status, 0);
+  ASSERT_EQ(wait_result, rc);
+  ASSERT_TRUE(WIFEXITED(status));
+  ASSERT_EQ(66, WEXITSTATUS(status));
+#endif
+}
+
 TEST(UNISTD_TEST, vfork) {
 #if defined(__BIONIC__)
   pthread_internal_t* self = __get_thread();
