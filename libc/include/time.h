@@ -365,13 +365,14 @@ int clock_gettime(clockid_t __clock, struct timespec* _Nonnull __ts);
 
 /**
  * [clock_nanosleep(2)](http://man7.org/linux/man-pages/man2/clock_nanosleep.2.html)
- * sleeps for the given time as measured by the given clock.
+ * sleeps for the given time (or until the given time if the TIMER_ABSTIME flag
+ * is used), as measured by the given clock.
  *
  * Returns 0 on success, and returns -1 and returns an error number on failure.
  * If the sleep was interrupted by a signal, the return value will be `EINTR`
  * and `remainder` will be the amount of time remaining.
  */
-int clock_nanosleep(clockid_t __clock, int __flags, const struct timespec* _Nonnull __duration, struct timespec* _Nullable __remainder);
+int clock_nanosleep(clockid_t __clock, int __flags, const struct timespec* _Nonnull __time, struct timespec* _Nullable __remainder);
 
 /**
  * [clock_settime(2)](http://man7.org/linux/man-pages/man2/clock_settime.2.html)
