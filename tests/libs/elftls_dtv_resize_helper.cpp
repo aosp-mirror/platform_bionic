@@ -33,8 +33,6 @@
 #include <functional>
 #include <iostream>
 
-#include <android-base/test_utils.h>
-
 #include "bionic/pthread_internal.h"
 
 constexpr bool kDumpModulesForDebugging = false;
