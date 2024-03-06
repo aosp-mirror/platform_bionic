@@ -89,7 +89,11 @@ pid_t fork(void);
 
 /**
  * _Fork() creates a new process. _Fork() differs from fork() in that it does
- * not run any handlers set by pthread_atfork().
+ * not run any handlers set by pthread_atfork(). In addition to any user-defined
+ * ones, bionic uses pthread_atfork() handlers to ensure consistency of its own
+ * state, so the child should only call
+ * [POSIX async-safe](https://man7.org/linux/man-pages/man7/signal-safety.7.html)
+ * functions.
  *
  * Returns 0 in the child, the pid of the child in the parent,
  * and returns -1 and sets `errno` on failure.

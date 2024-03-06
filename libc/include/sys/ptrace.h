@@ -59,7 +59,7 @@ __BEGIN_DECLS
 #define PT_GETSIGINFO PTRACE_GETSIGINFO
 #define PT_SETSIGINFO PTRACE_SETSIGINFO
 
-long ptrace(int __request, ...);
+long ptrace(int __op, ...);
 
 __END_DECLS
 
