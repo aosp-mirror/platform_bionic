@@ -45,6 +45,6 @@ __BEGIN_DECLS
  *
  * Returns -1 and sets `errno` on failure; success values vary by option.
  */
-int prctl(int __option, ...);
+int prctl(int __op, ...);
 
 __END_DECLS
