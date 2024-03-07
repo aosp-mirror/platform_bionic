@@ -46,8 +46,6 @@
 #include "private/CFIShadow.h" // For kLibraryAlignment
 #include "private/elf_note.h"
 
-#include <procinfo/process_map.h>
-
 static int GetTargetElfMachine() {
 #if defined(__arm__)
   return EM_ARM;
@@ -869,25 +867,20 @@ bool ElfReader::LoadSegments() {
       }
     }
 
-    // if the segment is writable, and its memory map extends beyond
-    // the segment contents on file (p_filesz); zero-fill it until the
-    // end of the mapping backed by the file, rounded to the next
-    // page boundary; as this portion of the mapping corresponds to either
-    // garbage (partial page at the end) or data from other segments.
+    // if the segment is writable, and does not end on a page boundary,
+    // zero-fill it until the page limit.
     //
-    // If any part of the mapping extends beyond the file size there is
-    // no need to zero it since that region is not touchable by userspace
-    // and attempting to do so will causes the kernel to throw a SIGBUS.
-    //
-    // See: system/libprocinfo/include/procinfo/process_map_size.h
-    uint64_t file_backed_size = ::android::procinfo::MappedFileSize(seg_page_start,
-                                page_end(seg_page_start + file_length),
-                                file_offset_ + file_page_start, file_size_);
+    // Do not attempt to zero the extended region past the first partial page,
+    // since doing so may:
+    //   1) Result in a SIGBUS, as the region is not backed by the underlying
+    //      file.
+    //   2) Break the COW backing, faulting in new anon pages for a region
+    //      that will not be used.
+
     // _seg_file_end = unextended seg_file_end
     uint64_t _seg_file_end = seg_start + phdr->p_filesz;
-    uint64_t zero_fill_len = file_backed_size - (_seg_file_end - seg_page_start);
-    if ((phdr->p_flags & PF_W) != 0 && zero_fill_len > 0) {
-      memset(reinterpret_cast<void*>(_seg_file_end), 0, zero_fill_len);
+    if ((phdr->p_flags & PF_W) != 0 && page_offset(_seg_file_end) > 0) {
+      memset(reinterpret_cast<void*>(_seg_file_end), 0, kPageSize - page_offset(_seg_file_end));
     }
 
     seg_file_end = page_end(seg_file_end);
