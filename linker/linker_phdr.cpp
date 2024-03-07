@@ -1010,71 +1010,11 @@ int phdr_table_unprotect_segments(const ElfW(Phdr)* phdr_table,
                                    should_pad_segments);
 }
 
-static inline void _extend_gnu_relro_prot_end(const ElfW(Phdr)* relro_phdr,
-                                              const ElfW(Phdr)* phdr_table, size_t phdr_count,
-                                              ElfW(Addr) load_bias, ElfW(Addr)* seg_page_end,
-                                              bool should_pad_segments) {
-  // Find the index and phdr of the LOAD containing the GNU_RELRO segment
-  for (size_t index = 0; index < phdr_count; ++index) {
-    const ElfW(Phdr)* phdr = &phdr_table[index];
-
-    if (phdr->p_type == PT_LOAD && phdr->p_vaddr == relro_phdr->p_vaddr) {
-      // If the PT_GNU_RELRO mem size is not at least as large as the corresponding
-      // LOAD segment mem size, we need to protect only a partial region of the
-      // LOAD segment and therefore cannot avoid a VMA split.
-      //
-      // Note: Don't check the page-aligned mem sizes since the extended protection
-      // may incorrectly write protect non-relocation data.
-      //
-      // Example:
-      //
-      //               |---- 3K ----|-- 1K --|---- 3K ---- |-- 1K --|
-      //       ----------------------------------------------------------------
-      //               |            |        |             |        |
-      //        SEG X  |     RO     |   RO   |     RW      |        |   SEG Y
-      //               |            |        |             |        |
-      //       ----------------------------------------------------------------
-      //                            |        |             |
-      //                            |        |             |
-      //                            |        |             |
-      //                    relro_vaddr   relro_vaddr   relro_vaddr
-      //                    (load_vaddr)       +            +
-      //                                  relro_memsz   load_memsz
-      //
-      //       ----------------------------------------------------------------
-      //               |         PAGE        |         PAGE         |
-      //       ----------------------------------------------------------------
-      //                                     |       Potential      |
-      //                                     |----- Extended RO ----|
-      //                                     |      Protection      |
-      //
-      // If the check below uses  page aligned mem sizes it will cause incorrect write
-      // protection of the 3K RW part of the LOAD segment containing the GNU_RELRO.
-      if (relro_phdr->p_memsz < phdr->p_memsz) {
-        return;
-      }
-
-      ElfW(Addr) p_memsz = phdr->p_memsz;
-      ElfW(Addr) p_filesz = phdr->p_filesz;
-
-      // Attempt extending the VMA (mprotect range). Without extending the range,
-      // mprotect will only RO protect a part of the extended RW LOAD segment, which
-      // will leave an extra split RW VMA (the gap).
-      _extend_load_segment_vma(phdr_table, phdr_count, index, &p_memsz, &p_filesz,
-                               should_pad_segments);
-
-      *seg_page_end = page_end(phdr->p_vaddr + p_memsz + load_bias);
-      return;
-    }
-  }
-}
-
 /* Used internally by phdr_table_protect_gnu_relro and
  * phdr_table_unprotect_gnu_relro.
  */
 static int _phdr_table_set_gnu_relro_prot(const ElfW(Phdr)* phdr_table, size_t phdr_count,
-                                          ElfW(Addr) load_bias, int prot_flags,
-                                          bool should_pad_segments) {
+                                          ElfW(Addr) load_bias, int prot_flags) {
   const ElfW(Phdr)* phdr = phdr_table;
   const ElfW(Phdr)* phdr_limit = phdr + phdr_count;
 
@@ -1101,8 +1041,6 @@ static int _phdr_table_set_gnu_relro_prot(const ElfW(Phdr)* phdr_table, size_t p
     //       that it starts on a page boundary.
     ElfW(Addr) seg_page_start = page_start(phdr->p_vaddr) + load_bias;
     ElfW(Addr) seg_page_end = page_end(phdr->p_vaddr + phdr->p_memsz) + load_bias;
-    _extend_gnu_relro_prot_end(phdr, phdr_table, phdr_count, load_bias, &seg_page_end,
-                               should_pad_segments);
 
     int ret = mprotect(reinterpret_cast<void*>(seg_page_start),
                        seg_page_end - seg_page_start,
@@ -1127,14 +1065,12 @@ static int _phdr_table_set_gnu_relro_prot(const ElfW(Phdr)* phdr_table, size_t p
  *   phdr_table  -> program header table
  *   phdr_count  -> number of entries in tables
  *   load_bias   -> load bias
- *   should_pad_segments -> Were segments extended to avoid gaps in the memory map
  * Return:
  *   0 on success, -1 on failure (error code in errno).
  */
-int phdr_table_protect_gnu_relro(const ElfW(Phdr)* phdr_table, size_t phdr_count,
-                                 ElfW(Addr) load_bias, bool should_pad_segments) {
-  return _phdr_table_set_gnu_relro_prot(phdr_table, phdr_count, load_bias, PROT_READ,
-                                        should_pad_segments);
+int phdr_table_protect_gnu_relro(const ElfW(Phdr)* phdr_table,
+                                 size_t phdr_count, ElfW(Addr) load_bias) {
+  return _phdr_table_set_gnu_relro_prot(phdr_table, phdr_count, load_bias, PROT_READ);
 }
 
 /* Serialize the GNU relro segments to the given file descriptor. This can be
