@@ -542,7 +542,7 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
       errno = EINVAL;
       return false;
     }
-    *reinterpret_cast<bool*>(arg) = atomic_load(&__libc_globals->memtag_stack);
+    *reinterpret_cast<bool*>(arg) = atomic_load(&__libc_memtag_stack);
     return true;
   }
   if (opcode == M_GET_DECAY_TIME_ENABLED) {
