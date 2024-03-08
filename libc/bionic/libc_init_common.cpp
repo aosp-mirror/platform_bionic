@@ -57,6 +57,7 @@ extern "C" void scudo_malloc_set_zero_contents(int);
 extern "C" void scudo_malloc_set_pattern_fill_contents(int);
 
 __LIBC_HIDDEN__ constinit WriteProtected<libc_globals> __libc_globals;
+__LIBC_HIDDEN__ constinit _Atomic(bool) __libc_memtag_stack;
 
 // Not public, but well-known in the BSDs.
 __BIONIC_WEAK_VARIABLE_FOR_NATIVE_BRIDGE

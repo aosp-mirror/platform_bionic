@@ -58,7 +58,7 @@ void SetDefaultHeapTaggingLevel() {
       case M_HEAP_TAGGING_LEVEL_SYNC:
       case M_HEAP_TAGGING_LEVEL_ASYNC:
         atomic_store(&globals->memtag, true);
-        atomic_store(&globals->memtag_stack, __libc_shared_globals()->initial_memtag_stack);
+        atomic_store(&__libc_memtag_stack, __libc_shared_globals()->initial_memtag_stack);
         break;
       default:
         break;
@@ -113,7 +113,7 @@ bool SetHeapTaggingLevel(HeapTaggingLevel tag_level) {
           // tagged and checks no longer happen.
           globals->heap_pointer_tag = static_cast<uintptr_t>(0xffull << UNTAG_SHIFT);
         }
-        atomic_store(&globals->memtag_stack, false);
+        atomic_store(&__libc_memtag_stack, false);
         atomic_store(&globals->memtag, false);
       });
 
@@ -194,7 +194,7 @@ static constexpr size_t kUntagLimit = 128 * 1024 * 1024;
 extern "C" __LIBC_HIDDEN__ __attribute__((no_sanitize("memtag"))) void memtag_handle_longjmp(
     void* sp_dst __unused) {
 #ifdef __aarch64__
-  if (__libc_globals->memtag_stack) {
+  if (atomic_load(&__libc_memtag_stack)) {
     void* sp = __builtin_frame_address(0);
     size_t distance = reinterpret_cast<uintptr_t>(sp_dst) - reinterpret_cast<uintptr_t>(sp);
     if (distance > kUntagLimit) {

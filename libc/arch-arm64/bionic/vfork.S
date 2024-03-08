@@ -28,7 +28,6 @@
 
 #include <platform/bionic/tls_defines.h>
 #include <private/bionic_asm.h>
-#include <private/bionic_asm_offsets.h>
 #include <asm/signal.h>
 #include <linux/sched.h>
 
@@ -58,8 +57,8 @@ ENTRY_WEAK_FOR_NATIVE_BRIDGE(vfork)
     // [1] https://cs.android.com/android/platform/superproject/+/master:system/extras/simpleperf/app_api/cpp/simpleperf.cpp;drc=788fa4183441f4977ddbd5a055e42a7fe7691d21;l=308
 #if !__has_feature(hwaddress_sanitizer)
     // if (!__libc_globals->memtag_stack) x0 |= CLONE_VM | CLONE_VFORK;
-    adrp    x1, __libc_globals + OFFSETOF_libc_globals_memtag_stack
-    ldrb    w1, [x1, :lo12:__libc_globals + OFFSETOF_libc_globals_memtag_stack]
+    adrp    x1, __libc_memtag_stack
+    ldrb    w1, [x1, :lo12:__libc_memtag_stack]
     cbnz    w1, 1f
     orr     x0, x0, #CLONE_VM
     orr     x0, x0, #CLONE_VFORK
