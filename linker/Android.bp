@@ -116,7 +116,6 @@ cc_defaults {
         "libziparchive",
         "libbase",
         "libz",
-        "libprocinfo", // For procinfo::MappedFileSize()
 
         "libasync_safe",
 
@@ -574,7 +573,6 @@ cc_test {
         "libasync_safe",
         "libbase",
         "liblog_for_runtime_apex",
-        "libprocinfo", // For procinfo::MappedFileSize()
     ],
 
     data_libs: [
