@@ -58,7 +58,7 @@ cc_defaults {
         "stdio_benchmark.cpp",
         "stdlib_benchmark.cpp",
         "string_benchmark.cpp",
-        "syscall_mmap_benchmark.cpp",
+        "syscall_mm_benchmark.cpp",
         "time_benchmark.cpp",
         "unistd_benchmark.cpp",
         "wctype_benchmark.cpp",
