@@ -49,4 +49,72 @@
   <iterations>10</iterations>
   <args>AT_MULTI_PAGE_SIZES</args>
 </fn>
+<fn>
+  <name>BM_syscall_mmap_anon_mmap_only</name>
+  <iterations>10</iterations>
+  <args>AT_MULTI_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mmap_anon_munmap_only</name>
+  <iterations>10</iterations>
+  <args>AT_MULTI_PAGE_SIZES</args>
+</fn>
 
+<!-- madvise tests -->
+<fn>
+  <name>BM_syscall_mmap_anon_madvise_dontneed</name>
+  <iterations>10</iterations>
+  <args>AT_MULTI_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mmap_anon_madvise_pageout</name>
+  <iterations>10</iterations>
+  <args>AT_MULTI_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mmap_anon_madvise_free</name>
+  <iterations>10</iterations>
+  <args>AT_MULTI_PAGE_SIZES</args>
+</fn>
+
+<!-- mprotect tests -->
+<fn>
+  <name>BM_syscall_mmap_anon_mprotect_rw_to_rd</name>
+  <iterations>10</iterations>
+  <args>AT_All_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mmap_anon_mprotect_rw_to_none</name>
+  <iterations>10</iterations>
+  <args>AT_All_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mmap_anon_mprotect_rd_to_none</name>
+  <iterations>10</iterations>
+  <args>AT_All_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mmap_file_mprotect_rw_to_rd</name>
+  <iterations>10</iterations>
+  <args>AT_All_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mmap_file_mprotect_rw_to_none</name>
+  <iterations>10</iterations>
+  <args>AT_All_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mmap_file_mprotect_none_to_rw</name>
+  <iterations>10</iterations>
+  <args>AT_All_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mmap_file_mprotect_none_to_rd</name>
+  <iterations>10</iterations>
+  <args>AT_All_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mmap_file_mprotect_rd_to_none</name>
+  <iterations>10</iterations>
+  <args>AT_All_PAGE_SIZES</args>
+</fn>
