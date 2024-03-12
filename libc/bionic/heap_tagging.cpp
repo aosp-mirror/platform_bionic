@@ -192,17 +192,29 @@ static constexpr size_t kUntagLimit = 128 * 1024 * 1024;
 #endif  // __aarch64__
 
 extern "C" __LIBC_HIDDEN__ __attribute__((no_sanitize("memtag"))) void memtag_handle_longjmp(
-    void* sp_dst __unused) {
+    void* sp_dst __unused, void* sp_src __unused) {
+  // A usual longjmp looks like this, where sp_dst was the LR in the call to setlongjmp (i.e.
+  // the SP of the frame calling setlongjmp).
+  // ┌─────────────────────┐                  │
+  // │                     │                  │
+  // ├─────────────────────┤◄──────── sp_dst  │ stack
+  // │         ...         │                  │ grows
+  // ├─────────────────────┤                  │ to lower
+  // │         ...         │                  │ addresses
+  // ├─────────────────────┤◄──────── sp_src  │
+  // │siglongjmp           │                  │
+  // ├─────────────────────┤                  │
+  // │memtag_handle_longjmp│                  │
+  // └─────────────────────┘                  ▼
 #ifdef __aarch64__
   if (__libc_globals->memtag_stack) {
-    void* sp = __builtin_frame_address(0);
-    size_t distance = reinterpret_cast<uintptr_t>(sp_dst) - reinterpret_cast<uintptr_t>(sp);
+    size_t distance = reinterpret_cast<uintptr_t>(sp_dst) - reinterpret_cast<uintptr_t>(sp_src);
     if (distance > kUntagLimit) {
       async_safe_fatal(
-          "memtag_handle_longjmp: stack adjustment too large! %p -> %p, distance %zx > %zx\n", sp,
-          sp_dst, distance, kUntagLimit);
+          "memtag_handle_longjmp: stack adjustment too large! %p -> %p, distance %zx > %zx\n",
+          sp_src, sp_dst, distance, kUntagLimit);
     } else {
-      untag_memory(sp, sp_dst);
+      untag_memory(sp_src, sp_dst);
     }
   }
 #endif  // __aarch64__
