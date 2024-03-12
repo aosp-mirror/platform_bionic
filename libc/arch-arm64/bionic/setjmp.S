@@ -201,6 +201,7 @@ ENTRY_WEAK_FOR_NATIVE_BRIDGE(siglongjmp)
   bic x2, x2, #1
   ldr x0, [x0, #(_JB_X30_SP  * 8 + 8)]
   eor x0, x0, x2
+  add x1, sp, #16
   bl memtag_handle_longjmp
 
   mov x1, x19 // Restore 'value'.
