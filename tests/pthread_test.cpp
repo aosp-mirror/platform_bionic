@@ -1423,10 +1423,11 @@ static int g_atfork_child_calls = 0;
 static void AtForkChild1() { g_atfork_child_calls = (g_atfork_child_calls * 10) + 1; }
 static void AtForkChild2() { g_atfork_child_calls = (g_atfork_child_calls * 10) + 2; }
 
-TEST(pthread, pthread_atfork_smoke) {
+TEST(pthread, pthread_atfork_smoke_fork) {
   ASSERT_EQ(0, pthread_atfork(AtForkPrepare1, AtForkParent1, AtForkChild1));
   ASSERT_EQ(0, pthread_atfork(AtForkPrepare2, AtForkParent2, AtForkChild2));
 
+  g_atfork_prepare_calls = g_atfork_parent_calls = g_atfork_child_calls = 0;
   pid_t pid = fork();
   ASSERT_NE(-1, pid) << strerror(errno);
 
@@ -1440,6 +1441,44 @@ TEST(pthread, pthread_atfork_smoke) {
   // Prepare calls are made in the reverse order.
   ASSERT_EQ(21, g_atfork_prepare_calls);
   AssertChildExited(pid, 0);
+}
+
+TEST(pthread, pthread_atfork_smoke_vfork) {
+  ASSERT_EQ(0, pthread_atfork(AtForkPrepare1, AtForkParent1, AtForkChild1));
+  ASSERT_EQ(0, pthread_atfork(AtForkPrepare2, AtForkParent2, AtForkChild2));
+
+  g_atfork_prepare_calls = g_atfork_parent_calls = g_atfork_child_calls = 0;
+  pid_t pid = vfork();
+  ASSERT_NE(-1, pid) << strerror(errno);
+
+  // atfork handlers are not called.
+  if (pid == 0) {
+    ASSERT_EQ(0, g_atfork_child_calls);
+    _exit(0);
+  }
+  ASSERT_EQ(0, g_atfork_parent_calls);
+  ASSERT_EQ(0, g_atfork_prepare_calls);
+  AssertChildExited(pid, 0);
+}
+
+TEST(pthread, pthread_atfork_smoke__Fork) {
+#if defined(__BIONIC__)
+  ASSERT_EQ(0, pthread_atfork(AtForkPrepare1, AtForkParent1, AtForkChild1));
+  ASSERT_EQ(0, pthread_atfork(AtForkPrepare2, AtForkParent2, AtForkChild2));
+
+  g_atfork_prepare_calls = g_atfork_parent_calls = g_atfork_child_calls = 0;
+  pid_t pid = _Fork();
+  ASSERT_NE(-1, pid) << strerror(errno);
+
+  // atfork handlers are not called.
+  if (pid == 0) {
+    ASSERT_EQ(0, g_atfork_child_calls);
+    _exit(0);
+  }
+  ASSERT_EQ(0, g_atfork_parent_calls);
+  ASSERT_EQ(0, g_atfork_prepare_calls);
+  AssertChildExited(pid, 0);
+#endif
 }
 
 TEST(pthread, pthread_attr_getscope) {

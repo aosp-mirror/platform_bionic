@@ -1592,6 +1592,7 @@ LIBC_V { # introduced=VanillaIceCream
     android_crash_detail_replace_data;
     epoll_pwait2;
     epoll_pwait2_64;
+    _Fork;
     localtime_rz;
     mbsrtowcs_l;
     mktime_z;
