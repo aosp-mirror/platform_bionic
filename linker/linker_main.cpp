@@ -201,7 +201,6 @@ struct ExecutableInfo {
   const ElfW(Phdr)* phdr;
   size_t phdr_count;
   ElfW(Addr) entry_point;
-  bool should_pad_segments;
 };
 
 static ExecutableInfo get_executable_info(const char* arg_path) {
@@ -294,7 +293,6 @@ static ExecutableInfo load_executable(const char* orig_path) {
   result.phdr = elf_reader.loaded_phdr();
   result.phdr_count = elf_reader.phdr_count();
   result.entry_point = elf_reader.entry_point();
-  result.should_pad_segments = elf_reader.should_pad_segments();
   return result;
 }
 
@@ -368,7 +366,6 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   somain = si;
   si->phdr = exe_info.phdr;
   si->phnum = exe_info.phdr_count;
-  si->set_should_pad_segments(exe_info.should_pad_segments);
   get_elf_base_from_phdr(si->phdr, si->phnum, &si->base, &si->load_bias);
   si->size = phdr_table_get_load_size(si->phdr, si->phnum);
   si->dynamic = nullptr;
@@ -402,7 +399,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
     auto note_gnu_property = GnuPropertySection(somain);
     if (note_gnu_property.IsBTICompatible() &&
         (phdr_table_protect_segments(somain->phdr, somain->phnum, somain->load_bias,
-                                     somain->should_pad_segments(), &note_gnu_property) < 0)) {
+                                     &note_gnu_property) < 0)) {
       __linker_error("error: can't protect segments for \"%s\": %s", exe_info.path.c_str(),
                      strerror(errno));
     }
