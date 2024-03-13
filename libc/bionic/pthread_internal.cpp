@@ -179,10 +179,8 @@ void __find_main_stack_limits(uintptr_t* low, uintptr_t* high) {
 void __pthread_internal_remap_stack_with_mte() {
 #if defined(__aarch64__)
   // If process doesn't have MTE enabled, we don't need to do anything.
-  if (!__libc_globals->memtag) return;
-  bool prev = true;
-  __libc_globals.mutate(
-      [&prev](libc_globals* globals) { prev = atomic_exchange(&globals->memtag_stack, true); });
+  if (!atomic_load(&__libc_globals->memtag)) return;
+  bool prev = atomic_exchange(&__libc_memtag_stack, true);
   if (prev) return;
   uintptr_t lo, hi;
   __find_main_stack_limits(&lo, &hi);
