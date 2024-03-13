@@ -49,6 +49,33 @@
   <iterations>10</iterations>
   <args>AT_MULTI_PAGE_SIZES</args>
 </fn>
+<fn>
+  <name>BM_syscall_mmap_anon_mmap_only</name>
+  <iterations>10</iterations>
+  <args>AT_MULTI_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mmap_anon_munmap_only</name>
+  <iterations>10</iterations>
+  <args>AT_MULTI_PAGE_SIZES</args>
+</fn>
+
+<!-- madvise tests -->
+<fn>
+  <name>BM_syscall_mmap_anon_madvise_dontneed</name>
+  <iterations>10</iterations>
+  <args>AT_MULTI_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mmap_anon_madvise_pageout</name>
+  <iterations>10</iterations>
+  <args>AT_MULTI_PAGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_syscall_mmap_anon_madvise_free</name>
+  <iterations>10</iterations>
+  <args>AT_MULTI_PAGE_SIZES</args>
+</fn>
 
 <!-- mprotect tests -->
 <fn>
