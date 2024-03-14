@@ -160,7 +160,7 @@ TEST(cfi_test, invalid) {
 // cfi_test_helper exports __cfi_check, which triggers CFI initialization at startup.
 TEST(cfi_test, early_init) {
 #if defined(__BIONIC__)
-  std::string helper = GetTestlibRoot() + "/cfi_test_helper";
+  std::string helper = GetTestLibRoot() + "/cfi_test_helper";
   chmod(helper.c_str(), 0755); // TODO: "x" lost in CTS, b/34945607
   ExecTestHelper eth;
   eth.SetArgs({ helper.c_str(), nullptr });
@@ -172,7 +172,7 @@ TEST(cfi_test, early_init) {
 // at startup.
 TEST(cfi_test, early_init2) {
 #if defined(__BIONIC__)
-  std::string helper = GetTestlibRoot() + "/cfi_test_helper2";
+  std::string helper = GetTestLibRoot() + "/cfi_test_helper2";
   chmod(helper.c_str(), 0755); // TODO: "x" lost in CTS, b/34945607
   ExecTestHelper eth;
   eth.SetArgs({ helper.c_str(), nullptr });
