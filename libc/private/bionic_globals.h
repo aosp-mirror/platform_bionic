@@ -38,7 +38,6 @@
 
 #include "private/WriteProtected.h"
 #include "private/bionic_allocator.h"
-#include "private/bionic_asm_offsets.h"
 #include "private/bionic_elf_tls.h"
 #include "private/bionic_fdsan.h"
 #include "private/bionic_malloc_dispatch.h"
@@ -48,7 +47,6 @@ struct libc_globals {
   vdso_entry vdso[VDSO_END];
   long setjmp_cookie;
   uintptr_t heap_pointer_tag;
-  _Atomic(bool) memtag_stack;
   _Atomic(bool) decay_time_enabled;
   _Atomic(bool) memtag;
 
@@ -77,11 +75,11 @@ struct memtag_dynamic_entries_t {
   bool memtag_stack;
 };
 
-#ifdef __aarch64__
-static_assert(OFFSETOF_libc_globals_memtag_stack == offsetof(libc_globals, memtag_stack));
-#endif
-
 __LIBC_HIDDEN__ extern WriteProtected<libc_globals> __libc_globals;
+// This cannot be in __libc_globals, because we cannot access the
+// WriteProtected in a thread-safe way.
+// See b/328256432.
+__LIBC_HIDDEN__ extern _Atomic(bool) __libc_memtag_stack;
 
 struct abort_msg_t;
 struct crash_detail_page_t;
