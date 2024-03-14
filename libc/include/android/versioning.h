@@ -76,3 +76,9 @@
 #define __VERSIONER_FORTIFY_INLINE
 
 #endif  // defined(__BIONIC_VERSIONER)
+
+// Vendor modules do not follow SDK versioning. Ignore NDK guards for vendor modules.
+#if defined(__ANDROID_VENDOR__)
+#undef __BIONIC_AVAILABILITY
+#define __BIONIC_AVAILABILITY(x)
+#endif // defined(__ANDROID_VENDOR__)
