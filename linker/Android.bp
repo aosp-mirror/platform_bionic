@@ -573,6 +573,7 @@ cc_test {
         "libasync_safe",
         "libbase",
         "liblog_for_runtime_apex",
+        "libprocinfo", // For procinfo::MappedFileSize()
     ],
 
     data_libs: [
