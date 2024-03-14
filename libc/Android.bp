@@ -2061,11 +2061,10 @@ cc_defaults {
 
 cc_object {
     name: "crtbrand",
-    // crtbrand.c needs <stdint.h> and a #define for the platform SDK version.
     local_include_dirs: [
-        "include",
         "private", // crtbrand.S depends on private/bionic_asm_note.h
     ],
+    // crtbrand.S needs to know the platform SDK version.
     product_variables: {
         platform_sdk_version: {
             asflags: ["-DPLATFORM_SDK_VERSION=%d"],
@@ -2092,7 +2091,6 @@ cc_object {
 cc_object {
     name: "crtend_so",
     local_include_dirs: [
-        "include",
         "private", // crtend_so.S depends on private/bionic_asm_arm64.h
     ],
     srcs: ["arch-common/bionic/crtend_so.S"],
@@ -2146,7 +2144,6 @@ cc_object {
     // name clash between gcc and bionic.
     name: "crtend_android",
     local_include_dirs: [
-        "include",
         "private", // crtend.S depends on private/bionic_asm_arm64.h
     ],
     srcs: ["arch-common/bionic/crtend.S"],
@@ -2157,7 +2154,6 @@ cc_object {
 cc_object {
     name: "crt_pad_segment",
     local_include_dirs: [
-        "include",
         "private", // crt_pad_segment.S depends on private/bionic_asm_note.h
     ],
     srcs: ["arch-common/bionic/crt_pad_segment.S"],
