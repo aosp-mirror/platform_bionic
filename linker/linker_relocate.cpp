@@ -419,6 +419,7 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
         } else {
           CHECK(found_in->get_tls() != nullptr); // We rejected a missing TLS segment above.
           module_id = found_in->get_tls()->module_id;
+          CHECK(module_id != kTlsUninitializedModuleId);
         }
         trace_reloc("RELO TLS_DTPMOD %16p <- %zu %s",
                     rel_target, module_id, sym_name);
