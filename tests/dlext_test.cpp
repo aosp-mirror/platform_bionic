@@ -31,6 +31,7 @@
 #include <android-base/test_utils.h>
 
 #include <sys/mman.h>
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/vfs.h>
 #include <sys/wait.h>
@@ -2046,6 +2047,11 @@ TEST(dlext, ns_anonymous) {
                                                              -1, 0));
   ASSERT_TRUE(reinterpret_cast<void*>(reserved_addr) != MAP_FAILED);
 
+  struct stat file_stat;
+  int ret = TEMP_FAILURE_RETRY(stat(private_library_absolute_path.c_str(), &file_stat));
+  ASSERT_EQ(ret, 0) << "Failed to stat library";
+  size_t file_size = file_stat.st_size;
+
   for (const auto& rec : maps_to_copy) {
     uintptr_t offset = rec.addr_start - addr_start;
     size_t size = rec.addr_end - rec.addr_start;
@@ -2053,7 +2059,11 @@ TEST(dlext, ns_anonymous) {
     void* map = mmap(addr, size, PROT_READ | PROT_WRITE,
                      MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
     ASSERT_TRUE(map != MAP_FAILED);
-    memcpy(map, reinterpret_cast<void*>(rec.addr_start), size);
+    // Attempting the below memcpy from a portion of the map that is off the end of
+    // the backing file will cause the kernel to throw a SIGBUS
+    size_t _size = ::android::procinfo::MappedFileSize(rec.addr_start, rec.addr_end,
+                                                       rec.offset, file_size);
+    memcpy(map, reinterpret_cast<void*>(rec.addr_start), _size);
     mprotect(map, size, rec.perms);
   }
 
