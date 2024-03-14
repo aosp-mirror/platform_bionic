@@ -523,39 +523,39 @@ std::map<std::string, args_vector_t> GetShorthand() {
 
   int page_sz = getpagesize();
   std::vector<int> sub_page_sizes = {page_sz / 2, page_sz / 4, page_sz / 8};
-  std::vector<int> multi_page_sizes = {page_sz, page_sz * 2, page_sz * 3, page_sz * 10,
-                                       page_sz * 100};
+  std::vector<int> multi_page_sizes = {page_sz,      page_sz * 2,  page_sz * 3,  page_sz * 10,
+                                       page_sz * 25, page_sz * 50, page_sz * 75, page_sz * 100};
   std::vector<int> all_page_sizes(sub_page_sizes);
   all_page_sizes.insert(all_page_sizes.end(), multi_page_sizes.begin(), multi_page_sizes.end());
 
-  std::map<std::string, args_vector_t> args_shorthand {
-    {"AT_COMMON_SIZES", GetArgs(kCommonSizes)},
-    {"AT_SMALL_SIZES", GetArgs(kSmallSizes)},
-    {"AT_MEDIUM_SIZES", GetArgs(kMediumSizes)},
-    {"AT_LARGE_SIZES", GetArgs(kLargeSizes)},
-    {"AT_ALL_SIZES", GetArgs(all_sizes)},
-    {"AT_SUB_PAGE_SIZES", GetArgs(sub_page_sizes)},
-    {"AT_MULTI_PAGE_SIZES", GetArgs(multi_page_sizes)},
-    {"AT_All_PAGE_SIZES", GetArgs(all_page_sizes)},
+  std::map<std::string, args_vector_t> args_shorthand{
+      {"AT_COMMON_SIZES", GetArgs(kCommonSizes)},
+      {"AT_SMALL_SIZES", GetArgs(kSmallSizes)},
+      {"AT_MEDIUM_SIZES", GetArgs(kMediumSizes)},
+      {"AT_LARGE_SIZES", GetArgs(kLargeSizes)},
+      {"AT_ALL_SIZES", GetArgs(all_sizes)},
+      {"AT_SUB_PAGE_SIZES", GetArgs(sub_page_sizes)},
+      {"AT_MULTI_PAGE_SIZES", GetArgs(multi_page_sizes)},
+      {"AT_ALL_PAGE_SIZES", GetArgs(all_page_sizes)},
 
-    {"AT_ALIGNED_ONEBUF", GetArgs(kCommonSizes, 0)},
-    {"AT_ALIGNED_ONEBUF_SMALL", GetArgs(kSmallSizes, 0)},
-    {"AT_ALIGNED_ONEBUF_MEDIUM", GetArgs(kMediumSizes, 0)},
-    {"AT_ALIGNED_ONEBUF_LARGE", GetArgs(kLargeSizes, 0)},
-    {"AT_ALIGNED_ONEBUF_ALL", GetArgs(all_sizes, 0)},
+      {"AT_ALIGNED_ONEBUF", GetArgs(kCommonSizes, 0)},
+      {"AT_ALIGNED_ONEBUF_SMALL", GetArgs(kSmallSizes, 0)},
+      {"AT_ALIGNED_ONEBUF_MEDIUM", GetArgs(kMediumSizes, 0)},
+      {"AT_ALIGNED_ONEBUF_LARGE", GetArgs(kLargeSizes, 0)},
+      {"AT_ALIGNED_ONEBUF_ALL", GetArgs(all_sizes, 0)},
 
-    {"AT_ALIGNED_TWOBUF", GetArgs(kCommonSizes, 0, 0)},
-    {"AT_ALIGNED_TWOBUF_SMALL", GetArgs(kSmallSizes, 0, 0)},
-    {"AT_ALIGNED_TWOBUF_MEDIUM", GetArgs(kMediumSizes, 0, 0)},
-    {"AT_ALIGNED_TWOBUF_LARGE", GetArgs(kLargeSizes, 0, 0)},
-    {"AT_ALIGNED_TWOBUF_ALL", GetArgs(all_sizes, 0, 0)},
+      {"AT_ALIGNED_TWOBUF", GetArgs(kCommonSizes, 0, 0)},
+      {"AT_ALIGNED_TWOBUF_SMALL", GetArgs(kSmallSizes, 0, 0)},
+      {"AT_ALIGNED_TWOBUF_MEDIUM", GetArgs(kMediumSizes, 0, 0)},
+      {"AT_ALIGNED_TWOBUF_LARGE", GetArgs(kLargeSizes, 0, 0)},
+      {"AT_ALIGNED_TWOBUF_ALL", GetArgs(all_sizes, 0, 0)},
 
-    // Do not exceed 512. that is about the largest number of properties
-    // that can be created with the current property area size.
-    {"NUM_PROPS", args_vector_t{ {1}, {4}, {16}, {64}, {128}, {256}, {512} }},
+      // Do not exceed 512. that is about the largest number of properties
+      // that can be created with the current property area size.
+      {"NUM_PROPS", args_vector_t{{1}, {4}, {16}, {64}, {128}, {256}, {512}}},
 
-    {"MATH_COMMON", args_vector_t{ {0}, {1}, {2}, {3} }},
-    {"MATH_SINCOS_COMMON", args_vector_t{ {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7} }},
+      {"MATH_COMMON", args_vector_t{{0}, {1}, {2}, {3}}},
+      {"MATH_SINCOS_COMMON", args_vector_t{{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}}},
   };
 
   args_vector_t args_onebuf;
