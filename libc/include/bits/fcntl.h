@@ -43,6 +43,6 @@ __BEGIN_DECLS
  *
  * The return value depends on the operation.
  */
-int fcntl(int __fd, int __cmd, ...);
+int fcntl(int __fd, int __op, ...);
 
 __END_DECLS

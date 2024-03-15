@@ -58,6 +58,7 @@ class ElfReader {
   const char* get_string(ElfW(Word) index) const;
   bool is_mapped_by_caller() const { return mapped_by_caller_; }
   ElfW(Addr) entry_point() const { return header_.e_entry + load_bias_; }
+  bool should_pad_segments() const { return should_pad_segments_; }
 
  private:
   bool ReadElfHeader();
@@ -65,6 +66,7 @@ class ElfReader {
   bool ReadProgramHeaders();
   bool ReadSectionHeaders();
   bool ReadDynamicSection();
+  bool ReadPadSegmentNote();
   bool ReserveAddressSpace(address_space_params* address_space);
   bool LoadSegments();
   bool FindPhdr();
@@ -113,6 +115,9 @@ class ElfReader {
   // Is map owned by the caller
   bool mapped_by_caller_;
 
+  // Pad gaps between segments when memory mapping?
+  bool should_pad_segments_ = false;
+
   // Only used by AArch64 at the moment.
   GnuPropertySection note_gnu_property_ __unused;
 };
@@ -123,13 +128,14 @@ size_t phdr_table_get_load_size(const ElfW(Phdr)* phdr_table, size_t phdr_count,
 size_t phdr_table_get_maximum_alignment(const ElfW(Phdr)* phdr_table, size_t phdr_count);
 
 int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table, size_t phdr_count,
-                                ElfW(Addr) load_bias, const GnuPropertySection* prop = nullptr);
+                                ElfW(Addr) load_bias, bool should_pad_segments,
+                                const GnuPropertySection* prop = nullptr);
 
 int phdr_table_unprotect_segments(const ElfW(Phdr)* phdr_table, size_t phdr_count,
-                                  ElfW(Addr) load_bias);
+                                  ElfW(Addr) load_bias, bool should_pad_segments);
 
 int phdr_table_protect_gnu_relro(const ElfW(Phdr)* phdr_table, size_t phdr_count,
-                                 ElfW(Addr) load_bias);
+                                 ElfW(Addr) load_bias, bool should_pad_segments);
 
 int phdr_table_serialize_gnu_relro(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                    ElfW(Addr) load_bias, int fd, size_t* file_offset);

@@ -609,6 +609,8 @@ int getpwuid_r(uid_t uid, passwd* pwd, char* buf, size_t byte_count, passwd** re
 }
 
 // All users are in just one group, the one passed in.
+// In practice, id(1) will show you in a lot more groups, because adbd
+// adds you to a lot of supplementary groups when dropping privileges.
 int getgrouplist(const char* /*user*/, gid_t group, gid_t* groups, int* ngroups) {
   if (*ngroups < 1) {
     *ngroups = 1;
@@ -616,6 +618,12 @@ int getgrouplist(const char* /*user*/, gid_t group, gid_t* groups, int* ngroups)
   }
   groups[0] = group;
   return (*ngroups = 1);
+}
+
+// See getgrouplist() to understand why we don't call it.
+int initgroups(const char* /*user*/, gid_t group) {
+  gid_t groups[] = {group};
+  return setgroups(1, groups);
 }
 
 char* getlogin() { // NOLINT: implementing bad function.

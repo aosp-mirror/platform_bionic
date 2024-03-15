@@ -40,7 +40,7 @@ __BEGIN_DECLS
 /**
  * [ioctl(2)](http://man7.org/linux/man-pages/man2/ioctl.2.html) operates on device files.
  */
-int ioctl(int __fd, int __request, ...);
+int ioctl(int __fd, int __op, ...);
 
 /*
  * Work around unsigned -> signed conversion warnings: many common ioctl
@@ -57,7 +57,7 @@ int ioctl(int __fd, int __request, ...);
  */
 #if !defined(BIONIC_IOCTL_NO_SIGNEDNESS_OVERLOAD)
 /* enable_if(1) just exists to break overloading ties. */
-int ioctl(int __fd, unsigned __request, ...) __overloadable __enable_if(1, "") __RENAME(ioctl);
+int ioctl(int __fd, unsigned __op, ...) __overloadable __enable_if(1, "") __RENAME(ioctl);
 #endif
 
 __END_DECLS

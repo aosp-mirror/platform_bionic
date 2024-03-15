@@ -1586,8 +1586,13 @@ LIBC_U { # introduced=UpsideDownCake
 
 LIBC_V { # introduced=VanillaIceCream
   global:
+    android_crash_detail_register;
+    android_crash_detail_unregister;
+    android_crash_detail_replace_name;
+    android_crash_detail_replace_data;
     epoll_pwait2;
     epoll_pwait2_64;
+    _Fork;
     localtime_rz;
     mbsrtowcs_l;
     mktime_z;

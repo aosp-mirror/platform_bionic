@@ -19,10 +19,10 @@
 
 #include <string>
 
-std::string GetTestlibRoot();
+std::string GetTestLibRoot();
 
 inline std::string GetPrebuiltElfDir() {
-  return GetTestlibRoot() + "/prebuilt-elf-files";
+  return GetTestLibRoot() + "/prebuilt-elf-files";
 }
 
 #endif  // _BIONIC_TESTS_GTEST_GLOBALS_H
