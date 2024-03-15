@@ -421,6 +421,7 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
         } else {
           CHECK(found_in->get_tls() != nullptr); // We rejected a missing TLS segment above.
           module_id = found_in->get_tls()->module_id;
+          CHECK(module_id != kTlsUninitializedModuleId);
         }
         trace_reloc("RELO TLS_DTPMOD %16p <- %zu %s",
                     rel_target, module_id, sym_name);
@@ -588,6 +589,11 @@ static bool packed_relocate(Relocator& relocator, Args ...args) {
 }
 
 bool soinfo::relocate(const SymbolLookupList& lookup_list) {
+  // For ldd, don't apply relocations because TLS segments are not registered.
+  // We don't care whether ldd diagnoses unresolved symbols.
+  if (g_is_ldd) {
+    return true;
+  }
 
   VersionTracker version_tracker;
 

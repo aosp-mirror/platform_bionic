@@ -31,14 +31,15 @@
 #include <vector>
 
 #include "async_safe/CHECK.h"
+#include "linker_globals.h"
+#include "linker_main.h"
+#include "linker_soinfo.h"
 #include "private/ScopedRWLock.h"
 #include "private/ScopedSignalBlocker.h"
 #include "private/bionic_defs.h"
 #include "private/bionic_elf_tls.h"
 #include "private/bionic_globals.h"
 #include "private/linker_native_bridge.h"
-#include "linker_main.h"
-#include "linker_soinfo.h"
 
 static bool g_static_tls_finished;
 static std::vector<TlsModule> g_tls_modules;
@@ -109,7 +110,11 @@ extern "C" void __linker_reserve_bionic_tls_in_static_tls() {
 void linker_setup_exe_static_tls(const char* progname) {
   soinfo* somain = solist_get_somain();
   StaticTlsLayout& layout = __libc_shared_globals()->static_tls_layout;
-  if (somain->get_tls() == nullptr) {
+
+  // For ldd, don't add the executable's TLS segment to the static TLS layout.
+  // It is likely to trigger the underaligned TLS segment error on arm32/arm64
+  // when the ldd argument is actually a shared object.
+  if (somain->get_tls() == nullptr || g_is_ldd) {
     layout.reserve_exe_segment_and_tcb(nullptr, progname);
   } else {
     register_tls_module(somain, layout.reserve_exe_segment_and_tcb(&somain->get_tls()->segment, progname));
@@ -133,6 +138,11 @@ void linker_finalize_static_tls() {
 }
 
 void register_soinfo_tls(soinfo* si) {
+  // ldd skips registration of the executable's TLS segment above to avoid the
+  // arm32/arm64 underalignment error. For consistency, also skip registration
+  // of TLS segments here, for shared objects.
+  if (g_is_ldd) return;
+
   soinfo_tls* si_tls = si->get_tls();
   if (si_tls == nullptr || si_tls->module_id != kTlsUninitializedModuleId) {
     return;

@@ -496,6 +496,12 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
     }
     si->increment_ref_count();
   }
+
+  // Exit early for ldd. We don't want to run the code that was loaded, so skip
+  // the constructor calls. Skip CFI setup because it would call __cfi_init in
+  // libdl.so.
+  if (g_is_ldd) _exit(EXIT_SUCCESS);
+
 #if defined(__aarch64__)
   // This has to happen after the find_libraries, which will have collected any possible
   // libraries that request memtag_stack in the dynamic section.
@@ -828,8 +834,6 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) 
   g_default_namespace.add_soinfo(solinker);
 
   ElfW(Addr) start_address = linker_main(args, exe_to_load);
-
-  if (g_is_ldd) _exit(EXIT_SUCCESS);
 
   INFO("[ Jumping to _start (%p)... ]", reinterpret_cast<void*>(start_address));
 
