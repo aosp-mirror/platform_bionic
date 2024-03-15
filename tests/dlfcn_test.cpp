@@ -1301,7 +1301,7 @@ TEST(dlfcn, dt_runpath_smoke) {
 }
 
 TEST(dlfcn, dt_runpath_absolute_path) {
-  std::string libpath = GetTestlibRoot() + "/libtest_dt_runpath_d.so";
+  std::string libpath = GetTestLibRoot() + "/libtest_dt_runpath_d.so";
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
 

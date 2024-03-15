@@ -32,7 +32,7 @@
 
 __BEGIN_DECLS
 
-#if !defined(__BIONIC_NO_PAGE_SIZE_MACRO)
+#if !defined(__BIONIC_NO_PAGE_SIZE_MACRO) || defined(__BIONIC_DEPRECATED_PAGE_SIZE_MACRO)
 #define PAGE_SIZE 4096
 #define PAGE_MASK (~(PAGE_SIZE - 1))
 #endif

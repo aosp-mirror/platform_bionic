@@ -107,14 +107,6 @@ static long __pathconf(const struct statfs& s, int name) {
     case _PC_REC_MIN_XFER_SIZE:
       return s.f_bsize;
 
-#if 0
-    case _PC_REC_INCR_XFER_SIZE:
-    case _PC_REC_MAX_XFER_SIZE:
-#endif
-
-    case _PC_SYMLINK_MAX:
-      return -1; /* no limit */
-
     case _PC_CHOWN_RESTRICTED:
       return _POSIX_CHOWN_RESTRICTED;
 
@@ -125,12 +117,15 @@ static long __pathconf(const struct statfs& s, int name) {
       return _POSIX_VDISABLE;
 
     case _PC_ASYNC_IO:
-      return -1;
-
     case _PC_PRIO_IO:
-      return -1;
-
+    case _PC_REC_INCR_XFER_SIZE:
+    case _PC_REC_MAX_XFER_SIZE:
+    case _PC_SYMLINK_MAX:
     case _PC_SYNC_IO:
+      // No API to answer these: the caller will have to "try it and see".
+      // This differs from the next case in not setting errno to EINVAL,
+      // since we did understand the question --- we just don't have a
+      // good answer.
       return -1;
 
     default:

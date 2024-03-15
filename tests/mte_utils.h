@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,34 +25,19 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <grp.h>
-#include <unistd.h>
-#include <stdlib.h>
 
-#define  INIT_GROUPS  2
+#pragma once
 
-int
-initgroups (const char *user, gid_t group)
-{
-    gid_t   groups0[ INIT_GROUPS ];
-    gid_t*  groups    = groups0;
-    int     ret       = -1;
-    int     numgroups = INIT_GROUPS;
+#if defined(__BIONIC__) && defined(__aarch64__)
 
-    if (getgrouplist(user, group, groups, &numgroups) < 0) {
-        groups = malloc(numgroups*sizeof(groups[0]));
-        if (groups == NULL)
-            return -1;
-        if (getgrouplist(user,group,groups,&numgroups) < 0) {
-            goto EXIT;
-        }
-    }
-
-    ret = setgroups(numgroups, groups);
-
-EXIT:
-    if (groups != groups0)
-        free(groups);
-
-    return ret;
+__attribute__((target("mte"))) static bool is_stack_mte_on() {
+  alignas(16) int x = 0;
+  void* p = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(&x) + (1UL << 57));
+  void* p_cpy = p;
+  __builtin_arm_stg(p);
+  p = __builtin_arm_ldg(p);
+  __builtin_arm_stg(&x);
+  return p == p_cpy;
 }
+
+#endif

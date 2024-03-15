@@ -62,9 +62,6 @@ cc_defaults {
 
         // This warning does not provide any benefit to the tests.
         "-Wno-reorder-init-list",
-
-        // For glibc.
-        "-D__STDC_LIMIT_MACROS",
     ],
     header_libs: [
         "libcutils_headers",
@@ -788,6 +785,7 @@ cc_test_library {
     ],
     static_libs: [
         "libbase",
+        "libprocinfo",
     ],
     include_dirs: [
         "bionic/libc",
@@ -837,6 +835,7 @@ cc_defaults {
         "cfi_test_helper",
         "cfi_test_helper2",
         "elftls_dlopen_ie_error_helper",
+        "elftls_dtv_resize_helper",
         "exec_linker_helper",
         "exec_linker_helper_lib",
         "heap_tagging_async_helper",
@@ -939,6 +938,8 @@ cc_defaults {
         "libtest_elftls_dynamic_filler_1",
         "libtest_elftls_dynamic_filler_2",
         "libtest_elftls_dynamic_filler_3",
+        "libtest_elftls_dynamic_filler_4",
+        "libtest_elftls_dynamic_filler_5",
         "libtest_elftls_shared_var",
         "libtest_elftls_shared_var_ie",
         "libtest_elftls_tprel",
@@ -1130,7 +1131,12 @@ cc_test {
     shared_libs: [
         "libbase",
     ],
-    data_libs: ["libtest_simple_memtag_stack"],
+    data_libs: ["libtest_simple_memtag_stack", "libtest_depends_on_simple_memtag_stack"],
+    data_bins: [
+        "testbinary_depends_on_simple_memtag_stack",
+        "testbinary_depends_on_depends_on_simple_memtag_stack",
+        "testbinary_is_stack_mte_after_dlopen"
+    ],
     header_libs: ["bionic_libc_platform_headers"],
     test_suites: ["device-tests"],
 }

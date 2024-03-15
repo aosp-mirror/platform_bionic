@@ -51,7 +51,7 @@ union semun {
   void* _Nullable __pad;
 };
 
-int semctl(int __sem_id, int __sem_num, int __cmd, ...) __INTRODUCED_IN(26);
+int semctl(int __sem_id, int __sem_num, int __op, ...) __INTRODUCED_IN(26);
 int semget(key_t __key, int __sem_count, int __flags) __INTRODUCED_IN(26);
 int semop(int __sem_id, struct sembuf* _Nonnull __ops, size_t __op_count) __INTRODUCED_IN(26);
 

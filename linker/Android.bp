@@ -553,20 +553,33 @@ cc_test {
         "linker_sleb128_test.cpp",
         "linker_utils_test.cpp",
         "linker_gnu_hash_test.cpp",
+        "linker_crt_pad_segment_test.cpp",
 
         // Parts of the linker that we're testing.
+        ":elf_note_sources",
         "linker_block_allocator.cpp",
         "linker_config.cpp",
         "linker_debug.cpp",
         "linker_note_gnu_property.cpp",
         "linker_test_globals.cpp",
         "linker_utils.cpp",
+        "linker_phdr.cpp",
+        "linker_mapped_file_fragment.cpp",
+        "linker_sdk_versions.cpp",
+        "linker_dlwarning.cpp",
     ],
 
     static_libs: [
         "libasync_safe",
         "libbase",
         "liblog_for_runtime_apex",
+        "libprocinfo", // For procinfo::MappedFileSize()
+    ],
+
+    data_libs: [
+        "crt_pad_segment_disabled",
+        "crt_pad_segment_enabled",
+        "no_crt_pad_segment",
     ],
 
     arch: {

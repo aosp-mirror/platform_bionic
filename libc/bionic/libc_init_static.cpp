@@ -51,6 +51,7 @@
 #include "private/bionic_elf_tls.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_tls.h"
+#include "private/elf_note.h"
 #include "pthread_internal.h"
 #include "sys/system_properties.h"
 #include "sysprop_helpers.h"
@@ -157,49 +158,12 @@ static void layout_static_tls(KernelArgumentBlock& args) {
 }
 
 #ifdef __aarch64__
-static bool __get_elf_note(const ElfW(Phdr) * phdr_start, size_t phdr_ct,
-                           const ElfW(Addr) load_bias, unsigned desired_type,
-                           const char* desired_name, const ElfW(Nhdr) * *note_out,
-                           const char** desc_out) {
-  for (size_t i = 0; i < phdr_ct; ++i) {
-    const ElfW(Phdr)* phdr = &phdr_start[i];
-    if (phdr->p_type != PT_NOTE) {
-      continue;
-    }
-    ElfW(Addr) p = load_bias + phdr->p_vaddr;
-    ElfW(Addr) note_end = load_bias + phdr->p_vaddr + phdr->p_memsz;
-    while (p + sizeof(ElfW(Nhdr)) <= note_end) {
-      const ElfW(Nhdr)* note = reinterpret_cast<const ElfW(Nhdr)*>(p);
-      p += sizeof(ElfW(Nhdr));
-      const char* name = reinterpret_cast<const char*>(p);
-      p += align_up(note->n_namesz, 4);
-      const char* desc = reinterpret_cast<const char*>(p);
-      p += align_up(note->n_descsz, 4);
-      if (p > note_end) {
-        break;
-      }
-      if (note->n_type != desired_type) {
-        continue;
-      }
-      size_t desired_name_len = strlen(desired_name);
-      if (note->n_namesz != desired_name_len + 1 ||
-          strncmp(desired_name, name, desired_name_len) != 0) {
-        break;
-      }
-      *note_out = note;
-      *desc_out = desc;
-      return true;
-    }
-  }
-  return false;
-}
-
 static HeapTaggingLevel __get_memtag_level_from_note(const ElfW(Phdr) * phdr_start, size_t phdr_ct,
                                                      const ElfW(Addr) load_bias, bool* stack) {
   const ElfW(Nhdr) * note;
   const char* desc;
-  if (!__get_elf_note(phdr_start, phdr_ct, load_bias, NT_ANDROID_TYPE_MEMTAG, "Android", &note,
-                      &desc)) {
+  if (!__find_elf_note(NT_ANDROID_TYPE_MEMTAG, "Android", phdr_start, phdr_ct, &note, &desc,
+                       load_bias)) {
     return M_HEAP_TAGGING_LEVEL_TBI;
   }
 
@@ -210,7 +174,7 @@ static HeapTaggingLevel __get_memtag_level_from_note(const ElfW(Phdr) * phdr_sta
                      note->n_descsz);
   }
 
-  // `desc` is always aligned due to ELF requirements, enforced in __get_elf_note().
+  // `desc` is always aligned due to ELF requirements, enforced in __find_elf_note().
   ElfW(Word) note_val = *reinterpret_cast<const ElfW(Word)*>(desc);
   *stack = (note_val & NT_MEMTAG_STACK) != 0;
 
@@ -341,6 +305,14 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(
   bool memtag_stack = false;
   HeapTaggingLevel level =
       __get_tagging_level(memtag_dynamic_entries, phdr_start, phdr_ct, load_bias, &memtag_stack);
+  // This is used by the linker (in linker.cpp) to communicate than any library linked by this
+  // executable enables memtag-stack.
+  if (__libc_shared_globals()->initial_memtag_stack) {
+    if (!memtag_stack) {
+      async_safe_format_log(ANDROID_LOG_INFO, "libc", "enabling PROT_MTE as requested by linker");
+    }
+    memtag_stack = true;
+  }
   char* env = getenv("BIONIC_MEMTAG_UPGRADE_SECS");
   static const char kAppProcessName[] = "app_process64";
   const char* progname = __libc_shared_globals()->init_progname;
@@ -409,6 +381,8 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(
   }
   // We did not enable MTE, so we do not need to arm the upgrade timer.
   __libc_shared_globals()->heap_tagging_upgrade_timer_sec = 0;
+  // We also didn't enable memtag_stack.
+  __libc_shared_globals()->initial_memtag_stack = false;
 }
 #else   // __aarch64__
 void __libc_init_mte(const memtag_dynamic_entries_t*, const void*, size_t, uintptr_t, void*) {}

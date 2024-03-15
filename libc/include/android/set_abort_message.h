@@ -33,16 +33,40 @@
  * @brief The android_set_abort_message() function.
  */
 
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
 
+typedef struct crash_detail_t crash_detail_t;
+
 /**
- * android_set_abort_message() sets the abort message that will be shown
- * by [debuggerd](https://source.android.com/devices/tech/debug/native-crash).
+ * android_set_abort_message() sets the abort message passed to
+ * [debuggerd](https://source.android.com/devices/tech/debug/native-crash)
+ * for inclusion in any crash.
+ *
  * This is meant for use by libraries that deliberately abort so that they can
  * provide an explanation. It is used within bionic to implement assert() and
- * all FORTIFY/fdsan aborts.
+ * all FORTIFY and fdsan failures.
+ *
+ * The message appears directly in logcat at the time of crash. It will
+ * also be added to both the tombstone proto in the crash_detail field, and
+ * in the tombstone text format.
+ *
+ * Tombstone proto definition:
+ *   https://cs.android.com/android/platform/superproject/main/+/main:system/core/debuggerd/proto/tombstone.proto
+ *
+ * An app can get hold of these for any `REASON_CRASH_NATIVE` instance of
+ * `android.app.ApplicationExitInfo`.
+ *  https://developer.android.com/reference/android/app/ApplicationExitInfo#getTraceInputStream()
+ *
+ * The given message is copied at the time this function is called, and does
+ * not need to be valid until the crash actually happens, but typically this
+ * function is called immediately before aborting. See <android/crash_detail.h>
+ * for API more suited to the use case where the caller doesn't _expect_ a
+ * crash but would like to see the information _if_ a crash happens.
  */
 void android_set_abort_message(const char* _Nullable __msg);
 

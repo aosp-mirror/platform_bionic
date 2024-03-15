@@ -364,6 +364,11 @@ struct soinfo {
   bool memtag_heap() const { return memtag_dynamic_entries()->memtag_heap; }
   bool memtag_stack() const { return memtag_dynamic_entries()->memtag_stack; }
 
+  void set_should_pad_segments(bool should_pad_segments) {
+   should_pad_segments_ = should_pad_segments;
+  }
+  bool should_pad_segments() const { return should_pad_segments_; }
+
  private:
   bool is_image_linked() const;
   void set_image_linked();
@@ -449,6 +454,9 @@ struct soinfo {
 
   // version >= 7
   memtag_dynamic_entries_t memtag_dynamic_entries_;
+
+  // Pad gaps between segments when memory mapping?
+  bool should_pad_segments_ = false;
 };
 
 // This function is used by dlvsym() to calculate hash of sym_ver
