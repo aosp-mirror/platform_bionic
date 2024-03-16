@@ -201,6 +201,7 @@ struct ExecutableInfo {
   const ElfW(Phdr)* phdr;
   size_t phdr_count;
   ElfW(Addr) entry_point;
+  bool should_pad_segments;
 };
 
 static ExecutableInfo get_executable_info(const char* arg_path) {
@@ -293,6 +294,7 @@ static ExecutableInfo load_executable(const char* orig_path) {
   result.phdr = elf_reader.loaded_phdr();
   result.phdr_count = elf_reader.phdr_count();
   result.entry_point = elf_reader.entry_point();
+  result.should_pad_segments = elf_reader.should_pad_segments();
   return result;
 }
 
@@ -366,6 +368,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   somain = si;
   si->phdr = exe_info.phdr;
   si->phnum = exe_info.phdr_count;
+  si->set_should_pad_segments(exe_info.should_pad_segments);
   get_elf_base_from_phdr(si->phdr, si->phnum, &si->base, &si->load_bias);
   si->size = phdr_table_get_load_size(si->phdr, si->phnum);
   si->dynamic = nullptr;
@@ -399,7 +402,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
     auto note_gnu_property = GnuPropertySection(somain);
     if (note_gnu_property.IsBTICompatible() &&
         (phdr_table_protect_segments(somain->phdr, somain->phnum, somain->load_bias,
-                                     &note_gnu_property) < 0)) {
+                                     somain->should_pad_segments(), &note_gnu_property) < 0)) {
       __linker_error("error: can't protect segments for \"%s\": %s", exe_info.path.c_str(),
                      strerror(errno));
     }
@@ -493,6 +496,12 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
     }
     si->increment_ref_count();
   }
+
+  // Exit early for ldd. We don't want to run the code that was loaded, so skip
+  // the constructor calls. Skip CFI setup because it would call __cfi_init in
+  // libdl.so.
+  if (g_is_ldd) _exit(EXIT_SUCCESS);
+
 #if defined(__aarch64__)
   // This has to happen after the find_libraries, which will have collected any possible
   // libraries that request memtag_stack in the dynamic section.
@@ -825,8 +834,6 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) 
   g_default_namespace.add_soinfo(solinker);
 
   ElfW(Addr) start_address = linker_main(args, exe_to_load);
-
-  if (g_is_ldd) _exit(EXIT_SUCCESS);
 
   INFO("[ Jumping to _start (%p)... ]", reinterpret_cast<void*>(start_address));
 

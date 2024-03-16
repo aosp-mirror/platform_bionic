@@ -2866,11 +2866,12 @@ bool soinfo::prelink_image() {
 
   TlsSegment tls_segment;
   if (__bionic_get_tls_segment(phdr, phnum, load_bias, &tls_segment)) {
+    // The loader does not (currently) support ELF TLS, so it shouldn't have
+    // a TLS segment.
+    CHECK(!relocating_linker && "TLS not supported in loader");
     if (!__bionic_check_tls_alignment(&tls_segment.alignment)) {
-      if (!relocating_linker) {
-        DL_ERR("TLS segment alignment in \"%s\" is not a power of 2: %zu",
-               get_realpath(), tls_segment.alignment);
-      }
+      DL_ERR("TLS segment alignment in \"%s\" is not a power of 2: %zu", get_realpath(),
+             tls_segment.alignment);
       return false;
     }
     tls_ = std::make_unique<soinfo_tls>();
@@ -3364,7 +3365,7 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
                               "\"%s\" has text relocations",
                               get_realpath());
     add_dlwarning(get_realpath(), "text relocations");
-    if (phdr_table_unprotect_segments(phdr, phnum, load_bias) < 0) {
+    if (phdr_table_unprotect_segments(phdr, phnum, load_bias, should_pad_segments_) < 0) {
       DL_ERR("can't unprotect loadable segments for \"%s\": %s", get_realpath(), strerror(errno));
       return false;
     }
@@ -3380,7 +3381,7 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
 #if !defined(__LP64__)
   if (has_text_relocations) {
     // All relocations are done, we can protect our segments back to read-only.
-    if (phdr_table_protect_segments(phdr, phnum, load_bias) < 0) {
+    if (phdr_table_protect_segments(phdr, phnum, load_bias, should_pad_segments_) < 0) {
       DL_ERR("can't protect segments for \"%s\": %s",
              get_realpath(), strerror(errno));
       return false;
@@ -3418,7 +3419,7 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
 }
 
 bool soinfo::protect_relro() {
-  if (phdr_table_protect_gnu_relro(phdr, phnum, load_bias) < 0) {
+  if (phdr_table_protect_gnu_relro(phdr, phnum, load_bias, should_pad_segments_) < 0) {
     DL_ERR("can't enable GNU RELRO protection for \"%s\": %s",
            get_realpath(), strerror(errno));
     return false;
