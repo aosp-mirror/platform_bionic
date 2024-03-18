@@ -2084,7 +2084,6 @@ TEST(dlext, ns_hidden_child) {
   ExecTestHelper eth;
 
   std::string helper = GetTestLibRoot() + "/ns_hidden_child_helper";
-  chmod(helper.c_str(), 0755); // TODO: "x" lost in CTS, b/34945607
   std::string app_ns_dir = GetTestLibRoot() + "/ns_hidden_child_app";
   eth.SetArgs({ helper.c_str(), app_ns_dir.c_str(), nullptr });
 
