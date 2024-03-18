@@ -80,7 +80,6 @@ TEST(elftls_dl, dlopen_ie_error) {
   std::string error = "success\n";
 #endif
 
-  chmod(helper.c_str(), 0755); // TODO: "x" lost in CTS, b/34945607
   ExecTestHelper eth;
   eth.SetArgs({ helper.c_str(), nullptr });
   eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0, error.c_str());
@@ -155,7 +154,6 @@ TEST(elftls_dl, tlsdesc_missing_weak) {
 TEST(elftls_dl, dtv_resize) {
 #if defined(__BIONIC__)
   std::string helper = GetTestLibRoot() + "/elftls_dtv_resize_helper";
-  chmod(helper.c_str(), 0755);  // TODO: "x" lost in CTS, b/34945607
   ExecTestHelper eth;
   eth.SetArgs({helper.c_str(), nullptr});
   eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0, nullptr);
