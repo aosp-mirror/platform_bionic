@@ -162,7 +162,6 @@ TEST(dl, preinit_system_calls) {
 #if defined(__BIONIC__)
   SKIP_WITH_HWASAN << "hwasan not initialized in preinit_array, b/124007027";
   std::string helper = GetTestLibRoot() + "/preinit_syscall_test_helper";
-  chmod(helper.c_str(), 0755); // TODO: "x" lost in CTS, b/34945607
   ExecTestHelper eth;
   eth.SetArgs({ helper.c_str(), nullptr });
   eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0, nullptr);
@@ -173,7 +172,6 @@ TEST(dl, preinit_getauxval) {
 #if defined(__BIONIC__)
   SKIP_WITH_HWASAN << "hwasan not initialized in preinit_array, b/124007027";
   std::string helper = GetTestLibRoot() + "/preinit_getauxval_test_helper";
-  chmod(helper.c_str(), 0755); // TODO: "x" lost in CTS, b/34945607
   ExecTestHelper eth;
   eth.SetArgs({ helper.c_str(), nullptr });
   eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0, nullptr);
@@ -187,7 +185,6 @@ TEST(dl, preinit_getauxval) {
 TEST(dl, exec_without_ld_preload) {
 #if defined(__BIONIC__)
   std::string helper = GetTestLibRoot() + "/ld_preload_test_helper";
-  chmod(helper.c_str(), 0755);
   ExecTestHelper eth;
   eth.SetArgs({ helper.c_str(), nullptr });
   eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0, "12345");
@@ -198,7 +195,6 @@ TEST(dl, exec_with_ld_preload) {
 #if defined(__BIONIC__)
   std::string helper = GetTestLibRoot() + "/ld_preload_test_helper";
   std::string env = std::string("LD_PRELOAD=") + GetTestLibRoot() + "/ld_preload_test_helper_lib2.so";
-  chmod(helper.c_str(), 0755);
   ExecTestHelper eth;
   eth.SetArgs({ helper.c_str(), nullptr });
   eth.SetEnv({ env.c_str(), nullptr });
@@ -226,7 +222,6 @@ TEST(dl, exec_without_ld_config_file) {
                               "/ld_config_test_helper\": library \"ld_config_test_helper_lib1.so\" "
                               "not found: needed by main executable\n";
   std::string helper = GetTestLibRoot() + "/ld_config_test_helper";
-  chmod(helper.c_str(), 0755);
   ExecTestHelper eth;
   eth.SetArgs({ helper.c_str(), nullptr });
   eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, EXIT_FAILURE, error_message.c_str());
@@ -283,7 +278,6 @@ TEST(dl, exec_with_ld_config_file) {
   TemporaryFile config_file;
   create_ld_config_file(config_file.path);
   std::string env = std::string("LD_CONFIG_FILE=") + config_file.path;
-  chmod(helper.c_str(), 0755);
   ExecTestHelper eth;
   eth.SetArgs({ helper.c_str(), nullptr });
   eth.SetEnv({ env.c_str(), nullptr });
@@ -320,7 +314,6 @@ TEST(dl, exec_with_ld_config_file_with_ld_preload) {
   create_ld_config_file(config_file.path);
   std::string env = std::string("LD_CONFIG_FILE=") + config_file.path;
   std::string env2 = std::string("LD_PRELOAD=") + GetTestLibRoot() + "/ld_config_test_helper_lib3.so";
-  chmod(helper.c_str(), 0755);
   ExecTestHelper eth;
   eth.SetArgs({ helper.c_str(), nullptr });
   eth.SetEnv({ env.c_str(), env2.c_str(), nullptr });
@@ -360,7 +353,6 @@ TEST(dl, disable_ld_config_file) {
   TemporaryFile config_file;
   create_ld_config_file(config_file.path);
   std::string env = std::string("LD_CONFIG_FILE=") + config_file.path;
-  chmod(helper.c_str(), 0755);
   ExecTestHelper eth;
   eth.SetArgs({ helper.c_str(), nullptr });
   eth.SetEnv({ env.c_str(), nullptr });

@@ -248,7 +248,6 @@ TEST_P(MemtagNoteTest, SEGV) {
   std::string helper_base = std::string("heap_tagging_") + (isStatic ? "static_" : "") +
                             kNoteSuffix[static_cast<int>(note)] + "_helper";
   std::string helper = GetTestLibRoot() + "/" + helper_base;
-  chmod(helper.c_str(), 0755);
   ExecTestHelper eth;
   eth.SetArgs({helper.c_str(), nullptr});
   eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0,
