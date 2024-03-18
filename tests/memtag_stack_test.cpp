@@ -35,7 +35,6 @@ TEST_P(MemtagStackTest, test) {
   std::string helper =
       GetTestLibRoot() + (is_static ? "/stack_tagging_static_helper" : "/stack_tagging_helper");
   const char* arg = std::get<0>(GetParam());
-  chmod(helper.c_str(), 0755);
   ExecTestHelper eth;
   eth.SetArgs({helper.c_str(), arg, nullptr});
   eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0, "");
