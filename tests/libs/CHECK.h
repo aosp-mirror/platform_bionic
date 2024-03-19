@@ -26,7 +26,7 @@
 static inline void check_failure(const char* file, int line, const char* function,
                                  const char* failed_expression) {
   fprintf(stderr, "%s:%d: %s: assertion \"%s\" failed\n", file, line, function, failed_expression);
-  fflush(stderr);
+  fflush(NULL);
   abort();
 }
 
