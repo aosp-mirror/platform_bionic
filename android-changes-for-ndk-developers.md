@@ -98,10 +98,12 @@ to dlopen(3) (as opposed to being referenced by DT_NEEDED entries).
 
 ## GNU hashes (Availible in API level >= 23)
 
-The GNU hash style available with --hash-style=gnu allows faster
-symbol lookup and is now supported by the dynamic linker in API 23 and
-above. (Use --hash-style=both if you want to build code that uses this
-feature >= Android M but still works on older releases.)
+The GNU hash style available with `--hash-style=gnu` allows faster
+symbol lookup and is supported by Android's dynamic linker in API 23 and
+above. Use `--hash-style=both` if you want to build code that uses this
+feature in new enough releases but still works on older releases.
+If you're using the NDK, clang chooses the right option
+(automatically)[https://github.com/android/ndk/issues/2005].
 
 
 ## Correct soname/path handling (Available in API level >= 23)
