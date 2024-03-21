@@ -60,11 +60,18 @@ bool __bionic_get_tls_segment(const ElfW(Phdr)* phdr_table, size_t phdr_count,
   for (size_t i = 0; i < phdr_count; ++i) {
     const ElfW(Phdr)& phdr = phdr_table[i];
     if (phdr.p_type == PT_TLS) {
-      *out = TlsSegment {
-        phdr.p_memsz,
-        phdr.p_align,
-        reinterpret_cast<void*>(load_bias + phdr.p_vaddr),
-        phdr.p_filesz,
+      *out = TlsSegment{
+          .aligned_size =
+              TlsAlignedSize{
+                  .size = phdr.p_memsz,
+                  .align =
+                      TlsAlign{
+                          .value = phdr.p_align ?: 1,  // 0 means "no alignment requirement"
+                          .skew = phdr.p_vaddr % MAX(1, phdr.p_align),
+                      },
+              },
+          .init_ptr = reinterpret_cast<void*>(load_bias + phdr.p_vaddr),
+          .init_size = phdr.p_filesz,
       };
       return true;
     }
@@ -72,114 +79,171 @@ bool __bionic_get_tls_segment(const ElfW(Phdr)* phdr_table, size_t phdr_count,
   return false;
 }
 
-// Return true if the alignment of a TLS segment is a valid power-of-two. Also
-// cap the alignment if it's too high.
-bool __bionic_check_tls_alignment(size_t* alignment) {
-  // N.B. The size does not need to be a multiple of the alignment. With
-  // ld.bfd (or after using binutils' strip), the TLS segment's size isn't
-  // rounded up.
-  if (*alignment == 0 || !powerof2(*alignment)) {
-    return false;
-  }
-  // Bionic only respects TLS alignment up to one page.
-  *alignment = MIN(*alignment, page_size());
-  return true;
+// Return true if the alignment of a TLS segment is a valid power-of-two.
+bool __bionic_check_tls_align(size_t align) {
+  // Note: The size does not need to be a multiple of the alignment. With ld.bfd
+  // (or after using binutils' strip), the TLS segment's size isn't rounded up.
+  return powerof2(align);
+}
+
+static void static_tls_layout_overflow() {
+  async_safe_fatal("error: TLS segments in static TLS overflowed");
+}
+
+static size_t align_checked(size_t value, TlsAlign tls_align) {
+  const size_t align = tls_align.value;
+  const size_t skew = tls_align.skew;
+  CHECK(align != 0 && powerof2(align + 0) && skew < align);
+  const size_t result = ((value - skew + align - 1) & ~(align - 1)) + skew;
+  if (result < value) static_tls_layout_overflow();
+  return result;
 }
 
 size_t StaticTlsLayout::offset_thread_pointer() const {
   return offset_bionic_tcb_ + (-MIN_TLS_SLOT * sizeof(void*));
 }
 
-// Reserves space for the Bionic TCB and the executable's TLS segment. Returns
-// the offset of the executable's TLS segment.
-size_t StaticTlsLayout::reserve_exe_segment_and_tcb(const TlsSegment* exe_segment,
+// Allocates the Bionic TCB and the executable's TLS segment in the static TLS
+// layout, satisfying alignment requirements for both.
+//
+// For an executable's TLS accesses (using the LocalExec model), the static
+// linker bakes TLS offsets directly into the .text section, so the loader must
+// place the executable segment at the same offset relative to the TP.
+// Similarly, the Bionic TLS slots (bionic_tcb) must also be allocated at the
+// correct offset relative to the TP.
+//
+// Returns the offset of the executable's TLS segment.
+//
+// Note: This function has unit tests, but they are in bionic-unit-tests-static,
+// not bionic-unit-tests.
+size_t StaticTlsLayout::reserve_exe_segment_and_tcb(const TlsSegment* seg,
                                                     const char* progname __attribute__((unused))) {
   // Special case: if the executable has no TLS segment, then just allocate a
   // TCB and skip the minimum alignment check on ARM.
-  if (exe_segment == nullptr) {
+  if (seg == nullptr) {
     offset_bionic_tcb_ = reserve_type<bionic_tcb>();
     return 0;
   }
 
 #if defined(__arm__) || defined(__aarch64__)
+  // ARM uses a "variant 1" TLS layout. The ABI specifies that the TP points at
+  // a 2-word TCB, followed by the executable's segment. In practice, libc
+  // implementations actually allocate a larger TCB at negative offsets from the
+  // TP.
+  //
+  // Historically, Bionic allocated an 8-word TCB starting at TP+0, so to keep
+  // the executable's TLS segment from overlapping the last 6 slots, Bionic
+  // requires that executables have an 8-word PT_TLS alignment to ensure that
+  // the TCB fits in the alignment padding, which it accomplishes using
+  // crtbegin.c. Bionic uses negative offsets for new TLS slots to avoid this
+  // problem.
 
-  // First reserve enough space for the TCB before the executable segment.
-  reserve(sizeof(bionic_tcb), 1);
+  static_assert(MIN_TLS_SLOT <= 0 && MAX_TLS_SLOT >= 1);
+  static_assert(sizeof(bionic_tcb) == (MAX_TLS_SLOT - MIN_TLS_SLOT + 1) * sizeof(void*));
+  static_assert(alignof(bionic_tcb) == sizeof(void*));
+  const size_t max_align = MAX(alignof(bionic_tcb), seg->aligned_size.align.value);
 
-  // Then reserve the segment itself.
-  const size_t result = reserve(exe_segment->size, exe_segment->alignment);
+  // Allocate the TCB first. Split it into negative and non-negative slots and
+  // ensure that TP (i.e. the first non-negative slot) is aligned to max_align.
+  const size_t tcb_size_pre = -MIN_TLS_SLOT * sizeof(void*);
+  const size_t tcb_size_post = (MAX_TLS_SLOT + 1) * sizeof(void*);
+  const auto pair =
+      reserve_tp_pair(TlsAlignedSize{.size = tcb_size_pre},
+                      TlsAlignedSize{.size = tcb_size_post, .align = TlsAlign{.value = max_align}});
+  offset_bionic_tcb_ = pair.before;
+  const size_t offset_tp = pair.tp;
 
-  // The variant 1 ABI that ARM linkers follow specifies a 2-word TCB between
-  // the thread pointer and the start of the executable's TLS segment, but both
-  // the thread pointer and the TLS segment are aligned appropriately for the
-  // TLS segment. Calculate the distance between the thread pointer and the
-  // EXE's segment.
-  const size_t exe_tpoff = __BIONIC_ALIGN(sizeof(void*) * 2, exe_segment->alignment);
+  // Allocate the segment.
+  offset_exe_ = reserve(seg->aligned_size);
 
-  const size_t min_bionic_alignment = BIONIC_ROUND_UP_POWER_OF_2(MAX_TLS_SLOT) * sizeof(void*);
-  if (exe_tpoff < min_bionic_alignment) {
-    async_safe_fatal("error: \"%s\": executable's TLS segment is underaligned: "
-                     "alignment is %zu, needs to be at least %zu for %s Bionic",
-                     progname, exe_segment->alignment, min_bionic_alignment,
-                     (sizeof(void*) == 4 ? "ARM" : "ARM64"));
+  // Verify that the ABI and Bionic tpoff values are equal, which is equivalent
+  // to checking whether the segment is sufficiently aligned.
+  const size_t abi_tpoff = align_checked(2 * sizeof(void*), seg->aligned_size.align);
+  const size_t actual_tpoff = align_checked(tcb_size_post, seg->aligned_size.align);
+  CHECK(actual_tpoff == offset_exe_ - offset_tp);
+
+  if (abi_tpoff != actual_tpoff) {
+    async_safe_fatal(
+        "error: \"%s\": executable's TLS segment is underaligned: "
+        "alignment is %zu (skew %zu), needs to be at least %zu for %s Bionic",
+        progname, seg->aligned_size.align.value, seg->aligned_size.align.skew, tcb_size_post,
+        (sizeof(void*) == 4 ? "ARM" : "ARM64"));
   }
-
-  offset_bionic_tcb_ = result - exe_tpoff - (-MIN_TLS_SLOT * sizeof(void*));
-  return result;
 
 #elif defined(__i386__) || defined(__x86_64__)
 
-  // x86 uses variant 2 TLS layout. The executable's segment is located just
-  // before the TCB.
-  static_assert(MIN_TLS_SLOT == 0, "First slot of bionic_tcb must be slot #0 on x86");
-  const size_t exe_size = round_up_with_overflow_check(exe_segment->size, exe_segment->alignment);
-  reserve(exe_size, 1);
-  const size_t max_align = MAX(alignof(bionic_tcb), exe_segment->alignment);
-  offset_bionic_tcb_ = reserve(sizeof(bionic_tcb), max_align);
-  return offset_bionic_tcb_ - exe_size;
+  auto pair = reserve_tp_pair(seg->aligned_size, TlsAlignedSize::of_type<bionic_tcb>());
+  offset_exe_ = pair.before;
+  offset_bionic_tcb_ = pair.after;
 
 #elif defined(__riscv)
+  static_assert(MAX_TLS_SLOT == -1, "Last slot of bionic_tcb must be slot #(-1) on riscv");
 
-  // First reserve enough space for the TCB before the executable segment.
-  offset_bionic_tcb_ = reserve(sizeof(bionic_tcb), 1);
-
-  // Then reserve the segment itself.
-  const size_t exe_size = round_up_with_overflow_check(exe_segment->size, exe_segment->alignment);
-  return reserve(exe_size, 1);
+  auto pair = reserve_tp_pair(TlsAlignedSize::of_type<bionic_tcb>(), seg->aligned_size);
+  offset_bionic_tcb_ = pair.before;
+  offset_exe_ = pair.after;
 
 #else
 #error "Unrecognized architecture"
 #endif
+
+  return offset_exe_;
 }
 
-void StaticTlsLayout::reserve_bionic_tls() {
+size_t StaticTlsLayout::reserve_bionic_tls() {
   offset_bionic_tls_ = reserve_type<bionic_tls>();
+  return offset_bionic_tls_;
 }
 
 void StaticTlsLayout::finish_layout() {
   // Round the offset up to the alignment.
-  offset_ = round_up_with_overflow_check(offset_, alignment_);
-
-  if (overflowed_) {
-    async_safe_fatal("error: TLS segments in static TLS overflowed");
-  }
+  cursor_ = align_checked(cursor_, TlsAlign{.value = align_});
 }
 
-// The size is not required to be a multiple of the alignment. The alignment
-// must be a positive power-of-two.
-size_t StaticTlsLayout::reserve(size_t size, size_t alignment) {
-  offset_ = round_up_with_overflow_check(offset_, alignment);
-  const size_t result = offset_;
-  if (__builtin_add_overflow(offset_, size, &offset_)) overflowed_ = true;
-  alignment_ = MAX(alignment_, alignment);
+size_t StaticTlsLayout::align_cursor(TlsAlign align) {
+  cursor_ = align_checked(cursor_, align);
+  align_ = MAX(align_, align.value);
+  return cursor_;
+}
+
+size_t StaticTlsLayout::align_cursor_unskewed(size_t align) {
+  return align_cursor(TlsAlign{.value = align});
+}
+
+// Reserve the requested number of bytes at the requested alignment. The
+// requested size is not required to be a multiple of the alignment, nor is the
+// cursor aligned after the allocation.
+size_t StaticTlsLayout::reserve(TlsAlignedSize aligned_size) {
+  align_cursor(aligned_size.align);
+  const size_t result = cursor_;
+  if (__builtin_add_overflow(cursor_, aligned_size.size, &cursor_)) static_tls_layout_overflow();
   return result;
 }
 
-size_t StaticTlsLayout::round_up_with_overflow_check(size_t value, size_t alignment) {
-  const size_t old_value = value;
-  value = __BIONIC_ALIGN(value, alignment);
-  if (value < old_value) overflowed_ = true;
-  return value;
+// Calculate the TP offset and allocate something before it and something after
+// it. The TP will be aligned to:
+//
+//     MAX(before.align.value, after.align.value)
+//
+// The `before` and `after` allocations are each allocated as closely as
+// possible to the TP.
+StaticTlsLayout::TpAllocations StaticTlsLayout::reserve_tp_pair(TlsAlignedSize before,
+                                                                TlsAlignedSize after) {
+  // Tentative `before` allocation.
+  const size_t tentative_before = reserve(before);
+  const size_t tentative_before_end = align_cursor_unskewed(before.align.value);
+
+  const size_t offset_tp = align_cursor_unskewed(MAX(before.align.value, after.align.value));
+
+  const size_t offset_after = reserve(after);
+
+  // If the `after` allocation has higher alignment than `before`, then there
+  // may be alignment padding to remove between `before` and the TP. Shift
+  // `before` forward to remove this padding.
+  CHECK(((offset_tp - tentative_before_end) & (before.align.value - 1)) == 0);
+  const size_t offset_before = tentative_before + (offset_tp - tentative_before_end);
+
+  return TpAllocations{offset_before, offset_tp, offset_after};
 }
 
 // Copy each TLS module's initialization image into a newly-allocated block of
@@ -309,7 +373,11 @@ __attribute__((noinline)) static void* tls_get_addr_slow_path(const TlsIndex* ti
   void* mod_ptr = dtv->modules[module_idx];
   if (mod_ptr == nullptr) {
     const TlsSegment& segment = modules.module_table[module_idx].segment;
-    mod_ptr = __libc_shared_globals()->tls_allocator.memalign(segment.alignment, segment.size);
+    // TODO: Currently the aligned_size.align.skew property is ignored.
+    // That is, for a dynamic TLS block at addr A, (A % p_align) will be 0, not
+    // (p_vaddr % p_align).
+    mod_ptr = __libc_shared_globals()->tls_allocator.memalign(segment.aligned_size.align.value,
+                                                              segment.aligned_size.size);
     if (segment.init_size > 0) {
       memcpy(mod_ptr, segment.init_ptr, segment.init_size);
     }
@@ -317,8 +385,8 @@ __attribute__((noinline)) static void* tls_get_addr_slow_path(const TlsIndex* ti
 
     // Reports the allocation to the listener, if any.
     if (modules.on_creation_cb != nullptr) {
-      modules.on_creation_cb(mod_ptr,
-                             static_cast<void*>(static_cast<char*>(mod_ptr) + segment.size));
+      modules.on_creation_cb(
+          mod_ptr, static_cast<void*>(static_cast<char*>(mod_ptr) + segment.aligned_size.size));
     }
   }
 
