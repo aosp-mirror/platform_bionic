@@ -202,10 +202,6 @@ typedef Elf64_Xword Elf64_Relr;
 #define DF_1_SINGLETON  0x02000000
 #define DF_1_STUB       0x04000000
 
-/* http://www.sco.com/developers/gabi/latest/ch4.eheader.html */
-#define ELFOSABI_SYSV 0 /* Synonym for ELFOSABI_NONE used by valgrind. */
-#define ELFOSABI_GNU 3 /* Synonym for ELFOSABI_LINUX. */
-
 /* http://www.sco.com/developers/gabi/latest/ch4.reloc.html */
 #define ELF32_R_INFO(sym, type) ((((Elf32_Word)sym) << 8) | ((type) & 0xff))
 #define ELF64_R_INFO(sym, type) ((((Elf64_Xword)sym) << 32) | ((type) & 0xffffffff))
@@ -260,6 +256,13 @@ typedef Elf64_Xword Elf64_Relr;
 #define DT_ANDROID_RELA 0x60000011 // DT_LOOS + 4
 #define DT_ANDROID_RELASZ 0x60000012 // DT_LOOS + 5
 
+/* TODO: upstream these to FreeBSD? */
+#define DT_AARCH64_MEMTAG_MODE 0x70000009
+#define DT_AARCH64_MEMTAG_HEAP 0x7000000b
+#define DT_AARCH64_MEMTAG_STACK 0x7000000c
+#define DT_AARCH64_MEMTAG_GLOBALS 0x7000000d
+#define DT_AARCH64_MEMTAG_GLOBALSSZ 0x7000000f
+
 /* Linux traditionally doesn't have the trailing 64 that BSD has on these. */
 #define R_AARCH64_TLS_DTPREL R_AARCH64_TLS_DTPREL64
 #define R_AARCH64_TLS_DTPMOD R_AARCH64_TLS_DTPMOD64
@@ -268,6 +271,17 @@ typedef Elf64_Xword Elf64_Relr;
 /* TODO: upstream these to FreeBSD? */
 #define R_ARM_TLS_DESC 13
 #define R_ARM_IRELATIVE 160
+
+/* https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc#relocations */
+/* TODO: upstream these to FreeBSD? */
+#define R_RISCV_TLSDESC 12
+#define R_RISCV_PLT32 59
+#define R_RISCV_SET_ULEB128 60
+#define R_RISCV_SUB_ULEB128 61
+#define R_RISCV_TLSDESC_HI20 62
+#define R_RISCV_TLSDESC_LOAD_LO12 63
+#define R_RISCV_TLSDESC_ADD_LO12 64
+#define R_RISCV_TLSDESC_CALL 65
 
 /* BSD spells this slightly differently to Linux. */
 #define R_X86_64_JUMP_SLOT R_X86_64_JMP_SLOT
