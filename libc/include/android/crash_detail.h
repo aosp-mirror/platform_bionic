@@ -69,7 +69,7 @@ typedef struct crash_detail_t crash_detail_t;
  * Introduced in API 35.
  *
  * \param name identifying name for this extra data.
- *             this should generally be a human-readable debug string, but we are treating
+ *             this should generally be a human-readable UTF-8 string, but we are treating
  *             it as arbitrary bytes because it could be corrupted by the crash.
  * \param name_size number of bytes of the buffer pointed to by name
  * \param data a buffer containing the extra detail bytes, if null the crash detail
