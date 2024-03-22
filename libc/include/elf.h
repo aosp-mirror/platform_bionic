@@ -207,8 +207,6 @@ typedef Elf64_Xword Elf64_Relr;
 #define ELF64_R_INFO(sym, type) ((((Elf64_Xword)sym) << 32) | ((type) & 0xffffffff))
 
 /* http://www.sco.com/developers/gabi/latest/ch4.symtab.html */
-#undef ELF_ST_TYPE
-#define ELF_ST_TYPE(x) ((x) & 0xf)
 #define ELF_ST_INFO(b,t) (((b) << 4) + ((t) & 0xf))
 #define ELF32_ST_INFO(b,t) ELF_ST_INFO(b,t)
 #define ELF64_ST_INFO(b,t) ELF_ST_INFO(b,t)
