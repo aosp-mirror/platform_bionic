@@ -581,6 +581,9 @@ cc_test_library {
     include_dirs: [
         "bionic/libc",
     ],
+    static_libs: [
+        "libbase",
+    ],
     shared: {
         enabled: false,
     },
@@ -837,8 +840,10 @@ cc_defaults {
     data_bins: [
         "cfi_test_helper",
         "cfi_test_helper2",
+        "elftls_align_test_helper",
         "elftls_dlopen_ie_error_helper",
         "elftls_dtv_resize_helper",
+        "elftls_skew_align_test_helper",
         "exec_linker_helper",
         "exec_linker_helper_lib",
         "heap_tagging_async_helper",
@@ -1192,9 +1197,9 @@ cc_test {
         "gtest_globals.cpp",
         "gtest_main.cpp",
 
-        // The Bionic allocator has its own C++ API. It isn't packaged into its
-        // own library, so it can only be tested when it's part of libc.a.
+        // Test internal parts of Bionic that aren't exposed via libc.so.
         "bionic_allocator_test.cpp",
+        "static_tls_layout_test.cpp",
     ],
     include_dirs: [
         "bionic/libc",
@@ -1224,6 +1229,8 @@ cc_test {
         never: true,
     },
     data_bins: [
+        "elftls_align_test_helper",
+        "elftls_skew_align_test_helper",
         "heap_tagging_async_helper",
         "heap_tagging_disabled_helper",
         "heap_tagging_static_async_helper",

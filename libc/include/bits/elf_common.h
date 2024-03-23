@@ -1,5 +1,5 @@
 /*-
- * SPDX-License-Identifier: BSD-2-Clause-FreeBSD
+ * SPDX-License-Identifier: BSD-2-Clause
  *
  * Copyright (c) 2017, 2018 Dell EMC
  * Copyright (c) 2000, 2001, 2008, 2011, David E. O'Brien
@@ -26,8 +26,6 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- *
- * $FreeBSD$
  */
 
 #ifndef _SYS_ELF_COMMON_H_
@@ -36,6 +34,26 @@
 /*
  * ELF definitions that are independent of architecture or word size.
  */
+
+/*
+ * Note header.  The ".note" section contains an array of notes.  Each
+ * begins with this header, aligned to a word boundary.  Immediately
+ * following the note header is n_namesz bytes of name, padded to the
+ * next word boundary.  Then comes n_descsz bytes of descriptor, again
+ * padded to a word boundary.  The values of n_namesz and n_descsz do
+ * not include the padding.
+ */
+
+#if 0 // android-added
+#if !defined(LOCORE) && !defined(__ASSEMBLER__)
+typedef struct {
+	u_int32_t	n_namesz;	/* Length of name. */
+	u_int32_t	n_descsz;	/* Length of descriptor. */
+	u_int32_t	n_type;		/* Type of this note. */
+} Elf_Note;
+typedef Elf_Note Elf_Nhdr;
+#endif
+#endif // android-added
 
 /*
  * Option kinds.
@@ -91,6 +109,21 @@
  */
 #define	OGP_GROUP	0x0000ffff	/* GP group number */
 #define	OGP_SELF	0x00010000	/* GP group is self-contained */
+
+/*
+ * The header for GNU-style hash sections.
+ */
+
+#if 0 // android-added
+#if !defined(LOCORE) && !defined(__ASSEMBLER__)
+typedef struct {
+	u_int32_t	gh_nbuckets;	/* Number of hash buckets. */
+	u_int32_t	gh_symndx;	/* First visible symbol in .dynsym. */
+	u_int32_t	gh_maskwords;	/* #maskwords used in bloom filter. */
+	u_int32_t	gh_shift2;	/* Bloom filter shift count. */
+} Elf_GNU_Hash_Header;
+#endif
+#endif
 
 /* Indexes into the e_ident array.  Keep synced with
    http://www.sco.com/developers/gabi/latest/ch4.eheader.html */
@@ -153,7 +186,9 @@
 #define	ELFOSABI_ARM		97	/* ARM */
 #define	ELFOSABI_STANDALONE	255	/* Standalone (embedded) application */
 
+#define	ELFOSABI_SYSV		ELFOSABI_NONE	/* symbol used in old spec */
 #define	ELFOSABI_MONTEREY	ELFOSABI_AIX	/* Monterey */
+#define	ELFOSABI_GNU		ELFOSABI_LINUX
 
 /* e_ident */
 #define	IS_ELF(ehdr)	((ehdr).e_ident[EI_MAG0] == ELFMAG0 && \
@@ -299,6 +334,7 @@
 #define	EF_ARM_EABI_VER3	0x03000000
 #define	EF_ARM_EABI_VER4	0x04000000
 #define	EF_ARM_EABI_VER5	0x05000000
+#define	EF_ARM_EABI_VERSION(x)	((x) & EF_ARM_EABIMASK)
 #define	EF_ARM_INTERWORK	0x00000004
 #define	EF_ARM_APCS_26		0x00000008
 #define	EF_ARM_APCS_FLOAT	0x00000010
@@ -418,12 +454,12 @@
 #define	SHT_HIOS		0x6fffffff	/* Last of OS specific semantics */
 #define	SHT_LOPROC		0x70000000	/* reserved range for processor */
 #define	SHT_X86_64_UNWIND	0x70000001	/* unwind information */
-#define	SHT_AMD64_UNWIND	SHT_X86_64_UNWIND
+#define	SHT_AMD64_UNWIND	SHT_X86_64_UNWIND 
 
 #define	SHT_ARM_EXIDX		0x70000001	/* Exception index table. */
-#define	SHT_ARM_PREEMPTMAP	0x70000002	/* BPABI DLL dynamic linking
+#define	SHT_ARM_PREEMPTMAP	0x70000002	/* BPABI DLL dynamic linking 
 						   pre-emption map. */
-#define	SHT_ARM_ATTRIBUTES	0x70000003	/* Object file compatibility
+#define	SHT_ARM_ATTRIBUTES	0x70000003	/* Object file compatibility 
 						   attributes. */
 #define	SHT_ARM_DEBUGOVERLAY	0x70000004	/* See DBGOVL for details. */
 #define	SHT_ARM_OVERLAYSECTION	0x70000005	/* See DBGOVL for details. */
@@ -499,6 +535,9 @@
 #define	PT_TLS		7	/* Thread local storage segment */
 #define	PT_LOOS		0x60000000	/* First OS-specific. */
 #define	PT_SUNW_UNWIND	0x6464e550	/* amd64 UNWIND program header */
+// android-removed: #define	PT_GNU_EH_FRAME	0x6474e550
+// android-removed: #define	PT_GNU_STACK	0x6474e551
+// android-removed: #define	PT_GNU_RELRO	0x6474e552
 #define	PT_DUMP_DELTA	0x6fb5d000	/* va->pa map for kernel dumps
 					   (currently arm). */
 #define	PT_LOSUNW	0x6ffffffa
@@ -648,11 +687,6 @@
 #define	DT_AARCH64_BTI_PLT		0x70000001
 #define	DT_AARCH64_PAC_PLT		0x70000003
 #define	DT_AARCH64_VARIANT_PCS		0x70000005
-#define DT_AARCH64_MEMTAG_MODE		0x70000009
-#define DT_AARCH64_MEMTAG_HEAP		0x7000000b
-#define DT_AARCH64_MEMTAG_STACK		0x7000000c
-#define DT_AARCH64_MEMTAG_GLOBALS	0x7000000d
-#define DT_AARCH64_MEMTAG_GLOBALSSZ	0x7000000f
 
 #define	DT_ARM_SYMTABSZ			0x70000001
 #define	DT_ARM_PREEMPTMAP		0x70000002
@@ -810,6 +844,7 @@
 
 #define	GNU_PROPERTY_AARCH64_FEATURE_1_AND	0xc0000000
 
+// android-removed: #define	GNU_PROPERTY_AARCH64_FEATURE_1_BTI	0x00000001
 #define	GNU_PROPERTY_AARCH64_FEATURE_1_PAC	0x00000002
 
 #define	GNU_PROPERTY_X86_FEATURE_1_AND		0xc0000002
@@ -917,6 +952,49 @@
 #define	ELFCOMPRESS_HIOS	0x6fffffff
 #define	ELFCOMPRESS_LOPROC	0x70000000	/* Processor-specific */
 #define	ELFCOMPRESS_HIPROC	0x7fffffff
+
+#if 0 // android-added
+/* Values for a_type. */
+#define	AT_NULL		0	/* Terminates the vector. */
+#define	AT_IGNORE	1	/* Ignored entry. */
+#define	AT_EXECFD	2	/* File descriptor of program to load. */
+#define	AT_PHDR		3	/* Program header of program already loaded. */
+#define	AT_PHENT	4	/* Size of each program header entry. */
+#define	AT_PHNUM	5	/* Number of program header entries. */
+#define	AT_PAGESZ	6	/* Page size in bytes. */
+#define	AT_BASE		7	/* Interpreter's base address. */
+#define	AT_FLAGS	8	/* Flags. */
+#define	AT_ENTRY	9	/* Where interpreter should transfer control. */
+#define	AT_NOTELF	10	/* Program is not ELF ?? */
+#define	AT_UID		11	/* Real uid. */
+#define	AT_EUID		12	/* Effective uid. */
+#define	AT_GID		13	/* Real gid. */
+#define	AT_EGID		14	/* Effective gid. */
+#define	AT_EXECPATH	15	/* Path to the executable. */
+#define	AT_CANARY	16	/* Canary for SSP. */
+#define	AT_CANARYLEN	17	/* Length of the canary. */
+#define	AT_OSRELDATE	18	/* OSRELDATE. */
+#define	AT_NCPUS	19	/* Number of CPUs. */
+#define	AT_PAGESIZES	20	/* Pagesizes. */
+#define	AT_PAGESIZESLEN	21	/* Number of pagesizes. */
+#define	AT_TIMEKEEP	22	/* Pointer to timehands. */
+#define	AT_STACKPROT	23	/* Initial stack protection. */
+#define	AT_EHDRFLAGS	24	/* e_flags field from elf hdr */
+#define	AT_HWCAP	25	/* CPU feature flags. */
+#define	AT_HWCAP2	26	/* CPU feature flags 2. */
+#define	AT_BSDFLAGS	27	/* ELF BSD Flags. */
+#define	AT_ARGC		28	/* Argument count */
+#define	AT_ARGV		29	/* Argument vector */
+#define	AT_ENVC		30	/* Environment count */
+#define	AT_ENVV		31	/* Environment vector */
+#define	AT_PS_STRINGS	32	/* struct ps_strings */
+#define	AT_FXRNG	33	/* Pointer to root RNG seed version. */
+#define	AT_KPRELOAD	34	/* Base of vdso, preloaded by rtld */
+#define	AT_USRSTACKBASE	35	/* Top of user stack */
+#define	AT_USRSTACKLIM	36	/* Grow limit of user stack */
+
+#define	AT_COUNT	37	/* Count of defined aux entry types. */
+#endif // android-added
 
 /*
  * Relocation types.
@@ -1087,7 +1165,7 @@
 #define	R_IA_64_PCREL22		0x7a	/* immediate22	S + A - P */
 #define	R_IA_64_PCREL64I	0x7b	/* immediate64	S + A - P */
 #define	R_IA_64_IPLTMSB		0x80	/* function descriptor MSB special */
-#define	R_IA_64_IPLTLSB		0x81	/* function descriptor LSB speciaal */
+#define	R_IA_64_IPLTLSB		0x81	/* function descriptor LSB special */
 #define	R_IA_64_SUB		0x85	/* immediate64	A - S */
 #define	R_IA_64_LTOFF22X	0x86	/* immediate22	special */
 #define	R_IA_64_LDXMOV		0x87	/* immediate22	special */
@@ -1248,7 +1326,6 @@
 
 /*
  * RISC-V relocation types.
- * https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc#relocations
  */
 
 /* Relocation types used by the dynamic linker. */
@@ -1264,7 +1341,6 @@
 #define	R_RISCV_TLS_DTPREL64	9
 #define	R_RISCV_TLS_TPREL32	10
 #define	R_RISCV_TLS_TPREL64	11
-#define	R_RISCV_TLSDESC    	12
 
 /* Relocation types not used by the dynamic linker. */
 #define	R_RISCV_BRANCH		16
@@ -1292,8 +1368,6 @@
 #define	R_RISCV_SUB16		38
 #define	R_RISCV_SUB32		39
 #define	R_RISCV_SUB64		40
-#define	R_RISCV_GNU_VTINHERIT	41
-#define	R_RISCV_GNU_VTENTRY	42
 #define	R_RISCV_ALIGN		43
 #define	R_RISCV_RVC_BRANCH	44
 #define	R_RISCV_RVC_JUMP	45
@@ -1306,13 +1380,6 @@
 #define	R_RISCV_SET32		56
 #define	R_RISCV_32_PCREL	57
 #define	R_RISCV_IRELATIVE	58
-#define	R_RISCV_PLT32		59
-#define	R_RISCV_SET_ULEB128	60
-#define	R_RISCV_SUB_ULEB128	61
-#define	R_RISCV_TLSDESC_HI20	62
-#define	R_RISCV_TLSDESC_LOAD_LO12 63
-#define	R_RISCV_TLSDESC_ADD_LO12 64
-#define	R_RISCV_TLSDESC_CALL	65
 
 #define	R_SPARC_NONE		0
 #define	R_SPARC_8		1
