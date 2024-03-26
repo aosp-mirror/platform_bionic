@@ -99,7 +99,8 @@ char* _Nullable dlerror(void);
 /**
  * [dlsym(3)](http://man7.org/linux/man-pages/man3/dlsym.3.html)
  * returns a pointer to the symbol with the given name in the shared
- * library represented by the given handle.
+ * library represented by the given handle. The handle may have been
+ * returned from dlopen(), or can be RTLD_DEFAULT or RTLD_NEXT.
  *
  * Returns the address of the symbol on success, and returns NULL on failure,
  * in which case dlerror() can be used to retrieve the specific error.
@@ -109,7 +110,8 @@ void* _Nullable dlsym(void* __BIONIC_COMPLICATED_NULLNESS __handle, const char* 
 /**
  * [dlvsym(3)](http://man7.org/linux/man-pages/man3/dlvsym.3.html)
  * returns a pointer to the symbol with the given name and version in the shared
- * library represented by the given handle.
+ * library represented by the given handle. The handle may have been
+ * returned from dlopen(), or can be RTLD_DEFAULT or RTLD_NEXT.
  *
  * Returns the address of the symbol on success, and returns NULL on failure,
  * in which case dlerror() can be used to retrieve the specific error.
