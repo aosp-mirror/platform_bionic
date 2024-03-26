@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,27 +26,38 @@
  * SUCH DAMAGE.
  */
 
-#include <private/bionic_asm.h>
+#include <stdint.h>
 
-#define FUNCTION_DELEGATE(name, impl) \
-ENTRY(name); \
-    b impl; \
-END(name)
+#include "CHECK.h"
 
-FUNCTION_DELEGATE(memchr, __memchr_aarch64_mte)
-FUNCTION_DELEGATE(memcmp, __memcmp_aarch64)
-FUNCTION_DELEGATE(memcpy, __memcpy_aarch64)
-FUNCTION_DELEGATE(memmove, __memmove_aarch64)
-FUNCTION_DELEGATE(memrchr, __memrchr_aarch64)
-FUNCTION_DELEGATE(memset, __memset_aarch64)
-FUNCTION_DELEGATE(stpcpy, __stpcpy_aarch64)
-FUNCTION_DELEGATE(strchr, __strchr_aarch64_mte)
-FUNCTION_DELEGATE(strchrnul, __strchrnul_aarch64_mte)
-FUNCTION_DELEGATE(strcmp, __strcmp_aarch64)
-FUNCTION_DELEGATE(strcpy, __strcpy_aarch64)
-FUNCTION_DELEGATE(strlen, __strlen_aarch64_mte)
-FUNCTION_DELEGATE(strrchr, __strrchr_aarch64_mte)
-FUNCTION_DELEGATE(strncmp, __strncmp_aarch64)
-FUNCTION_DELEGATE(strnlen, __strnlen_aarch64)
+struct AlignedVar {
+  int field;
+  char buffer[0x1000 - sizeof(int)];
+} __attribute__((aligned(0x400)));
 
-NOTE_GNU_PROPERTY()
+struct SmallVar {
+  int field;
+  char buffer[0xeee - sizeof(int)];
+};
+
+// The single .tdata section should have a size that isn't a multiple of its
+// alignment.
+__thread struct AlignedVar var1 = {13};
+__thread struct AlignedVar var2 = {17};
+__thread struct SmallVar var3 = {19};
+
+static uintptr_t var_addr(void* value) {
+  // Maybe the optimizer would assume that the variable has the alignment it is
+  // declared with.
+  asm volatile("" : "+r,m"(value) : : "memory");
+  return reinterpret_cast<uintptr_t>(value);
+}
+
+int main() {
+  CHECK((var_addr(&var1) & 0x3ff) == 0);
+  CHECK((var_addr(&var2) & 0x3ff) == 0);
+  CHECK(var1.field == 13);
+  CHECK(var2.field == 17);
+  CHECK(var3.field == 19);
+  return 0;
+}
