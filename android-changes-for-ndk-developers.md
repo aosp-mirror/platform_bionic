@@ -478,6 +478,16 @@ There are no plans to remove support for ELF files using the older
 OS private use constants for RELR, nor for ELF files using packed
 relocations.
 
+Prior to API level 35, there was a bug that caused RELR relocations to
+be applied after packed relocations. This meant that ifunc resolvers
+referenced by `R_*_IRELATIVE` relocations in the packed relocation
+section would have been able to read globals with RELR relocations
+before they were relocated. The version of `lld` in the NDK has never
+produced binaries affected by this bug, but third-party toolchains
+should make sure not to store `R_*_IRELATIVE` relocations in packed
+relocation sections in order to maintain compatibility with API levels
+below 35.
+
 You can read more about relative relocations
 and their long and complicated history at
 https://maskray.me/blog/2021-10-31-relative-relocations-and-relr.
