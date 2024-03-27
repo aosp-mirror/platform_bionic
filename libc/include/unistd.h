@@ -336,6 +336,13 @@ int ttyname_r(int __fd, char* _Nonnull __buf, size_t __buf_size);
 
 int acct(const char* _Nullable __path);
 
+/**
+ * [getpagesize(2)](https://man7.org/linux/man-pages/man2/getpagesize.2.html)
+ * returns the system's page size. This is slightly faster than going via
+ * sysconf().
+ *
+ * Returns the system's page size in bytes.
+ */
 int getpagesize(void) __attribute_const__;
 
 long syscall(long __number, ...);
