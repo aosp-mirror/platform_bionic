@@ -647,6 +647,9 @@ static void call_ifunc_resolvers() {
     auto *dyn = reinterpret_cast<ElfW(Dyn)*>(ehdr + phdr[i].p_vaddr);
     ElfW(Addr) pltrel = 0, pltrelsz = 0, rel = 0, relsz = 0;
     for (size_t j = 0, size = phdr[i].p_filesz / sizeof(ElfW(Dyn)); j != size; ++j) {
+      // We can't handle IRELATIVE relocations in DT_ANDROID_REL[A].
+      // We disabled DT_ANDROID_REL[A] at build time; verify that it was actually disabled.
+      CHECK(dyn[j].d_tag != DT_ANDROID_REL && dyn[j].d_tag != DT_ANDROID_RELA);
       if (dyn[j].d_tag == DT_JMPREL) {
         pltrel = dyn[j].d_un.d_ptr;
       } else if (dyn[j].d_tag == DT_PLTRELSZ) {
