@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,27 +26,49 @@
  * SUCH DAMAGE.
  */
 
-#include <private/bionic_asm.h>
+// LLD tries not to generate a PT_TLS segment where (p_vaddr % p_align) is
+// non-zero. It can still do so if the p_align values are greater than a page.
 
-#define FUNCTION_DELEGATE(name, impl) \
-ENTRY(name); \
-    b impl; \
-END(name)
+#include <stdint.h>
+#include <unistd.h>
 
-FUNCTION_DELEGATE(memchr, __memchr_aarch64_mte)
-FUNCTION_DELEGATE(memcmp, __memcmp_aarch64)
-FUNCTION_DELEGATE(memcpy, __memcpy_aarch64)
-FUNCTION_DELEGATE(memmove, __memmove_aarch64)
-FUNCTION_DELEGATE(memrchr, __memrchr_aarch64)
-FUNCTION_DELEGATE(memset, __memset_aarch64)
-FUNCTION_DELEGATE(stpcpy, __stpcpy_aarch64)
-FUNCTION_DELEGATE(strchr, __strchr_aarch64_mte)
-FUNCTION_DELEGATE(strchrnul, __strchrnul_aarch64_mte)
-FUNCTION_DELEGATE(strcmp, __strcmp_aarch64)
-FUNCTION_DELEGATE(strcpy, __strcpy_aarch64)
-FUNCTION_DELEGATE(strlen, __strlen_aarch64_mte)
-FUNCTION_DELEGATE(strrchr, __strrchr_aarch64_mte)
-FUNCTION_DELEGATE(strncmp, __strncmp_aarch64)
-FUNCTION_DELEGATE(strnlen, __strnlen_aarch64)
+#include "CHECK.h"
 
-NOTE_GNU_PROPERTY()
+struct SmallVar {
+  int field;
+  char buffer[0x100 - sizeof(int)];
+};
+
+struct AlignedVar {
+  int field;
+  char buffer[0x20000 - sizeof(int)];
+} __attribute__((aligned(0x20000)));
+
+__thread struct SmallVar var1 = {13};
+__thread struct SmallVar var2 = {17};
+__thread struct AlignedVar var3;
+__thread struct AlignedVar var4;
+
+static uintptr_t var_addr(void* value) {
+  // Maybe the optimizer would assume that the variable has the alignment it is
+  // declared with.
+  asm volatile("" : "+r,m"(value) : : "memory");
+  return reinterpret_cast<uintptr_t>(value);
+}
+
+int main() {
+  // Bionic only allocates ELF TLS blocks with up to page alignment.
+  CHECK((var_addr(&var3) & (getpagesize() - 1)) == 0);
+  CHECK((var_addr(&var4) & (getpagesize() - 1)) == 0);
+
+  // TODO: These TLS accesses are broken with the current version of LLD. See
+  // https://github.com/llvm/llvm-project/issues/84743.
+#if !defined(__riscv)
+  CHECK(var1.field == 13);
+  CHECK(var2.field == 17);
+#endif
+
+  CHECK(var3.field == 0);
+  CHECK(var4.field == 0);
+  return 0;
+}

@@ -98,10 +98,12 @@ to dlopen(3) (as opposed to being referenced by DT_NEEDED entries).
 
 ## GNU hashes (Availible in API level >= 23)
 
-The GNU hash style available with --hash-style=gnu allows faster
-symbol lookup and is now supported by the dynamic linker in API 23 and
-above. (Use --hash-style=both if you want to build code that uses this
-feature >= Android M but still works on older releases.)
+The GNU hash style available with `--hash-style=gnu` allows faster
+symbol lookup and is supported by Android's dynamic linker in API 23 and
+above. Use `--hash-style=both` if you want to build code that uses this
+feature in new enough releases but still works on older releases.
+If you're using the NDK, clang chooses the right option
+(automatically)[https://github.com/android/ndk/issues/2005].
 
 
 ## Correct soname/path handling (Available in API level >= 23)
@@ -475,6 +477,16 @@ format available from API level 23.
 There are no plans to remove support for ELF files using the older
 OS private use constants for RELR, nor for ELF files using packed
 relocations.
+
+Prior to API level 35, there was a bug that caused RELR relocations to
+be applied after packed relocations. This meant that ifunc resolvers
+referenced by `R_*_IRELATIVE` relocations in the packed relocation
+section would have been able to read globals with RELR relocations
+before they were relocated. The version of `lld` in the NDK has never
+produced binaries affected by this bug, but third-party toolchains
+should make sure not to store `R_*_IRELATIVE` relocations in packed
+relocation sections in order to maintain compatibility with API levels
+below 35.
 
 You can read more about relative relocations
 and their long and complicated history at
