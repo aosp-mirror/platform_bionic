@@ -30,7 +30,12 @@ struct sync_file_info {
   __u32 pad;
   __u64 sync_fence_info;
 };
+struct sync_set_deadline {
+  __u64 deadline_ns;
+  __u64 pad;
+};
 #define SYNC_IOC_MAGIC '>'
 #define SYNC_IOC_MERGE _IOWR(SYNC_IOC_MAGIC, 3, struct sync_merge_data)
 #define SYNC_IOC_FILE_INFO _IOWR(SYNC_IOC_MAGIC, 4, struct sync_file_info)
+#define SYNC_IOC_SET_DEADLINE _IOW(SYNC_IOC_MAGIC, 5, struct sync_set_deadline)
 #endif

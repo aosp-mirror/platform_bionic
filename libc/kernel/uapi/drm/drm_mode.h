@@ -357,6 +357,9 @@ struct drm_mode_crtc_lut {
 struct drm_color_ctm {
   __u64 matrix[9];
 };
+struct drm_color_ctm_3x4 {
+  __u64 matrix[12];
+};
 struct drm_color_lut {
   __u16 red;
   __u16 green;
@@ -482,6 +485,10 @@ struct drm_mode_rect {
   __s32 y1;
   __s32 x2;
   __s32 y2;
+};
+struct drm_mode_closefb {
+  __u32 fb_id;
+  __u32 pad;
 };
 #ifdef __cplusplus
 }

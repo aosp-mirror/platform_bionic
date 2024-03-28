@@ -21,6 +21,7 @@ extern "C" {
 #define DRM_V3D_PERFMON_CREATE 0x08
 #define DRM_V3D_PERFMON_DESTROY 0x09
 #define DRM_V3D_PERFMON_GET_VALUES 0x0a
+#define DRM_V3D_SUBMIT_CPU 0x0b
 #define DRM_IOCTL_V3D_SUBMIT_CL DRM_IOWR(DRM_COMMAND_BASE + DRM_V3D_SUBMIT_CL, struct drm_v3d_submit_cl)
 #define DRM_IOCTL_V3D_WAIT_BO DRM_IOWR(DRM_COMMAND_BASE + DRM_V3D_WAIT_BO, struct drm_v3d_wait_bo)
 #define DRM_IOCTL_V3D_CREATE_BO DRM_IOWR(DRM_COMMAND_BASE + DRM_V3D_CREATE_BO, struct drm_v3d_create_bo)
@@ -32,12 +33,19 @@ extern "C" {
 #define DRM_IOCTL_V3D_PERFMON_CREATE DRM_IOWR(DRM_COMMAND_BASE + DRM_V3D_PERFMON_CREATE, struct drm_v3d_perfmon_create)
 #define DRM_IOCTL_V3D_PERFMON_DESTROY DRM_IOWR(DRM_COMMAND_BASE + DRM_V3D_PERFMON_DESTROY, struct drm_v3d_perfmon_destroy)
 #define DRM_IOCTL_V3D_PERFMON_GET_VALUES DRM_IOWR(DRM_COMMAND_BASE + DRM_V3D_PERFMON_GET_VALUES, struct drm_v3d_perfmon_get_values)
+#define DRM_IOCTL_V3D_SUBMIT_CPU DRM_IOW(DRM_COMMAND_BASE + DRM_V3D_SUBMIT_CPU, struct drm_v3d_submit_cpu)
 #define DRM_V3D_SUBMIT_CL_FLUSH_CACHE 0x01
 #define DRM_V3D_SUBMIT_EXTENSION 0x02
 struct drm_v3d_extension {
   __u64 next;
   __u32 id;
 #define DRM_V3D_EXT_ID_MULTI_SYNC 0x01
+#define DRM_V3D_EXT_ID_CPU_INDIRECT_CSD 0x02
+#define DRM_V3D_EXT_ID_CPU_TIMESTAMP_QUERY 0x03
+#define DRM_V3D_EXT_ID_CPU_RESET_TIMESTAMP_QUERY 0x04
+#define DRM_V3D_EXT_ID_CPU_COPY_TIMESTAMP_QUERY 0x05
+#define DRM_V3D_EXT_ID_CPU_RESET_PERFORMANCE_QUERY 0x06
+#define DRM_V3D_EXT_ID_CPU_COPY_PERFORMANCE_QUERY 0x07
   __u32 flags;
 };
 struct drm_v3d_sem {
@@ -52,6 +60,7 @@ enum v3d_queue {
   V3D_TFU,
   V3D_CSD,
   V3D_CACHE_CLEAN,
+  V3D_CPU,
 };
 struct drm_v3d_multi_sync {
   struct drm_v3d_extension base;
@@ -109,6 +118,7 @@ enum drm_v3d_param {
   DRM_V3D_PARAM_SUPPORTS_CACHE_FLUSH,
   DRM_V3D_PARAM_SUPPORTS_PERFMON,
   DRM_V3D_PARAM_SUPPORTS_MULTISYNC_EXT,
+  DRM_V3D_PARAM_SUPPORTS_CPU_QUEUE,
 };
 struct drm_v3d_get_param {
   __u32 param;
@@ -133,6 +143,10 @@ struct drm_v3d_submit_tfu {
   __u32 out_sync;
   __u32 flags;
   __u64 extensions;
+  struct {
+    __u32 ioc;
+    __u32 pad;
+  } v71;
 };
 struct drm_v3d_submit_csd {
   __u32 cfg[7];
@@ -145,6 +159,66 @@ struct drm_v3d_submit_csd {
   __u64 extensions;
   __u32 flags;
   __u32 pad;
+};
+struct drm_v3d_indirect_csd {
+  struct drm_v3d_extension base;
+  struct drm_v3d_submit_csd submit;
+  __u32 indirect;
+  __u32 offset;
+  __u32 wg_size;
+  __u32 wg_uniform_offsets[3];
+};
+struct drm_v3d_timestamp_query {
+  struct drm_v3d_extension base;
+  __u64 offsets;
+  __u64 syncs;
+  __u32 count;
+  __u32 pad;
+};
+struct drm_v3d_reset_timestamp_query {
+  struct drm_v3d_extension base;
+  __u64 syncs;
+  __u32 offset;
+  __u32 count;
+};
+struct drm_v3d_copy_timestamp_query {
+  struct drm_v3d_extension base;
+  __u8 do_64bit;
+  __u8 do_partial;
+  __u8 availability_bit;
+  __u8 pad;
+  __u32 offset;
+  __u32 stride;
+  __u32 count;
+  __u64 offsets;
+  __u64 syncs;
+};
+struct drm_v3d_reset_performance_query {
+  struct drm_v3d_extension base;
+  __u64 syncs;
+  __u32 count;
+  __u32 nperfmons;
+  __u64 kperfmon_ids;
+};
+struct drm_v3d_copy_performance_query {
+  struct drm_v3d_extension base;
+  __u8 do_64bit;
+  __u8 do_partial;
+  __u8 availability_bit;
+  __u8 pad;
+  __u32 offset;
+  __u32 stride;
+  __u32 nperfmons;
+  __u32 ncounters;
+  __u32 count;
+  __u64 syncs;
+  __u64 kperfmon_ids;
+};
+struct drm_v3d_submit_cpu {
+  __u64 bo_handles;
+  __u32 bo_handle_count;
+  __u32 flags;
+  __u64 extensions;
 };
 enum {
   V3D_PERFCNT_FEP_VALID_PRIMTS_NO_PIXELS,

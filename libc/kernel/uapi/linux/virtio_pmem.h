@@ -9,6 +9,8 @@
 #include <linux/types.h>
 #include <linux/virtio_ids.h>
 #include <linux/virtio_config.h>
+#define VIRTIO_PMEM_F_SHMEM_REGION 0
+#define VIRTIO_PMEM_SHMEM_REGION_ID 0
 struct virtio_pmem_config {
   __le64 start;
   __le64 size;
