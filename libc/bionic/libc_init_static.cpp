@@ -138,9 +138,9 @@ static void layout_static_tls(KernelArgumentBlock& args) {
   static TlsModule mod;
   TlsModules& modules = __libc_shared_globals()->tls_modules;
   if (__bionic_get_tls_segment(phdr_start, phdr_ct, 0, &mod.segment)) {
-    if (!__bionic_check_tls_alignment(&mod.segment.alignment)) {
+    if (!__bionic_check_tls_align(mod.segment.aligned_size.align.value)) {
       async_safe_fatal("error: TLS segment alignment in \"%s\" is not a power of 2: %zu\n",
-                       progname, mod.segment.alignment);
+                       progname, mod.segment.aligned_size.align.value);
     }
     mod.static_offset = layout.reserve_exe_segment_and_tcb(&mod.segment, progname);
     mod.first_generation = kTlsGenerationFirst;

@@ -156,6 +156,20 @@ cc_test {
     ],
 }
 
+cc_test {
+    name: "elftls_align_test_helper",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["elftls_align_test_helper.cpp"],
+    stl: "none", // avoid including extra TLS variables in the executable
+}
+
+cc_test {
+    name: "elftls_skew_align_test_helper",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["elftls_skew_align_test_helper.cpp"],
+    stl: "none", // avoid including extra TLS variables in the executable
+}
+
 // -----------------------------------------------------------------------------
 // Library to test gnu-styled hash
 // -----------------------------------------------------------------------------
