@@ -5155,3 +5155,11 @@ THIS SOFTWARE.
 
 -------------------------------------------------------------------
 
+memcpy - copy memory area
+
+Copyright (c) 2012-2022, Arm Limited.
+Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+SPDX-License-Identifier: MIT OR Apache-2.0 WITH LLVM-exception
+
+-------------------------------------------------------------------
+
