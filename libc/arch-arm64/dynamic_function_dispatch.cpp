@@ -137,7 +137,32 @@ DEFINE_IFUNC_FOR(memrchr) {
 
 typedef int memset_func(void*, int, size_t);
 DEFINE_IFUNC_FOR(memset) {
+  unsigned long midr;
+  unsigned int impl_id, cpu_variant;
+
+  if (arg->_hwcap & HWCAP_CPUID) {
+    /* Read the MIDR register */
+    asm("mrs %0, MIDR_EL1 \n\t" : "=r"(midr));
+
+    /* Extract the CPU Implementer ID */
+    impl_id = (midr >> MIDR_IMPL_ID_SHIFT) & (MIDR_IMPL_ID_MASK);
+
+    /* Check for Qualcomm implementer ID */
+    if (impl_id == QCOM_IMPL_ID) {
+      cpu_variant = (midr >> CPU_VARIANT_SHIFT) & CPU_VARIANT_MASK;
+
+      /* Check for Qualcomm Oryon CPU variants: 0x1, 0x2, 0x3, 0x4, 0x5 */
+      if (cpu_variant <= QCOM_ORYON_CPU_VARIANTS) {
+        RETURN_FUNC(memset_func, __memset_aarch64_nt);
+      } else {
+        RETURN_FUNC(memset_func, __memset_aarch64);
+      }
+    } else {
+      RETURN_FUNC(memset_func, __memset_aarch64);
+    }
+  } else {
     RETURN_FUNC(memset_func, __memset_aarch64);
+  }
 }
 
 typedef char* stpcpy_func(char*, const char*, size_t);

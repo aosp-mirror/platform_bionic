@@ -1076,6 +1076,7 @@ cc_library_static {
                 "arch-arm64/bionic/syscall.S",
                 "arch-arm64/bionic/vfork.S",
                 "arch-arm64/oryon/memcpy-nt.S",
+                "arch-arm64/oryon/memset-nt.S",
             ],
         },
 
