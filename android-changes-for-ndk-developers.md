@@ -156,34 +156,26 @@ page-aligned and stored uncompressed for this to work.
 ## Private API (Enforced for API level >= 24)
 
 Native libraries must use only public API, and must not link against
-non-NDK platform libraries. Starting with API level 24 this rule is enforced and
-applications are no longer able to load non-NDK platform libraries. The
-rule is enforced by the dynamic linker, so non-public libraries
+non-NDK platform libraries. On devices running API level 24 or later,
+this rule is enforced and applications are no longer able to load all
+non-NDK platform libraries. This was to prevent future issues similar
+to the disruption caused when Android switched from OpenSSL to BoringSSL
+at API level 23.
+
+The rule is enforced by the dynamic linker, so non-public libraries
 are not accessible regardless of the way code tries to load them:
-System.loadLibrary, DT_NEEDED entries, and direct calls to dlopen(3)
+System.loadLibrary(), DT_NEEDED entries, and direct calls to dlopen(3)
 will all work exactly the same.
 
-Users should have a consistent app experience across updates,
-and developers shouldn't have to make emergency app updates to
-handle platform changes. For that reason, we recommend against using
-private C/C++ symbols. Private symbols aren't tested as part of the
-Compatibility Test Suite (CTS) that all Android devices must pass. They
-may not exist, or they may behave differently. This makes apps that use
-them more likely to fail on specific devices, or on future releases ---
-as many developers found when Android switched from
-OpenSSL to BoringSSL in API level 23.
-
-In order to reduce the user impact of this transition, we've identified
-a set of libraries that see significant use from Google Play's
-most-installed apps, and that are feasible for us to support in the
+In order to reduce the user impact of this transition, we identified
+a set of libraries that saw significant use from Google Play's
+most-installed apps and were feasible for us to support in the
 short term (including libandroid_runtime.so, libcutils.so, libcrypto.so,
-and libssl.so). In order to give you more time to transition, we will
-temporarily support these libraries; so if you see a warning that means
-your code will not work in a future release -- please fix it now!
-
-Between API level 26 and API level 30, this compatibility mode could be
+and libssl.so). In order to give app developers more time to transition,
+we allowed access to these libraries for apps with a target API level < 24.
+On devices running API level 26 to API level 30, this compatibility mode could be
 disabled by setting a system property (`debug.ld.greylist_disabled`).
-This property is ignored in API level 31 and later.
+This property is ignored on devices running API level 31 and later.
 
 ```
 $ readelf --dynamic libBroken.so | grep NEEDED
@@ -240,11 +232,11 @@ headers.
 
 ## Text Relocations (Enforced for API level >= 23)
 
-Starting with API level 23, shared objects must not contain text
-relocations. That is, the code must be loaded as is and must not be
-modified. Such an approach reduces load time and improves security.
+Apps with a target API level >= 23 cannot load shared objects that contain text
+relocations. Such an approach reduces load time and improves security. This was
+only a change for 32-bit, because 64-bit never supported text relocations.
 
-The usual reason for text relocations is non-position independent
+The usual reason for text relocations was non-position independent
 hand-written assembler. This is not common. You can use the scanelf tool
 from the pax-utils debian package for further diagnostics:
 
@@ -276,8 +268,8 @@ because the Android dynamic linker trusts the entry/flag.
 
 *Potential problems*: Relocations enforce code pages being writable, and
 wastefully increase the number of dirty pages in memory. The dynamic
-linker issued warnings about text relocations from API level 19, but on API 23
-and above refuses to load code with text relocations.
+linker issued warnings about text relocations from API level 19, but on API
+level 23 and above refuses to load code with text relocations.
 
 *Resolution*: rewrite assembler to be position independent to ensure
 no text relocations are necessary. The
@@ -355,11 +347,11 @@ the `-soname` linker option).
 To allow `atfork` and `pthread_atfork` handlers to be unregistered on
 `dlclose`, API level 23 added a new libc function `__register_atfork`.
 This means that code using `atfork` or `pthread_atfork` functions that is
-built with a target API level >= 23 will not load on earlier versions of
+built with a `minSdkVersion` >= 23 will not load on earlier versions of
 Android, with an error referencing `__register_atfork`.
 
-*Resolution*: build your code with an NDK target API level that matches your
-app's minimum API level, or avoid using `atfork`/`pthread_atfork`.
+*Resolution*: build your code with `minSdkVersion` that matches the minimum
+API level you actually support, or avoid using `atfork`/`pthread_atfork`.
 
 
 ## DT_RUNPATH support (Available in API level >= 24)
@@ -408,7 +400,7 @@ being incompatible with future versions of Android.
 
 ## Enable logging of dlopen/dlsym and library loading errors for apps (Available for API level >= 26)
 
-Starting with API level 26 it is possible to enable logging of dynamic
+On devices running API level 26 or later you can enable logging of dynamic
 linker activity for debuggable apps by setting a property corresponding
 to the fully-qualified name of the specific app:
 ```
@@ -455,8 +447,8 @@ are possible workarounds.
 
 ## Use of IFUNC in libc (True for all API levels on devices running Android 10)
 
-Starting with Android 10 (API level 29, but applying to code targeting all API
-levels), libc uses [IFUNC](https://sourceware.org/glibc/wiki/GNU_IFUNC)
+On devices running API level 29, libc uses
+[IFUNC](https://sourceware.org/glibc/wiki/GNU_IFUNC)
 functionality in the dynamic linker to choose optimized assembler routines at
 run time rather than at build time. This lets us use the same `libc.so` on all
 devices, and is similar to what other OSes already did. Because the zygote
