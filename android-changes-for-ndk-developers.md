@@ -11,12 +11,9 @@ See also the
 for details about changes in stack unwinding (crash dumps) between
 different releases.
 
-Required tools: the NDK has an _arch_-linux-android-readelf binary
-(e.g. arm-linux-androideabi-readelf or i686-linux-android-readelf)
-for each architecture (under toolchains/), but you can use readelf for
-any architecture, as we will be doing basic inspection only. On Linux
-you need to have the “binutils” package installed for readelf,
-and “pax-utils” for scanelf.
+Required tools: the NDK has an `llvm-readelf` binary that understands all the
+architecture-specific details of all Android's supported architectures. Recent
+versions of Android also have toybox readelf on the device.
 
 
 ## How we manage incompatible changes
@@ -38,42 +35,44 @@ as toasts. Experience has shown that many developers don’t habitually
 check logcat for warnings until their app stops functioning, so the
 toasts help bring some visibility to the issues before it's too late.
 
+
 ## Changes to library dependency resolution
 
 Until it was [fixed](https://issuetracker.google.com/36950617) in
-JB-MR2, Android didn't include the application library directory
+API level 18, Android didn't include the application library directory
 on the dynamic linker's search path. This meant that apps
 had to call `dlopen` or `System.loadLibrary` on all transitive
 dependencies before loading their main library. Worse, until it was
-[fixed](https://issuetracker.google.com/36935779) in JB-MR2, the
+[fixed](https://issuetracker.google.com/36935779) in API level 18, the
 dynamic linker's caching code cached failures too, so it was necessary
 to topologically sort your libraries and load them in reverse order.
 
-If you need to support Android devices running OS
-versions older than JB-MR2, you might want to consider
+If you need to support Android devices running OS versions older than
+API level 23, you might want to consider
 [ReLinker](https://github.com/KeepSafe/ReLinker) which claims to solve
-these problems automatically.
+these and other problems automatically.
 
 Alternatively, if you don't have too many dependencies, it can be easiest to
 simply link all of your code into one big library and sidestep the details of
 library and symbol lookup changes on all past (and future) Android versions.
 
+
 ## Changes to library search order
 
 We have made various fixes to library search order when resolving symbols.
 
-With API 22, load order switched from depth-first to breadth-first to
+With API level 22, load order switched from depth-first to breadth-first to
 fix dlsym(3).
 
-Before API 23, the default search order was to try the main executable,
+Before API level 23, the default search order was to try the main executable,
 LD_PRELOAD libraries, the library itself, and its DT_NEEDED libraries
-in that order. For API 23 and later, for any given library, the dynamic
+in that order. For API level 23 and later, for any given library, the dynamic
 linker divides other libraries into the global group and the local
 group. The global group is shared by all libraries and contains the main
 executable, LD_PRELOAD libraries, and any library with the DF_1_GLOBAL
 flag set (by passing “-z global” to ld(1)). The local group is
 the breadth-first transitive closure of the library and its DT_NEEDED
-libraries. The M dynamic linker searches the global group followed by
+libraries. The API level 23 dynamic linker searches the global group followed by
 the local group. This allows ASAN, for example, to ensure that it can
 intercept any symbol.
 
@@ -89,7 +88,7 @@ on its search path.
 ## RTLD_LOCAL (Available in API level >= 23)
 
 The dlopen(3) RTLD_LOCAL flag used to be ignored but is implemented
-correctly in API 23 and later. Note that RTLD_LOCAL is the default,
+correctly in API level 23 and later. Note that RTLD_LOCAL is the default,
 so even calls to dlopen(3) that didn’t explicitly use RTLD_LOCAL will
 be affected (unless they explicitly used RTLD_GLOBAL). With RTLD_LOCAL,
 symbols will not be made available to libraries loaded by later calls
@@ -99,7 +98,7 @@ to dlopen(3) (as opposed to being referenced by DT_NEEDED entries).
 ## GNU hashes (Availible in API level >= 23)
 
 The GNU hash style available with `--hash-style=gnu` allows faster
-symbol lookup and is supported by Android's dynamic linker in API 23 and
+symbol lookup and is supported by Android's dynamic linker in API level 23 and
 above. Use `--hash-style=both` if you want to build code that uses this
 feature in new enough releases but still works on older releases.
 If you're using the NDK, clang chooses the right option
@@ -157,34 +156,26 @@ page-aligned and stored uncompressed for this to work.
 ## Private API (Enforced for API level >= 24)
 
 Native libraries must use only public API, and must not link against
-non-NDK platform libraries. Starting with API 24 this rule is enforced and
-applications are no longer able to load non-NDK platform libraries. The
-rule is enforced by the dynamic linker, so non-public libraries
+non-NDK platform libraries. On devices running API level 24 or later,
+this rule is enforced and applications are no longer able to load all
+non-NDK platform libraries. This was to prevent future issues similar
+to the disruption caused when Android switched from OpenSSL to BoringSSL
+at API level 23.
+
+The rule is enforced by the dynamic linker, so non-public libraries
 are not accessible regardless of the way code tries to load them:
-System.loadLibrary, DT_NEEDED entries, and direct calls to dlopen(3)
+System.loadLibrary(), DT_NEEDED entries, and direct calls to dlopen(3)
 will all work exactly the same.
 
-Users should have a consistent app experience across updates,
-and developers shouldn't have to make emergency app updates to
-handle platform changes. For that reason, we recommend against using
-private C/C++ symbols. Private symbols aren't tested as part of the
-Compatibility Test Suite (CTS) that all Android devices must pass. They
-may not exist, or they may behave differently. This makes apps that use
-them more likely to fail on specific devices, or on future releases ---
-as many developers found when Android 6.0 Marshmallow switched from
-OpenSSL to BoringSSL.
-
-In order to reduce the user impact of this transition, we've identified
-a set of libraries that see significant use from Google Play's
-most-installed apps, and that are feasible for us to support in the
+In order to reduce the user impact of this transition, we identified
+a set of libraries that saw significant use from Google Play's
+most-installed apps and were feasible for us to support in the
 short term (including libandroid_runtime.so, libcutils.so, libcrypto.so,
-and libssl.so). In order to give you more time to transition, we will
-temporarily support these libraries; so if you see a warning that means
-your code will not work in a future release -- please fix it now!
-
-Between O and R, this compatibility mode could be disabled by setting a
-system property (`debug.ld.greylist_disabled`). This property is ignored
-in S and later.
+and libssl.so). In order to give app developers more time to transition,
+we allowed access to these libraries for apps with a target API level < 24.
+On devices running API level 26 to API level 30, this compatibility mode could be
+disabled by setting a system property (`debug.ld.greylist_disabled`).
+This property is ignored on devices running API level 31 and later.
 
 ```
 $ readelf --dynamic libBroken.so | grep NEEDED
@@ -200,7 +191,7 @@ $ readelf --dynamic libBroken.so | grep NEEDED
  0x00000001 (NEEDED)                     Shared library: [libc.so]
 ```
 
-*Potential problems*: starting from API 24 the dynamic linker will not
+*Potential problems*: starting from API level 24 the dynamic linker will not
 load private libraries, preventing the application from loading.
 
 *Resolution*: rewrite your native code to rely only on public API. As a
@@ -238,15 +229,16 @@ $ readelf --headers libBroken.so | grep 'section headers'
 *Resolution*: remove the extra steps from your build that strip section
 headers.
 
+
 ## Text Relocations (Enforced for API level >= 23)
 
-Starting with API 23, shared objects must not contain text
-relocations. That is, the code must be loaded as is and must not be
-modified. Such an approach reduces load time and improves security.
+Apps with a target API level >= 23 cannot load shared objects that contain text
+relocations. Such an approach reduces load time and improves security. This was
+only a change for 32-bit, because 64-bit never supported text relocations.
 
-The usual reason for text relocations is non-position independent
-hand-written assembler. This is not common. Use the scanelf tool as
-described in our documentation for further diagnostics:
+The usual reason for text relocations was non-position independent
+hand-written assembler. This is not common. You can use the scanelf tool
+from the pax-utils debian package for further diagnostics:
 
 ```
 $ scanelf -qT libTextRel.so
@@ -256,10 +248,10 @@ $ scanelf -qT libTextRel.so
 ```
 
 If you have no scanelf tool available, it is possible to do a basic
-check with readelf instead, look for either a TEXTREL entry or the
+check with readelf instead. Look for either a TEXTREL entry or the
 TEXTREL flag. Either alone is sufficient. (The value corresponding to the
 TEXTREL entry is irrelevant and typically 0 --- simply the presence of
-the TEXTREL entry declares that the .so contains text relocations). This
+the TEXTREL entry declares that the .so contains text relocations.) This
 example has both indicators present:
 
 ```
@@ -276,9 +268,8 @@ because the Android dynamic linker trusts the entry/flag.
 
 *Potential problems*: Relocations enforce code pages being writable, and
 wastefully increase the number of dirty pages in memory. The dynamic
-linker has issued warnings about text relocations since Android K
-(API 19), but on API 23 and above it refuses to load code with text
-relocations.
+linker issued warnings about text relocations from API level 19, but on API
+level 23 and above refuses to load code with text relocations.
 
 *Resolution*: rewrite assembler to be position independent to ensure
 no text relocations are necessary. The
@@ -296,9 +287,9 @@ DT_NEEDED entry should be the same as the needed library's SONAME,
 leaving the business of finding the library at runtime to the dynamic
 linker.
 
-Before API 23, Android's dynamic linker ignored the full path, and
+Before API level 23, Android's dynamic linker ignored the full path, and
 used only the basename (the part after the last ‘/') when looking
-up the required libraries. Since API 23 the runtime linker will honor
+up the required libraries. Since API level 23 the runtime linker will honor
 the DT_NEEDED exactly and so it won't be able to load the library if
 it is not present in that exact location on the device.
 
@@ -315,8 +306,8 @@ $ readelf --dynamic libSample.so | grep NEEDED
 [C:\Users\build\Android\ci\jni\libBroken.so]
 ```
 
-*Potential problems*: before API 23 the DT_NEEDED entry's basename was
-used, but starting from API 23 the Android runtime will try to load the
+*Potential problems*: before API level 23 the DT_NEEDED entry's basename was
+used, but starting from API level 23 the Android runtime will try to load the
 library using the path specified, and that path won't exist on the
 device. There are broken third-party toolchains/build systems that use
 a path on a build host instead of the SONAME.
@@ -350,16 +341,18 @@ default. Ensure you're using the current NDK and that you haven't
 configured your build system to generate incorrect SONAME entries (using
 the `-soname` linker option).
 
+
 ## `__register_atfork` (Available in API level >= 23)
 
 To allow `atfork` and `pthread_atfork` handlers to be unregistered on
-`dlclose`, the implementation changed in API level 23. Unfortunately this
-requires a new libc function `__register_atfork`. Code using these functions
-that is built with a target API level >= 23 therefore will not load on earlier
-versions of Android, with an error referencing `__register_atfork`.
+`dlclose`, API level 23 added a new libc function `__register_atfork`.
+This means that code using `atfork` or `pthread_atfork` functions that is
+built with a `minSdkVersion` >= 23 will not load on earlier versions of
+Android, with an error referencing `__register_atfork`.
 
-*Resolution*: build your code with an NDK target API level that matches your
-app's minimum API level, or avoid using `atfork`/`pthread_atfork`.
+*Resolution*: build your code with `minSdkVersion` that matches the minimum
+API level you actually support, or avoid using `atfork`/`pthread_atfork`.
+
 
 ## DT_RUNPATH support (Available in API level >= 24)
 
@@ -389,6 +382,7 @@ $ readelf --program-headers -W libBadFlags.so | grep WE
 into your app. The middleware vendor is aware of the problem and has a fix
 available.
 
+
 ## Invalid ELF header/section headers (Enforced for API level >= 26)
 
 In API level 26 and above the dynamic linker checks more values in
@@ -403,9 +397,10 @@ dlopen failed: "/data/data/com.example.bad/lib.so" has unsupported e_shentsize: 
 ELF files. Note that using them puts application under high risk of
 being incompatible with future versions of Android.
 
-## Enable logging of dlopen/dlsym and library loading errors for apps (Available in Android O)
 
-Starting with Android O it is possible to enable logging of dynamic
+## Enable logging of dlopen/dlsym and library loading errors for apps (Available for API level >= 26)
+
+On devices running API level 26 or later you can enable logging of dynamic
 linker activity for debuggable apps by setting a property corresponding
 to the fully-qualified name of the specific app:
 ```
@@ -429,12 +424,13 @@ app-specific one. For example, to enable logging of all dlopen(3)
 adb shell setprop debug.ld.all dlerror,dlopen
 ```
 
+
 ## dlclose interacts badly with thread local variables with non-trivial destructors
 
 Android allows `dlclose` to unload a library even if there are still
 thread-local variables with non-trivial destructors. This leads to
 crashes when a thread exits and attempts to call the destructor, the
-code for which has been unloaded (as in [issue 360], fixed in P).
+code for which has been unloaded (as in [issue 360], fixed in API level 28).
 
 [issue 360]: https://github.com/android-ndk/ndk/issues/360
 
@@ -442,18 +438,19 @@ Not calling `dlclose` or ensuring that your library has `RTLD_NODELETE`
 set (so that calls to `dlclose` don't actually unload the library)
 are possible workarounds.
 
-|                   | Pre-M                      | M+      | P+    |
+|                   | API level < 23             | >= 23   | >= 28 |
 | ----------------- | -------------------------- | ------- | ----- |
 | No workaround     | Works for static STL       | Broken  | Works |
 | `-Wl,-z,nodelete` | Works for static STL       | Works   | Works |
 | No `dlclose`      | Works                      | Works   | Works |
 
-## Use of IFUNC in libc (True for all API levels on devices running Q)
 
-Starting with Android Q (API level 29), libc uses
-[IFUNC](https://sourceware.org/glibc/wiki/GNU_IFUNC) functionality in
-the dynamic linker to choose optimized assembler routines at run time
-rather than at build time. This lets us use the same `libc.so` on all
+## Use of IFUNC in libc (True for all API levels on devices running Android 10)
+
+On devices running API level 29, libc uses
+[IFUNC](https://sourceware.org/glibc/wiki/GNU_IFUNC)
+functionality in the dynamic linker to choose optimized assembler routines at
+run time rather than at build time. This lets us use the same `libc.so` on all
 devices, and is similar to what other OSes already did. Because the zygote
 uses the C library, this decision is made long before we know what API
 level an app targets, so all code sees the new IFUNC-using C library.
@@ -461,6 +458,7 @@ Most apps should be unaffected by this change, but apps that hook or try to
 detect hooking of C library functions might need to fix their code to cope
 with IFUNC relocations. The affected functions are from `<string.h>`, but
 may expand to include more functions (and more libraries) in future.
+
 
 ## Relative relocations (RELR)
 
@@ -492,19 +490,22 @@ You can read more about relative relocations
 and their long and complicated history at
 https://maskray.me/blog/2021-10-31-relative-relocations-and-relr.
 
+
 ## No more sentinels in .preinit_array/.init_array/.fini_array sections of executables (in All API levels)
 
-In Android <= U and NDK <= 26, Android used sentinels in these sections of
-executables to locate the start and end of arrays. However, when building with
-LTO, the function pointers in the arrays can be reordered, making sentinels no
-longer work. This prevents constructors for global C++ variables from being
-called in static executables when using LTO.
+In Android <= API level 34 and NDK <= r26, Android used sentinels in the
+`.preinit_array`/`.init_array`/`.fini_array` sections of executables to locate
+the start and end of these arrays. When building with LTO, the function pointers
+in the arrays can be reordered, making sentinels no longer work. This prevents
+constructors for global C++ variables from being called in static executables
+when using LTO.
 
-To fix this, in Android >= V and NDK >= 27, we removed sentinels and switched
-to using symbols inserted by LLD (like `__init_array_start`,
-`__init_array_end`) to locate the arrays. This also avoids keeping a section
-when there are no corresponding functions.
+To fix this, in Android >= API level 35 and NDK >= r27, we removed sentinels
+and switched to using symbols inserted by LLD (like `__init_array_start`,
+`__init_array_end`) to locate the arrays. This also avoids the need for an
+empty section when there are no corresponding functions.
 
-For dynamic executables, we kept sentinel support in crtbegin_dynamic.o and
-libc.so. This ensures that executables built with newer crtbegin_dynamic.o
-(in NDK >= 27) work with older libc.so (in Android <= U), and vice versa.
+For dynamic executables, we kept sentinel support in `crtbegin_dynamic.o` and
+`libc.so`. This ensures that executables built with newer `crtbegin_dynamic.o`
+(in NDK >= r27) work with older `libc.so` (in Android <= API level 34), and
+vice versa.
