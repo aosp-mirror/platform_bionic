@@ -65,6 +65,16 @@ DEFINE_IFUNC_FOR(memmove) {
     }
 }
 
+typedef int memrchr_func(const void*, int, size_t);
+DEFINE_IFUNC_FOR(memrchr) {
+    RETURN_FUNC(memrchr_func, __memrchr_aarch64);
+}
+
+typedef int memset_func(void*, int, size_t);
+DEFINE_IFUNC_FOR(memset) {
+    RETURN_FUNC(memset_func, __memset_aarch64);
+}
+
 typedef char* stpcpy_func(char*, const char*, size_t);
 DEFINE_IFUNC_FOR(stpcpy) {
     // TODO: enable the SVE version.
