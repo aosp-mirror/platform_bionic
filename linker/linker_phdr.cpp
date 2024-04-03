@@ -724,6 +724,16 @@ bool ElfReader::ReadPadSegmentNote() {
       continue;
     }
 
+    // If the PT_NOTE extends beyond the file. The ELF is doing something
+    // strange -- obfuscation, embedding hidden loaders, ...
+    //
+    // It doesn't contain the pad_segment note. Skip it to avoid SIGBUS
+    // by accesses beyond the file.
+    off64_t note_end_off = file_offset_ + phdr->p_offset + phdr->p_filesz;
+    if (note_end_off > file_size_) {
+      continue;
+    }
+
     // note_fragment is scoped to within the loop so that there is
     // at most 1 PT_NOTE mapped at anytime during this search.
     MappedFileFragment note_fragment;
