@@ -384,8 +384,6 @@ struct soinfo {
 
  private:
   bool relocate(const SymbolLookupList& lookup_list);
-  bool relocate_relr();
-  void apply_relr_reloc(ElfW(Addr) offset);
 
   // This part of the structure is only available
   // when FLAG_NEW_SOINFO is set in this->flags.
