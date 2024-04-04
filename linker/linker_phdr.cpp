@@ -1280,11 +1280,6 @@ int phdr_table_map_gnu_relro(const ElfW(Phdr)* phdr_table,
 
 
 #if defined(__arm__)
-
-#  ifndef PT_ARM_EXIDX
-#    define PT_ARM_EXIDX    0x70000001      /* .ARM.exidx segment */
-#  endif
-
 /* Return the address and size of the .ARM.exidx section in memory,
  * if present.
  *
