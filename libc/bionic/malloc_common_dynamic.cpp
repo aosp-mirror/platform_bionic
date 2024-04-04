@@ -381,7 +381,7 @@ static void MallocInitImpl(libc_globals* globals) {
 
   MaybeInitGwpAsanFromLibc(globals);
 
-#if defined(USE_SCUDO)
+#if defined(USE_SCUDO) && !__has_feature(hwaddress_sanitizer)
   __libc_shared_globals()->scudo_stack_depot = __scudo_get_stack_depot_addr();
   __libc_shared_globals()->scudo_region_info = __scudo_get_region_info_addr();
   __libc_shared_globals()->scudo_ring_buffer = __scudo_get_ring_buffer_addr();
