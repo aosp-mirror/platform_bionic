@@ -152,6 +152,10 @@ typedef struct {
     // mode, and bug reports will be created by debuggerd, however the process
     // will recover and continue to function as if the memory safety bug wasn't
     // detected.
+    //
+    // In Android 15, this is the same as TURN_ON_WITH_SAMPLING, as GWP-ASan is
+    // only ever used in non-crashing mode (even for platform executables and
+    // system apps).
     TURN_ON_FOR_APP_SAMPLED_NON_CRASHING,
   };
 
