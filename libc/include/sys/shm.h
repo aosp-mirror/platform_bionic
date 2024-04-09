@@ -36,11 +36,12 @@
 #include <sys/cdefs.h>
 #include <sys/ipc.h>
 #include <sys/types.h>
+#include <unistd.h>
 
 #include <linux/shm.h>
 
 #define shmid_ds shmid64_ds
-#define SHMLBA 4096
+#define SHMLBA getpagesize()
 
 __BEGIN_DECLS
 

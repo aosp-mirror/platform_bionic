@@ -65,19 +65,16 @@
 .endm
 
 ENTRY_WEAK_FOR_NATIVE_BRIDGE(setjmp)
-  movl 4(%esp),%ecx
   mov $1,%eax
   jmp .L_sigsetjmp
 END(setjmp)
 
 ENTRY_WEAK_FOR_NATIVE_BRIDGE(_setjmp)
-  movl 4(%esp),%ecx
   movl $0,%eax
   jmp .L_sigsetjmp
 END(_setjmp)
 
 ENTRY_WEAK_FOR_NATIVE_BRIDGE(sigsetjmp)
-  movl 4(%esp),%ecx
   movl 8(%esp),%eax
 
 .L_sigsetjmp:
@@ -88,6 +85,7 @@ ENTRY_WEAK_FOR_NATIVE_BRIDGE(sigsetjmp)
   PIC_EPILOGUE
 
   // Record the setjmp cookie and whether or not we're saving the signal mask.
+  movl 4(%esp),%ecx
   movl %eax,(_JB_SIGFLAG * 4)(%ecx)
 
   // Do we need to save the signal mask?
