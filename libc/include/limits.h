@@ -136,6 +136,9 @@
 #define IOV_MAX 1024
 #define SEM_VALUE_MAX 0x3fffffff
 
+/** Do not use: prefer getline() or asprintf() rather than hard-coding an arbitrary size. */
+#define LINE_MAX _POSIX2_LINE_MAX
+
 /* POSIX says these belong in <unistd.h> but BSD has some in <limits.h>. */
 #include <bits/posix_limits.h>
 
