@@ -99,7 +99,7 @@ struct sched_param {
 };
 
 /**
- * [sched_setscheduler(2)](http://man7.org/linux/man-pages/man2/sched_getcpu.2.html)
+ * [sched_setscheduler(2)](https://man7.org/linux/man-pages/man2/sched_setscheduler.2.html)
  * sets the scheduling policy and associated parameters for the given thread.
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
@@ -107,7 +107,7 @@ struct sched_param {
 int sched_setscheduler(pid_t __pid, int __policy, const struct sched_param* _Nonnull __param);
 
 /**
- * [sched_getscheduler(2)](http://man7.org/linux/man-pages/man2/sched_getcpu.2.html)
+ * [sched_getscheduler(2)](https://man7.org/linux/man-pages/man2/sched_getscheduler.2)
  * gets the scheduling policy for the given thread.
  *
  * Returns a non-negative thread policy on success and returns -1 and sets
