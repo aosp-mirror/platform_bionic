@@ -30,18 +30,22 @@
 #include <stddef.h>
 #include <sys/auxv.h>
 
-#define MIDR_IMPL_ID_SHIFT 24u
-#define MIDR_IMPL_ID_MASK 0xFF
-#define CPU_VARIANT_SHIFT 20u
-#define CPU_VARIANT_MASK 0xF
+static inline bool __bionic_is_oryon(unsigned long hwcap) {
+    if (!(hwcap & HWCAP_CPUID)) return false;
 
-/* Macro to identify CPU implementer */
-#define QCOM_IMPL_ID 0x51
+    // Extract the implementor and variant bits from MIDR_EL1.
+    // https://www.kernel.org/doc/html/latest/arch/arm64/cpu-feature-registers.html#list-of-registers-with-visible-features
+    unsigned long midr;
+    __asm__ __volatile__("mrs %0, MIDR_EL1" : "=r"(midr));
+    uint16_t cpu = (midr >> 20) & 0xfff;
 
-/* Macro to indentify qualcomm CPU variants which supports
- * __memcpy_aarch64_nt routine
- */
-#define QCOM_ORYON_CPU_VARIANTS 0x5
+    auto make_cpu = [](unsigned implementor, unsigned variant) {
+        return (implementor << 4) | variant;
+    };
+
+    // Check for implementor Qualcomm's variants 0x1..0x5 (Oryon).
+    return cpu >= make_cpu('Q', 0x1) && cpu <= make_cpu('Q', 0x5);
+}
 
 extern "C" {
 
@@ -62,68 +66,20 @@ DEFINE_IFUNC_FOR(memcmp) {
 
 typedef void* memcpy_func(void*, const void*, size_t);
 DEFINE_IFUNC_FOR(memcpy) {
-  unsigned long midr;
-  unsigned int impl_id, cpu_variant;
-
-  /* Check if hardware capability CPUID is available */
-  if (arg->_hwcap & HWCAP_CPUID) {
-    /* Read the MIDR register */
-    asm("mrs %0, MIDR_EL1 \n\t" : "=r"(midr));
-
-    /* Extract the CPU Implementer ID */
-    impl_id = (midr >> MIDR_IMPL_ID_SHIFT) & (MIDR_IMPL_ID_MASK);
-
-    /* Check for Qualcomm implementer ID */
-    if (impl_id == QCOM_IMPL_ID) {
-      cpu_variant = (midr >> CPU_VARIANT_SHIFT) & CPU_VARIANT_MASK;
-
-      /* Check for Qualcomm Oryon CPU variants: 0x1, 0x2, 0x3, 0x4, 0x5 */
-      if (cpu_variant <= QCOM_ORYON_CPU_VARIANTS) {
+    if (__bionic_is_oryon(arg->_hwcap)) {
         RETURN_FUNC(memcpy_func, __memcpy_aarch64_nt);
-      } else {
+    } else if (arg->_hwcap & HWCAP_ASIMD) {
+        RETURN_FUNC(memcpy_func, __memcpy_aarch64_simd);
+    } else {
         RETURN_FUNC(memcpy_func, __memcpy_aarch64);
-      }
     }
-  }
-  /* If CPU implementer is not Qualcomm, choose the custom
-   * implementation based on CPU architecture feature
-   * */
-  if (arg->_hwcap & HWCAP_ASIMD) {
-    RETURN_FUNC(memcpy_func, __memcpy_aarch64_simd);
-  } else {
-    RETURN_FUNC(memcpy_func, __memcpy_aarch64);
-  }
 }
 
 typedef void* memmove_func(void*, const void*, size_t);
 DEFINE_IFUNC_FOR(memmove) {
-  unsigned long midr;
-  unsigned int impl_id, cpu_variant;
-
-  /* Check if hardware capability CPUID is available */
-  if (arg->_hwcap & HWCAP_CPUID) {
-    /* Read the MIDR register */
-    asm("mrs %0, MIDR_EL1 \n\t" : "=r"(midr));
-
-    /* Extract the CPU Implementer ID */
-    impl_id = (midr >> MIDR_IMPL_ID_SHIFT) & (MIDR_IMPL_ID_MASK);
-
-    /* Check for Qualcomm implementer ID */
-    if (impl_id == QCOM_IMPL_ID) {
-      cpu_variant = (midr >> CPU_VARIANT_SHIFT) & CPU_VARIANT_MASK;
-
-      /* Check for Qualcomm Oryon CPU variants: 0x1, 0x2, 0x3, 0x4, 0x5 */
-      if (cpu_variant <= QCOM_ORYON_CPU_VARIANTS) {
-        RETURN_FUNC(memcpy_func, __memmove_aarch64_nt);
-      } else {
-        RETURN_FUNC(memcpy_func, __memmove_aarch64);
-      }
-    }
-  }
-  /* If CPU implementer is not Qualcomm, choose the custom
-   * implementation based on CPU architecture feature
-   * */
-  if (arg->_hwcap & HWCAP_ASIMD) {
+  if (__bionic_is_oryon(arg->_hwcap)) {
+    RETURN_FUNC(memcpy_func, __memmove_aarch64_nt);
+  } else if (arg->_hwcap & HWCAP_ASIMD) {
     RETURN_FUNC(memmove_func, __memmove_aarch64_simd);
   } else {
     RETURN_FUNC(memmove_func, __memmove_aarch64);
@@ -137,32 +93,11 @@ DEFINE_IFUNC_FOR(memrchr) {
 
 typedef int memset_func(void*, int, size_t);
 DEFINE_IFUNC_FOR(memset) {
-  unsigned long midr;
-  unsigned int impl_id, cpu_variant;
-
-  if (arg->_hwcap & HWCAP_CPUID) {
-    /* Read the MIDR register */
-    asm("mrs %0, MIDR_EL1 \n\t" : "=r"(midr));
-
-    /* Extract the CPU Implementer ID */
-    impl_id = (midr >> MIDR_IMPL_ID_SHIFT) & (MIDR_IMPL_ID_MASK);
-
-    /* Check for Qualcomm implementer ID */
-    if (impl_id == QCOM_IMPL_ID) {
-      cpu_variant = (midr >> CPU_VARIANT_SHIFT) & CPU_VARIANT_MASK;
-
-      /* Check for Qualcomm Oryon CPU variants: 0x1, 0x2, 0x3, 0x4, 0x5 */
-      if (cpu_variant <= QCOM_ORYON_CPU_VARIANTS) {
+    if (__bionic_is_oryon(arg->_hwcap)) {
         RETURN_FUNC(memset_func, __memset_aarch64_nt);
-      } else {
-        RETURN_FUNC(memset_func, __memset_aarch64);
-      }
     } else {
-      RETURN_FUNC(memset_func, __memset_aarch64);
+        RETURN_FUNC(memset_func, __memset_aarch64);
     }
-  } else {
-    RETURN_FUNC(memset_func, __memset_aarch64);
-  }
 }
 
 typedef char* stpcpy_func(char*, const char*, size_t);
