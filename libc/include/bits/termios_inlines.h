@@ -37,7 +37,7 @@
 #include <linux/termios.h>
 
 #if !defined(__BIONIC_TERMIOS_INLINE)
-#define __BIONIC_TERMIOS_INLINE static __inline
+#define __BIONIC_TERMIOS_INLINE static inline
 #endif
 
 __BEGIN_DECLS
@@ -45,7 +45,7 @@ __BEGIN_DECLS
 // Supporting separate input and output speeds would require an ABI
 // change for `struct termios`.
 
-static __inline speed_t cfgetspeed(const struct termios* _Nonnull s) {
+static inline speed_t cfgetspeed(const struct termios* _Nonnull s) {
   return __BIONIC_CAST(static_cast, speed_t, s->c_cflag & CBAUD);
 }
 
