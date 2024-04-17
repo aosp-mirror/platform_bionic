@@ -32,7 +32,7 @@
 
 #if __ANDROID_API__ < 28
 
-#define __BIONIC_SWAB_INLINE static __inline
+#define __BIONIC_SWAB_INLINE static inline
 #include <bits/swab.h>
 
 #endif
