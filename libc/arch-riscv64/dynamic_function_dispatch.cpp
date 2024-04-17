@@ -35,7 +35,7 @@
 
 extern "C" {
 
-static __always_inline int ifunc_faccessat(int dir_fd, const char* path, int mode) {
+static inline __always_inline int ifunc_faccessat(int dir_fd, const char* path, int mode) {
   register long a0 __asm__("a0") = dir_fd;
   register long a1 __asm__("a1") = reinterpret_cast<long>(path);
   register long a2 __asm__("a2") = mode;
