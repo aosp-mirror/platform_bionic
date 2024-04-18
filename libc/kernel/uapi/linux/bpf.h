@@ -271,8 +271,9 @@ enum bpf_link_type {
   BPF_LINK_TYPE_TCX = 11,
   BPF_LINK_TYPE_UPROBE_MULTI = 12,
   BPF_LINK_TYPE_NETKIT = 13,
-  MAX_BPF_LINK_TYPE,
+  __MAX_BPF_LINK_TYPE,
 };
+#define MAX_BPF_LINK_TYPE __MAX_BPF_LINK_TYPE
 enum bpf_perf_event_type {
   BPF_PERF_EVENT_UNSPEC = 0,
   BPF_PERF_EVENT_UPROBE = 1,
@@ -296,6 +297,7 @@ enum bpf_perf_event_type {
 #define BPF_F_SLEEPABLE (1U << 4)
 #define BPF_F_XDP_HAS_FRAGS (1U << 5)
 #define BPF_F_XDP_DEV_BOUND_ONLY (1U << 6)
+#define BPF_F_TEST_REG_INVARIANTS (1U << 7)
 enum {
   BPF_F_KPROBE_MULTI_RETURN = (1U << 0)
 };
@@ -1063,6 +1065,16 @@ struct bpf_link_info {
       __u64 missed;
     } kprobe_multi;
     struct {
+      __aligned_u64 path;
+      __aligned_u64 offsets;
+      __aligned_u64 ref_ctr_offsets;
+      __aligned_u64 cookies;
+      __u32 path_size;
+      __u32 count;
+      __u32 flags;
+      __u32 pid;
+    } uprobe_multi;
+    struct {
       __u32 type;
       __u32 : 32;
       union {
@@ -1198,6 +1210,7 @@ enum {
   BPF_TCP_LISTEN,
   BPF_TCP_CLOSING,
   BPF_TCP_NEW_SYN_RECV,
+  BPF_TCP_BOUND_INACTIVE,
   BPF_TCP_MAX_STATES
 };
 enum {
@@ -1358,34 +1371,25 @@ struct bpf_spin_lock {
   __u32 val;
 };
 struct bpf_timer {
-  __u64 : 64;
-  __u64 : 64;
+  __u64 __opaque[2];
 } __attribute__((aligned(8)));
 struct bpf_dynptr {
-  __u64 : 64;
-  __u64 : 64;
+  __u64 __opaque[2];
 } __attribute__((aligned(8)));
 struct bpf_list_head {
-  __u64 : 64;
-  __u64 : 64;
+  __u64 __opaque[2];
 } __attribute__((aligned(8)));
 struct bpf_list_node {
-  __u64 : 64;
-  __u64 : 64;
-  __u64 : 64;
+  __u64 __opaque[3];
 } __attribute__((aligned(8)));
 struct bpf_rb_root {
-  __u64 : 64;
-  __u64 : 64;
+  __u64 __opaque[2];
 } __attribute__((aligned(8)));
 struct bpf_rb_node {
-  __u64 : 64;
-  __u64 : 64;
-  __u64 : 64;
-  __u64 : 64;
+  __u64 __opaque[4];
 } __attribute__((aligned(8)));
 struct bpf_refcount {
-  __u32 : 32;
+  __u32 __opaque[1];
 } __attribute__((aligned(4)));
 struct bpf_sysctl {
   __u32 write;

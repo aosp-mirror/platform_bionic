@@ -13,7 +13,10 @@ struct ioctl_gntalloc_alloc_gref {
   __u16 flags;
   __u32 count;
   __u64 index;
-  __u32 gref_ids[1];
+  union {
+    __u32 gref_ids[1];
+    __DECLARE_FLEX_ARRAY(__u32, gref_ids_flex);
+  };
 };
 #define GNTALLOC_FLAG_WRITABLE 1
 #define IOCTL_GNTALLOC_DEALLOC_GREF _IOC(_IOC_NONE, 'G', 6, sizeof(struct ioctl_gntalloc_dealloc_gref))
