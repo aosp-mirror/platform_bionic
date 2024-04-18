@@ -320,27 +320,12 @@
 /* Used to rename functions so that the compiler emits a call to 'x' rather than the function this was applied to. */
 #define __RENAME(x) __asm__(#x)
 
-#if __has_builtin(__builtin_umul_overflow) || __GNUC__ >= 5
-#if defined(__LP64__)
-#define __size_mul_overflow(a, b, result) __builtin_umull_overflow(a, b, result)
-#else
-#define __size_mul_overflow(a, b, result) __builtin_umul_overflow(a, b, result)
-#endif
-#else
-extern inline __always_inline __attribute__((gnu_inline))
-int __size_mul_overflow(__SIZE_TYPE__ a, __SIZE_TYPE__ b, __SIZE_TYPE__ *result) {
-    *result = a * b;
-    static const __SIZE_TYPE__ mul_no_overflow = 1UL << (sizeof(__SIZE_TYPE__) * 4);
-    return (a >= mul_no_overflow || b >= mul_no_overflow) && a > 0 && (__SIZE_TYPE__)-1 / a < b;
-}
-#endif
-
 /*
  * Used when we need to check for overflow when multiplying x and y. This
- * should only be used where __size_mul_overflow can not work, because it makes
- * assumptions that __size_mul_overflow doesn't (x and y are positive, ...),
+ * should only be used where __builtin_umull_overflow can not work, because it makes
+ * assumptions that __builtin_umull_overflow doesn't (x and y are positive, ...),
  * *and* doesn't make use of compiler intrinsics, so it's probably slower than
- * __size_mul_overflow.
+ * __builtin_umull_overflow.
  */
 #define __unsafe_check_mul_overflow(x, y) ((__SIZE_TYPE__)-1 / (x) < (y))
 
