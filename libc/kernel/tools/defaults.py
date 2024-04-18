@@ -32,8 +32,10 @@ kernel_known_macros = {
 # addition to removing the structure, add a #include to the file.
 kernel_structs_to_remove = {
     # Remove these structures since they are still the same as
-    # timeval, itimerval.
-    "__kernel_old_timeval": None,
+    # timeval, itimerval. Also, add an include of linux/time.h
+    # since __kernel_old_timeval is being changed to timeval, and
+    # is only present in linux/time.h.
+    "__kernel_old_timeval": "linux/time.h",
     "__kernel_old_itimerval": None,
     # Replace all of the below structures with #include <bits/STRUCT.h>
     "__kernel_sockaddr_storage": "bits/sockaddr_storage.h",

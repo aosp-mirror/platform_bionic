@@ -427,4 +427,9 @@
 #define __NR_futex_wake (__NR_SYSCALL_BASE + 454)
 #define __NR_futex_wait (__NR_SYSCALL_BASE + 455)
 #define __NR_futex_requeue (__NR_SYSCALL_BASE + 456)
+#define __NR_statmount (__NR_SYSCALL_BASE + 457)
+#define __NR_listmount (__NR_SYSCALL_BASE + 458)
+#define __NR_lsm_get_self_attr (__NR_SYSCALL_BASE + 459)
+#define __NR_lsm_set_self_attr (__NR_SYSCALL_BASE + 460)
+#define __NR_lsm_list_modules (__NR_SYSCALL_BASE + 461)
 #endif
