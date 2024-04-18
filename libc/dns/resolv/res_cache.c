@@ -1166,14 +1166,14 @@ entry_free( Entry*  e )
     }
 }
 
-static __inline__ void
+static inline void
 entry_mru_remove( Entry*  e )
 {
     e->mru_prev->mru_next = e->mru_next;
     e->mru_next->mru_prev = e->mru_prev;
 }
 
-static __inline__ void
+static inline void
 entry_mru_add( Entry*  e, Entry*  list )
 {
     Entry*  first = list->mru_next;
