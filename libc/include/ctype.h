@@ -42,7 +42,7 @@
  * also provide actual symbols for any caller that needs them.
  */
 #if !defined(__BIONIC_CTYPE_INLINE)
-#define __BIONIC_CTYPE_INLINE static __inline
+#define __BIONIC_CTYPE_INLINE static inline
 #endif
 
 /** Internal implementation detail. Do not use. */
