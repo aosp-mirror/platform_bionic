@@ -433,7 +433,8 @@ struct ethtool_rxfh {
   __u32 indir_size;
   __u32 key_size;
   __u8 hfunc;
-  __u8 rsvd8[3];
+  __u8 input_xfrm;
+  __u8 rsvd8[2];
   __u32 rsvd32;
   __u32 rss_config[];
 };
@@ -857,6 +858,8 @@ enum ethtool_link_mode_bit_indices {
 #define WAKE_MAGICSECURE (1 << 6)
 #define WAKE_FILTER (1 << 7)
 #define WOL_MODE_COUNT 8
+#define RXH_XFRM_SYM_XOR (1 << 0)
+#define RXH_XFRM_NO_CHANGE 0xff
 #define TCP_V4_FLOW 0x01
 #define UDP_V4_FLOW 0x02
 #define SCTP_V4_FLOW 0x03

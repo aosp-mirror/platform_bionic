@@ -9,6 +9,7 @@
 #include <linux/types.h>
 #include <linux/if_ether.h>
 #include <rdma/ib_user_ioctl_verbs.h>
+#include <rdma/mlx5_user_ioctl_verbs.h>
 enum {
   MLX5_QP_FLAG_SIGNATURE = 1 << 0,
   MLX5_QP_FLAG_SCATTER_CQE = 1 << 1,
@@ -186,6 +187,7 @@ struct mlx5_ib_query_device_resp {
   __u32 tunnel_offloads_caps;
   struct mlx5_ib_dci_streams_caps dci_streams_caps;
   __u16 reserved;
+  struct mlx5_ib_uapi_reg reg_c0;
 };
 enum mlx5_ib_create_cq_flags {
   MLX5_IB_CREATE_CQ_FLAGS_CQE_128B_PAD = 1 << 0,
