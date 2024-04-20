@@ -361,6 +361,7 @@ cc_defaults {
 
     sanitize: {
         hwaddress: false,
+        memtag_stack: false,
     },
 
     static_libs: [
