@@ -350,8 +350,11 @@ long syscall(long __number, ...);
 int daemon(int __no_chdir, int __no_close);
 
 #if defined(__arm__)
+/**
+ * New code should use __builtin___clear_cache() instead, which works on
+ * all architectures.
+ */
 int cacheflush(long __addr, long __nbytes, long __cache);
-    /* __attribute__((deprecated("use __builtin___clear_cache instead"))); */
 #endif
 
 pid_t tcgetpgrp(int __fd);
