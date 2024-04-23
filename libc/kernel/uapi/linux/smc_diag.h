@@ -85,5 +85,7 @@ struct smcd_diag_dmbinfo {
   __aligned_u64 my_gid;
   __aligned_u64 token;
   __aligned_u64 peer_token;
+  __aligned_u64 peer_gid_ext;
+  __aligned_u64 my_gid_ext;
 };
 #endif

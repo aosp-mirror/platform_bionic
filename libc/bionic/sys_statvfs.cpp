@@ -17,7 +17,7 @@
 #include <sys/statfs.h>
 #include <sys/statvfs.h>
 
-static __inline void __bionic_statfs_to_statvfs(const struct statfs* src, struct statvfs* dst) {
+static inline void __bionic_statfs_to_statvfs(const struct statfs* src, struct statvfs* dst) {
   dst->f_bsize = src->f_bsize;
   dst->f_frsize = src->f_frsize;
   dst->f_blocks = src->f_blocks;

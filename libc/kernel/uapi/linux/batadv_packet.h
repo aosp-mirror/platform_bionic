@@ -51,6 +51,7 @@ enum batadv_mcast_flags {
   BATADV_MCAST_WANT_ALL_IPV6 = 1UL << 2,
   BATADV_MCAST_WANT_NO_RTR4 = 1UL << 3,
   BATADV_MCAST_WANT_NO_RTR6 = 1UL << 4,
+  BATADV_MCAST_HAVE_MC_PTYPE_CAPA = 1UL << 5,
 };
 #define BATADV_TT_DATA_TYPE_MASK 0x0F
 enum batadv_tt_data_flags {
@@ -76,6 +77,7 @@ enum batadv_tvlv_type {
   BATADV_TVLV_TT = 0x04,
   BATADV_TVLV_ROAM = 0x05,
   BATADV_TVLV_MCAST = 0x06,
+  BATADV_TVLV_MCAST_TRACKER = 0x07,
 };
 #pragma pack(2)
 struct batadv_bla_claim_dst {
@@ -208,6 +210,13 @@ struct batadv_bcast_packet {
   __be32 seqno;
   __u8 orig[ETH_ALEN];
 };
+struct batadv_mcast_packet {
+  __u8 packet_type;
+  __u8 version;
+  __u8 ttl;
+  __u8 reserved;
+  __be16 tvlv_len;
+};
 struct batadv_coded_packet {
   __u8 packet_type;
   __u8 version;
@@ -266,6 +275,9 @@ struct batadv_tvlv_roam_adv {
 struct batadv_tvlv_mcast_data {
   __u8 flags;
   __u8 reserved[3];
+};
+struct batadv_tvlv_mcast_tracker {
+  __be16 num_dests;
 };
 #pragma pack()
 #endif

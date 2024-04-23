@@ -70,7 +70,7 @@ bool* g_zygote_child;
 
 const MallocDispatch* g_dispatch;
 
-static __always_inline uint64_t Nanotime() {
+static inline __always_inline uint64_t Nanotime() {
   struct timespec t = {};
   clock_gettime(CLOCK_MONOTONIC, &t);
   return static_cast<uint64_t>(t.tv_sec) * 1000000000LL + t.tv_nsec;

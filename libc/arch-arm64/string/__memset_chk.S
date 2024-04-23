@@ -31,10 +31,10 @@
 ENTRY(__memset_chk)
   cmp x2, x3
   // Direct b.ls memcpy may not have enough range
-  b.hi .L_memset_chk_fail
+  b.hi L(__memset_chk_fail_trampoline)
   b memset
 
-.L_memset_chk_fail:
+L(__memset_chk_fail_trampoline):
   // Preserve for accurate backtrace.
   stp x29, x30, [sp, -16]!
   .cfi_def_cfa_offset 16

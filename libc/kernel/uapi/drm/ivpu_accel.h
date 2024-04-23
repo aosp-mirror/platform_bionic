@@ -43,6 +43,11 @@ extern "C" {
 #define DRM_IVPU_CONTEXT_PRIORITY_NORMAL 1
 #define DRM_IVPU_CONTEXT_PRIORITY_FOCUS 2
 #define DRM_IVPU_CONTEXT_PRIORITY_REALTIME 3
+#define DRM_IVPU_JOB_PRIORITY_DEFAULT 0
+#define DRM_IVPU_JOB_PRIORITY_IDLE 1
+#define DRM_IVPU_JOB_PRIORITY_NORMAL 2
+#define DRM_IVPU_JOB_PRIORITY_FOCUS 3
+#define DRM_IVPU_JOB_PRIORITY_REALTIME 4
 #define DRM_IVPU_CAP_METRIC_STREAMER 1
 #define DRM_IVPU_CAP_DMA_MEMORY_RANGE 2
 struct drm_ivpu_param {
@@ -80,8 +85,10 @@ struct drm_ivpu_submit {
   __u32 engine;
   __u32 flags;
   __u32 commands_offset;
+  __u32 priority;
 };
 #define DRM_IVPU_JOB_STATUS_SUCCESS 0
+#define DRM_IVPU_JOB_STATUS_ABORTED 256
 struct drm_ivpu_bo_wait {
   __u32 handle;
   __u32 flags;
