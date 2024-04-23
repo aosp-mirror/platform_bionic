@@ -157,6 +157,7 @@ enum nft_rule_attributes {
 };
 #define NFTA_RULE_MAX (__NFTA_RULE_MAX - 1)
 enum nft_rule_compat_flags {
+  NFT_RULE_COMPAT_F_UNUSED = (1 << 0),
   NFT_RULE_COMPAT_F_INV = (1 << 1),
   NFT_RULE_COMPAT_F_MASK = NFT_RULE_COMPAT_F_INV,
 };

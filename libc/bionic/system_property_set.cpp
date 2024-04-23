@@ -257,6 +257,21 @@ static void detect_protocol_version() {
   }
 }
 
+static const char* __prop_error_to_string(int error) {
+  switch (error) {
+  case PROP_ERROR_READ_CMD: return "PROP_ERROR_READ_CMD";
+  case PROP_ERROR_READ_DATA: return "PROP_ERROR_READ_DATA";
+  case PROP_ERROR_READ_ONLY_PROPERTY: return "PROP_ERROR_READ_ONLY_PROPERTY";
+  case PROP_ERROR_INVALID_NAME: return "PROP_ERROR_INVALID_NAME";
+  case PROP_ERROR_INVALID_VALUE: return "PROP_ERROR_INVALID_VALUE";
+  case PROP_ERROR_PERMISSION_DENIED: return "PROP_ERROR_PERMISSION_DENIED";
+  case PROP_ERROR_INVALID_CMD: return "PROP_ERROR_INVALID_CMD";
+  case PROP_ERROR_HANDLE_CONTROL_MESSAGE: return "PROP_ERROR_HANDLE_CONTROL_MESSAGE";
+  case PROP_ERROR_SET_FAILED: return "PROP_ERROR_SET_FAILED";
+  }
+  return "<unknown>";
+}
+
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int __system_property_set(const char* key, const char* value) {
   if (key == nullptr) return -1;
@@ -310,8 +325,8 @@ int __system_property_set(const char* key, const char* value) {
 
     if (result != PROP_SUCCESS) {
       async_safe_format_log(ANDROID_LOG_WARN, "libc",
-                            "Unable to set property \"%s\" to \"%s\": error code: 0x%x", key, value,
-                            result);
+                            "Unable to set property \"%s\" to \"%s\": %s (0x%x)", key, value,
+                            __prop_error_to_string(result), result);
       return -1;
     }
 

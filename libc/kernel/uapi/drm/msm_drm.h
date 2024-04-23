@@ -36,6 +36,7 @@ struct drm_msm_timespec {
 #define MSM_PARAM_CMDLINE 0x0d
 #define MSM_PARAM_VA_START 0x0e
 #define MSM_PARAM_VA_SIZE 0x0f
+#define MSM_PARAM_HIGHEST_BANK_BIT 0x10
 #define MSM_PARAM_NR_RINGS MSM_PARAM_PRIORITIES
 struct drm_msm_param {
   __u32 pipe;
@@ -63,6 +64,8 @@ struct drm_msm_gem_new {
 #define MSM_INFO_GET_NAME 0x03
 #define MSM_INFO_SET_IOVA 0x04
 #define MSM_INFO_GET_FLAGS 0x05
+#define MSM_INFO_SET_METADATA 0x06
+#define MSM_INFO_GET_METADATA 0x07
 struct drm_msm_gem_info {
   __u32 handle;
   __u32 info;

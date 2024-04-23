@@ -353,6 +353,7 @@ struct drm_gem_open {
 #define DRM_CAP_CRTC_IN_VBLANK_EVENT 0x12
 #define DRM_CAP_SYNCOBJ 0x13
 #define DRM_CAP_SYNCOBJ_TIMELINE 0x14
+#define DRM_CAP_ATOMIC_ASYNC_PAGE_FLIP 0x15
 struct drm_get_cap {
   __u64 capability;
   __u64 value;
@@ -362,6 +363,7 @@ struct drm_get_cap {
 #define DRM_CLIENT_CAP_ATOMIC 3
 #define DRM_CLIENT_CAP_ASPECT_RATIO 4
 #define DRM_CLIENT_CAP_WRITEBACK_CONNECTORS 5
+#define DRM_CLIENT_CAP_CURSOR_PLANE_HOTSPOT 6
 struct drm_set_client_cap {
   __u64 capability;
   __u64 value;
@@ -401,6 +403,7 @@ struct drm_syncobj_transfer {
 #define DRM_SYNCOBJ_WAIT_FLAGS_WAIT_ALL (1 << 0)
 #define DRM_SYNCOBJ_WAIT_FLAGS_WAIT_FOR_SUBMIT (1 << 1)
 #define DRM_SYNCOBJ_WAIT_FLAGS_WAIT_AVAILABLE (1 << 2)
+#define DRM_SYNCOBJ_WAIT_FLAGS_WAIT_DEADLINE (1 << 3)
 struct drm_syncobj_wait {
   __u64 handles;
   __s64 timeout_nsec;
@@ -408,6 +411,7 @@ struct drm_syncobj_wait {
   __u32 flags;
   __u32 first_signaled;
   __u32 pad;
+  __u64 deadline_nsec;
 };
 struct drm_syncobj_timeline_wait {
   __u64 handles;
@@ -417,6 +421,7 @@ struct drm_syncobj_timeline_wait {
   __u32 flags;
   __u32 first_signaled;
   __u32 pad;
+  __u64 deadline_nsec;
 };
 struct drm_syncobj_eventfd {
   __u32 handle;
@@ -570,6 +575,7 @@ extern "C" {
 #define DRM_IOCTL_SYNCOBJ_TIMELINE_SIGNAL DRM_IOWR(0xCD, struct drm_syncobj_timeline_array)
 #define DRM_IOCTL_MODE_GETFB2 DRM_IOWR(0xCE, struct drm_mode_fb_cmd2)
 #define DRM_IOCTL_SYNCOBJ_EVENTFD DRM_IOWR(0xCF, struct drm_syncobj_eventfd)
+#define DRM_IOCTL_MODE_CLOSEFB DRM_IOWR(0xD0, struct drm_mode_closefb)
 #define DRM_COMMAND_BASE 0x40
 #define DRM_COMMAND_END 0xA0
 struct drm_event {
