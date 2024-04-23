@@ -86,17 +86,17 @@ int sigwait(const sigset_t* _Nonnull __set, int* _Nonnull __signal);
 int sigwait64(const sigset64_t* _Nonnull __set, int* _Nonnull __signal) __INTRODUCED_IN(28);
 
 int sighold(int __signal)
-  __attribute__((deprecated("use sigprocmask() or pthread_sigmask() instead")))
+  __attribute__((__deprecated__("use sigprocmask() or pthread_sigmask() instead")))
   __INTRODUCED_IN(26);
 int sigignore(int __signal)
-  __attribute__((deprecated("use sigaction() instead"))) __INTRODUCED_IN(26);
+  __attribute__((__deprecated__("use sigaction() instead"))) __INTRODUCED_IN(26);
 int sigpause(int __signal)
-  __attribute__((deprecated("use sigsuspend() instead"))) __INTRODUCED_IN(26);
+  __attribute__((__deprecated__("use sigsuspend() instead"))) __INTRODUCED_IN(26);
 int sigrelse(int __signal)
-  __attribute__((deprecated("use sigprocmask() or pthread_sigmask() instead")))
+  __attribute__((__deprecated__("use sigprocmask() or pthread_sigmask() instead")))
   __INTRODUCED_IN(26);
 sighandler_t _Nonnull sigset(int __signal, sighandler_t _Nullable __handler)
-  __attribute__((deprecated("use sigaction() instead"))) __INTRODUCED_IN(26);
+  __attribute__((__deprecated__("use sigaction() instead"))) __INTRODUCED_IN(26);
 
 int raise(int __signal);
 int kill(pid_t __pid, int __signal);
