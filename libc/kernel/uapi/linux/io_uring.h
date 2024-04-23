@@ -58,6 +58,7 @@ struct io_uring_sqe {
     __u32 uring_cmd_flags;
     __u32 waitid_flags;
     __u32 futex_flags;
+    __u32 install_fd_flags;
   };
   __u64 user_data;
   union {
@@ -172,6 +173,7 @@ enum io_uring_op {
   IORING_OP_FUTEX_WAIT,
   IORING_OP_FUTEX_WAKE,
   IORING_OP_FUTEX_WAITV,
+  IORING_OP_FIXED_FD_INSTALL,
   IORING_OP_LAST,
 };
 #define IORING_URING_CMD_FIXED (1U << 0)
@@ -209,6 +211,7 @@ enum {
 };
 #define IORING_MSG_RING_CQE_SKIP (1U << 0)
 #define IORING_MSG_RING_FLAGS_PASS (1U << 1)
+#define IORING_FIXED_FD_NO_CLOEXEC (1U << 0)
 struct io_uring_cqe {
   __u64 user_data;
   __s32 res;
@@ -312,6 +315,7 @@ enum {
   IORING_UNREGISTER_PBUF_RING = 23,
   IORING_REGISTER_SYNC_CANCEL = 24,
   IORING_REGISTER_FILE_ALLOC_RANGE = 25,
+  IORING_REGISTER_PBUF_STATUS = 26,
   IORING_REGISTER_LAST,
   IORING_REGISTER_USE_REGISTERED_RING = 1U << 31
 };
@@ -396,6 +400,11 @@ struct io_uring_buf_reg {
   __u16 bgid;
   __u16 flags;
   __u64 resv[3];
+};
+struct io_uring_buf_status {
+  __u32 buf_group;
+  __u32 head;
+  __u32 resv[8];
 };
 enum {
   IORING_RESTRICTION_REGISTER_OP = 0,

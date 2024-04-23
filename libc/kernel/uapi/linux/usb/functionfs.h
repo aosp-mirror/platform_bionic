@@ -59,8 +59,9 @@ struct usb_os_desc_header {
 struct usb_ext_compat_desc {
   __u8 bFirstInterfaceNumber;
   __u8 Reserved1;
-  __u8 CompatibleID[8];
+  __struct_group(, IDs,, __u8 CompatibleID[8];
   __u8 SubCompatibleID[8];
+ );
   __u8 Reserved2[6];
 };
 struct usb_ext_prop_desc {
