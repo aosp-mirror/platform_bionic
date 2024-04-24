@@ -57,7 +57,7 @@ int unsetenv(const char* _Nonnull __name);
 int clearenv(void);
 
 char* _Nullable mkdtemp(char* _Nonnull __template);
-char* _Nullable mktemp(char* _Nonnull __template) __attribute__((deprecated("mktemp is unsafe, use mkstemp or tmpfile instead")));
+char* _Nullable mktemp(char* _Nonnull __template) __attribute__((__deprecated__("mktemp is unsafe, use mkstemp or tmpfile instead")));
 
 int mkostemp64(char* _Nonnull __template, int __flags) __INTRODUCED_IN(23);
 int mkostemp(char* _Nonnull __template, int __flags) __INTRODUCED_IN(23);

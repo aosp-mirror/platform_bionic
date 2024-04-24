@@ -139,12 +139,12 @@
 
 #define __wur __attribute__((__warn_unused_result__))
 
-#define __errorattr(msg) __attribute__((unavailable(msg)))
-#define __warnattr(msg) __attribute__((deprecated(msg)))
-#define __warnattr_real(msg) __attribute__((deprecated(msg)))
-#define __enable_if(cond, msg) __attribute__((enable_if(cond, msg)))
-#define __clang_error_if(cond, msg) __attribute__((diagnose_if(cond, msg, "error")))
-#define __clang_warning_if(cond, msg) __attribute__((diagnose_if(cond, msg, "warning")))
+#define __errorattr(msg) __attribute__((__unavailable__(msg)))
+#define __warnattr(msg) __attribute__((__deprecated__(msg)))
+#define __warnattr_real(msg) __attribute__((__deprecated__(msg)))
+#define __enable_if(cond, msg) __attribute__((__enable_if__(cond, msg)))
+#define __clang_error_if(cond, msg) __attribute__((__diagnose_if__(cond, msg, "error")))
+#define __clang_warning_if(cond, msg) __attribute__((__diagnose_if__(cond, msg, "warning")))
 
 #if defined(ANDROID_STRICT)
 /*
@@ -248,7 +248,7 @@
 
 #if defined(__BIONIC_FORTIFY)
 #  define __bos0(s) __bosn((s), 0)
-#  define __pass_object_size_n(n) __attribute__((pass_object_size(n)))
+#  define __pass_object_size_n(n) __attribute__((__pass_object_size__(n)))
 /*
  * FORTIFY'ed functions all have either enable_if or pass_object_size, which
  * makes taking their address impossible. Saying (&read)(foo, bar, baz); will
@@ -260,7 +260,7 @@
  * them available externally. FORTIFY'ed functions try to be as close to possible as 'invisible';
  * having stack protectors detracts from that (b/182948263).
  */
-#  define __BIONIC_FORTIFY_INLINE static inline __attribute__((no_stack_protector)) \
+#  define __BIONIC_FORTIFY_INLINE static inline __attribute__((__no_stack_protector__)) \
       __always_inline __VERSIONER_FORTIFY_INLINE
 /*
  * We should use __BIONIC_FORTIFY_VARIADIC instead of __BIONIC_FORTIFY_INLINE
@@ -270,7 +270,7 @@
  */
 #  define __BIONIC_FORTIFY_VARIADIC static inline
 /* Error functions don't have bodies, so they can just be static. */
-#  define __BIONIC_ERROR_FUNCTION_VISIBILITY static __attribute__((unused))
+#  define __BIONIC_ERROR_FUNCTION_VISIBILITY static __attribute__((__unused__))
 #else
 /* Further increase sharing for some inline functions */
 #  define __pass_object_size_n(n)
@@ -300,21 +300,21 @@
 #  define __BIONIC_INCLUDE_FORTIFY_HEADERS 1
 #endif
 
-#define __overloadable __attribute__((overloadable))
+#define __overloadable __attribute__((__overloadable__))
 
-#define __diagnose_as_builtin(...) __attribute__((diagnose_as_builtin(__VA_ARGS__)))
+#define __diagnose_as_builtin(...) __attribute__((__diagnose_as_builtin__(__VA_ARGS__)))
 
 /* Used to tag non-static symbols that are private and never exposed by the shared library. */
-#define __LIBC_HIDDEN__ __attribute__((visibility("hidden")))
+#define __LIBC_HIDDEN__ __attribute__((__visibility__("hidden")))
 
 /*
  * Used to tag symbols that should be hidden for 64-bit,
  * but visible to preserve binary compatibility for LP32.
  */
 #ifdef __LP64__
-#define __LIBC32_LEGACY_PUBLIC__ __attribute__((visibility("hidden")))
+#define __LIBC32_LEGACY_PUBLIC__ __attribute__((__visibility__("hidden")))
 #else
-#define __LIBC32_LEGACY_PUBLIC__ __attribute__((visibility("default")))
+#define __LIBC32_LEGACY_PUBLIC__ __attribute__((__visibility__("default")))
 #endif
 
 /* Used to rename functions so that the compiler emits a call to 'x' rather than the function this was applied to. */
