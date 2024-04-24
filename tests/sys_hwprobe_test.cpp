@@ -33,6 +33,62 @@
 #include <sys/syscall.h>
 #endif
 
+#if defined(__riscv)
+__attribute__((noinline))
+uint64_t scalar_cast(uint8_t const* p) {
+  return *(uint64_t const*)p;
+}
+
+__attribute__((noinline))
+uint64_t scalar_memcpy(uint8_t const* p) {
+  uint64_t r;
+  __builtin_memcpy(&r, p, sizeof(r));
+  return r;
+}
+
+__attribute__((noinline))
+void vector_memcpy(uint8_t* d, uint8_t const* p) {
+  __builtin_memcpy(d, p, 16);
+}
+
+__attribute__((noinline))
+void vector_ldst(uint8_t* d, uint8_t const* p) {
+  __riscv_vse8(d, __riscv_vle8_v_u8m1(p, 16), 16);
+}
+
+__attribute__((noinline))
+void vector_ldst64(uint8_t* d, uint8_t const* p) {
+  __riscv_vse64((void*)d, __riscv_vle64_v_u64m1((void const*)p, 16), 16);
+}
+
+// For testing scalar and vector unaligned accesses.
+uint64_t tmp[3] = {1,1,1};
+uint64_t dst[3] = {1,1,1};
+#endif
+
+TEST(sys_hwprobe, __riscv_hwprobe_misaligned_scalar) {
+#if defined(__riscv)
+  uint8_t* p = (uint8_t*)tmp + 1;
+  ASSERT_NE(0U, scalar_cast(p));
+  ASSERT_NE(0U, scalar_memcpy(p));
+#else
+  GTEST_SKIP() << "__riscv_hwprobe requires riscv64";
+#endif
+}
+
+TEST(sys_hwprobe, __riscv_hwprobe_misaligned_vector) {
+#if defined(__riscv)
+  uint8_t* p = (uint8_t*)tmp + 1;
+  uint8_t* d = (uint8_t*)dst + 1;
+
+  ASSERT_NE(0U, vector_ldst(d, p));
+  ASSERT_NE(0U, vector_memcpy(d, p));
+  ASSERT_NE(0U, vector_ldst64(d, p));
+#else
+  GTEST_SKIP() << "__riscv_hwprobe requires riscv64";
+#endif
+}
+
 TEST(sys_hwprobe, __riscv_hwprobe) {
 #if defined(__riscv) && __has_include(<sys/hwprobe.h>)
   riscv_hwprobe probes[] = {{.key = RISCV_HWPROBE_KEY_IMA_EXT_0},
