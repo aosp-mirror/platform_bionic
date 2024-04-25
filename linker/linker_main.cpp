@@ -29,6 +29,7 @@
 #include "linker_main.h"
 
 #include <link.h>
+#include <stdlib.h>
 #include <sys/auxv.h>
 
 #include "linker.h"
@@ -222,9 +223,9 @@ static ExecutableInfo get_executable_info(const char* arg_path) {
 
   // Path might be a symlink
   char sym_path[PATH_MAX];
-  ssize_t sym_path_len = readlink(exe_path, sym_path, sizeof(sym_path));
-  if (sym_path_len > 0 && sym_path_len < static_cast<ssize_t>(sizeof(sym_path))) {
-    result.path = std::string(sym_path, sym_path_len);
+  auto ret = realpath(exe_path, sym_path);
+  if (ret != nullptr) {
+    result.path = std::string(sym_path, strlen(sym_path));
   } else {
     result.path = std::string(exe_path, strlen(exe_path));
   }
