@@ -221,14 +221,10 @@ static ExecutableInfo get_executable_info(const char* arg_path) {
     exe_path = arg_path;
   }
 
-  // Path might be a symlink
+  // Path might be a symlink; we need the target so that we get the right
+  // linker configuration later.
   char sym_path[PATH_MAX];
-  auto ret = realpath(exe_path, sym_path);
-  if (ret != nullptr) {
-    result.path = std::string(sym_path, strlen(sym_path));
-  } else {
-    result.path = std::string(exe_path, strlen(exe_path));
-  }
+  result.path = std::string(realpath(exe_path, sym_path) != nullptr ? sym_path : exe_path);
 
   result.phdr = reinterpret_cast<const ElfW(Phdr)*>(getauxval(AT_PHDR));
   result.phdr_count = getauxval(AT_PHNUM);
