@@ -367,9 +367,7 @@ cc_defaults {
         "liblinker_main",
         "liblinker_malloc",
 
-        // Use a version of libc++ built without exceptions, because accessing EH globals uses
-        // ELF TLS, which is not supported in the loader.
-        "libc++_static_noexcept",
+        "libc++_static",
         "libc_nomalloc",
         "libc_dynamic_dispatch",
         "libm",
@@ -436,7 +434,7 @@ cc_binary {
                 "linker_debuggerd_android.cpp",
             ],
             static_libs: [
-                "libc++demangle_noexcept",
+                "libc++demangle",
                 "libdebuggerd_handler_fallback",
             ],
         },
