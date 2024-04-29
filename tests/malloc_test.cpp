@@ -678,10 +678,12 @@ TEST(malloc, mallopt_smoke) {
 TEST(malloc, mallopt_decay) {
 #if defined(__BIONIC__)
   SKIP_WITH_HWASAN << "hwasan does not implement mallopt";
+  ASSERT_EQ(1, mallopt(M_DECAY_TIME, -1));
   ASSERT_EQ(1, mallopt(M_DECAY_TIME, 1));
   ASSERT_EQ(1, mallopt(M_DECAY_TIME, 0));
   ASSERT_EQ(1, mallopt(M_DECAY_TIME, 1));
   ASSERT_EQ(1, mallopt(M_DECAY_TIME, 0));
+  ASSERT_EQ(1, mallopt(M_DECAY_TIME, -1));
 #else
   GTEST_SKIP() << "bionic-only test";
 #endif
@@ -1490,7 +1492,7 @@ TEST(malloc, zero_init) {
   // release secondary allocations back to the OS) was modified to 0ms/1ms by
   // mallopt_decay. Ensure that we delay for at least a second before releasing
   // pages to the OS in order to avoid implicit zeroing by the kernel.
-  mallopt(M_DECAY_TIME, 1000);
+  mallopt(M_DECAY_TIME, 1);
   TestHeapZeroing(/* num_iterations */ 32, [](int iteration) -> int {
     return 1 << (19 + iteration % 4);
   });
@@ -1764,6 +1766,10 @@ TEST(android_mallopt, get_decay_time_enabled) {
   EXPECT_EQ(1, mallopt(M_DECAY_TIME, 1));
   EXPECT_TRUE(android_mallopt(M_GET_DECAY_TIME_ENABLED, &value, sizeof(value)));
   EXPECT_TRUE(value);
+
+  EXPECT_EQ(1, mallopt(M_DECAY_TIME, -1));
+  EXPECT_TRUE(android_mallopt(M_GET_DECAY_TIME_ENABLED, &value, sizeof(value)));
+  EXPECT_FALSE(value);
 #else
   GTEST_SKIP() << "bionic-only test";
 #endif
