@@ -123,7 +123,7 @@ extern "C" int mallopt(int param, int value) {
   // Track the M_DECAY_TIME mallopt calls.
   if (param == M_DECAY_TIME && retval == 1) {
     __libc_globals.mutate([value](libc_globals* globals) {
-      if (value == 0) {
+      if (value <= 0) {
         atomic_store(&globals->decay_time_enabled, false);
       } else {
         atomic_store(&globals->decay_time_enabled, true);
