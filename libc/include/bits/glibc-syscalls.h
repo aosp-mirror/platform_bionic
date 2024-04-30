@@ -552,6 +552,9 @@
 #if defined(__NR_listen)
   #define SYS_listen __NR_listen
 #endif
+#if defined(__NR_listmount)
+  #define SYS_listmount __NR_listmount
+#endif
 #if defined(__NR_listxattr)
   #define SYS_listxattr __NR_listxattr
 #endif
@@ -575,6 +578,15 @@
 #endif
 #if defined(__NR_lsetxattr)
   #define SYS_lsetxattr __NR_lsetxattr
+#endif
+#if defined(__NR_lsm_get_self_attr)
+  #define SYS_lsm_get_self_attr __NR_lsm_get_self_attr
+#endif
+#if defined(__NR_lsm_list_modules)
+  #define SYS_lsm_list_modules __NR_lsm_list_modules
+#endif
+#if defined(__NR_lsm_set_self_attr)
+  #define SYS_lsm_set_self_attr __NR_lsm_set_self_attr
 #endif
 #if defined(__NR_lstat)
   #define SYS_lstat __NR_lstat
@@ -1217,6 +1229,9 @@
 #endif
 #if defined(__NR_statfs64)
   #define SYS_statfs64 __NR_statfs64
+#endif
+#if defined(__NR_statmount)
+  #define SYS_statmount __NR_statmount
 #endif
 #if defined(__NR_statx)
   #define SYS_statx __NR_statx

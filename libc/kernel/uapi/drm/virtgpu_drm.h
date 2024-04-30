@@ -58,6 +58,7 @@ struct drm_virtgpu_execbuffer {
 #define VIRTGPU_PARAM_CROSS_DEVICE 5
 #define VIRTGPU_PARAM_CONTEXT_INIT 6
 #define VIRTGPU_PARAM_SUPPORTED_CAPSET_IDs 7
+#define VIRTGPU_PARAM_EXPLICIT_DEBUG_NAME 8
 struct drm_virtgpu_getparam {
   __u64 param;
   __u64 value;
@@ -140,6 +141,7 @@ struct drm_virtgpu_resource_create_blob {
 #define VIRTGPU_CONTEXT_PARAM_CAPSET_ID 0x0001
 #define VIRTGPU_CONTEXT_PARAM_NUM_RINGS 0x0002
 #define VIRTGPU_CONTEXT_PARAM_POLL_RINGS_MASK 0x0003
+#define VIRTGPU_CONTEXT_PARAM_DEBUG_NAME 0x0004
 struct drm_virtgpu_context_set_param {
   __u64 param;
   __u64 value;

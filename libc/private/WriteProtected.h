@@ -51,30 +51,39 @@ class WriteProtected {
   void initialize() {
     // Not strictly necessary, but this will hopefully segfault if we initialize
     // multiple times by accident.
-    memset(&contents, 0, sizeof(contents));
+    memset(contents_addr(), 0, sizeof(contents));
     set_protection(PROT_READ);
   }
 
   const T* operator->() {
-    return &contents.value;
+    return &contents_addr()->value;
   }
 
   const T& operator*() {
-    return contents.value;
+    return contents_addr()->value;
   }
 
   template <typename Mutator>
   void mutate(Mutator mutator) {
     set_protection(PROT_READ | PROT_WRITE);
-    mutator(&contents.value);
+    mutator(&contents_addr()->value);
     set_protection(PROT_READ);
   }
 
  private:
   WriteProtectedContents<T> contents;
 
-  void set_protection(int prot) {
+  WriteProtectedContents<T>* contents_addr() {
     auto addr = &contents;
+    // Hide the fact that we're returning the address of contents from the compiler.
+    // Otherwise it may generate code assuming alignment of 64KB even though the
+    // variable is only guaranteed to have 4KB alignment.
+    __asm__ __volatile__("" : "+r"(addr));
+    return addr;
+  }
+
+  void set_protection(int prot) {
+    auto addr = contents_addr();
 #if __has_feature(hwaddress_sanitizer)
     // The mprotect system call does not currently untag pointers, so do it
     // ourselves.

@@ -72,7 +72,7 @@ ENTRY_WEAK_FOR_NATIVE_BRIDGE(vfork)
     mov     x8, __NR_clone
     svc     #0
 
-    cbz     x0, .L_exit
+    cbz     x0, L(done)
 
     // rc != 0: reset cached_pid_ and vforked_.
     str     w10, [x9, #20]
@@ -80,7 +80,7 @@ ENTRY_WEAK_FOR_NATIVE_BRIDGE(vfork)
     cneg    x0, x0, hi
     b.hi    __set_errno_internal
 
-.L_exit:
+L(done):
     ret
 END(vfork)
 

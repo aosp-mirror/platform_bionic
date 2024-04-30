@@ -13,6 +13,7 @@
 #define XDP_USE_NEED_WAKEUP (1 << 3)
 #define XDP_USE_SG (1 << 4)
 #define XDP_UMEM_UNALIGNED_CHUNK_FLAG (1 << 0)
+#define XDP_UMEM_TX_SW_CSUM (1 << 1)
 struct sockaddr_xdp {
   __u16 sxdp_family;
   __u16 sxdp_flags;
@@ -47,6 +48,7 @@ struct xdp_umem_reg {
   __u32 chunk_size;
   __u32 headroom;
   __u32 flags;
+  __u32 tx_metadata_len;
 };
 struct xdp_statistics {
   __u64 rx_dropped;
@@ -66,10 +68,25 @@ struct xdp_options {
 #define XDP_UMEM_PGOFF_COMPLETION_RING 0x180000000ULL
 #define XSK_UNALIGNED_BUF_OFFSET_SHIFT 48
 #define XSK_UNALIGNED_BUF_ADDR_MASK ((1ULL << XSK_UNALIGNED_BUF_OFFSET_SHIFT) - 1)
+#define XDP_TXMD_FLAGS_TIMESTAMP (1 << 0)
+#define XDP_TXMD_FLAGS_CHECKSUM (1 << 1)
+struct xsk_tx_metadata {
+  __u64 flags;
+  union {
+    struct {
+      __u16 csum_start;
+      __u16 csum_offset;
+    } request;
+    struct {
+      __u64 tx_timestamp;
+    } completion;
+  };
+};
 struct xdp_desc {
   __u64 addr;
   __u32 len;
   __u32 options;
 };
 #define XDP_PKT_CONTD (1 << 0)
+#define XDP_TX_METADATA (1 << 1)
 #endif

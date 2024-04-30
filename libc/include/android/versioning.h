@@ -20,15 +20,15 @@
 // we should only annotate headers when we are running versioner.
 #if defined(__BIONIC_VERSIONER)
 
-#define __INTRODUCED_IN(api_level) __attribute__((annotate("introduced_in=" #api_level)))
-#define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level) __attribute__((annotate("introduced_in=" #api_level))) __VERSIONER_NO_GUARD
-#define __DEPRECATED_IN(api_level) __attribute__((annotate("deprecated_in=" #api_level)))
-#define __REMOVED_IN(api_level) __attribute__((annotate("obsoleted_in=" #api_level)))
-#define __INTRODUCED_IN_32(api_level) __attribute__((annotate("introduced_in_32=" #api_level)))
-#define __INTRODUCED_IN_64(api_level) __attribute__((annotate("introduced_in_64=" #api_level)))
+#define __INTRODUCED_IN(api_level) __attribute__((__annotate__("introduced_in=" #api_level)))
+#define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level) __attribute__((__annotate__("introduced_in=" #api_level))) __VERSIONER_NO_GUARD
+#define __DEPRECATED_IN(api_level) __attribute__((__annotate__("deprecated_in=" #api_level)))
+#define __REMOVED_IN(api_level) __attribute__((__annotate__("obsoleted_in=" #api_level)))
+#define __INTRODUCED_IN_32(api_level) __attribute__((__annotate__("introduced_in_32=" #api_level)))
+#define __INTRODUCED_IN_64(api_level) __attribute__((__annotate__("introduced_in_64=" #api_level)))
 
-#define __VERSIONER_NO_GUARD __attribute__((annotate("versioner_no_guard")))
-#define __VERSIONER_FORTIFY_INLINE __attribute__((annotate("versioner_fortify_inline")))
+#define __VERSIONER_NO_GUARD __attribute__((__annotate__("versioner_no_guard")))
+#define __VERSIONER_FORTIFY_INLINE __attribute__((__annotate__("versioner_fortify_inline")))
 
 #else
 

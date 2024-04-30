@@ -174,7 +174,29 @@ pid_t pthread_gettid_np(pthread_t __pthread);
 
 int pthread_join(pthread_t __pthread, void* _Nullable * _Nullable __return_value_ptr);
 
+/**
+ * [pthread_key_create(3)](https://man7.org/linux/man-pages/man3/pthread_key_create.3p.html)
+ * creates a key for thread-specific data.
+ *
+ * There is a limit of `PTHREAD_KEYS_MAX` keys per process, but most callers
+ * should just use the C or C++ `thread_local` storage specifier anyway. When
+ * targeting new enough OS versions, the compiler will automatically use
+ * ELF TLS; when targeting old OS versions the emutls implementation will
+ * multiplex pthread keys behind the scenes, using one per library rather than
+ * one per thread-local variable. If you are implementing the runtime for a
+ * different language, you should consider similar implementation choices and
+ * avoid a direct one-to-one mapping from thread locals to pthread keys.
+ *
+ * Returns 0 on success and returns an error number on failure.
+ */
 int pthread_key_create(pthread_key_t* _Nonnull __key_ptr, void (* _Nullable __key_destructor)(void* _Nullable));
+
+/**
+ * [pthread_key_delete(3)](https://man7.org/linux/man-pages/man3/pthread_key_delete.3p.html)
+ * deletes a key for thread-specific data.
+ *
+ * Returns 0 on success and returns an error number on failure.
+ */
 int pthread_key_delete(pthread_key_t __key);
 
 int pthread_mutexattr_destroy(pthread_mutexattr_t* _Nonnull __attr);

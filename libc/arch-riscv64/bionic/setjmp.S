@@ -205,7 +205,7 @@ ENTRY_WEAK_FOR_NATIVE_BRIDGE(siglongjmp)
   // Check the checksum before doing anything.
   m_calculate_checksum t0, a0, t1
   ld t1, _JB_CHECKSUM(a0)
-  bne t0, t1, 3f
+  bne t0, t1, L(checksum_failure)
 
   // Do we need to restore the signal mask?
   ld a2, _JB_SIGFLAG(a0)
@@ -290,7 +290,7 @@ ENTRY_WEAK_FOR_NATIVE_BRIDGE(siglongjmp)
   mv a0, a1
   ret
 
-3:
+L(checksum_failure):
   call __bionic_setjmp_checksum_mismatch
 END(siglongjmp)
 

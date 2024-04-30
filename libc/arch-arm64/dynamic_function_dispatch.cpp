@@ -30,6 +30,23 @@
 #include <stddef.h>
 #include <sys/auxv.h>
 
+static inline bool __bionic_is_oryon(unsigned long hwcap) {
+    if (!(hwcap & HWCAP_CPUID)) return false;
+
+    // Extract the implementor and variant bits from MIDR_EL1.
+    // https://www.kernel.org/doc/html/latest/arch/arm64/cpu-feature-registers.html#list-of-registers-with-visible-features
+    unsigned long midr;
+    __asm__ __volatile__("mrs %0, MIDR_EL1" : "=r"(midr));
+    uint16_t cpu = (midr >> 20) & 0xfff;
+
+    auto make_cpu = [](unsigned implementor, unsigned variant) {
+        return (implementor << 4) | variant;
+    };
+
+    // Check for implementor Qualcomm's variants 0x1..0x5 (Oryon).
+    return cpu >= make_cpu('Q', 0x1) && cpu <= make_cpu('Q', 0x5);
+}
+
 extern "C" {
 
 typedef void* memchr_func(const void*, int, size_t);
@@ -49,7 +66,9 @@ DEFINE_IFUNC_FOR(memcmp) {
 
 typedef void* memcpy_func(void*, const void*, size_t);
 DEFINE_IFUNC_FOR(memcpy) {
-    if (arg->_hwcap & HWCAP_ASIMD) {
+    if (__bionic_is_oryon(arg->_hwcap)) {
+        RETURN_FUNC(memcpy_func, __memcpy_aarch64_nt);
+    } else if (arg->_hwcap & HWCAP_ASIMD) {
         RETURN_FUNC(memcpy_func, __memcpy_aarch64_simd);
     } else {
         RETURN_FUNC(memcpy_func, __memcpy_aarch64);
@@ -58,11 +77,13 @@ DEFINE_IFUNC_FOR(memcpy) {
 
 typedef void* memmove_func(void*, const void*, size_t);
 DEFINE_IFUNC_FOR(memmove) {
-    if (arg->_hwcap & HWCAP_ASIMD) {
-        RETURN_FUNC(memmove_func, __memmove_aarch64_simd);
-    } else {
-        RETURN_FUNC(memmove_func, __memmove_aarch64);
-    }
+  if (__bionic_is_oryon(arg->_hwcap)) {
+    RETURN_FUNC(memcpy_func, __memmove_aarch64_nt);
+  } else if (arg->_hwcap & HWCAP_ASIMD) {
+    RETURN_FUNC(memmove_func, __memmove_aarch64_simd);
+  } else {
+    RETURN_FUNC(memmove_func, __memmove_aarch64);
+  }
 }
 
 typedef int memrchr_func(const void*, int, size_t);
@@ -72,7 +93,11 @@ DEFINE_IFUNC_FOR(memrchr) {
 
 typedef int memset_func(void*, int, size_t);
 DEFINE_IFUNC_FOR(memset) {
-    RETURN_FUNC(memset_func, __memset_aarch64);
+    if (__bionic_is_oryon(arg->_hwcap)) {
+        RETURN_FUNC(memset_func, __memset_aarch64_nt);
+    } else {
+        RETURN_FUNC(memset_func, __memset_aarch64);
+    }
 }
 
 typedef char* stpcpy_func(char*, const char*, size_t);
