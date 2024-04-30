@@ -7,6 +7,7 @@
 #ifndef EFA_ABI_USER_H
 #define EFA_ABI_USER_H
 #include <linux/types.h>
+#include <rdma/ib_user_ioctl_cmds.h>
 #define EFA_UVERBS_ABI_VERSION 1
 enum {
   EFA_ALLOC_UCONTEXT_CMD_COMP_TX_BATCH = 1 << 0,
@@ -103,5 +104,20 @@ struct efa_ibv_ex_query_device_resp {
   __u16 max_rq_sge;
   __u32 max_rdma_size;
   __u32 device_caps;
+};
+enum {
+  EFA_QUERY_MR_VALIDITY_RECV_IC_ID = 1 << 0,
+  EFA_QUERY_MR_VALIDITY_RDMA_READ_IC_ID = 1 << 1,
+  EFA_QUERY_MR_VALIDITY_RDMA_RECV_IC_ID = 1 << 2,
+};
+enum efa_query_mr_attrs {
+  EFA_IB_ATTR_QUERY_MR_HANDLE = (1U << UVERBS_ID_NS_SHIFT),
+  EFA_IB_ATTR_QUERY_MR_RESP_IC_ID_VALIDITY,
+  EFA_IB_ATTR_QUERY_MR_RESP_RECV_IC_ID,
+  EFA_IB_ATTR_QUERY_MR_RESP_RDMA_READ_IC_ID,
+  EFA_IB_ATTR_QUERY_MR_RESP_RDMA_RECV_IC_ID,
+};
+enum efa_mr_methods {
+  EFA_IB_METHOD_MR_QUERY = (1U << UVERBS_ID_NS_SHIFT),
 };
 #endif

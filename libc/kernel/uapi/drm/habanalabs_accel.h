@@ -656,6 +656,7 @@ enum hl_server_type {
 #define HL_INFO_HW_ERR_EVENT 36
 #define HL_INFO_FW_ERR_EVENT 37
 #define HL_INFO_USER_ENGINE_ERR_EVENT 38
+#define HL_INFO_DEV_SIGNED 40
 #define HL_INFO_VERSION_MAX_LEN 128
 #define HL_INFO_CARD_NAME_MAX_LEN 16
 #define HL_ENGINES_DATA_MAX_SIZE SZ_1M
@@ -849,6 +850,7 @@ struct hl_info_dev_memalloc_page_sizes {
 #define SEC_SIGNATURE_BUF_SZ 255
 #define SEC_PUB_DATA_BUF_SZ 510
 #define SEC_CERTIFICATE_BUF_SZ 2046
+#define SEC_DEV_INFO_BUF_SZ 5120
 struct hl_info_sec_attest {
   __u32 nonce;
   __u16 pcr_quote_len;
@@ -863,6 +865,18 @@ struct hl_info_sec_attest {
   __u8 public_data[SEC_PUB_DATA_BUF_SZ];
   __u8 certificate[SEC_CERTIFICATE_BUF_SZ];
   __u8 pad0[2];
+};
+struct hl_info_signed {
+  __u32 nonce;
+  __u16 pub_data_len;
+  __u16 certificate_len;
+  __u8 info_sig_len;
+  __u8 public_data[SEC_PUB_DATA_BUF_SZ];
+  __u8 certificate[SEC_CERTIFICATE_BUF_SZ];
+  __u8 info_sig[SEC_SIGNATURE_BUF_SZ];
+  __u16 dev_info_len;
+  __u8 dev_info[SEC_DEV_INFO_BUF_SZ];
+  __u8 pad[2];
 };
 struct hl_page_fault_info {
   __s64 timestamp;

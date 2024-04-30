@@ -43,8 +43,8 @@ class ElfReader {
  public:
   ElfReader();
 
-  bool Read(const char* name, int fd, off64_t file_offset, off64_t file_size);
-  bool Load(address_space_params* address_space);
+  [[nodiscard]] bool Read(const char* name, int fd, off64_t file_offset, off64_t file_size);
+  [[nodiscard]] bool Load(address_space_params* address_space);
 
   const char* name() const { return name_.c_str(); }
   size_t phdr_count() const { return phdr_num_; }
@@ -61,18 +61,18 @@ class ElfReader {
   bool should_pad_segments() const { return should_pad_segments_; }
 
  private:
-  bool ReadElfHeader();
-  bool VerifyElfHeader();
-  bool ReadProgramHeaders();
-  bool ReadSectionHeaders();
-  bool ReadDynamicSection();
-  bool ReadPadSegmentNote();
-  bool ReserveAddressSpace(address_space_params* address_space);
-  bool LoadSegments();
-  bool FindPhdr();
-  bool FindGnuPropertySection();
-  bool CheckPhdr(ElfW(Addr));
-  bool CheckFileRange(ElfW(Addr) offset, size_t size, size_t alignment);
+  [[nodiscard]] bool ReadElfHeader();
+  [[nodiscard]] bool VerifyElfHeader();
+  [[nodiscard]] bool ReadProgramHeaders();
+  [[nodiscard]] bool ReadSectionHeaders();
+  [[nodiscard]] bool ReadDynamicSection();
+  [[nodiscard]] bool ReadPadSegmentNote();
+  [[nodiscard]] bool ReserveAddressSpace(address_space_params* address_space);
+  [[nodiscard]] bool LoadSegments();
+  [[nodiscard]] bool FindPhdr();
+  [[nodiscard]] bool FindGnuPropertySection();
+  [[nodiscard]] bool CheckPhdr(ElfW(Addr));
+  [[nodiscard]] bool CheckFileRange(ElfW(Addr) offset, size_t size, size_t alignment);
 
   bool did_read_;
   bool did_load_;

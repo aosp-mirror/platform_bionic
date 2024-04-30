@@ -92,7 +92,7 @@ struct snd_hwdep_dsp_image {
 #define SNDRV_HWDEP_IOCTL_INFO _IOR('H', 0x01, struct snd_hwdep_info)
 #define SNDRV_HWDEP_IOCTL_DSP_STATUS _IOR('H', 0x02, struct snd_hwdep_dsp_status)
 #define SNDRV_HWDEP_IOCTL_DSP_LOAD _IOW('H', 0x03, struct snd_hwdep_dsp_image)
-#define SNDRV_PCM_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 15)
+#define SNDRV_PCM_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 17)
 typedef unsigned long snd_pcm_uframes_t;
 typedef signed long snd_pcm_sframes_t;
 enum {
@@ -201,7 +201,10 @@ typedef int __bitwise snd_pcm_format_t;
 #endif
 typedef int __bitwise snd_pcm_subformat_t;
 #define SNDRV_PCM_SUBFORMAT_STD (( snd_pcm_subformat_t) 0)
-#define SNDRV_PCM_SUBFORMAT_LAST SNDRV_PCM_SUBFORMAT_STD
+#define SNDRV_PCM_SUBFORMAT_MSBITS_MAX (( snd_pcm_subformat_t) 1)
+#define SNDRV_PCM_SUBFORMAT_MSBITS_20 (( snd_pcm_subformat_t) 2)
+#define SNDRV_PCM_SUBFORMAT_MSBITS_24 (( snd_pcm_subformat_t) 3)
+#define SNDRV_PCM_SUBFORMAT_LAST SNDRV_PCM_SUBFORMAT_MSBITS_24
 #define SNDRV_PCM_INFO_MMAP 0x00000001
 #define SNDRV_PCM_INFO_MMAP_VALID 0x00000002
 #define SNDRV_PCM_INFO_DOUBLE 0x00000004

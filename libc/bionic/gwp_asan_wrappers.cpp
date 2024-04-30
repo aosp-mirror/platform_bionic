@@ -258,14 +258,14 @@ void SetDefaultGwpAsanOptions(Options* options, unsigned* process_sample_rate,
   options->Backtrace = android_unsafe_frame_pointer_chase;
   options->SampleRate = kDefaultSampleRate;
   options->MaxSimultaneousAllocations = kDefaultMaxAllocs;
+  options->Recoverable = true;
+  GwpAsanRecoverable = true;
 
-  *process_sample_rate = 1;
-  if (mallopt_options.desire == Action::TURN_ON_WITH_SAMPLING) {
+  if (mallopt_options.desire == Action::TURN_ON_WITH_SAMPLING ||
+      mallopt_options.desire == Action::TURN_ON_FOR_APP_SAMPLED_NON_CRASHING) {
     *process_sample_rate = kDefaultProcessSampling;
-  } else if (mallopt_options.desire == Action::TURN_ON_FOR_APP_SAMPLED_NON_CRASHING) {
-    *process_sample_rate = kDefaultProcessSampling;
-    options->Recoverable = true;
-    GwpAsanRecoverable = true;
+  } else {
+    *process_sample_rate = 1;
   }
 }
 
@@ -403,7 +403,7 @@ bool GetGwpAsanOptions(Options* options, unsigned* process_sample_rate,
         /* default */ kDefaultMaxAllocs / frequency_multiplier;
   }
 
-  bool recoverable = false;
+  bool recoverable = true;
   if (GetGwpAsanBoolOption(&recoverable, mallopt_options, kRecoverableSystemSysprop,
                            kRecoverableAppSysprop, kRecoverableTargetedSyspropPrefix,
                            kRecoverableEnvVar, "recoverable")) {
