@@ -69,7 +69,7 @@ extern FILE* _Nonnull stderr __INTRODUCED_IN(23);
 #define stderr stderr
 #else
 /* Before M the actual symbols for stdin and friends had different names. */
-extern FILE __sF[] __REMOVED_IN(23);
+extern FILE __sF[] __REMOVED_IN(23, "Use stdin/stdout/stderr");
 
 #define stdin (&__sF[0])
 #define stdout (&__sF[1])
