@@ -61,7 +61,7 @@ extern "C" {
 };
 
 void memtag_stack_dlopen_callback() {
-  async_safe_format_log(ANDROID_LOG_INFO, "libc", "remapping stacks as PROT_MTE");
+  async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "remapping stacks as PROT_MTE");
   __pthread_internal_remap_stack_with_mte();
 }
 
