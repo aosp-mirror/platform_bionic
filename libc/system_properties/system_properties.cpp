@@ -337,31 +337,42 @@ int SystemProperties::Update(prop_info* pi, const char* value, unsigned int len)
 
 int SystemProperties::Add(const char* name, unsigned int namelen, const char* value,
                           unsigned int valuelen) {
-  if (valuelen >= PROP_VALUE_MAX && !is_read_only(name)) {
+  if (namelen < 1) {
+    async_safe_format_log(ANDROID_LOG_ERROR, "libc",
+                          "__system_property_add failed: name length 0");
     return -1;
   }
 
-  if (namelen < 1) {
+  if (valuelen >= PROP_VALUE_MAX && !is_read_only(name)) {
+    async_safe_format_log(ANDROID_LOG_ERROR, "libc",
+                          "__system_property_add failed: \"%s\" value too long: %d >= PROP_VALUE_MAX",
+                          name, valuelen);
     return -1;
   }
 
   if (!initialized_) {
+    async_safe_format_log(ANDROID_LOG_ERROR, "libc",
+                          "__system_property_add failed: properties not initialized");
     return -1;
   }
 
   prop_area* serial_pa = contexts_->GetSerialPropArea();
   if (serial_pa == nullptr) {
+    async_safe_format_log(ANDROID_LOG_ERROR, "libc",
+                          "__system_property_add failed: property area not found");
     return -1;
   }
 
   prop_area* pa = contexts_->GetPropAreaForName(name);
   if (!pa) {
-    async_safe_format_log(ANDROID_LOG_ERROR, "libc", "Access denied adding property \"%s\"", name);
+    async_safe_format_log(ANDROID_LOG_ERROR, "libc",
+                          "__system_property_add failed: access denied for \"%s\"", name);
     return -1;
   }
 
-  bool ret = pa->add(name, namelen, value, valuelen);
-  if (!ret) {
+  if (!pa->add(name, namelen, value, valuelen)) {
+    async_safe_format_log(ANDROID_LOG_ERROR, "libc",
+                          "__system_property_add failed: add failed for \"%s\"", name);
     return -1;
   }
 
