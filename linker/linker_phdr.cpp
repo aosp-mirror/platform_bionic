@@ -773,7 +773,16 @@ static inline void _extend_load_segment_vma(const ElfW(Phdr)* phdr_table, size_t
   const ElfW(Phdr)* next = nullptr;
   size_t next_idx = phdr_idx + 1;
 
-  if (phdr->p_align == kPageSize || !should_pad_segments) {
+  // Don't do segment extension for p_align > 64KiB, such ELFs already existed in the
+  // field e.g. 2MiB p_align for THPs and are relatively small in number.
+  //
+  // The kernel can only represent padding for p_align up to 64KiB. This is because
+  // the kernel uses 4 available bits in the vm_area_struct to represent padding
+  // extent; and so cannot enable mitigations to avoid breaking app compatibility for
+  // p_aligns > 64KiB.
+  //
+  // Don't perform segment extension on these to avoid app compatibility issues.
+  if (phdr->p_align <= kPageSize || phdr->p_align > 64*1024 || !should_pad_segments) {
     return;
   }
 
