@@ -1410,15 +1410,15 @@ TEST(android_mallopt, set_allocation_limit_multiple_threads) {
 }
 
 #if defined(__BIONIC__)
-using Action = android_mallopt_gwp_asan_options_t::Action;
+using Mode = android_mallopt_gwp_asan_options_t::Mode;
 TEST(android_mallopt, DISABLED_multiple_enable_gwp_asan) {
   android_mallopt_gwp_asan_options_t options;
   options.program_name = "";  // Don't infer GWP-ASan options from sysprops.
-  options.desire = Action::DONT_TURN_ON_UNLESS_OVERRIDDEN;
+  options.mode = Mode::APP_MANIFEST_NEVER;
   // GWP-ASan should already be enabled. Trying to enable or disable it should
   // always pass.
   ASSERT_TRUE(android_mallopt(M_INITIALIZE_GWP_ASAN, &options, sizeof(options)));
-  options.desire = Action::TURN_ON_WITH_SAMPLING;
+  options.mode = Mode::APP_MANIFEST_DEFAULT;
   ASSERT_TRUE(android_mallopt(M_INITIALIZE_GWP_ASAN, &options, sizeof(options)));
 }
 #endif  // defined(__BIONIC__)
