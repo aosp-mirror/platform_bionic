@@ -918,10 +918,28 @@ bool ElfReader::LoadSegments() {
     //   2) Break the COW backing, faulting in new anon pages for a region
     //      that will not be used.
 
-    // _seg_file_end = unextended seg_file_end
-    uint64_t _seg_file_end = seg_start + phdr->p_filesz;
-    if ((phdr->p_flags & PF_W) != 0 && page_offset(_seg_file_end) > 0) {
-      memset(reinterpret_cast<void*>(_seg_file_end), 0, kPageSize - page_offset(_seg_file_end));
+    uint64_t unextended_seg_file_end = seg_start + phdr->p_filesz;
+    if ((phdr->p_flags & PF_W) != 0 && page_offset(unextended_seg_file_end) > 0) {
+      memset(reinterpret_cast<void*>(unextended_seg_file_end), 0,
+             kPageSize - page_offset(unextended_seg_file_end));
+    }
+
+    // Pages may be brought in due to readahead.
+    // Drop the padding (zero) pages, to avoid reclaim work later.
+    //
+    // NOTE: The madvise() here is special, as it also serves to hint to the
+    // kernel the portion of the LOAD segment that is padding.
+    //
+    // See: [1] https://android-review.googlesource.com/c/kernel/common/+/3032411
+    //      [2] https://android-review.googlesource.com/c/kernel/common/+/3048835
+    uint64_t pad_start = page_end(unextended_seg_file_end);
+    uint64_t pad_end = page_end(seg_file_end);
+    CHECK(pad_start <= pad_end);
+    uint64_t pad_len = pad_end - pad_start;
+    if (page_size_migration_supported() && pad_len > 0 &&
+        madvise(reinterpret_cast<void*>(pad_start), pad_len, MADV_DONTNEED)) {
+      DL_WARN("\"%s\": madvise(0x%" PRIx64 ", 0x%" PRIx64 ", MADV_DONTNEED) failed: %m",
+              name_.c_str(), pad_start, pad_len);
     }
 
     seg_file_end = page_end(seg_file_end);
