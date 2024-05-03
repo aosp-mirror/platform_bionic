@@ -164,9 +164,7 @@ FORTIFY_TEST(string) {
     const char large_string[] = "Hello!!!";
     static_assert(sizeof(large_string) > sizeof(small_buffer), "");
 
-#if __clang_major__ > 13
-    // expected-error@+3{{will always overflow}}
-#endif
+    // expected-error@+2{{will always overflow}}
     // expected-error@+1{{string bigger than buffer}}
     EXPECT_FORTIFY_DEATH(strcpy(small_buffer, large_string));
     // expected-error@+1{{string bigger than buffer}}
@@ -204,9 +202,7 @@ FORTIFY_TEST(string) {
     static_assert(sizeof(small_string) > sizeof(split.tiny_buffer), "");
 
 #if _FORTIFY_SOURCE > 1
-#if __clang_major__ > 13
-    // expected-error@+4{{will always overflow}}
-#endif
+    // expected-error@+3{{will always overflow}}
     // expected-error@+2{{string bigger than buffer}}
 #endif
     EXPECT_FORTIFY_DEATH_STRUCT(strcpy(split.tiny_buffer, small_string));
