@@ -2990,3 +2990,8 @@ filegroup {
     name: "versioner-dependencies",
     srcs: ["versioner-dependencies/**/*"],
 }
+
+filegroup {
+    name: "linux_capability_header",
+    srcs: ["kernel/uapi/linux/capability.h"],
+}
