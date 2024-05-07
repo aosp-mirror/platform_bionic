@@ -38,6 +38,11 @@
 extern "C" void scudo_malloc_disable_memory_tagging();
 extern "C" void scudo_malloc_set_track_allocation_stacks(int);
 
+extern "C" const char* __scudo_get_stack_depot_addr();
+extern "C" const char* __scudo_get_ring_buffer_addr();
+extern "C" size_t __scudo_get_ring_buffer_size();
+extern "C" size_t __scudo_get_stack_depot_size();
+
 // Protected by `g_heap_tagging_lock`.
 static HeapTaggingLevel heap_tagging_level = M_HEAP_TAGGING_LEVEL_NONE;
 
@@ -158,6 +163,10 @@ bool SetHeapTaggingLevel(HeapTaggingLevel tag_level) {
         set_tcf_on_all_threads(PR_MTE_TCF_SYNC);
 #if defined(USE_SCUDO) && !__has_feature(hwaddress_sanitizer)
         scudo_malloc_set_track_allocation_stacks(1);
+        __libc_shared_globals()->scudo_ring_buffer = __scudo_get_ring_buffer_addr();
+        __libc_shared_globals()->scudo_ring_buffer_size = __scudo_get_ring_buffer_size();
+        __libc_shared_globals()->scudo_stack_depot = __scudo_get_stack_depot_addr();
+        __libc_shared_globals()->scudo_stack_depot_size = __scudo_get_stack_depot_size();
 #endif
       }
       break;
