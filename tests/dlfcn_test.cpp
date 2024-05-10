@@ -824,6 +824,8 @@ TEST(dlfcn, dlopen_failure) {
 }
 
 TEST(dlfcn, dlclose_unload) {
+  const size_t kPageSize = getpagesize();
+
   void* handle = dlopen("libtest_simple.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
   uint32_t* taxicab_number = static_cast<uint32_t*>(dlsym(handle, "dlopen_testlib_taxicab_number"));
@@ -833,9 +835,9 @@ TEST(dlfcn, dlclose_unload) {
   // Making sure that the library has been unmapped as part of library unload
   // process. Note that mprotect somewhat counter-intuitively returns ENOMEM in
   // this case.
-  uintptr_t page_start = reinterpret_cast<uintptr_t>(taxicab_number) & ~(PAGE_SIZE - 1);
-  ASSERT_TRUE(mprotect(reinterpret_cast<void*>(page_start), PAGE_SIZE, PROT_NONE) != 0);
-  ASSERT_EQ(ENOMEM, errno) << strerror(errno);
+  uintptr_t page_start = reinterpret_cast<uintptr_t>(taxicab_number) & ~(kPageSize - 1);
+  ASSERT_TRUE(mprotect(reinterpret_cast<void*>(page_start), kPageSize, PROT_NONE) != 0);
+  ASSERT_ERRNO(ENOMEM);
 }
 
 static void ConcurrentDlErrorFn(std::string& error) {
@@ -971,9 +973,15 @@ TEST(dlfcn, dlopen_executable_by_absolute_path) {
 }
 
 #define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib64/" ABI_STRING "/"
+#if __has_feature(hwaddress_sanitizer)
+#define PATH_TO_LIBC PATH_TO_SYSTEM_LIB "hwasan/libc.so"
+#define PATH_TO_BOOTSTRAP_LIBC PATH_TO_SYSTEM_LIB "bootstrap/hwasan/libc.so"
+#define ALTERNATE_PATH_TO_LIBC ALTERNATE_PATH_TO_SYSTEM_LIB "hwasan/libc.so"
+#else
 #define PATH_TO_LIBC PATH_TO_SYSTEM_LIB "libc.so"
 #define PATH_TO_BOOTSTRAP_LIBC PATH_TO_SYSTEM_LIB "bootstrap/libc.so"
 #define ALTERNATE_PATH_TO_LIBC ALTERNATE_PATH_TO_SYSTEM_LIB "libc.so"
+#endif
 
 TEST(dlfcn, dladdr_libc) {
 #if defined(__GLIBC__)
@@ -981,24 +989,25 @@ TEST(dlfcn, dladdr_libc) {
 #endif
 
   Dl_info info;
-  void* addr = reinterpret_cast<void*>(puts); // well-known libc function
+  void* addr = reinterpret_cast<void*>(puts);  // An arbitrary libc function.
   ASSERT_TRUE(dladdr(addr, &info) != 0);
 
-  char libc_realpath[PATH_MAX];
-
   // Check if libc is in canonical path or in alternate path.
+  const char* expected_path;
   if (strncmp(ALTERNATE_PATH_TO_SYSTEM_LIB,
               info.dli_fname,
               sizeof(ALTERNATE_PATH_TO_SYSTEM_LIB) - 1) == 0) {
     // Platform with emulated architecture.  Symlink on ARC++.
-    ASSERT_TRUE(realpath(ALTERNATE_PATH_TO_LIBC, libc_realpath) == libc_realpath);
+    expected_path = ALTERNATE_PATH_TO_LIBC;
   } else if (strncmp(PATH_TO_BOOTSTRAP_LIBC, info.dli_fname,
                      sizeof(PATH_TO_BOOTSTRAP_LIBC) - 1) == 0) {
-    ASSERT_TRUE(realpath(PATH_TO_BOOTSTRAP_LIBC, libc_realpath) == libc_realpath);
+    expected_path = PATH_TO_BOOTSTRAP_LIBC;
   } else {
     // /system/lib is symlink when this test is executed on host.
-    ASSERT_TRUE(realpath(PATH_TO_LIBC, libc_realpath) == libc_realpath);
+    expected_path = PATH_TO_LIBC;
   }
+  char libc_realpath[PATH_MAX];
+  ASSERT_TRUE(realpath(expected_path, libc_realpath) != nullptr) << strerror(errno);
 
   ASSERT_STREQ(libc_realpath, info.dli_fname);
   // TODO: add check for dfi_fbase
@@ -1292,7 +1301,7 @@ TEST(dlfcn, dt_runpath_smoke) {
 }
 
 TEST(dlfcn, dt_runpath_absolute_path) {
-  std::string libpath = GetTestlibRoot() + "/libtest_dt_runpath_d.so";
+  std::string libpath = GetTestLibRoot() + "/libtest_dt_runpath_d.so";
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
 

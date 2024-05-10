@@ -19,6 +19,8 @@
 #include <malloc.h>
 #include <sys/prctl.h>
 
+#include <android-base/silent_death_test.h>
+
 #if defined(__BIONIC__)
 #include "gtest_globals.h"
 #include "platform/bionic/mte.h"
@@ -26,6 +28,7 @@
 
 #include "SignalUtils.h"
 
+#include <android-base/properties.h>
 #include <android-base/test_utils.h>
 #include <bionic/malloc_tagged_pointers.h>
 
@@ -43,7 +46,9 @@ static bool SetHeapTaggingLevel(HeapTaggingLevel level) {
 }
 #endif
 
-TEST(heap_tagging_level, tagged_pointer_dies) {
+using heap_tagging_level_DeathTest = SilentDeathTest;
+
+TEST_F(heap_tagging_level_DeathTest, tagged_pointer_dies) {
 #if defined(__BIONIC__)
   if (!KernelSupportsTaggedPointers()) {
     GTEST_SKIP() << "Kernel doesn't support tagged pointers.";
@@ -220,34 +225,32 @@ TEST(heap_tagging_level, tagging_level_transition_sync_none) {
 enum class MemtagNote { NONE, ASYNC, SYNC };
 class MemtagNoteTest : public testing::TestWithParam<std::tuple<MemtagNote, bool>> {};
 
+static const char* kNoteSuffix[] = {"disabled", "async", "sync"};
+
 TEST_P(MemtagNoteTest, SEGV) {
 #if defined(__BIONIC__) && defined(__aarch64__)
   SKIP_WITH_NATIVE_BRIDGE;  // http://b/242170715
+  if (android::base::GetProperty("persist.arm64.memtag.default", "") != "") {
+    GTEST_SKIP() << "not supported when overriding memtag mode with property";
+  }
   // Note that we do not check running_with_hwasan() - what matters here is whether the test binary
   // itself is built with HWASan.
-  bool withHWASAN = __has_feature(hwaddress_sanitizer);
   bool withMTE = getauxval(AT_HWCAP2) & HWCAP2_MTE;
 
-  const char* kNoteSuffix[] = {"disabled", "async", "sync"};
-  const char* kExpectedOutputHWASAN[] = {".*tag-mismatch.*", ".*tag-mismatch.*",
-                                         ".*tag-mismatch.*"};
   // Note that we do not check the exact si_code of the "async" variant, as it may be auto-upgraded
   // to asymm or even sync.
   const char* kExpectedOutputMTE[] = {"normal exit\n", "SEGV_MTE[AS]ERR\n", "SEGV_MTESERR\n"};
   const char* kExpectedOutputNonMTE[] = {"normal exit\n", "normal exit\n", "normal exit\n"};
-  const char** kExpectedOutput =
-      withHWASAN ? kExpectedOutputHWASAN : (withMTE ? kExpectedOutputMTE : kExpectedOutputNonMTE);
-  const int kExpectedExitStatus = withHWASAN ? -SIGABRT : 0;
+  const char** kExpectedOutput = withMTE ? kExpectedOutputMTE : kExpectedOutputNonMTE;
 
   MemtagNote note = std::get<0>(GetParam());
   bool isStatic = std::get<1>(GetParam());
   std::string helper_base = std::string("heap_tagging_") + (isStatic ? "static_" : "") +
                             kNoteSuffix[static_cast<int>(note)] + "_helper";
-  std::string helper = GetTestlibRoot() + "/" + helper_base;
-  chmod(helper.c_str(), 0755);
+  std::string helper = GetTestLibRoot() + "/" + helper_base;
   ExecTestHelper eth;
   eth.SetArgs({helper.c_str(), nullptr});
-  eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, kExpectedExitStatus,
+  eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0,
           kExpectedOutput[static_cast<int>(note)]);
 #else
   GTEST_SKIP() << "bionic/arm64 only";
@@ -257,4 +260,10 @@ TEST_P(MemtagNoteTest, SEGV) {
 INSTANTIATE_TEST_SUITE_P(, MemtagNoteTest,
                          testing::Combine(testing::Values(MemtagNote::NONE, MemtagNote::ASYNC,
                                                           MemtagNote::SYNC),
-                                          testing::Bool()));
+                                          testing::Bool()),
+                         [](const ::testing::TestParamInfo<MemtagNoteTest::ParamType>& info) {
+                           MemtagNote note = std::get<0>(info.param);
+                           std::string s = kNoteSuffix[static_cast<int>(note)];
+                           if (std::get<1>(info.param)) s += "_static";
+                           return s;
+                         });

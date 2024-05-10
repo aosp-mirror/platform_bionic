@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_LINUX_BINDER_H
 #define _UAPI_LINUX_BINDER_H
 #include <linux/types.h>
@@ -132,20 +120,22 @@ struct binder_extended_error {
   __u32 command;
   __s32 param;
 };
-#define BINDER_WRITE_READ _IOWR('b', 1, struct binder_write_read)
-#define BINDER_SET_IDLE_TIMEOUT _IOW('b', 3, __s64)
-#define BINDER_SET_MAX_THREADS _IOW('b', 5, __u32)
-#define BINDER_SET_IDLE_PRIORITY _IOW('b', 6, __s32)
-#define BINDER_SET_CONTEXT_MGR _IOW('b', 7, __s32)
-#define BINDER_THREAD_EXIT _IOW('b', 8, __s32)
-#define BINDER_VERSION _IOWR('b', 9, struct binder_version)
-#define BINDER_GET_NODE_DEBUG_INFO _IOWR('b', 11, struct binder_node_debug_info)
-#define BINDER_GET_NODE_INFO_FOR_REF _IOWR('b', 12, struct binder_node_info_for_ref)
-#define BINDER_SET_CONTEXT_MGR_EXT _IOW('b', 13, struct flat_binder_object)
-#define BINDER_FREEZE _IOW('b', 14, struct binder_freeze_info)
-#define BINDER_GET_FROZEN_INFO _IOWR('b', 15, struct binder_frozen_status_info)
-#define BINDER_ENABLE_ONEWAY_SPAM_DETECTION _IOW('b', 16, __u32)
-#define BINDER_GET_EXTENDED_ERROR _IOWR('b', 17, struct binder_extended_error)
+enum {
+  BINDER_WRITE_READ = _IOWR('b', 1, struct binder_write_read),
+  BINDER_SET_IDLE_TIMEOUT = _IOW('b', 3, __s64),
+  BINDER_SET_MAX_THREADS = _IOW('b', 5, __u32),
+  BINDER_SET_IDLE_PRIORITY = _IOW('b', 6, __s32),
+  BINDER_SET_CONTEXT_MGR = _IOW('b', 7, __s32),
+  BINDER_THREAD_EXIT = _IOW('b', 8, __s32),
+  BINDER_VERSION = _IOWR('b', 9, struct binder_version),
+  BINDER_GET_NODE_DEBUG_INFO = _IOWR('b', 11, struct binder_node_debug_info),
+  BINDER_GET_NODE_INFO_FOR_REF = _IOWR('b', 12, struct binder_node_info_for_ref),
+  BINDER_SET_CONTEXT_MGR_EXT = _IOW('b', 13, struct flat_binder_object),
+  BINDER_FREEZE = _IOW('b', 14, struct binder_freeze_info),
+  BINDER_GET_FROZEN_INFO = _IOWR('b', 15, struct binder_frozen_status_info),
+  BINDER_ENABLE_ONEWAY_SPAM_DETECTION = _IOW('b', 16, __u32),
+  BINDER_GET_EXTENDED_ERROR = _IOWR('b', 17, struct binder_extended_error),
+};
 enum transaction_flags {
   TF_ONE_WAY = 0x01,
   TF_ROOT_OBJECT = 0x04,
@@ -221,6 +211,7 @@ enum binder_driver_return_protocol {
   BR_FAILED_REPLY = _IO('r', 17),
   BR_FROZEN_REPLY = _IO('r', 18),
   BR_ONEWAY_SPAM_SUSPECT = _IO('r', 19),
+  BR_TRANSACTION_PENDING_FROZEN = _IO('r', 20),
 };
 enum binder_driver_command_protocol {
   BC_TRANSACTION = _IOW('c', 0, struct binder_transaction_data),

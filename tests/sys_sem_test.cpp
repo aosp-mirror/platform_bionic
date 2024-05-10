@@ -33,6 +33,8 @@
 
 #include <android-base/file.h>
 
+#include "utils.h"
+
 TEST(sys_sem, smoke) {
   if (semctl(-1, 0, IPC_RMID) == -1 && errno == ENOSYS) {
     GTEST_SKIP() << "no <sys/sem.h> support in this kernel";
@@ -62,7 +64,7 @@ TEST(sys_sem, smoke) {
   ops[0] = { .sem_num = 0, .sem_op = 0, .sem_flg = 0 };
   errno = 0;
   ASSERT_EQ(-1, semtimedop(id, ops, 1, &ts));
-  ASSERT_EQ(EAGAIN, errno);
+  ASSERT_ERRNO(EAGAIN);
   ASSERT_EQ(1, semctl(id, 0, GETVAL));
 
   // Decrement.
@@ -87,15 +89,21 @@ TEST(sys_sem, semctl_failure) {
 }
 
 TEST(sys_sem, semop_failure) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
   errno = 0;
   ASSERT_EQ(-1, semop(-1, nullptr, 0));
   ASSERT_TRUE(errno == EINVAL || errno == ENOSYS);
+#pragma clang diagnostic pop
 }
 
 TEST(sys_sem, semtimedop_failure) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
   errno = 0;
   ASSERT_EQ(-1, semtimedop(-1, nullptr, 0, nullptr));
   ASSERT_TRUE(errno == EINVAL || errno == ENOSYS);
+#pragma clang diagnostic pop
 }
 
 TEST(sys_sem, union_semun) {

@@ -29,7 +29,7 @@
 #if defined(__BIONIC_FORTIFY)
 
 __BIONIC_FORTIFY_INLINE
-void __bionic_bcopy(const void *src, void* const dst __pass_object_size0, size_t len)
+void __bionic_bcopy(const void * _Nonnull src, void* _Nonnull const dst __pass_object_size0, size_t len)
         __overloadable
         __clang_error_if(__bos_unevaluated_lt(__bos0(dst), len),
                          "'bcopy' called with size bigger than buffer") {
@@ -44,7 +44,7 @@ void __bionic_bcopy(const void *src, void* const dst __pass_object_size0, size_t
 }
 
 __BIONIC_FORTIFY_INLINE
-void __bionic_bzero(void* const b __pass_object_size0, size_t len)
+void __bionic_bzero(void* _Nonnull const b __pass_object_size0, size_t len)
         __overloadable
         __clang_error_if(__bos_unevaluated_lt(__bos0(b), len),
                          "'bzero' called with size bigger than buffer") {

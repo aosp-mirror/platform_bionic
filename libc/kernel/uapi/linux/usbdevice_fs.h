@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_LINUX_USBDEVICE_FS_H
 #define _UAPI_LINUX_USBDEVICE_FS_H
 #include <linux/types.h>
@@ -27,13 +15,13 @@ struct usbdevfs_ctrltransfer {
   __u16 wIndex;
   __u16 wLength;
   __u32 timeout;
-  void __user * data;
+  void  * data;
 };
 struct usbdevfs_bulktransfer {
   unsigned int ep;
   unsigned int len;
   unsigned int timeout;
-  void __user * data;
+  void  * data;
 };
 struct usbdevfs_setinterface {
   unsigned int interface;
@@ -41,7 +29,7 @@ struct usbdevfs_setinterface {
 };
 struct usbdevfs_disconnectsignal {
   unsigned int signr;
-  void __user * context;
+  void  * context;
 };
 #define USBDEVFS_MAXDRIVERNAME 255
 struct usbdevfs_getdriver {
@@ -80,7 +68,7 @@ struct usbdevfs_urb {
   unsigned char endpoint;
   int status;
   unsigned int flags;
-  void __user * buffer;
+  void  * buffer;
   int buffer_length;
   int actual_length;
   int start_frame;
@@ -90,13 +78,13 @@ struct usbdevfs_urb {
   };
   int error_count;
   unsigned int signr;
-  void __user * usercontext;
+  void  * usercontext;
   struct usbdevfs_iso_packet_desc iso_frame_desc[];
 };
 struct usbdevfs_ioctl {
   int ifno;
   int ioctl_code;
-  void __user * data;
+  void  * data;
 };
 struct usbdevfs_hub_portinfo {
   char nports;

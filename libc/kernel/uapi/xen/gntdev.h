@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef __LINUX_PUBLIC_GNTDEV_H__
 #define __LINUX_PUBLIC_GNTDEV_H__
 #include <linux/types.h>
@@ -55,7 +43,7 @@ struct ioctl_gntdev_unmap_notify {
 };
 struct gntdev_grant_copy_segment {
   union {
-    void __user * virt;
+    void  * virt;
     struct {
       grant_ref_t ref;
       __u16 offset;
@@ -69,7 +57,7 @@ struct gntdev_grant_copy_segment {
 #define IOCTL_GNTDEV_GRANT_COPY _IOC(_IOC_NONE, 'G', 8, sizeof(struct ioctl_gntdev_grant_copy))
 struct ioctl_gntdev_grant_copy {
   unsigned int count;
-  struct gntdev_grant_copy_segment __user * segments;
+  struct gntdev_grant_copy_segment  * segments;
 };
 #define UNMAP_NOTIFY_CLEAR_BYTE 0x1
 #define UNMAP_NOTIFY_SEND_EVENT 0x2

@@ -37,7 +37,9 @@
 // We assume that the compiler is not smart enough to optimize away fences in a single-threaded
 // program. If that changes, we'll need to add a second thread.
 
+// We increment the counter this way to avoid -Wdeprecated-volatile warnings.
 static volatile unsigned counter;
+#define INC_COUNTER() counter = counter + 1
 
 std::atomic<int> test_loc(0);
 
@@ -47,7 +49,7 @@ static std::mutex mtx;
 
 void BM_atomic_empty(benchmark::State& state) {
   while (state.KeepRunning()) {
-    ++counter;
+    INC_COUNTER();
   }
 }
 BIONIC_BENCHMARK(BM_atomic_empty);
@@ -56,7 +58,7 @@ static void BM_atomic_load_relaxed(benchmark::State& state) {
   unsigned result = 0;
   while (state.KeepRunning()) {
     result += test_loc.load(std::memory_order_relaxed);
-    ++counter;
+    INC_COUNTER();
   }
   sink = result;
 }
@@ -66,7 +68,7 @@ static void BM_atomic_load_acquire(benchmark::State& state) {
   unsigned result = 0;
   while (state.KeepRunning()) {
     result += test_loc.load(std::memory_order_acquire);
-    ++counter;
+    INC_COUNTER();
   }
   sink = result;
 }
@@ -76,7 +78,7 @@ static void BM_atomic_store_release(benchmark::State& state) {
   int i = counter;
   while (state.KeepRunning()) {
     test_loc.store(++i, std::memory_order_release);
-    ++counter;
+    INC_COUNTER();
   }
 }
 BIONIC_BENCHMARK(BM_atomic_store_release);
@@ -85,7 +87,7 @@ static void BM_atomic_store_seq_cst(benchmark::State& state) {
   int i = counter;
   while (state.KeepRunning()) {
     test_loc.store(++i, std::memory_order_seq_cst);
-    ++counter;
+    INC_COUNTER();
   }
 }
 BIONIC_BENCHMARK(BM_atomic_store_seq_cst);
@@ -94,7 +96,7 @@ static void BM_atomic_fetch_add_relaxed(benchmark::State& state) {
   unsigned result = 0;
   while (state.KeepRunning()) {
     result += test_loc.fetch_add(1, std::memory_order_relaxed);
-    ++counter;
+    INC_COUNTER();
   }
   sink = result;
 }
@@ -104,7 +106,7 @@ static void BM_atomic_fetch_add_seq_cst(benchmark::State& state) {
   unsigned result = 0;
   while (state.KeepRunning()) {
     result += test_loc.fetch_add(1, std::memory_order_seq_cst);
-    ++counter;
+    INC_COUNTER();
   }
   sink = result;
 }
@@ -118,7 +120,7 @@ static void BM_atomic_acquire_fence(benchmark::State& state) {
   while (state.KeepRunning()) {
     result += test_loc.load(std::memory_order_relaxed);
     std::atomic_thread_fence(std::memory_order_acquire);
-    ++counter;
+    INC_COUNTER();
   }
   sink = result;
 }
@@ -129,7 +131,7 @@ static void BM_atomic_seq_cst_fence(benchmark::State& state) {
   while (state.KeepRunning()) {
     result += test_loc.load(std::memory_order_relaxed);
     std::atomic_thread_fence(std::memory_order_seq_cst);
-    ++counter;
+    INC_COUNTER();
   }
   sink = result;
 }
@@ -142,7 +144,8 @@ static void BM_atomic_fetch_add_cs(benchmark::State& state) {
   while (state.KeepRunning()) {
     {
       std::lock_guard<std::mutex> _(mtx);
-      result += ++counter;
+      INC_COUNTER();
+      result += counter;
     }
   }
   sink = result;

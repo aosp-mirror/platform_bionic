@@ -85,6 +85,42 @@
 #define	PRIiPTR			__PRI_PTR_prefix"i"		/* intptr_t */
 
 /* fprintf macros for unsigned integers */
+#define	PRIb8			"b"		/* int8_t */
+#define	PRIb16			"b"		/* int16_t */
+#define	PRIb32			"b"		/* int32_t */
+#define	PRIb64			__PRI_64_prefix"b"		/* int64_t */
+
+#define	PRIbLEAST8		"b"		/* int_least8_t */
+#define	PRIbLEAST16		"b"		/* int_least16_t */
+#define	PRIbLEAST32		"b"		/* int_least32_t */
+#define	PRIbLEAST64		__PRI_64_prefix"b"		/* int_least64_t */
+
+#define	PRIbFAST8		"b"		/* int_fast8_t */
+#define	PRIbFAST16		__PRI_FAST_prefix"b"	/* int_fast16_t */
+#define	PRIbFAST32		__PRI_FAST_prefix"b"	/* int_fast32_t */
+#define	PRIbFAST64		__PRI_64_prefix"b"		/* int_fast64_t */
+
+#define	PRIbMAX			"jb"		/* intmax_t */
+#define	PRIbPTR			__PRI_PTR_prefix"b"		/* intptr_t */
+
+#define	PRIB8			"B"		/* int8_t */
+#define	PRIB16			"B"		/* int16_t */
+#define	PRIB32			"B"		/* int32_t */
+#define	PRIB64			__PRI_64_prefix"B"		/* int64_t */
+
+#define	PRIBLEAST8		"B"		/* int_least8_t */
+#define	PRIBLEAST16		"B"		/* int_least16_t */
+#define	PRIBLEAST32		"B"		/* int_least32_t */
+#define	PRIBLEAST64		__PRI_64_prefix"B"		/* int_least64_t */
+
+#define	PRIBFAST8		"B"		/* int_fast8_t */
+#define	PRIBFAST16		__PRI_FAST_prefix"B"	/* int_fast16_t */
+#define	PRIBFAST32		__PRI_FAST_prefix"B"	/* int_fast32_t */
+#define	PRIBFAST64		__PRI_64_prefix"B"		/* int_fast64_t */
+
+#define	PRIBMAX			"jB"		/* intmax_t */
+#define	PRIBPTR			__PRI_PTR_prefix"B"		/* intptr_t */
+
 #define	PRIo8			"o"		/* int8_t */
 #define	PRIo16			"o"		/* int16_t */
 #define	PRIo32			"o"		/* int32_t */
@@ -195,6 +231,42 @@
 #define	SCNiPTR			__PRI_PTR_prefix"i"		/* intptr_t */
 
 /* fscanf macros for unsigned integers */
+#define	SCNb8			"hhb"		/* uint8_t */
+#define	SCNb16			"hb"		/* uint16_t */
+#define	SCNb32			"b"		/* uint32_t */
+#define	SCNb64			__PRI_64_prefix"b"		/* uint64_t */
+
+#define	SCNbLEAST8		"hhb"		/* uint_least8_t */
+#define	SCNbLEAST16		"hb"		/* uint_least16_t */
+#define	SCNbLEAST32		"b"		/* uint_least32_t */
+#define	SCNbLEAST64		__PRI_64_prefix"b"		/* uint_least64_t */
+
+#define	SCNbFAST8		"hhb"		/* uint_fast8_t */
+#define	SCNbFAST16		__PRI_FAST_prefix"b"	/* uint_fast16_t */
+#define	SCNbFAST32		__PRI_FAST_prefix"b"	/* uint_fast32_t */
+#define	SCNbFAST64		__PRI_64_prefix"b"		/* uint_fast64_t */
+
+#define	SCNbMAX			"jb"		/* uintmax_t */
+#define	SCNbPTR			__PRI_PTR_prefix"b"		/* uintptr_t */
+
+#define	SCNB8			"hhB"		/* uint8_t */
+#define	SCNB16			"hB"		/* uint16_t */
+#define	SCNB32			"B"		/* uint32_t */
+#define	SCNB64			__PRI_64_prefix"B"		/* uint64_t */
+
+#define	SCNBLEAST8		"hhB"		/* uint_least8_t */
+#define	SCNBLEAST16		"hB"		/* uint_least16_t */
+#define	SCNBLEAST32		"B"		/* uint_least32_t */
+#define	SCNBLEAST64		__PRI_64_prefix"B"		/* uint_least64_t */
+
+#define	SCNBFAST8		"hhB"		/* uint_fast8_t */
+#define	SCNBFAST16		__PRI_FAST_prefix"B"	/* uint_fast16_t */
+#define	SCNBFAST32		__PRI_FAST_prefix"B"	/* uint_fast32_t */
+#define	SCNBFAST64		__PRI_64_prefix"B"		/* uint_fast64_t */
+
+#define	SCNBMAX			"jB"		/* uintmax_t */
+#define	SCNBPTR			__PRI_PTR_prefix"B"		/* uintptr_t */
+
 #define	SCNo8			"hho"		/* uint8_t */
 #define	SCNo16			"ho"		/* uint16_t */
 #define	SCNo32			"o"		/* uint32_t */
@@ -255,12 +327,12 @@ typedef struct {
 } imaxdiv_t;
 
 __BEGIN_DECLS
-intmax_t imaxabs(intmax_t __i) __attribute_const__ __INTRODUCED_IN(19);
-imaxdiv_t imaxdiv(intmax_t __numerator, intmax_t __denominator) __attribute_const__ __INTRODUCED_IN(19);
+intmax_t imaxabs(intmax_t __i) __attribute_const__;
+imaxdiv_t imaxdiv(intmax_t __numerator, intmax_t __denominator) __attribute_const__;
 intmax_t strtoimax(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base);
 uintmax_t strtoumax(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base);
-intmax_t wcstoimax(const wchar_t* _Nonnull __s, wchar_t* _Nullable * _Nullable __end_ptr, int __base) __INTRODUCED_IN(21);
-uintmax_t wcstoumax(const wchar_t* _Nonnull __s, wchar_t* _Nullable * _Nullable __end_ptr, int __base) __INTRODUCED_IN(21);
+intmax_t wcstoimax(const wchar_t* _Nonnull __s, wchar_t* _Nullable * _Nullable __end_ptr, int __base);
+uintmax_t wcstoumax(const wchar_t* _Nonnull __s, wchar_t* _Nullable * _Nullable __end_ptr, int __base);
 __END_DECLS
 
 #endif

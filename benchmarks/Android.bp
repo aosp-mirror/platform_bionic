@@ -15,6 +15,7 @@
 //
 
 package {
+    default_team: "trendy_team_native_tools_libraries",
     default_applicable_licenses: ["bionic_benchmarks_license"],
 }
 
@@ -57,6 +58,7 @@ cc_defaults {
         "stdio_benchmark.cpp",
         "stdlib_benchmark.cpp",
         "string_benchmark.cpp",
+        "syscall_mm_benchmark.cpp",
         "time_benchmark.cpp",
         "unistd_benchmark.cpp",
         "wctype_benchmark.cpp",
@@ -71,6 +73,7 @@ cc_defaults {
 
     target: {
         android: {
+            header_libs: ["bionic_libc_platform_headers"],
             static_libs: [
                 "libmeminfo",
                 "libprocinfo",
@@ -154,7 +157,13 @@ cc_test {
         "libbase",
         "libBionicBenchmarksUtils",
     ],
-    data: ["test_suites/*"],
+    data: [
+        "test_suites/*",
+        "suites/*",
+        ":bionic-benchmarks",
+    ],
+    test_suites: ["device-tests"],
+    require_root: true,
 }
 
 cc_binary {

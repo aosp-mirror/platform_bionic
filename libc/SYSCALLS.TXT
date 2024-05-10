@@ -161,7 +161,7 @@ int fstatat64|fstatat:newfstatat(int, const char*, struct stat*, int)  lp64
 int linkat(int, const char*, int, const char*, int)  all
 int mkdirat(int, const char*, mode_t)  all
 int mknodat(int, const char*, mode_t, dev_t)  all
-int readlinkat(int, const char*, char*, size_t)  all
+ssize_t readlinkat(int, const char*, char*, size_t)  all
 int renameat2(int, const char*, int, const char*, unsigned)  all
 int symlinkat(const char*, int, const char*)  all
 int unlinkat(int, const char*, int)   all
@@ -322,6 +322,7 @@ ssize_t vmsplice(int, const struct iovec*, size_t, unsigned int)  all
 int __epoll_create1:epoll_create1(int)  all
 int epoll_ctl(int, int op, int, struct epoll_event*)  all
 int __epoll_pwait:epoll_pwait(int, struct epoll_event*, int, int, const sigset64_t*, size_t)  all
+int __epoll_pwait2:epoll_pwait2(int, struct epoll_event*, int, const timespec64*, const sigset64_t*, size_t)  all
 
 int __eventfd:eventfd2(unsigned int, int)  all
 
@@ -356,7 +357,7 @@ int     __set_tls:__ARM_NR_set_tls(void*)                                 arm
 int     cacheflush:__ARM_NR_cacheflush(long start, long end, long flags)  arm
 
 # riscv64-specific
-int _flush_icache:riscv_flush_icache(void*, void*, unsigned long) riscv64
+int __riscv_flush_icache:riscv_flush_icache(void*, void*, unsigned long) riscv64
 
 # x86-specific
 int     __set_thread_area:set_thread_area(void*) x86

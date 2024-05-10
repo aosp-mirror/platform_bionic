@@ -16,15 +16,42 @@
 
 #pragma once
 
-// Get PAGE_SIZE and PAGE_MASK.
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/auxv.h>
+
+// For PAGE_SIZE.
 #include <sys/user.h>
 
+inline size_t page_size() {
+#if defined(PAGE_SIZE)
+  return PAGE_SIZE;
+#else
+  static const size_t page_size = getauxval(AT_PAGESZ);
+  return page_size;
+#endif
+}
+
+constexpr size_t max_page_size() {
+#if defined(PAGE_SIZE)
+  return PAGE_SIZE;
+#else
+  return 65536;
+#endif
+}
+
 // Returns the address of the page containing address 'x'.
-#define PAGE_START(x) ((x) & PAGE_MASK)
+inline uintptr_t page_start(uintptr_t x) {
+  return x & ~(page_size() - 1);
+}
 
 // Returns the offset of address 'x' in its page.
-#define PAGE_OFFSET(x) ((x) & ~PAGE_MASK)
+inline uintptr_t page_offset(uintptr_t x) {
+  return x & (page_size() - 1);
+}
 
 // Returns the address of the next page after address 'x', unless 'x' is
 // itself at the start of a page.
-#define PAGE_END(x) PAGE_START((x) + (PAGE_SIZE-1))
+inline uintptr_t page_end(uintptr_t x) {
+  return page_start(x + page_size() - 1);
+}

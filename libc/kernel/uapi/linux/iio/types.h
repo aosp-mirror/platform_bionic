@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_IIO_TYPES_H_
 #define _UAPI_IIO_TYPES_H_
 enum iio_chan_type {
@@ -54,6 +42,10 @@ enum iio_chan_type {
   IIO_POSITIONRELATIVE,
   IIO_PHASE,
   IIO_MASSCONCENTRATION,
+  IIO_DELTA_ANGL,
+  IIO_DELTA_VELOCITY,
+  IIO_COLORTEMP,
+  IIO_CHROMATICITY,
 };
 enum iio_modifier {
   IIO_NO_MOD,
@@ -107,6 +99,8 @@ enum iio_modifier {
   IIO_MOD_PITCH,
   IIO_MOD_YAW,
   IIO_MOD_ROLL,
+  IIO_MOD_LIGHT_UVA,
+  IIO_MOD_LIGHT_UVB,
 };
 enum iio_event_type {
   IIO_EV_TYPE_THRESH,

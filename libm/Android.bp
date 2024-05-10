@@ -94,8 +94,6 @@ cc_library {
         "upstream-freebsd/lib/msun/src/s_cbrtf.c",
         "upstream-freebsd/lib/msun/src/s_ccosh.c",
         "upstream-freebsd/lib/msun/src/s_ccoshf.c",
-        "upstream-freebsd/lib/msun/src/s_ceil.c",
-        "upstream-freebsd/lib/msun/src/s_ceilf.c",
         "upstream-freebsd/lib/msun/src/s_cexp.c",
         "upstream-freebsd/lib/msun/src/s_cexpf.c",
         "upstream-freebsd/lib/msun/src/s_cimag.c",
@@ -130,8 +128,6 @@ cc_library {
         "upstream-freebsd/lib/msun/src/s_fdim.c",
         "upstream-freebsd/lib/msun/src/s_finite.c",
         "upstream-freebsd/lib/msun/src/s_finitef.c",
-        "upstream-freebsd/lib/msun/src/s_floor.c",
-        "upstream-freebsd/lib/msun/src/s_floorf.c",
         "upstream-freebsd/lib/msun/src/s_fma.c",
         "upstream-freebsd/lib/msun/src/s_fmaf.c",
         "upstream-freebsd/lib/msun/src/s_fmax.c",
@@ -282,10 +278,8 @@ cc_library {
         arm: {
             srcs: [
                 "arm/fenv.c",
-            ],
-            exclude_srcs: [
-                "upstream-freebsd/lib/msun/src/s_floor.c",
-                "upstream-freebsd/lib/msun/src/s_floorf.c",
+                "upstream-freebsd/lib/msun/src/s_ceil.c",
+                "upstream-freebsd/lib/msun/src/s_ceilf.c",
             ],
             instruction_set: "arm",
             pack_relocations: false,
@@ -296,6 +290,8 @@ cc_library {
                 // For backwards-compatibility, some arm32 builtins are exported from libm.so.
                 static_libs: ["libclang_rt.builtins-exported"],
             },
+            // "#pragma STDC FENV_ACCESS ON" in e_sqrtl.c is not supported for arm32.
+            cflags: ["-Wno-ignored-pragmas"],
         },
 
         arm64: {
@@ -303,10 +299,6 @@ cc_library {
                 "arm64/fenv.c",
             ],
             exclude_srcs: [
-                "upstream-freebsd/lib/msun/src/s_ceil.c",
-                "upstream-freebsd/lib/msun/src/s_ceilf.c",
-                "upstream-freebsd/lib/msun/src/s_floor.c",
-                "upstream-freebsd/lib/msun/src/s_floorf.c",
                 "upstream-freebsd/lib/msun/src/s_fma.c",
                 "upstream-freebsd/lib/msun/src/s_fmaf.c",
                 "upstream-freebsd/lib/msun/src/s_fmax.c",
@@ -337,11 +329,6 @@ cc_library {
             ],
 
             exclude_srcs: [
-                // TODO: do the rest when our clang has https://reviews.llvm.org/D136508.
-                // TODO: "upstream-freebsd/lib/msun/src/s_ceil.c",
-                // TODO: "upstream-freebsd/lib/msun/src/s_ceilf.c",
-                // TODO: "upstream-freebsd/lib/msun/src/s_floor.c",
-                // TODO: "upstream-freebsd/lib/msun/src/s_floorf.c",
                 "upstream-freebsd/lib/msun/src/s_fma.c",
                 "upstream-freebsd/lib/msun/src/s_fmaf.c",
                 "upstream-freebsd/lib/msun/src/s_fmax.c",
@@ -356,12 +343,12 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/s_lrintf.c",
                 "upstream-freebsd/lib/msun/src/s_lround.c",
                 "upstream-freebsd/lib/msun/src/s_lroundf.c",
-                // TODO: "upstream-freebsd/lib/msun/src/s_rint.c",
-                // TODO: "upstream-freebsd/lib/msun/src/s_rintf.c",
-                // TODO: "upstream-freebsd/lib/msun/src/s_round.c",
-                // TODO: "upstream-freebsd/lib/msun/src/s_roundf.c",
-                // TODO: "upstream-freebsd/lib/msun/src/s_trunc.c",
-                // TODO: "upstream-freebsd/lib/msun/src/s_truncf.c",
+                "upstream-freebsd/lib/msun/src/s_rint.c",
+                "upstream-freebsd/lib/msun/src/s_rintf.c",
+                "upstream-freebsd/lib/msun/src/s_round.c",
+                "upstream-freebsd/lib/msun/src/s_roundf.c",
+                "upstream-freebsd/lib/msun/src/s_trunc.c",
+                "upstream-freebsd/lib/msun/src/s_truncf.c",
             ],
             version_script: ":libm.riscv64.map",
         },
@@ -373,10 +360,6 @@ cc_library {
                 "x86/lrintf.S",
             ],
             exclude_srcs: [
-                "upstream-freebsd/lib/msun/src/s_ceil.c",
-                "upstream-freebsd/lib/msun/src/s_ceilf.c",
-                "upstream-freebsd/lib/msun/src/s_floor.c",
-                "upstream-freebsd/lib/msun/src/s_floorf.c",
                 "upstream-freebsd/lib/msun/src/s_lrint.c",
                 "upstream-freebsd/lib/msun/src/s_lrintf.c",
                 "upstream-freebsd/lib/msun/src/s_rint.c",
@@ -400,10 +383,6 @@ cc_library {
                 "x86_64/lrintf.S",
             ],
             exclude_srcs: [
-                "upstream-freebsd/lib/msun/src/s_ceil.c",
-                "upstream-freebsd/lib/msun/src/s_ceilf.c",
-                "upstream-freebsd/lib/msun/src/s_floor.c",
-                "upstream-freebsd/lib/msun/src/s_floorf.c",
                 "upstream-freebsd/lib/msun/src/s_llrint.c",
                 "upstream-freebsd/lib/msun/src/s_llrintf.c",
                 "upstream-freebsd/lib/msun/src/s_lrint.c",
@@ -423,7 +402,6 @@ cc_library {
     ],
 
     cflags: [
-        "-D__BIONIC_LP32_USE_LONG_DOUBLE",
         "-D_BSD_SOURCE",
         "-DFLT_EVAL_METHOD=0",
         "-include freebsd-compat.h",
@@ -432,7 +410,6 @@ cc_library {
         "-fno-math-errno",
         "-Wall",
         "-Werror",
-        "-Wno-ignored-pragmas",
         "-Wno-missing-braces",
         "-Wno-parentheses",
         "-Wno-sign-compare",
@@ -490,13 +467,11 @@ ndk_library {
     name: "libm",
     symbol_file: "libm.map.txt",
     first_version: "9",
-    // APIs implemented in asm don't have debug info: http://b/190554910.
-    allow_untyped_symbols: true,
 }
 
 genrule {
     name: "libm.arm.map",
-    out: ["libm.arm.map"],
+    out: ["libm.arm.map.txt"],
     srcs: ["libm.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) arm $(in) $(out)",
@@ -504,7 +479,7 @@ genrule {
 
 genrule {
     name: "libm.arm64.map",
-    out: ["libm.arm64.map"],
+    out: ["libm.arm64.map.txt"],
     srcs: ["libm.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) arm64 $(in) $(out)",
@@ -512,7 +487,7 @@ genrule {
 
 genrule {
     name: "libm.riscv64.map",
-    out: ["libm.riscv64.map"],
+    out: ["libm.riscv64.map.txt"],
     srcs: ["libm.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) riscv64 $(in) $(out)",
@@ -520,7 +495,7 @@ genrule {
 
 genrule {
     name: "libm.x86.map",
-    out: ["libm.x86.map"],
+    out: ["libm.x86.map.txt"],
     srcs: ["libm.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) x86 $(in) $(out)",
@@ -528,8 +503,13 @@ genrule {
 
 genrule {
     name: "libm.x86_64.map",
-    out: ["libm.x86_64.map"],
+    out: ["libm.x86_64.map.txt"],
     srcs: ["libm.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) x86_64 $(in) $(out)",
+}
+
+filegroup {
+    name: "libc_ldexp_srcs",
+    srcs: ["upstream-freebsd/lib/msun/src/s_scalbn.c"],
 }

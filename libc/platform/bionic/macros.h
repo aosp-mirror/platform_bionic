@@ -40,12 +40,12 @@ static constexpr uintptr_t align_up(uintptr_t p, size_t align) {
 }
 
 template <typename T>
-static inline T* align_down(T* p, size_t align) {
+static inline T* _Nonnull align_down(T* _Nonnull p, size_t align) {
   return reinterpret_cast<T*>(align_down(reinterpret_cast<uintptr_t>(p), align));
 }
 
 template <typename T>
-static inline T* align_up(T* p, size_t align) {
+static inline T* _Nonnull align_up(T* _Nonnull p, size_t align) {
   return reinterpret_cast<T*>(align_up(reinterpret_cast<uintptr_t>(p), align));
 }
 
@@ -94,6 +94,6 @@ static inline uintptr_t untag_address(uintptr_t p) {
 }
 
 template <typename T>
-static inline T* untag_address(T* p) {
+static inline T* _Nonnull untag_address(T* _Nonnull p) {
   return reinterpret_cast<T*>(untag_address(reinterpret_cast<uintptr_t>(p)));
 }

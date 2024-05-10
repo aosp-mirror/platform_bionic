@@ -284,8 +284,8 @@ static std::vector<T> Intersection(const std::set<T>& a, const std::set<T>& b) {
 //      If a function is declared as an inline before a certain version, the inline definition
 //      should have no version tag.
 //   3. Each availability type must only be present globally or on a per-arch basis.
-//      (e.g. __INTRODUCED_IN_ARM(9) __INTRODUCED_IN_X86(10) __DEPRECATED_IN(11) is fine,
-//      but not __INTRODUCED_IN(9) __INTRODUCED_IN_X86(10))
+//      (e.g. __INTRODUCED_IN_32(21) __INTRODUCED_IN_64(22) __DEPRECATED_IN(23) is fine,
+//      but not __INTRODUCED_IN(9) __INTRODUCED_IN_32(10))
 static bool checkSymbol(const Symbol& symbol) {
   std::string cwd = getWorkingDir() + "/";
 

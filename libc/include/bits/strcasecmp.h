@@ -46,12 +46,12 @@ __BEGIN_DECLS
  * Returns an integer less than, equal to, or greater than zero if the first string is less than,
  * equal to, or greater than the second string (ignoring case).
  */
-int strcasecmp(const char* __s1, const char* __s2) __attribute_pure__;
+int strcasecmp(const char* _Nonnull __s1, const char* _Nonnull __s2) __attribute_pure__;
 
 /**
  * Like strcasecmp() but taking a `locale_t`.
  */
-int strcasecmp_l(const char* __s1, const char* __s2, locale_t __l) __attribute_pure__ __INTRODUCED_IN(23);
+int strcasecmp_l(const char* _Nonnull __s1, const char* _Nonnull __s2, locale_t _Nonnull __l) __attribute_pure__ __INTRODUCED_IN(23);
 
 /**
  * [strncasecmp(3)](http://man7.org/linux/man-pages/man3/strncasecmp.3.html) compares the first
@@ -61,11 +61,11 @@ int strcasecmp_l(const char* __s1, const char* __s2, locale_t __l) __attribute_p
  * first string is less than, equal to, or greater than the first `n` bytes of the second
  * string (ignoring case).
  */
-int strncasecmp(const char* __s1, const char* __s2, size_t __n) __attribute_pure__;
+int strncasecmp(const char* _Nonnull __s1, const char* _Nonnull __s2, size_t __n) __attribute_pure__;
 
 /**
  * Like strncasecmp() but taking a `locale_t`.
  */
-int strncasecmp_l(const char* __s1, const char* __s2, size_t __n, locale_t __l) __attribute_pure__ __INTRODUCED_IN(23);
+int strncasecmp_l(const char* _Nonnull __s1, const char* _Nonnull __s2, size_t __n, locale_t _Nonnull __l) __attribute_pure__ __INTRODUCED_IN(23);
 
 __END_DECLS

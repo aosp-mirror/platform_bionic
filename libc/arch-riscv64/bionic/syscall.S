@@ -44,10 +44,10 @@ ENTRY(syscall)
 
   // Did it fail?
   li a7, -MAX_ERRNO
-  bgtu a0, a7, 1f
-
+  bgtu a0, a7, L(failure)
   ret
-1:
+
+L(failure):
   neg a0, a0
-  j __set_errno_internal
+  tail __set_errno_internal
 END(syscall)

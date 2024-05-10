@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_LINUX_IF_BRIDGE_H
 #define _UAPI_LINUX_IF_BRIDGE_H
 #include <linux/types.h>
@@ -435,6 +423,9 @@ enum {
   BRIDGE_VLANDB_ENTRY_TUNNEL_INFO,
   BRIDGE_VLANDB_ENTRY_STATS,
   BRIDGE_VLANDB_ENTRY_MCAST_ROUTER,
+  BRIDGE_VLANDB_ENTRY_MCAST_N_GROUPS,
+  BRIDGE_VLANDB_ENTRY_MCAST_MAX_GROUPS,
+  BRIDGE_VLANDB_ENTRY_NEIGH_SUPPRESS,
   __BRIDGE_VLANDB_ENTRY_MAX,
 };
 #define BRIDGE_VLANDB_ENTRY_MAX (__BRIDGE_VLANDB_ENTRY_MAX - 1)
@@ -504,6 +495,11 @@ enum {
   MDBA_MDB_EATTR_GROUP_MODE,
   MDBA_MDB_EATTR_SOURCE,
   MDBA_MDB_EATTR_RTPROT,
+  MDBA_MDB_EATTR_DST,
+  MDBA_MDB_EATTR_DST_PORT,
+  MDBA_MDB_EATTR_VNI,
+  MDBA_MDB_EATTR_IFINDEX,
+  MDBA_MDB_EATTR_SRC_VNI,
   __MDBA_MDB_EATTR_MAX
 };
 #define MDBA_MDB_EATTR_MAX (__MDBA_MDB_EATTR_MAX - 1)
@@ -574,11 +570,24 @@ enum {
 };
 #define MDBA_SET_ENTRY_MAX (__MDBA_SET_ENTRY_MAX - 1)
 enum {
+  MDBA_GET_ENTRY_UNSPEC,
+  MDBA_GET_ENTRY,
+  MDBA_GET_ENTRY_ATTRS,
+  __MDBA_GET_ENTRY_MAX,
+};
+#define MDBA_GET_ENTRY_MAX (__MDBA_GET_ENTRY_MAX - 1)
+enum {
   MDBE_ATTR_UNSPEC,
   MDBE_ATTR_SOURCE,
   MDBE_ATTR_SRC_LIST,
   MDBE_ATTR_GROUP_MODE,
   MDBE_ATTR_RTPROT,
+  MDBE_ATTR_DST,
+  MDBE_ATTR_DST_PORT,
+  MDBE_ATTR_VNI,
+  MDBE_ATTR_IFINDEX,
+  MDBE_ATTR_SRC_VNI,
+  MDBE_ATTR_STATE_MASK,
   __MDBE_ATTR_MAX,
 };
 #define MDBE_ATTR_MAX (__MDBE_ATTR_MAX - 1)

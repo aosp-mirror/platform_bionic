@@ -36,7 +36,10 @@
 #include <algorithm>
 #include <atomic>
 #include <functional>
+#include <string>
 #include <thread>
+#include <unordered_map>
+#include <utility>
 #include <vector>
 
 #include <tinyxml2.h>
@@ -80,7 +83,7 @@ TEST(malloc, malloc_overflow) {
   SKIP_WITH_HWASAN;
   errno = 0;
   ASSERT_EQ(nullptr, malloc(SIZE_MAX));
-  ASSERT_EQ(ENOMEM, errno);
+  ASSERT_ERRNO(ENOMEM);
 }
 
 TEST(malloc, calloc_std) {
@@ -117,23 +120,23 @@ TEST(malloc, calloc_illegal) {
   SKIP_WITH_HWASAN;
   errno = 0;
   ASSERT_EQ(nullptr, calloc(-1, 100));
-  ASSERT_EQ(ENOMEM, errno);
+  ASSERT_ERRNO(ENOMEM);
 }
 
 TEST(malloc, calloc_overflow) {
   SKIP_WITH_HWASAN;
   errno = 0;
   ASSERT_EQ(nullptr, calloc(1, SIZE_MAX));
-  ASSERT_EQ(ENOMEM, errno);
+  ASSERT_ERRNO(ENOMEM);
   errno = 0;
   ASSERT_EQ(nullptr, calloc(SIZE_MAX, SIZE_MAX));
-  ASSERT_EQ(ENOMEM, errno);
+  ASSERT_ERRNO(ENOMEM);
   errno = 0;
   ASSERT_EQ(nullptr, calloc(2, SIZE_MAX));
-  ASSERT_EQ(ENOMEM, errno);
+  ASSERT_ERRNO(ENOMEM);
   errno = 0;
   ASSERT_EQ(nullptr, calloc(SIZE_MAX, 2));
-  ASSERT_EQ(ENOMEM, errno);
+  ASSERT_ERRNO(ENOMEM);
 }
 
 TEST(malloc, memalign_multiple) {
@@ -343,12 +346,12 @@ TEST(malloc, realloc_overflow) {
   SKIP_WITH_HWASAN;
   errno = 0;
   ASSERT_EQ(nullptr, realloc(nullptr, SIZE_MAX));
-  ASSERT_EQ(ENOMEM, errno);
+  ASSERT_ERRNO(ENOMEM);
   void* ptr = malloc(100);
   ASSERT_TRUE(ptr != nullptr);
   errno = 0;
   ASSERT_EQ(nullptr, realloc(ptr, SIZE_MAX));
-  ASSERT_EQ(ENOMEM, errno);
+  ASSERT_ERRNO(ENOMEM);
   free(ptr);
 }
 
@@ -666,7 +669,7 @@ TEST(malloc, mallopt_smoke) {
   errno = 0;
   ASSERT_EQ(0, mallopt(-1000, 1));
   // mallopt doesn't set errno.
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
 #else
   GTEST_SKIP() << "bionic-only test";
 #endif
@@ -675,11 +678,12 @@ TEST(malloc, mallopt_smoke) {
 TEST(malloc, mallopt_decay) {
 #if defined(__BIONIC__)
   SKIP_WITH_HWASAN << "hwasan does not implement mallopt";
-  errno = 0;
+  ASSERT_EQ(1, mallopt(M_DECAY_TIME, -1));
   ASSERT_EQ(1, mallopt(M_DECAY_TIME, 1));
   ASSERT_EQ(1, mallopt(M_DECAY_TIME, 0));
   ASSERT_EQ(1, mallopt(M_DECAY_TIME, 1));
   ASSERT_EQ(1, mallopt(M_DECAY_TIME, 0));
+  ASSERT_EQ(1, mallopt(M_DECAY_TIME, -1));
 #else
   GTEST_SKIP() << "bionic-only test";
 #endif
@@ -688,8 +692,54 @@ TEST(malloc, mallopt_decay) {
 TEST(malloc, mallopt_purge) {
 #if defined(__BIONIC__)
   SKIP_WITH_HWASAN << "hwasan does not implement mallopt";
-  errno = 0;
   ASSERT_EQ(1, mallopt(M_PURGE, 0));
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
+TEST(malloc, mallopt_purge_all) {
+#if defined(__BIONIC__)
+  SKIP_WITH_HWASAN << "hwasan does not implement mallopt";
+  ASSERT_EQ(1, mallopt(M_PURGE_ALL, 0));
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
+TEST(malloc, mallopt_log_stats) {
+#if defined(__BIONIC__)
+  SKIP_WITH_HWASAN << "hwasan does not implement mallopt";
+  ASSERT_EQ(1, mallopt(M_LOG_STATS, 0));
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
+// Verify that all of the mallopt values are unique.
+TEST(malloc, mallopt_unique_params) {
+#if defined(__BIONIC__)
+  std::vector<std::pair<int, std::string>> params{
+      std::make_pair(M_DECAY_TIME, "M_DECAY_TIME"),
+      std::make_pair(M_PURGE, "M_PURGE"),
+      std::make_pair(M_PURGE_ALL, "M_PURGE_ALL"),
+      std::make_pair(M_MEMTAG_TUNING, "M_MEMTAG_TUNING"),
+      std::make_pair(M_THREAD_DISABLE_MEM_INIT, "M_THREAD_DISABLE_MEM_INIT"),
+      std::make_pair(M_CACHE_COUNT_MAX, "M_CACHE_COUNT_MAX"),
+      std::make_pair(M_CACHE_SIZE_MAX, "M_CACHE_SIZE_MAX"),
+      std::make_pair(M_TSDS_COUNT_MAX, "M_TSDS_COUNT_MAX"),
+      std::make_pair(M_BIONIC_ZERO_INIT, "M_BIONIC_ZERO_INIT"),
+      std::make_pair(M_BIONIC_SET_HEAP_TAGGING_LEVEL, "M_BIONIC_SET_HEAP_TAGGING_LEVEL"),
+      std::make_pair(M_LOG_STATS, "M_LOG_STATS"),
+  };
+
+  std::unordered_map<int, std::string> all_params;
+  for (const auto& param : params) {
+    EXPECT_TRUE(all_params.count(param.first) == 0)
+        << "mallopt params " << all_params[param.first] << " and " << param.second
+        << " have the same value " << param.first;
+    all_params.insert(param);
+  }
 #else
   GTEST_SKIP() << "bionic-only test";
 #endif
@@ -746,11 +796,11 @@ TEST(malloc, reallocarray_overflow) {
 
   errno = 0;
   ASSERT_TRUE(reallocarray(nullptr, a, b) == nullptr);
-  ASSERT_EQ(ENOMEM, errno);
+  ASSERT_ERRNO(ENOMEM);
 
   errno = 0;
   ASSERT_TRUE(reallocarray(nullptr, b, a) == nullptr);
-  ASSERT_EQ(ENOMEM, errno);
+  ASSERT_ERRNO(ENOMEM);
 #else
   GTEST_SKIP() << "reallocarray not available";
 #endif
@@ -773,7 +823,7 @@ TEST(malloc, mallinfo) {
     8, 32, 128, 4096, 32768, 131072, 1024000, 10240000, 20480000, 300000000
   };
 
-  constexpr static size_t kMaxAllocs = 50;
+  static constexpr size_t kMaxAllocs = 50;
 
   for (size_t size : sizes) {
     // If some of these allocations are stuck in a thread cache, then keep
@@ -816,7 +866,7 @@ TEST(malloc, mallinfo2) {
   SKIP_WITH_HWASAN << "hwasan does not implement mallinfo2";
   static size_t sizes[] = {8, 32, 128, 4096, 32768, 131072, 1024000, 10240000, 20480000, 300000000};
 
-  constexpr static size_t kMaxAllocs = 50;
+  static constexpr size_t kMaxAllocs = 50;
 
   for (size_t size : sizes) {
     // If some of these allocations are stuck in a thread cache, then keep
@@ -887,7 +937,8 @@ void __attribute__((optnone)) VerifyAlignment(Type* floating) {
   size_t expected_alignment = alignof(Type);
   if (expected_alignment != 0) {
     ASSERT_EQ(0U, (expected_alignment - 1) & reinterpret_cast<uintptr_t>(floating))
-        << "Expected alignment " << expected_alignment << " ptr value " << floating;
+        << "Expected alignment " << expected_alignment << " ptr value "
+        << static_cast<void*>(floating);
   }
 }
 
@@ -1069,7 +1120,7 @@ TEST(android_mallopt, error_on_unexpected_option) {
   const int unrecognized_option = -1;
   errno = 0;
   EXPECT_EQ(false, android_mallopt(unrecognized_option, nullptr, 0));
-  EXPECT_EQ(ENOTSUP, errno);
+  EXPECT_ERRNO(ENOTSUP);
 #else
   GTEST_SKIP() << "bionic-only test";
 #endif
@@ -1100,11 +1151,11 @@ TEST(android_mallopt, init_zygote_child_profiling) {
   errno = 0;
   if (IsDynamic()) {
     EXPECT_EQ(true, android_mallopt(M_INIT_ZYGOTE_CHILD_PROFILING, nullptr, 0));
-    EXPECT_EQ(0, errno);
+    EXPECT_ERRNO(0);
   } else {
     // Not supported in static executables.
     EXPECT_EQ(false, android_mallopt(M_INIT_ZYGOTE_CHILD_PROFILING, nullptr, 0));
-    EXPECT_EQ(ENOTSUP, errno);
+    EXPECT_ERRNO(ENOTSUP);
   }
 
   // Unexpected arguments rejected.
@@ -1112,9 +1163,9 @@ TEST(android_mallopt, init_zygote_child_profiling) {
   char unexpected = 0;
   EXPECT_EQ(false, android_mallopt(M_INIT_ZYGOTE_CHILD_PROFILING, &unexpected, 1));
   if (IsDynamic()) {
-    EXPECT_EQ(EINVAL, errno);
+    EXPECT_ERRNO(EINVAL);
   } else {
-    EXPECT_EQ(ENOTSUP, errno);
+    EXPECT_ERRNO(ENOTSUP);
   }
 #else
   GTEST_SKIP() << "bionic-only test";
@@ -1296,45 +1347,44 @@ TEST(android_mallopt, set_allocation_limit_realloc_free) {
 }
 
 #if defined(__BIONIC__)
-static void* SetAllocationLimit(void* data) {
-  std::atomic_bool* go = reinterpret_cast<std::atomic_bool*>(data);
-  while (!go->load()) {
-  }
-  size_t limit = 500 * 1024 * 1024;
-  if (android_mallopt(M_SET_ALLOCATION_LIMIT_BYTES, &limit, sizeof(limit))) {
-    return reinterpret_cast<void*>(-1);
-  }
-  return nullptr;
-}
-
 static void SetAllocationLimitMultipleThreads() {
-  std::atomic_bool go;
-  go = false;
-
   static constexpr size_t kNumThreads = 4;
-  pthread_t threads[kNumThreads];
+  std::atomic_bool start_running = false;
+  std::atomic<size_t> num_running;
+  std::atomic<size_t> num_successful;
+  std::unique_ptr<std::thread> threads[kNumThreads];
   for (size_t i = 0; i < kNumThreads; i++) {
-    ASSERT_EQ(0, pthread_create(&threads[i], nullptr, SetAllocationLimit, &go));
+    threads[i].reset(new std::thread([&num_running, &start_running, &num_successful] {
+      ++num_running;
+      while (!start_running) {
+      }
+      size_t limit = 500 * 1024 * 1024;
+      if (android_mallopt(M_SET_ALLOCATION_LIMIT_BYTES, &limit, sizeof(limit))) {
+        ++num_successful;
+      }
+    }));
   }
 
-  // Let them go all at once.
-  go = true;
+  // Wait until all of the threads have started.
+  while (num_running != kNumThreads)
+    ;
+
+  // Now start all of the threads setting the mallopt at once.
+  start_running = true;
+
   // Send hardcoded signal (BIONIC_SIGNAL_PROFILER with value 0) to trigger
-  // heapprofd handler.
-  union sigval signal_value;
-  signal_value.sival_int = 0;
+  // heapprofd handler. This will verify that changing the limit while
+  // the allocation handlers are being changed at the same time works,
+  // or that the limit handler is changed first and this also works properly.
+  union sigval signal_value {};
   ASSERT_EQ(0, sigqueue(getpid(), BIONIC_SIGNAL_PROFILER, signal_value));
 
-  size_t num_successful = 0;
+  // Wait for all of the threads to finish.
   for (size_t i = 0; i < kNumThreads; i++) {
-    void* result;
-    ASSERT_EQ(0, pthread_join(threads[i], &result));
-    if (result != nullptr) {
-      num_successful++;
-    }
+    threads[i]->join();
   }
-  ASSERT_EQ(1U, num_successful);
-  exit(0);
+  ASSERT_EQ(1U, num_successful) << "Only one thread should be able to set the limit.";
+  _exit(0);
 }
 #endif
 
@@ -1442,7 +1492,7 @@ TEST(malloc, zero_init) {
   // release secondary allocations back to the OS) was modified to 0ms/1ms by
   // mallopt_decay. Ensure that we delay for at least a second before releasing
   // pages to the OS in order to avoid implicit zeroing by the kernel.
-  mallopt(M_DECAY_TIME, 1000);
+  mallopt(M_DECAY_TIME, 1);
   TestHeapZeroing(/* num_iterations */ 32, [](int iteration) -> int {
     return 1 << (19 + iteration % 4);
   });
@@ -1572,6 +1622,7 @@ void VerifyAllocationsAreZero(std::function<void*(size_t)> alloc_func, std::stri
 }
 
 // Verify that small and medium allocations are always zero.
+// @CddTest = 9.7/C-4-1
 TEST(malloc, zeroed_allocations_small_medium_sizes) {
 #if !defined(__BIONIC__)
   GTEST_SKIP() << "Only valid on bionic";
@@ -1601,6 +1652,7 @@ TEST(malloc, zeroed_allocations_small_medium_sizes) {
 }
 
 // Verify that large allocations are always zero.
+// @CddTest = 9.7/C-4-1
 TEST(malloc, zeroed_allocations_large_sizes) {
 #if !defined(__BIONIC__)
   GTEST_SKIP() << "Only valid on bionic";
@@ -1629,6 +1681,8 @@ TEST(malloc, zeroed_allocations_large_sizes) {
       "posix_memalign", test_sizes, kMaxAllocations);
 }
 
+// Verify that reallocs are zeroed when expanded.
+// @CddTest = 9.7/C-4-1
 TEST(malloc, zeroed_allocations_realloc) {
 #if !defined(__BIONIC__)
   GTEST_SKIP() << "Only valid on bionic";
@@ -1682,4 +1736,41 @@ TEST(malloc, zeroed_allocations_realloc) {
       free(ptrs[i]);
     }
   }
+}
+
+TEST(android_mallopt, get_decay_time_enabled_errors) {
+#if defined(__BIONIC__)
+  errno = 0;
+  EXPECT_FALSE(android_mallopt(M_GET_DECAY_TIME_ENABLED, nullptr, sizeof(bool)));
+  EXPECT_ERRNO(EINVAL);
+
+  errno = 0;
+  int value;
+  EXPECT_FALSE(android_mallopt(M_GET_DECAY_TIME_ENABLED, &value, sizeof(value)));
+  EXPECT_ERRNO(EINVAL);
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
+TEST(android_mallopt, get_decay_time_enabled) {
+#if defined(__BIONIC__)
+  SKIP_WITH_HWASAN << "hwasan does not implement mallopt";
+
+  EXPECT_EQ(1, mallopt(M_DECAY_TIME, 0));
+
+  bool value;
+  EXPECT_TRUE(android_mallopt(M_GET_DECAY_TIME_ENABLED, &value, sizeof(value)));
+  EXPECT_FALSE(value);
+
+  EXPECT_EQ(1, mallopt(M_DECAY_TIME, 1));
+  EXPECT_TRUE(android_mallopt(M_GET_DECAY_TIME_ENABLED, &value, sizeof(value)));
+  EXPECT_TRUE(value);
+
+  EXPECT_EQ(1, mallopt(M_DECAY_TIME, -1));
+  EXPECT_TRUE(android_mallopt(M_GET_DECAY_TIME_ENABLED, &value, sizeof(value)));
+  EXPECT_FALSE(value);
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
 }

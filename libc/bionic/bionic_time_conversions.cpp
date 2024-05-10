@@ -52,23 +52,32 @@ void timeval_from_timespec(timeval& tv, const timespec& ts) {
   tv.tv_usec = ts.tv_nsec / 1000;
 }
 
-void monotonic_time_from_realtime_time(timespec& monotonic_time, const timespec& realtime_time) {
-  monotonic_time = realtime_time;
+static void convert_timespec_clocks(timespec& new_time, clockid_t new_clockbase,
+                                    const timespec& old_time, clockid_t old_clockbase) {
+  // get reference clocks
+  timespec new_clock;
+  clock_gettime(new_clockbase, &new_clock);
+  timespec old_clock;
+  clock_gettime(old_clockbase, &old_clock);
 
-  timespec cur_monotonic_time;
-  clock_gettime(CLOCK_MONOTONIC, &cur_monotonic_time);
-  timespec cur_realtime_time;
-  clock_gettime(CLOCK_REALTIME, &cur_realtime_time);
+  // compute new time by moving old delta to the new clock.
+  new_time.tv_sec = old_time.tv_sec - old_clock.tv_sec + new_clock.tv_sec;
+  new_time.tv_nsec = old_time.tv_nsec - old_clock.tv_nsec + new_clock.tv_nsec;
 
-  monotonic_time.tv_nsec -= cur_realtime_time.tv_nsec;
-  monotonic_time.tv_nsec += cur_monotonic_time.tv_nsec;
-  if (monotonic_time.tv_nsec >= NS_PER_S) {
-    monotonic_time.tv_nsec -= NS_PER_S;
-    monotonic_time.tv_sec += 1;
-  } else if (monotonic_time.tv_nsec < 0) {
-    monotonic_time.tv_nsec += NS_PER_S;
-    monotonic_time.tv_sec -= 1;
+  // correct nsec to second wrap.
+  if (new_time.tv_nsec >= NS_PER_S) {
+    new_time.tv_nsec -= NS_PER_S;
+    new_time.tv_sec += 1;
+  } else if (new_time.tv_nsec < 0) {
+    new_time.tv_nsec += NS_PER_S;
+    new_time.tv_sec -= 1;
   }
-  monotonic_time.tv_sec -= cur_realtime_time.tv_sec;
-  monotonic_time.tv_sec += cur_monotonic_time.tv_sec;
+}
+
+void monotonic_time_from_realtime_time(timespec& monotonic_time, const timespec& realtime_time) {
+  convert_timespec_clocks(monotonic_time, CLOCK_MONOTONIC, realtime_time, CLOCK_REALTIME);
+}
+
+void realtime_time_from_monotonic_time(timespec& realtime_time, const timespec& monotonic_time) {
+  convert_timespec_clocks(realtime_time, CLOCK_REALTIME, monotonic_time, CLOCK_MONOTONIC);
 }

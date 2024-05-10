@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _LINUX_PRCTL_H
 #define _LINUX_PRCTL_H
 #include <linux/types.h>
@@ -184,6 +172,22 @@ struct prctl_mm_map {
 #define PR_SME_GET_VL 64
 #define PR_SME_VL_LEN_MASK 0xffff
 #define PR_SME_VL_INHERIT (1 << 17)
+#define PR_SET_MDWE 65
+#define PR_MDWE_REFUSE_EXEC_GAIN (1UL << 0)
+#define PR_MDWE_NO_INHERIT (1UL << 1)
+#define PR_GET_MDWE 66
 #define PR_SET_VMA 0x53564d41
 #define PR_SET_VMA_ANON_NAME 0
+#define PR_GET_AUXV 0x41555856
+#define PR_SET_MEMORY_MERGE 67
+#define PR_GET_MEMORY_MERGE 68
+#define PR_RISCV_V_SET_CONTROL 69
+#define PR_RISCV_V_GET_CONTROL 70
+#define PR_RISCV_V_VSTATE_CTRL_DEFAULT 0
+#define PR_RISCV_V_VSTATE_CTRL_OFF 1
+#define PR_RISCV_V_VSTATE_CTRL_ON 2
+#define PR_RISCV_V_VSTATE_CTRL_INHERIT (1 << 4)
+#define PR_RISCV_V_VSTATE_CTRL_CUR_MASK 0x3
+#define PR_RISCV_V_VSTATE_CTRL_NEXT_MASK 0xc
+#define PR_RISCV_V_VSTATE_CTRL_MASK 0x1f
 #endif

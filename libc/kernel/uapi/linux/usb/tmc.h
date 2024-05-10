@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef __LINUX_USB_TMC_H
 #define __LINUX_USB_TMC_H
 #include <linux/types.h>
@@ -46,7 +34,7 @@ struct usbtmc_request {
 } __attribute__((packed));
 struct usbtmc_ctrlrequest {
   struct usbtmc_request req;
-  void __user * data;
+  void  * data;
 } __attribute__((packed));
 struct usbtmc_termchar {
   __u8 term_char;
@@ -59,7 +47,7 @@ struct usbtmc_message {
   __u32 transfer_size;
   __u32 transferred;
   __u32 flags;
-  void __user * message;
+  void  * message;
 } __attribute__((packed));
 #define USBTMC_IOC_NR 91
 #define USBTMC_IOCTL_INDICATOR_PULSE _IO(USBTMC_IOC_NR, 1)

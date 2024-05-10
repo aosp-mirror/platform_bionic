@@ -53,6 +53,7 @@
 
 #include "Config.h"
 #include "DebugData.h"
+#include "LogAllocatorStats.h"
 #include "Unreachable.h"
 #include "UnwindBacktrace.h"
 #include "backtrace.h"
@@ -69,7 +70,7 @@ bool* g_zygote_child;
 
 const MallocDispatch* g_dispatch;
 
-static __always_inline uint64_t Nanotime() {
+static inline __always_inline uint64_t Nanotime() {
   struct timespec t = {};
   clock_gettime(CLOCK_MONOTONIC, &t);
   return static_cast<uint64_t>(t.tv_sec) * 1000000000LL + t.tv_nsec;
@@ -496,7 +497,7 @@ void debug_free_malloc_leak_info(uint8_t* info) {
   g_dispatch->free(info);
   // Purge the memory that was freed since a significant amount of
   // memory could have been allocated and freed.
-  g_dispatch->mallopt(M_PURGE, 0);
+  g_dispatch->mallopt(M_PURGE_ALL, 0);
 }
 
 size_t debug_malloc_usable_size(void* pointer) {
@@ -517,10 +518,14 @@ size_t debug_malloc_usable_size(void* pointer) {
 }
 
 static TimedResult InternalMalloc(size_t size) {
-  if ((g_debug->config().options() & BACKTRACE) && g_debug->pointer->ShouldDumpAndReset()) {
+  uint64_t options = g_debug->config().options();
+  if ((options & BACKTRACE) && g_debug->pointer->ShouldDumpAndReset()) {
     debug_dump_heap(android::base::StringPrintf(
                         "%s.%d.txt", g_debug->config().backtrace_dump_prefix().c_str(), getpid())
                         .c_str());
+  }
+  if (options & LOG_ALLOCATOR_STATS_ON_SIGNAL) {
+    LogAllocatorStats::CheckIfShouldLog();
   }
 
   if (size == 0) {
@@ -593,10 +598,14 @@ void* debug_malloc(size_t size) {
 }
 
 static TimedResult InternalFree(void* pointer) {
-  if ((g_debug->config().options() & BACKTRACE) && g_debug->pointer->ShouldDumpAndReset()) {
+  uint64_t options = g_debug->config().options();
+  if ((options & BACKTRACE) && g_debug->pointer->ShouldDumpAndReset()) {
     debug_dump_heap(android::base::StringPrintf(
                         "%s.%d.txt", g_debug->config().backtrace_dump_prefix().c_str(), getpid())
                         .c_str());
+  }
+  if (options & LOG_ALLOCATOR_STATS_ON_SIGNAL) {
+    LogAllocatorStats::CheckIfShouldLog();
   }
 
   void* free_pointer = pointer;
@@ -1123,7 +1132,7 @@ static void write_dump(int fd) {
 
   // Purge the memory that was allocated and freed during this operation
   // since it can be large enough to expand the RSS significantly.
-  g_dispatch->mallopt(M_PURGE, 0);
+  g_dispatch->mallopt(M_PURGE_ALL, 0);
 }
 
 bool debug_write_malloc_leak_info(FILE* fp) {

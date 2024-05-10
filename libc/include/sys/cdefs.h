@@ -38,7 +38,7 @@
 
 /**
  * `__BIONIC__` is always defined if you're building with bionic. See
- * https://android.googlesource.com/platform/bionic/+/master/docs/defines.md.
+ * https://android.googlesource.com/platform/bionic/+/main/docs/defines.md.
  */
 #define __BIONIC__ 1
 
@@ -139,12 +139,12 @@
 
 #define __wur __attribute__((__warn_unused_result__))
 
-#define __errorattr(msg) __attribute__((unavailable(msg)))
-#define __warnattr(msg) __attribute__((deprecated(msg)))
-#define __warnattr_real(msg) __attribute__((deprecated(msg)))
-#define __enable_if(cond, msg) __attribute__((enable_if(cond, msg)))
-#define __clang_error_if(cond, msg) __attribute__((diagnose_if(cond, msg, "error")))
-#define __clang_warning_if(cond, msg) __attribute__((diagnose_if(cond, msg, "warning")))
+#define __errorattr(msg) __attribute__((__unavailable__(msg)))
+#define __warnattr(msg) __attribute__((__deprecated__(msg)))
+#define __warnattr_real(msg) __attribute__((__deprecated__(msg)))
+#define __enable_if(cond, msg) __attribute__((__enable_if__(cond, msg)))
+#define __clang_error_if(cond, msg) __attribute__((__diagnose_if__(cond, msg, "error")))
+#define __clang_warning_if(cond, msg) __attribute__((__diagnose_if__(cond, msg, "warning")))
 
 #if defined(ANDROID_STRICT)
 /*
@@ -187,7 +187,7 @@
 
 /*
  * _FILE_OFFSET_BITS 64 support.
- * See https://android.googlesource.com/platform/bionic/+/master/docs/32-bit-abi.md
+ * See https://android.googlesource.com/platform/bionic/+/main/docs/32-bit-abi.md
  */
 #if !defined(__LP64__) && defined(_FILE_OFFSET_BITS) && _FILE_OFFSET_BITS == 64
 #  define __USE_FILE_OFFSET64 1
@@ -199,39 +199,6 @@
 #  define __RENAME_IF_FILE_OFFSET64(func) __RENAME(func)
 #else
 #  define __RENAME_IF_FILE_OFFSET64(func)
-#endif
-
-/*
- * For LP32, `long double` == `double`. Historically many `long double` functions were incorrect
- * on x86, missing on most architectures, and even if they are present and correct, linking to
- * them just bloats your ELF file by adding extra relocations. The __BIONIC_LP32_USE_LONG_DOUBLE
- * macro lets us test the headers both ways (and adds an escape valve).
- *
- * Note that some functions have their __RENAME_LDBL commented out as a sign that although we could
- * use __RENAME_LDBL it would actually cause the function to be introduced later because the
- * `long double` variant appeared before the `double` variant.
- *
- * The _NO_GUARD_FOR_NDK variants keep the __VERSIONER_NO_GUARD behavior working for the NDK. This
- * allows libc++ to refer to these functions in inlines without needing to guard them, needed since
- * libc++ doesn't currently guard these calls. There's no risk to the apps though because using
- * those APIs will still cause a link error.
- */
-#if defined(__LP64__) || defined(__BIONIC_LP32_USE_LONG_DOUBLE)
-#define __RENAME_LDBL(rewrite,rewrite_api_level,regular_api_level) __INTRODUCED_IN(regular_api_level)
-#define __RENAME_LDBL_NO_GUARD_FOR_NDK(rewrite,rewrite_api_level,regular_api_level) __INTRODUCED_IN_NO_GUARD_FOR_NDK(regular_api_level)
-#else
-#define __RENAME_LDBL(rewrite,rewrite_api_level,regular_api_level) __RENAME(rewrite) __INTRODUCED_IN(rewrite_api_level)
-#define __RENAME_LDBL_NO_GUARD_FOR_NDK(rewrite,rewrite_api_level,regular_api_level) __RENAME(rewrite) __INTRODUCED_IN_NO_GUARD_FOR_NDK(rewrite_api_level)
-#endif
-
-/*
- * On all architectures, `struct stat` == `struct stat64`, but LP32 didn't gain the *64 functions
- * until API level 21.
- */
-#if defined(__LP64__) || defined(__BIONIC_LP32_USE_STAT64)
-#define __RENAME_STAT64(rewrite,rewrite_api_level,regular_api_level) __INTRODUCED_IN(regular_api_level)
-#else
-#define __RENAME_STAT64(rewrite,rewrite_api_level,regular_api_level) __RENAME(rewrite) __INTRODUCED_IN(rewrite_api_level)
 #endif
 
 /* glibc compatibility. */
@@ -281,7 +248,7 @@
 
 #if defined(__BIONIC_FORTIFY)
 #  define __bos0(s) __bosn((s), 0)
-#  define __pass_object_size_n(n) __attribute__((pass_object_size(n)))
+#  define __pass_object_size_n(n) __attribute__((__pass_object_size__(n)))
 /*
  * FORTIFY'ed functions all have either enable_if or pass_object_size, which
  * makes taking their address impossible. Saying (&read)(foo, bar, baz); will
@@ -293,7 +260,7 @@
  * them available externally. FORTIFY'ed functions try to be as close to possible as 'invisible';
  * having stack protectors detracts from that (b/182948263).
  */
-#  define __BIONIC_FORTIFY_INLINE static __inline__ __attribute__((no_stack_protector)) \
+#  define __BIONIC_FORTIFY_INLINE static inline __attribute__((__no_stack_protector__)) \
       __always_inline __VERSIONER_FORTIFY_INLINE
 /*
  * We should use __BIONIC_FORTIFY_VARIADIC instead of __BIONIC_FORTIFY_INLINE
@@ -301,9 +268,9 @@
  * The __always_inline attribute is useless, misleading, and could trigger
  * clang compiler bug to incorrectly inline variadic functions.
  */
-#  define __BIONIC_FORTIFY_VARIADIC static __inline__
+#  define __BIONIC_FORTIFY_VARIADIC static inline
 /* Error functions don't have bodies, so they can just be static. */
-#  define __BIONIC_ERROR_FUNCTION_VISIBILITY static __attribute__((unused))
+#  define __BIONIC_ERROR_FUNCTION_VISIBILITY static __attribute__((__unused__))
 #else
 /* Further increase sharing for some inline functions */
 #  define __pass_object_size_n(n)
@@ -333,47 +300,32 @@
 #  define __BIONIC_INCLUDE_FORTIFY_HEADERS 1
 #endif
 
-#define __overloadable __attribute__((overloadable))
+#define __overloadable __attribute__((__overloadable__))
 
-#define __diagnose_as_builtin(...) __attribute__((diagnose_as_builtin(__VA_ARGS__)))
+#define __diagnose_as_builtin(...) __attribute__((__diagnose_as_builtin__(__VA_ARGS__)))
 
 /* Used to tag non-static symbols that are private and never exposed by the shared library. */
-#define __LIBC_HIDDEN__ __attribute__((visibility("hidden")))
+#define __LIBC_HIDDEN__ __attribute__((__visibility__("hidden")))
 
 /*
  * Used to tag symbols that should be hidden for 64-bit,
  * but visible to preserve binary compatibility for LP32.
  */
 #ifdef __LP64__
-#define __LIBC32_LEGACY_PUBLIC__ __attribute__((visibility("hidden")))
+#define __LIBC32_LEGACY_PUBLIC__ __attribute__((__visibility__("hidden")))
 #else
-#define __LIBC32_LEGACY_PUBLIC__ __attribute__((visibility("default")))
+#define __LIBC32_LEGACY_PUBLIC__ __attribute__((__visibility__("default")))
 #endif
 
 /* Used to rename functions so that the compiler emits a call to 'x' rather than the function this was applied to. */
 #define __RENAME(x) __asm__(#x)
 
-#if __has_builtin(__builtin_umul_overflow) || __GNUC__ >= 5
-#if defined(__LP64__)
-#define __size_mul_overflow(a, b, result) __builtin_umull_overflow(a, b, result)
-#else
-#define __size_mul_overflow(a, b, result) __builtin_umul_overflow(a, b, result)
-#endif
-#else
-extern __inline__ __always_inline __attribute__((gnu_inline))
-int __size_mul_overflow(__SIZE_TYPE__ a, __SIZE_TYPE__ b, __SIZE_TYPE__ *result) {
-    *result = a * b;
-    static const __SIZE_TYPE__ mul_no_overflow = 1UL << (sizeof(__SIZE_TYPE__) * 4);
-    return (a >= mul_no_overflow || b >= mul_no_overflow) && a > 0 && (__SIZE_TYPE__)-1 / a < b;
-}
-#endif
-
 /*
  * Used when we need to check for overflow when multiplying x and y. This
- * should only be used where __size_mul_overflow can not work, because it makes
- * assumptions that __size_mul_overflow doesn't (x and y are positive, ...),
+ * should only be used where __builtin_umull_overflow can not work, because it makes
+ * assumptions that __builtin_umull_overflow doesn't (x and y are positive, ...),
  * *and* doesn't make use of compiler intrinsics, so it's probably slower than
- * __size_mul_overflow.
+ * __builtin_umull_overflow.
  */
 #define __unsafe_check_mul_overflow(x, y) ((__SIZE_TYPE__)-1 / (x) < (y))
 

@@ -72,7 +72,7 @@ class VersionTracker {
 };
 
 static constexpr const char* kBionicChangesUrl =
-    "https://android.googlesource.com/platform/bionic/+/master/"
+    "https://android.googlesource.com/platform/bionic/+/main/"
     "android-changes-for-ndk-developers.md";
 
 soinfo* get_libdl_info(const soinfo& linker_si);
@@ -102,10 +102,6 @@ bool do_dlsym(void* handle, const char* sym_name,
               void** symbol);
 
 int do_dladdr(const void* addr, Dl_info* info);
-
-// void ___cfi_slowpath(uint64_t CallSiteTypeId, void *Ptr, void *Ret);
-// void ___cfi_slowpath_diag(uint64_t CallSiteTypeId, void *Ptr, void *DiagData, void *Ret);
-void ___cfi_fail(uint64_t CallSiteTypeId, void* Ptr, void *DiagData, void *Ret);
 
 void set_application_target_sdk_version(int target);
 int get_application_target_sdk_version();
@@ -183,6 +179,7 @@ struct address_space_params {
 int get_application_target_sdk_version();
 ElfW(Versym) find_verdef_version_index(const soinfo* si, const version_info* vi);
 bool validate_verdef_section(const soinfo* si);
+bool relocate_relr(const ElfW(Relr)* begin, const ElfW(Relr)* end, ElfW(Addr) load_bias);
 
 struct platform_properties {
 #if defined(__aarch64__)

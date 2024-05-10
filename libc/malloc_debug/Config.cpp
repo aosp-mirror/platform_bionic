@@ -204,6 +204,10 @@ const std::unordered_map<std::string, Config::OptionInfo> Config::kOptions = {
         "check_unreachable_on_signal",
         {CHECK_UNREACHABLE_ON_SIGNAL, &Config::VerifyValueEmpty},
     },
+    {
+        "log_allocator_stats_on_signal",
+        {LOG_ALLOCATOR_STATS_ON_SIGNAL, &Config::VerifyValueEmpty},
+    },
 };
 
 bool Config::ParseValue(const std::string& option, const std::string& value, size_t min_value,
@@ -409,7 +413,8 @@ bool Config::VerifyValueEmpty(const std::string& option, const std::string& valu
 
 void Config::LogUsage() const {
   error_log("For malloc debug option descriptions go to:");
-  error_log("  https://android.googlesource.com/platform/bionic/+/master/libc/malloc_debug/README.md");
+  error_log(
+      "  https://android.googlesource.com/platform/bionic/+/main/libc/malloc_debug/README.md");
 }
 
 bool Config::GetOption(const char** options_str, std::string* option, std::string* value) {
@@ -466,6 +471,7 @@ bool Config::Init(const char* options_str) {
   backtrace_min_size_bytes_ = 0;
   backtrace_max_size_bytes_ = SIZE_MAX;
   check_unreachable_signal_ = SIGRTMAX - 16;
+  log_allocator_stats_signal_ = SIGRTMAX - 15;
 
   // Process each option name we can find.
   std::string option;

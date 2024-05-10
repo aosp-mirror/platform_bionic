@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_LINUX_FS_H
 #define _UAPI_LINUX_FS_H
 #include <linux/limits.h>
@@ -190,10 +178,40 @@ struct fsxattr {
 #define SYNC_FILE_RANGE_WAIT_AFTER 4
 #define SYNC_FILE_RANGE_WRITE_AND_WAIT (SYNC_FILE_RANGE_WRITE | SYNC_FILE_RANGE_WAIT_BEFORE | SYNC_FILE_RANGE_WAIT_AFTER)
 typedef int __bitwise __kernel_rwf_t;
-#define RWF_HIPRI ((__force __kernel_rwf_t) 0x00000001)
-#define RWF_DSYNC ((__force __kernel_rwf_t) 0x00000002)
-#define RWF_SYNC ((__force __kernel_rwf_t) 0x00000004)
-#define RWF_NOWAIT ((__force __kernel_rwf_t) 0x00000008)
-#define RWF_APPEND ((__force __kernel_rwf_t) 0x00000010)
+#define RWF_HIPRI (( __kernel_rwf_t) 0x00000001)
+#define RWF_DSYNC (( __kernel_rwf_t) 0x00000002)
+#define RWF_SYNC (( __kernel_rwf_t) 0x00000004)
+#define RWF_NOWAIT (( __kernel_rwf_t) 0x00000008)
+#define RWF_APPEND (( __kernel_rwf_t) 0x00000010)
 #define RWF_SUPPORTED (RWF_HIPRI | RWF_DSYNC | RWF_SYNC | RWF_NOWAIT | RWF_APPEND)
+#define PAGEMAP_SCAN _IOWR('f', 16, struct pm_scan_arg)
+#define PAGE_IS_WPALLOWED (1 << 0)
+#define PAGE_IS_WRITTEN (1 << 1)
+#define PAGE_IS_FILE (1 << 2)
+#define PAGE_IS_PRESENT (1 << 3)
+#define PAGE_IS_SWAPPED (1 << 4)
+#define PAGE_IS_PFNZERO (1 << 5)
+#define PAGE_IS_HUGE (1 << 6)
+#define PAGE_IS_SOFT_DIRTY (1 << 7)
+struct page_region {
+  __u64 start;
+  __u64 end;
+  __u64 categories;
+};
+#define PM_SCAN_WP_MATCHING (1 << 0)
+#define PM_SCAN_CHECK_WPASYNC (1 << 1)
+struct pm_scan_arg {
+  __u64 size;
+  __u64 flags;
+  __u64 start;
+  __u64 end;
+  __u64 walk_end;
+  __u64 vec;
+  __u64 vec_len;
+  __u64 max_pages;
+  __u64 category_inverted;
+  __u64 category_mask;
+  __u64 category_anyof_mask;
+  __u64 return_mask;
+};
 #endif

@@ -35,7 +35,7 @@
 /* PATH_MAX is unavailable without polluting the namespace, but it's always 4096 on Linux */
 #define __PATH_MAX 4096
 
-char* realpath(const char* path, char* resolved)
+char* _Nullable realpath(const char* _Nonnull path, char* _Nullable resolved)
         __clang_error_if(!path, "'realpath': NULL path is never correct; flipped arguments?")
         __clang_error_if(__bos_unevaluated_lt(__bos(resolved), __PATH_MAX),
                          "'realpath' output parameter must be NULL or a pointer to a buffer "

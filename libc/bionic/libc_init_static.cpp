@@ -51,6 +51,7 @@
 #include "private/bionic_elf_tls.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_tls.h"
+#include "private/elf_note.h"
 #include "pthread_internal.h"
 #include "sys/system_properties.h"
 #include "sysprop_helpers.h"
@@ -69,10 +70,21 @@ __LIBC_HIDDEN__ void* __libc_sysinfo;
 extern "C" int __cxa_atexit(void (*)(void *), void *, void *);
 extern "C" const char* __gnu_basename(const char* path);
 
-static void call_array(init_func_t** list, int argc, char* argv[], char* envp[]) {
-  // First element is -1, list is null-terminated
-  while (*++list) {
-    (*list)(argc, argv, envp);
+static void call_array(init_func_t** list, size_t count, int argc, char* argv[], char* envp[]) {
+  while (count-- > 0) {
+    init_func_t* function = *list++;
+    (*function)(argc, argv, envp);
+  }
+}
+
+static void call_fini_array(void* arg) {
+  structors_array_t* structors = reinterpret_cast<structors_array_t*>(arg);
+  fini_func_t** array = structors->fini_array;
+  size_t count = structors->fini_array_count;
+  // Now call each destructor in reverse order.
+  while (count-- > 0) {
+    fini_func_t* function = array[count];
+    (*function)();
   }
 }
 
@@ -80,17 +92,6 @@ static void call_array(init_func_t** list, int argc, char* argv[], char* envp[])
 extern __LIBC_HIDDEN__ __attribute__((weak)) ElfW(Rel) __rel_iplt_start[], __rel_iplt_end[];
 
 static void call_ifunc_resolvers() {
-  if (__rel_iplt_start == nullptr || __rel_iplt_end == nullptr) {
-    // These symbols were not emitted by gold. Gold has code to do so, but for
-    // whatever reason it is not being run. In these cases ifuncs cannot be
-    // resolved, so we do not support using ifuncs in static executables linked
-    // with gold.
-    //
-    // Since they are weak, they will be non-null when linked with bfd/lld and
-    // null when linked with gold.
-    return;
-  }
-
   for (ElfW(Rel)* r = __rel_iplt_start; r != __rel_iplt_end; ++r) {
     ElfW(Addr)* offset = reinterpret_cast<ElfW(Addr)*>(r->r_offset);
     ElfW(Addr) resolver = *offset;
@@ -101,17 +102,6 @@ static void call_ifunc_resolvers() {
 extern __LIBC_HIDDEN__ __attribute__((weak)) ElfW(Rela) __rela_iplt_start[], __rela_iplt_end[];
 
 static void call_ifunc_resolvers() {
-  if (__rela_iplt_start == nullptr || __rela_iplt_end == nullptr) {
-    // These symbols were not emitted by gold. Gold has code to do so, but for
-    // whatever reason it is not being run. In these cases ifuncs cannot be
-    // resolved, so we do not support using ifuncs in static executables linked
-    // with gold.
-    //
-    // Since they are weak, they will be non-null when linked with bfd/lld and
-    // null when linked with gold.
-    return;
-  }
-
   for (ElfW(Rela)* r = __rela_iplt_start; r != __rela_iplt_end; ++r) {
     ElfW(Addr)* offset = reinterpret_cast<ElfW(Addr)*>(r->r_offset);
     ElfW(Addr) resolver = r->r_addend;
@@ -129,8 +119,8 @@ static void apply_gnu_relro() {
       continue;
     }
 
-    ElfW(Addr) seg_page_start = PAGE_START(phdr->p_vaddr);
-    ElfW(Addr) seg_page_end = PAGE_END(phdr->p_vaddr + phdr->p_memsz);
+    ElfW(Addr) seg_page_start = page_start(phdr->p_vaddr);
+    ElfW(Addr) seg_page_end = page_end(phdr->p_vaddr + phdr->p_memsz);
 
     // Check return value here? What do we do if we fail?
     mprotect(reinterpret_cast<void*>(seg_page_start), seg_page_end - seg_page_start, PROT_READ);
@@ -148,9 +138,9 @@ static void layout_static_tls(KernelArgumentBlock& args) {
   static TlsModule mod;
   TlsModules& modules = __libc_shared_globals()->tls_modules;
   if (__bionic_get_tls_segment(phdr_start, phdr_ct, 0, &mod.segment)) {
-    if (!__bionic_check_tls_alignment(&mod.segment.alignment)) {
+    if (!__bionic_check_tls_align(mod.segment.aligned_size.align.value)) {
       async_safe_fatal("error: TLS segment alignment in \"%s\" is not a power of 2: %zu\n",
-                       progname, mod.segment.alignment);
+                       progname, mod.segment.aligned_size.align.value);
     }
     mod.static_offset = layout.reserve_exe_segment_and_tcb(&mod.segment, progname);
     mod.first_generation = kTlsGenerationFirst;
@@ -168,50 +158,52 @@ static void layout_static_tls(KernelArgumentBlock& args) {
 }
 
 #ifdef __aarch64__
-static bool __read_memtag_note(const ElfW(Nhdr)* note, const char* name, const char* desc,
-                               unsigned* result) {
-  if (note->n_type != NT_ANDROID_TYPE_MEMTAG) {
-    return false;
+static HeapTaggingLevel __get_memtag_level_from_note(const ElfW(Phdr) * phdr_start, size_t phdr_ct,
+                                                     const ElfW(Addr) load_bias, bool* stack) {
+  const ElfW(Nhdr) * note;
+  const char* desc;
+  if (!__find_elf_note(NT_ANDROID_TYPE_MEMTAG, "Android", phdr_start, phdr_ct, &note, &desc,
+                       load_bias)) {
+    return M_HEAP_TAGGING_LEVEL_TBI;
   }
-  if (note->n_namesz != 8 || strncmp(name, "Android", 8) != 0) {
-    return false;
-  }
+
   // Previously (in Android 12), if the note was != 4 bytes, we check-failed
   // here. Let's be more permissive to allow future expansion.
   if (note->n_descsz < 4) {
     async_safe_fatal("unrecognized android.memtag note: n_descsz = %d, expected >= 4",
                      note->n_descsz);
   }
-  *result = *reinterpret_cast<const ElfW(Word)*>(desc);
-  return true;
-}
 
-static unsigned __get_memtag_note(const ElfW(Phdr)* phdr_start, size_t phdr_ct,
-                                  const ElfW(Addr) load_bias) {
-  for (size_t i = 0; i < phdr_ct; ++i) {
-    const ElfW(Phdr)* phdr = &phdr_start[i];
-    if (phdr->p_type != PT_NOTE) {
-      continue;
-    }
-    ElfW(Addr) p = load_bias + phdr->p_vaddr;
-    ElfW(Addr) note_end = load_bias + phdr->p_vaddr + phdr->p_memsz;
-    while (p + sizeof(ElfW(Nhdr)) <= note_end) {
-      const ElfW(Nhdr)* note = reinterpret_cast<const ElfW(Nhdr)*>(p);
-      p += sizeof(ElfW(Nhdr));
-      const char* name = reinterpret_cast<const char*>(p);
-      p += align_up(note->n_namesz, 4);
-      const char* desc = reinterpret_cast<const char*>(p);
-      p += align_up(note->n_descsz, 4);
-      if (p > note_end) {
-        break;
-      }
-      unsigned ret;
-      if (__read_memtag_note(note, name, desc, &ret)) {
-        return ret;
-      }
-    }
+  // `desc` is always aligned due to ELF requirements, enforced in __find_elf_note().
+  ElfW(Word) note_val = *reinterpret_cast<const ElfW(Word)*>(desc);
+  *stack = (note_val & NT_MEMTAG_STACK) != 0;
+
+  // Warning: In Android 12, any value outside of bits [0..3] resulted in a check-fail.
+  if (!(note_val & (NT_MEMTAG_HEAP | NT_MEMTAG_STACK))) {
+    async_safe_format_log(ANDROID_LOG_INFO, "libc",
+                          "unrecognised memtag note_val did not specificy heap or stack: %u",
+                          note_val);
+    return M_HEAP_TAGGING_LEVEL_TBI;
   }
-  return 0;
+
+  unsigned mode = note_val & NT_MEMTAG_LEVEL_MASK;
+  switch (mode) {
+    case NT_MEMTAG_LEVEL_NONE:
+      // Note, previously (in Android 12), NT_MEMTAG_LEVEL_NONE was
+      // NT_MEMTAG_LEVEL_DEFAULT, which implied SYNC mode. This was never used
+      // by anyone, but we note it (heh) here for posterity, in case the zero
+      // level becomes meaningful, and binaries with this note can be executed
+      // on Android 12 devices.
+      return M_HEAP_TAGGING_LEVEL_TBI;
+    case NT_MEMTAG_LEVEL_ASYNC:
+      return M_HEAP_TAGGING_LEVEL_ASYNC;
+    case NT_MEMTAG_LEVEL_SYNC:
+    default:
+      // We allow future extensions to specify mode 3 (currently unused), with
+      // the idea that it might be used for ASYMM mode or something else. On
+      // this version of Android, it falls back to SYNC mode.
+      return M_HEAP_TAGGING_LEVEL_SYNC;
+  }
 }
 
 // Returns true if there's an environment setting (either sysprop or env var)
@@ -262,48 +254,65 @@ static bool get_environment_memtag_setting(HeapTaggingLevel* level) {
 // Returns the initial heap tagging level. Note: This function will never return
 // M_HEAP_TAGGING_LEVEL_NONE, if MTE isn't enabled for this process we enable
 // M_HEAP_TAGGING_LEVEL_TBI.
-static HeapTaggingLevel __get_heap_tagging_level(const void* phdr_start, size_t phdr_ct,
-                                                 uintptr_t load_bias, bool* stack) {
-  unsigned note_val =
-      __get_memtag_note(reinterpret_cast<const ElfW(Phdr)*>(phdr_start), phdr_ct, load_bias);
-  *stack = note_val & NT_MEMTAG_STACK;
+static HeapTaggingLevel __get_tagging_level(const memtag_dynamic_entries_t* memtag_dynamic_entries,
+                                            const void* phdr_start, size_t phdr_ct,
+                                            uintptr_t load_bias, bool* stack) {
+  HeapTaggingLevel level = M_HEAP_TAGGING_LEVEL_TBI;
 
-  HeapTaggingLevel level;
-  if (get_environment_memtag_setting(&level)) return level;
-
-  // Note, previously (in Android 12), any value outside of bits [0..3] resulted
-  // in a check-fail. In order to be permissive of further extensions, we
-  // relaxed this restriction.
-  if (!(note_val & (NT_MEMTAG_HEAP | NT_MEMTAG_STACK))) return M_HEAP_TAGGING_LEVEL_TBI;
-
-  unsigned mode = note_val & NT_MEMTAG_LEVEL_MASK;
-  switch (mode) {
-    case NT_MEMTAG_LEVEL_NONE:
-      // Note, previously (in Android 12), NT_MEMTAG_LEVEL_NONE was
-      // NT_MEMTAG_LEVEL_DEFAULT, which implied SYNC mode. This was never used
-      // by anyone, but we note it (heh) here for posterity, in case the zero
-      // level becomes meaningful, and binaries with this note can be executed
-      // on Android 12 devices.
-      return M_HEAP_TAGGING_LEVEL_TBI;
-    case NT_MEMTAG_LEVEL_ASYNC:
-      return M_HEAP_TAGGING_LEVEL_ASYNC;
-    case NT_MEMTAG_LEVEL_SYNC:
-    default:
-      // We allow future extensions to specify mode 3 (currently unused), with
-      // the idea that it might be used for ASYMM mode or something else. On
-      // this version of Android, it falls back to SYNC mode.
-      return M_HEAP_TAGGING_LEVEL_SYNC;
+  // If the dynamic entries exist, use those. Otherwise, fall back to the old
+  // Android note, which is still used for fully static executables. When
+  // -fsanitize=memtag* is used in newer toolchains, currently both the dynamic
+  // entries and the old note are created, but we'd expect to move to just the
+  // dynamic entries for dynamically linked executables in the future. In
+  // addition, there's still some cleanup of the build system (that uses a
+  // manually-constructed note) needed. For more information about the dynamic
+  // entries, see:
+  // https://github.com/ARM-software/abi-aa/blob/main/memtagabielf64/memtagabielf64.rst#dynamic-section
+  if (memtag_dynamic_entries && memtag_dynamic_entries->has_memtag_mode) {
+    switch (memtag_dynamic_entries->memtag_mode) {
+      case 0:
+        level = M_HEAP_TAGGING_LEVEL_SYNC;
+        break;
+      case 1:
+        level = M_HEAP_TAGGING_LEVEL_ASYNC;
+        break;
+      default:
+        async_safe_format_log(ANDROID_LOG_INFO, "libc",
+                              "unrecognised DT_AARCH64_MEMTAG_MODE value: %u",
+                              memtag_dynamic_entries->memtag_mode);
+    }
+    *stack = memtag_dynamic_entries->memtag_stack;
+  } else {
+    level = __get_memtag_level_from_note(reinterpret_cast<const ElfW(Phdr)*>(phdr_start), phdr_ct,
+                                         load_bias, stack);
   }
+
+  // We can't short-circuit the environment override, as `stack` is still inherited from the
+  // binary's settings.
+  if (get_environment_memtag_setting(&level)) {
+    if (level == M_HEAP_TAGGING_LEVEL_NONE || level == M_HEAP_TAGGING_LEVEL_TBI) {
+      *stack = false;
+    }
+  }
+  return level;
 }
 
 // Figure out the desired memory tagging mode (sync/async, heap/globals/stack) for this executable.
 // This function is called from the linker before the main executable is relocated.
-__attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const void* phdr_start,
-                                                                         size_t phdr_ct,
-                                                                         uintptr_t load_bias,
-                                                                         void* stack_top) {
-  bool memtag_stack;
-  HeapTaggingLevel level = __get_heap_tagging_level(phdr_start, phdr_ct, load_bias, &memtag_stack);
+__attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(
+    const memtag_dynamic_entries_t* memtag_dynamic_entries, const void* phdr_start, size_t phdr_ct,
+    uintptr_t load_bias, void* stack_top) {
+  bool memtag_stack = false;
+  HeapTaggingLevel level =
+      __get_tagging_level(memtag_dynamic_entries, phdr_start, phdr_ct, load_bias, &memtag_stack);
+  // This is used by the linker (in linker.cpp) to communicate than any library linked by this
+  // executable enables memtag-stack.
+  if (__libc_shared_globals()->initial_memtag_stack) {
+    if (!memtag_stack) {
+      async_safe_format_log(ANDROID_LOG_INFO, "libc", "enabling PROT_MTE as requested by linker");
+    }
+    memtag_stack = true;
+  }
   char* env = getenv("BIONIC_MEMTAG_UPGRADE_SECS");
   static const char kAppProcessName[] = "app_process64";
   const char* progname = __libc_shared_globals()->init_progname;
@@ -354,11 +363,10 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const v
       __libc_shared_globals()->initial_memtag_stack = memtag_stack;
 
       if (memtag_stack) {
-        void* page_start =
-            reinterpret_cast<void*>(PAGE_START(reinterpret_cast<uintptr_t>(stack_top)));
-        if (mprotect(page_start, PAGE_SIZE, PROT_READ | PROT_WRITE | PROT_MTE | PROT_GROWSDOWN)) {
-          async_safe_fatal("error: failed to set PROT_MTE on main thread stack: %s\n",
-                           strerror(errno));
+        void* pg_start =
+            reinterpret_cast<void*>(page_start(reinterpret_cast<uintptr_t>(stack_top)));
+        if (mprotect(pg_start, page_size(), PROT_READ | PROT_WRITE | PROT_MTE | PROT_GROWSDOWN)) {
+          async_safe_fatal("error: failed to set PROT_MTE on main thread stack: %m");
         }
       }
 
@@ -373,9 +381,11 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const v
   }
   // We did not enable MTE, so we do not need to arm the upgrade timer.
   __libc_shared_globals()->heap_tagging_upgrade_timer_sec = 0;
+  // We also didn't enable memtag_stack.
+  __libc_shared_globals()->initial_memtag_stack = false;
 }
 #else   // __aarch64__
-void __libc_init_mte(const void*, size_t, uintptr_t, void*) {}
+void __libc_init_mte(const memtag_dynamic_entries_t*, const void*, size_t, uintptr_t, void*) {}
 #endif  // __aarch64__
 
 void __libc_init_profiling_handlers() {
@@ -402,7 +412,8 @@ __attribute__((no_sanitize("memtag"))) __noreturn static void __real_libc_init(
   layout_static_tls(args);
   __libc_init_main_thread_final();
   __libc_init_common();
-  __libc_init_mte(reinterpret_cast<ElfW(Phdr)*>(getauxval(AT_PHDR)), getauxval(AT_PHNUM),
+  __libc_init_mte(/*memtag_dynamic_entries=*/nullptr,
+                  reinterpret_cast<ElfW(Phdr)*>(getauxval(AT_PHDR)), getauxval(AT_PHNUM),
                   /*load_bias = */ 0, /*stack_top = */ raw_args);
   __libc_init_scudo();
   __libc_init_profiling_handlers();
@@ -414,14 +425,15 @@ __attribute__((no_sanitize("memtag"))) __noreturn static void __real_libc_init(
   // Several Linux ABIs don't pass the onexit pointer, and the ones that
   // do never use it.  Therefore, we ignore it.
 
-  call_array(structors->preinit_array, args.argc, args.argv, args.envp);
-  call_array(structors->init_array, args.argc, args.argv, args.envp);
+  call_array(structors->preinit_array, structors->preinit_array_count, args.argc, args.argv,
+             args.envp);
+  call_array(structors->init_array, structors->init_array_count, args.argc, args.argv, args.envp);
 
   // The executable may have its own destructors listed in its .fini_array
   // so we need to ensure that these are called when the program exits
   // normally.
-  if (structors->fini_array != nullptr) {
-    __cxa_atexit(__libc_fini,structors->fini_array,nullptr);
+  if (structors->fini_array_count > 0) {
+    __cxa_atexit(call_fini_array, const_cast<structors_array_t*>(structors), nullptr);
   }
 
   __libc_init_mte_late();

@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef __LINUX_PKT_CLS_H
 #define __LINUX_PKT_CLS_H
 #include <linux/types.h>
@@ -217,30 +205,6 @@ struct tc_u32_pcnt {
 #define TC_U32_EAT 8
 #define TC_U32_MAXDEPTH 8
 enum {
-  TCA_RSVP_UNSPEC,
-  TCA_RSVP_CLASSID,
-  TCA_RSVP_DST,
-  TCA_RSVP_SRC,
-  TCA_RSVP_PINFO,
-  TCA_RSVP_POLICE,
-  TCA_RSVP_ACT,
-  __TCA_RSVP_MAX
-};
-#define TCA_RSVP_MAX (__TCA_RSVP_MAX - 1)
-struct tc_rsvp_gpi {
-  __u32 key;
-  __u32 mask;
-  int offset;
-};
-struct tc_rsvp_pinfo {
-  struct tc_rsvp_gpi dpi;
-  struct tc_rsvp_gpi spi;
-  __u8 protocol;
-  __u8 tunnelid;
-  __u8 tunnelhdr;
-  __u8 pad;
-};
-enum {
   TCA_ROUTE4_UNSPEC,
   TCA_ROUTE4_CLASSID,
   TCA_ROUTE4_TO,
@@ -261,18 +225,6 @@ enum {
   __TCA_FW_MAX
 };
 #define TCA_FW_MAX (__TCA_FW_MAX - 1)
-enum {
-  TCA_TCINDEX_UNSPEC,
-  TCA_TCINDEX_HASH,
-  TCA_TCINDEX_MASK,
-  TCA_TCINDEX_SHIFT,
-  TCA_TCINDEX_FALL_THROUGH,
-  TCA_TCINDEX_CLASSID,
-  TCA_TCINDEX_POLICE,
-  TCA_TCINDEX_ACT,
-  __TCA_TCINDEX_MAX
-};
-#define TCA_TCINDEX_MAX (__TCA_TCINDEX_MAX - 1)
 enum {
   FLOW_KEY_SRC,
   FLOW_KEY_DST,
@@ -463,6 +415,10 @@ enum {
   TCA_FLOWER_KEY_PPPOE_SID,
   TCA_FLOWER_KEY_PPP_PROTO,
   TCA_FLOWER_KEY_L2TPV3_SID,
+  TCA_FLOWER_L2_MISS,
+  TCA_FLOWER_KEY_CFM,
+  TCA_FLOWER_KEY_SPI,
+  TCA_FLOWER_KEY_SPI_MASK,
   __TCA_FLOWER_MAX,
 };
 #define TCA_FLOWER_MAX (__TCA_FLOWER_MAX - 1)
@@ -534,6 +490,13 @@ enum {
   TCA_FLOWER_KEY_FLAGS_IS_FRAGMENT = (1 << 0),
   TCA_FLOWER_KEY_FLAGS_FRAG_IS_FIRST = (1 << 1),
 };
+enum {
+  TCA_FLOWER_KEY_CFM_OPT_UNSPEC,
+  TCA_FLOWER_KEY_CFM_MD_LEVEL,
+  TCA_FLOWER_KEY_CFM_OPCODE,
+  __TCA_FLOWER_KEY_CFM_OPT_MAX,
+};
+#define TCA_FLOWER_KEY_CFM_OPT_MAX (__TCA_FLOWER_KEY_CFM_OPT_MAX - 1)
 #define TCA_FLOWER_MASK_FLAGS_RANGE (1 << 0)
 struct tc_matchall_pcnt {
   __u64 rhit;

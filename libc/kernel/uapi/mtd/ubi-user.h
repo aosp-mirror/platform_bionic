@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef __UBI_USER_H__
 #define __UBI_USER_H__
 #include <linux/types.h>
@@ -57,7 +45,8 @@ struct ubi_attach_req {
   __s32 vid_hdr_offset;
   __s16 max_beb_per1024;
   __s8 disable_fm;
-  __s8 padding[9];
+  __s8 need_resv_pool;
+  __s8 padding[8];
 };
 enum {
   UBI_VOL_SKIP_CRC_CHECK_FLG = 0x1,

@@ -51,7 +51,21 @@ size_t mbrtoc32(char32_t* pc32, const char* s, size_t n, mbstate_t* ps) {
   }
 
   if (n == 0) {
-    return 0;
+    // C23 7.30.1 (for each `mbrtoc*` function) says:
+    //
+    // Returns:
+    //
+    //     0 if the next n or fewer bytes complete the multibyte character that
+    //     corresponds to the null wide character (which is the value stored).
+    //
+    //     (size_t)(-2) if the next n bytes contribute to an incomplete (but
+    //     potentially valid) multibyte character, and all n bytes have been
+    //     processed (no value is stored).
+    //
+    // Bionic historically interpreted the behavior when n is 0 to be the next 0
+    // bytes decoding to the null. That's a pretty bad interpretation, and both
+    // glibc and musl return -2 for that case.
+    return BIONIC_MULTIBYTE_RESULT_INCOMPLETE_SEQUENCE;
   }
 
   uint8_t ch;
@@ -109,7 +123,7 @@ size_t mbrtoc32(char32_t* pc32, const char* s, size_t n, mbstate_t* ps) {
     mbstate_set_byte(state, bytes_so_far + i, *s++);
   }
   if (i < bytes_wanted) {
-    return __MB_ERR_INCOMPLETE_SEQUENCE;
+    return BIONIC_MULTIBYTE_RESULT_INCOMPLETE_SEQUENCE;
   }
 
   // Decode the octet sequence representing the character in chunks

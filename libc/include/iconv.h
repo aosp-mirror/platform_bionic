@@ -50,18 +50,21 @@ typedef struct __iconv_t* iconv_t;
  * [iconv_open(3)](http://man7.org/linux/man-pages/man3/iconv_open.3.html) allocates a new converter
  * from `__src_encoding` to `__dst_encoding`.
  *
+ * Android supports the `utf8`, `ascii`, `usascii`, `utf16be`, `utf16le`, `utf32be`, `utf32le`,
+ * and `wchart` encodings for both source and destination.
+ *
+ * Android supports the GNU `//IGNORE` and `//TRANSLIT` extensions for the
+ * destination encoding.
+ *
  * Returns a new `iconv_t` on success and returns `((iconv_t) -1)` and sets `errno` on failure.
  *
  * Available since API level 28.
  */
-iconv_t _Nonnull iconv_open(const char* _Nonnull __src_encoding, const char* _Nonnull __dst_encoding) __INTRODUCED_IN(28);
+iconv_t _Nonnull iconv_open(const char* _Nonnull __dst_encoding, const char* _Nonnull __src_encoding) __INTRODUCED_IN(28);
 
 /**
  * [iconv(3)](http://man7.org/linux/man-pages/man3/iconv.3.html) converts characters from one
  * encoding to another.
- *
- * Android supports the `utf8`, `ascii`, `usascii`, `utf16be`, `utf16le`, `utf32be`, `utf32le`,
- * and `wchart` encodings. Android also supports the GNU `//IGNORE` and `//TRANSLIT` extensions.
  *
  * Returns the number of characters converted on success and returns `((size_t) -1)` and
  * sets `errno` on failure.

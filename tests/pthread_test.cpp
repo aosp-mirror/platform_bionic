@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <sys/cdefs.h>
 #include <sys/mman.h>
+#include <sys/param.h>
 #include <sys/prctl.h>
 #include <sys/resource.h>
 #include <sys/syscall.h>
@@ -41,6 +42,7 @@
 #include <android-base/scopeguard.h>
 #include <android-base/silent_death_test.h>
 #include <android-base/strings.h>
+#include <android-base/test_utils.h>
 
 #include "private/bionic_constants.h"
 #include "SignalUtils.h"
@@ -182,6 +184,30 @@ TEST(pthread, pthread_key_dirty) {
 
   ASSERT_EQ(0, munmap(stack, stack_size));
   ASSERT_EQ(0, pthread_key_delete(key));
+}
+
+static void* FnWithStackFrame(void*) {
+  int x;
+  *const_cast<volatile int*>(&x) = 1;
+  return nullptr;
+}
+
+TEST(pthread, pthread_heap_allocated_stack) {
+  SKIP_WITH_HWASAN; // TODO(b/148982147): Re-enable when fixed.
+
+  size_t stack_size = 640 * 1024;
+  std::unique_ptr<char[]> stack(new (std::align_val_t(getpagesize())) char[stack_size]);
+  memset(stack.get(), '\xff', stack_size);
+
+  pthread_attr_t attr;
+  ASSERT_EQ(0, pthread_attr_init(&attr));
+  ASSERT_EQ(0, pthread_attr_setstack(&attr, stack.get(), stack_size));
+
+  pthread_t t;
+  ASSERT_EQ(0, pthread_create(&t, &attr, FnWithStackFrame, nullptr));
+
+  void* result;
+  ASSERT_EQ(0, pthread_join(t, &result));
 }
 
 TEST(pthread, static_pthread_key_used_before_creation) {
@@ -560,7 +586,7 @@ TEST(pthread, pthread_kill__exited_thread) {
   while (TEMP_FAILURE_RETRY(syscall(__NR_tgkill, getpid(), tid, 0)) != -1) {
     continue;
   }
-  ASSERT_EQ(ESRCH, errno);
+  ASSERT_ERRNO(ESRCH);
 
   ASSERT_EQ(ESRCH, pthread_kill(thread, 0));
 }
@@ -759,7 +785,7 @@ TEST(pthread, pthread_attr_setguardsize_tiny) {
   size_t guard_size;
   ASSERT_EQ(0, pthread_attr_getguardsize(&attributes, &guard_size));
   ASSERT_EQ(128U, guard_size);
-  ASSERT_EQ(4096U, GetActualGuardSize(attributes));
+  ASSERT_EQ(static_cast<unsigned long>(getpagesize()), GetActualGuardSize(attributes));
 }
 
 TEST(pthread, pthread_attr_setguardsize_reasonable) {
@@ -783,7 +809,7 @@ TEST(pthread, pthread_attr_setguardsize_needs_rounding) {
   size_t guard_size;
   ASSERT_EQ(0, pthread_attr_getguardsize(&attributes, &guard_size));
   ASSERT_EQ(32*1024U + 1, guard_size);
-  ASSERT_EQ(36*1024U, GetActualGuardSize(attributes));
+  ASSERT_EQ(roundup(32 * 1024U + 1, getpagesize()), GetActualGuardSize(attributes));
 }
 
 TEST(pthread, pthread_attr_setguardsize_enormous) {
@@ -1397,10 +1423,11 @@ static int g_atfork_child_calls = 0;
 static void AtForkChild1() { g_atfork_child_calls = (g_atfork_child_calls * 10) + 1; }
 static void AtForkChild2() { g_atfork_child_calls = (g_atfork_child_calls * 10) + 2; }
 
-TEST(pthread, pthread_atfork_smoke) {
+TEST(pthread, pthread_atfork_smoke_fork) {
   ASSERT_EQ(0, pthread_atfork(AtForkPrepare1, AtForkParent1, AtForkChild1));
   ASSERT_EQ(0, pthread_atfork(AtForkPrepare2, AtForkParent2, AtForkChild2));
 
+  g_atfork_prepare_calls = g_atfork_parent_calls = g_atfork_child_calls = 0;
   pid_t pid = fork();
   ASSERT_NE(-1, pid) << strerror(errno);
 
@@ -1414,6 +1441,44 @@ TEST(pthread, pthread_atfork_smoke) {
   // Prepare calls are made in the reverse order.
   ASSERT_EQ(21, g_atfork_prepare_calls);
   AssertChildExited(pid, 0);
+}
+
+TEST(pthread, pthread_atfork_smoke_vfork) {
+  ASSERT_EQ(0, pthread_atfork(AtForkPrepare1, AtForkParent1, AtForkChild1));
+  ASSERT_EQ(0, pthread_atfork(AtForkPrepare2, AtForkParent2, AtForkChild2));
+
+  g_atfork_prepare_calls = g_atfork_parent_calls = g_atfork_child_calls = 0;
+  pid_t pid = vfork();
+  ASSERT_NE(-1, pid) << strerror(errno);
+
+  // atfork handlers are not called.
+  if (pid == 0) {
+    ASSERT_EQ(0, g_atfork_child_calls);
+    _exit(0);
+  }
+  ASSERT_EQ(0, g_atfork_parent_calls);
+  ASSERT_EQ(0, g_atfork_prepare_calls);
+  AssertChildExited(pid, 0);
+}
+
+TEST(pthread, pthread_atfork_smoke__Fork) {
+#if defined(__BIONIC__)
+  ASSERT_EQ(0, pthread_atfork(AtForkPrepare1, AtForkParent1, AtForkChild1));
+  ASSERT_EQ(0, pthread_atfork(AtForkPrepare2, AtForkParent2, AtForkChild2));
+
+  g_atfork_prepare_calls = g_atfork_parent_calls = g_atfork_child_calls = 0;
+  pid_t pid = _Fork();
+  ASSERT_NE(-1, pid) << strerror(errno);
+
+  // atfork handlers are not called.
+  if (pid == 0) {
+    ASSERT_EQ(0, g_atfork_child_calls);
+    _exit(0);
+  }
+  ASSERT_EQ(0, g_atfork_parent_calls);
+  ASSERT_EQ(0, g_atfork_prepare_calls);
+  AssertChildExited(pid, 0);
+#endif
 }
 
 TEST(pthread, pthread_attr_getscope) {
@@ -2372,6 +2437,20 @@ static void pthread_mutex_timedlock_helper(clockid_t clock,
   ts.tv_sec = -1;
   ASSERT_EQ(ETIMEDOUT, lock_function(&m, &ts));
 
+  // check we wait long enough for the lock.
+  ASSERT_EQ(0, clock_gettime(clock, &ts));
+  const int64_t start_ns = ts.tv_sec * NS_PER_S + ts.tv_nsec;
+
+  // add a second to get deadline.
+  ts.tv_sec += 1;
+
+  ASSERT_EQ(ETIMEDOUT, lock_function(&m, &ts));
+
+  // The timedlock must have waited at least 1 second before returning.
+  clock_gettime(clock, &ts);
+  const int64_t end_ns = ts.tv_sec * NS_PER_S + ts.tv_nsec;
+  ASSERT_GT(end_ns - start_ns, NS_PER_S);
+
   // If the mutex is unlocked, pthread_mutex_timedlock should succeed.
   ASSERT_EQ(0, pthread_mutex_unlock(&m));
 
@@ -2417,7 +2496,11 @@ static void pthread_mutex_timedlock_pi_helper(clockid_t clock,
 
   timespec ts;
   clock_gettime(clock, &ts);
+  const int64_t start_ns = ts.tv_sec * NS_PER_S + ts.tv_nsec;
+
+  // add a second to get deadline.
   ts.tv_sec += 1;
+
   ASSERT_EQ(0, lock_function(&m.lock, &ts));
 
   struct ThreadArgs {
@@ -2446,6 +2529,12 @@ static void pthread_mutex_timedlock_pi_helper(clockid_t clock,
   void* result;
   ASSERT_EQ(0, pthread_join(thread, &result));
   ASSERT_EQ(ETIMEDOUT, reinterpret_cast<intptr_t>(result));
+
+  // The timedlock must have waited at least 1 second before returning.
+  clock_gettime(clock, &ts);
+  const int64_t end_ns = ts.tv_sec * NS_PER_S + ts.tv_nsec;
+  ASSERT_GT(end_ns - start_ns, NS_PER_S);
+
   ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
 }
 

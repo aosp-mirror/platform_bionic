@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_RPMSG_H_
 #define _UAPI_RPMSG_H_
 #include <linux/ioctl.h>
@@ -30,4 +18,6 @@ struct rpmsg_endpoint_info {
 #define RPMSG_DESTROY_EPT_IOCTL _IO(0xb5, 0x2)
 #define RPMSG_CREATE_DEV_IOCTL _IOW(0xb5, 0x3, struct rpmsg_endpoint_info)
 #define RPMSG_RELEASE_DEV_IOCTL _IOW(0xb5, 0x4, struct rpmsg_endpoint_info)
+#define RPMSG_GET_OUTGOING_FLOWCONTROL _IOR(0xb5, 0x5, int)
+#define RPMSG_SET_INCOMING_FLOWCONTROL _IOR(0xb5, 0x6, int)
 #endif

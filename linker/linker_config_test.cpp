@@ -40,6 +40,7 @@
 #include <android-base/file.h>
 #include <android-base/scopeguard.h>
 #include <android-base/stringprintf.h>
+#include <vector>
 
 #if defined(__LP64__)
 #define ARCH_SUFFIX "64"
@@ -64,6 +65,10 @@ static const char* config_str =
   "namespace.default.asan.search.paths = /data\n"
   "namespace.default.asan.search.paths += /vendor/${LIB}\n"
   "namespace.default.asan.permitted.paths = /data:/vendor\n"
+  "namespace.default.hwasan.search.paths = /vendor/${LIB}/hwasan\n"
+  "namespace.default.hwasan.search.paths += /vendor/${LIB}\n"
+  "namespace.default.hwasan.permitted.paths = /vendor/${LIB}/hwasan\n"
+  "namespace.default.hwasan.permitted.paths += /vendor/${LIB}\n"
   "namespace.default.links = system\n"
   "namespace.default.links += vndk\n"
   // irregular whitespaces are added intentionally for testing purpose
@@ -77,11 +82,17 @@ static const char* config_str =
   "namespace.system.permitted.paths = /system/${LIB}\n"
   "namespace.system.asan.search.paths = /data:/system/${LIB}\n"
   "namespace.system.asan.permitted.paths = /data:/system\n"
+  "namespace.system.hwasan.search.paths = /system/${LIB}/hwasan\n"
+  "namespace.system.hwasan.search.paths += /system/${LIB}\n"
+  "namespace.system.hwasan.permitted.paths = /system/${LIB}/hwasan\n"
+  "namespace.system.hwasan.permitted.paths += /system/${LIB}\n"
   "namespace.vndk.isolated = tr\n"
   "namespace.vndk.isolated += ue\n" // should be ignored and return as 'false'.
   "namespace.vndk.search.paths = /system/${LIB}/vndk\n"
   "namespace.vndk.asan.search.paths = /data\n"
   "namespace.vndk.asan.search.paths += /system/${LIB}/vndk\n"
+  "namespace.vndk.hwasan.search.paths = /system/${LIB}/vndk/hwasan\n"
+  "namespace.vndk.hwasan.search.paths += /system/${LIB}/vndk\n"
   "namespace.vndk.links = default\n"
   "namespace.vndk.link.default.allow_all_shared_libs = true\n"
   "namespace.vndk.link.vndk_in_system.allow_all_shared_libs = true\n"
@@ -107,26 +118,50 @@ static std::vector<std::string> resolve_paths(std::vector<std::string> paths) {
   return resolved_paths;
 }
 
-static void run_linker_config_smoke_test(bool is_asan) {
-  const std::vector<std::string> kExpectedDefaultSearchPath =
-      resolve_paths(is_asan ? std::vector<std::string>({ "/data", "/vendor/lib" ARCH_SUFFIX }) :
-                              std::vector<std::string>({ "/vendor/lib" ARCH_SUFFIX }));
+enum class SmokeTestType {
+  None,
+  Asan,
+  Hwasan,
+};
 
-  const std::vector<std::string> kExpectedDefaultPermittedPath =
-      resolve_paths(is_asan ? std::vector<std::string>({ "/data", "/vendor" }) :
-                              std::vector<std::string>({ "/vendor/lib" ARCH_SUFFIX }));
+static void run_linker_config_smoke_test(SmokeTestType type) {
+  std::vector<std::string> expected_default_search_path;
+  std::vector<std::string> expected_default_permitted_path;
+  std::vector<std::string> expected_system_search_path;
+  std::vector<std::string> expected_system_permitted_path;
+  std::vector<std::string> expected_vndk_search_path;
 
-  const std::vector<std::string> kExpectedSystemSearchPath =
-      resolve_paths(is_asan ? std::vector<std::string>({ "/data", "/system/lib" ARCH_SUFFIX }) :
-                              std::vector<std::string>({ "/system/lib" ARCH_SUFFIX }));
+  switch (type) {
+    case SmokeTestType::None:
+      expected_default_search_path = { "/vendor/lib" ARCH_SUFFIX };
+      expected_default_permitted_path = { "/vendor/lib" ARCH_SUFFIX };
+      expected_system_search_path = { "/system/lib" ARCH_SUFFIX };
+      expected_system_permitted_path = { "/system/lib" ARCH_SUFFIX };
+      expected_vndk_search_path = { "/system/lib" ARCH_SUFFIX "/vndk" };
+      break;
+    case SmokeTestType::Asan:
+      expected_default_search_path = { "/data", "/vendor/lib" ARCH_SUFFIX };
+      expected_default_permitted_path = { "/data", "/vendor" };
+      expected_system_search_path = { "/data", "/system/lib" ARCH_SUFFIX };
+      expected_system_permitted_path = { "/data", "/system" };
+      expected_vndk_search_path = { "/data", "/system/lib" ARCH_SUFFIX "/vndk" };
+      break;
+    case SmokeTestType::Hwasan:
+      expected_default_search_path = { "/vendor/lib" ARCH_SUFFIX "/hwasan", "/vendor/lib" ARCH_SUFFIX };
+      expected_default_permitted_path = { "/vendor/lib" ARCH_SUFFIX "/hwasan", "/vendor/lib" ARCH_SUFFIX };
+      expected_system_search_path = { "/system/lib" ARCH_SUFFIX "/hwasan" , "/system/lib" ARCH_SUFFIX };
+      expected_system_permitted_path = { "/system/lib" ARCH_SUFFIX "/hwasan", "/system/lib" ARCH_SUFFIX };
+      expected_vndk_search_path = { "/system/lib" ARCH_SUFFIX "/vndk/hwasan", "/system/lib" ARCH_SUFFIX "/vndk" };
+      break;
+  }
 
-  const std::vector<std::string> kExpectedSystemPermittedPath =
-      resolve_paths(is_asan ? std::vector<std::string>({ "/data", "/system" }) :
-                              std::vector<std::string>({ "/system/lib" ARCH_SUFFIX }));
-
-  const std::vector<std::string> kExpectedVndkSearchPath =
-      resolve_paths(is_asan ? std::vector<std::string>({ "/data", "/system/lib" ARCH_SUFFIX "/vndk"}) :
-                              std::vector<std::string>({ "/system/lib" ARCH_SUFFIX "/vndk"}));
+  expected_default_search_path = resolve_paths(expected_default_search_path);
+  // expected_default_permitted_path is skipped on purpose, permitted paths
+  // do not get resolved in linker_config.cpp
+  expected_system_search_path = resolve_paths(expected_system_search_path);
+  // expected_system_permitted_path is skipped on purpose, permitted paths
+  // do not get resolved in linker_config.cpp
+  expected_vndk_search_path = resolve_paths(expected_vndk_search_path);
 
   TemporaryFile tmp_file;
   close(tmp_file.fd);
@@ -149,7 +184,8 @@ static void run_linker_config_smoke_test(bool is_asan) {
   std::string error_msg;
   ASSERT_TRUE(Config::read_binary_config(tmp_file.path,
                                          executable_path.c_str(),
-                                         is_asan,
+                                         type == SmokeTestType::Asan,
+                                         type == SmokeTestType::Hwasan,
                                          &config,
                                          &error_msg)) << error_msg;
   ASSERT_TRUE(config != nullptr);
@@ -162,8 +198,8 @@ static void run_linker_config_smoke_test(bool is_asan) {
 
   ASSERT_TRUE(default_ns_config->isolated());
   ASSERT_FALSE(default_ns_config->visible());
-  ASSERT_EQ(kExpectedDefaultSearchPath, default_ns_config->search_paths());
-  ASSERT_EQ(kExpectedDefaultPermittedPath, default_ns_config->permitted_paths());
+  ASSERT_EQ(expected_default_search_path, default_ns_config->search_paths());
+  ASSERT_EQ(expected_default_permitted_path, default_ns_config->permitted_paths());
 
   const auto& default_ns_links = default_ns_config->links();
   ASSERT_EQ(2U, default_ns_links.size());
@@ -202,14 +238,14 @@ static void run_linker_config_smoke_test(bool is_asan) {
 
   ASSERT_TRUE(ns_system->isolated());
   ASSERT_TRUE(ns_system->visible());
-  ASSERT_EQ(kExpectedSystemSearchPath, ns_system->search_paths());
-  ASSERT_EQ(kExpectedSystemPermittedPath, ns_system->permitted_paths());
+  ASSERT_EQ(expected_system_search_path, ns_system->search_paths());
+  ASSERT_EQ(expected_system_permitted_path, ns_system->permitted_paths());
 
   ASSERT_TRUE(ns_vndk != nullptr) << "vndk namespace was not found";
 
   ASSERT_FALSE(ns_vndk->isolated()); // malformed bool property
   ASSERT_FALSE(ns_vndk->visible()); // undefined bool property
-  ASSERT_EQ(kExpectedVndkSearchPath, ns_vndk->search_paths());
+  ASSERT_EQ(expected_vndk_search_path, ns_vndk->search_paths());
 
   const auto& ns_vndk_links = ns_vndk->links();
   ASSERT_EQ(1U, ns_vndk_links.size());
@@ -223,11 +259,15 @@ static void run_linker_config_smoke_test(bool is_asan) {
 }
 
 TEST(linker_config, smoke) {
-  run_linker_config_smoke_test(false);
+  run_linker_config_smoke_test(SmokeTestType::None);
 }
 
 TEST(linker_config, asan_smoke) {
-  run_linker_config_smoke_test(true);
+  run_linker_config_smoke_test(SmokeTestType::Asan);
+}
+
+TEST(linker_config, hwasan_smoke) {
+  run_linker_config_smoke_test(SmokeTestType::Hwasan);
 }
 
 TEST(linker_config, ns_link_shared_libs_invalid_settings) {
@@ -258,6 +298,7 @@ TEST(linker_config, ns_link_shared_libs_invalid_settings) {
   std::string error_msg;
   ASSERT_FALSE(Config::read_binary_config(tmp_file.path,
                                           executable_path.c_str(),
+                                          false,
                                           false,
                                           &config,
                                           &error_msg));
@@ -303,6 +344,7 @@ TEST(linker_config, dir_path_resolve) {
 
   ASSERT_TRUE(Config::read_binary_config(tmp_file.path,
                                          executable_path.c_str(),
+                                         false,
                                          false,
                                          &config,
                                          &error_msg)) << error_msg;

@@ -56,12 +56,12 @@ ENTRY_PRIVATE(tlsdesc_resolver_dynamic)
   ldr x22, [x0]                 // TlsDynamicResolverArg::generation
 
   cmp x21, x22
-  b.lo .fallback
+  b.lo L(fallback)
 
-  ldr x21, [x0, #8]             // TlsIndex::module
+  ldr x21, [x0, #8]             // TlsIndex::module_id
   ldr x22, [x0, #16]            // TlsIndex::offset
-  ldr x21, [x20, x21, lsl #3]   // TlsDtv::modules[module]
-  cbz x21, .fallback
+  ldr x21, [x20, x21, lsl #3]   // TlsDtv::modules[module_id]
+  cbz x21, L(fallback)
   add x0, x21, x22
   sub x0, x0, x19
 
@@ -75,7 +75,7 @@ ENTRY_PRIVATE(tlsdesc_resolver_dynamic)
   .cfi_restore x20
   ret
 
-.fallback:
+L(fallback):
   .cfi_restore_state
   ldp x21, x22, [sp, #16]
   .cfi_restore x21

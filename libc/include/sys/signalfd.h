@@ -45,14 +45,12 @@ __BEGIN_DECLS
  * file descriptor for reading signal events.
  *
  * Returns the file descriptor on success, and returns -1 and sets `errno` on failure.
- *
- * Available since API level 18.
  */
-int signalfd(int __fd, const sigset_t* __mask, int __flags) __INTRODUCED_IN(18);
+int signalfd(int __fd, const sigset_t* _Nonnull __mask, int __flags);
 
 /**
  * Like signalfd() but allows setting a signal mask with RT signals even from a 32-bit process.
  */
-int signalfd64(int __fd, const sigset64_t* __mask, int __flags) __INTRODUCED_IN(28);
+int signalfd64(int __fd, const sigset64_t* _Nonnull __mask, int __flags) __INTRODUCED_IN(28);
 
 __END_DECLS

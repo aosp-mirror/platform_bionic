@@ -58,10 +58,8 @@ int poll(struct pollfd* _Nullable __fds, nfds_t __count, int __timeout_ms);
  *
  * Returns the number of ready file descriptors on success, 0 for timeout,
  * and returns -1 and sets `errno` on failure.
- *
- * Available since API level 28.
  */
-int ppoll(struct pollfd* _Nullable __fds, nfds_t __count, const struct timespec* _Nullable __timeout, const sigset_t* _Nullable __mask) __INTRODUCED_IN(21);
+int ppoll(struct pollfd* _Nullable __fds, nfds_t __count, const struct timespec* _Nullable __timeout, const sigset_t* _Nullable __mask);
 
 /**
  * Like ppoll() but allows setting a signal mask with RT signals even from a 32-bit process.

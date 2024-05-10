@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _COMEDI_H
 #define _COMEDI_H
 #define COMEDI_MAJORVERSION 0
@@ -244,14 +232,14 @@ enum comedi_counter_status_flags {
 struct comedi_insn {
   unsigned int insn;
   unsigned int n;
-  unsigned int __user * data;
+  unsigned int  * data;
   unsigned int subdev;
   unsigned int chanspec;
   unsigned int unused[3];
 };
 struct comedi_insnlist {
   unsigned int n_insns;
-  struct comedi_insn __user * insns;
+  struct comedi_insn  * insns;
 };
 struct comedi_cmd {
   unsigned int subdev;
@@ -268,19 +256,19 @@ struct comedi_cmd {
   unsigned int stop_arg;
   unsigned int * chanlist;
   unsigned int chanlist_len;
-  short __user * data;
+  short  * data;
   unsigned int data_len;
 };
 struct comedi_chaninfo {
   unsigned int subdev;
-  unsigned int __user * maxdata_list;
-  unsigned int __user * flaglist;
-  unsigned int __user * rangelist;
+  unsigned int  * maxdata_list;
+  unsigned int  * flaglist;
+  unsigned int  * rangelist;
   unsigned int unused[4];
 };
 struct comedi_rangeinfo {
   unsigned int range_type;
-  void __user * range_ptr;
+  void  * range_ptr;
 };
 struct comedi_krange {
   int min;

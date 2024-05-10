@@ -49,10 +49,10 @@
 
 /* glibc compatibility. */
 __BEGIN_DECLS
-uint32_t htonl(uint32_t __x) __attribute_const__ __INTRODUCED_IN(21);
-uint16_t htons(uint16_t __x) __attribute_const__ __INTRODUCED_IN(21);
-uint32_t ntohl(uint32_t __x) __attribute_const__ __INTRODUCED_IN(21);
-uint16_t ntohs(uint16_t __x) __attribute_const__ __INTRODUCED_IN(21);
+uint32_t htonl(uint32_t __x) __attribute_const__;
+uint16_t htons(uint16_t __x) __attribute_const__;
+uint32_t ntohl(uint32_t __x) __attribute_const__;
+uint16_t ntohs(uint16_t __x) __attribute_const__;
 __END_DECLS
 
 #define htonl(x) __swap32(x)

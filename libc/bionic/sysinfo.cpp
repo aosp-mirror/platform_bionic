@@ -33,8 +33,9 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "private/get_cpu_count_from_string.h"
+#include "platform/bionic/page.h"
 #include "private/ScopedReaddir.h"
+#include "private/get_cpu_count_from_string.h"
 
 int __get_cpu_count(const char* sys_file) {
   int cpu_count = 1;
@@ -64,11 +65,11 @@ int get_nprocs() {
 long get_phys_pages() {
   struct sysinfo si;
   sysinfo(&si);
-  return (static_cast<int64_t>(si.totalram) * si.mem_unit) / PAGE_SIZE;
+  return (static_cast<int64_t>(si.totalram) * si.mem_unit) / page_size();
 }
 
 long get_avphys_pages() {
   struct sysinfo si;
   sysinfo(&si);
-  return ((static_cast<int64_t>(si.freeram) + si.bufferram) * si.mem_unit) / PAGE_SIZE;
+  return ((static_cast<int64_t>(si.freeram) + si.bufferram) * si.mem_unit) / page_size();
 }

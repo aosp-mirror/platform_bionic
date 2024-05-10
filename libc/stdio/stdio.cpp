@@ -197,7 +197,7 @@ found:
 	fp->_lb._size = 0;
 
 	memset(_EXT(fp), 0, sizeof(struct __sfileext));
-	_FLOCK(fp) = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
+	_EXT(fp)->_lock = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
 	_EXT(fp)->_caller_handles_locking = false;
 
 	// Caller sets cookie, _read/_write etc.
@@ -773,7 +773,7 @@ char* fgets(char* buf, int n, FILE* fp) {
 char* fgets_unlocked(char* buf, int n, FILE* fp) {
   if (n <= 0) __fortify_fatal("fgets: buffer size %d <= 0", n);
 
-  _SET_ORIENTATION(fp, -1);
+  _SET_ORIENTATION(fp, ORIENT_BYTES);
 
   char* s = buf;
   n--; // Leave space for NUL.
@@ -884,7 +884,7 @@ wint_t getwchar() {
 
 void perror(const char* msg) {
   if (msg == nullptr) msg = "";
-  fprintf(stderr, "%s%s%s\n", msg, (*msg == '\0') ? "" : ": ", strerror(errno));
+  fprintf(stderr, "%s%s%m\n", msg, (*msg == '\0') ? "" : ": ");
 }
 
 int printf(const char* fmt, ...) {
@@ -903,7 +903,7 @@ int putc_unlocked(int c, FILE* fp) {
     errno = EBADF;
     return EOF;
   }
-  _SET_ORIENTATION(fp, -1);
+  _SET_ORIENTATION(fp, ORIENT_BYTES);
   if (--fp->_w >= 0 || (fp->_w >= fp->_lbfsize && c != '\n')) {
     return (*fp->_p++ = c);
   }
@@ -1098,7 +1098,7 @@ size_t fread_unlocked(void* buf, size_t size, size_t count, FILE* fp) {
   size_t total = desired_total;
   if (total == 0) return 0;
 
-  _SET_ORIENTATION(fp, -1);
+  _SET_ORIENTATION(fp, ORIENT_BYTES);
 
   // TODO: how can this ever happen?!
   if (fp->_r < 0) fp->_r = 0;
@@ -1165,7 +1165,7 @@ size_t fwrite_unlocked(const void* buf, size_t size, size_t count, FILE* fp) {
   __siov iov = { .iov_base = const_cast<void*>(buf), .iov_len = n };
   __suio uio = { .uio_iov = &iov, .uio_iovcnt = 1, .uio_resid = n };
 
-  _SET_ORIENTATION(fp, -1);
+  _SET_ORIENTATION(fp, ORIENT_BYTES);
 
   // The usual case is success (__sfvwrite returns 0); skip the divide if this happens,
   // since divides are generally slow.
@@ -1237,6 +1237,23 @@ FILE* popen(const char* cmd, const char* mode) {
 int pclose(FILE* fp) {
   CHECK_FP(fp);
   return __FILE_close(fp);
+}
+
+void flockfile(FILE* fp) {
+  CHECK_FP(fp);
+  pthread_mutex_lock(&_EXT(fp)->_lock);
+}
+
+int ftrylockfile(FILE* fp) {
+  CHECK_FP(fp);
+  // The specification for ftrylockfile() says it returns 0 on success,
+  // or non-zero on error. We don't bother canonicalizing to 0/-1...
+  return pthread_mutex_trylock(&_EXT(fp)->_lock);
+}
+
+void funlockfile(FILE* fp) {
+  CHECK_FP(fp);
+  pthread_mutex_unlock(&_EXT(fp)->_lock);
 }
 
 namespace {

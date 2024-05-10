@@ -44,24 +44,13 @@ extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);
 int sigprocmask(int how,
                 const sigset_t* bionic_new_set,
                 sigset_t* bionic_old_set) __attribute__((__noinline__)) {
-  SigSetConverter new_set;
-  sigset64_t* new_set_ptr = nullptr;
-  if (bionic_new_set != nullptr) {
-    sigemptyset64(&new_set.sigset64);
-    new_set.sigset = *bionic_new_set;
-    new_set_ptr = &new_set.sigset64;
+  SigSetConverter new_set{bionic_new_set};
+  SigSetConverter old_set{bionic_old_set};
+  int rc = sigprocmask64(how, new_set.ptr, old_set.ptr);
+  if (rc == 0 && bionic_old_set != nullptr) {
+    old_set.copy_out();
   }
-
-  SigSetConverter old_set;
-  if (sigprocmask64(how, new_set_ptr, &old_set.sigset64) == -1) {
-    return -1;
-  }
-
-  if (bionic_old_set != nullptr) {
-    *bionic_old_set = old_set.sigset;
-  }
-
-  return 0;
+  return rc;
 }
 
 int sigprocmask64(int how,

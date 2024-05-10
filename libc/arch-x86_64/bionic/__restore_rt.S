@@ -109,7 +109,7 @@
   // Restoring RSP is unnecessary as the unwinder simply uses the CFA value.
   RESTORE_GPR(RIP)
   nop
-ENTRY_PRIVATE_NO_DWARF(__restore_rt)
+ENTRY_NO_DWARF_PRIVATE(__restore_rt)
   mov $__NR_rt_sigreturn, %rax
   syscall
 END(__restore_rt)

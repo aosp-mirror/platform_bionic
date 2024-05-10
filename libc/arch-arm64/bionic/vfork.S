@@ -31,8 +31,7 @@
 #include <asm/signal.h>
 #include <linux/sched.h>
 
-ENTRY(vfork)
-__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
+ENTRY_WEAK_FOR_NATIVE_BRIDGE(vfork)
     // x9 = __get_tls()[TLS_SLOT_THREAD_ID]
     mrs     x9, tpidr_el0
     ldr     x9, [x9, #(TLS_SLOT_THREAD_ID * 8)]
@@ -42,10 +41,29 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
     ldr     w10, [x9, #20]
     str     w0, [x9, #20]
 
-    // Clear vfork_child_stack_bottom_.
-    str     xzr, [x9, #776]
+    mov     x0, #SIGCHLD
 
-    mov     x0, #(CLONE_VM | CLONE_VFORK | SIGCHLD)
+    // If either HWASan or stack MTE is enabled, set up the clone() flags to
+    // make vfork() act like fork(). We don't call the atfork handlers, so we
+    // may deadlock if the child allocates, but we have seen badly written
+    // atfork handlers themselves cause deadlocks [1]. ndk_translation already
+    // implements vfork() as fork() without calling handlers, so we have some
+    // evidence that it isn't necessary to call them.
+    //
+    // POSIX.1 defines vfork() to have the same effect as fork() except that
+    // most behavior, including heap allocation, becomes undefined in the child,
+    // so we aren't violating POSIX by doing this.
+    //
+    // [1] https://cs.android.com/android/platform/superproject/+/master:system/extras/simpleperf/app_api/cpp/simpleperf.cpp;drc=788fa4183441f4977ddbd5a055e42a7fe7691d21;l=308
+#if !__has_feature(hwaddress_sanitizer)
+    // if (!__libc_globals->memtag_stack) x0 |= CLONE_VM | CLONE_VFORK;
+    adrp    x1, __libc_memtag_stack
+    ldrb    w1, [x1, :lo12:__libc_memtag_stack]
+    cbnz    w1, 1f
+    orr     x0, x0, #CLONE_VM
+    orr     x0, x0, #CLONE_VFORK
+1:
+#endif
     mov     x1, xzr
     mov     x2, xzr
     mov     x3, xzr
@@ -54,7 +72,7 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
     mov     x8, __NR_clone
     svc     #0
 
-    cbz     x0, .L_exit
+    cbz     x0, L(done)
 
     // rc != 0: reset cached_pid_ and vforked_.
     str     w10, [x9, #20]
@@ -62,26 +80,7 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
     cneg    x0, x0, hi
     b.hi    __set_errno_internal
 
-    // Clean up stack shadow in the parent process.
-    // https://github.com/google/sanitizers/issues/925
-    paciasp
-    .cfi_negate_ra_state
-    stp x0, x30, [sp, #-16]!
-    .cfi_adjust_cfa_offset 16
-    .cfi_rel_offset x0, 0
-    .cfi_rel_offset x30, 8
-
-    add x0, sp, #16
-    bl memtag_handle_vfork
-
-    ldp x0, x30, [sp], #16
-    .cfi_adjust_cfa_offset -16
-    .cfi_restore x0
-    .cfi_restore x30
-    autiasp
-    .cfi_negate_ra_state
-
-.L_exit:
+L(done):
     ret
 END(vfork)
 

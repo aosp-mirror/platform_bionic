@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_PARPORT_H_
 #define _UAPI_PARPORT_H_
 #define PARPORT_MAX 16
@@ -75,4 +63,7 @@ typedef enum {
 #define IEEE1284_DATA 0
 #define PARPORT_EPP_FAST (1 << 0)
 #define PARPORT_W91284PIC (1 << 1)
+#define PARPORT_EPP_FAST_32 PARPORT_EPP_FAST
+#define PARPORT_EPP_FAST_16 (1 << 2)
+#define PARPORT_EPP_FAST_8 (1 << 3)
 #endif

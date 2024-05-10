@@ -104,3 +104,4 @@ class DlErrorRestorer {
 };
 
 __LIBC_HIDDEN__ extern bool g_is_ldd;
+__LIBC_HIDDEN__ extern pthread_mutex_t g_dl_mutex;

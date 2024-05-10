@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _PTP_CLOCK_H_
 #define _PTP_CLOCK_H_
 #include <linux/ioctl.h>
@@ -46,7 +34,8 @@ struct ptp_clock_caps {
   int n_pins;
   int cross_timestamping;
   int adjust_phase;
-  int rsv[12];
+  int max_phase_adj;
+  int rsv[11];
 };
 struct ptp_extts_request {
   unsigned int index;
@@ -115,6 +104,8 @@ struct ptp_pin_desc {
 #define PTP_PIN_SETFUNC2 _IOW(PTP_CLK_MAGIC, 16, struct ptp_pin_desc)
 #define PTP_SYS_OFFSET_PRECISE2 _IOWR(PTP_CLK_MAGIC, 17, struct ptp_sys_offset_precise)
 #define PTP_SYS_OFFSET_EXTENDED2 _IOWR(PTP_CLK_MAGIC, 18, struct ptp_sys_offset_extended)
+#define PTP_MASK_CLEAR_ALL _IO(PTP_CLK_MAGIC, 19)
+#define PTP_MASK_EN_SINGLE _IOW(PTP_CLK_MAGIC, 20, unsigned int)
 struct ptp_extts_event {
   struct ptp_clock_time t;
   unsigned int index;

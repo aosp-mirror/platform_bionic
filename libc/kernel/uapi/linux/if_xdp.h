@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _LINUX_IF_XDP_H
 #define _LINUX_IF_XDP_H
 #include <linux/types.h>
@@ -23,7 +11,9 @@
 #define XDP_COPY (1 << 1)
 #define XDP_ZEROCOPY (1 << 2)
 #define XDP_USE_NEED_WAKEUP (1 << 3)
+#define XDP_USE_SG (1 << 4)
 #define XDP_UMEM_UNALIGNED_CHUNK_FLAG (1 << 0)
+#define XDP_UMEM_TX_SW_CSUM (1 << 1)
 struct sockaddr_xdp {
   __u16 sxdp_family;
   __u16 sxdp_flags;
@@ -58,6 +48,7 @@ struct xdp_umem_reg {
   __u32 chunk_size;
   __u32 headroom;
   __u32 flags;
+  __u32 tx_metadata_len;
 };
 struct xdp_statistics {
   __u64 rx_dropped;
@@ -77,9 +68,25 @@ struct xdp_options {
 #define XDP_UMEM_PGOFF_COMPLETION_RING 0x180000000ULL
 #define XSK_UNALIGNED_BUF_OFFSET_SHIFT 48
 #define XSK_UNALIGNED_BUF_ADDR_MASK ((1ULL << XSK_UNALIGNED_BUF_OFFSET_SHIFT) - 1)
+#define XDP_TXMD_FLAGS_TIMESTAMP (1 << 0)
+#define XDP_TXMD_FLAGS_CHECKSUM (1 << 1)
+struct xsk_tx_metadata {
+  __u64 flags;
+  union {
+    struct {
+      __u16 csum_start;
+      __u16 csum_offset;
+    } request;
+    struct {
+      __u64 tx_timestamp;
+    } completion;
+  };
+};
 struct xdp_desc {
   __u64 addr;
   __u32 len;
   __u32 options;
 };
+#define XDP_PKT_CONTD (1 << 0)
+#define XDP_TX_METADATA (1 << 1)
 #endif

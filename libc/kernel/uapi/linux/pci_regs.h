@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef LINUX_PCI_REGS_H
 #define LINUX_PCI_REGS_H
 #define PCI_CFG_SPACE_SIZE 256
@@ -64,6 +52,7 @@
 #define PCI_HEADER_TYPE_NORMAL 0
 #define PCI_HEADER_TYPE_BRIDGE 1
 #define PCI_HEADER_TYPE_CARDBUS 2
+#define PCI_HEADER_TYPE_MFD 0x80
 #define PCI_BIST 0x0f
 #define PCI_BIST_CODE_MASK 0x0f
 #define PCI_BIST_START 0x40
@@ -546,6 +535,7 @@
 #define PCI_EXP_RTCAP 0x1e
 #define PCI_EXP_RTCAP_CRSVIS 0x0001
 #define PCI_EXP_RTSTA 0x20
+#define PCI_EXP_RTSTA_PME_RQ_ID 0x0000ffff
 #define PCI_EXP_RTSTA_PME 0x00010000
 #define PCI_EXP_RTSTA_PENDING 0x00020000
 #define PCI_EXP_DEVCAP2 0x24
@@ -594,6 +584,7 @@
 #define PCI_EXP_LNKCTL2_TX_MARGIN 0x0380
 #define PCI_EXP_LNKCTL2_HASD 0x0020
 #define PCI_EXP_LNKSTA2 0x32
+#define PCI_EXP_LNKSTA2_FLIT 0x0400
 #define PCI_CAP_EXP_ENDPOINT_SIZEOF_V2 0x32
 #define PCI_EXP_SLTCAP2 0x34
 #define PCI_EXP_SLTCAP2_IBPD 0x00000001
@@ -635,6 +626,7 @@
 #define PCI_EXT_CAP_ID_DVSEC 0x23
 #define PCI_EXT_CAP_ID_DLF 0x25
 #define PCI_EXT_CAP_ID_PL_16GT 0x26
+#define PCI_EXT_CAP_ID_PL_32GT 0x2A
 #define PCI_EXT_CAP_ID_DOE 0x2E
 #define PCI_EXT_CAP_ID_MAX PCI_EXT_CAP_ID_DOE
 #define PCI_EXT_CAP_DSN_SIZEOF 12
@@ -794,12 +786,13 @@
 #define PCI_PRI_ALLOC_REQ 0x0c
 #define PCI_EXT_CAP_PRI_SIZEOF 16
 #define PCI_PASID_CAP 0x04
-#define PCI_PASID_CAP_EXEC 0x02
-#define PCI_PASID_CAP_PRIV 0x04
+#define PCI_PASID_CAP_EXEC 0x0002
+#define PCI_PASID_CAP_PRIV 0x0004
+#define PCI_PASID_CAP_WIDTH 0x1f00
 #define PCI_PASID_CTRL 0x06
-#define PCI_PASID_CTRL_ENABLE 0x01
-#define PCI_PASID_CTRL_EXEC 0x02
-#define PCI_PASID_CTRL_PRIV 0x04
+#define PCI_PASID_CTRL_ENABLE 0x0001
+#define PCI_PASID_CTRL_EXEC 0x0002
+#define PCI_PASID_CTRL_PRIV 0x0004
 #define PCI_EXT_CAP_PASID_SIZEOF 8
 #define PCI_SRIOV_CAP 0x04
 #define PCI_SRIOV_CAP_VFM 0x00000001
@@ -836,6 +829,8 @@
 #define PCI_LTR_VALUE_MASK 0x000003ff
 #define PCI_LTR_SCALE_MASK 0x00001c00
 #define PCI_LTR_SCALE_SHIFT 10
+#define PCI_LTR_NOSNOOP_VALUE 0x03ff0000
+#define PCI_LTR_NOSNOOP_SCALE 0x1c000000
 #define PCI_EXT_CAP_LTR_SIZEOF 8
 #define PCI_ACS_CAP 0x04
 #define PCI_ACS_SV 0x0001
@@ -888,9 +883,16 @@
 #define PCI_EXP_DPC_STATUS 0x08
 #define PCI_EXP_DPC_STATUS_TRIGGER 0x0001
 #define PCI_EXP_DPC_STATUS_TRIGGER_RSN 0x0006
+#define PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR 0x0000
+#define PCI_EXP_DPC_STATUS_TRIGGER_RSN_NFE 0x0002
+#define PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE 0x0004
+#define PCI_EXP_DPC_STATUS_TRIGGER_RSN_IN_EXT 0x0006
 #define PCI_EXP_DPC_STATUS_INTERRUPT 0x0008
 #define PCI_EXP_DPC_RP_BUSY 0x0010
 #define PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT 0x0060
+#define PCI_EXP_DPC_STATUS_TRIGGER_RSN_RP_PIO 0x0000
+#define PCI_EXP_DPC_STATUS_TRIGGER_RSN_SW_TRIGGER 0x0020
+#define PCI_EXP_DPC_RP_PIO_FEP 0x1f00
 #define PCI_EXP_DPC_SOURCE_ID 0x0A
 #define PCI_EXP_DPC_RP_PIO_STATUS 0x0C
 #define PCI_EXP_DPC_RP_PIO_MASK 0x10
@@ -928,6 +930,8 @@
 #define PCI_L1SS_CTL1_LTR_L12_TH_VALUE 0x03ff0000
 #define PCI_L1SS_CTL1_LTR_L12_TH_SCALE 0xe0000000
 #define PCI_L1SS_CTL2 0x0c
+#define PCI_L1SS_CTL2_T_PWR_ON_SCALE 0x00000003
+#define PCI_L1SS_CTL2_T_PWR_ON_VALUE 0x000000f8
 #define PCI_DVSEC_HEADER1 0x4
 #define PCI_DVSEC_HEADER1_VID(x) ((x) & 0xffff)
 #define PCI_DVSEC_HEADER1_REV(x) (((x) >> 16) & 0xf)

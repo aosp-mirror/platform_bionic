@@ -28,7 +28,7 @@ nop
 b__MGPA7naqebvq14OaFbhaqGevttreR0_AF_10VVagresnprR:
 .space __SIZEOF_POINTER__
 .data
-.globl b__MGGA7naqebvq20OcFbhaqGevttrePyvragR
+.weak b__MGGA7naqebvq20OcFbhaqGevttrePyvragR
 .type b__MGGA7naqebvq20OcFbhaqGevttrePyvragR,%object
 b__MGGA7naqebvq20OcFbhaqGevttrePyvragR:
 .space __SIZEOF_POINTER__
@@ -83,7 +83,7 @@ nop
 b__MGPA7naqebvq12FbhaqGevttreR0_AF_19VFbhaqGevttrePyvragR:
 .space __SIZEOF_POINTER__
 .data
-.globl b__MGPA7naqebvq14OcFbhaqGevttreR0_AF_10VVagresnprR
+.weak b__MGPA7naqebvq14OcFbhaqGevttreR0_AF_10VVagresnprR
 .type b__MGPA7naqebvq14OcFbhaqGevttreR0_AF_10VVagresnprR,%object
 b__MGPA7naqebvq14OcFbhaqGevttreR0_AF_10VVagresnprR:
 .space __SIZEOF_POINTER__
@@ -93,7 +93,7 @@ b__MGPA7naqebvq14OcFbhaqGevttreR0_AF_10VVagresnprR:
 b__MGGA7naqebvq14OaFbhaqGevttreR:
 .space __SIZEOF_POINTER__
 .data
-.globl b__MGIA7naqebvq20OcFbhaqGevttrePyvragR
+.weak b__MGIA7naqebvq20OcFbhaqGevttrePyvragR
 .type b__MGIA7naqebvq20OcFbhaqGevttrePyvragR,%object
 b__MGIA7naqebvq20OcFbhaqGevttrePyvragR:
 .space __SIZEOF_POINTER__
@@ -103,7 +103,7 @@ b__MGIA7naqebvq20OcFbhaqGevttrePyvragR:
 b__MA7naqebvq22VFbhaqGevttreUjFreivpr10qrfpevcgbeR:
 .space __SIZEOF_POINTER__
 .data
-.globl b__MGPA7naqebvq23OcFbhaqGevttreUjFreivprR8_AF_9OcErsOnfrR
+.weak b__MGPA7naqebvq23OcFbhaqGevttreUjFreivprR8_AF_9OcErsOnfrR
 .type b__MGPA7naqebvq23OcFbhaqGevttreUjFreivprR8_AF_9OcErsOnfrR,%object
 b__MGPA7naqebvq23OcFbhaqGevttreUjFreivprR8_AF_9OcErsOnfrR:
 .space __SIZEOF_POINTER__
@@ -128,7 +128,7 @@ nop
 b__MA7naqebvq12FbhaqGevttre11yvfgZbqhyrfREXAF_8Fgevat16RC31fbhaq_gevttre_zbqhyr_qrfpevcgbeCw:
 nop
 .text
-.globl b__MA7naqebvq11OaVagresnprVAF_13VFbhaqGevttreRR10baNfOvaqreRi
+.weak b__MA7naqebvq11OaVagresnprVAF_13VFbhaqGevttreRR10baNfOvaqreRi
 .type b__MA7naqebvq11OaVagresnprVAF_13VFbhaqGevttreRR10baNfOvaqreRi,%function
 b__MA7naqebvq11OaVagresnprVAF_13VFbhaqGevttreRR10baNfOvaqreRi:
 nop
@@ -138,7 +138,7 @@ nop
 b__MA7naqebvq13VFbhaqGevttre14trgQrsnhygVzcyRi:
 nop
 .data
-.globl b__MGGA7naqebvq14OcFbhaqGevttreR
+.weak b__MGGA7naqebvq14OcFbhaqGevttreR
 .type b__MGGA7naqebvq14OcFbhaqGevttreR,%object
 b__MGGA7naqebvq14OcFbhaqGevttreR:
 .space __SIZEOF_POINTER__
@@ -168,7 +168,7 @@ b__MGPA7naqebvq23OaFbhaqGevttreUjFreivprR0_AF_11OaVagresnprVAF_22VFbhaqGevttreUj
 b__MA7naqebvq12FbhaqGevttre12thvqGbFgevatRCX12nhqvb_hhvq_fCpz:
 nop
 .data
-.globl b__MGIA7naqebvq14OcFbhaqGevttreR
+.weak b__MGIA7naqebvq14OcFbhaqGevttreR
 .type b__MGIA7naqebvq14OcFbhaqGevttreR,%object
 b__MGIA7naqebvq14OcFbhaqGevttreR:
 .space __SIZEOF_POINTER__
@@ -208,12 +208,12 @@ nop
 b__MGPA7naqebvq22VFbhaqGevttreUjFreivprR0_AF_10VVagresnprR:
 .space __SIZEOF_POINTER__
 .text
-.globl b__MA7naqebvq11OaVagresnprVAF_19VFbhaqGevttrePyvragRR10baNfOvaqreRi
+.weak b__MA7naqebvq11OaVagresnprVAF_19VFbhaqGevttrePyvragRR10baNfOvaqreRi
 .type b__MA7naqebvq11OaVagresnprVAF_19VFbhaqGevttrePyvragRR10baNfOvaqreRi,%function
 b__MA7naqebvq11OaVagresnprVAF_19VFbhaqGevttrePyvragRR10baNfOvaqreRi:
 nop
 .data
-.globl b__MGPA7naqebvq14OcFbhaqGevttreR0_AF_11OcVagresnprVAF_13VFbhaqGevttreRRR
+.weak b__MGPA7naqebvq14OcFbhaqGevttreR0_AF_11OcVagresnprVAF_13VFbhaqGevttreRRR
 .type b__MGPA7naqebvq14OcFbhaqGevttreR0_AF_11OcVagresnprVAF_13VFbhaqGevttreRRR,%object
 b__MGPA7naqebvq14OcFbhaqGevttreR0_AF_11OcVagresnprVAF_13VFbhaqGevttreRRR:
 .space __SIZEOF_POINTER__
@@ -228,7 +228,7 @@ nop
 b__MA7naqebvq19VFbhaqGevttrePyvrag14trgQrsnhygVzcyRi:
 nop
 .data
-.globl b__MGPA7naqebvq23OcFbhaqGevttreUjFreivprR0_AF_11OcVagresnprVAF_22VFbhaqGevttreUjFreivprRRR
+.weak b__MGPA7naqebvq23OcFbhaqGevttreUjFreivprR0_AF_11OcVagresnprVAF_22VFbhaqGevttreUjFreivprRRR
 .type b__MGPA7naqebvq23OcFbhaqGevttreUjFreivprR0_AF_11OcVagresnprVAF_22VFbhaqGevttreUjFreivprRRR,%object
 b__MGPA7naqebvq23OcFbhaqGevttreUjFreivprR0_AF_11OcVagresnprVAF_22VFbhaqGevttreUjFreivprRRR:
 .space __SIZEOF_POINTER__
@@ -253,7 +253,7 @@ nop
 b__MGPA7naqebvq12FbhaqGevttreR32_AF_7VOvaqre14QrnguErpvcvragR:
 .space __SIZEOF_POINTER__
 .data
-.globl b__MGPA7naqebvq20OcFbhaqGevttrePyvragR0_AF_11OcVagresnprVAF_19VFbhaqGevttrePyvragRRR
+.weak b__MGPA7naqebvq20OcFbhaqGevttrePyvragR0_AF_11OcVagresnprVAF_19VFbhaqGevttrePyvragRRR
 .type b__MGPA7naqebvq20OcFbhaqGevttrePyvragR0_AF_11OcVagresnprVAF_19VFbhaqGevttrePyvragRRR,%object
 b__MGPA7naqebvq20OcFbhaqGevttrePyvragR0_AF_11OcVagresnprVAF_19VFbhaqGevttrePyvragRRR:
 .space __SIZEOF_POINTER__
@@ -328,7 +328,7 @@ nop
 b__MA7naqebvq14OaFbhaqGevttre10baGenafnpgRwEXAF_6CnepryRCF1_w:
 nop
 .data
-.globl b__MGPA7naqebvq20OcFbhaqGevttrePyvragR8_AF_9OcErsOnfrR
+.weak b__MGPA7naqebvq20OcFbhaqGevttrePyvragR8_AF_9OcErsOnfrR
 .type b__MGPA7naqebvq20OcFbhaqGevttrePyvragR8_AF_9OcErsOnfrR,%object
 b__MGPA7naqebvq20OcFbhaqGevttrePyvragR8_AF_9OcErsOnfrR:
 .space __SIZEOF_POINTER__
@@ -388,7 +388,7 @@ nop
 b__MA7naqebvq12FbhaqGevttre24trgFbhaqGevttreUjFreivprRi:
 nop
 .data
-.globl b__MGPA7naqebvq14OcFbhaqGevttreR0_AF_13VFbhaqGevttreR
+.weak b__MGPA7naqebvq14OcFbhaqGevttreR0_AF_13VFbhaqGevttreR
 .type b__MGPA7naqebvq14OcFbhaqGevttreR0_AF_13VFbhaqGevttreR,%object
 b__MGPA7naqebvq14OcFbhaqGevttreR0_AF_13VFbhaqGevttreR:
 .space __SIZEOF_POINTER__
@@ -398,7 +398,7 @@ b__MGPA7naqebvq14OcFbhaqGevttreR0_AF_13VFbhaqGevttreR:
 b__MGPA7naqebvq23OaFbhaqGevttreUjFreivprR8_AF_7VOvaqreR:
 .space __SIZEOF_POINTER__
 .data
-.globl b__MGPA7naqebvq23OcFbhaqGevttreUjFreivprR0_AF_22VFbhaqGevttreUjFreivprR
+.weak b__MGPA7naqebvq23OcFbhaqGevttreUjFreivprR0_AF_22VFbhaqGevttreUjFreivprR
 .type b__MGPA7naqebvq23OcFbhaqGevttreUjFreivprR0_AF_22VFbhaqGevttreUjFreivprR,%object
 b__MGPA7naqebvq23OcFbhaqGevttreUjFreivprR0_AF_22VFbhaqGevttreUjFreivprR:
 .space __SIZEOF_POINTER__
@@ -418,17 +418,17 @@ b__MGIA7naqebvq12FbhaqGevttreR:
 b__MA7naqebvq13VFbhaqGevttre10qrfpevcgbeR:
 .space __SIZEOF_POINTER__
 .data
-.globl b__MGPA7naqebvq14OcFbhaqGevttreR8_AF_9OcErsOnfrR
+.weak b__MGPA7naqebvq14OcFbhaqGevttreR8_AF_9OcErsOnfrR
 .type b__MGPA7naqebvq14OcFbhaqGevttreR8_AF_9OcErsOnfrR,%object
 b__MGPA7naqebvq14OcFbhaqGevttreR8_AF_9OcErsOnfrR:
 .space __SIZEOF_POINTER__
 .data
-.globl b__MGPA7naqebvq20OcFbhaqGevttrePyvragR0_AF_19VFbhaqGevttrePyvragR
+.weak b__MGPA7naqebvq20OcFbhaqGevttrePyvragR0_AF_19VFbhaqGevttrePyvragR
 .type b__MGPA7naqebvq20OcFbhaqGevttrePyvragR0_AF_19VFbhaqGevttrePyvragR,%object
 b__MGPA7naqebvq20OcFbhaqGevttrePyvragR0_AF_19VFbhaqGevttrePyvragR:
 .space __SIZEOF_POINTER__
 .data
-.globl b__MGPA7naqebvq23OcFbhaqGevttreUjFreivprR0_AF_10VVagresnprR
+.weak b__MGPA7naqebvq23OcFbhaqGevttreUjFreivprR0_AF_10VVagresnprR
 .type b__MGPA7naqebvq23OcFbhaqGevttreUjFreivprR0_AF_10VVagresnprR,%object
 b__MGPA7naqebvq23OcFbhaqGevttreUjFreivprR0_AF_10VVagresnprR:
 .space __SIZEOF_POINTER__
@@ -463,7 +463,7 @@ nop
 b__MGua8_A7naqebvq12FbhaqGevttreQ1Ri:
 nop
 .text
-.globl b__MA7naqebvq11OaVagresnprVAF_22VFbhaqGevttreUjFreivprRR10baNfOvaqreRi
+.weak b__MA7naqebvq11OaVagresnprVAF_22VFbhaqGevttreUjFreivprRR10baNfOvaqreRi
 .type b__MA7naqebvq11OaVagresnprVAF_22VFbhaqGevttreUjFreivprRR10baNfOvaqreRi,%function
 b__MA7naqebvq11OaVagresnprVAF_22VFbhaqGevttreUjFreivprRR10baNfOvaqreRi:
 nop
@@ -473,7 +473,7 @@ nop
 b__MA7naqebvq22VFbhaqGevttreUjFreivpr14trgQrsnhygVzcyRi:
 nop
 .data
-.globl b__MGGA7naqebvq23OcFbhaqGevttreUjFreivprR
+.weak b__MGGA7naqebvq23OcFbhaqGevttreUjFreivprR
 .type b__MGGA7naqebvq23OcFbhaqGevttreUjFreivprR,%object
 b__MGGA7naqebvq23OcFbhaqGevttreUjFreivprR:
 .space __SIZEOF_POINTER__
@@ -498,7 +498,7 @@ nop
 b__MA7naqebvq13VFbhaqGevttre14frgQrsnhygVzcyRAFg3__110havdhr_cgeVF0_AF1_14qrsnhyg_qryrgrVF0_RRRR:
 nop
 .text
-.globl b__MA7naqebvq2fcVAF_22VFbhaqGevttreUjFreivprRRQ2Ri
+.weak b__MA7naqebvq2fcVAF_22VFbhaqGevttreUjFreivprRRQ2Ri
 .type b__MA7naqebvq2fcVAF_22VFbhaqGevttreUjFreivprRRQ2Ri,%function
 b__MA7naqebvq2fcVAF_22VFbhaqGevttreUjFreivprRRQ2Ri:
 nop
@@ -508,7 +508,7 @@ nop
 b__MGPA7naqebvq20OaFbhaqGevttrePyvragR8_AF_7OOvaqreR:
 .space __SIZEOF_POINTER__
 .data
-.globl b__MGIA7naqebvq23OcFbhaqGevttreUjFreivprR
+.weak b__MGIA7naqebvq23OcFbhaqGevttreUjFreivprR
 .type b__MGIA7naqebvq23OcFbhaqGevttreUjFreivprR,%object
 b__MGIA7naqebvq23OcFbhaqGevttreUjFreivprR:
 .space __SIZEOF_POINTER__
@@ -643,7 +643,7 @@ nop
 b__MA7naqebvq13VFbhaqGevttreQ2Ri:
 nop
 .data
-.globl b__MGPA7naqebvq20OcFbhaqGevttrePyvragR0_AF_10VVagresnprR
+.weak b__MGPA7naqebvq20OcFbhaqGevttrePyvragR0_AF_10VVagresnprR
 .type b__MGPA7naqebvq20OcFbhaqGevttrePyvragR0_AF_10VVagresnprR,%object
 b__MGPA7naqebvq20OcFbhaqGevttrePyvragR0_AF_10VVagresnprR:
 .space __SIZEOF_POINTER__

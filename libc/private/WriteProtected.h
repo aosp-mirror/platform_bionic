@@ -25,15 +25,16 @@
 #include <async_safe/log.h>
 
 #include "platform/bionic/macros.h"
+#include "platform/bionic/page.h"
 
 template <typename T>
 union WriteProtectedContents {
   T value;
-  char padding[PAGE_SIZE];
+  char padding[max_page_size()];
 
   WriteProtectedContents() = default;
   BIONIC_DISALLOW_COPY_AND_ASSIGN(WriteProtectedContents);
-} __attribute__((aligned(PAGE_SIZE)));
+} __attribute__((aligned(max_page_size())));
 
 // Write protected wrapper class that aligns its contents to a page boundary,
 // and sets the memory protection to be non-writable, except when being modified
@@ -41,9 +42,8 @@ union WriteProtectedContents {
 template <typename T>
 class WriteProtected {
  public:
-  static_assert(sizeof(T) < PAGE_SIZE,
-                "WriteProtected only supports contents up to PAGE_SIZE");
-  static_assert(__is_pod(T), "WriteProtected only supports POD contents");
+  static_assert(sizeof(T) < max_page_size(),
+                "WriteProtected only supports contents up to max_page_size()");
 
   WriteProtected() = default;
   BIONIC_DISALLOW_COPY_AND_ASSIGN(WriteProtected);
@@ -51,36 +51,45 @@ class WriteProtected {
   void initialize() {
     // Not strictly necessary, but this will hopefully segfault if we initialize
     // multiple times by accident.
-    memset(&contents, 0, sizeof(contents));
+    memset(contents_addr(), 0, sizeof(contents));
     set_protection(PROT_READ);
   }
 
   const T* operator->() {
-    return &contents.value;
+    return &contents_addr()->value;
   }
 
   const T& operator*() {
-    return contents.value;
+    return contents_addr()->value;
   }
 
   template <typename Mutator>
   void mutate(Mutator mutator) {
     set_protection(PROT_READ | PROT_WRITE);
-    mutator(&contents.value);
+    mutator(&contents_addr()->value);
     set_protection(PROT_READ);
   }
 
  private:
   WriteProtectedContents<T> contents;
 
-  void set_protection(int prot) {
+  WriteProtectedContents<T>* contents_addr() {
     auto addr = &contents;
+    // Hide the fact that we're returning the address of contents from the compiler.
+    // Otherwise it may generate code assuming alignment of 64KB even though the
+    // variable is only guaranteed to have 4KB alignment.
+    __asm__ __volatile__("" : "+r"(addr));
+    return addr;
+  }
+
+  void set_protection(int prot) {
+    auto addr = contents_addr();
 #if __has_feature(hwaddress_sanitizer)
     // The mprotect system call does not currently untag pointers, so do it
     // ourselves.
     addr = untag_address(addr);
 #endif
-    if (mprotect(reinterpret_cast<void*>(addr), PAGE_SIZE, prot) == -1) {
+    if (mprotect(reinterpret_cast<void*>(addr), max_page_size(), prot) == -1) {
       async_safe_fatal("WriteProtected mprotect %x failed: %s", prot, strerror(errno));
     }
   }

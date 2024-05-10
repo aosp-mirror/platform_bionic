@@ -99,15 +99,15 @@ struct sched_param {
 };
 
 /**
- * [sched_setscheduler(2)](http://man7.org/linux/man-pages/man2/sched_getcpu.2.html)
+ * [sched_setscheduler(2)](https://man7.org/linux/man-pages/man2/sched_setscheduler.2.html)
  * sets the scheduling policy and associated parameters for the given thread.
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
  */
-int sched_setscheduler(pid_t __pid, int __policy, const struct sched_param* __param);
+int sched_setscheduler(pid_t __pid, int __policy, const struct sched_param* _Nonnull __param);
 
 /**
- * [sched_getscheduler(2)](http://man7.org/linux/man-pages/man2/sched_getcpu.2.html)
+ * [sched_getscheduler(2)](https://man7.org/linux/man-pages/man2/sched_getscheduler.2)
  * gets the scheduling policy for the given thread.
  *
  * Returns a non-negative thread policy on success and returns -1 and sets
@@ -145,7 +145,7 @@ int sched_get_priority_min(int __policy);
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
  */
-int sched_setparam(pid_t __pid, const struct sched_param* __param);
+int sched_setparam(pid_t __pid, const struct sched_param* _Nonnull __param);
 
 /**
  * [sched_getparam(2)](http://man7.org/linux/man-pages/man2/sched_getparam.2.html)
@@ -153,7 +153,7 @@ int sched_setparam(pid_t __pid, const struct sched_param* __param);
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
  */
-int sched_getparam(pid_t __pid, struct sched_param* __param);
+int sched_getparam(pid_t __pid, struct sched_param* _Nonnull __param);
 
 /**
  * [sched_rr_get_interval(2)](http://man7.org/linux/man-pages/man2/sched_rr_get_interval.2.html)
@@ -161,7 +161,7 @@ int sched_getparam(pid_t __pid, struct sched_param* __param);
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
  */
-int sched_rr_get_interval(pid_t __pid, struct timespec* __quantum);
+int sched_rr_get_interval(pid_t __pid, struct timespec* _Nonnull __quantum);
 
 #if defined(__USE_GNU)
 
@@ -172,27 +172,23 @@ int sched_rr_get_interval(pid_t __pid, struct timespec* __quantum);
  * Returns the pid of the child to the caller on success and
  * returns -1 and sets `errno` on failure.
  */
-int clone(int (*__fn)(void*), void* __child_stack, int __flags, void* __arg, ...) __INTRODUCED_IN_ARM(9) __INTRODUCED_IN_X86(17);
+int clone(int (* __BIONIC_COMPLICATED_NULLNESS __fn)(void* __BIONIC_COMPLICATED_NULLNESS ), void* __BIONIC_COMPLICATED_NULLNESS __child_stack, int __flags, void* _Nullable __arg, ...);
 
 /**
  * [unshare(2)](http://man7.org/linux/man-pages/man2/unshare.2.html)
  * disassociates part of the caller's execution context.
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
- *
- * Available since API level 17.
  */
-int unshare(int __flags) __INTRODUCED_IN(17);
+int unshare(int __flags);
 
 /**
  * [setns(2)](http://man7.org/linux/man-pages/man2/setns.2.html)
  * reassociates a thread with a different namespace.
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
- *
- * Available since API level 21.
  */
-int setns(int __fd, int __ns_type) __INTRODUCED_IN(21);
+int setns(int __fd, int __ns_type);
 
 /**
  * [sched_getcpu(3)](http://man7.org/linux/man-pages/man3/sched_getcpu.3.html)
@@ -228,7 +224,7 @@ typedef struct {
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
  */
-int sched_setaffinity(pid_t __pid, size_t __set_size, const cpu_set_t* __set);
+int sched_setaffinity(pid_t __pid, size_t __set_size, const cpu_set_t* _Nonnull __set);
 
 /**
  * [sched_getaffinity(2)](http://man7.org/linux/man-pages/man2/sched_getaffinity.2.html)
@@ -236,7 +232,7 @@ int sched_setaffinity(pid_t __pid, size_t __set_size, const cpu_set_t* __set);
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
  */
-int sched_getaffinity(pid_t __pid, size_t __set_size, cpu_set_t* __set);
+int sched_getaffinity(pid_t __pid, size_t __set_size, cpu_set_t* _Nonnull __set);
 
 /**
  * [CPU_ZERO](https://man7.org/linux/man-pages/man3/CPU_SET.3.html) clears all
@@ -308,7 +304,7 @@ int sched_getaffinity(pid_t __pid, size_t __set_size, cpu_set_t* __set);
  * how many bits are set in a dynamic CPU set allocated by `CPU_ALLOC`.
  */
 #define CPU_COUNT_S(setsize, set)  __sched_cpucount((setsize), (set))
-int __sched_cpucount(size_t __set_size, const cpu_set_t* __set);
+int __sched_cpucount(size_t __set_size, const cpu_set_t* _Nonnull __set);
 
 /**
  * [CPU_EQUAL](https://man7.org/linux/man-pages/man3/CPU_SET.3.html) tests
@@ -379,14 +375,14 @@ int __sched_cpucount(size_t __set_size, const cpu_set_t* __set);
  * allocates a CPU set large enough for CPUs in the range 0..count-1.
  */
 #define CPU_ALLOC(count)  __sched_cpualloc((count))
-cpu_set_t* __sched_cpualloc(size_t __count);
+cpu_set_t* _Nullable __sched_cpualloc(size_t __count);
 
 /**
  * [CPU_FREE](https://man7.org/linux/man-pages/man3/CPU_SET.3.html)
  * deallocates a CPU set allocated by `CPU_ALLOC`.
  */
 #define CPU_FREE(set)     __sched_cpufree((set))
-void __sched_cpufree(cpu_set_t* __set);
+void __sched_cpufree(cpu_set_t* _Nonnull __set);
 
 #endif /* __USE_GNU */
 

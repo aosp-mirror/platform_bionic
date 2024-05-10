@@ -29,6 +29,8 @@
 #include <android-base/silent_death_test.h>
 #include <android-base/unique_fd.h>
 
+#include "utils.h"
+
 using android::base::unique_fd;
 using namespace std::chrono_literals;
 
@@ -43,15 +45,13 @@ TEST(pidfd, pidfd_open) {
   }
 
   unique_fd pidfd(pidfd_open(child, 0));
-  if (pidfd.get() == -1) {
-    ASSERT_EQ(ENOSYS, errno);
-    GTEST_SKIP() << "pidfd_open not available";
-  }
+  if (pidfd.get() == -1 && errno == ENOSYS) GTEST_SKIP() << "no pidfd_open() in this kernel";
+  ASSERT_NE(-1, pidfd.get()) << strerror(errno);
 
   siginfo_t siginfo;
   int rc = waitid(P_PIDFD, pidfd.get(), &siginfo, WEXITED);
   if (rc == -1) {
-    ASSERT_EQ(EINVAL, errno) << strerror(errno);
+    ASSERT_ERRNO(EINVAL);
     GTEST_SKIP() << "P_PIDFD not available";
   }
 
@@ -64,16 +64,12 @@ TEST(pidfd, pidfd_getfd) {
   unique_fd r, w;
   ASSERT_TRUE(android::base::Pipe(&r, &w));
   unique_fd self(pidfd_open(getpid(), 0));
-  if (self.get() == -1) {
-    ASSERT_EQ(ENOSYS, errno);
-    GTEST_SKIP() << "pidfd_open not available";
-  }
+  if (self.get() == -1 && errno == ENOSYS) GTEST_SKIP() << "no pidfd_open() in this kernel";
+  ASSERT_NE(-1, self.get()) << strerror(errno);
 
   unique_fd dup(pidfd_getfd(self.get(), r.get(), 0));
-  if (dup.get() == -1) {
-    ASSERT_EQ(ENOSYS, errno) << strerror(errno);
-    GTEST_SKIP() << "pidfd_getfd not available";
-  }
+  if (dup.get() == -1 && errno == ENOSYS) GTEST_SKIP() << "no pidfd_getfd() in this kernel";
+  ASSERT_NE(-1, dup.get()) << strerror(errno);
 
   ASSERT_NE(r.get(), dup.get());
   ASSERT_EQ(3, write(w.get(), "foo", 3));
@@ -86,15 +82,12 @@ TEST(pidfd, pidfd_getfd) {
 TEST_F(pidfd_DeathTest, pidfd_send_signal) {
 #if defined(__BIONIC__)
   unique_fd self(pidfd_open(getpid(), 0));
-  if (self.get() == -1) {
-    ASSERT_EQ(ENOSYS, errno);
-    GTEST_SKIP() << "pidfd_open not available";
-  }
+  if (self.get() == -1 && errno == ENOSYS) GTEST_SKIP() << "no pidfd_open() in this kernel";
+  ASSERT_NE(-1, self.get()) << strerror(errno);
 
-  if (pidfd_send_signal(self.get(), 0, nullptr, 0) == -1) {
-    ASSERT_EQ(ENOSYS, errno);
-    GTEST_SKIP() << "pidfd_send_signal not available";
-  }
+  int rc = pidfd_send_signal(self.get(), 0, nullptr, 0);
+  if (rc == -1 && errno == ENOSYS) GTEST_SKIP() << "no pidfd_send_signal() in this kernel";
+  ASSERT_EQ(0, rc) << strerror(errno);
 
   ASSERT_EXIT(({
                 // gtest will fork a child off for ASSERT_EXIT: `self` refers to the parent.

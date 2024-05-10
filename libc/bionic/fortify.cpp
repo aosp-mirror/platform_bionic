@@ -99,8 +99,8 @@ char* __fgets_chk(char* dst, int supplied_size, FILE* stream, size_t dst_len_fro
 }
 
 size_t __fread_chk(void* buf, size_t size, size_t count, FILE* stream, size_t buf_size) {
-  size_t total;
-  if (__predict_false(__size_mul_overflow(size, count, &total))) {
+  unsigned long total;
+  if (__predict_false(__builtin_umull_overflow(size, count, &total))) {
     // overflow: trigger the error path in fread
     return fread(buf, size, count, stream);
   }
@@ -109,8 +109,8 @@ size_t __fread_chk(void* buf, size_t size, size_t count, FILE* stream, size_t bu
 }
 
 size_t __fwrite_chk(const void* buf, size_t size, size_t count, FILE* stream, size_t buf_size) {
-  size_t total;
-  if (__predict_false(__size_mul_overflow(size, count, &total))) {
+  unsigned long total;
+  if (__predict_false(__builtin_umull_overflow(size, count, &total))) {
     // overflow: trigger the error path in fwrite
     return fwrite(buf, size, count, stream);
   }
@@ -489,9 +489,9 @@ extern "C" char* __STRCPY_CHK(char* dst, const char* src, size_t dst_len) {
   return strcpy(dst, src);
 }
 
-#if !defined(__arm__) && !defined(__aarch64__)
+#if !defined(__arm__) && !defined(__aarch64__) && !defined(__riscv)
 // Runtime implementation of __memcpy_chk (used directly by compiler, not in headers).
-// arm32 and arm64 have assembler implementations, and don't need this C fallback.
+// arm32,arm64,riscv have assembler implementations, and don't need this C fallback.
 extern "C" void* __memcpy_chk(void* dst, const void* src, size_t count, size_t dst_len) {
   __check_count("memcpy", "count", count);
   __check_buffer_access("memcpy", "write into", count, dst_len);

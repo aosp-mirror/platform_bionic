@@ -42,6 +42,12 @@ static void termios_h() {
   STRUCT_MEMBER(struct termios, tcflag_t, c_lflag);
   STRUCT_MEMBER_ARRAY(struct termios, cc_t/*[]*/, c_cc);
 
+#if !defined(__GLIBC__)  // Our glibc is too old.
+  TYPE(struct winsize);
+  STRUCT_MEMBER(struct winsize, unsigned short, ws_row);
+  STRUCT_MEMBER(struct winsize, unsigned short, ws_col);
+#endif
+
   MACRO(NCCS);
 
   MACRO(VEOF);
@@ -162,6 +168,12 @@ static void termios_h() {
   FUNCTION(tcflush, int (*f)(int, int));
   FUNCTION(tcgetattr, int (*f)(int, struct termios*));
   FUNCTION(tcgetsid, pid_t (*f)(int));
+#if !defined(__GLIBC__)  // Our glibc is too old.
+  FUNCTION(tcgetwinsize, int (*f)(int, struct winsize*));
+#endif
   FUNCTION(tcsendbreak, int (*f)(int, int));
   FUNCTION(tcsetattr, int (*f)(int, int, const struct termios*));
+#if !defined(__GLIBC__)  // Our glibc is too old.
+  FUNCTION(tcsetwinsize, int (*f)(int, const struct winsize*));
+#endif
 }

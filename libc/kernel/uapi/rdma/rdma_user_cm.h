@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef RDMA_USER_CM_H
 #define RDMA_USER_CM_H
 #include <linux/types.h>
@@ -88,7 +76,7 @@ struct rdma_ucm_bind {
   __u32 id;
   __u16 addr_size;
   __u16 reserved;
-  struct __kernel_sockaddr_storage addr;
+  struct sockaddr_storage addr;
 };
 struct rdma_ucm_resolve_ip {
   struct sockaddr_in6 src_addr;
@@ -102,8 +90,8 @@ struct rdma_ucm_resolve_addr {
   __u16 src_size;
   __u16 dst_size;
   __u32 reserved;
-  struct __kernel_sockaddr_storage src_addr;
-  struct __kernel_sockaddr_storage dst_addr;
+  struct sockaddr_storage src_addr;
+  struct sockaddr_storage dst_addr;
 };
 struct rdma_ucm_resolve_route {
   __u32 id;
@@ -137,8 +125,8 @@ struct rdma_ucm_query_addr_resp {
   __u16 pkey;
   __u16 src_size;
   __u16 dst_size;
-  struct __kernel_sockaddr_storage src_addr;
-  struct __kernel_sockaddr_storage dst_addr;
+  struct sockaddr_storage src_addr;
+  struct sockaddr_storage dst_addr;
   __u32 ibdev_index;
   __u32 reserved1;
 };
@@ -225,7 +213,7 @@ struct rdma_ucm_join_mcast {
   __u32 id;
   __u16 addr_size;
   __u16 join_flags;
-  struct __kernel_sockaddr_storage addr;
+  struct sockaddr_storage addr;
 };
 struct rdma_ucm_get_event {
   __aligned_u64 response;

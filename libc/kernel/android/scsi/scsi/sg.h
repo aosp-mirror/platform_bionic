@@ -1,26 +1,14 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _SCSI_GENERIC_H
 #define _SCSI_GENERIC_H
 #include <linux/compiler.h>
 typedef struct sg_iovec {
-  void __user * iov_base;
+  void  * iov_base;
   size_t iov_len;
 } sg_iovec_t;
 typedef struct sg_io_hdr {
@@ -30,13 +18,13 @@ typedef struct sg_io_hdr {
   unsigned char mx_sb_len;
   unsigned short iovec_count;
   unsigned int dxfer_len;
-  void __user * dxferp;
-  unsigned char __user * cmdp;
-  void __user * sbp;
+  void  * dxferp;
+  unsigned char  * cmdp;
+  void  * sbp;
   unsigned int timeout;
   unsigned int flags;
   int pack_id;
-  void __user * usr_ptr;
+  void  * usr_ptr;
   unsigned char status;
   unsigned char masked_status;
   unsigned char msg_status;
@@ -96,7 +84,7 @@ typedef struct sg_req_info {
   char sg_io_owned;
   char problem;
   int pack_id;
-  void __user * usr_ptr;
+  void  * usr_ptr;
   unsigned int duration;
   int unused;
 } sg_req_info_t;

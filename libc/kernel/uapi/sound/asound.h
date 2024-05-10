@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI__SOUND_ASOUND_H
 #define _UAPI__SOUND_ASOUND_H
 #ifdef __linux__
@@ -96,7 +84,7 @@ struct snd_hwdep_dsp_status {
 struct snd_hwdep_dsp_image {
   unsigned int index;
   unsigned char name[64];
-  unsigned char __user * image;
+  unsigned char  * image;
   size_t length;
   unsigned long driver_data;
 };
@@ -104,7 +92,7 @@ struct snd_hwdep_dsp_image {
 #define SNDRV_HWDEP_IOCTL_INFO _IOR('H', 0x01, struct snd_hwdep_info)
 #define SNDRV_HWDEP_IOCTL_DSP_STATUS _IOR('H', 0x02, struct snd_hwdep_dsp_status)
 #define SNDRV_HWDEP_IOCTL_DSP_LOAD _IOW('H', 0x03, struct snd_hwdep_dsp_image)
-#define SNDRV_PCM_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 15)
+#define SNDRV_PCM_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 17)
 typedef unsigned long snd_pcm_uframes_t;
 typedef signed long snd_pcm_sframes_t;
 enum {
@@ -125,64 +113,64 @@ enum {
   SNDRV_PCM_STREAM_LAST = SNDRV_PCM_STREAM_CAPTURE,
 };
 typedef int __bitwise snd_pcm_access_t;
-#define SNDRV_PCM_ACCESS_MMAP_INTERLEAVED ((__force snd_pcm_access_t) 0)
-#define SNDRV_PCM_ACCESS_MMAP_NONINTERLEAVED ((__force snd_pcm_access_t) 1)
-#define SNDRV_PCM_ACCESS_MMAP_COMPLEX ((__force snd_pcm_access_t) 2)
-#define SNDRV_PCM_ACCESS_RW_INTERLEAVED ((__force snd_pcm_access_t) 3)
-#define SNDRV_PCM_ACCESS_RW_NONINTERLEAVED ((__force snd_pcm_access_t) 4)
+#define SNDRV_PCM_ACCESS_MMAP_INTERLEAVED (( snd_pcm_access_t) 0)
+#define SNDRV_PCM_ACCESS_MMAP_NONINTERLEAVED (( snd_pcm_access_t) 1)
+#define SNDRV_PCM_ACCESS_MMAP_COMPLEX (( snd_pcm_access_t) 2)
+#define SNDRV_PCM_ACCESS_RW_INTERLEAVED (( snd_pcm_access_t) 3)
+#define SNDRV_PCM_ACCESS_RW_NONINTERLEAVED (( snd_pcm_access_t) 4)
 #define SNDRV_PCM_ACCESS_LAST SNDRV_PCM_ACCESS_RW_NONINTERLEAVED
 typedef int __bitwise snd_pcm_format_t;
-#define SNDRV_PCM_FORMAT_S8 ((__force snd_pcm_format_t) 0)
-#define SNDRV_PCM_FORMAT_U8 ((__force snd_pcm_format_t) 1)
-#define SNDRV_PCM_FORMAT_S16_LE ((__force snd_pcm_format_t) 2)
-#define SNDRV_PCM_FORMAT_S16_BE ((__force snd_pcm_format_t) 3)
-#define SNDRV_PCM_FORMAT_U16_LE ((__force snd_pcm_format_t) 4)
-#define SNDRV_PCM_FORMAT_U16_BE ((__force snd_pcm_format_t) 5)
-#define SNDRV_PCM_FORMAT_S24_LE ((__force snd_pcm_format_t) 6)
-#define SNDRV_PCM_FORMAT_S24_BE ((__force snd_pcm_format_t) 7)
-#define SNDRV_PCM_FORMAT_U24_LE ((__force snd_pcm_format_t) 8)
-#define SNDRV_PCM_FORMAT_U24_BE ((__force snd_pcm_format_t) 9)
-#define SNDRV_PCM_FORMAT_S32_LE ((__force snd_pcm_format_t) 10)
-#define SNDRV_PCM_FORMAT_S32_BE ((__force snd_pcm_format_t) 11)
-#define SNDRV_PCM_FORMAT_U32_LE ((__force snd_pcm_format_t) 12)
-#define SNDRV_PCM_FORMAT_U32_BE ((__force snd_pcm_format_t) 13)
-#define SNDRV_PCM_FORMAT_FLOAT_LE ((__force snd_pcm_format_t) 14)
-#define SNDRV_PCM_FORMAT_FLOAT_BE ((__force snd_pcm_format_t) 15)
-#define SNDRV_PCM_FORMAT_FLOAT64_LE ((__force snd_pcm_format_t) 16)
-#define SNDRV_PCM_FORMAT_FLOAT64_BE ((__force snd_pcm_format_t) 17)
-#define SNDRV_PCM_FORMAT_IEC958_SUBFRAME_LE ((__force snd_pcm_format_t) 18)
-#define SNDRV_PCM_FORMAT_IEC958_SUBFRAME_BE ((__force snd_pcm_format_t) 19)
-#define SNDRV_PCM_FORMAT_MU_LAW ((__force snd_pcm_format_t) 20)
-#define SNDRV_PCM_FORMAT_A_LAW ((__force snd_pcm_format_t) 21)
-#define SNDRV_PCM_FORMAT_IMA_ADPCM ((__force snd_pcm_format_t) 22)
-#define SNDRV_PCM_FORMAT_MPEG ((__force snd_pcm_format_t) 23)
-#define SNDRV_PCM_FORMAT_GSM ((__force snd_pcm_format_t) 24)
-#define SNDRV_PCM_FORMAT_S20_LE ((__force snd_pcm_format_t) 25)
-#define SNDRV_PCM_FORMAT_S20_BE ((__force snd_pcm_format_t) 26)
-#define SNDRV_PCM_FORMAT_U20_LE ((__force snd_pcm_format_t) 27)
-#define SNDRV_PCM_FORMAT_U20_BE ((__force snd_pcm_format_t) 28)
-#define SNDRV_PCM_FORMAT_SPECIAL ((__force snd_pcm_format_t) 31)
-#define SNDRV_PCM_FORMAT_S24_3LE ((__force snd_pcm_format_t) 32)
-#define SNDRV_PCM_FORMAT_S24_3BE ((__force snd_pcm_format_t) 33)
-#define SNDRV_PCM_FORMAT_U24_3LE ((__force snd_pcm_format_t) 34)
-#define SNDRV_PCM_FORMAT_U24_3BE ((__force snd_pcm_format_t) 35)
-#define SNDRV_PCM_FORMAT_S20_3LE ((__force snd_pcm_format_t) 36)
-#define SNDRV_PCM_FORMAT_S20_3BE ((__force snd_pcm_format_t) 37)
-#define SNDRV_PCM_FORMAT_U20_3LE ((__force snd_pcm_format_t) 38)
-#define SNDRV_PCM_FORMAT_U20_3BE ((__force snd_pcm_format_t) 39)
-#define SNDRV_PCM_FORMAT_S18_3LE ((__force snd_pcm_format_t) 40)
-#define SNDRV_PCM_FORMAT_S18_3BE ((__force snd_pcm_format_t) 41)
-#define SNDRV_PCM_FORMAT_U18_3LE ((__force snd_pcm_format_t) 42)
-#define SNDRV_PCM_FORMAT_U18_3BE ((__force snd_pcm_format_t) 43)
-#define SNDRV_PCM_FORMAT_G723_24 ((__force snd_pcm_format_t) 44)
-#define SNDRV_PCM_FORMAT_G723_24_1B ((__force snd_pcm_format_t) 45)
-#define SNDRV_PCM_FORMAT_G723_40 ((__force snd_pcm_format_t) 46)
-#define SNDRV_PCM_FORMAT_G723_40_1B ((__force snd_pcm_format_t) 47)
-#define SNDRV_PCM_FORMAT_DSD_U8 ((__force snd_pcm_format_t) 48)
-#define SNDRV_PCM_FORMAT_DSD_U16_LE ((__force snd_pcm_format_t) 49)
-#define SNDRV_PCM_FORMAT_DSD_U32_LE ((__force snd_pcm_format_t) 50)
-#define SNDRV_PCM_FORMAT_DSD_U16_BE ((__force snd_pcm_format_t) 51)
-#define SNDRV_PCM_FORMAT_DSD_U32_BE ((__force snd_pcm_format_t) 52)
+#define SNDRV_PCM_FORMAT_S8 (( snd_pcm_format_t) 0)
+#define SNDRV_PCM_FORMAT_U8 (( snd_pcm_format_t) 1)
+#define SNDRV_PCM_FORMAT_S16_LE (( snd_pcm_format_t) 2)
+#define SNDRV_PCM_FORMAT_S16_BE (( snd_pcm_format_t) 3)
+#define SNDRV_PCM_FORMAT_U16_LE (( snd_pcm_format_t) 4)
+#define SNDRV_PCM_FORMAT_U16_BE (( snd_pcm_format_t) 5)
+#define SNDRV_PCM_FORMAT_S24_LE (( snd_pcm_format_t) 6)
+#define SNDRV_PCM_FORMAT_S24_BE (( snd_pcm_format_t) 7)
+#define SNDRV_PCM_FORMAT_U24_LE (( snd_pcm_format_t) 8)
+#define SNDRV_PCM_FORMAT_U24_BE (( snd_pcm_format_t) 9)
+#define SNDRV_PCM_FORMAT_S32_LE (( snd_pcm_format_t) 10)
+#define SNDRV_PCM_FORMAT_S32_BE (( snd_pcm_format_t) 11)
+#define SNDRV_PCM_FORMAT_U32_LE (( snd_pcm_format_t) 12)
+#define SNDRV_PCM_FORMAT_U32_BE (( snd_pcm_format_t) 13)
+#define SNDRV_PCM_FORMAT_FLOAT_LE (( snd_pcm_format_t) 14)
+#define SNDRV_PCM_FORMAT_FLOAT_BE (( snd_pcm_format_t) 15)
+#define SNDRV_PCM_FORMAT_FLOAT64_LE (( snd_pcm_format_t) 16)
+#define SNDRV_PCM_FORMAT_FLOAT64_BE (( snd_pcm_format_t) 17)
+#define SNDRV_PCM_FORMAT_IEC958_SUBFRAME_LE (( snd_pcm_format_t) 18)
+#define SNDRV_PCM_FORMAT_IEC958_SUBFRAME_BE (( snd_pcm_format_t) 19)
+#define SNDRV_PCM_FORMAT_MU_LAW (( snd_pcm_format_t) 20)
+#define SNDRV_PCM_FORMAT_A_LAW (( snd_pcm_format_t) 21)
+#define SNDRV_PCM_FORMAT_IMA_ADPCM (( snd_pcm_format_t) 22)
+#define SNDRV_PCM_FORMAT_MPEG (( snd_pcm_format_t) 23)
+#define SNDRV_PCM_FORMAT_GSM (( snd_pcm_format_t) 24)
+#define SNDRV_PCM_FORMAT_S20_LE (( snd_pcm_format_t) 25)
+#define SNDRV_PCM_FORMAT_S20_BE (( snd_pcm_format_t) 26)
+#define SNDRV_PCM_FORMAT_U20_LE (( snd_pcm_format_t) 27)
+#define SNDRV_PCM_FORMAT_U20_BE (( snd_pcm_format_t) 28)
+#define SNDRV_PCM_FORMAT_SPECIAL (( snd_pcm_format_t) 31)
+#define SNDRV_PCM_FORMAT_S24_3LE (( snd_pcm_format_t) 32)
+#define SNDRV_PCM_FORMAT_S24_3BE (( snd_pcm_format_t) 33)
+#define SNDRV_PCM_FORMAT_U24_3LE (( snd_pcm_format_t) 34)
+#define SNDRV_PCM_FORMAT_U24_3BE (( snd_pcm_format_t) 35)
+#define SNDRV_PCM_FORMAT_S20_3LE (( snd_pcm_format_t) 36)
+#define SNDRV_PCM_FORMAT_S20_3BE (( snd_pcm_format_t) 37)
+#define SNDRV_PCM_FORMAT_U20_3LE (( snd_pcm_format_t) 38)
+#define SNDRV_PCM_FORMAT_U20_3BE (( snd_pcm_format_t) 39)
+#define SNDRV_PCM_FORMAT_S18_3LE (( snd_pcm_format_t) 40)
+#define SNDRV_PCM_FORMAT_S18_3BE (( snd_pcm_format_t) 41)
+#define SNDRV_PCM_FORMAT_U18_3LE (( snd_pcm_format_t) 42)
+#define SNDRV_PCM_FORMAT_U18_3BE (( snd_pcm_format_t) 43)
+#define SNDRV_PCM_FORMAT_G723_24 (( snd_pcm_format_t) 44)
+#define SNDRV_PCM_FORMAT_G723_24_1B (( snd_pcm_format_t) 45)
+#define SNDRV_PCM_FORMAT_G723_40 (( snd_pcm_format_t) 46)
+#define SNDRV_PCM_FORMAT_G723_40_1B (( snd_pcm_format_t) 47)
+#define SNDRV_PCM_FORMAT_DSD_U8 (( snd_pcm_format_t) 48)
+#define SNDRV_PCM_FORMAT_DSD_U16_LE (( snd_pcm_format_t) 49)
+#define SNDRV_PCM_FORMAT_DSD_U32_LE (( snd_pcm_format_t) 50)
+#define SNDRV_PCM_FORMAT_DSD_U16_BE (( snd_pcm_format_t) 51)
+#define SNDRV_PCM_FORMAT_DSD_U32_BE (( snd_pcm_format_t) 52)
 #define SNDRV_PCM_FORMAT_LAST SNDRV_PCM_FORMAT_DSD_U32_BE
 #define SNDRV_PCM_FORMAT_FIRST SNDRV_PCM_FORMAT_S8
 #ifdef SNDRV_LITTLE_ENDIAN
@@ -212,13 +200,17 @@ typedef int __bitwise snd_pcm_format_t;
 #define SNDRV_PCM_FORMAT_U20 SNDRV_PCM_FORMAT_U20_BE
 #endif
 typedef int __bitwise snd_pcm_subformat_t;
-#define SNDRV_PCM_SUBFORMAT_STD ((__force snd_pcm_subformat_t) 0)
-#define SNDRV_PCM_SUBFORMAT_LAST SNDRV_PCM_SUBFORMAT_STD
+#define SNDRV_PCM_SUBFORMAT_STD (( snd_pcm_subformat_t) 0)
+#define SNDRV_PCM_SUBFORMAT_MSBITS_MAX (( snd_pcm_subformat_t) 1)
+#define SNDRV_PCM_SUBFORMAT_MSBITS_20 (( snd_pcm_subformat_t) 2)
+#define SNDRV_PCM_SUBFORMAT_MSBITS_24 (( snd_pcm_subformat_t) 3)
+#define SNDRV_PCM_SUBFORMAT_LAST SNDRV_PCM_SUBFORMAT_MSBITS_24
 #define SNDRV_PCM_INFO_MMAP 0x00000001
 #define SNDRV_PCM_INFO_MMAP_VALID 0x00000002
 #define SNDRV_PCM_INFO_DOUBLE 0x00000004
 #define SNDRV_PCM_INFO_BATCH 0x00000010
 #define SNDRV_PCM_INFO_SYNC_APPLPTR 0x00000020
+#define SNDRV_PCM_INFO_PERFECT_DRAIN 0x00000040
 #define SNDRV_PCM_INFO_INTERLEAVED 0x00000100
 #define SNDRV_PCM_INFO_NONINTERLEAVED 0x00000200
 #define SNDRV_PCM_INFO_COMPLEX 0x00000400
@@ -243,15 +235,15 @@ typedef int __bitwise snd_pcm_subformat_t;
 #define __SND_STRUCT_TIME64
 #endif
 typedef int __bitwise snd_pcm_state_t;
-#define SNDRV_PCM_STATE_OPEN ((__force snd_pcm_state_t) 0)
-#define SNDRV_PCM_STATE_SETUP ((__force snd_pcm_state_t) 1)
-#define SNDRV_PCM_STATE_PREPARED ((__force snd_pcm_state_t) 2)
-#define SNDRV_PCM_STATE_RUNNING ((__force snd_pcm_state_t) 3)
-#define SNDRV_PCM_STATE_XRUN ((__force snd_pcm_state_t) 4)
-#define SNDRV_PCM_STATE_DRAINING ((__force snd_pcm_state_t) 5)
-#define SNDRV_PCM_STATE_PAUSED ((__force snd_pcm_state_t) 6)
-#define SNDRV_PCM_STATE_SUSPENDED ((__force snd_pcm_state_t) 7)
-#define SNDRV_PCM_STATE_DISCONNECTED ((__force snd_pcm_state_t) 8)
+#define SNDRV_PCM_STATE_OPEN (( snd_pcm_state_t) 0)
+#define SNDRV_PCM_STATE_SETUP (( snd_pcm_state_t) 1)
+#define SNDRV_PCM_STATE_PREPARED (( snd_pcm_state_t) 2)
+#define SNDRV_PCM_STATE_RUNNING (( snd_pcm_state_t) 3)
+#define SNDRV_PCM_STATE_XRUN (( snd_pcm_state_t) 4)
+#define SNDRV_PCM_STATE_DRAINING (( snd_pcm_state_t) 5)
+#define SNDRV_PCM_STATE_PAUSED (( snd_pcm_state_t) 6)
+#define SNDRV_PCM_STATE_SUSPENDED (( snd_pcm_state_t) 7)
+#define SNDRV_PCM_STATE_DISCONNECTED (( snd_pcm_state_t) 8)
 #define SNDRV_PCM_STATE_LAST SNDRV_PCM_STATE_DISCONNECTED
 enum {
   SNDRV_PCM_MMAP_OFFSET_DATA = 0x00000000,
@@ -310,6 +302,7 @@ typedef int snd_pcm_hw_param_t;
 #define SNDRV_PCM_HW_PARAMS_NORESAMPLE (1 << 0)
 #define SNDRV_PCM_HW_PARAMS_EXPORT_BUFFER (1 << 1)
 #define SNDRV_PCM_HW_PARAMS_NO_PERIOD_WAKEUP (1 << 2)
+#define SNDRV_PCM_HW_PARAMS_NO_DRAIN_SILENCE (1 << 3)
 struct snd_interval {
   unsigned int min, max;
   unsigned int openmin : 1, openmax : 1, integer : 1, empty : 1;
@@ -475,12 +468,12 @@ struct __snd_pcm_sync_ptr64 {
 };
 struct snd_xferi {
   snd_pcm_sframes_t result;
-  void __user * buf;
+  void  * buf;
   snd_pcm_uframes_t frames;
 };
 struct snd_xfern {
   snd_pcm_sframes_t result;
-  void __user * __user * bufs;
+  void  *  * bufs;
   snd_pcm_uframes_t frames;
 };
 enum {
@@ -565,7 +558,7 @@ enum {
 #define SNDRV_PCM_IOCTL_READN_FRAMES _IOR('A', 0x53, struct snd_xfern)
 #define SNDRV_PCM_IOCTL_LINK _IOW('A', 0x60, int)
 #define SNDRV_PCM_IOCTL_UNLINK _IO('A', 0x61)
-#define SNDRV_RAWMIDI_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 2)
+#define SNDRV_RAWMIDI_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 4)
 enum {
   SNDRV_RAWMIDI_STREAM_OUTPUT = 0,
   SNDRV_RAWMIDI_STREAM_INPUT,
@@ -574,6 +567,7 @@ enum {
 #define SNDRV_RAWMIDI_INFO_OUTPUT 0x00000001
 #define SNDRV_RAWMIDI_INFO_INPUT 0x00000002
 #define SNDRV_RAWMIDI_INFO_DUPLEX 0x00000004
+#define SNDRV_RAWMIDI_INFO_UMP 0x00000008
 struct snd_rawmidi_info {
   unsigned int device;
   unsigned int subdevice;
@@ -622,6 +616,56 @@ struct snd_rawmidi_status {
   size_t xruns;
   unsigned char reserved[16];
 };
+#define SNDRV_UMP_EP_INFO_STATIC_BLOCKS 0x01
+#define SNDRV_UMP_EP_INFO_PROTO_MIDI_MASK 0x0300
+#define SNDRV_UMP_EP_INFO_PROTO_MIDI1 0x0100
+#define SNDRV_UMP_EP_INFO_PROTO_MIDI2 0x0200
+#define SNDRV_UMP_EP_INFO_PROTO_JRTS_MASK 0x0003
+#define SNDRV_UMP_EP_INFO_PROTO_JRTS_TX 0x0001
+#define SNDRV_UMP_EP_INFO_PROTO_JRTS_RX 0x0002
+struct snd_ump_endpoint_info {
+  int card;
+  int device;
+  unsigned int flags;
+  unsigned int protocol_caps;
+  unsigned int protocol;
+  unsigned int num_blocks;
+  unsigned short version;
+  unsigned short family_id;
+  unsigned short model_id;
+  unsigned int manufacturer_id;
+  unsigned char sw_revision[4];
+  unsigned short padding;
+  unsigned char name[128];
+  unsigned char product_id[128];
+  unsigned char reserved[32];
+} __attribute__((__packed__));
+#define SNDRV_UMP_DIR_INPUT 0x01
+#define SNDRV_UMP_DIR_OUTPUT 0x02
+#define SNDRV_UMP_DIR_BIDIRECTION 0x03
+#define SNDRV_UMP_BLOCK_IS_MIDI1 (1U << 0)
+#define SNDRV_UMP_BLOCK_IS_LOWSPEED (1U << 1)
+#define SNDRV_UMP_BLOCK_UI_HINT_UNKNOWN 0x00
+#define SNDRV_UMP_BLOCK_UI_HINT_RECEIVER 0x01
+#define SNDRV_UMP_BLOCK_UI_HINT_SENDER 0x02
+#define SNDRV_UMP_BLOCK_UI_HINT_BOTH 0x03
+#define SNDRV_UMP_MAX_GROUPS 16
+#define SNDRV_UMP_MAX_BLOCKS 32
+struct snd_ump_block_info {
+  int card;
+  int device;
+  unsigned char block_id;
+  unsigned char direction;
+  unsigned char active;
+  unsigned char first_group;
+  unsigned char num_groups;
+  unsigned char midi_ci_version;
+  unsigned char sysex8_streams;
+  unsigned char ui_hint;
+  unsigned int flags;
+  unsigned char name[128];
+  unsigned char reserved[32];
+} __attribute__((__packed__));
 #define SNDRV_RAWMIDI_IOCTL_PVERSION _IOR('W', 0x00, int)
 #define SNDRV_RAWMIDI_IOCTL_INFO _IOR('W', 0x01, struct snd_rawmidi_info)
 #define SNDRV_RAWMIDI_IOCTL_USER_PVERSION _IOW('W', 0x02, int)
@@ -629,6 +673,8 @@ struct snd_rawmidi_status {
 #define SNDRV_RAWMIDI_IOCTL_STATUS _IOWR('W', 0x20, struct snd_rawmidi_status)
 #define SNDRV_RAWMIDI_IOCTL_DROP _IOW('W', 0x30, int)
 #define SNDRV_RAWMIDI_IOCTL_DRAIN _IOW('W', 0x31, int)
+#define SNDRV_UMP_IOCTL_ENDPOINT_INFO _IOR('W', 0x40, struct snd_ump_endpoint_info)
+#define SNDRV_UMP_IOCTL_BLOCK_INFO _IOR('W', 0x41, struct snd_ump_block_info)
 #define SNDRV_TIMER_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 7)
 enum {
   SNDRV_TIMER_CLASS_NONE = - 1,
@@ -763,7 +809,7 @@ struct snd_timer_tread {
   unsigned int val;
   __time_pad pad2;
 };
-#define SNDRV_CTL_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 8)
+#define SNDRV_CTL_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 9)
 struct snd_ctl_card_info {
   int card;
   int pad;
@@ -776,22 +822,22 @@ struct snd_ctl_card_info {
   unsigned char components[128];
 };
 typedef int __bitwise snd_ctl_elem_type_t;
-#define SNDRV_CTL_ELEM_TYPE_NONE ((__force snd_ctl_elem_type_t) 0)
-#define SNDRV_CTL_ELEM_TYPE_BOOLEAN ((__force snd_ctl_elem_type_t) 1)
-#define SNDRV_CTL_ELEM_TYPE_INTEGER ((__force snd_ctl_elem_type_t) 2)
-#define SNDRV_CTL_ELEM_TYPE_ENUMERATED ((__force snd_ctl_elem_type_t) 3)
-#define SNDRV_CTL_ELEM_TYPE_BYTES ((__force snd_ctl_elem_type_t) 4)
-#define SNDRV_CTL_ELEM_TYPE_IEC958 ((__force snd_ctl_elem_type_t) 5)
-#define SNDRV_CTL_ELEM_TYPE_INTEGER64 ((__force snd_ctl_elem_type_t) 6)
+#define SNDRV_CTL_ELEM_TYPE_NONE (( snd_ctl_elem_type_t) 0)
+#define SNDRV_CTL_ELEM_TYPE_BOOLEAN (( snd_ctl_elem_type_t) 1)
+#define SNDRV_CTL_ELEM_TYPE_INTEGER (( snd_ctl_elem_type_t) 2)
+#define SNDRV_CTL_ELEM_TYPE_ENUMERATED (( snd_ctl_elem_type_t) 3)
+#define SNDRV_CTL_ELEM_TYPE_BYTES (( snd_ctl_elem_type_t) 4)
+#define SNDRV_CTL_ELEM_TYPE_IEC958 (( snd_ctl_elem_type_t) 5)
+#define SNDRV_CTL_ELEM_TYPE_INTEGER64 (( snd_ctl_elem_type_t) 6)
 #define SNDRV_CTL_ELEM_TYPE_LAST SNDRV_CTL_ELEM_TYPE_INTEGER64
 typedef int __bitwise snd_ctl_elem_iface_t;
-#define SNDRV_CTL_ELEM_IFACE_CARD ((__force snd_ctl_elem_iface_t) 0)
-#define SNDRV_CTL_ELEM_IFACE_HWDEP ((__force snd_ctl_elem_iface_t) 1)
-#define SNDRV_CTL_ELEM_IFACE_MIXER ((__force snd_ctl_elem_iface_t) 2)
-#define SNDRV_CTL_ELEM_IFACE_PCM ((__force snd_ctl_elem_iface_t) 3)
-#define SNDRV_CTL_ELEM_IFACE_RAWMIDI ((__force snd_ctl_elem_iface_t) 4)
-#define SNDRV_CTL_ELEM_IFACE_TIMER ((__force snd_ctl_elem_iface_t) 5)
-#define SNDRV_CTL_ELEM_IFACE_SEQUENCER ((__force snd_ctl_elem_iface_t) 6)
+#define SNDRV_CTL_ELEM_IFACE_CARD (( snd_ctl_elem_iface_t) 0)
+#define SNDRV_CTL_ELEM_IFACE_HWDEP (( snd_ctl_elem_iface_t) 1)
+#define SNDRV_CTL_ELEM_IFACE_MIXER (( snd_ctl_elem_iface_t) 2)
+#define SNDRV_CTL_ELEM_IFACE_PCM (( snd_ctl_elem_iface_t) 3)
+#define SNDRV_CTL_ELEM_IFACE_RAWMIDI (( snd_ctl_elem_iface_t) 4)
+#define SNDRV_CTL_ELEM_IFACE_TIMER (( snd_ctl_elem_iface_t) 5)
+#define SNDRV_CTL_ELEM_IFACE_SEQUENCER (( snd_ctl_elem_iface_t) 6)
 #define SNDRV_CTL_ELEM_IFACE_LAST SNDRV_CTL_ELEM_IFACE_SEQUENCER
 #define SNDRV_CTL_ELEM_ACCESS_READ (1 << 0)
 #define SNDRV_CTL_ELEM_ACCESS_WRITE (1 << 1)
@@ -826,7 +872,7 @@ struct snd_ctl_elem_list {
   unsigned int space;
   unsigned int used;
   unsigned int count;
-  struct snd_ctl_elem_id __user * pids;
+  struct snd_ctl_elem_id  * pids;
   unsigned char reserved[50];
 };
 struct snd_ctl_elem_info {
@@ -909,6 +955,9 @@ struct snd_ctl_tlv {
 #define SNDRV_CTL_IOCTL_RAWMIDI_NEXT_DEVICE _IOWR('U', 0x40, int)
 #define SNDRV_CTL_IOCTL_RAWMIDI_INFO _IOWR('U', 0x41, struct snd_rawmidi_info)
 #define SNDRV_CTL_IOCTL_RAWMIDI_PREFER_SUBDEVICE _IOW('U', 0x42, int)
+#define SNDRV_CTL_IOCTL_UMP_NEXT_DEVICE _IOWR('U', 0x43, int)
+#define SNDRV_CTL_IOCTL_UMP_ENDPOINT_INFO _IOWR('U', 0x44, struct snd_ump_endpoint_info)
+#define SNDRV_CTL_IOCTL_UMP_BLOCK_INFO _IOWR('U', 0x45, struct snd_ump_block_info)
 #define SNDRV_CTL_IOCTL_POWER _IOWR('U', 0xd0, int)
 #define SNDRV_CTL_IOCTL_POWER_STATE _IOR('U', 0xd1, int)
 enum sndrv_ctl_event_type {

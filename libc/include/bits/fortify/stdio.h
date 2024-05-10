@@ -30,29 +30,29 @@
 #error "Never include this file directly; instead, include <stdio.h>"
 #endif
 
-char* __fgets_chk(char*, int, FILE*, size_t) __INTRODUCED_IN(17);
-size_t __fread_chk(void*, size_t, size_t, FILE*, size_t) __INTRODUCED_IN(24);
-size_t __fwrite_chk(const void*, size_t, size_t, FILE*, size_t) __INTRODUCED_IN(24);
+char* _Nullable __fgets_chk(char* _Nonnull, int, FILE* _Nonnull, size_t);
+size_t __fread_chk(void* _Nonnull, size_t, size_t, FILE* _Nonnull, size_t) __INTRODUCED_IN(24);
+size_t __fwrite_chk(const void* _Nonnull, size_t, size_t, FILE* _Nonnull, size_t) __INTRODUCED_IN(24);
 
 #if defined(__BIONIC_FORTIFY) && !defined(__BIONIC_NO_STDIO_FORTIFY)
 
 #if __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
 /* No diag -- clang diagnoses misuses of this on its own.  */
 __BIONIC_FORTIFY_INLINE __printflike(3, 0)
-int vsnprintf(char* const __pass_object_size dest, size_t size, const char* format, va_list ap)
+int vsnprintf(char* const __BIONIC_COMPLICATED_NULLNESS __pass_object_size dest, size_t size, const char* _Nonnull format, va_list ap)
         __diagnose_as_builtin(__builtin_vsnprintf, 1, 2, 3, 4)
         __overloadable {
     return __builtin___vsnprintf_chk(dest, size, 0, __bos(dest), format, ap);
 }
 
 __BIONIC_FORTIFY_INLINE __printflike(2, 0)
-int vsprintf(char* const __pass_object_size dest, const char* format, va_list ap) __overloadable {
+int vsprintf(char* const __BIONIC_COMPLICATED_NULLNESS __pass_object_size dest, const char* _Nonnull format, va_list ap) __overloadable {
     return __builtin___vsprintf_chk(dest, 0, __bos(dest), format, ap);
 }
 #endif
 
 __BIONIC_ERROR_FUNCTION_VISIBILITY
-int sprintf(char* dest, const char* format)
+int sprintf(char* __BIONIC_COMPLICATED_NULLNESS dest, const char* _Nonnull format)
     __overloadable
     __enable_if(__bos_unevaluated_lt(__bos(dest), __builtin_strlen(format)),
                 "format string will always overflow destination buffer")
@@ -60,7 +60,7 @@ int sprintf(char* dest, const char* format)
 
 #if __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
 __BIONIC_FORTIFY_VARIADIC __printflike(2, 3)
-int sprintf(char* const __pass_object_size dest, const char* format, ...) __overloadable {
+int sprintf(char* const __BIONIC_COMPLICATED_NULLNESS __pass_object_size dest, const char* _Nonnull format, ...) __overloadable {
     va_list va;
     va_start(va, format);
     int result = __builtin___vsprintf_chk(dest, 0, __bos(dest), format, va);
@@ -70,7 +70,7 @@ int sprintf(char* const __pass_object_size dest, const char* format, ...) __over
 
 /* No diag -- clang diagnoses misuses of this on its own.  */
 __BIONIC_FORTIFY_VARIADIC __printflike(3, 4)
-int snprintf(char* const __pass_object_size dest, size_t size, const char* format, ...)
+int snprintf(char* const __BIONIC_COMPLICATED_NULLNESS __pass_object_size dest, size_t size, const char* _Nonnull format, ...)
         __diagnose_as_builtin(__builtin_snprintf, 1, 2, 3)
         __overloadable {
     va_list va;
@@ -86,7 +86,7 @@ int snprintf(char* const __pass_object_size dest, size_t size, const char* forma
                                !__unsafe_check_mul_overflow(size, count))
 
 __BIONIC_FORTIFY_INLINE
-size_t fread(void* const __pass_object_size0 buf, size_t size, size_t count, FILE* stream)
+size_t fread(void* const _Nonnull __pass_object_size0 buf, size_t size, size_t count, FILE* _Nonnull stream)
         __overloadable
         __clang_error_if(__unsafe_check_mul_overflow(size, count),
                          "in call to 'fread', size * count overflows")
@@ -103,7 +103,7 @@ size_t fread(void* const __pass_object_size0 buf, size_t size, size_t count, FIL
 }
 
 __BIONIC_FORTIFY_INLINE
-size_t fwrite(const void* const __pass_object_size0 buf, size_t size, size_t count, FILE* stream)
+size_t fwrite(const void* const _Nonnull __pass_object_size0 buf, size_t size, size_t count, FILE* _Nonnull stream)
         __overloadable
         __clang_error_if(__unsafe_check_mul_overflow(size, count),
                          "in call to 'fwrite', size * count overflows")
@@ -121,7 +121,7 @@ size_t fwrite(const void* const __pass_object_size0 buf, size_t size, size_t cou
 #undef __bos_trivially_ge_mul
 
 __BIONIC_FORTIFY_INLINE
-char* fgets(char* const __pass_object_size dest, int size, FILE* stream)
+char* _Nullable fgets(char* const _Nonnull __pass_object_size dest, int size, FILE* _Nonnull stream)
         __overloadable
         __clang_error_if(size < 0, "in call to 'fgets', size should not be negative")
         __clang_error_if(__bos_unevaluated_lt(__bos(dest), size),

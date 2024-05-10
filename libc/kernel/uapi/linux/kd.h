@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_LINUX_KD_H
 #define _UAPI_LINUX_KD_H
 #include <linux/types.h>
@@ -27,7 +15,7 @@
 struct consolefontdesc {
   unsigned short charcount;
   unsigned short charheight;
-  char __user * chardata;
+  char  * chardata;
 };
 #define PIO_FONTRESET 0x4B6D
 #define GIO_CMAP 0x4B70
@@ -68,7 +56,7 @@ struct unipair {
 };
 struct unimapdesc {
   unsigned short entry_ct;
-  struct unipair __user * entries;
+  struct unipair  * entries;
 };
 #define PIO_UNIMAP 0x4B67
 #define PIO_UNIMAPCLR 0x4B68
@@ -147,7 +135,7 @@ struct console_font_op {
   unsigned int flags;
   unsigned int width, height;
   unsigned int charcount;
-  unsigned char __user * data;
+  unsigned char  * data;
 };
 struct console_font {
   unsigned int width, height;
@@ -158,5 +146,7 @@ struct console_font {
 #define KD_FONT_OP_GET 1
 #define KD_FONT_OP_SET_DEFAULT 2
 #define KD_FONT_OP_COPY 3
+#define KD_FONT_OP_SET_TALL 4
+#define KD_FONT_OP_GET_TALL 5
 #define KD_FONT_FLAG_DONT_RECALC 1
 #endif

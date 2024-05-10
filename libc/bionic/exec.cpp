@@ -186,6 +186,5 @@ int fexecve(int fd, char* const* argv, char* const* envp) {
 
 __attribute__((no_sanitize("memtag"))) int execve(const char* pathname, char* const* argv,
                                                   char* const* envp) {
-  __get_thread()->vfork_child_stack_bottom = __builtin_frame_address(0);
   return __execve(pathname, argv, envp);
 }

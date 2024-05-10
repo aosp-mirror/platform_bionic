@@ -37,7 +37,7 @@
 
 __BEGIN_DECLS
 
-#if defined(__USE_BSD)
+#if defined(__USE_BSD) || defined(__USE_GNU)
 #include <strings.h>
 #endif
 
@@ -76,7 +76,7 @@ void* _Nonnull memset_explicit(void* _Nonnull __dst, int __ch, size_t __n) __INT
 void* _Nullable memmem(const void* _Nonnull __haystack, size_t __haystack_size, const void* _Nonnull __needle, size_t __needle_size) __attribute_pure__;
 
 char* _Nullable strchr(const char* _Nonnull __s, int __ch) __attribute_pure__;
-char* _Nullable __strchr_chk(const char* _Nonnull __s, int __ch, size_t __n) __INTRODUCED_IN(18);
+char* _Nullable __strchr_chk(const char* _Nonnull __s, int __ch, size_t __n);
 #if defined(__USE_GNU)
 #if defined(__cplusplus)
 extern "C++" char* _Nonnull strchrnul(char* _Nonnull __s, int __ch) __RENAME(strchrnul) __attribute_pure__ __INTRODUCED_IN(24);
@@ -87,13 +87,13 @@ char* _Nonnull strchrnul(const char* _Nonnull __s, int __ch) __attribute_pure__ 
 #endif
 
 char* _Nullable strrchr(const char* _Nonnull __s, int __ch) __attribute_pure__;
-char* _Nullable __strrchr_chk(const char* _Nonnull __s, int __ch, size_t __n) __INTRODUCED_IN(18);
+char* _Nullable __strrchr_chk(const char* _Nonnull __s, int __ch, size_t __n);
 
 size_t strlen(const char* _Nonnull __s) __attribute_pure__;
-size_t __strlen_chk(const char* _Nonnull __s, size_t __n) __INTRODUCED_IN(17);
+size_t __strlen_chk(const char* _Nonnull __s, size_t __n);
 
 int strcmp(const char* _Nonnull __lhs, const char* _Nonnull __rhs) __attribute_pure__;
-char* _Nonnull stpcpy(char* _Nonnull __dst, const char* _Nonnull __src) __INTRODUCED_IN(21);
+char* _Nonnull stpcpy(char* _Nonnull __dst, const char* _Nonnull __src);
 char* _Nonnull strcpy(char* _Nonnull __dst, const char* _Nonnull __src);
 char* _Nonnull strcat(char* _Nonnull __dst, const char* _Nonnull __src);
 char* _Nullable strdup(const char* _Nonnull __s);
@@ -116,11 +116,38 @@ char* _Nonnull strerror_r(int __errno_value, char* _Nullable __buf, size_t __n) 
 int strerror_r(int __errno_value, char* _Nonnull __buf, size_t __n);
 #endif
 
+/**
+ * [strerrorname_np(3)](http://man7.org/linux/man-pages/man3/strerrordesc_np.3.html)
+ * returns the name of the errno constant corresponding to its argument.
+ * `strerrorname_np(38)` would return "ENOSYS", because `ENOSYS` is errno 38. This
+ * is mostly useful for error reporting in cases where a string like "ENOSYS" is
+ * more readable than a string like "Function not implemented", which would be
+ * returned by strerror().
+ *
+ * Returns a pointer to a string, or null for unknown errno values.
+ *
+ * Available since API level 35.
+ */
+#if defined(__USE_GNU)
+const char* _Nullable strerrorname_np(int __errno_value) __INTRODUCED_IN(35);
+#endif
+
+/**
+ * [strerrordesc_np(3)](http://man7.org/linux/man-pages/man3/strerrordesc_np.3.html)
+ * is like strerror() but without localization. Since Android's strerror()
+ * does not localize, this is the same as strerror() on Android.
+ *
+ * Returns a pointer to a string.
+ */
+#if defined(__USE_GNU)
+const char* _Nonnull strerrordesc_np(int __errno_value) __RENAME(strerror);
+#endif
+
 size_t strnlen(const char* _Nonnull __s, size_t __n) __attribute_pure__;
 char* _Nonnull strncat(char* _Nonnull __dst, const char* _Nonnull __src, size_t __n);
 char* _Nullable strndup(const char* _Nonnull __s, size_t __n);
 int strncmp(const char* _Nonnull __lhs, const char* _Nonnull __rhs, size_t __n) __attribute_pure__;
-char* _Nonnull stpncpy(char* _Nonnull __dst, const char* _Nonnull __src, size_t __n) __INTRODUCED_IN(21);
+char* _Nonnull stpncpy(char* _Nonnull __dst, const char* _Nonnull __src, size_t __n);
 char* _Nonnull strncpy(char* _Nonnull __dst, const char* _Nonnull __src, size_t __n);
 
 size_t strlcat(char* _Nonnull __dst, const char* _Nonnull __src, size_t __n);
@@ -136,8 +163,8 @@ char* _Nonnull strsignal(int __signal);
 int strcoll(const char* _Nonnull __lhs, const char* _Nonnull __rhs) __attribute_pure__;
 size_t strxfrm(char* __BIONIC_COMPLICATED_NULLNESS __dst, const char* _Nonnull __src, size_t __n);
 
-int strcoll_l(const char* _Nonnull __lhs, const char* _Nonnull __rhs, locale_t _Nonnull __l) __attribute_pure__ __INTRODUCED_IN(21);
-size_t strxfrm_l(char* __BIONIC_COMPLICATED_NULLNESS __dst, const char* _Nonnull __src, size_t __n, locale_t _Nonnull __l) __INTRODUCED_IN(21);
+int strcoll_l(const char* _Nonnull __lhs, const char* _Nonnull __rhs, locale_t _Nonnull __l) __attribute_pure__;
+size_t strxfrm_l(char* __BIONIC_COMPLICATED_NULLNESS __dst, const char* _Nonnull __src, size_t __n, locale_t _Nonnull __l);
 
 #if defined(__USE_GNU) && !defined(basename)
 /*

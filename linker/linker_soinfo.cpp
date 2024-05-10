@@ -211,11 +211,8 @@ const ElfW(Sym)* soinfo_do_lookup(const char* name, const version_info* vi,
       soinfo_do_lookup_impl<false>(name, vi, si_found_in, lookup_list);
 }
 
-soinfo::soinfo(android_namespace_t* ns, const char* realpath,
-               const struct stat* file_stat, off64_t file_offset,
-               int rtld_flags) {
-  memset(this, 0, sizeof(*this));
-
+soinfo::soinfo(android_namespace_t* ns, const char* realpath, const struct stat* file_stat,
+               off64_t file_offset, int rtld_flags) {
   if (realpath != nullptr) {
     realpath_ = realpath;
   }
@@ -506,15 +503,13 @@ static inline void call_array(const char* array_name __unused, F* functions, siz
 }
 
 void soinfo::call_pre_init_constructors() {
-  if (g_is_ldd) return;
-
   // DT_PREINIT_ARRAY functions are called before any other constructors for executables,
   // but ignored in a shared library.
   call_array("DT_PREINIT_ARRAY", preinit_array_, preinit_array_count_, false, get_realpath());
 }
 
 void soinfo::call_constructors() {
-  if (constructors_called || g_is_ldd) {
+  if (constructors_called) {
     return;
   }
 

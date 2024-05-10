@@ -39,6 +39,7 @@
 #include <linux/types.h>
 #include <linux/compiler.h>
 
+#include <bits/sockaddr_storage.h>
 #include <bits/sa_family_t.h>
 
 __BEGIN_DECLS
@@ -70,15 +71,8 @@ struct sockaddr {
   char sa_data[14];
 };
 
-struct sockaddr_storage {
-  union {
-    struct {
-      sa_family_t ss_family;
-      char __data[128 - sizeof(sa_family_t)];
-    };
-    void* __align;
-  };
-};
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnullability-completeness"
 
 struct linger {
   int l_onoff;
@@ -106,6 +100,8 @@ struct cmsghdr {
   int cmsg_type;
 };
 
+#pragma clang diagnostic pop
+
 #define CMSG_NXTHDR(mhdr, cmsg) __cmsg_nxthdr((mhdr), (cmsg))
 #define CMSG_ALIGN(len) ( ((len)+sizeof(long)-1) & ~(sizeof(long)-1) )
 #define CMSG_DATA(cmsg) (((unsigned char*)(cmsg) + CMSG_ALIGN(sizeof(struct cmsghdr))))
@@ -116,7 +112,7 @@ struct cmsghdr {
    ? (struct cmsghdr*) (msg)->msg_control : (struct cmsghdr*) NULL)
 #define CMSG_OK(mhdr, cmsg) ((cmsg)->cmsg_len >= sizeof(struct cmsghdr) &&   (cmsg)->cmsg_len <= (unsigned long)   ((mhdr)->msg_controllen -   ((char*)(cmsg) - (char*)(mhdr)->msg_control)))
 
-struct cmsghdr* __cmsg_nxthdr(struct msghdr* __msg, struct cmsghdr* __cmsg) __INTRODUCED_IN(21);
+struct cmsghdr* _Nullable __cmsg_nxthdr(struct msghdr* _Nonnull __msg, struct cmsghdr* _Nonnull __cmsg);
 
 #define SCM_RIGHTS 0x01
 #define SCM_CREDENTIALS 0x02
@@ -287,29 +283,28 @@ struct ucred {
 # define __socketcall extern
 #endif
 
-__socketcall int accept(int __fd, struct sockaddr* __addr, socklen_t* __addr_length);
-__socketcall int accept4(int __fd, struct sockaddr* __addr, socklen_t* __addr_length, int __flags) __INTRODUCED_IN(21);
-__socketcall int bind(int __fd, const struct sockaddr* __addr, socklen_t __addr_length);
-__socketcall int connect(int __fd, const struct sockaddr* __addr, socklen_t __addr_length);
-__socketcall int getpeername(int __fd, struct sockaddr* __addr, socklen_t* __addr_length);
-__socketcall int getsockname(int __fd, struct sockaddr* __addr, socklen_t* __addr_length);
-__socketcall int getsockopt(int __fd, int __level, int __option, void* __value, socklen_t* __value_length);
+__socketcall int accept(int __fd, struct sockaddr* _Nullable __addr, socklen_t* _Nullable __addr_length);
+__socketcall int accept4(int __fd, struct sockaddr* _Nullable __addr, socklen_t* _Nullable __addr_length, int __flags);
+__socketcall int bind(int __fd, const struct sockaddr* _Nonnull __addr, socklen_t __addr_length);
+__socketcall int connect(int __fd, const struct sockaddr* _Nonnull __addr, socklen_t __addr_length);
+__socketcall int getpeername(int __fd, struct sockaddr* _Nonnull __addr, socklen_t* _Nonnull __addr_length);
+__socketcall int getsockname(int __fd, struct sockaddr* _Nonnull __addr, socklen_t* _Nonnull __addr_length);
+__socketcall int getsockopt(int __fd, int __level, int __option, void* _Nullable __value, socklen_t* _Nonnull __value_length);
 __socketcall int listen(int __fd, int __backlog);
-__socketcall int recvmmsg(int __fd, struct mmsghdr* __msgs, unsigned int __msg_count, int __flags, const struct timespec* __timeout)
-  __INTRODUCED_IN(21);
-__socketcall ssize_t recvmsg(int __fd, struct msghdr* __msg, int __flags);
-__socketcall int sendmmsg(int __fd, const struct mmsghdr* __msgs, unsigned int __msg_count, int __flags) __INTRODUCED_IN(21);
-__socketcall ssize_t sendmsg(int __fd, const struct msghdr* __msg, int __flags);
-__socketcall int setsockopt(int __fd, int __level, int __option, const void* __value, socklen_t __value_length);
+__socketcall int recvmmsg(int __fd, struct mmsghdr* _Nonnull __msgs, unsigned int __msg_count, int __flags, const struct timespec* _Nullable __timeout);
+__socketcall ssize_t recvmsg(int __fd, struct msghdr* _Nonnull __msg, int __flags);
+__socketcall int sendmmsg(int __fd, const struct mmsghdr* _Nonnull __msgs, unsigned int __msg_count, int __flags);
+__socketcall ssize_t sendmsg(int __fd, const struct msghdr* _Nonnull __msg, int __flags);
+__socketcall int setsockopt(int __fd, int __level, int __option, const void* _Nullable __value, socklen_t __value_length);
 __socketcall int shutdown(int __fd, int __how);
 __socketcall int socket(int __af, int __type, int __protocol);
-__socketcall int socketpair(int __af, int __type, int __protocol, int __fds[2]);
+__socketcall int socketpair(int __af, int __type, int __protocol, int __fds[_Nonnull 2]);
 
-ssize_t recv(int __fd, void* __buf, size_t __n, int __flags);
-ssize_t send(int __fd, const void* __buf, size_t __n, int __flags);
+ssize_t recv(int __fd, void* _Nullable __buf, size_t __n, int __flags);
+ssize_t send(int __fd, const void* _Nonnull __buf, size_t __n, int __flags);
 
-__socketcall ssize_t sendto(int __fd, const void* __buf, size_t __n, int __flags, const struct sockaddr* __dst_addr, socklen_t __dst_addr_length);
-__socketcall ssize_t recvfrom(int __fd, void* __buf, size_t __n, int __flags, struct sockaddr* __src_addr, socklen_t* __src_addr_length);
+__socketcall ssize_t sendto(int __fd, const void* _Nonnull __buf, size_t __n, int __flags, const struct sockaddr* _Nullable __dst_addr, socklen_t __dst_addr_length);
+__socketcall ssize_t recvfrom(int __fd, void* _Nullable __buf, size_t __n, int __flags, struct sockaddr* _Nullable __src_addr, socklen_t* _Nullable __src_addr_length);
 
 #if defined(__BIONIC_INCLUDE_FORTIFY_HEADERS)
 #include <bits/fortify/socket.h>

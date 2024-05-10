@@ -52,7 +52,7 @@ static void Gather(uint64_t* rss_bytes) {
         android::base::StartsWith(vma.name, "[anon:GWP-ASan")) {
       android::meminfo::Vma update_vma(vma);
       if (!proc_mem.FillInVmaStats(update_vma)) {
-        err(1, "FillInVmaStats failed\n");
+        err(1, "FillInVmaStats failed");
       }
       *rss_bytes += update_vma.usage.rss;
     }
@@ -69,7 +69,7 @@ static void MapBenchmark(benchmark::State& state, size_t num_elements) {
   for (auto _ : state) {
 #if defined(__BIONIC__)
     state.PauseTiming();
-    mallopt(M_PURGE, 0);
+    mallopt(M_PURGE_ALL, 0);
     uint64_t rss_bytes_before = 0;
     Gather(&rss_bytes_before);
     state.ResumeTiming();
@@ -80,7 +80,7 @@ static void MapBenchmark(benchmark::State& state, size_t num_elements) {
     }
 #if defined(__BIONIC__)
     state.PauseTiming();
-    mallopt(M_PURGE, 0);
+    mallopt(M_PURGE_ALL, 0);
     Gather(&rss_bytes);
     // Try and record only the memory used in the map.
     rss_bytes -= rss_bytes_before;

@@ -36,22 +36,23 @@
 #include <sys/cdefs.h>
 #include <sys/ipc.h>
 #include <sys/types.h>
+#include <unistd.h>
 
 #include <linux/shm.h>
 
 #define shmid_ds shmid64_ds
-#define SHMLBA 4096
+#define SHMLBA getpagesize()
 
 __BEGIN_DECLS
 
 typedef unsigned long shmatt_t;
 
 /** Not useful on Android; disallowed by SELinux. */
-void* shmat(int __shm_id, const void* __addr, int __flags) __INTRODUCED_IN(26);
+void* _Nonnull shmat(int __shm_id, const void* _Nullable __addr, int __flags) __INTRODUCED_IN(26);
 /** Not useful on Android; disallowed by SELinux. */
-int shmctl(int __shm_id, int __cmd, struct shmid_ds* __buf) __INTRODUCED_IN(26);
+int shmctl(int __shm_id, int __op, struct shmid_ds* _Nullable __buf) __INTRODUCED_IN(26);
 /** Not useful on Android; disallowed by SELinux. */
-int shmdt(const void* __addr) __INTRODUCED_IN(26);
+int shmdt(const void* _Nonnull __addr) __INTRODUCED_IN(26);
 /** Not useful on Android; disallowed by SELinux. */
 int shmget(key_t __key, size_t __size, int __flags) __INTRODUCED_IN(26);
 

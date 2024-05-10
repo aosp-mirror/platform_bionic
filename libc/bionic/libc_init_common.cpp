@@ -56,7 +56,8 @@ extern "C" int __system_properties_init(void);
 extern "C" void scudo_malloc_set_zero_contents(int);
 extern "C" void scudo_malloc_set_pattern_fill_contents(int);
 
-__LIBC_HIDDEN__ WriteProtected<libc_globals> __libc_globals;
+__LIBC_HIDDEN__ constinit WriteProtected<libc_globals> __libc_globals;
+__LIBC_HIDDEN__ constinit _Atomic(bool) __libc_memtag_stack;
 
 // Not public, but well-known in the BSDs.
 __BIONIC_WEAK_VARIABLE_FOR_NATIVE_BRIDGE
@@ -95,7 +96,7 @@ void __libc_init_scudo() {
   SetDefaultHeapTaggingLevel();
 
 // TODO(b/158870657) make this unconditional when all devices support SCUDO.
-#if defined(USE_SCUDO)
+#if defined(USE_SCUDO) && !__has_feature(hwaddress_sanitizer)
 #if defined(SCUDO_PATTERN_FILL_CONTENTS)
   scudo_malloc_set_pattern_fill_contents(1);
 #elif defined(SCUDO_ZERO_CONTENTS)
@@ -181,12 +182,12 @@ void __libc_init_fork_handler() {
 extern "C" void scudo_malloc_set_add_large_allocation_slack(int add_slack);
 
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE void __libc_set_target_sdk_version(int target __unused) {
-#if defined(USE_SCUDO)
+#if defined(USE_SCUDO) && !__has_feature(hwaddress_sanitizer)
   scudo_malloc_set_add_large_allocation_slack(target < __ANDROID_API_S__);
 #endif
 }
 
-__noreturn static void __early_abort(int line) {
+__noreturn static void __early_abort(size_t line) {
   // We can't write to stdout or stderr because we're aborting before we've checked that
   // it's safe for us to use those file descriptors. We probably can't strace either, so
   // we rely on the fact that if we dereference a low address, either debuggerd or the
@@ -289,6 +290,7 @@ static bool __is_unsafe_environment_variable(const char* name) {
       "LD_DEBUG",
       "LD_DEBUG_OUTPUT",
       "LD_DYNAMIC_WEAK",
+      "LD_HWASAN",
       "LD_LIBRARY_PATH",
       "LD_ORIGIN_PATH",
       "LD_PRELOAD",
@@ -339,11 +341,11 @@ static void __initialize_personality() {
 #if !defined(__LP64__)
   int old_value = personality(0xffffffff);
   if (old_value == -1) {
-    async_safe_fatal("error getting old personality value: %s", strerror(errno));
+    async_safe_fatal("error getting old personality value: %m");
   }
 
   if (personality((static_cast<unsigned int>(old_value) & ~PER_MASK) | PER_LINUX32) == -1) {
-    async_safe_fatal("error setting PER_LINUX32 personality: %s", strerror(errno));
+    async_safe_fatal("error setting PER_LINUX32 personality: %m");
   }
 #endif
 }

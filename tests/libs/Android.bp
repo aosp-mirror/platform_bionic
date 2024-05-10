@@ -15,6 +15,7 @@
 //
 
 package {
+    default_team: "trendy_team_native_tools_libraries",
     default_applicable_licenses: ["bionic_tests_license"],
 }
 
@@ -29,11 +30,11 @@ cc_defaults {
         "-Wl,--rpath,${ORIGIN}",
         "-Wl,--enable-new-dtags",
     ],
+    static_libs: ["libbase"],
     relative_install_path: "bionic-loader-test-libs",
     gtest: false,
     sanitize: {
         address: false,
-        fuzzer: false,
     },
     stl: "libc++_static",
     target: {
@@ -53,14 +54,12 @@ cc_test_library {
     name: "libtest_elftls_shared_var",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["elftls_shared_var.cpp"],
-    cflags: ["-fno-emulated-tls"],
 }
 
 cc_test_library {
     name: "libtest_elftls_shared_var_ie",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["elftls_shared_var_ie.cpp"],
-    cflags: ["-fno-emulated-tls"],
     shared_libs: ["libtest_elftls_shared_var"],
 }
 
@@ -68,7 +67,6 @@ cc_test_library {
     name: "libtest_elftls_tprel",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["elftls_tprel.cpp"],
-    cflags: ["-fno-emulated-tls"],
 }
 
 cc_test {
@@ -82,32 +80,27 @@ cc_test_library {
     name: "libtest_elftls_dynamic",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["elftls_dynamic.cpp"],
-    cflags: ["-fno-emulated-tls"],
     shared_libs: ["libtest_elftls_shared_var"],
 }
 
 cc_test {
-   name: "thread_exit_cb_helper",
-   defaults: ["bionic_testlib_defaults"],
-   srcs: ["thread_exit_cb_helper.cpp"],
-   cflags: ["-fno-emulated-tls"],
+    name: "thread_exit_cb_helper",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["thread_exit_cb_helper.cpp"],
 }
 
 cc_test {
-   name: "tls_properties_helper",
-   defaults: ["bionic_testlib_defaults"],
-   srcs: ["tls_properties_helper.cpp"],
-   cflags: ["-fno-emulated-tls"],
-   shared_libs: ["libtest_elftls_shared_var"],
+    name: "tls_properties_helper",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["tls_properties_helper.cpp"],
+    shared_libs: ["libtest_elftls_shared_var"],
 }
-
 
 cc_test_library {
     name: "libtest_elftls_dynamic_filler_1",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["elftls_dynamic_filler.cpp"],
     cflags: [
-        "-fno-emulated-tls",
         "-DTLS_FILLER=100",
     ],
 }
@@ -117,7 +110,6 @@ cc_test_library {
     defaults: ["bionic_testlib_defaults"],
     srcs: ["elftls_dynamic_filler.cpp"],
     cflags: [
-        "-fno-emulated-tls",
         "-DTLS_FILLER=200",
     ],
 }
@@ -127,9 +119,55 @@ cc_test_library {
     defaults: ["bionic_testlib_defaults"],
     srcs: ["elftls_dynamic_filler.cpp"],
     cflags: [
-        "-fno-emulated-tls",
         "-DTLS_FILLER=300",
     ],
+}
+
+cc_test_library {
+    name: "libtest_elftls_dynamic_filler_4",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["elftls_dynamic_filler.cpp"],
+    cflags: [
+        "-DTLS_FILLER=400",
+    ],
+}
+
+cc_test_library {
+    name: "libtest_elftls_dynamic_filler_5",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["elftls_dynamic_filler.cpp"],
+    cflags: [
+        "-DTLS_FILLER=500",
+    ],
+}
+
+cc_test {
+    name: "elftls_dtv_resize_helper",
+    defaults: [
+        "bionic_testlib_defaults",
+        "bionic_targets_only",
+    ],
+    srcs: ["elftls_dtv_resize_helper.cpp"],
+    include_dirs: [
+        "bionic/libc",
+    ],
+    static_libs: [
+        "libbase",
+    ],
+}
+
+cc_test {
+    name: "elftls_align_test_helper",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["elftls_align_test_helper.cpp"],
+    stl: "none", // avoid including extra TLS variables in the executable
+}
+
+cc_test {
+    name: "elftls_skew_align_test_helper",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["elftls_skew_align_test_helper.cpp"],
+    stl: "none", // avoid including extra TLS variables in the executable
 }
 
 // -----------------------------------------------------------------------------
@@ -240,6 +278,93 @@ cc_test_library {
     name: "libtest_simple",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlopen_testlib_simple.cpp"],
+}
+
+// -----------------------------------------------------------------------------
+// Libraries and binaries used by memtag_stack_dlopen_test tests
+// -----------------------------------------------------------------------------
+cc_test_library {
+    name: "libtest_simple_memtag_stack",
+    sanitize: {
+        memtag_stack: true,
+    },
+    srcs: ["dlopen_testlib_simple.cpp"],
+}
+
+cc_test_library {
+    name: "libtest_depends_on_simple_memtag_stack",
+    sanitize: {
+        memtag_stack: false,
+    },
+    shared_libs: [
+        "libtest_simple_memtag_stack",
+    ],
+    srcs: ["dlopen_testlib_depends_on_simple.cpp"],
+}
+
+cc_binary {
+    name: "testbinary_is_stack_mte_after_dlopen",
+    sanitize: {
+        memtag_stack: false,
+        memtag_heap: true,
+    },
+    srcs: ["testbinary_is_stack_mte_after_dlopen.cpp"],
+}
+
+cc_binary {
+    name: "testbinary_depends_on_simple_memtag_stack",
+    sanitize: {
+        memtag_stack: false,
+        memtag_heap: true,
+    },
+    shared_libs: [
+        "libtest_simple_memtag_stack",
+    ],
+    srcs: ["testbinary_is_stack_mte.cpp"],
+}
+
+cc_binary {
+    name: "testbinary_depends_on_depends_on_simple_memtag_stack",
+    sanitize: {
+        memtag_stack: false,
+        memtag_heap: true,
+    },
+    shared_libs: [
+        "libtest_depends_on_simple_memtag_stack",
+    ],
+    srcs: ["testbinary_is_stack_mte.cpp"],
+}
+
+// -----------------------------------------------------------------------------
+// Libraries used by hwasan_test
+// -----------------------------------------------------------------------------
+cc_test_library {
+    name: "libtest_simple_hwasan",
+    arch: {
+        arm64: {
+            enabled: true,
+        },
+    },
+    sanitize: {
+        hwaddress: true,
+    },
+    relative_install_path: "hwasan",
+    enabled: false,
+    srcs: ["dlopen_testlib_simple_hwasan.cpp"],
+}
+
+cc_test_library {
+    // A weird name. This is the vanilla (non-HWASan) copy of the library that
+    // is used for the hwasan test.
+    name: "libtest_simple_hwasan_nohwasan",
+    arch: {
+        arm64: {
+            enabled: true,
+        },
+    },
+    stem: "libtest_simple_hwasan",
+    enabled: false,
+    srcs: ["dlopen_testlib_simple_hwasan.cpp"],
 }
 
 // -----------------------------------------------------------------------------
@@ -613,7 +738,6 @@ cc_test_library {
     ],
     sanitize: {
         address: false,
-        fuzzer: false,
     },
     stl: "libc++_static",
     target: {
@@ -1470,7 +1594,7 @@ cc_test_library {
     shared_libs: ["ld_config_test_helper_lib2"],
     relative_install_path: "bionic-loader-test-libs/ns2",
     // Mark the library DF_1_GLOBAL so it is added to every linker namespace.
-    ldflags: ["-Wl,-z,global"]
+    ldflags: ["-Wl,-z,global"],
 }
 
 cc_test_library {
@@ -1518,7 +1642,6 @@ cc_test_library {
     defaults: ["bionic_testlib_defaults"],
     srcs: ["segment_gap_inner.cpp"],
 }
-
 
 // -----------------------------------------------------------------------------
 // Check that we support all kinds of relocations: regular, "relocation packer",
@@ -1568,121 +1691,153 @@ cc_test_library {
 }
 
 cc_defaults {
-  name: "bionic_targets_only",
-  enabled: false,
-  target: {
-     android: {
-       enabled: true,
-     },
-     linux_bionic: {
-       enabled: true,
-     },
-   },
+    name: "bionic_targets_only",
+    enabled: false,
+    target: {
+        android: {
+            enabled: true,
+        },
+        linux_bionic: {
+            enabled: true,
+        },
+    },
 }
 
 cc_test {
-   name: "heap_tagging_sync_helper",
-   defaults: ["bionic_testlib_defaults", "bionic_targets_only"],
-   srcs: ["heap_tagging_helper.cpp"],
-   sanitize: {
-     memtag_heap: true,
-     diag: {
-       memtag_heap: true,
-     },
-   },
+    name: "heap_tagging_sync_helper",
+    defaults: [
+        "bionic_testlib_defaults",
+        "bionic_targets_only",
+    ],
+    srcs: ["heap_tagging_helper.cpp"],
+    sanitize: {
+        memtag_heap: true,
+        diag: {
+            memtag_heap: true,
+        },
+        hwaddress: false,
+    },
 }
 
 cc_test {
-   name: "heap_tagging_async_helper",
-   defaults: ["bionic_testlib_defaults", "bionic_targets_only"],
-   srcs: ["heap_tagging_helper.cpp"],
-   sanitize: {
-     memtag_heap: true,
-     diag: {
-       memtag_heap: false,
-     },
-   },
+    name: "heap_tagging_async_helper",
+    defaults: [
+        "bionic_testlib_defaults",
+        "bionic_targets_only",
+    ],
+    srcs: ["heap_tagging_helper.cpp"],
+    sanitize: {
+        memtag_heap: true,
+        diag: {
+            memtag_heap: false,
+        },
+        hwaddress: false,
+    },
 }
 
 cc_test {
-   name: "heap_tagging_disabled_helper",
-   defaults: ["bionic_testlib_defaults", "bionic_targets_only"],
-   srcs: ["heap_tagging_helper.cpp"],
-   sanitize: {
-     memtag_heap: false,
-   },
+    name: "heap_tagging_disabled_helper",
+    defaults: [
+        "bionic_testlib_defaults",
+        "bionic_targets_only",
+    ],
+    srcs: ["heap_tagging_helper.cpp"],
+    sanitize: {
+        memtag_heap: false,
+        hwaddress: false,
+    },
 }
 
 cc_test {
-   name: "heap_tagging_static_sync_helper",
-   defaults: ["bionic_testlib_defaults", "bionic_targets_only"],
-   srcs: ["heap_tagging_helper.cpp"],
-   static_executable: true,
-   sanitize: {
-     memtag_heap: true,
-     diag: {
-       memtag_heap: true,
-     },
-   },
+    name: "heap_tagging_static_sync_helper",
+    defaults: [
+        "bionic_testlib_defaults",
+        "bionic_targets_only",
+    ],
+    srcs: ["heap_tagging_helper.cpp"],
+    static_executable: true,
+    sanitize: {
+        memtag_heap: true,
+        diag: {
+            memtag_heap: true,
+        },
+        hwaddress: false,
+    },
 }
 
 cc_test {
-   name: "heap_tagging_static_async_helper",
-   defaults: ["bionic_testlib_defaults", "bionic_targets_only"],
-   srcs: ["heap_tagging_helper.cpp"],
-   static_executable: true,
-   sanitize: {
-     memtag_heap: true,
-     diag: {
-       memtag_heap: false,
-     },
-   },
+    name: "heap_tagging_static_async_helper",
+    defaults: [
+        "bionic_testlib_defaults",
+        "bionic_targets_only",
+    ],
+    srcs: ["heap_tagging_helper.cpp"],
+    static_executable: true,
+    sanitize: {
+        memtag_heap: true,
+        diag: {
+            memtag_heap: false,
+        },
+        hwaddress: false,
+    },
 }
 
 cc_test {
-   name: "heap_tagging_static_disabled_helper",
-   defaults: ["bionic_testlib_defaults", "bionic_targets_only"],
-   srcs: ["heap_tagging_helper.cpp"],
-   static_executable: true,
-   sanitize: {
-     memtag_heap: false,
-   },
+    name: "heap_tagging_static_disabled_helper",
+    defaults: [
+        "bionic_testlib_defaults",
+        "bionic_targets_only",
+    ],
+    srcs: ["heap_tagging_helper.cpp"],
+    static_executable: true,
+    sanitize: {
+        memtag_heap: false,
+        hwaddress: false,
+    },
 }
 
 cc_test {
-   name: "stack_tagging_helper",
-   defaults: ["bionic_testlib_defaults", "bionic_targets_only"],
-   srcs: ["stack_tagging_helper.cpp"],
-   sanitize: {
-     memtag_heap: true,
-     memtag_stack: true,
-     diag: {
-       memtag_heap: true,
-     },
-   },
-   header_libs: ["bionic_libc_platform_headers"],
-   cflags: ["-fexceptions"],
+    name: "stack_tagging_helper",
+    defaults: [
+        "bionic_testlib_defaults",
+        "bionic_targets_only",
+    ],
+    srcs: ["stack_tagging_helper.cpp"],
+    sanitize: {
+        memtag_heap: true,
+        memtag_stack: true,
+        diag: {
+            memtag_heap: true,
+        },
+        hwaddress: false,
+    },
+    header_libs: ["bionic_libc_platform_headers"],
+    cflags: ["-fexceptions"],
 }
 
 cc_test {
-   name: "stack_tagging_static_helper",
-   defaults: ["bionic_testlib_defaults", "bionic_targets_only"],
-   srcs: ["stack_tagging_helper.cpp"],
-   static_executable: true,
-   sanitize: {
-     memtag_heap: true,
-     memtag_stack: true,
-     diag: {
-       memtag_heap: true,
-     },
-   },
-   header_libs: ["bionic_libc_platform_headers"],
-   cflags: ["-fexceptions"],
+    name: "stack_tagging_static_helper",
+    defaults: [
+        "bionic_testlib_defaults",
+        "bionic_targets_only",
+    ],
+    srcs: ["stack_tagging_helper.cpp"],
+    static_executable: true,
+    sanitize: {
+        memtag_heap: true,
+        memtag_stack: true,
+        diag: {
+            memtag_heap: true,
+        },
+        hwaddress: false,
+    },
+    header_libs: ["bionic_libc_platform_headers"],
+    cflags: ["-fexceptions"],
 }
 
 cc_genrule {
     name: "libdlext_test_zip_zipaligned",
-     out: ["bionic-loader-test-libs/libdlext_test_zip/libdlext_test_zip_zipaligned.zip"],
+    out: ["bionic-loader-test-libs/libdlext_test_zip/libdlext_test_zip_zipaligned.zip"],
     tools: [
         "soong_zip",
         "bionic_tests_zipalign",
@@ -1699,10 +1854,6 @@ cc_genrule {
         " $(location soong_zip) -o $(out).unaligned -L 0 -C $(genDir)/zipdir -D $(genDir)/zipdir &&" +
         " $(location bionic_tests_zipalign) 4096 $(out).unaligned $(out)",
 
-    bazel_module: {
-        // Depends on soong_zip, which is not available yet.
-        bp2build_available: false
-    },
 }
 
 cc_genrule {
@@ -1741,9 +1892,4 @@ cc_genrule {
         " touch $(genDir)/zipdir/empty_file.txt &&" +
         " $(location soong_zip) -o $(out).unaligned -L 0 -C $(genDir)/zipdir -D $(genDir)/zipdir &&" +
         " $(location bionic_tests_zipalign) 4096 $(out).unaligned $(out)",
-
-    bazel_module: {
-        // Depends on soong_zip, which is not available yet.
-        bp2build_available: false
-    },
 }

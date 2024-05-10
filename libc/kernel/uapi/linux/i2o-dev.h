@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _I2O_DEV_H
 #define _I2O_DEV_H
 #define MAX_I2O_CONTROLLERS 32
@@ -42,38 +30,38 @@ struct i2o_cmd_passthru32 {
 };
 struct i2o_cmd_passthru {
   unsigned int iop;
-  void __user * msg;
+  void  * msg;
 };
 struct i2o_cmd_hrtlct {
   unsigned int iop;
-  void __user * resbuf;
-  unsigned int __user * reslen;
+  void  * resbuf;
+  unsigned int  * reslen;
 };
 struct i2o_cmd_psetget {
   unsigned int iop;
   unsigned int tid;
-  void __user * opbuf;
+  void  * opbuf;
   unsigned int oplen;
-  void __user * resbuf;
-  unsigned int __user * reslen;
+  void  * resbuf;
+  unsigned int  * reslen;
 };
 struct i2o_sw_xfer {
   unsigned int iop;
   unsigned char flags;
   unsigned char sw_type;
   unsigned int sw_id;
-  void __user * buf;
-  unsigned int __user * swlen;
-  unsigned int __user * maxfrag;
-  unsigned int __user * curfrag;
+  void  * buf;
+  unsigned int  * swlen;
+  unsigned int  * maxfrag;
+  unsigned int  * curfrag;
 };
 struct i2o_html {
   unsigned int iop;
   unsigned int tid;
   unsigned int page;
-  void __user * resbuf;
-  unsigned int __user * reslen;
-  void __user * qbuf;
+  void  * resbuf;
+  unsigned int  * reslen;
+  void  * qbuf;
   unsigned int qlen;
 };
 #define I2O_EVT_Q_LEN 32

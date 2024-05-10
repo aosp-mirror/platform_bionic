@@ -53,7 +53,7 @@
 #define WIFEXITED(__status) (WTERMSIG(__status) == 0)
 
 /** Returns true if the process was stopped by a signal. */
-#define WIFSTOPPED(__status) (WTERMSIG(__status) == 0x7f)
+#define WIFSTOPPED(__status) (((__status) & 0xff) == 0x7f)
 
 /** Returns true if the process was terminated by a signal. */
 #define WIFSIGNALED(__status) (WTERMSIG((__status)+1) >= 2)

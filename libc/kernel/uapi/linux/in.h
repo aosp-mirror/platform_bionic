@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_LINUX_IN_H
 #define _UAPI_LINUX_IN_H
 #include <bits/ip_msfilter.h>
@@ -141,6 +129,8 @@ enum {
 #define MCAST_MSFILTER 48
 #define IP_MULTICAST_ALL 49
 #define IP_UNICAST_IF 50
+#define IP_LOCAL_PORT_RANGE 51
+#define IP_PROTOCOL 52
 #define MCAST_EXCLUDE 0
 #define MCAST_INCLUDE 1
 #define IP_DEFAULT_MULTICAST_TTL 1
@@ -158,32 +148,32 @@ struct ip_mreqn {
 #define IP_MSFILTER_SIZE(numsrc) (sizeof(struct ip_msfilter) - sizeof(__u32) + (numsrc) * sizeof(__u32))
 struct group_req {
   __u32 gr_interface;
-  struct __kernel_sockaddr_storage gr_group;
+  struct sockaddr_storage gr_group;
 };
 struct group_source_req {
   __u32 gsr_interface;
-  struct __kernel_sockaddr_storage gsr_group;
-  struct __kernel_sockaddr_storage gsr_source;
+  struct sockaddr_storage gsr_group;
+  struct sockaddr_storage gsr_source;
 };
 struct group_filter {
   union {
     struct {
       __u32 gf_interface_aux;
-      struct __kernel_sockaddr_storage gf_group_aux;
+      struct sockaddr_storage gf_group_aux;
       __u32 gf_fmode_aux;
       __u32 gf_numsrc_aux;
-      struct __kernel_sockaddr_storage gf_slist[1];
+      struct sockaddr_storage gf_slist[1];
     };
     struct {
       __u32 gf_interface;
-      struct __kernel_sockaddr_storage gf_group;
+      struct sockaddr_storage gf_group;
       __u32 gf_fmode;
       __u32 gf_numsrc;
-      struct __kernel_sockaddr_storage gf_slist_flex[];
+      struct sockaddr_storage gf_slist_flex[];
     };
   };
 };
-#define GROUP_FILTER_SIZE(numsrc) (sizeof(struct group_filter) - sizeof(struct __kernel_sockaddr_storage) + (numsrc) * sizeof(struct __kernel_sockaddr_storage))
+#define GROUP_FILTER_SIZE(numsrc) (sizeof(struct group_filter) - sizeof(struct sockaddr_storage) + (numsrc) * sizeof(struct sockaddr_storage))
 #endif
 #if __UAPI_DEF_IN_PKTINFO
 struct in_pktinfo {

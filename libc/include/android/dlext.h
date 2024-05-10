@@ -157,7 +157,7 @@ typedef struct {
   uint64_t flags;
 
   /** Used by `ANDROID_DLEXT_RESERVED_ADDRESS` and `ANDROID_DLEXT_RESERVED_ADDRESS_HINT`. */
-  void*   reserved_addr;
+  void*   _Nullable reserved_addr;
   /** Used by `ANDROID_DLEXT_RESERVED_ADDRESS` and `ANDROID_DLEXT_RESERVED_ADDRESS_HINT`. */
   size_t  reserved_size;
 
@@ -170,18 +170,15 @@ typedef struct {
   off64_t library_fd_offset;
 
   /** Used by `ANDROID_DLEXT_USE_NAMESPACE`. */
-  struct android_namespace_t* library_namespace;
+  struct android_namespace_t* _Nullable library_namespace;
 } android_dlextinfo;
 
 /**
  * Opens the given library. The `__filename` and `__flags` arguments are
  * the same as for [dlopen(3)](http://man7.org/linux/man-pages/man3/dlopen.3.html),
  * with the Android-specific flags supplied via the `flags` member of `__info`.
- *
- * Available since API level 21.
  */
-void* android_dlopen_ext(const char* __filename, int __flags, const android_dlextinfo* __info)
-  __INTRODUCED_IN(21);
+void* _Nullable android_dlopen_ext(const char* _Nullable __filename, int __flags, const android_dlextinfo* _Nullable __info);
 
 __END_DECLS
 

@@ -33,6 +33,7 @@
 #include <gtest/gtest.h>
 
 #include "linker_utils.h"
+#include "platform/bionic/page.h"
 
 TEST(linker_utils, format_string) {
   std::vector<std::pair<std::string, std::string>> params = {{ "LIB", "lib32"}, { "SDKVER", "42"}};
@@ -104,15 +105,35 @@ TEST(linker_utils, parse_zip_path_smoke) {
 }
 
 TEST(linker_utils, page_start) {
-  ASSERT_EQ(0x0001000, page_start(0x0001000));
-  ASSERT_EQ(0x3002000, page_start(0x300222f));
-  ASSERT_EQ(0x6001000, page_start(0x6001fff));
+  const size_t kPageSize = page_size();
+
+  if (kPageSize == 4096) {
+    ASSERT_EQ(0x0001000U, page_start(0x0001000));
+    ASSERT_EQ(0x3002000U, page_start(0x300222f));
+    ASSERT_EQ(0x6001000U, page_start(0x6001fff));
+  } else if (kPageSize == 16384) {
+    ASSERT_EQ(0x0004000U, page_start(0x0004000));
+    ASSERT_EQ(0x3008000U, page_start(0x300822f));
+    ASSERT_EQ(0x6004000U, page_start(0x6004fff));
+  } else {
+    FAIL() << "Page size not supported " << kPageSize;
+  }
 }
 
 TEST(linker_utils, page_offset) {
-  ASSERT_EQ(0x0U, page_offset(0x0001000));
-  ASSERT_EQ(0x22fU, page_offset(0x300222f));
-  ASSERT_EQ(0xfffU, page_offset(0x6001fff));
+  const size_t kPageSize = page_size();
+
+  if (kPageSize == 4096) {
+    ASSERT_EQ(0x0U, page_offset(0x0001000));
+    ASSERT_EQ(0x22fU, page_offset(0x30222f));
+    ASSERT_EQ(0xfffU, page_offset(0x6001fff));
+  } else if (kPageSize == 16384) {
+    ASSERT_EQ(0x0U, page_offset(0x0004000));
+    ASSERT_EQ(0x322fU, page_offset(0x30322f));
+    ASSERT_EQ(0x3fffU, page_offset(0x6003fff));
+  } else {
+    FAIL() << "Page size not supported " << kPageSize;
+  }
 }
 
 TEST(linker_utils, safe_add) {

@@ -55,7 +55,7 @@ __BEGIN_DECLS
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
-int mount(const char* __source, const char* __target, const char* __fs_type, unsigned long __flags, const void* __data);
+int mount(const char* __BIONIC_COMPLICATED_NULLNESS __source, const char* _Nonnull __target, const char* __BIONIC_COMPLICATED_NULLNESS __fs_type, unsigned long __flags, const void* _Nullable __data);
 
 /**
  * [umount(2)](http://man7.org/linux/man-pages/man2/umount.2.html) unmounts the filesystem at
@@ -63,7 +63,7 @@ int mount(const char* __source, const char* __target, const char* __fs_type, uns
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
-int umount(const char* __target);
+int umount(const char* _Nonnull __target);
 
 /**
  * [umount2(2)](http://man7.org/linux/man-pages/man2/umount2.2.html) unmounts the filesystem at
@@ -71,6 +71,6 @@ int umount(const char* __target);
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
-int umount2(const char* __target, int __flags);
+int umount2(const char* _Nonnull __target, int __flags);
 
 __END_DECLS
