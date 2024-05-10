@@ -41,6 +41,14 @@ apex {
         "libc_malloc_debug",
         "libc_malloc_hooks",
     ],
+    arch: {
+        arm64: {
+            native_shared_libs: [
+                "libc_hwasan",
+                "libclang_rt.hwasan",
+            ],
+        },
+    },
     binaries: [
         "linkerconfig",
     ],
@@ -84,6 +92,7 @@ sdk {
         "crtbegin_so",
         "crtend_android",
         "crtend_so",
+        "crt_pad_segment",
     ],
 }
 

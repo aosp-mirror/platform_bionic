@@ -25,9 +25,9 @@ typedef enum {
 /** See hsearch()/hsearch_r(). */
 typedef struct entry {
   /** The string key. */
-  char* key;
+  char* _Nullable key;
   /** The associated data. */
-  void* data;
+  void* _Nullable data;
 } ENTRY;
 
 /**
@@ -57,7 +57,7 @@ typedef enum {
 #if defined(__USE_BSD) || defined(__USE_GNU)
 /** The hash table type for hcreate_r()/hdestroy_r()/hsearch_r(). */
 struct hsearch_data {
-  struct __hsearch* __hsearch;
+  struct __hsearch* _Nullable __hsearch;
 };
 #endif
 
@@ -66,18 +66,14 @@ __BEGIN_DECLS
 /**
  * [insque(3)](http://man7.org/linux/man-pages/man3/insque.3.html) inserts
  * an item in a queue (an intrusive doubly-linked list).
- *
- * Available since API level 21.
  */
-void insque(void* __element, void* __previous) __INTRODUCED_IN(21);
+void insque(void* _Nonnull __element, void* _Nullable __previous);
 
 /**
  * [remque(3)](http://man7.org/linux/man-pages/man3/remque.3.html) removes
  * an item from a queue (an intrusive doubly-linked list).
- *
- * Available since API level 21.
  */
-void remque(void* __element) __INTRODUCED_IN(21);
+void remque(void* _Nonnull __element);
 
 /**
  * [hcreate(3)](http://man7.org/linux/man-pages/man3/hcreate.3.html)
@@ -112,7 +108,7 @@ void hdestroy(void) __INTRODUCED_IN(28);
  *
  * Available since API level 28.
  */
-ENTRY* hsearch(ENTRY __entry, ACTION __action) __INTRODUCED_IN(28);
+ENTRY* _Nullable hsearch(ENTRY __entry, ACTION __action) __INTRODUCED_IN(28);
 
 #if defined(__USE_BSD) || defined(__USE_GNU)
 
@@ -124,7 +120,7 @@ ENTRY* hsearch(ENTRY __entry, ACTION __action) __INTRODUCED_IN(28);
  *
  * Available since API level 28.
  */
-int hcreate_r(size_t __n, struct hsearch_data* __table) __INTRODUCED_IN(28);
+int hcreate_r(size_t __n, struct hsearch_data* _Nonnull __table) __INTRODUCED_IN(28);
 
 /**
  * [hdestroy_r(3)](http://man7.org/linux/man-pages/man3/hdestroy_r.3.html) destroys
@@ -132,7 +128,7 @@ int hcreate_r(size_t __n, struct hsearch_data* __table) __INTRODUCED_IN(28);
  *
  * Available since API level 28.
  */
-void hdestroy_r(struct hsearch_data* __table) __INTRODUCED_IN(28);
+void hdestroy_r(struct hsearch_data* _Nonnull __table) __INTRODUCED_IN(28);
 
 /**
  * [hsearch_r(3)](http://man7.org/linux/man-pages/man3/hsearch_r.3.html) finds or
@@ -143,7 +139,7 @@ void hdestroy_r(struct hsearch_data* __table) __INTRODUCED_IN(28);
  *
  * Available since API level 28.
  */
-int hsearch_r(ENTRY __entry, ACTION __action, ENTRY** __result, struct hsearch_data* __table) __INTRODUCED_IN(28);
+int hsearch_r(ENTRY __entry, ACTION __action, ENTRY* _Nullable * _Nonnull __result, struct hsearch_data* _Nonnull __table) __INTRODUCED_IN(28);
 
 #endif
 
@@ -155,10 +151,8 @@ int hsearch_r(ENTRY __entry, ACTION __action, ENTRY** __result, struct hsearch_d
  * See bsearch() if you have a sorted array.
  *
  * Returns a pointer to the matching element on success, or NULL on failure.
- *
- * Available since API level 21.
  */
-void* lfind(const void* __key, const void* __array, size_t* __count, size_t __size, int (*__comparator)(const void*, const void*)) __INTRODUCED_IN(21);
+void* _Nullable lfind(const void* _Nonnull __key, const void* _Nonnull __array, size_t* _Nonnull __count, size_t __size, int (* _Nonnull __comparator)(const void* _Nonnull, const void* _Nonnull));
 
 /**
  * [lsearch(3)](http://man7.org/linux/man-pages/man3/lsearch.3.html) brute-force
@@ -170,10 +164,8 @@ void* lfind(const void* __key, const void* __array, size_t* __count, size_t __si
  *
  * Returns a pointer to the matching element on success, or to the newly-added
  * element on failure.
- *
- * Available since API level 21.
  */
-void* lsearch(const void* __key, void* __array, size_t* __count, size_t __size, int (*__comparator)(const void*, const void*)) __INTRODUCED_IN(21);
+void* _Nonnull lsearch(const void* _Nonnull __key, void* _Nonnull __array, size_t* _Nonnull __count, size_t __size, int (* _Nonnull __comparator)(const void* _Nonnull, const void* _Nonnull));
 
 /**
  * [tdelete(3)](http://man7.org/linux/man-pages/man3/tdelete.3.html) searches
@@ -182,13 +174,13 @@ void* lsearch(const void* __key, void* __array, size_t* __count, size_t __size, 
  *
  * Returns a pointer to the parent of the deleted node, or NULL on failure.
  */
-void* tdelete(const void* __key, void** __root_ptr, int (*__comparator)(const void*, const void*));
+void* _Nullable tdelete(const void* _Nonnull __key, void* _Nullable * _Nullable __root_ptr, int (* _Nonnull __comparator)(const void* _Nonnull, const void* _Nonnull));
 
 /**
  * [tdestroy(3)](http://man7.org/linux/man-pages/man3/tdestroy.3.html) destroys
  * the hash table `__root` using `__free_fn` on each node.
  */
-void tdestroy(void* __root, void (*__free_fn)(void*));
+void tdestroy(void* _Nullable __root, void (* _Nullable __free_fn)(void* _Nullable));
 
 /**
  * [tfind(3)](http://man7.org/linux/man-pages/man3/tfind.3.html) searches
@@ -197,7 +189,7 @@ void tdestroy(void* __root, void (*__free_fn)(void*));
  *
  * Returns a pointer to the matching node, or NULL on failure.
  */
-void* tfind(const void* __key, void* const* __root_ptr, int (*__comparator)(const void*, const void*));
+void* _Nullable tfind(const void* _Nonnull __key, void* _Nullable const* _Nullable __root_ptr, int (* _Nonnull __comparator)(const void* _Nonnull, const void* _Nonnull));
 
 /**
  * [tsearch(3)](http://man7.org/linux/man-pages/man3/tsearch.3.html) searches
@@ -208,12 +200,12 @@ void* tfind(const void* __key, void* const* __root_ptr, int (*__comparator)(cons
  *
  * Returns a pointer to the matching node, or to the newly-added node.
  */
-void* tsearch(const void* __key, void** __root_ptr, int (*__comparator)(const void*, const void*));
+void* _Nullable tsearch(const void* _Nonnull __key, void* _Nullable * _Nullable __root_ptr, int (* _Nonnull __comparator)(const void* _Nonnull, const void* _Nonnull));
 
 /**
  * [twalk(3)](http://man7.org/linux/man-pages/man3/twalk.3.html) calls
  * `__visitor` on every node in the tree.
  */
-void twalk(const void* __root, void (*__visitor)(const void*, VISIT, int)) __INTRODUCED_IN(21);
+void twalk(const void* _Nullable __root, void (* _Nullable __visitor)(const void* _Nullable, VISIT, int));
 
 __END_DECLS

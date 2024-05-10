@@ -29,6 +29,7 @@
 #include "linker_mapped_file_fragment.h"
 #include "linker_debug.h"
 #include "linker_utils.h"
+#include "platform/bionic/page.h"
 
 #include <inttypes.h>
 #include <stdlib.h>

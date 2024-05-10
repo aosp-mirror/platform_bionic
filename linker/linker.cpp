@@ -27,6 +27,7 @@
  */
 
 #include <android/api-level.h>
+#include <assert.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <inttypes.h>
@@ -34,6 +35,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/auxv.h>
 #include <sys/mman.h>
 #include <sys/param.h>
 #include <sys/vfs.h>
@@ -69,11 +71,12 @@
 #include "linker_translate_path.h"
 #include "linker_utils.h"
 
+#include "android-base/macros.h"
+#include "android-base/stringprintf.h"
+#include "android-base/strings.h"
+#include "private/bionic_asm_note.h"
 #include "private/bionic_call_ifunc_resolver.h"
 #include "private/bionic_globals.h"
-#include "android-base/macros.h"
-#include "android-base/strings.h"
-#include "android-base/stringprintf.h"
 #include "ziparchive/zip_archive.h"
 
 static std::unordered_map<void*, size_t> g_dso_handle_counters;
@@ -132,6 +135,36 @@ static const char* const kAsanDefaultLdPaths[] = {
   kVendorLibDir,
   nullptr
 };
+
+#if defined(__aarch64__)
+static const char* const kHwasanSystemLibDir  = "/system/lib64/hwasan";
+static const char* const kHwasanOdmLibDir     = "/odm/lib64/hwasan";
+static const char* const kHwasanVendorLibDir  = "/vendor/lib64/hwasan";
+
+// HWASan is only supported on aarch64.
+static const char* const kHwsanDefaultLdPaths[] = {
+  kHwasanSystemLibDir,
+  kSystemLibDir,
+  kHwasanOdmLibDir,
+  kOdmLibDir,
+  kHwasanVendorLibDir,
+  kVendorLibDir,
+  nullptr
+};
+
+// Is HWASAN enabled?
+static bool g_is_hwasan = false;
+#else
+static const char* const kHwsanDefaultLdPaths[] = {
+  kSystemLibDir,
+  kOdmLibDir,
+  kVendorLibDir,
+  nullptr
+};
+
+// Never any HWASan. Help the compiler remove the code we don't need.
+constexpr bool g_is_hwasan = false;
+#endif
 
 // Is ASAN enabled?
 static bool g_is_asan = false;
@@ -606,6 +639,7 @@ class LoadTask {
     si_->phdr = elf_reader.loaded_phdr();
     si_->set_gap_start(elf_reader.gap_start());
     si_->set_gap_size(elf_reader.gap_size());
+    si_->set_should_pad_segments(elf_reader.should_pad_segments());
 
     return true;
   }
@@ -931,7 +965,7 @@ static int open_library_in_zipfile(ZipArchiveCache* zip_archive_cache,
   }
 
   // Check if it is properly stored
-  if (entry.method != kCompressStored || (entry.offset % PAGE_SIZE) != 0) {
+  if (entry.method != kCompressStored || (entry.offset % page_size()) != 0) {
     close(fd);
     return -1;
   }
@@ -1140,7 +1174,7 @@ static bool load_library(android_namespace_t* ns,
          "load_library(ns=%s, task=%s, flags=0x%x, realpath=%s, search_linked_namespaces=%d)",
          ns->get_name(), name, rtld_flags, realpath.c_str(), search_linked_namespaces);
 
-  if ((file_offset % PAGE_SIZE) != 0) {
+  if ((file_offset % page_size()) != 0) {
     DL_OPEN_ERR("file offset for the library \"%s\" is not page-aligned: %" PRId64, name, file_offset);
     return false;
   }
@@ -1661,12 +1695,30 @@ bool find_libraries(android_namespace_t* ns,
   }
 
   // Step 3: pre-link all DT_NEEDED libraries in breadth first order.
+  bool any_memtag_stack = false;
   for (auto&& task : load_tasks) {
     soinfo* si = task->get_soinfo();
     if (!si->is_linked() && !si->prelink_image()) {
       return false;
     }
+    // si->memtag_stack() needs to be called after si->prelink_image() which populates
+    // the dynamic section.
+    if (si->has_min_version(7) && si->memtag_stack()) {
+      any_memtag_stack = true;
+      LD_LOG(kLogDlopen,
+             "... load_library requesting stack MTE for: realpath=\"%s\", soname=\"%s\"",
+             si->get_realpath(), si->get_soname());
+    }
     register_soinfo_tls(si);
+  }
+  if (any_memtag_stack) {
+    if (auto* cb = __libc_shared_globals()->memtag_stack_dlopen_callback) {
+      cb();
+    } else {
+      // find_library is used by the initial linking step, so we communicate that we
+      // want memtag_stack enabled to __libc_init_mte.
+      __libc_shared_globals()->initial_memtag_stack = true;
+    }
   }
 
   // Step 4: Construct the global group. DF_1_GLOBAL bit is force set for LD_PRELOADed libs because
@@ -2134,26 +2186,46 @@ void* do_dlopen(const char* name, int flags,
   }
   // End Workaround for dlopen(/system/lib/<soname>) when .so is in /apex.
 
-  std::string asan_name_holder;
+  std::string translated_name_holder;
 
+  assert(!g_is_hwasan || !g_is_asan);
   const char* translated_name = name;
   if (g_is_asan && translated_name != nullptr && translated_name[0] == '/') {
     char original_path[PATH_MAX];
     if (realpath(name, original_path) != nullptr) {
-      asan_name_holder = std::string(kAsanLibDirPrefix) + original_path;
-      if (file_exists(asan_name_holder.c_str())) {
+      translated_name_holder = std::string(kAsanLibDirPrefix) + original_path;
+      if (file_exists(translated_name_holder.c_str())) {
         soinfo* si = nullptr;
         if (find_loaded_library_by_realpath(ns, original_path, true, &si)) {
           PRINT("linker_asan dlopen NOT translating \"%s\" -> \"%s\": library already loaded", name,
-                asan_name_holder.c_str());
+                translated_name_holder.c_str());
         } else {
           PRINT("linker_asan dlopen translating \"%s\" -> \"%s\"", name, translated_name);
-          translated_name = asan_name_holder.c_str();
+          translated_name = translated_name_holder.c_str();
+        }
+      }
+    }
+  } else if (g_is_hwasan && translated_name != nullptr && translated_name[0] == '/') {
+    char original_path[PATH_MAX];
+    if (realpath(name, original_path) != nullptr) {
+      // Keep this the same as CreateHwasanPath in system/linkerconfig/modules/namespace.cc.
+      std::string path(original_path);
+      auto slash = path.rfind('/');
+      if (slash != std::string::npos || slash != path.size() - 1) {
+        translated_name_holder = path.substr(0, slash) + "/hwasan" + path.substr(slash);
+      }
+      if (!translated_name_holder.empty() && file_exists(translated_name_holder.c_str())) {
+        soinfo* si = nullptr;
+        if (find_loaded_library_by_realpath(ns, original_path, true, &si)) {
+          PRINT("linker_hwasan dlopen NOT translating \"%s\" -> \"%s\": library already loaded", name,
+                translated_name_holder.c_str());
+        } else {
+          PRINT("linker_hwasan dlopen translating \"%s\" -> \"%s\"", name, translated_name);
+          translated_name = translated_name_holder.c_str();
         }
       }
     }
   }
-
   ProtectedDataGuard guard;
   soinfo* si = find_library(ns, translated_name, flags, extinfo, caller);
   loading_trace.End();
@@ -2716,7 +2788,7 @@ bool soinfo::lookup_version_info(const VersionTracker& version_tracker, ElfW(Wor
   return true;
 }
 
-void soinfo::apply_relr_reloc(ElfW(Addr) offset) {
+static void apply_relr_reloc(ElfW(Addr) offset, ElfW(Addr) load_bias) {
   ElfW(Addr) address = offset + load_bias;
   *reinterpret_cast<ElfW(Addr)*>(address) += load_bias;
 }
@@ -2724,20 +2796,18 @@ void soinfo::apply_relr_reloc(ElfW(Addr) offset) {
 // Process relocations in SHT_RELR section (experimental).
 // Details of the encoding are described in this post:
 //   https://groups.google.com/d/msg/generic-abi/bX460iggiKg/Pi9aSwwABgAJ
-bool soinfo::relocate_relr() {
-  ElfW(Relr)* begin = relr_;
-  ElfW(Relr)* end = relr_ + relr_count_;
+bool relocate_relr(const ElfW(Relr)* begin, const ElfW(Relr)* end, ElfW(Addr) load_bias) {
   constexpr size_t wordsize = sizeof(ElfW(Addr));
 
   ElfW(Addr) base = 0;
-  for (ElfW(Relr)* current = begin; current < end; ++current) {
+  for (const ElfW(Relr)* current = begin; current < end; ++current) {
     ElfW(Relr) entry = *current;
     ElfW(Addr) offset;
 
     if ((entry&1) == 0) {
       // Even entry: encodes the offset for next relocation.
       offset = static_cast<ElfW(Addr)>(entry);
-      apply_relr_reloc(offset);
+      apply_relr_reloc(offset, load_bias);
       // Set base offset for subsequent bitmap entries.
       base = offset + wordsize;
       continue;
@@ -2748,7 +2818,7 @@ bool soinfo::relocate_relr() {
     while (entry != 0) {
       entry >>= 1;
       if ((entry&1) != 0) {
-        apply_relr_reloc(offset);
+        apply_relr_reloc(offset, load_bias);
       }
       offset += wordsize;
     }
@@ -2794,11 +2864,12 @@ bool soinfo::prelink_image() {
 
   TlsSegment tls_segment;
   if (__bionic_get_tls_segment(phdr, phnum, load_bias, &tls_segment)) {
-    if (!__bionic_check_tls_alignment(&tls_segment.alignment)) {
-      if (!relocating_linker) {
-        DL_ERR("TLS segment alignment in \"%s\" is not a power of 2: %zu",
-               get_realpath(), tls_segment.alignment);
-      }
+    // The loader does not (currently) support ELF TLS, so it shouldn't have
+    // a TLS segment.
+    CHECK(!relocating_linker && "TLS not supported in loader");
+    if (!__bionic_check_tls_align(tls_segment.aligned_size.align.value)) {
+      DL_ERR("TLS segment alignment in \"%s\" is not a power of 2: %zu", get_realpath(),
+             tls_segment.aligned_size.align.value);
       return false;
     }
     tls_ = std::make_unique<soinfo_tls>();
@@ -3142,6 +3213,33 @@ bool soinfo::prelink_image() {
       case DT_AARCH64_VARIANT_PCS:
         // Ignored: AArch64 processor-specific dynamic array tags.
         break;
+      case DT_AARCH64_MEMTAG_MODE:
+        memtag_dynamic_entries_.has_memtag_mode = true;
+        memtag_dynamic_entries_.memtag_mode = d->d_un.d_val;
+        break;
+      case DT_AARCH64_MEMTAG_HEAP:
+        memtag_dynamic_entries_.memtag_heap = d->d_un.d_val;
+        break;
+      // The AArch64 MemtagABI originally erroneously defined
+      // DT_AARCH64_MEMTAG_STACK as `d_ptr`, which is why the dynamic tag value
+      // is odd (`0x7000000c`). `d_val` is clearly the correct semantics, and so
+      // this was fixed in the ABI, but the value (0x7000000c) didn't change
+      // because we already had Android binaries floating around with dynamic
+      // entries, and didn't want to create a whole new dynamic entry and
+      // reserve a value just to fix that tiny mistake. P.S. lld was always
+      // outputting DT_AARCH64_MEMTAG_STACK as `d_val` anyway.
+      case DT_AARCH64_MEMTAG_STACK:
+        memtag_dynamic_entries_.memtag_stack = d->d_un.d_val;
+        break;
+      // Same as above, except DT_AARCH64_MEMTAG_GLOBALS was incorrectly defined
+      // as `d_val` (hence an even value of `0x7000000d`), when it should have
+      // been `d_ptr` all along. lld has always outputted this as `d_ptr`.
+      case DT_AARCH64_MEMTAG_GLOBALS:
+        memtag_dynamic_entries_.memtag_globals = reinterpret_cast<void*>(load_bias + d->d_un.d_ptr);
+        break;
+      case DT_AARCH64_MEMTAG_GLOBALSSZ:
+        memtag_dynamic_entries_.memtag_globalssz = d->d_un.d_val;
+        break;
 #endif
 
       default:
@@ -3265,7 +3363,7 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
                               "\"%s\" has text relocations",
                               get_realpath());
     add_dlwarning(get_realpath(), "text relocations");
-    if (phdr_table_unprotect_segments(phdr, phnum, load_bias) < 0) {
+    if (phdr_table_unprotect_segments(phdr, phnum, load_bias, should_pad_segments_) < 0) {
       DL_ERR("can't unprotect loadable segments for \"%s\": %s", get_realpath(), strerror(errno));
       return false;
     }
@@ -3281,7 +3379,7 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
 #if !defined(__LP64__)
   if (has_text_relocations) {
     // All relocations are done, we can protect our segments back to read-only.
-    if (phdr_table_protect_segments(phdr, phnum, load_bias) < 0) {
+    if (phdr_table_protect_segments(phdr, phnum, load_bias, should_pad_segments_) < 0) {
       DL_ERR("can't protect segments for \"%s\": %s",
              get_realpath(), strerror(errno));
       return false;
@@ -3319,7 +3417,7 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
 }
 
 bool soinfo::protect_relro() {
-  if (phdr_table_protect_gnu_relro(phdr, phnum, load_bias) < 0) {
+  if (phdr_table_protect_gnu_relro(phdr, phnum, load_bias, should_pad_segments_) < 0) {
     DL_ERR("can't enable GNU RELRO protection for \"%s\": %s",
            get_realpath(), strerror(errno));
     return false;
@@ -3327,9 +3425,10 @@ bool soinfo::protect_relro() {
   return true;
 }
 
-static std::vector<android_namespace_t*> init_default_namespace_no_config(bool is_asan) {
+static std::vector<android_namespace_t*> init_default_namespace_no_config(bool is_asan, bool is_hwasan) {
   g_default_namespace.set_isolated(false);
-  auto default_ld_paths = is_asan ? kAsanDefaultLdPaths : kDefaultLdPaths;
+  auto default_ld_paths = is_asan ? kAsanDefaultLdPaths : (
+    is_hwasan ? kHwsanDefaultLdPaths : kDefaultLdPaths);
 
   char real_path[PATH_MAX];
   std::vector<std::string> ld_default_paths;
@@ -3433,6 +3532,7 @@ static std::string get_ld_config_file_path(const char* executable_path) {
   return kLdConfigFilePath;
 }
 
+
 std::vector<android_namespace_t*> init_default_namespaces(const char* executable_path) {
   g_default_namespace.set_name("(default)");
 
@@ -3446,6 +3546,16 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
               (strcmp(bname, "linker_asan") == 0 ||
                strcmp(bname, "linker_asan64") == 0);
 
+#if defined(__aarch64__)
+  // HWASan is only supported on AArch64.
+  // The AT_SECURE restriction is because this is a debug feature that does
+  // not need to work on secure binaries, it doesn't hurt to disallow the
+  // environment variable for them, as it impacts the program execution.
+  char* hwasan_env = getenv("LD_HWASAN");
+  g_is_hwasan = (bname != nullptr &&
+              strcmp(bname, "linker_hwasan64") == 0) ||
+              (hwasan_env != nullptr && !getauxval(AT_SECURE) && strcmp(hwasan_env, "1") == 0);
+#endif
   const Config* config = nullptr;
 
   {
@@ -3453,7 +3563,7 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
     INFO("[ Reading linker config \"%s\" ]", ld_config_file_path.c_str());
     ScopedTrace trace(("linker config " + ld_config_file_path).c_str());
     std::string error_msg;
-    if (!Config::read_binary_config(ld_config_file_path.c_str(), executable_path, g_is_asan,
+    if (!Config::read_binary_config(ld_config_file_path.c_str(), executable_path, g_is_asan, g_is_hwasan,
                                     &config, &error_msg)) {
       if (!error_msg.empty()) {
         DL_WARN("Warning: couldn't read '%s' for '%s' (using default configuration instead): %s",
@@ -3464,7 +3574,7 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
   }
 
   if (config == nullptr) {
-    return init_default_namespace_no_config(g_is_asan);
+    return init_default_namespace_no_config(g_is_asan, g_is_hwasan);
   }
 
   const auto& namespace_configs = config->namespace_configs();

@@ -75,232 +75,231 @@ typedef __float_t float_t;
 
 double acos(double __x);
 float acosf(float __x);
-long double acosl(long double __x) __RENAME_LDBL(acos, 3, 21);
+long double acosl(long double __x);
 
 double asin(double __x);
 float asinf(float __x);
-long double asinl(long double __x) __RENAME_LDBL(asin, 3, 21);
+long double asinl(long double __x);
 
 double atan(double __x);
 float atanf(float __x);
-long double atanl(long double __x) __RENAME_LDBL(atan, 3, 21);
+long double atanl(long double __x);
 
 double atan2(double __y, double __x);
 float atan2f(float __y, float __x);
-long double atan2l(long double __y, long double __x) __RENAME_LDBL(atan2, 3, 21);
+long double atan2l(long double __y, long double __x);
 
 double cos(double __x);
 float cosf(float __x);
-long double cosl(long double __x) __RENAME_LDBL(cos, 3, 21);
+long double cosl(long double __x);
 
 double sin(double __x);
 float sinf(float __x);
-long double sinl(long double __x) __RENAME_LDBL(sin, 3, 21);
+long double sinl(long double __x);
 
 double tan(double __x);
 float tanf(float __x);
-long double tanl(long double __x) __RENAME_LDBL(tan, 3, 21);
+long double tanl(long double __x);
 
 double acosh(double __x);
 float acoshf(float __x);
-long double acoshl(long double __x) __RENAME_LDBL(acosh, 3, 21);
+long double acoshl(long double __x);
 
 double asinh(double __x);
 float asinhf(float __x);
-long double asinhl(long double __x) __RENAME_LDBL(asinh, 3, 21);
+long double asinhl(long double __x);
 
 double atanh(double __x);
 float atanhf(float __x);
-long double atanhl(long double __x) __RENAME_LDBL(atanh, 3, 21);
+long double atanhl(long double __x);
 
 double cosh(double __x);
 float coshf(float __x);
-long double coshl(long double __x) __RENAME_LDBL(cosh, 3, 21);
+long double coshl(long double __x);
 
 double sinh(double __x);
 float sinhf(float __x);
-long double sinhl(long double __x) __RENAME_LDBL(sinh, 3, 21);
+long double sinhl(long double __x);
 
 double tanh(double __x);
 float tanhf(float __x);
-long double tanhl(long double __x) __RENAME_LDBL(tanh, 3, 21);
+long double tanhl(long double __x);
 
 double exp(double __x);
 float expf(float __x);
-long double expl(long double __x) __RENAME_LDBL(exp, 3, 21);
+long double expl(long double __x);
 
 double exp2(double __x);
 float exp2f(float __x);
-long double exp2l(long double __x) __RENAME_LDBL(exp2, 3, 21);
+long double exp2l(long double __x);
 
 double expm1(double __x);
 float expm1f(float __x);
-long double expm1l(long double __x) __RENAME_LDBL(expm1, 3, 21);
+long double expm1l(long double __x);
 
 double frexp(double __x, int* _Nonnull __exponent);
 float frexpf(float __x, int* _Nonnull __exponent);
-long double frexpl(long double __x, int* _Nonnull __exponent) __RENAME_LDBL(frexp, 3, 21);
+long double frexpl(long double __x, int* _Nonnull __exponent);
 
 int ilogb(double __x) __attribute_const__;
 int ilogbf(float __x) __attribute_const__;
-int ilogbl(long double __x) __RENAME_LDBL(ilogb, 3, 3) __attribute_const__;
+int ilogbl(long double __x) __attribute_const__;
 
 double ldexp(double __x, int __exponent);
 float ldexpf(float __x, int __exponent);
-long double ldexpl(long double __x, int __exponent) __RENAME_LDBL(ldexp, 3, 3);
+long double ldexpl(long double __x, int __exponent);
 
 double log(double __x);
 float logf(float __x);
-long double logl(long double __x) __RENAME_LDBL(log, 3, 21);
+long double logl(long double __x);
 
 double log10(double __x);
 float log10f(float __x);
-long double log10l(long double __x) __RENAME_LDBL(log10, 3, 21);
+long double log10l(long double __x);
 
 double log1p(double __x);
 float log1pf(float __x);
-long double log1pl(long double __x) __RENAME_LDBL(log1p, 3, 21);
+long double log1pl(long double __x);
 
-double log2(double __x) __INTRODUCED_IN(18);
-float log2f(float __x) __INTRODUCED_IN(18);
-long double log2l(long double __x) __RENAME_LDBL(log2, 18, 18);
+double log2(double __x);
+float log2f(float __x);
+long double log2l(long double __x);
 
 double logb(double __x);
 float logbf(float __x);
-long double logbl(long double __x) __RENAME_LDBL(logb, 3, 18);
+long double logbl(long double __x);
 
 double modf(double __x, double* _Nonnull __integral_part);
 float modff(float __x, float* _Nonnull __integral_part);
-long double modfl(long double __x, long double* _Nonnull __integral_part) __RENAME_LDBL(modf, 3, 21);
+long double modfl(long double __x, long double* _Nonnull __integral_part);
 
 double scalbn(double __x, int __exponent);
 float scalbnf(float __x, int __exponent);
-long double scalbnl(long double __x, int __exponent) __RENAME_LDBL(scalbn, 3, 3);
+long double scalbnl(long double __x, int __exponent);
 
-/* TODO: once the NDK only supports >= 18, use __RENAME_LDBL here too. */
-double scalbln(double __x, long __exponent) __INTRODUCED_IN_X86_NO_GUARD_FOR_NDK(18);
-float scalblnf(float __x, long __exponent) __INTRODUCED_IN_X86_NO_GUARD_FOR_NDK(18);
-long double scalblnl(long double __x, long __exponent) __INTRODUCED_IN_X86_NO_GUARD_FOR_NDK(18);
+double scalbln(double __x, long __exponent);
+float scalblnf(float __x, long __exponent);
+long double scalblnl(long double __x, long __exponent);
 
 double cbrt(double __x);
 float cbrtf(float __x);
-long double cbrtl(long double __x) __RENAME_LDBL(cbrt, 3, 21);
+long double cbrtl(long double __x);
 
 double fabs(double __x) __attribute_const__;
 float fabsf(float __x) __attribute_const__;
-long double fabsl(long double __x) __RENAME_LDBL(fabs, 3, 3) __attribute_const__;
+long double fabsl(long double __x) __attribute_const__;
 
 double hypot(double __x, double __y);
 float hypotf(float __x, float __y);
-long double hypotl(long double __x, long double __y) __RENAME_LDBL(hypot, 3, 21);
+long double hypotl(long double __x, long double __y);
 
 double pow(double __x, double __y);
 float powf(float __x, float __y);
-long double powl(long double __x, long double __y) __RENAME_LDBL(pow, 3, 21);
+long double powl(long double __x, long double __y);
 
 double sqrt(double __x);
 float sqrtf(float __x);
-long double sqrtl(long double __x) __RENAME_LDBL(sqrt, 3, 21);
+long double sqrtl(long double __x);
 
 double erf(double __x);
 float erff(float __x);
-long double erfl(long double __x) __RENAME_LDBL(erf, 3, 21);
+long double erfl(long double __x);
 
 double erfc(double __x);
 float erfcf(float __x);
-long double erfcl(long double __x) __RENAME_LDBL(erfc, 3, 21);
+long double erfcl(long double __x);
 
 double lgamma(double __x);
 float lgammaf(float __x);
-long double lgammal(long double __x) __RENAME_LDBL(lgamma, 3, 21);
+long double lgammal(long double __x);
 
 double tgamma(double __x);
 float tgammaf(float __x);
-long double tgammal(long double __x) __RENAME_LDBL(tgamma, 3, 21);
+long double tgammal(long double __x);
 
 double ceil(double __x);
 float ceilf(float __x);
-long double ceill(long double __x) __RENAME_LDBL(ceil, 3, 3);
+long double ceill(long double __x);
 
 double floor(double __x);
 float floorf(float __x);
-long double floorl(long double __x) __RENAME_LDBL(floor, 3, 3);
+long double floorl(long double __x);
 
 double nearbyint(double __x);
 float nearbyintf(float __x);
-long double nearbyintl(long double __x) __RENAME_LDBL(nearbyint, 3, 21);
+long double nearbyintl(long double __x);
 
 double rint(double __x);
 float rintf(float __x);
-long double rintl(long double __x) __RENAME_LDBL(rint, 3, 21);
+long double rintl(long double __x);
 
 long lrint(double __x);
 long lrintf(float __x);
-long lrintl(long double __x) __RENAME_LDBL(lrint, 3, 21);
+long lrintl(long double __x);
 
 long long llrint(double __x);
 long long llrintf(float __x);
-long long llrintl(long double __x) __RENAME_LDBL(llrint, 3, 21);
+long long llrintl(long double __x);
 
 double round(double __x);
 float roundf(float __x);
-long double roundl(long double __x) __RENAME_LDBL(roundl, 3, 3);
+long double roundl(long double __x);
 
 long lround(double __x);
 long lroundf(float __x);
-long lroundl(long double __x) __RENAME_LDBL(lround, 3, 3);
+long lroundl(long double __x);
 
 long long llround(double __x);
 long long llroundf(float __x);
-long long llroundl(long double __x) __RENAME_LDBL(llround, 3, 3);
+long long llroundl(long double __x);
 
 double trunc(double __x);
 float truncf(float __x);
-long double truncl(long double __x) __RENAME_LDBL(trunc, 3, 3);
+long double truncl(long double __x);
 
 double fmod(double __x, double __y);
 float fmodf(float __x, float __y);
-long double fmodl(long double __x, long double __y) __RENAME_LDBL(fmod, 3, 21);
+long double fmodl(long double __x, long double __y);
 
 double remainder(double __x, double __y);
 float remainderf(float __x, float __y);
-long double remainderl(long double __x, long double __y) __RENAME_LDBL(remainder, 3, 21);
+long double remainderl(long double __x, long double __y);
 
 double remquo(double __x, double __y, int* _Nonnull __quotient_bits);
 float remquof(float __x, float __y, int* _Nonnull __quotient_bits);
-long double remquol(long double __x, long double __y, int* _Nonnull __quotient_bits) __RENAME_LDBL(remquo, 3, 21);
+long double remquol(long double __x, long double __y, int* _Nonnull __quotient_bits);
 
 double copysign(double __value, double __sign) __attribute_const__;
 float copysignf(float __value, float __sign) __attribute_const__;
-long double copysignl(long double __value, long double __sign) __RENAME_LDBL(copysign, 3, 3) __attribute_const__;
+long double copysignl(long double __value, long double __sign) __attribute_const__;
 
 double nan(const char* _Nonnull __kind) __attribute_const__;
 float nanf(const char* _Nonnull __kind) __attribute_const__;
-long double nanl(const char* _Nonnull __kind) __RENAME_LDBL(nan, 13, 13) __attribute_const__;
+long double nanl(const char* _Nonnull __kind) __attribute_const__;
 
 double nextafter(double __x, double __y);
 float nextafterf(float __x, float __y);
-long double nextafterl(long double __x, long double __y) __RENAME_LDBL_NO_GUARD_FOR_NDK(nextafter, 3, 21);
+long double nextafterl(long double __x, long double __y);
 
-double nexttoward(double __x, long double __y) __INTRODUCED_IN_NO_GUARD_FOR_NDK(18);
+double nexttoward(double __x, long double __y);
 float nexttowardf(float __x, long double __y);
-long double nexttowardl(long double __x, long double __y) __RENAME_LDBL_NO_GUARD_FOR_NDK(nexttoward, 18, 18);
+long double nexttowardl(long double __x, long double __y);
 
 double fdim(double __x, double __y);
 float fdimf(float __x, float __y);
-long double fdiml(long double __x, long double __y) __RENAME_LDBL(fdim, 3, 3);
+long double fdiml(long double __x, long double __y);
 
 double fmax(double __x, double __y) __attribute_const__;
 float fmaxf(float __x, float __y) __attribute_const__;
-long double fmaxl(long double __x, long double __y) __RENAME_LDBL(fmax, 3, 3) __attribute_const__;
+long double fmaxl(long double __x, long double __y) __attribute_const__;
 
 double fmin(double __x, double __y) __attribute_const__;
 float fminf(float __x, float __y) __attribute_const__;
-long double fminl(long double __x, long double __y) __RENAME_LDBL(fmin, 3, 3) __attribute_const__;
+long double fminl(long double __x, long double __y) __attribute_const__;
 
 double fma(double __x, double __y, double __z);
 float fmaf(float __x, float __y, float __z);
-long double fmal(long double __x, long double __y, long double __z) __RENAME_LDBL_NO_GUARD_FOR_NDK(fma, 3, 21);
+long double fmal(long double __x, long double __y, long double __z);
 
 #define isgreater(x, y) __builtin_isgreater((x), (y))
 #define isgreaterequal(x, y) __builtin_isgreaterequal((x), (y))
@@ -320,7 +319,7 @@ long double fmal(long double __x, long double __y, long double __z) __RENAME_LDB
  * to the std namespace, making it impossible to use both <cmath> (which gets
  * included by a lot of other standard headers) and ::isnan.
  */
-int (isinf)(double __x) __attribute_const__ __INTRODUCED_IN(21);
+int (isinf)(double __x) __attribute_const__;
 int (isnan)(double __x) __attribute_const__;
 
 /* POSIX extensions. */
@@ -368,7 +367,7 @@ double gamma_r(double __x, int* _Nonnull __sign);
 double lgamma_r(double __x, int* _Nonnull __sign);
 double significand(double __x);
 long double lgammal_r(long double __x, int* _Nonnull __sign) __INTRODUCED_IN(23);
-long double significandl(long double __x) __INTRODUCED_IN(21);
+long double significandl(long double __x);
 float dremf(float __x, float __y);
 int finitef(float __x) __attribute_const__;
 float gammaf(float __x);

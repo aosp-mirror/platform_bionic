@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_LINUX_IF_LINK_H
 #define _UAPI_LINUX_IF_LINK_H
 #include <linux/types.h>
@@ -167,6 +155,9 @@ enum {
   IFLA_TSO_MAX_SEGS,
   IFLA_ALLMULTI,
   IFLA_DEVLINK_PORT,
+  IFLA_GSO_IPV4_MAX_SIZE,
+  IFLA_GRO_IPV4_MAX_SIZE,
+  IFLA_DPLL_PIN,
   __IFLA_MAX
 };
 #define IFLA_MAX (__IFLA_MAX - 1)
@@ -254,6 +245,8 @@ enum {
   IFLA_BR_VLAN_STATS_PER_PORT,
   IFLA_BR_MULTI_BOOLOPT,
   IFLA_BR_MCAST_QUERIER_STATE,
+  IFLA_BR_FDB_N_LEARNED,
+  IFLA_BR_FDB_MAX_LEARNED,
   __IFLA_BR_MAX,
 };
 #define IFLA_BR_MAX (__IFLA_BR_MAX - 1)
@@ -307,6 +300,10 @@ enum {
   IFLA_BRPORT_MCAST_EHT_HOSTS_CNT,
   IFLA_BRPORT_LOCKED,
   IFLA_BRPORT_MAB,
+  IFLA_BRPORT_MCAST_N_GROUPS,
+  IFLA_BRPORT_MCAST_MAX_GROUPS,
+  IFLA_BRPORT_NEIGH_VLAN_SUPPRESS,
+  IFLA_BRPORT_BACKUP_NHID,
   __IFLA_BRPORT_MAX
 };
 #define IFLA_BRPORT_MAX (__IFLA_BRPORT_MAX - 1)
@@ -360,6 +357,7 @@ enum {
   IFLA_MACVLAN_MACADDR_COUNT,
   IFLA_MACVLAN_BC_QUEUE_LEN,
   IFLA_MACVLAN_BC_QUEUE_LEN_USED,
+  IFLA_MACVLAN_BC_CUTOFF,
   __IFLA_MACVLAN_MAX,
 };
 #define IFLA_MACVLAN_MAX (__IFLA_MACVLAN_MAX - 1)
@@ -453,6 +451,26 @@ struct tunnel_msg {
   __u16 reserved2;
   __u32 ifindex;
 };
+enum netkit_action {
+  NETKIT_NEXT = - 1,
+  NETKIT_PASS = 0,
+  NETKIT_DROP = 2,
+  NETKIT_REDIRECT = 7,
+};
+enum netkit_mode {
+  NETKIT_L2,
+  NETKIT_L3,
+};
+enum {
+  IFLA_NETKIT_UNSPEC,
+  IFLA_NETKIT_PEER_INFO,
+  IFLA_NETKIT_PRIMARY,
+  IFLA_NETKIT_POLICY,
+  IFLA_NETKIT_PEER_POLICY,
+  IFLA_NETKIT_MODE,
+  __IFLA_NETKIT_MAX,
+};
+#define IFLA_NETKIT_MAX (__IFLA_NETKIT_MAX - 1)
 #define TUNNEL_MSG_FLAG_STATS 0x01
 #define TUNNEL_MSG_VALID_USER_FLAGS TUNNEL_MSG_FLAG_STATS
 enum {
@@ -517,6 +535,8 @@ enum {
   IFLA_VXLAN_TTL_INHERIT,
   IFLA_VXLAN_DF,
   IFLA_VXLAN_VNIFILTER,
+  IFLA_VXLAN_LOCALBYPASS,
+  IFLA_VXLAN_LABEL_POLICY,
   __IFLA_VXLAN_MAX
 };
 #define IFLA_VXLAN_MAX (__IFLA_VXLAN_MAX - 1)
@@ -530,6 +550,12 @@ enum ifla_vxlan_df {
   VXLAN_DF_INHERIT,
   __VXLAN_DF_END,
   VXLAN_DF_MAX = __VXLAN_DF_END - 1,
+};
+enum ifla_vxlan_label_policy {
+  VXLAN_LABEL_FIXED = 0,
+  VXLAN_LABEL_INHERIT = 1,
+  __VXLAN_LABEL_END,
+  VXLAN_LABEL_MAX = __VXLAN_LABEL_END - 1,
 };
 enum {
   IFLA_GENEVE_UNSPEC,
@@ -943,7 +969,8 @@ enum {
 #define IFLA_MCTP_MAX (__IFLA_MCTP_MAX - 1)
 enum {
   IFLA_DSA_UNSPEC,
-  IFLA_DSA_MASTER,
+  IFLA_DSA_CONDUIT,
+  IFLA_DSA_MASTER = IFLA_DSA_CONDUIT,
   __IFLA_DSA_MAX,
 };
 #define IFLA_DSA_MAX (__IFLA_DSA_MAX - 1)

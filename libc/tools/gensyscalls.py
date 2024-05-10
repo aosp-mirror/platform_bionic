@@ -88,12 +88,12 @@ riscv64_call = syscall_stub_header + """\
     ecall
 
     li      a7, -MAX_ERRNO
-    bgtu    a0, a7, 1f
+    bgeu    a0, a7, 1f
 
     ret
 1:
     neg     a0, a0
-    j       __set_errno_internal
+    tail    __set_errno_internal
 END(%(func)s)
 """
 
@@ -227,11 +227,6 @@ def add_footer(pointer_length, stub, syscall):
     aliases = syscall["aliases"]
     for alias in aliases:
         stub += "\nALIAS_SYMBOL(%s, %s)\n" % (alias, syscall["func"])
-
-    # Use hidden visibility on LP64 for any functions beginning with underscores.
-    if pointer_length == 64 and syscall["func"].startswith("__"):
-        stub += '.hidden ' + syscall["func"] + '\n'
-
     return stub
 
 

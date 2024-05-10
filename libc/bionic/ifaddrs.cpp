@@ -281,8 +281,7 @@ static void get_interface_flags_via_ioctl(ifaddrs** list) {
   ScopedFd s(socket(AF_INET, SOCK_DGRAM | SOCK_CLOEXEC, 0));
   if (s.get() == -1) {
     async_safe_format_log(ANDROID_LOG_ERROR, "libc",
-                          "socket(AF_INET, SOCK_DGRAM | SOCK_CLOEXEC) failed in ifaddrs: %s",
-                          strerror(errno));
+                          "socket(AF_INET, SOCK_DGRAM | SOCK_CLOEXEC) failed in ifaddrs: %m");
     return;
   }
 
@@ -294,8 +293,8 @@ static void get_interface_flags_via_ioctl(ifaddrs** list) {
       addr->ifa.ifa_flags = ifr.ifr_flags;
     } else {
       async_safe_format_log(ANDROID_LOG_ERROR, "libc",
-                            "ioctl(SIOCGIFFLAGS) for \"%s\" failed in ifaddrs: %s",
-                            addr->ifa.ifa_name, strerror(errno));
+                            "ioctl(SIOCGIFFLAGS) for \"%s\" failed in ifaddrs: %m",
+                            addr->ifa.ifa_name);
     }
   }
 }

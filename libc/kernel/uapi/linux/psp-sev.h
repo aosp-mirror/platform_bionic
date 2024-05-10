@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef __PSP_SEV_USER_H__
 #define __PSP_SEV_USER_H__
 #include <linux/types.h>
@@ -32,6 +20,7 @@ enum {
   SEV_MAX,
 };
 typedef enum {
+  SEV_RET_NO_FW_CALL = - 1,
   SEV_RET_SUCCESS = 0,
   SEV_RET_INVALID_PLATFORM_STATE,
   SEV_RET_INVALID_GUEST_STATE,
@@ -57,6 +46,7 @@ typedef enum {
   SEV_RET_INVALID_PARAM,
   SEV_RET_RESOURCE_LIMIT,
   SEV_RET_SECURE_DATA_INVALID,
+  SEV_RET_INVALID_KEY = 0x27,
   SEV_RET_MAX,
 } sev_ret_code;
 struct sev_user_data_status {

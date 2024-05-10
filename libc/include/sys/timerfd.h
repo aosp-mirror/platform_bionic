@@ -50,10 +50,8 @@ __BEGIN_DECLS
  * timer file descriptor.
  *
  * Returns the new file descriptor on success, and returns -1 and sets `errno` on failure.
- *
- * Available since API level 19.
  */
-int timerfd_create(clockid_t __clock, int __flags) __INTRODUCED_IN(19);
+int timerfd_create(clockid_t __clock, int __flags);
 
 /** The timerfd_settime() flag to use absolute rather than relative times. */
 #define TFD_TIMER_ABSTIME (1 << 0)
@@ -65,19 +63,15 @@ int timerfd_create(clockid_t __clock, int __flags) __INTRODUCED_IN(19);
  * stops a timer.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
- *
- * Available since API level 19.
  */
-int timerfd_settime(int __fd, int __flags, const struct itimerspec* __new_value, struct itimerspec* __old_value) __INTRODUCED_IN(19);
+int timerfd_settime(int __fd, int __flags, const struct itimerspec* _Nonnull __new_value, struct itimerspec* _Nullable __old_value);
 
 /**
  * [timerfd_gettime(2)](http://man7.org/linux/man-pages/man2/timerfd_gettime.2.html) queries the
  * current timer settings.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
- *
- * Available since API level 19.
  */
-int timerfd_gettime(int __fd, struct itimerspec* __current_value) __INTRODUCED_IN(19);
+int timerfd_gettime(int __fd, struct itimerspec* _Nonnull __current_value);
 
 __END_DECLS

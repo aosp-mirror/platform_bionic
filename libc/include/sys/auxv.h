@@ -45,9 +45,7 @@ __BEGIN_DECLS
  *
  * Returns the corresponding value on success,
  * and returns 0 and sets `errno` to `ENOENT` on failure.
- *
- * Available since API level 18.
  */
-unsigned long int getauxval(unsigned long int __type) __INTRODUCED_IN(18);
+unsigned long int getauxval(unsigned long int __type);
 
 __END_DECLS

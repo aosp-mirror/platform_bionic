@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef MLX5_USER_IOCTL_VERBS_H
 #define MLX5_USER_IOCTL_VERBS_H
 #include <linux/types.h>
@@ -44,6 +32,7 @@ enum mlx5_ib_uapi_dm_type {
   MLX5_IB_UAPI_DM_TYPE_STEERING_SW_ICM,
   MLX5_IB_UAPI_DM_TYPE_HEADER_MODIFY_SW_ICM,
   MLX5_IB_UAPI_DM_TYPE_HEADER_MODIFY_PATTERN_SW_ICM,
+  MLX5_IB_UAPI_DM_TYPE_ENCAP_SW_ICM,
 };
 enum mlx5_ib_uapi_devx_create_event_channel_flags {
   MLX5_IB_UAPI_DEVX_CR_EV_CH_FLAGS_OMIT_DATA = 1 << 0,

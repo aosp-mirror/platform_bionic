@@ -40,24 +40,24 @@
 __BEGIN_DECLS
 
 #define b64_ntop __b64_ntop
-int b64_ntop(u_char const* __src, size_t __src_size, char* __dst, size_t __dst_size);
+int b64_ntop(u_char const* _Nonnull __src, size_t __src_size, char* _Nonnull __dst, size_t __dst_size);
 #define b64_pton __b64_pton
-int b64_pton(char const* __src, u_char* __dst, size_t __dst_size);
+int b64_pton(char const* _Nonnull __src, u_char* _Nonnull __dst, size_t __dst_size);
 
 #define dn_comp __dn_comp
-int dn_comp(const char* __src, u_char* __dst, int __dst_size, u_char** __dn_ptrs , u_char** __last_dn_ptr);
+int dn_comp(const char* _Nonnull __src, u_char* _Nonnull __dst, int __dst_size, u_char* _Nullable * _Nullable __dn_ptrs , u_char* _Nullable * _Nullable __last_dn_ptr);
 
-int dn_expand(const u_char* __msg, const u_char* __eom, const u_char* __src, char* __dst, int __dst_size);
+int dn_expand(const u_char* _Nonnull __msg, const u_char* _Nonnull __eom, const u_char* _Nonnull __src, char* _Nonnull __dst, int __dst_size);
 
 #define p_class __p_class
-const char* p_class(int __class);
+const char* _Nonnull p_class(int __class);
 #define p_type __p_type
-const char* p_type(int __type);
+const char* _Nonnull p_type(int __type);
 
 int res_init(void);
-int res_mkquery(int __opcode, const char* __domain_name, int __class, int __type, const u_char* __data, int __data_size, const u_char* __new_rr_in, u_char* __buf, int __buf_size);
-int res_query(const char* __name, int __class, int __type, u_char* __answer, int __answer_size);
-int res_search(const char* __name, int __class, int __type, u_char* __answer, int __answer_size);
+int res_mkquery(int __opcode, const char* _Nonnull __domain_name, int __class, int __type, const u_char* _Nullable __data, int __data_size, const u_char* _Nullable __new_rr_in, u_char* _Nonnull __buf, int __buf_size);
+int res_query(const char* _Nonnull __name, int __class, int __type, u_char* _Nonnull __answer, int __answer_size);
+int res_search(const char* _Nonnull __name, int __class, int __type, u_char* _Nonnull __answer, int __answer_size);
 
 #define res_randomid __res_randomid
 u_int __res_randomid(void) __INTRODUCED_IN(29);

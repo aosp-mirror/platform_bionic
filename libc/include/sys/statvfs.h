@@ -88,30 +88,29 @@ struct statvfs64 { __STATVFS64_BODY __STATVFS64_CODA };
 /** Flag for `f_flag` in `struct statvfs`: see `MS_RELATIME`. */
 #define ST_RELATIME    0x1000
 
+/** Flag for `f_flag` in `struct statvfs`: don't follow symlinks. */
+#define ST_NOSYMFOLLOW 0x2000
+
 /**
  * [statvfs(3)](http://man7.org/linux/man-pages/man3/statvfs.3.html)
  * queries filesystem statistics for the given path.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
- *
- * Available since API level 19.
  */
-int statvfs(const char* __path, struct statvfs* __buf) __INTRODUCED_IN(19);
+int statvfs(const char* _Nonnull __path, struct statvfs* _Nonnull __buf);
 
 /**
  * [fstatvfs(3)](http://man7.org/linux/man-pages/man3/fstatvfs.3.html)
  * queries filesystem statistics for the given file descriptor.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
- *
- * Available since API level 19.
  */
-int fstatvfs(int __fd, struct statvfs* __buf) __INTRODUCED_IN(19);
+int fstatvfs(int __fd, struct statvfs* _Nonnull __buf);
 
 /** Equivalent to statvfs() . */
-int statvfs64(const char* __path, struct statvfs64* __buf) __INTRODUCED_IN(21);
+int statvfs64(const char* _Nonnull __path, struct statvfs64* _Nonnull __buf);
 
 /** Equivalent to fstatvfs(). */
-int fstatvfs64(int __fd, struct statvfs64* __buf) __INTRODUCED_IN(21);
+int fstatvfs64(int __fd, struct statvfs64* _Nonnull __buf);
 
 __END_DECLS

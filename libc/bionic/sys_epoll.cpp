@@ -34,6 +34,8 @@
 
 extern "C" int __epoll_create1(int flags);
 extern "C" int __epoll_pwait(int, epoll_event*, int, int, const sigset64_t*, size_t);
+extern "C" int __epoll_pwait2(int, epoll_event*, int, const __kernel_timespec*, const sigset64_t*,
+                              size_t);
 
 int epoll_create(int size) {
   if (size <= 0) {
@@ -48,18 +50,37 @@ int epoll_create1(int flags) {
 }
 
 int epoll_pwait(int fd, epoll_event* events, int max_events, int timeout, const sigset_t* ss) {
-  SigSetConverter set;
-  sigset64_t* ss_ptr = nullptr;
-  if (ss != nullptr) {
-    set = {};
-    set.sigset = *ss;
-    ss_ptr = &set.sigset64;
-  }
-  return epoll_pwait64(fd, events, max_events, timeout, ss_ptr);
+  SigSetConverter set{ss};
+  return epoll_pwait64(fd, events, max_events, timeout, set.ptr);
 }
 
 int epoll_pwait64(int fd, epoll_event* events, int max_events, int timeout, const sigset64_t* ss) {
   return __epoll_pwait(fd, events, max_events, timeout, ss, sizeof(*ss));
+}
+
+int epoll_pwait2(int fd, epoll_event* events, int max_events, const timespec* timeout,
+                 const sigset_t* ss) {
+  SigSetConverter set{ss};
+  return epoll_pwait2_64(fd, events, max_events, timeout, set.ptr);
+}
+
+int epoll_pwait2_64(int fd, epoll_event* events, int max_events, const timespec* timeout,
+                    const sigset64_t* ss) {
+  // epoll_pwait2() is our first syscall that assumes a 64-bit time_t even for
+  // 32-bit processes, so for ILP32 we need to convert.
+  // TODO: factor this out into a TimeSpecConverter as/when we get more syscalls like this.
+#if __LP64__
+  const __kernel_timespec* kts_ptr = reinterpret_cast<const __kernel_timespec*>(timeout);
+#else
+  __kernel_timespec kts;
+  const __kernel_timespec* kts_ptr = nullptr;
+  if (timeout) {
+    kts.tv_sec = timeout->tv_sec;
+    kts.tv_nsec = timeout->tv_nsec;
+    kts_ptr = &kts;
+  }
+#endif
+  return __epoll_pwait2(fd, events, max_events, kts_ptr, ss, sizeof(*ss));
 }
 
 int epoll_wait(int fd, struct epoll_event* events, int max_events, int timeout) {

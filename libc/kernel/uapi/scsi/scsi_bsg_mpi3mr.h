@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef SCSI_BSG_MPI3MR_H_INCLUDED
 #define SCSI_BSG_MPI3MR_H_INCLUDED
 #include <linux/types.h>
@@ -220,9 +208,6 @@ struct mpi3mr_bsg_packet {
     struct mpi3mr_bsg_mptcmd mptcmd;
   } cmd;
 };
-#ifndef MPI3_NVME_ENCAP_CMD_MAX
-#define MPI3_NVME_ENCAP_CMD_MAX (1)
-#endif
 struct mpi3_nvme_encapsulated_request {
   __le16 host_tag;
   __u8 ioc_use_only02;
@@ -236,7 +221,7 @@ struct mpi3_nvme_encapsulated_request {
   __le16 flags;
   __le32 data_length;
   __le32 reserved14[3];
-  __le32 command[MPI3_NVME_ENCAP_CMD_MAX];
+  __le32 command[];
 };
 struct mpi3_nvme_encapsulated_error_reply {
   __le16 host_tag;
@@ -257,6 +242,8 @@ struct mpi3_nvme_encapsulated_error_reply {
 #define MPI3MR_NVME_DATA_FORMAT_PRP 0
 #define MPI3MR_NVME_DATA_FORMAT_SGL1 1
 #define MPI3MR_NVME_DATA_FORMAT_SGL2 2
+#define MPI3MR_NVMESGL_DATA_SEGMENT 0x00
+#define MPI3MR_NVMESGL_LAST_SEGMENT 0x03
 struct mpi3_scsi_task_mgmt_request {
   __le16 host_tag;
   __u8 ioc_use_only02;

@@ -279,7 +279,7 @@ TEST(stdlib, aligned_alloc_sweep) {
     for (size_t fail_align = last_align + 1; fail_align < align; fail_align++) {
       ASSERT_TRUE(aligned_alloc(fail_align, fail_align) == nullptr)
           << "Unexpected success at align " << fail_align;
-      ASSERT_EQ(EINVAL, errno) << "Unexpected errno at align " << fail_align;
+      ASSERT_ERRNO(EINVAL) << "Unexpected errno at align " << fail_align;
     }
     void* ptr = aligned_alloc(align, 2 * align);
     ASSERT_TRUE(ptr != nullptr) << "Unexpected failure at align " << align;
@@ -310,21 +310,21 @@ TEST(stdlib, realpath__NULL_filename) {
   const char* path = nullptr;
   char* p = realpath(path, nullptr);
   ASSERT_TRUE(p == nullptr);
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 }
 
 TEST(stdlib, realpath__empty_filename) {
   errno = 0;
   char* p = realpath("", nullptr);
   ASSERT_TRUE(p == nullptr);
-  ASSERT_EQ(ENOENT, errno);
+  ASSERT_ERRNO(ENOENT);
 }
 
 TEST(stdlib, realpath__ENOENT) {
   errno = 0;
   char* p = realpath("/this/directory/path/almost/certainly/does/not/exist", nullptr);
   ASSERT_TRUE(p == nullptr);
-  ASSERT_EQ(ENOENT, errno);
+  ASSERT_ERRNO(ENOENT);
 }
 
 TEST(stdlib, realpath__ELOOP) {
@@ -335,19 +335,19 @@ TEST(stdlib, realpath__ELOOP) {
   errno = 0;
   char* p = realpath(link.c_str(), nullptr);
   ASSERT_TRUE(p == nullptr);
-  ASSERT_EQ(ELOOP, errno);
+  ASSERT_ERRNO(ELOOP);
 }
 
 TEST(stdlib, realpath__component_after_non_directory) {
   errno = 0;
   char* p = realpath("/dev/null/.", nullptr);
   ASSERT_TRUE(p == nullptr);
-  ASSERT_EQ(ENOTDIR, errno);
+  ASSERT_ERRNO(ENOTDIR);
 
   errno = 0;
   p = realpath("/dev/null/..", nullptr);
   ASSERT_TRUE(p == nullptr);
-  ASSERT_EQ(ENOTDIR, errno);
+  ASSERT_ERRNO(ENOTDIR);
 }
 
 TEST(stdlib, realpath) {
@@ -403,7 +403,7 @@ TEST(stdlib, realpath__deleted) {
   errno = 0;
   char* result = realpath(path.c_str(), nullptr);
   ASSERT_EQ(nullptr, result) << result;
-  ASSERT_EQ(ENOENT, errno);
+  ASSERT_ERRNO(ENOENT);
   free(result);
 }
 
@@ -695,7 +695,7 @@ TEST(stdlib, ptsname_r_ENOTTY) {
   errno = 0;
   char buf[128];
   ASSERT_EQ(ENOTTY, ptsname_r(STDOUT_FILENO, buf, sizeof(buf)));
-  ASSERT_EQ(ENOTTY, errno);
+  ASSERT_ERRNO(ENOTTY);
 }
 
 TEST(stdlib, ptsname_r_EINVAL) {
@@ -704,7 +704,7 @@ TEST(stdlib, ptsname_r_EINVAL) {
   errno = 0;
   char* buf = nullptr;
   ASSERT_EQ(EINVAL, ptsname_r(fd, buf, 128));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   close(fd);
 }
 
@@ -714,7 +714,7 @@ TEST(stdlib, ptsname_r_ERANGE) {
   errno = 0;
   char buf[1];
   ASSERT_EQ(ERANGE, ptsname_r(fd, buf, sizeof(buf)));
-  ASSERT_EQ(ERANGE, errno);
+  ASSERT_ERRNO(ERANGE);
   close(fd);
 }
 
@@ -745,7 +745,7 @@ TEST(stdlib, ttyname_r_ENOTTY) {
   errno = 0;
   char buf[128];
   ASSERT_EQ(ENOTTY, ttyname_r(fd, buf, sizeof(buf)));
-  ASSERT_EQ(ENOTTY, errno);
+  ASSERT_ERRNO(ENOTTY);
   close(fd);
 }
 
@@ -755,7 +755,7 @@ TEST(stdlib, ttyname_r_EINVAL) {
   errno = 0;
   char* buf = nullptr;
   ASSERT_EQ(EINVAL, ttyname_r(fd, buf, 128));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
   close(fd);
 }
 
@@ -765,7 +765,7 @@ TEST(stdlib, ttyname_r_ERANGE) {
   errno = 0;
   char buf[1];
   ASSERT_EQ(ERANGE, ttyname_r(fd, buf, sizeof(buf)));
-  ASSERT_EQ(ERANGE, errno);
+  ASSERT_ERRNO(ERANGE);
   close(fd);
 }
 
@@ -773,7 +773,7 @@ TEST(stdlib, unlockpt_ENOTTY) {
   int fd = open("/dev/null", O_WRONLY);
   errno = 0;
   ASSERT_EQ(-1, unlockpt(fd));
-  ASSERT_EQ(ENOTTY, errno);
+  ASSERT_ERRNO(ENOTTY);
   close(fd);
 }
 
@@ -830,17 +830,17 @@ static void CheckStrToInt(T fn(const char* s, char** end, int base)) {
   // Negative base => invalid.
   errno = 0;
   ASSERT_EQ(T(0), fn("123", &end_p, -1));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 
   // Base 1 => invalid (base 0 means "please guess").
   errno = 0;
   ASSERT_EQ(T(0), fn("123", &end_p, 1));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 
   // Base > 36 => invalid.
   errno = 0;
   ASSERT_EQ(T(0), fn("123", &end_p, 37));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 
   // Both leading + or - are always allowed (even for the strtou* family).
   ASSERT_EQ(T(-123), fn("-123", &end_p, 10));
@@ -875,14 +875,14 @@ static void CheckStrToInt(T fn(const char* s, char** end, int base)) {
     end_p = nullptr;
     errno = 0;
     ASSERT_EQ(std::numeric_limits<T>::min(), fn(min.c_str(), &end_p, 0));
-    ASSERT_EQ(0, errno);
+    ASSERT_ERRNO(0);
     ASSERT_EQ('\0', *end_p);
     // Too negative (such as -129).
     min.back() = (min.back() + 1);
     end_p = nullptr;
     errno = 0;
     ASSERT_EQ(std::numeric_limits<T>::min(), fn(min.c_str(), &end_p, 0));
-    ASSERT_EQ(ERANGE, errno);
+    ASSERT_ERRNO(ERANGE);
     ASSERT_EQ('\0', *end_p);
   }
 
@@ -891,15 +891,21 @@ static void CheckStrToInt(T fn(const char* s, char** end, int base)) {
   end_p = nullptr;
   errno = 0;
   ASSERT_EQ(std::numeric_limits<T>::max(), fn(max.c_str(), &end_p, 0));
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
   ASSERT_EQ('\0', *end_p);
   // Too positive (such as 128).
   max.back() = (max.back() + 1);
   end_p = nullptr;
   errno = 0;
   ASSERT_EQ(std::numeric_limits<T>::max(), fn(max.c_str(), &end_p, 0));
-  ASSERT_EQ(ERANGE, errno);
+  ASSERT_ERRNO(ERANGE);
   ASSERT_EQ('\0', *end_p);
+
+  // Junk at the end of a valid conversion.
+  errno = 0;
+  ASSERT_EQ(static_cast<T>(123), fn("123abc", &end_p, 0));
+  ASSERT_ERRNO(0);
+  ASSERT_STREQ("abc", end_p);
 
   // In case of overflow, strto* leaves us pointing past the end of the number,
   // not at the digit that overflowed.
@@ -907,14 +913,14 @@ static void CheckStrToInt(T fn(const char* s, char** end, int base)) {
   errno = 0;
   ASSERT_EQ(std::numeric_limits<T>::max(),
             fn("99999999999999999999999999999999999999999999999999999abc", &end_p, 0));
-  ASSERT_EQ(ERANGE, errno);
+  ASSERT_ERRNO(ERANGE);
   ASSERT_STREQ("abc", end_p);
   if (std::numeric_limits<T>::is_signed) {
       end_p = nullptr;
       errno = 0;
       ASSERT_EQ(std::numeric_limits<T>::min(),
                 fn("-99999999999999999999999999999999999999999999999999999abc", &end_p, 0));
-      ASSERT_EQ(ERANGE, errno);
+      ASSERT_ERRNO(ERANGE);
       ASSERT_STREQ("abc", end_p);
   }
 }

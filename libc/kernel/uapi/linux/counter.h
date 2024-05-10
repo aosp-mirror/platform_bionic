@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_COUNTER_H_
 #define _UAPI_COUNTER_H_
 #include <linux/ioctl.h>
@@ -71,6 +59,12 @@ enum counter_count_mode {
   COUNTER_COUNT_MODE_RANGE_LIMIT,
   COUNTER_COUNT_MODE_NON_RECYCLE,
   COUNTER_COUNT_MODE_MODULO_N,
+  COUNTER_COUNT_MODE_INTERRUPT_ON_TERMINAL_COUNT,
+  COUNTER_COUNT_MODE_HARDWARE_RETRIGGERABLE_ONESHOT,
+  COUNTER_COUNT_MODE_RATE_GENERATOR,
+  COUNTER_COUNT_MODE_SQUARE_WAVE_MODE,
+  COUNTER_COUNT_MODE_SOFTWARE_TRIGGERED_STROBE,
+  COUNTER_COUNT_MODE_HARDWARE_TRIGGERED_STROBE,
 };
 enum counter_function {
   COUNTER_FUNCTION_INCREASE,

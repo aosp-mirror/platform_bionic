@@ -46,7 +46,7 @@ from typing import Dict, List, Optional, Set
 from subprocess import PIPE, DEVNULL
 from pathlib import Path
 
-from common_types import LoadedLibrary, SymbolRef, SymKind, bfs_walk, json_to_elf_tree
+from common_types import LoadedLibrary, SymbolRef, SymBind, SymKind, bfs_walk, json_to_elf_tree
 
 
 g_obfuscate = True
@@ -115,9 +115,13 @@ kBionicIgnoredSymbols: Set[str] = set([
     'getprogname',
     'gettid',
     'isnanf',
+    'lseek64',
+    'lstat64',
     'mallinfo',
     'malloc_info',
+    'pread64',
     'pthread_gettid_np',
+    'pwrite64',
     'res_mkquery',
     'strlcpy',
     'strtoll_l',
@@ -191,15 +195,16 @@ def make_asm_file(lib: LoadedLibrary, is_main: bool, out_filename: Path, map_out
             if not d.defined: continue
             sym = trans_sym(d.name, None)
             if sym is None: continue
+            binding = 'weak' if d.bind == SymBind.Weak else 'globl'
             if d.kind == SymKind.Func:
                 out.write('.text\n'
-                          f'.globl {sym}\n'
+                          f'.{binding} {sym}\n'
                           f'.type {sym},%function\n'
                           f'{sym}:\n'
                           'nop\n')
             else: # SymKind.Var
                 out.write('.data\n'
-                          f'.globl {sym}\n'
+                          f'.{binding} {sym}\n'
                           f'.type {sym},%object\n'
                           f'{sym}:\n'
                           f'.space __SIZEOF_POINTER__\n')

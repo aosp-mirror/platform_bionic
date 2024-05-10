@@ -112,7 +112,7 @@ void StressSizeClass(size_t numThreads, size_t allocSize) {
 
   // Do an explicit purge to ensure we will be more likely to get the actual
   // in-use memory.
-  mallopt(M_PURGE, 0);
+  mallopt(M_PURGE_ALL, 0);
 
   android::meminfo::ProcMemInfo proc_mem(getpid());
   const std::vector<android::meminfo::Vma>& maps = proc_mem.MapsWithoutUsageStats();

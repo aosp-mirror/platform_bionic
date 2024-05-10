@@ -1,25 +1,14 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _LINUX_XFRM_H
 #define _LINUX_XFRM_H
 #include <linux/in6.h>
 #include <linux/types.h>
+#include <linux/stddef.h>
 typedef union {
   __be32 a4;
   __be32 a6[4];
@@ -35,7 +24,7 @@ struct xfrm_sec_ctx {
   __u8 ctx_alg;
   __u16 ctx_len;
   __u32 ctx_sid;
-  char ctx_str[];
+  char ctx_str[] __counted_by(ctx_len);
 };
 #define XFRM_SC_DOI_RESERVED 0
 #define XFRM_SC_DOI_LSM 1

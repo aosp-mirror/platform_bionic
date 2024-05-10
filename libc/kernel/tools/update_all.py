@@ -92,6 +92,7 @@ def GenerateGlibcSyscallsHeader(updater):
                      'kernel/uapi/asm-arm/asm/unistd.h',
                      'kernel/uapi/asm-arm/asm/unistd-eabi.h',
                      'kernel/uapi/asm-arm/asm/unistd-oabi.h',
+                     'kernel/uapi/asm-riscv/asm/unistd.h',
                      'kernel/uapi/asm-x86/asm/unistd_32.h',
                      'kernel/uapi/asm-x86/asm/unistd_64.h',
                      'kernel/uapi/asm-x86/asm/unistd_x32.h']:

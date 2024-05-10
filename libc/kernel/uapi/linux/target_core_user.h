@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef __TARGET_CORE_USER_H
 #define __TARGET_CORE_USER_H
 #include <linux/types.h>
@@ -61,7 +49,7 @@ struct tcmu_cmd_entry {
       __u64 cdb_off;
       __u64 __pad1;
       __u64 __pad2;
-      struct iovec iov[0];
+      __DECLARE_FLEX_ARRAY(struct iovec, iov);
     } req;
     struct {
       __u8 scsi_status;

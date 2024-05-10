@@ -34,6 +34,8 @@
 #include <errno.h>
 #include <gtest/gtest.h>
 
+#include "utils.h"
+
 TEST(sys_random, getentropy) {
 #if defined(HAVE_SYS_RANDOM)
   char buf1[64];
@@ -48,13 +50,16 @@ TEST(sys_random, getentropy) {
 }
 
 TEST(sys_random, getentropy_EFAULT) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
 #if defined(HAVE_SYS_RANDOM)
   errno = 0;
   ASSERT_EQ(-1, getentropy(nullptr, 1));
-  ASSERT_EQ(EFAULT, errno);
+  ASSERT_ERRNO(EFAULT);
 #else
   GTEST_SKIP() << "<sys/random.h> not available";
 #endif
+#pragma clang diagnostic pop
 }
 
 TEST(sys_random, getentropy_EIO) {
@@ -64,7 +69,7 @@ TEST(sys_random, getentropy_EIO) {
 
   errno = 0;
   ASSERT_EQ(-1, getentropy(buf, sizeof(buf)));
-  ASSERT_EQ(EIO, errno);
+  ASSERT_ERRNO(EIO);
 #else
   GTEST_SKIP() << "<sys/random.h> not available";
 #endif
@@ -84,13 +89,16 @@ TEST(sys_random, getrandom) {
 }
 
 TEST(sys_random, getrandom_EFAULT) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
 #if defined(HAVE_SYS_RANDOM)
   errno = 0;
   ASSERT_EQ(-1, getrandom(nullptr, 256, 0));
-  ASSERT_EQ(EFAULT, errno);
+  ASSERT_ERRNO(EFAULT);
 #else
   GTEST_SKIP() << "<sys/random.h> not available";
 #endif
+#pragma clang diagnostic pop
 }
 
 TEST(sys_random, getrandom_EINVAL) {
@@ -98,7 +106,7 @@ TEST(sys_random, getrandom_EINVAL) {
   errno = 0;
   char buf[64];
   ASSERT_EQ(-1, getrandom(buf, sizeof(buf), ~0));
-  ASSERT_EQ(EINVAL, errno);
+  ASSERT_ERRNO(EINVAL);
 #else
   GTEST_SKIP() << "<sys/random.h> not available";
 #endif

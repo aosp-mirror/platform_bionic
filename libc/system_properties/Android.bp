@@ -1,4 +1,5 @@
 package {
+    default_team: "trendy_team_native_tools_libraries",
     // See: http://go/android-license-faq
     // A large-scale-change added 'default_applicable_licenses' to import
     // all of the 'license_kinds' from "bionic_libc_license"
@@ -32,6 +33,9 @@ cc_library_static {
         "bionic/libstdc++/include",
     ],
     export_include_dirs: ["include"],
+    apex_available: [
+        "com.android.runtime",
+    ],
 }
 
 cc_benchmark {

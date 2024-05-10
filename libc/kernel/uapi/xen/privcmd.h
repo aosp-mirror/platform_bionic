@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef __LINUX_PUBLIC_PRIVCMD_H__
 #define __LINUX_PUBLIC_PRIVCMD_H__
 #include <linux/types.h>
@@ -33,13 +21,13 @@ struct privcmd_mmap_entry {
 struct privcmd_mmap {
   int num;
   domid_t dom;
-  struct privcmd_mmap_entry __user * entry;
+  struct privcmd_mmap_entry  * entry;
 };
 struct privcmd_mmapbatch {
   int num;
   domid_t dom;
   __u64 addr;
-  xen_pfn_t __user * arr;
+  xen_pfn_t  * arr;
 };
 #define PRIVCMD_MMAPBATCH_MFN_ERROR 0xf0000000U
 #define PRIVCMD_MMAPBATCH_PAGED_ERROR 0x80000000U
@@ -47,17 +35,17 @@ struct privcmd_mmapbatch_v2 {
   unsigned int num;
   domid_t dom;
   __u64 addr;
-  const xen_pfn_t __user * arr;
-  int __user * err;
+  const xen_pfn_t  * arr;
+  int  * err;
 };
 struct privcmd_dm_op_buf {
-  void __user * uptr;
+  void  * uptr;
   size_t size;
 };
 struct privcmd_dm_op {
   domid_t dom;
   __u16 num;
-  const struct privcmd_dm_op_buf __user * ubufs;
+  const struct privcmd_dm_op_buf  * ubufs;
 };
 struct privcmd_mmap_resource {
   domid_t dom;
@@ -67,6 +55,28 @@ struct privcmd_mmap_resource {
   __u64 num;
   __u64 addr;
 };
+#define PRIVCMD_IRQFD_FLAG_DEASSIGN (1 << 0)
+struct privcmd_irqfd {
+  __u64 dm_op;
+  __u32 size;
+  __u32 fd;
+  __u32 flags;
+  domid_t dom;
+  __u8 pad[2];
+};
+#define PRIVCMD_IOEVENTFD_FLAG_DEASSIGN (1 << 0)
+struct privcmd_ioeventfd {
+  __u64 ioreq;
+  __u64 ports;
+  __u64 addr;
+  __u32 addr_len;
+  __u32 event_fd;
+  __u32 vcpus;
+  __u32 vq;
+  __u32 flags;
+  domid_t dom;
+  __u8 pad[2];
+};
 #define IOCTL_PRIVCMD_HYPERCALL _IOC(_IOC_NONE, 'P', 0, sizeof(struct privcmd_hypercall))
 #define IOCTL_PRIVCMD_MMAP _IOC(_IOC_NONE, 'P', 2, sizeof(struct privcmd_mmap))
 #define IOCTL_PRIVCMD_MMAPBATCH _IOC(_IOC_NONE, 'P', 3, sizeof(struct privcmd_mmapbatch))
@@ -74,4 +84,6 @@ struct privcmd_mmap_resource {
 #define IOCTL_PRIVCMD_DM_OP _IOC(_IOC_NONE, 'P', 5, sizeof(struct privcmd_dm_op))
 #define IOCTL_PRIVCMD_RESTRICT _IOC(_IOC_NONE, 'P', 6, sizeof(domid_t))
 #define IOCTL_PRIVCMD_MMAP_RESOURCE _IOC(_IOC_NONE, 'P', 7, sizeof(struct privcmd_mmap_resource))
+#define IOCTL_PRIVCMD_IRQFD _IOW('P', 8, struct privcmd_irqfd)
+#define IOCTL_PRIVCMD_IOEVENTFD _IOW('P', 9, struct privcmd_ioeventfd)
 #endif

@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef __LINUX_UVCVIDEO_H_
 #define __LINUX_UVCVIDEO_H_
 #include <linux/ioctl.h>
@@ -36,9 +24,10 @@
 #define UVC_CTRL_FLAG_AUTO_UPDATE (1 << 7)
 #define UVC_CTRL_FLAG_ASYNCHRONOUS (1 << 8)
 #define UVC_CTRL_FLAG_GET_RANGE (UVC_CTRL_FLAG_GET_CUR | UVC_CTRL_FLAG_GET_MIN | UVC_CTRL_FLAG_GET_MAX | UVC_CTRL_FLAG_GET_RES | UVC_CTRL_FLAG_GET_DEF)
+#define UVC_MENU_NAME_LEN 32
 struct uvc_menu_info {
   __u32 value;
-  __u8 name[32];
+  __u8 name[UVC_MENU_NAME_LEN];
 };
 struct uvc_xu_control_mapping {
   __u32 id;
@@ -49,7 +38,7 @@ struct uvc_xu_control_mapping {
   __u8 offset;
   __u32 v4l2_type;
   __u32 data_type;
-  struct uvc_menu_info __user * menu_info;
+  struct uvc_menu_info  * menu_info;
   __u32 menu_count;
   __u32 reserved[4];
 };
@@ -58,7 +47,7 @@ struct uvc_xu_control_query {
   __u8 selector;
   __u8 query;
   __u16 size;
-  __u8 __user * data;
+  __u8  * data;
 };
 #define UVCIOC_CTRL_MAP _IOWR('u', 0x20, struct uvc_xu_control_mapping)
 #define UVCIOC_CTRL_QUERY _IOWR('u', 0x21, struct uvc_xu_control_query)

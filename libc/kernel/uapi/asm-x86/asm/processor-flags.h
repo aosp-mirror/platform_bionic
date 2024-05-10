@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_ASM_X86_PROCESSOR_FLAGS_H
 #define _UAPI_ASM_X86_PROCESSOR_FLAGS_H
 #include <linux/const.h>
@@ -83,6 +71,10 @@
 #define X86_CR3_PCD _BITUL(X86_CR3_PCD_BIT)
 #define X86_CR3_PCID_BITS 12
 #define X86_CR3_PCID_MASK (_AC((1UL << X86_CR3_PCID_BITS) - 1, UL))
+#define X86_CR3_LAM_U57_BIT 61
+#define X86_CR3_LAM_U57 _BITULL(X86_CR3_LAM_U57_BIT)
+#define X86_CR3_LAM_U48_BIT 62
+#define X86_CR3_LAM_U48 _BITULL(X86_CR3_LAM_U48_BIT)
 #define X86_CR3_PCID_NOFLUSH_BIT 63
 #define X86_CR3_PCID_NOFLUSH _BITULL(X86_CR3_PCID_NOFLUSH_BIT)
 #define X86_CR4_VME_BIT 0
@@ -129,6 +121,8 @@
 #define X86_CR4_PKE _BITUL(X86_CR4_PKE_BIT)
 #define X86_CR4_CET_BIT 23
 #define X86_CR4_CET _BITUL(X86_CR4_CET_BIT)
+#define X86_CR4_LAM_SUP_BIT 28
+#define X86_CR4_LAM_SUP _BITUL(X86_CR4_LAM_SUP_BIT)
 #define X86_CR8_TPR _AC(0x0000000f, UL)
 #define CX86_PCR0 0x20
 #define CX86_GCR 0xb8

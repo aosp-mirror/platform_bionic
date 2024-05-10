@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _LINUX_SNMP_H
 #define _LINUX_SNMP_H
 enum {
@@ -24,7 +12,7 @@ enum {
   IPSTATS_MIB_INOCTETS,
   IPSTATS_MIB_INDELIVERS,
   IPSTATS_MIB_OUTFORWDATAGRAMS,
-  IPSTATS_MIB_OUTPKTS,
+  IPSTATS_MIB_OUTREQUESTS,
   IPSTATS_MIB_OUTOCTETS,
   IPSTATS_MIB_INHDRERRORS,
   IPSTATS_MIB_INTOOBIGERRORS,
@@ -56,6 +44,7 @@ enum {
   IPSTATS_MIB_ECT0PKTS,
   IPSTATS_MIB_CEPKTS,
   IPSTATS_MIB_REASM_OVERLAPS,
+  IPSTATS_MIB_OUTPKTS,
   __IPSTATS_MIB_MAX
 };
 enum {
@@ -87,6 +76,8 @@ enum {
   ICMP_MIB_OUTADDRMASKS,
   ICMP_MIB_OUTADDRMASKREPS,
   ICMP_MIB_CSUMERRORS,
+  ICMP_MIB_RATELIMITGLOBAL,
+  ICMP_MIB_RATELIMITHOST,
   __ICMP_MIB_MAX
 };
 #define __ICMPMSG_MIB_MAX 512
@@ -97,6 +88,7 @@ enum {
   ICMP6_MIB_OUTMSGS,
   ICMP6_MIB_OUTERRORS,
   ICMP6_MIB_CSUMERRORS,
+  ICMP6_MIB_RATELIMITHOST,
   __ICMP6_MIB_MAX
 };
 #define __ICMP6MSG_MIB_MAX 512
@@ -260,6 +252,11 @@ enum {
   LINUX_MIB_TCPMIGRATEREQSUCCESS,
   LINUX_MIB_TCPMIGRATEREQFAILURE,
   LINUX_MIB_TCPPLBREHASH,
+  LINUX_MIB_TCPAOREQUIRED,
+  LINUX_MIB_TCPAOBAD,
+  LINUX_MIB_TCPAOKEYNOTFOUND,
+  LINUX_MIB_TCPAOGOOD,
+  LINUX_MIB_TCPAODROPPEDICMPS,
   __LINUX_MIB_MAX
 };
 enum {

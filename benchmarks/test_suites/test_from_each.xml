@@ -20,7 +20,7 @@
 </fn>
 <fn>
   <name>BM_string_memcpy</name>
-  <args>512 4 4</args>
+  <args>512/4/4</args>
 </fn>
 <fn>
   <name>BM_time_clock_gettime</name>

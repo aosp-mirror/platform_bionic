@@ -3,6 +3,7 @@
 // ==============================================================
 // Used by libmemunreachable
 package {
+    default_team: "trendy_team_native_tools_libraries",
     // See: http://go/android-license-faq
     // A large-scale-change added 'default_applicable_licenses' to import
     // all of the 'license_kinds' from "bionic_libc_license"
@@ -61,6 +62,7 @@ cc_library {
         "DebugData.cpp",
         "debug_disable.cpp",
         "GuardData.cpp",
+        "LogAllocatorStats.cpp",
         "malloc_debug.cpp",
         "PointerData.cpp",
         "RecordData.cpp",
@@ -197,4 +199,5 @@ cc_test {
         "-O0",
     ],
     test_suites: ["general-tests"],
+    test_config: "tests/AndroidTest.xml",
 }

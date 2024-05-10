@@ -71,6 +71,6 @@ int pidfd_getfd(int __pidfd, int __targetfd, unsigned int __flags) __INTRODUCED_
  *
  * Available since API level 31.
  */
-int pidfd_send_signal(int __pidfd, int __sig, siginfo_t *__info, unsigned int __flags) __INTRODUCED_IN(31);
+int pidfd_send_signal(int __pidfd, int __sig, siginfo_t * _Nullable __info, unsigned int __flags) __INTRODUCED_IN(31);
 
 __END_DECLS

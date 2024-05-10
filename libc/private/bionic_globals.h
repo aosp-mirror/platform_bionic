@@ -47,7 +47,8 @@ struct libc_globals {
   vdso_entry vdso[VDSO_END];
   long setjmp_cookie;
   uintptr_t heap_pointer_tag;
-  _Atomic(bool) memtag_stack;
+  _Atomic(bool) decay_time_enabled;
+  _Atomic(bool) memtag;
 
   // In order to allow a complete switch between dispatch tables without
   // the need for copying each function by function in the structure,
@@ -65,9 +66,23 @@ struct libc_globals {
   MallocDispatch malloc_dispatch_table;
 };
 
+struct memtag_dynamic_entries_t {
+  void* memtag_globals;
+  size_t memtag_globalssz;
+  bool has_memtag_mode;
+  unsigned memtag_mode;
+  bool memtag_heap;
+  bool memtag_stack;
+};
+
 __LIBC_HIDDEN__ extern WriteProtected<libc_globals> __libc_globals;
+// This cannot be in __libc_globals, because we cannot access the
+// WriteProtected in a thread-safe way.
+// See b/328256432.
+__LIBC_HIDDEN__ extern _Atomic(bool) __libc_memtag_stack;
 
 struct abort_msg_t;
+struct crash_detail_page_t;
 namespace gwp_asan {
 struct AllocatorState;
 struct AllocationMetadata;
@@ -115,10 +130,15 @@ struct libc_shared_globals {
   const char* scudo_region_info = nullptr;
   const char* scudo_ring_buffer = nullptr;
   size_t scudo_ring_buffer_size = 0;
+  size_t scudo_stack_depot_size = 0;
 
   HeapTaggingLevel initial_heap_tagging_level = M_HEAP_TAGGING_LEVEL_NONE;
   bool initial_memtag_stack = false;
   int64_t heap_tagging_upgrade_timer_sec = 0;
+
+  void (*memtag_stack_dlopen_callback)() = nullptr;
+  pthread_mutex_t crash_detail_page_lock = PTHREAD_MUTEX_INITIALIZER;
+  crash_detail_page_t* crash_detail_page = nullptr;
 };
 
 __LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals();

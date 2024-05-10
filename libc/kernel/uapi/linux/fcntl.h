@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_LINUX_FCNTL_H
 #define _UAPI_LINUX_FCNTL_H
 #include <asm/fcntl.h>
@@ -34,6 +22,7 @@
 #define F_SEAL_GROW 0x0004
 #define F_SEAL_WRITE 0x0008
 #define F_SEAL_FUTURE_WRITE 0x0010
+#define F_SEAL_EXEC 0x0020
 #define F_GET_RW_HINT (F_LINUX_SPECIFIC_BASE + 11)
 #define F_SET_RW_HINT (F_LINUX_SPECIFIC_BASE + 12)
 #define F_GET_FILE_RW_HINT (F_LINUX_SPECIFIC_BASE + 13)
@@ -64,4 +53,5 @@
 #define AT_STATX_FORCE_SYNC 0x2000
 #define AT_STATX_DONT_SYNC 0x4000
 #define AT_RECURSIVE 0x8000
+#define AT_HANDLE_FID AT_REMOVEDIR
 #endif

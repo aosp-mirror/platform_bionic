@@ -1,28 +1,14 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI__SOUND_EMU10K1_H
 #define _UAPI__SOUND_EMU10K1_H
 #ifdef __linux__
 #include <linux/types.h>
 #endif
-#define EMU10K1_CARD_CREATIVE 0x00000000
-#define EMU10K1_CARD_EMUAPS 0x00000001
 #define EMU10K1_FX8010_PCM_COUNT 8
 #define __EMU10K1_DECLARE_BITMAP(name,bits) unsigned long name[(bits) / (sizeof(unsigned long) * 8)]
 #define iMAC0 0x00
@@ -41,10 +27,29 @@
 #define iEXP 0x0d
 #define iINTERP 0x0e
 #define iSKIP 0x0f
+#define LOWORD_OPX_MASK 0x000ffc00
+#define LOWORD_OPY_MASK 0x000003ff
+#define HIWORD_OPCODE_MASK 0x00f00000
+#define HIWORD_RESULT_MASK 0x000ffc00
+#define HIWORD_OPA_MASK 0x000003ff
+#define A_LOWORD_OPX_MASK 0x007ff000
+#define A_LOWORD_OPY_MASK 0x000007ff
+#define A_HIWORD_OPCODE_MASK 0x0f000000
+#define A_HIWORD_RESULT_MASK 0x007ff000
+#define A_HIWORD_OPA_MASK 0x000007ff
 #define FXBUS(x) (0x00 + (x))
 #define EXTIN(x) (0x10 + (x))
 #define EXTOUT(x) (0x20 + (x))
 #define FXBUS2(x) (0x30 + (x))
+#define A_FXBUS(x) (0x00 + (x))
+#define A_EXTIN(x) (0x40 + (x))
+#define A_P16VIN(x) (0x50 + (x))
+#define A_EXTOUT(x) (0x60 + (x))
+#define A_FXBUS2(x) (0x80 + (x))
+#define A_EMU32OUTH(x) (0xa0 + (x))
+#define A_EMU32OUTL(x) (0xb0 + (x))
+#define A3_EMU32IN(x) (0x160 + (x))
+#define A3_EMU32OUT(x) (0x1E0 + (x))
 #define C_00000000 0x40
 #define C_00000001 0x41
 #define C_00000002 0x42
@@ -73,33 +78,71 @@
 #define GPR_NOISE1 0x59
 #define GPR_IRQ 0x5a
 #define GPR_DBAC 0x5b
+#define A_C_00000000 0xc0
+#define A_C_00000001 0xc1
+#define A_C_00000002 0xc2
+#define A_C_00000003 0xc3
+#define A_C_00000004 0xc4
+#define A_C_00000008 0xc5
+#define A_C_00000010 0xc6
+#define A_C_00000020 0xc7
+#define A_C_00000100 0xc8
+#define A_C_00010000 0xc9
+#define A_C_00000800 0xca
+#define A_C_10000000 0xcb
+#define A_C_20000000 0xcc
+#define A_C_40000000 0xcd
+#define A_C_80000000 0xce
+#define A_C_7fffffff 0xcf
+#define A_C_ffffffff 0xd0
+#define A_C_fffffffe 0xd1
+#define A_C_c0000000 0xd2
+#define A_C_4f1bbcdc 0xd3
+#define A_C_5a7ef9db 0xd4
+#define A_C_00100000 0xd5
+#define A_GPR_ACCU 0xd6
+#define A_GPR_COND 0xd7
+#define A_GPR_NOISE0 0xd8
+#define A_GPR_NOISE1 0xd9
+#define A_GPR_IRQ 0xda
+#define A_GPR_DBAC 0xdb
+#define A_GPR_DBACE 0xde
+#define FXGPREGBASE 0x100
+#define A_FXGPREGBASE 0x400
+#define A_TANKMEMCTLREGBASE 0x100
+#define A_TANKMEMCTLREG_MASK 0x1f
+#define TANKMEMDATAREGBASE 0x200
+#define TANKMEMDATAREG_MASK 0x000fffff
+#define TANKMEMADDRREGBASE 0x300
+#define TANKMEMADDRREG_ADDR_MASK 0x000fffff
+#define TANKMEMADDRREG_CLEAR 0x00800000
+#define TANKMEMADDRREG_ALIGN 0x00400000
+#define TANKMEMADDRREG_WRITE 0x00200000
+#define TANKMEMADDRREG_READ 0x00100000
 #define GPR(x) (FXGPREGBASE + (x))
 #define ITRAM_DATA(x) (TANKMEMDATAREGBASE + 0x00 + (x))
 #define ETRAM_DATA(x) (TANKMEMDATAREGBASE + 0x80 + (x))
 #define ITRAM_ADDR(x) (TANKMEMADDRREGBASE + 0x00 + (x))
 #define ETRAM_ADDR(x) (TANKMEMADDRREGBASE + 0x80 + (x))
+#define A_GPR(x) (A_FXGPREGBASE + (x))
 #define A_ITRAM_DATA(x) (TANKMEMDATAREGBASE + 0x00 + (x))
 #define A_ETRAM_DATA(x) (TANKMEMDATAREGBASE + 0xc0 + (x))
 #define A_ITRAM_ADDR(x) (TANKMEMADDRREGBASE + 0x00 + (x))
 #define A_ETRAM_ADDR(x) (TANKMEMADDRREGBASE + 0xc0 + (x))
 #define A_ITRAM_CTL(x) (A_TANKMEMCTLREGBASE + 0x00 + (x))
 #define A_ETRAM_CTL(x) (A_TANKMEMCTLREGBASE + 0xc0 + (x))
-#define A_FXBUS(x) (0x00 + (x))
-#define A_EXTIN(x) (0x40 + (x))
-#define A_P16VIN(x) (0x50 + (x))
-#define A_EXTOUT(x) (0x60 + (x))
-#define A_FXBUS2(x) (0x80 + (x))
-#define A_EMU32OUTH(x) (0xa0 + (x))
-#define A_EMU32OUTL(x) (0xb0 + (x))
-#define A3_EMU32IN(x) (0x160 + (x))
-#define A3_EMU32OUT(x) (0x1E0 + (x))
-#define A_GPR(x) (A_FXGPREGBASE + (x))
 #define CC_REG_NORMALIZED C_00000001
 #define CC_REG_BORROW C_00000002
 #define CC_REG_MINUS C_00000004
 #define CC_REG_ZERO C_00000008
 #define CC_REG_SATURATE C_00000010
 #define CC_REG_NONZERO C_00000100
+#define A_CC_REG_NORMALIZED A_C_00000001
+#define A_CC_REG_BORROW A_C_00000002
+#define A_CC_REG_MINUS A_C_00000004
+#define A_CC_REG_ZERO A_C_00000008
+#define A_CC_REG_SATURATE A_C_00000010
+#define A_CC_REG_NONZERO A_C_00000100
 #define FXBUS_PCM_LEFT 0x00
 #define FXBUS_PCM_RIGHT 0x01
 #define FXBUS_PCM_LEFT_REAR 0x02
@@ -180,35 +223,6 @@
 #define A_EXTOUT_ADC_CAP_L 0x16
 #define A_EXTOUT_ADC_CAP_R 0x17
 #define A_EXTOUT_MIC_CAP 0x18
-#define A_C_00000000 0xc0
-#define A_C_00000001 0xc1
-#define A_C_00000002 0xc2
-#define A_C_00000003 0xc3
-#define A_C_00000004 0xc4
-#define A_C_00000008 0xc5
-#define A_C_00000010 0xc6
-#define A_C_00000020 0xc7
-#define A_C_00000100 0xc8
-#define A_C_00010000 0xc9
-#define A_C_00000800 0xca
-#define A_C_10000000 0xcb
-#define A_C_20000000 0xcc
-#define A_C_40000000 0xcd
-#define A_C_80000000 0xce
-#define A_C_7fffffff 0xcf
-#define A_C_ffffffff 0xd0
-#define A_C_fffffffe 0xd1
-#define A_C_c0000000 0xd2
-#define A_C_4f1bbcdc 0xd3
-#define A_C_5a7ef9db 0xd4
-#define A_C_00100000 0xd5
-#define A_GPR_ACCU 0xd6
-#define A_GPR_COND 0xd7
-#define A_GPR_NOISE0 0xd8
-#define A_GPR_NOISE1 0xd9
-#define A_GPR_IRQ 0xda
-#define A_GPR_DBAC 0xdb
-#define A_GPR_DBACE 0xde
 #define EMU10K1_DBG_ZC 0x80000000
 #define EMU10K1_DBG_SATURATION_OCCURED 0x02000000
 #define EMU10K1_DBG_SATURATION_ADDR 0x01ff0000
@@ -216,11 +230,13 @@
 #define EMU10K1_DBG_STEP 0x00004000
 #define EMU10K1_DBG_CONDITION_CODE 0x00003e00
 #define EMU10K1_DBG_SINGLE_STEP_ADDR 0x000001ff
-#define TANKMEMADDRREG_ADDR_MASK 0x000fffff
-#define TANKMEMADDRREG_CLEAR 0x00800000
-#define TANKMEMADDRREG_ALIGN 0x00400000
-#define TANKMEMADDRREG_WRITE 0x00200000
-#define TANKMEMADDRREG_READ 0x00100000
+#define A_DBG_ZC 0x40000000
+#define A_DBG_SATURATION_OCCURED 0x20000000
+#define A_DBG_SATURATION_ADDR 0x0ffc0000
+#define A_DBG_SINGLE_STEP 0x00020000
+#define A_DBG_STEP 0x00010000
+#define A_DBG_CONDITION_CODE 0x0000f800
+#define A_DBG_STEP_ADDR 0x000003ff
 struct snd_emu10k1_fx8010_info {
   unsigned int internal_tram_size;
   unsigned int external_tram_size;
@@ -234,6 +250,8 @@ struct snd_emu10k1_fx8010_info {
 #define EMU10K1_GPR_TRANSLATION_BASS 2
 #define EMU10K1_GPR_TRANSLATION_TREBLE 3
 #define EMU10K1_GPR_TRANSLATION_ONOFF 4
+#define EMU10K1_GPR_TRANSLATION_NEGATE 5
+#define EMU10K1_GPR_TRANSLATION_NEG_TABLE100 6
 enum emu10k1_ctl_elem_iface {
   EMU10K1_CTL_ELEM_IFACE_MIXER = 2,
   EMU10K1_CTL_ELEM_IFACE_PCM = 3,
@@ -251,9 +269,9 @@ struct snd_emu10k1_fx8010_control_gpr {
   unsigned int vcount;
   unsigned int count;
   unsigned short gpr[32];
-  unsigned int value[32];
-  unsigned int min;
-  unsigned int max;
+  int value[32];
+  int min;
+  int max;
   unsigned int translation;
   const unsigned int * tlv;
 };

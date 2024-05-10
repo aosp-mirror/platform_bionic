@@ -38,6 +38,7 @@
 #include <new>
 
 #include <async_safe/log.h>
+#include <private/android_filesystem_config.h>
 
 #include "system_properties/system_properties.h"
 
@@ -59,31 +60,28 @@ bool ContextsSerialized::InitializeContextNodes() {
   context_nodes_mmap_size_ = context_nodes_mmap_size;
 
   for (size_t i = 0; i < num_context_nodes; ++i) {
-    new (&context_nodes_[i]) ContextNode(property_info_area_file_->context(i), filename_);
+    new (&context_nodes_[i]) ContextNode(property_info_area_file_->context(i), dirname_);
   }
 
   return true;
 }
 
 bool ContextsSerialized::MapSerialPropertyArea(bool access_rw, bool* fsetxattr_failed) {
-  char filename[PROP_FILENAME_MAX];
-  int len = async_safe_format_buffer(filename, sizeof(filename), "%s/properties_serial", filename_);
-  if (len < 0 || len >= PROP_FILENAME_MAX) {
-    serial_prop_area_ = nullptr;
-    return false;
-  }
-
   if (access_rw) {
-    serial_prop_area_ =
-        prop_area::map_prop_area_rw(filename, "u:object_r:properties_serial:s0", fsetxattr_failed);
+    serial_prop_area_ = prop_area::map_prop_area_rw(
+        serial_filename_.c_str(), "u:object_r:properties_serial:s0", fsetxattr_failed);
   } else {
-    serial_prop_area_ = prop_area::map_prop_area(filename);
+    serial_prop_area_ = prop_area::map_prop_area(serial_filename_.c_str());
   }
   return serial_prop_area_;
 }
 
-bool ContextsSerialized::InitializeProperties() {
-  if (!property_info_area_file_.LoadDefaultPath()) {
+// Note: load_default_path is only used for testing, as it will cause properties to be loaded from
+// one file (specified by PropertyInfoAreaFile.LoadDefaultPath), but be written to "filename".
+bool ContextsSerialized::InitializeProperties(bool load_default_path) {
+  if (load_default_path && !property_info_area_file_.LoadDefaultPath()) {
+    return false;
+  } else if (!load_default_path && !property_info_area_file_.LoadPath(tree_filename_.c_str())) {
     return false;
   }
 
@@ -95,14 +93,20 @@ bool ContextsSerialized::InitializeProperties() {
   return true;
 }
 
-bool ContextsSerialized::Initialize(bool writable, const char* filename, bool* fsetxattr_failed) {
-  filename_ = filename;
-  if (!InitializeProperties()) {
+// Note: load_default_path is only used for testing, as it will cause properties to be loaded from
+// one file (specified by PropertyInfoAreaFile.LoadDefaultPath), but be written to "filename".
+bool ContextsSerialized::Initialize(bool writable, const char* dirname, bool* fsetxattr_failed,
+                                    bool load_default_path) {
+  dirname_ = dirname;
+  tree_filename_ = PropertiesFilename(dirname, "property_info");
+  serial_filename_ = PropertiesFilename(dirname, "properties_serial");
+
+  if (!InitializeProperties(load_default_path)) {
     return false;
   }
 
   if (writable) {
-    mkdir(filename_, S_IRWXU | S_IXGRP | S_IXOTH);
+    mkdir(dirname_, S_IRWXU | S_IXGRP | S_IXOTH);
     bool open_failed = false;
     if (fsetxattr_failed) {
       *fsetxattr_failed = false;

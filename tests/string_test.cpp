@@ -29,6 +29,7 @@
 #include <vector>
 
 #include "buffer_tests.h"
+#include "utils.h"
 
 #if defined(NOFORTIFY)
 #define STRING_TEST string_nofortify
@@ -123,7 +124,7 @@ TEST(STRING_TEST, gnu_strerror_r) {
   ASSERT_EQ(buf, strerror_r(4567, buf, 2));
   ASSERT_STREQ("U", buf);
   // The GNU strerror_r doesn't set errno (the POSIX one sets it to ERANGE).
-  ASSERT_EQ(0, errno);
+  ASSERT_ERRNO(0);
 #else
   GTEST_SKIP() << "musl doesn't have GNU strerror_r";
 #endif
@@ -318,33 +319,34 @@ TEST(STRING_TEST, strcpy4) {
 // one byte target with "\0" source
 TEST(STRING_TEST, stpcpy2) {
   char buf[1];
+  memset(buf, 'A', sizeof(buf));
   char* orig = strdup("");
-  ASSERT_EQ(buf, stpcpy(buf, orig));
-  ASSERT_EQ('\0', buf[0]);
+  EXPECT_EQ(buf, stpcpy(buf, orig));
+  EXPECT_EQ('\0', buf[0]);
   free(orig);
 }
 
 // multibyte target where we under fill target
 TEST(STRING_TEST, stpcpy3) {
   char buf[10];
-  char* orig = strdup("12345");
   memset(buf, 'A', sizeof(buf));
-  ASSERT_EQ(buf+strlen(orig), stpcpy(buf, orig));
-  ASSERT_STREQ("12345", buf);
-  ASSERT_EQ('A',  buf[6]);
-  ASSERT_EQ('A',  buf[7]);
-  ASSERT_EQ('A',  buf[8]);
-  ASSERT_EQ('A',  buf[9]);
+  char* orig = strdup("12345");
+  EXPECT_EQ(buf+strlen(orig), stpcpy(buf, orig));
+  EXPECT_STREQ("12345", buf);
+  EXPECT_EQ('A',  buf[6]);
+  EXPECT_EQ('A',  buf[7]);
+  EXPECT_EQ('A',  buf[8]);
+  EXPECT_EQ('A',  buf[9]);
   free(orig);
 }
 
 // multibyte target where we fill target exactly
 TEST(STRING_TEST, stpcpy4) {
   char buf[10];
-  char* orig = strdup("123456789");
   memset(buf, 'A', sizeof(buf));
-  ASSERT_EQ(buf+strlen(orig), stpcpy(buf, orig));
-  ASSERT_STREQ("123456789", buf);
+  char* orig = strdup("123456789");
+  EXPECT_EQ(buf+strlen(orig), stpcpy(buf, orig));
+  EXPECT_STREQ("123456789", buf);
   free(orig);
 }
 
@@ -1483,7 +1485,7 @@ static void TestBasename(const char* in, const char* expected_out) {
   errno = 0;
   const char* out = basename(in);
   ASSERT_STREQ(expected_out, out) << in;
-  ASSERT_EQ(0, errno) << in;
+  ASSERT_ERRNO(0) << in;
 }
 #endif
 
@@ -1683,5 +1685,18 @@ TEST(STRING_TEST, memset_explicit_smoke) {
   ASSERT_TRUE(memcmp(buf, "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", sizeof(buf)) == 0);
 #else
   GTEST_SKIP() << "memset_explicit not available";
+#endif
+}
+
+TEST(STRING_TEST, strerrorname_np) {
+#if defined(__BIONIC__)
+  ASSERT_STREQ("0", strerrorname_np(0));
+  ASSERT_STREQ("EINVAL", strerrorname_np(EINVAL));
+  ASSERT_STREQ("ENOSYS", strerrorname_np(ENOSYS));
+
+  ASSERT_EQ(nullptr, strerrorname_np(-1));
+  ASSERT_EQ(nullptr, strerrorname_np(666));
+#else
+  GTEST_SKIP() << "strerrorname_np not available";
 #endif
 }

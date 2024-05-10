@@ -126,15 +126,14 @@ static void HandleProfilingSignal(int /*signal_number*/, siginfo_t* info, void* 
 static void HandleTracedPerfSignal() {
   ScopedFd sock_fd{ socket(AF_UNIX, SOCK_STREAM | SOCK_NONBLOCK | SOCK_CLOEXEC, 0 /*protocol*/) };
   if (sock_fd.get() == -1) {
-    async_safe_format_log(ANDROID_LOG_ERROR, "libc", "failed to create socket: %s", strerror(errno));
+    async_safe_format_log(ANDROID_LOG_ERROR, "libc", "failed to create socket: %m");
     return;
   }
 
   sockaddr_un saddr{ AF_UNIX, "/dev/socket/traced_perf" };
   size_t addrlen = sizeof(sockaddr_un);
   if (connect(sock_fd.get(), reinterpret_cast<const struct sockaddr*>(&saddr), addrlen) == -1) {
-    async_safe_format_log(ANDROID_LOG_ERROR, "libc", "failed to connect to traced_perf socket: %s",
-                          strerror(errno));
+    async_safe_format_log(ANDROID_LOG_ERROR, "libc", "failed to connect to traced_perf socket: %m");
     return;
   }
 
@@ -153,13 +152,11 @@ static void HandleTracedPerfSignal() {
   }
 
   if (maps_fd.get() == -1) {
-    async_safe_format_log(ANDROID_LOG_ERROR, "libc", "failed to open /proc/self/maps: %s",
-                          strerror(errno));
+    async_safe_format_log(ANDROID_LOG_ERROR, "libc", "failed to open /proc/self/maps: %m");
     return;
   }
   if (mem_fd.get() == -1) {
-    async_safe_format_log(ANDROID_LOG_ERROR, "libc", "failed to open /proc/self/mem: %s",
-                          strerror(errno));
+    async_safe_format_log(ANDROID_LOG_ERROR, "libc", "failed to open /proc/self/mem: %m");
     return;
   }
 
@@ -183,7 +180,7 @@ static void HandleTracedPerfSignal() {
   memcpy(CMSG_DATA(cmsg), send_fds, num_fds * sizeof(int));
 
   if (sendmsg(sock_fd.get(), &msg_hdr, 0) == -1) {
-    async_safe_format_log(ANDROID_LOG_ERROR, "libc", "failed to sendmsg: %s", strerror(errno));
+    async_safe_format_log(ANDROID_LOG_ERROR, "libc", "failed to sendmsg: %m");
   }
 }
 

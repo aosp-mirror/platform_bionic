@@ -40,8 +40,9 @@ class MallocDebugConfigTest : public ::testing::Test {
 };
 
 std::string usage_string(
-  "6 malloc_debug For malloc debug option descriptions go to:\n"
-  "6 malloc_debug   https://android.googlesource.com/platform/bionic/+/master/libc/malloc_debug/README.md\n");
+    "6 malloc_debug For malloc debug option descriptions go to:\n"
+    "6 malloc_debug   "
+    "https://android.googlesource.com/platform/bionic/+/main/libc/malloc_debug/README.md\n");
 
 TEST_F(MallocDebugConfigTest, unknown_option) {
 
@@ -819,6 +820,24 @@ TEST_F(MallocDebugConfigTest, trigger_check_unreachable_on_signal_fail) {
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   std::string log_msg(
       "6 malloc_debug malloc_testing: value set for option 'check_unreachable_on_signal' "
+      "which does not take a value\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, log_allocator_stats_on_signal) {
+  ASSERT_TRUE(InitConfig("log_allocator_stats_on_signal")) << getFakeLogPrint();
+  ASSERT_EQ(LOG_ALLOCATOR_STATS_ON_SIGNAL, config->options());
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ("", getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, trigger_log_allocator_stats_on_signal_fail) {
+  ASSERT_FALSE(InitConfig("log_allocator_stats_on_signal=200")) << getFakeLogPrint();
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: value set for option 'log_allocator_stats_on_signal' "
       "which does not take a value\n");
   ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
 }

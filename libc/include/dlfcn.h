@@ -26,57 +26,159 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __DLFCN_H__
-#define __DLFCN_H__
+#pragma once
 
 #include <stdint.h>
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
 
+/**
+ * dladdr() returns information using this structure.
+ */
 typedef struct {
-  /* Pathname of shared object that contains address. */
+  /** Pathname of the shared object that contains the given address. */
   const char* _Nullable dli_fname;
-  /* Address at which shared object is loaded. */
+  /** Address at which the shared object is loaded. */
   void* _Nullable dli_fbase;
-  /* Name of nearest symbol with address lower than addr. */
+  /** Name of the nearest symbol with an address lower than the given address. */
   const char* _Nullable dli_sname;
-  /* Exact address of symbol named in dli_sname. */
+  /** Exact address of the symbol named in `dli_sname`. */
   void* _Nullable dli_saddr;
 } Dl_info;
 
+/**
+ * [dlopen(3)](http://man7.org/linux/man-pages/man3/dlopen.3.html)
+ * loads the given shared library.
+ *
+ * Returns a pointer to an opaque handle for use with other <dlfcn.h> functions
+ * on success, and returns NULL on failure, in which case dlerror() can be used
+ * to retrieve the specific error.
+ */
 void* _Nullable dlopen(const char* _Nullable __filename, int __flag);
+
+/**
+ * [dlclose(3)](http://man7.org/linux/man-pages/man3/dlclose.3.html)
+ * decrements the reference count for the given shared library (and
+ * any libraries brought in by that library's DT_NEEDED entries).
+ *
+ * If a library's reference count hits zero, it may be unloaded.
+ * Code that relies on this is not portable, and may not work on
+ * future versions of Android.
+ *
+ * dlclose() is dangerous because function pointers may or may not
+ * be rendered invalid, global data may or may not be rendered invalid,
+ * and memory may or may not leak. Code with global constructors is
+ * especially problematic. Instead of dlclose, prefer to leave the
+ * library open or, if cleanup is necessary, dlopen() the library in
+ * a child process which can later be killed by the parent or call
+ * exit() itself.
+ *
+ * Note also that dlclose() interacts badly with thread local variables
+ * with non-trivial destructors, with the
+ * (exact behavior varying by API level)[https://android.googlesource.com/platform/bionic/+/main/android-changes-for-ndk-developers.md#dlclose-interacts-badly-with-thread-local-variables-with-non_trivial-destructors].
+ *
+ * Returns 0 on success, and returns -1 on failure, in which case
+ * dlerror() can be used to retrieve the specific error.
+ */
 int dlclose(void* _Nonnull __handle);
+
+/**
+ * [dlerror(3)](http://man7.org/linux/man-pages/man3/dlerror.3.html)
+ * returns a human-readable error message describing the most recent
+ * failure from one of the <dlfcn.h> functions on the calling thread.
+ *
+ * This function also clears the error, so a second call (or a call
+ * before any failure) will return NULL.
+ *
+ * Returns a pointer to an error on success, and returns NULL if no
+ * error is pending.
+ */
 char* _Nullable dlerror(void);
-/* (RTLD_DEFAULT is null for LP64, but -1 for LP32) */
+
+/**
+ * [dlsym(3)](http://man7.org/linux/man-pages/man3/dlsym.3.html)
+ * returns a pointer to the symbol with the given name in the shared
+ * library represented by the given handle. The handle may have been
+ * returned from dlopen(), or can be RTLD_DEFAULT or RTLD_NEXT.
+ *
+ * Returns the address of the symbol on success, and returns NULL on failure,
+ * in which case dlerror() can be used to retrieve the specific error.
+ */
 void* _Nullable dlsym(void* __BIONIC_COMPLICATED_NULLNESS __handle, const char* _Nullable __symbol);
-/* (RTLD_DEFAULT is null for LP64, but -1 for LP32) */
+
+/**
+ * [dlvsym(3)](http://man7.org/linux/man-pages/man3/dlvsym.3.html)
+ * returns a pointer to the symbol with the given name and version in the shared
+ * library represented by the given handle. The handle may have been
+ * returned from dlopen(), or can be RTLD_DEFAULT or RTLD_NEXT.
+ *
+ * Returns the address of the symbol on success, and returns NULL on failure,
+ * in which case dlerror() can be used to retrieve the specific error.
+ */
 void* _Nullable dlvsym(void* __BIONIC_COMPLICATED_NULLNESS __handle, const char* _Nullable __symbol, const char* _Nullable __version) __INTRODUCED_IN(24);
+
+/**
+ * [dladdr(3)](http://man7.org/linux/man-pages/man3/dladdr.3.html)
+ * returns information about the symbol at the given address.
+ *
+ * Returns non-zero on success, and returns 0 on failure. Note that unlike
+ * the other <dlfcn.h> functions, in this case dlerror() will _not_ have
+ * more information.
+ */
 int dladdr(const void* _Nonnull __addr, Dl_info* _Nonnull __info);
 
+/**
+ * A dlsym()/dlvsym() handle that returns the first symbol found in any
+ * shared library using the default search order.
+ */
+#define RTLD_DEFAULT  __BIONIC_CAST(reinterpret_cast, void*, 0)
+
+/**
+ * A dlsym()/dlvsym() handle that returns the first symbol found in any
+ * shared library that appears _after_ the object containing the caller.
+ */
+#define RTLD_NEXT     __BIONIC_CAST(reinterpret_cast, void*, -1L)
+
+/**
+ * A dlopen() flag to not make symbols from this library available to later
+ * libraries. See also RTLD_GLOBAL.
+ */
 #define RTLD_LOCAL    0
+
+/** Not supported on Android; Android always uses RTLD_NOW. */
 #define RTLD_LAZY     0x00001
+
+/** A dlopen() flag to resolve all undefined symbols before dlopen() returns. */
 #define RTLD_NOW      0x00002
+
+/**
+ * A dlopen() flag to not actually load the given library;
+ * used to test whether the library is already loaded.
+ */
 #define RTLD_NOLOAD   0x00004
+
+/**
+ * A dlopen() flag to make symbols from this library available to later
+ * libraries. See also RTLD_LOCAL.
+ */
 #define RTLD_GLOBAL   0x00100
+
+/**
+ * A dlopen() flag to ignore later dlclose() calls on this library.
+ */
 #define RTLD_NODELETE 0x01000
 
+/* LP32 has historical ABI breakage. */
 #if !defined(__LP64__)
-/* LP32 is broken for historical reasons. */
+#undef RTLD_DEFAULT
+#define RTLD_DEFAULT  __BIONIC_CAST(reinterpret_cast, void*, 0xffffffff)
+#undef RTLD_NEXT
+#define RTLD_NEXT     __BIONIC_CAST(reinterpret_cast, void*, 0xfffffffe)
 #undef RTLD_NOW
 #define RTLD_NOW      0x00000
 #undef RTLD_GLOBAL
 #define RTLD_GLOBAL   0x00002
 #endif
 
-#if defined (__LP64__)
-#define RTLD_DEFAULT  __BIONIC_CAST(reinterpret_cast, void*, 0)
-#define RTLD_NEXT     __BIONIC_CAST(reinterpret_cast, void*, -1L)
-#else
-#define RTLD_DEFAULT  __BIONIC_CAST(reinterpret_cast, void*, 0xffffffff)
-#define RTLD_NEXT     __BIONIC_CAST(reinterpret_cast, void*, 0xfffffffe)
-#endif
-
 __END_DECLS
-
-#endif

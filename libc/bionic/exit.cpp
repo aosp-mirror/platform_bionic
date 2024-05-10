@@ -37,7 +37,6 @@ extern "C" void __cxa_thread_finalize();
 extern "C" __noreturn void __exit_group(int status);
 
 __attribute__((no_sanitize("memtag"))) void _exit(int status) {
-  __get_thread()->vfork_child_stack_bottom = __builtin_frame_address(0);
   __exit_group(status);
 }
 

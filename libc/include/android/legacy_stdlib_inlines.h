@@ -38,15 +38,15 @@
 
 __BEGIN_DECLS
 
-static __inline double strtod_l(const char* __s, char** __end_ptr, locale_t __l) {
+static inline double strtod_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, locale_t _Nonnull __l) {
   return strtod(__s, __end_ptr);
 }
 
-static __inline float strtof_l(const char* __s, char** __end_ptr, locale_t __l) {
+static inline float strtof_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, locale_t _Nonnull __l) {
   return strtof(__s, __end_ptr);
 }
 
-static __inline long strtol_l(const char* __s, char** __end_ptr, int __base, locale_t __l) {
+static inline long strtol_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base, locale_t _Nonnull __l) {
   return strtol(__s, __end_ptr, __base);
 }
 

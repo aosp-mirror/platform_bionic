@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_LINUX_PERF_EVENT_H
 #define _UAPI_LINUX_PERF_EVENT_H
 #include <linux/types.h>
@@ -130,6 +118,7 @@ enum perf_branch_sample_type_shift {
   PERF_SAMPLE_BRANCH_TYPE_SAVE_SHIFT = 16,
   PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT = 17,
   PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT = 18,
+  PERF_SAMPLE_BRANCH_COUNTERS_SHIFT = 19,
   PERF_SAMPLE_BRANCH_MAX_SHIFT
 };
 enum perf_branch_sample_type {
@@ -152,6 +141,7 @@ enum perf_branch_sample_type {
   PERF_SAMPLE_BRANCH_TYPE_SAVE = 1U << PERF_SAMPLE_BRANCH_TYPE_SAVE_SHIFT,
   PERF_SAMPLE_BRANCH_HW_INDEX = 1U << PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT,
   PERF_SAMPLE_BRANCH_PRIV_SAVE = 1U << PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT,
+  PERF_SAMPLE_BRANCH_COUNTERS = 1U << PERF_SAMPLE_BRANCH_COUNTERS_SHIFT,
   PERF_SAMPLE_BRANCH_MAX = 1U << PERF_SAMPLE_BRANCH_MAX_SHIFT,
 };
 enum {
@@ -237,6 +227,7 @@ enum perf_event_read_format {
 #define PERF_ATTR_SIZE_VER5 112
 #define PERF_ATTR_SIZE_VER6 120
 #define PERF_ATTR_SIZE_VER7 128
+#define PERF_ATTR_SIZE_VER8 136
 struct perf_event_attr {
   __u32 type;
   __u32 size;
@@ -276,6 +267,7 @@ struct perf_event_attr {
   __u32 aux_sample_size;
   __u32 __reserved_3;
   __u64 sig_data;
+  __u64 config3;
 };
 struct perf_event_query_bpf {
   __u32 ids_len;
@@ -468,6 +460,7 @@ union perf_mem_data_src {
 #define PERF_MEM_LVLNUM_L2 0x02
 #define PERF_MEM_LVLNUM_L3 0x03
 #define PERF_MEM_LVLNUM_L4 0x04
+#define PERF_MEM_LVLNUM_UNC 0x08
 #define PERF_MEM_LVLNUM_CXL 0x09
 #define PERF_MEM_LVLNUM_IO 0x0a
 #define PERF_MEM_LVLNUM_ANY_CACHE 0x0b
@@ -511,6 +504,7 @@ struct perf_branch_entry {
   __u64 to;
   __u64 mispred : 1, predicted : 1, in_tx : 1, abort : 1, cycles : 16, type : 4, spec : 2, new_type : 4, priv : 3, reserved : 31;
 };
+#define PERF_BRANCH_ENTRY_INFO_BITS_MAX 33
 union perf_sample_weight {
   __u64 full;
 #ifdef __LITTLE_ENDIAN_BITFIELD

@@ -232,18 +232,28 @@ TEST(spawn, posix_spawn_environment) {
 }
 
 TEST(spawn, posix_spawn_file_actions) {
+#if !defined(__GLIBC__)
   int fds[2];
   ASSERT_NE(-1, pipe(fds));
 
   posix_spawn_file_actions_t fa;
   ASSERT_EQ(0, posix_spawn_file_actions_init(&fa));
 
+  // Test addclose and adddup2 by redirecting output to the pipe created above.
   ASSERT_EQ(0, posix_spawn_file_actions_addclose(&fa, fds[0]));
   ASSERT_EQ(0, posix_spawn_file_actions_adddup2(&fa, fds[1], 1));
   ASSERT_EQ(0, posix_spawn_file_actions_addclose(&fa, fds[1]));
   // Check that close(2) failures are ignored by closing the same fd again.
   ASSERT_EQ(0, posix_spawn_file_actions_addclose(&fa, fds[1]));
+  // Open a file directly, to test addopen.
   ASSERT_EQ(0, posix_spawn_file_actions_addopen(&fa, 56, "/proc/version", O_RDONLY, 0));
+  // Test addfchdir by opening the same file a second way...
+  ASSERT_EQ(0, posix_spawn_file_actions_addopen(&fa, 57, "/proc", O_PATH, 0));
+  ASSERT_EQ(0, posix_spawn_file_actions_addfchdir_np(&fa, 57));
+  ASSERT_EQ(0, posix_spawn_file_actions_addopen(&fa, 58, "version", O_RDONLY, 0));
+  // Test addchdir by opening the same file a third way...
+  ASSERT_EQ(0, posix_spawn_file_actions_addchdir_np(&fa, "/"));
+  ASSERT_EQ(0, posix_spawn_file_actions_addopen(&fa, 59, "proc/version", O_RDONLY, 0));
 
   ExecTestHelper eth;
   eth.SetArgs({"ls", "-l", "/proc/self/fd", nullptr});
@@ -259,12 +269,21 @@ TEST(spawn, posix_spawn_file_actions) {
   AssertChildExited(pid, 0);
 
   // We'll know the dup2 worked if we see any ls(1) output in our pipe.
-  // The open we can check manually...
+  // The opens we can check manually (and they implicitly check the chdirs)...
   bool open_to_fd_56_worked = false;
+  bool open_to_fd_58_worked = false;
+  bool open_to_fd_59_worked = false;
   for (const auto& line : android::base::Split(content, "\n")) {
     if (line.find(" 56 -> /proc/version") != std::string::npos) open_to_fd_56_worked = true;
+    if (line.find(" 58 -> /proc/version") != std::string::npos) open_to_fd_58_worked = true;
+    if (line.find(" 59 -> /proc/version") != std::string::npos) open_to_fd_59_worked = true;
   }
-  ASSERT_TRUE(open_to_fd_56_worked);
+  ASSERT_TRUE(open_to_fd_56_worked) << content;
+  ASSERT_TRUE(open_to_fd_58_worked) << content;
+  ASSERT_TRUE(open_to_fd_59_worked) << content;
+#else
+  GTEST_SKIP() << "our old glibc doesn't have the chdirs; newer versions and musl do.";
+#endif
 }
 
 static void CatFileToString(posix_spawnattr_t* sa, const char* path, std::string* content) {

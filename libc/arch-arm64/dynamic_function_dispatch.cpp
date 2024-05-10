@@ -30,6 +30,23 @@
 #include <stddef.h>
 #include <sys/auxv.h>
 
+static inline bool __bionic_is_oryon(unsigned long hwcap) {
+    if (!(hwcap & HWCAP_CPUID)) return false;
+
+    // Extract the implementor and variant bits from MIDR_EL1.
+    // https://www.kernel.org/doc/html/latest/arch/arm64/cpu-feature-registers.html#list-of-registers-with-visible-features
+    unsigned long midr;
+    __asm__ __volatile__("mrs %0, MIDR_EL1" : "=r"(midr));
+    uint16_t cpu = (midr >> 20) & 0xfff;
+
+    auto make_cpu = [](unsigned implementor, unsigned variant) {
+        return (implementor << 4) | variant;
+    };
+
+    // Check for implementor Qualcomm's variants 0x1..0x5 (Oryon).
+    return cpu >= make_cpu('Q', 0x1) && cpu <= make_cpu('Q', 0x5);
+}
+
 extern "C" {
 
 typedef void* memchr_func(const void*, int, size_t);
@@ -41,7 +58,7 @@ DEFINE_IFUNC_FOR(memchr) {
     }
 }
 
-typedef void* memcmp_func(void*, const void*, size_t);
+typedef int memcmp_func(const void*, const void*, size_t);
 DEFINE_IFUNC_FOR(memcmp) {
     // TODO: enable the SVE version.
     RETURN_FUNC(memcmp_func, __memcmp_aarch64);
@@ -49,7 +66,9 @@ DEFINE_IFUNC_FOR(memcmp) {
 
 typedef void* memcpy_func(void*, const void*, size_t);
 DEFINE_IFUNC_FOR(memcpy) {
-    if (arg->_hwcap & HWCAP_ASIMD) {
+    if (__bionic_is_oryon(arg->_hwcap)) {
+        RETURN_FUNC(memcpy_func, __memcpy_aarch64_nt);
+    } else if (arg->_hwcap & HWCAP_ASIMD) {
         RETURN_FUNC(memcpy_func, __memcpy_aarch64_simd);
     } else {
         RETURN_FUNC(memcpy_func, __memcpy_aarch64);
@@ -58,14 +77,30 @@ DEFINE_IFUNC_FOR(memcpy) {
 
 typedef void* memmove_func(void*, const void*, size_t);
 DEFINE_IFUNC_FOR(memmove) {
-    if (arg->_hwcap & HWCAP_ASIMD) {
-        RETURN_FUNC(memmove_func, __memmove_aarch64_simd);
+  if (__bionic_is_oryon(arg->_hwcap)) {
+    RETURN_FUNC(memcpy_func, __memmove_aarch64_nt);
+  } else if (arg->_hwcap & HWCAP_ASIMD) {
+    RETURN_FUNC(memmove_func, __memmove_aarch64_simd);
+  } else {
+    RETURN_FUNC(memmove_func, __memmove_aarch64);
+  }
+}
+
+typedef int memrchr_func(const void*, int, size_t);
+DEFINE_IFUNC_FOR(memrchr) {
+    RETURN_FUNC(memrchr_func, __memrchr_aarch64);
+}
+
+typedef int memset_func(void*, int, size_t);
+DEFINE_IFUNC_FOR(memset) {
+    if (__bionic_is_oryon(arg->_hwcap)) {
+        RETURN_FUNC(memset_func, __memset_aarch64_nt);
     } else {
-        RETURN_FUNC(memmove_func, __memmove_aarch64);
+        RETURN_FUNC(memset_func, __memset_aarch64);
     }
 }
 
-typedef int stpcpy_func(char*, const char*);
+typedef char* stpcpy_func(char*, const char*, size_t);
 DEFINE_IFUNC_FOR(stpcpy) {
     // TODO: enable the SVE version.
     RETURN_FUNC(stpcpy_func, __stpcpy_aarch64);
@@ -95,7 +130,7 @@ DEFINE_IFUNC_FOR(strcmp) {
     RETURN_FUNC(strcmp_func, __strcmp_aarch64);
 }
 
-typedef int strcpy_func(char*, const char*);
+typedef char* strcpy_func(char*, const char*);
 DEFINE_IFUNC_FOR(strcpy) {
     // TODO: enable the SVE version.
     RETURN_FUNC(strcpy_func, __strcpy_aarch64);
@@ -110,13 +145,13 @@ DEFINE_IFUNC_FOR(strlen) {
     }
 }
 
-typedef int strncmp_func(const char*, const char*, int);
+typedef int strncmp_func(const char*, const char*, size_t);
 DEFINE_IFUNC_FOR(strncmp) {
     // TODO: enable the SVE version.
     RETURN_FUNC(strncmp_func, __strncmp_aarch64);
 }
 
-typedef size_t strnlen_func(const char*);
+typedef size_t strnlen_func(const char*, size_t);
 DEFINE_IFUNC_FOR(strnlen) {
     // TODO: enable the SVE version.
     RETURN_FUNC(strnlen_func, __strnlen_aarch64);

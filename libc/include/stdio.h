@@ -59,9 +59,9 @@ struct __sFILE;
 typedef struct __sFILE FILE;
 
 #if __ANDROID_API__ >= 23
-extern FILE* stdin __INTRODUCED_IN(23);
-extern FILE* stdout __INTRODUCED_IN(23);
-extern FILE* stderr __INTRODUCED_IN(23);
+extern FILE* _Nonnull stdin __INTRODUCED_IN(23);
+extern FILE* _Nonnull stdout __INTRODUCED_IN(23);
+extern FILE* _Nonnull stderr __INTRODUCED_IN(23);
 
 /* C99 and earlier plus current C++ standards say these must be macros. */
 #define stdin stdin
@@ -69,7 +69,7 @@ extern FILE* stderr __INTRODUCED_IN(23);
 #define stderr stderr
 #else
 /* Before M the actual symbols for stdin and friends had different names. */
-extern FILE __sF[] __REMOVED_IN(23);
+extern FILE __sF[] __REMOVED_IN(23, "Use stdin/stdout/stderr");
 
 #define stdin (&__sF[0])
 #define stdout (&__sF[1])
@@ -103,54 +103,54 @@ extern FILE __sF[] __REMOVED_IN(23);
 #define L_tmpnam 4096
 #define TMP_MAX 308915776
 
-void clearerr(FILE* __fp);
-int fclose(FILE* __fp);
-int feof(FILE* __fp);
-int ferror(FILE* __fp);
-int fflush(FILE* __fp);
-int fgetc(FILE* __fp);
-char* fgets(char* __buf, int __size, FILE* __fp);
-int fprintf(FILE* __fp , const char* __fmt, ...) __printflike(2, 3);
-int fputc(int __ch, FILE* __fp);
-int fputs(const char* __s, FILE* __fp);
-size_t fread(void* __buf, size_t __size, size_t __count, FILE* __fp);
-int fscanf(FILE* __fp, const char* __fmt, ...) __scanflike(2, 3);
-size_t fwrite(const void* __buf, size_t __size, size_t __count, FILE* __fp);
-int getc(FILE* __fp);
+void clearerr(FILE* _Nonnull __fp);
+int fclose(FILE* _Nonnull __fp);
+int feof(FILE* _Nonnull __fp);
+int ferror(FILE* _Nonnull __fp);
+int fflush(FILE* _Nullable __fp);
+int fgetc(FILE* _Nonnull __fp);
+char* _Nullable fgets(char* _Nonnull __buf, int __size, FILE* _Nonnull __fp);
+int fprintf(FILE* _Nonnull __fp , const char* _Nonnull __fmt, ...) __printflike(2, 3);
+int fputc(int __ch, FILE* _Nonnull __fp);
+int fputs(const char* _Nonnull __s, FILE* _Nonnull __fp);
+size_t fread(void* _Nonnull __buf, size_t __size, size_t __count, FILE* _Nonnull __fp);
+int fscanf(FILE* _Nonnull __fp, const char* _Nonnull __fmt, ...) __scanflike(2, 3);
+size_t fwrite(const void* _Nonnull __buf, size_t __size, size_t __count, FILE* _Nonnull __fp);
+int getc(FILE* _Nonnull __fp);
 int getchar(void);
-ssize_t getdelim(char** __line_ptr, size_t* __line_length_ptr, int __delimiter, FILE* __fp) __INTRODUCED_IN(18);
-ssize_t getline(char** __line_ptr, size_t* __line_length_ptr, FILE* __fp) __INTRODUCED_IN(18);
+ssize_t getdelim(char* _Nullable * _Nonnull __line_ptr, size_t* _Nonnull __line_length_ptr, int __delimiter, FILE* _Nonnull __fp);
+ssize_t getline(char* _Nullable * _Nonnull __line_ptr, size_t* _Nonnull __line_length_ptr, FILE* _Nonnull __fp);
 
-void perror(const char* __msg);
-int printf(const char* __fmt, ...) __printflike(1, 2);
-int putc(int __ch, FILE* __fp);
+void perror(const char* _Nullable __msg);
+int printf(const char* _Nonnull __fmt, ...) __printflike(1, 2);
+int putc(int __ch, FILE* _Nonnull __fp);
 int putchar(int __ch);
-int puts(const char* __s);
-int remove(const char* __path);
-void rewind(FILE* __fp);
-int scanf(const char* __fmt, ...) __scanflike(1, 2);
-void setbuf(FILE* __fp, char* __buf);
-int setvbuf(FILE* __fp, char* __buf, int __mode, size_t __size);
-int sscanf(const char* __s, const char* __fmt, ...) __scanflike(2, 3);
-int ungetc(int __ch, FILE* __fp);
-int vfprintf(FILE* __fp, const char* __fmt, va_list __args) __printflike(2, 0);
-int vprintf(const char* __fp, va_list __args) __printflike(1, 0);
+int puts(const char* _Nonnull __s);
+int remove(const char* _Nonnull __path);
+void rewind(FILE* _Nonnull __fp);
+int scanf(const char* _Nonnull __fmt, ...) __scanflike(1, 2);
+void setbuf(FILE* _Nonnull __fp, char* _Nullable __buf);
+int setvbuf(FILE* _Nonnull __fp, char* _Nullable __buf, int __mode, size_t __size);
+int sscanf(const char* _Nonnull __s, const char* _Nonnull __fmt, ...) __scanflike(2, 3);
+int ungetc(int __ch, FILE* _Nonnull __fp);
+int vfprintf(FILE* _Nonnull __fp, const char* _Nonnull __fmt, va_list __args) __printflike(2, 0);
+int vprintf(const char* _Nonnull __fp, va_list __args) __printflike(1, 0);
 
-int dprintf(int __fd, const char* __fmt, ...) __printflike(2, 3) __INTRODUCED_IN(21);
-int vdprintf(int __fd, const char* __fmt, va_list __args) __printflike(2, 0) __INTRODUCED_IN(21);
+int dprintf(int __fd, const char* _Nonnull __fmt, ...) __printflike(2, 3);
+int vdprintf(int __fd, const char* _Nonnull __fmt, va_list __args) __printflike(2, 0);
 
 #if (defined(__STDC_VERSION__) && __STDC_VERSION__ < 201112L) || \
     (defined(__cplusplus) && __cplusplus <= 201103L)
-char* gets(char* __buf) __attribute__((deprecated("gets is unsafe, use fgets instead")));
+char* _Nullable gets(char* _Nonnull __buf) __attribute__((__deprecated__("gets is unsafe, use fgets instead")));
 #endif
-int sprintf(char* __s, const char* __fmt, ...)
+int sprintf(char* __BIONIC_COMPLICATED_NULLNESS __s, const char* _Nonnull __fmt, ...)
     __printflike(2, 3) __warnattr_strict("sprintf is often misused; please use snprintf");
-int vsprintf(char* __s, const char* __fmt, va_list __args)
+int vsprintf(char* __BIONIC_COMPLICATED_NULLNESS __s, const char* _Nonnull __fmt, va_list __args)
     __printflike(2, 0) __warnattr_strict("vsprintf is often misused; please use vsnprintf");
-char* tmpnam(char* __s)
+char* _Nullable tmpnam(char* _Nullable __s)
     __warnattr("tmpnam is unsafe, use mkstemp or tmpfile instead");
 #define P_tmpdir "/tmp/" /* deprecated */
-char* tempnam(const char* __dir, const char* __prefix)
+char* _Nullable tempnam(const char* _Nullable __dir, const char* _Nullable __prefix)
     __warnattr("tempnam is unsafe, use mkstemp or tmpfile instead");
 
 /**
@@ -159,7 +159,7 @@ char* tempnam(const char* __dir, const char* __prefix)
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
-int rename(const char* __old_path, const char* __new_path);
+int rename(const char* _Nonnull __old_path, const char* _Nonnull __new_path);
 
 /**
  * [renameat(2)](http://man7.org/linux/man-pages/man2/renameat.2.html) changes
@@ -167,7 +167,7 @@ int rename(const char* __old_path, const char* __new_path);
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
-int renameat(int __old_dir_fd, const char* __old_path, int __new_dir_fd, const char* __new_path);
+int renameat(int __old_dir_fd, const char* _Nonnull __old_path, int __new_dir_fd, const char* _Nonnull __new_path);
 
 #if defined(__USE_GNU)
 
@@ -196,108 +196,111 @@ int renameat(int __old_dir_fd, const char* __old_path, int __new_dir_fd, const c
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
-int renameat2(int __old_dir_fd, const char* __old_path, int __new_dir_fd, const char* __new_path, unsigned __flags) __INTRODUCED_IN(30);
+int renameat2(int __old_dir_fd, const char* _Nonnull __old_path, int __new_dir_fd, const char* _Nonnull __new_path, unsigned __flags) __INTRODUCED_IN(30);
 
 #endif
 
-int fseek(FILE* __fp, long __offset, int __whence);
-long ftell(FILE* __fp);
+int fseek(FILE* _Nonnull __fp, long __offset, int __whence);
+long ftell(FILE* _Nonnull __fp);
 
-/* See https://android.googlesource.com/platform/bionic/+/master/docs/32-bit-abi.md */
+/* See https://android.googlesource.com/platform/bionic/+/main/docs/32-bit-abi.md */
 #if defined(__USE_FILE_OFFSET64)
-int fgetpos(FILE* __fp, fpos_t* __pos) __RENAME(fgetpos64) __INTRODUCED_IN(24);
-int fsetpos(FILE* __fp, const fpos_t* __pos) __RENAME(fsetpos64) __INTRODUCED_IN(24);
-int fseeko(FILE* __fp, off_t __offset, int __whence) __RENAME(fseeko64) __INTRODUCED_IN(24);
-off_t ftello(FILE* __fp) __RENAME(ftello64) __INTRODUCED_IN(24);
+int fgetpos(FILE* _Nonnull __fp, fpos_t* _Nonnull __pos) __RENAME(fgetpos64) __INTRODUCED_IN(24);
+int fsetpos(FILE* _Nonnull __fp, const fpos_t* _Nonnull __pos) __RENAME(fsetpos64) __INTRODUCED_IN(24);
+int fseeko(FILE* _Nonnull __fp, off_t __offset, int __whence) __RENAME(fseeko64) __INTRODUCED_IN(24);
+off_t ftello(FILE* _Nonnull __fp) __RENAME(ftello64) __INTRODUCED_IN(24);
 #  if defined(__USE_BSD)
-FILE* funopen(const void* __cookie,
-              int (*__read_fn)(void*, char*, int),
-              int (*__write_fn)(void*, const char*, int),
-              fpos_t (*__seek_fn)(void*, fpos_t, int),
-              int (*__close_fn)(void*)) __RENAME(funopen64) __INTRODUCED_IN(24);
+/* If __read_fn and __write_fn are both nullptr, it will cause EINVAL */
+FILE* _Nullable funopen(const void* _Nullable __cookie,
+              int (* __BIONIC_COMPLICATED_NULLNESS __read_fn)(void* _Nonnull, char* _Nonnull, int),
+              int (* __BIONIC_COMPLICATED_NULLNESS __write_fn)(void* _Nonnull, const char* _Nonnull, int),
+              fpos_t (* _Nullable __seek_fn)(void* _Nonnull, fpos_t, int),
+              int (* _Nullable __close_fn)(void* _Nonnull)) __RENAME(funopen64) __INTRODUCED_IN(24);
 #  endif
 #else
-int fgetpos(FILE* __fp, fpos_t* __pos);
-int fsetpos(FILE* __fp, const fpos_t* __pos);
-int fseeko(FILE* __fp, off_t __offset, int __whence);
-off_t ftello(FILE* __fp);
+int fgetpos(FILE* _Nonnull __fp, fpos_t* _Nonnull __pos);
+int fsetpos(FILE* _Nonnull __fp, const fpos_t* _Nonnull __pos);
+int fseeko(FILE* _Nonnull __fp, off_t __offset, int __whence);
+off_t ftello(FILE* _Nonnull __fp);
 #  if defined(__USE_BSD)
-FILE* funopen(const void* __cookie,
-              int (*__read_fn)(void*, char*, int),
-              int (*__write_fn)(void*, const char*, int),
-              fpos_t (*__seek_fn)(void*, fpos_t, int),
-              int (*__close_fn)(void*));
+/* If __read_fn and __write_fn are both nullptr, it will cause EINVAL */
+FILE* _Nullable funopen(const void* _Nullable __cookie,
+              int (* __BIONIC_COMPLICATED_NULLNESS __read_fn)(void* _Nonnull, char* _Nonnull, int),
+              int (* __BIONIC_COMPLICATED_NULLNESS __write_fn)(void* _Nonnull, const char* _Nonnull, int),
+              fpos_t (* _Nullable __seek_fn)(void* _Nonnull, fpos_t, int),
+              int (* _Nullable __close_fn)(void* _Nonnull));
 #  endif
 #endif
-int fgetpos64(FILE* __fp, fpos64_t* __pos) __INTRODUCED_IN(24);
-int fsetpos64(FILE* __fp, const fpos64_t* __pos) __INTRODUCED_IN(24);
-int fseeko64(FILE* __fp, off64_t __offset, int __whence) __INTRODUCED_IN(24);
-off64_t ftello64(FILE* __fp) __INTRODUCED_IN(24);
+int fgetpos64(FILE* _Nonnull __fp, fpos64_t* _Nonnull __pos) __INTRODUCED_IN(24);
+int fsetpos64(FILE* _Nonnull __fp, const fpos64_t* _Nonnull __pos) __INTRODUCED_IN(24);
+int fseeko64(FILE* _Nonnull __fp, off64_t __offset, int __whence) __INTRODUCED_IN(24);
+off64_t ftello64(FILE* _Nonnull __fp) __INTRODUCED_IN(24);
 #if defined(__USE_BSD)
-FILE* funopen64(const void* __cookie,
-                int (*__read_fn)(void*, char*, int),
-                int (*__write_fn)(void*, const char*, int),
-                fpos64_t (*__seek_fn)(void*, fpos64_t, int),
-                int (*__close_fn)(void*)) __INTRODUCED_IN(24);
+/* If __read_fn and __write_fn are both nullptr, it will cause EINVAL */
+FILE* _Nullable funopen64(const void* _Nullable __cookie,
+                int (* __BIONIC_COMPLICATED_NULLNESS __read_fn)(void* _Nonnull, char* _Nonnull, int),
+                int (* __BIONIC_COMPLICATED_NULLNESS __write_fn)(void* _Nonnull, const char* _Nonnull, int),
+                fpos64_t (* _Nullable __seek_fn)(void* _Nonnull, fpos64_t, int),
+                int (* _Nullable __close_fn)(void* _Nonnull)) __INTRODUCED_IN(24);
 #endif
 
-FILE* fopen(const char* __path, const char* __mode);
-FILE* fopen64(const char* __path, const char* __mode) __INTRODUCED_IN(24);
-FILE* freopen(const char* __path, const char* __mode, FILE* __fp);
-FILE* freopen64(const char* __path, const char* __mode, FILE* __fp) __INTRODUCED_IN(24);
-FILE* tmpfile(void);
-FILE* tmpfile64(void) __INTRODUCED_IN(24);
+FILE* _Nullable fopen(const char* _Nonnull __path, const char* _Nonnull __mode);
+FILE* _Nullable fopen64(const char* _Nonnull __path, const char* _Nonnull __mode) __INTRODUCED_IN(24);
+FILE* _Nullable freopen(const char* _Nullable __path, const char* _Nonnull __mode, FILE* _Nonnull __fp);
+FILE* _Nullable freopen64(const char* _Nullable __path, const char* _Nonnull __mode, FILE* _Nonnull __fp) __INTRODUCED_IN(24);
+FILE* _Nullable tmpfile(void);
+FILE* _Nullable tmpfile64(void) __INTRODUCED_IN(24);
 
-int snprintf(char* __buf, size_t __size, const char* __fmt, ...) __printflike(3, 4);
-int vfscanf(FILE* __fp, const char* __fmt, va_list __args) __scanflike(2, 0);
-int vscanf(const char* __fmt , va_list __args) __scanflike(1, 0);
-int vsnprintf(char* __buf, size_t __size, const char* __fmt, va_list __args) __printflike(3, 0);
-int vsscanf(const char* __s, const char* __fmt, va_list __args) __scanflike(2, 0);
+int snprintf(char* __BIONIC_COMPLICATED_NULLNESS __buf, size_t __size, const char* _Nonnull __fmt, ...) __printflike(3, 4);
+int vfscanf(FILE* _Nonnull __fp, const char* _Nonnull __fmt, va_list __args) __scanflike(2, 0);
+int vscanf(const char* _Nonnull __fmt , va_list __args) __scanflike(1, 0);
+int vsnprintf(char* __BIONIC_COMPLICATED_NULLNESS __buf, size_t __size, const char* _Nonnull __fmt, va_list __args) __printflike(3, 0);
+int vsscanf(const char* _Nonnull __s, const char* _Nonnull __fmt, va_list __args) __scanflike(2, 0);
 
 #define L_ctermid 1024 /* size for ctermid() */
-char* ctermid(char* __buf) __INTRODUCED_IN(26);
+char* _Nonnull ctermid(char* _Nullable __buf) __INTRODUCED_IN(26);
 
-FILE* fdopen(int __fd, const char* __mode);
-int fileno(FILE* __fp);
-int pclose(FILE* __fp);
-FILE* popen(const char* __command, const char* __mode);
-void flockfile(FILE* __fp);
-int ftrylockfile(FILE* __fp);
-void funlockfile(FILE* __fp);
-int getc_unlocked(FILE* __fp);
+FILE* _Nullable fdopen(int __fd, const char* _Nonnull __mode);
+int fileno(FILE* _Nonnull __fp);
+int pclose(FILE* _Nonnull __fp);
+FILE* _Nullable popen(const char* _Nonnull __command, const char* _Nonnull __mode);
+void flockfile(FILE* _Nonnull  __fp);
+int ftrylockfile(FILE* _Nonnull __fp);
+void funlockfile(FILE* _Nonnull __fp);
+int getc_unlocked(FILE* _Nonnull __fp);
 int getchar_unlocked(void);
-int putc_unlocked(int __ch, FILE* __fp);
+int putc_unlocked(int __ch, FILE* _Nonnull __fp);
 int putchar_unlocked(int __ch);
 
-FILE* fmemopen(void* __buf, size_t __size, const char* __mode) __INTRODUCED_IN(23);
-FILE* open_memstream(char** __ptr, size_t* __size_ptr) __INTRODUCED_IN(23);
+FILE* _Nullable fmemopen(void* _Nullable __buf, size_t __size, const char* _Nonnull __mode) __INTRODUCED_IN(23);
+FILE* _Nullable open_memstream(char* _Nonnull * _Nonnull __ptr, size_t* _Nonnull __size_ptr) __INTRODUCED_IN(23);
 
 #if defined(__USE_BSD) || defined(__BIONIC__) /* Historically bionic exposed these. */
-int  asprintf(char** __s_ptr, const char* __fmt, ...) __printflike(2, 3);
-char* fgetln(FILE* __fp, size_t* __length_ptr);
-int fpurge(FILE* __fp);
-void setbuffer(FILE* __fp, char* __buf, int __size);
-int setlinebuf(FILE* __fp);
-int vasprintf(char** __s_ptr, const char* __fmt, va_list __args) __printflike(2, 0);
-void clearerr_unlocked(FILE* __fp) __INTRODUCED_IN(23);
-int feof_unlocked(FILE* __fp) __INTRODUCED_IN(23);
-int ferror_unlocked(FILE* __fp) __INTRODUCED_IN(23);
-int fileno_unlocked(FILE* __fp) __INTRODUCED_IN(24);
+int  asprintf(char* _Nullable * _Nonnull __s_ptr, const char* _Nonnull __fmt, ...) __printflike(2, 3);
+char* _Nullable fgetln(FILE* _Nonnull __fp, size_t* _Nonnull __length_ptr);
+int fpurge(FILE* _Nonnull __fp);
+void setbuffer(FILE* _Nonnull __fp, char* _Nullable __buf, int __size);
+int setlinebuf(FILE* _Nonnull __fp);
+int vasprintf(char* _Nullable * _Nonnull __s_ptr, const char* _Nonnull __fmt, va_list __args) __printflike(2, 0);
+void clearerr_unlocked(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
+int feof_unlocked(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
+int ferror_unlocked(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
+int fileno_unlocked(FILE* _Nonnull __fp) __INTRODUCED_IN(24);
 #define fropen(cookie, fn) funopen(cookie, fn, 0, 0, 0)
 #define fwopen(cookie, fn) funopen(cookie, 0, fn, 0, 0)
 #endif
 
 #if defined(__USE_BSD)
-int fflush_unlocked(FILE* __fp) __INTRODUCED_IN(28);
-int fgetc_unlocked(FILE* __fp) __INTRODUCED_IN(28);
-int fputc_unlocked(int __ch, FILE* __fp) __INTRODUCED_IN(28);
-size_t fread_unlocked(void* __buf, size_t __size, size_t __count, FILE* __fp) __INTRODUCED_IN(28);
-size_t fwrite_unlocked(const void* __buf, size_t __size, size_t __count, FILE* __fp) __INTRODUCED_IN(28);
+int fflush_unlocked(FILE* _Nullable __fp) __INTRODUCED_IN(28);
+int fgetc_unlocked(FILE* _Nonnull __fp) __INTRODUCED_IN(28);
+int fputc_unlocked(int __ch, FILE* _Nonnull __fp) __INTRODUCED_IN(28);
+size_t fread_unlocked(void* _Nonnull __buf, size_t __size, size_t __count, FILE* _Nonnull __fp) __INTRODUCED_IN(28);
+size_t fwrite_unlocked(const void* _Nonnull __buf, size_t __size, size_t __count, FILE* _Nonnull __fp) __INTRODUCED_IN(28);
 #endif
 
 #if defined(__USE_GNU)
-int fputs_unlocked(const char* __s, FILE* __fp) __INTRODUCED_IN(28);
-char* fgets_unlocked(char* __buf, int __size, FILE* __fp) __INTRODUCED_IN(28);
+int fputs_unlocked(const char* _Nonnull __s, FILE* _Nonnull __fp) __INTRODUCED_IN(28);
+char* _Nullable fgets_unlocked(char* _Nonnull __buf, int __size, FILE* _Nonnull __fp) __INTRODUCED_IN(28);
 #endif
 
 #if defined(__BIONIC_INCLUDE_FORTIFY_HEADERS)

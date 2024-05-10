@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI__LINUX_MDIO_H__
 #define _UAPI__LINUX_MDIO_H__
 #include <linux/types.h>
@@ -78,7 +66,11 @@
 #define MDIO_AN_T1_LP_L 517
 #define MDIO_AN_T1_LP_M 518
 #define MDIO_AN_T1_LP_H 519
+#define MDIO_AN_10BT1_AN_CTRL 526
+#define MDIO_AN_10BT1_AN_STAT 527
 #define MDIO_PMA_PMD_BT1_CTRL 2100
+#define MDIO_PCS_1000BT1_CTRL 2304
+#define MDIO_PCS_1000BT1_STAT 2305
 #define MDIO_PMA_LASI_RXCTRL 0x9000
 #define MDIO_PMA_LASI_TXCTRL 0x9001
 #define MDIO_PMA_LASI_CTRL 0x9002
@@ -200,6 +192,28 @@
 #define MDIO_PMA_EXTABLE_10BT 0x0100
 #define MDIO_PMA_EXTABLE_BT1 0x0800
 #define MDIO_PMA_EXTABLE_NBT 0x4000
+#define MDIO_AN_C73_0_S_MASK GENMASK(4, 0)
+#define MDIO_AN_C73_0_E_MASK GENMASK(9, 5)
+#define MDIO_AN_C73_0_PAUSE BIT(10)
+#define MDIO_AN_C73_0_ASM_DIR BIT(11)
+#define MDIO_AN_C73_0_C2 BIT(12)
+#define MDIO_AN_C73_0_RF BIT(13)
+#define MDIO_AN_C73_0_ACK BIT(14)
+#define MDIO_AN_C73_0_NP BIT(15)
+#define MDIO_AN_C73_1_T_MASK GENMASK(4, 0)
+#define MDIO_AN_C73_1_1000BASE_KX BIT(5)
+#define MDIO_AN_C73_1_10GBASE_KX4 BIT(6)
+#define MDIO_AN_C73_1_10GBASE_KR BIT(7)
+#define MDIO_AN_C73_1_40GBASE_KR4 BIT(8)
+#define MDIO_AN_C73_1_40GBASE_CR4 BIT(9)
+#define MDIO_AN_C73_1_100GBASE_CR10 BIT(10)
+#define MDIO_AN_C73_1_100GBASE_KP4 BIT(11)
+#define MDIO_AN_C73_1_100GBASE_KR4 BIT(12)
+#define MDIO_AN_C73_1_100GBASE_CR4 BIT(13)
+#define MDIO_AN_C73_1_25GBASE_R_S BIT(14)
+#define MDIO_AN_C73_1_25GBASE_R BIT(15)
+#define MDIO_AN_C73_2_2500BASE_KX BIT(0)
+#define MDIO_AN_C73_2_5GBASE_KR BIT(1)
 #define MDIO_PHYXS_LNSTAT_SYNC0 0x0001
 #define MDIO_PHYXS_LNSTAT_SYNC1 0x0002
 #define MDIO_PHYXS_LNSTAT_SYNC2 0x0004
@@ -249,6 +263,8 @@
 #define MDIO_PMA_10T1L_STAT_LB_ABLE 0x2000
 #define MDIO_PCS_10T1L_CTRL_LB 0x4000
 #define MDIO_PCS_10T1L_CTRL_RESET 0x8000
+#define MDIO_PMA_PMD_BT1_B100_ABLE 0x0001
+#define MDIO_PMA_PMD_BT1_B1000_ABLE 0x0002
 #define MDIO_PMA_PMD_BT1_B10L_ABLE 0x0004
 #define MDIO_AN_T1_ADV_L_PAUSE_CAP ADVERTISE_PAUSE_CAP
 #define MDIO_AN_T1_ADV_L_PAUSE_ASYM ADVERTISE_PAUSE_ASYM
@@ -270,7 +286,16 @@
 #define MDIO_AN_T1_LP_M_B10L 0x4000
 #define MDIO_AN_T1_LP_H_10L_TX_HI_REQ 0x1000
 #define MDIO_AN_T1_LP_H_10L_TX_HI 0x2000
+#define MDIO_AN_10BT1_AN_CTRL_ADV_EEE_T1L 0x4000
+#define MDIO_AN_10BT1_AN_STAT_LPA_EEE_T1L 0x4000
+#define MDIO_PMA_PMD_BT1_CTRL_STRAP 0x000F
+#define MDIO_PMA_PMD_BT1_CTRL_STRAP_B1000 0x0001
 #define MDIO_PMA_PMD_BT1_CTRL_CFG_MST 0x4000
+#define MDIO_PCS_1000BT1_CTRL_LOW_POWER 0x0800
+#define MDIO_PCS_1000BT1_CTRL_DISABLE_TX 0x4000
+#define MDIO_PCS_1000BT1_CTRL_RESET 0x8000
+#define MDIO_PCS_1000BT1_STAT_LINK 0x0004
+#define MDIO_PCS_1000BT1_STAT_FAULT 0x0080
 #define MDIO_AN_EEE_ADV_100TX 0x0002
 #define MDIO_AN_EEE_ADV_1000T 0x0004
 #define MDIO_EEE_100TX MDIO_AN_EEE_ADV_100TX

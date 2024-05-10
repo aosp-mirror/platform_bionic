@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef __RADEON_DRM_H__
 #define __RADEON_DRM_H__
 #include "drm.h"
@@ -479,7 +467,7 @@ typedef struct drm_radeon_clear {
   unsigned int clear_depth;
   unsigned int color_mask;
   unsigned int depth_mask;
-  drm_radeon_clear_rect_t __user * depth_boxes;
+  drm_radeon_clear_rect_t  * depth_boxes;
 } drm_radeon_clear_t;
 typedef struct drm_radeon_vertex {
   int prim;
@@ -498,20 +486,20 @@ typedef struct drm_radeon_vertex2 {
   int idx;
   int discard;
   int nr_states;
-  drm_radeon_state_t __user * state;
+  drm_radeon_state_t  * state;
   int nr_prims;
-  drm_radeon_prim_t __user * prim;
+  drm_radeon_prim_t  * prim;
 } drm_radeon_vertex2_t;
 typedef struct drm_radeon_cmd_buffer {
   int bufsz;
-  char __user * buf;
+  char  * buf;
   int nbox;
-  struct drm_clip_rect __user * boxes;
+  struct drm_clip_rect  * boxes;
 } drm_radeon_cmd_buffer_t;
 typedef struct drm_radeon_tex_image {
   unsigned int x, y;
   unsigned int width, height;
-  const void __user * data;
+  const void  * data;
 } drm_radeon_tex_image_t;
 typedef struct drm_radeon_texture {
   unsigned int offset;
@@ -519,10 +507,10 @@ typedef struct drm_radeon_texture {
   int format;
   int width;
   int height;
-  drm_radeon_tex_image_t __user * image;
+  drm_radeon_tex_image_t  * image;
 } drm_radeon_texture_t;
 typedef struct drm_radeon_stipple {
-  unsigned int __user * mask;
+  unsigned int  * mask;
 } drm_radeon_stipple_t;
 typedef struct drm_radeon_indirect {
   int idx;
@@ -552,7 +540,7 @@ typedef struct drm_radeon_indirect {
 #define RADEON_PARAM_NUM_Z_PIPES 17
 typedef struct drm_radeon_getparam {
   int param;
-  void __user * value;
+  void  * value;
 } drm_radeon_getparam_t;
 #define RADEON_MEM_REGION_GART 1
 #define RADEON_MEM_REGION_FB 2
@@ -560,7 +548,7 @@ typedef struct drm_radeon_mem_alloc {
   int region;
   int alignment;
   int size;
-  int __user * region_offset;
+  int  * region_offset;
 } drm_radeon_mem_alloc_t;
 typedef struct drm_radeon_mem_free {
   int region;
@@ -572,7 +560,7 @@ typedef struct drm_radeon_mem_init_heap {
   int start;
 } drm_radeon_mem_init_heap_t;
 typedef struct drm_radeon_irq_emit {
-  int __user * irq_seq;
+  int  * irq_seq;
 } drm_radeon_irq_emit_t;
 typedef struct drm_radeon_irq_wait {
   int irq_seq;

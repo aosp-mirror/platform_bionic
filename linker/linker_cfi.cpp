@@ -50,8 +50,8 @@ class ShadowWrite {
   ShadowWrite(uint16_t* s, uint16_t* e) {
     shadow_start = reinterpret_cast<char*>(s);
     shadow_end = reinterpret_cast<char*>(e);
-    aligned_start = reinterpret_cast<char*>(PAGE_START(reinterpret_cast<uintptr_t>(shadow_start)));
-    aligned_end = reinterpret_cast<char*>(PAGE_END(reinterpret_cast<uintptr_t>(shadow_end)));
+    aligned_start = reinterpret_cast<char*>(page_start(reinterpret_cast<uintptr_t>(shadow_start)));
+    aligned_end = reinterpret_cast<char*>(page_end(reinterpret_cast<uintptr_t>(shadow_end)));
     tmp_start =
         reinterpret_cast<char*>(mmap(nullptr, aligned_end - aligned_start, PROT_READ | PROT_WRITE,
                                      MAP_PRIVATE | MAP_ANONYMOUS, -1, 0));
@@ -204,7 +204,7 @@ bool CFIShadowWriter::NotifyLibDl(soinfo* solist, uintptr_t p) {
   shadow_start = reinterpret_cast<uintptr_t* (*)(uintptr_t)>(cfi_init)(p);
   CHECK(shadow_start != nullptr);
   CHECK(*shadow_start == p);
-  mprotect(shadow_start, PAGE_SIZE, PROT_READ);
+  mprotect(shadow_start, page_size(), PROT_READ);
   return true;
 }
 

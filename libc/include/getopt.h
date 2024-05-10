@@ -49,8 +49,11 @@
 #define optional_argument 2
 
 struct option {
-  /** Name of long option. */
-  const char *name;
+  /**
+   * Name of long option. Options must have a non-NULL name.
+   * A NULL name signals the end of the options array.
+   */
+  const char * _Nullable name;
 
   /**
    * One of `no_argument`, `required_argument`, or `optional_argument`.
@@ -58,7 +61,7 @@ struct option {
   int has_arg;
 
   /** If not NULL, set `*flag` to val when option found. */
-  int* flag;
+  int* _Nullable flag;
 
   /** If `flag` not NULL, the value to assign to `*flag`; otherwise the return value. */
   int val;
@@ -69,12 +72,12 @@ __BEGIN_DECLS
 /**
  * [getopt_long(3)](http://man7.org/linux/man-pages/man3/getopt.3.html) parses command-line options.
  */
-int getopt_long(int __argc, char* const* __argv, const char* __options, const struct option* __long_options, int* __long_index);
+int getopt_long(int __argc, char* _Nonnull const* _Nonnull __argv, const char* _Nonnull __options, const struct option* _Nonnull __long_options, int* _Nullable __long_index);
 
 /**
  * [getopt_long_only(3)](http://man7.org/linux/man-pages/man3/getopt.3.html) parses command-line options.
  */
-int getopt_long_only(int __argc, char* const* __argv, const char* __options, const struct option* __long_options, int* __long_index);
+int getopt_long_only(int __argc, char* _Nonnull const* _Nonnull __argv, const char* _Nonnull __options, const struct option* _Nonnull __long_options, int* _Nullable __long_index);
 
 #ifndef _OPTRESET_DECLARED
 #define _OPTRESET_DECLARED

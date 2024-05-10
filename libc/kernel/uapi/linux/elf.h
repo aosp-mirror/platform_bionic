@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_LINUX_ELF_H
 #define _UAPI_LINUX_ELF_H
 #include <linux/types.h>
@@ -117,7 +105,7 @@ typedef __s64 Elf64_Sxword;
 #define ELF32_ST_TYPE(x) ELF_ST_TYPE(x)
 #define ELF64_ST_BIND(x) ELF_ST_BIND(x)
 #define ELF64_ST_TYPE(x) ELF_ST_TYPE(x)
-typedef struct dynamic {
+typedef struct {
   Elf32_Sword d_tag;
   union {
     Elf32_Sword d_val;
@@ -335,9 +323,12 @@ typedef struct elf64_shdr {
 #define NT_PPC_TM_CPPR 0x10e
 #define NT_PPC_TM_CDSCR 0x10f
 #define NT_PPC_PKEY 0x110
+#define NT_PPC_DEXCR 0x111
+#define NT_PPC_HASHKEYR 0x112
 #define NT_386_TLS 0x200
 #define NT_386_IOPERM 0x201
 #define NT_X86_XSTATE 0x202
+#define NT_X86_SHSTK 0x204
 #define NT_S390_HIGH_GPRS 0x300
 #define NT_S390_TIMER 0x301
 #define NT_S390_TODCMP 0x302
@@ -366,16 +357,21 @@ typedef struct elf64_shdr {
 #define NT_ARM_PAC_ENABLED_KEYS 0x40a
 #define NT_ARM_SSVE 0x40b
 #define NT_ARM_ZA 0x40c
+#define NT_ARM_ZT 0x40d
 #define NT_ARC_V2 0x600
 #define NT_VMCOREDD 0x700
 #define NT_MIPS_DSP 0x800
 #define NT_MIPS_FP_MODE 0x801
 #define NT_MIPS_MSA 0x802
+#define NT_RISCV_CSR 0x900
+#define NT_RISCV_VECTOR 0x901
 #define NT_LOONGARCH_CPUCFG 0xa00
 #define NT_LOONGARCH_CSR 0xa01
 #define NT_LOONGARCH_LSX 0xa02
 #define NT_LOONGARCH_LASX 0xa03
 #define NT_LOONGARCH_LBT 0xa04
+#define NT_LOONGARCH_HW_BREAK 0xa05
+#define NT_LOONGARCH_HW_WATCH 0xa06
 #define NT_GNU_PROPERTY_TYPE_0 5
 typedef struct elf32_note {
   Elf32_Word n_namesz;

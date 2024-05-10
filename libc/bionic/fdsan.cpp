@@ -40,6 +40,7 @@
 #include <unistd.h>
 
 #include <async_safe/log.h>
+#include <platform/bionic/page.h>
 #include <platform/bionic/reserved_signals.h>
 #include <sys/system_properties.h>
 
@@ -80,13 +81,13 @@ FdEntry* FdTableImpl<inline_fds>::at(size_t idx) {
 
     size_t required_count = max - inline_fds;
     size_t required_size = sizeof(FdTableOverflow) + required_count * sizeof(FdEntry);
-    size_t aligned_size = __BIONIC_ALIGN(required_size, PAGE_SIZE);
+    size_t aligned_size = __BIONIC_ALIGN(required_size, page_size());
     size_t aligned_count = (aligned_size - sizeof(FdTableOverflow)) / sizeof(FdEntry);
 
     void* allocation =
         mmap(nullptr, aligned_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
     if (allocation == MAP_FAILED) {
-      async_safe_fatal("fdsan: mmap failed: %s", strerror(errno));
+      async_safe_fatal("fdsan: mmap failed: %m");
     }
 
     FdTableOverflow* new_overflow = reinterpret_cast<FdTableOverflow*>(allocation);
@@ -218,6 +219,8 @@ const char* android_fdsan_get_tag_type(uint64_t tag) {
       return "ZipArchive";
     case ANDROID_FDSAN_OWNER_TYPE_NATIVE_HANDLE:
       return "native_handle_t";
+    case ANDROID_FDSAN_OWNER_TYPE_PARCEL:
+      return "Parcel";
 
     case ANDROID_FDSAN_OWNER_TYPE_GENERIC_00:
     default:

@@ -95,12 +95,10 @@ static inline uint16_t log2(size_t number) {
   return result;
 }
 
-BionicSmallObjectAllocator::BionicSmallObjectAllocator(uint32_t type,
-                                                       size_t block_size)
+BionicSmallObjectAllocator::BionicSmallObjectAllocator(uint32_t type, size_t block_size)
     : type_(type),
       block_size_(block_size),
-      blocks_per_page_((PAGE_SIZE - sizeof(small_object_page_info)) /
-                       block_size),
+      blocks_per_page_((page_size() - sizeof(small_object_page_info)) / block_size),
       free_pages_cnt_(0),
       page_list_(nullptr) {}
 
@@ -157,14 +155,13 @@ void BionicSmallObjectAllocator::free_page(small_object_page_info* page) {
   if (page_list_ == page) {
     page_list_ = page->next_page;
   }
-  munmap(page, PAGE_SIZE);
+  munmap(page, page_size());
   free_pages_cnt_--;
 }
 
 void BionicSmallObjectAllocator::free(void* ptr) {
   small_object_page_info* const page =
-      reinterpret_cast<small_object_page_info*>(
-          PAGE_START(reinterpret_cast<uintptr_t>(ptr)));
+      reinterpret_cast<small_object_page_info*>(page_start(reinterpret_cast<uintptr_t>(ptr)));
 
   if (reinterpret_cast<uintptr_t>(ptr) % block_size_ != 0) {
     async_safe_fatal("invalid pointer: %p (block_size=%zd)", ptr, block_size_);
@@ -192,14 +189,13 @@ void BionicSmallObjectAllocator::free(void* ptr) {
 }
 
 void BionicSmallObjectAllocator::alloc_page() {
-  void* const map_ptr = mmap(nullptr, PAGE_SIZE, PROT_READ | PROT_WRITE,
-                             MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  void* const map_ptr =
+      mmap(nullptr, page_size(), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   if (map_ptr == MAP_FAILED) {
-    async_safe_fatal("mmap failed: %s", strerror(errno));
+    async_safe_fatal("mmap failed: %m");
   }
 
-  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, map_ptr, PAGE_SIZE,
-        "bionic_alloc_small_objects");
+  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, map_ptr, page_size(), "bionic_alloc_small_objects");
 
   small_object_page_info* const page =
       reinterpret_cast<small_object_page_info*>(map_ptr);
@@ -269,15 +265,15 @@ void* BionicAllocator::alloc_mmap(size_t align, size_t size) {
   size_t header_size = __BIONIC_ALIGN(kPageInfoSize, align);
   size_t allocated_size;
   if (__builtin_add_overflow(header_size, size, &allocated_size) ||
-      PAGE_END(allocated_size) < allocated_size) {
+      page_end(allocated_size) < allocated_size) {
     async_safe_fatal("overflow trying to alloc %zu bytes", size);
   }
-  allocated_size = PAGE_END(allocated_size);
+  allocated_size = page_end(allocated_size);
   void* map_ptr = mmap(nullptr, allocated_size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS,
                        -1, 0);
 
   if (map_ptr == MAP_FAILED) {
-    async_safe_fatal("mmap failed: %s", strerror(errno));
+    async_safe_fatal("mmap failed: %m");
   }
 
   prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, map_ptr, allocated_size, "bionic_alloc_lob");
@@ -317,7 +313,7 @@ void* BionicAllocator::alloc(size_t size) {
 void* BionicAllocator::memalign(size_t align, size_t size) {
   // The Bionic allocator only supports alignment up to one page, which is good
   // enough for ELF TLS.
-  align = MIN(align, PAGE_SIZE);
+  align = MIN(align, page_size());
   align = MAX(align, 16);
   if (!powerof2(align)) {
     align = BIONIC_ROUND_UP_POWER_OF_2(align);
@@ -327,7 +323,7 @@ void* BionicAllocator::memalign(size_t align, size_t size) {
 }
 
 inline page_info* BionicAllocator::get_page_info_unchecked(void* ptr) {
-  uintptr_t header_page = PAGE_START(reinterpret_cast<size_t>(ptr) - kPageInfoSize);
+  uintptr_t header_page = page_start(reinterpret_cast<size_t>(ptr) - kPageInfoSize);
   return reinterpret_cast<page_info*>(header_page);
 }
 

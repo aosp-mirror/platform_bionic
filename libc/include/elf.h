@@ -202,17 +202,11 @@ typedef Elf64_Xword Elf64_Relr;
 #define DF_1_SINGLETON  0x02000000
 #define DF_1_STUB       0x04000000
 
-/* http://www.sco.com/developers/gabi/latest/ch4.eheader.html */
-#define ELFOSABI_SYSV 0 /* Synonym for ELFOSABI_NONE used by valgrind. */
-#define ELFOSABI_GNU 3 /* Synonym for ELFOSABI_LINUX. */
-
 /* http://www.sco.com/developers/gabi/latest/ch4.reloc.html */
 #define ELF32_R_INFO(sym, type) ((((Elf32_Word)sym) << 8) | ((type) & 0xff))
 #define ELF64_R_INFO(sym, type) ((((Elf64_Xword)sym) << 32) | ((type) & 0xffffffff))
 
 /* http://www.sco.com/developers/gabi/latest/ch4.symtab.html */
-#undef ELF_ST_TYPE
-#define ELF_ST_TYPE(x) ((x) & 0xf)
 #define ELF_ST_INFO(b,t) (((b) << 4) + ((t) & 0xf))
 #define ELF32_ST_INFO(b,t) ELF_ST_INFO(b,t)
 #define ELF64_ST_INFO(b,t) ELF_ST_INFO(b,t)
@@ -228,6 +222,8 @@ typedef Elf64_Xword Elf64_Relr;
 #define SHT_RELR 19
 #undef SHT_NUM
 #define SHT_NUM 20
+
+#define SHT_RISCV_ATTRIBUTES 0x70000003
 
 /*
  * Experimental support for SHT_RELR sections. For details, see proposal
@@ -258,6 +254,13 @@ typedef Elf64_Xword Elf64_Relr;
 #define DT_ANDROID_RELA 0x60000011 // DT_LOOS + 4
 #define DT_ANDROID_RELASZ 0x60000012 // DT_LOOS + 5
 
+/* TODO: upstreamed to FreeBSD as https://github.com/freebsd/freebsd-src/pull/1141/. */
+#define DT_AARCH64_MEMTAG_MODE 0x70000009
+#define DT_AARCH64_MEMTAG_HEAP 0x7000000b
+#define DT_AARCH64_MEMTAG_STACK 0x7000000c
+#define DT_AARCH64_MEMTAG_GLOBALS 0x7000000d
+#define DT_AARCH64_MEMTAG_GLOBALSSZ 0x7000000f
+
 /* Linux traditionally doesn't have the trailing 64 that BSD has on these. */
 #define R_AARCH64_TLS_DTPREL R_AARCH64_TLS_DTPREL64
 #define R_AARCH64_TLS_DTPMOD R_AARCH64_TLS_DTPMOD64
@@ -266,4 +269,25 @@ typedef Elf64_Xword Elf64_Relr;
 /* TODO: upstream these to FreeBSD? */
 #define R_ARM_TLS_DESC 13
 #define R_ARM_IRELATIVE 160
-#define R_X86_64_JUMP_SLOT 7
+
+/* FreeBSD is missing these, found in
+ * https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc#relocations
+ * so I've sent https://github.com/freebsd/freebsd-src/pull/1141 upstream.
+ */
+#define R_RISCV_TLSDESC 12
+#define R_RISCV_PLT32 59
+#define R_RISCV_SET_ULEB128 60
+#define R_RISCV_SUB_ULEB128 61
+#define R_RISCV_TLSDESC_HI20 62
+#define R_RISCV_TLSDESC_LOAD_LO12 63
+#define R_RISCV_TLSDESC_ADD_LO12 64
+#define R_RISCV_TLSDESC_CALL 65
+
+/* FreeBSD spells this slightly differently to Linux. Linux is correct according to
+ * https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc#file-header
+ * so I've sent https://github.com/freebsd/freebsd-src/pull/1148 upstream.
+ */
+#define EF_RISCV_FLOAT_ABI EF_RISCV_FLOAT_ABI_MASK
+
+/* FreeBSD spells this slightly differently to Linux. */
+#define R_X86_64_JUMP_SLOT R_X86_64_JMP_SLOT

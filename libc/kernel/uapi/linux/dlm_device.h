@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _LINUX_DLM_DEVICE_H
 #define _LINUX_DLM_DEVICE_H
 #include <linux/dlm.h>
@@ -33,11 +21,11 @@ struct dlm_lock_params {
   __u32 parent;
   __u64 xid;
   __u64 timeout;
-  void __user * castparam;
-  void __user * castaddr;
-  void __user * bastparam;
-  void __user * bastaddr;
-  struct dlm_lksb __user * lksb;
+  void  * castparam;
+  void  * castaddr;
+  void  * bastparam;
+  void  * bastaddr;
+  struct dlm_lksb  * lksb;
   char lvb[DLM_USER_LVB_LEN];
   char name[];
 };
@@ -67,9 +55,9 @@ struct dlm_device_version {
 struct dlm_lock_result {
   __u32 version[3];
   __u32 length;
-  void __user * user_astaddr;
-  void __user * user_astparam;
-  struct dlm_lksb __user * user_lksb;
+  void  * user_astaddr;
+  void  * user_astparam;
+  struct dlm_lksb  * user_lksb;
   struct dlm_lksb lksb;
   __u8 bast_mode;
   __u8 unused[3];

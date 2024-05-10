@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI_LINUX_MOUNT_H
 #define _UAPI_LINUX_MOUNT_H
 #include <linux/types.h>
@@ -63,7 +51,8 @@
 #define MOVE_MOUNT_T_AUTOMOUNTS 0x00000020
 #define MOVE_MOUNT_T_EMPTY_PATH 0x00000040
 #define MOVE_MOUNT_SET_GROUP 0x00000100
-#define MOVE_MOUNT__MASK 0x00000177
+#define MOVE_MOUNT_BENEATH 0x00000200
+#define MOVE_MOUNT__MASK 0x00000377
 #define FSOPEN_CLOEXEC 0x00000001
 #define FSPICK_CLOEXEC 0x00000001
 #define FSPICK_SYMLINK_NOFOLLOW 0x00000002
@@ -78,6 +67,7 @@ enum fsconfig_command {
   FSCONFIG_SET_FD = 5,
   FSCONFIG_CMD_CREATE = 6,
   FSCONFIG_CMD_RECONFIGURE = 7,
+  FSCONFIG_CMD_CREATE_EXCL = 8,
 };
 #define FSMOUNT_CLOEXEC 0x00000001
 #define MOUNT_ATTR_RDONLY 0x00000001
@@ -98,4 +88,41 @@ struct mount_attr {
   __u64 userns_fd;
 };
 #define MOUNT_ATTR_SIZE_VER0 32
+struct statmount {
+  __u32 size;
+  __u32 __spare1;
+  __u64 mask;
+  __u32 sb_dev_major;
+  __u32 sb_dev_minor;
+  __u64 sb_magic;
+  __u32 sb_flags;
+  __u32 fs_type;
+  __u64 mnt_id;
+  __u64 mnt_parent_id;
+  __u32 mnt_id_old;
+  __u32 mnt_parent_id_old;
+  __u64 mnt_attr;
+  __u64 mnt_propagation;
+  __u64 mnt_peer_group;
+  __u64 mnt_master;
+  __u64 propagate_from;
+  __u32 mnt_root;
+  __u32 mnt_point;
+  __u64 __spare2[50];
+  char str[];
+};
+struct mnt_id_req {
+  __u32 size;
+  __u32 spare;
+  __u64 mnt_id;
+  __u64 param;
+};
+#define MNT_ID_REQ_SIZE_VER0 24
+#define STATMOUNT_SB_BASIC 0x00000001U
+#define STATMOUNT_MNT_BASIC 0x00000002U
+#define STATMOUNT_PROPAGATE_FROM 0x00000004U
+#define STATMOUNT_MNT_ROOT 0x00000008U
+#define STATMOUNT_MNT_POINT 0x00000010U
+#define STATMOUNT_FS_TYPE 0x00000020U
+#define LSMT_ROOT 0xffffffffffffffff
 #endif

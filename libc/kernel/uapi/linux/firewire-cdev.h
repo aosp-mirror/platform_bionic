@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _LINUX_FIREWIRE_CDEV_H
 #define _LINUX_FIREWIRE_CDEV_H
 #include <linux/ioctl.h>
@@ -31,6 +19,10 @@
 #define FW_CDEV_EVENT_PHY_PACKET_SENT 0x07
 #define FW_CDEV_EVENT_PHY_PACKET_RECEIVED 0x08
 #define FW_CDEV_EVENT_ISO_INTERRUPT_MULTICHANNEL 0x09
+#define FW_CDEV_EVENT_REQUEST3 0x0a
+#define FW_CDEV_EVENT_RESPONSE2 0x0b
+#define FW_CDEV_EVENT_PHY_PACKET_SENT2 0x0c
+#define FW_CDEV_EVENT_PHY_PACKET_RECEIVED2 0x0d
 struct fw_cdev_event_common {
   __u64 closure;
   __u32 type;
@@ -50,6 +42,16 @@ struct fw_cdev_event_response {
   __u32 type;
   __u32 rcode;
   __u32 length;
+  __u32 data[];
+};
+struct fw_cdev_event_response2 {
+  __u64 closure;
+  __u32 type;
+  __u32 rcode;
+  __u32 length;
+  __u32 request_tstamp;
+  __u32 response_tstamp;
+  __u32 padding;
   __u32 data[];
 };
 struct fw_cdev_event_request {
@@ -72,6 +74,21 @@ struct fw_cdev_event_request2 {
   __u32 generation;
   __u32 handle;
   __u32 length;
+  __u32 data[];
+};
+struct fw_cdev_event_request3 {
+  __u64 closure;
+  __u32 type;
+  __u32 tcode;
+  __u64 offset;
+  __u32 source_node_id;
+  __u32 destination_node_id;
+  __u32 card;
+  __u32 generation;
+  __u32 handle;
+  __u32 length;
+  __u32 tstamp;
+  __u32 padding;
   __u32 data[];
 };
 struct fw_cdev_event_iso_interrupt {
@@ -100,6 +117,14 @@ struct fw_cdev_event_phy_packet {
   __u32 length;
   __u32 data[];
 };
+struct fw_cdev_event_phy_packet2 {
+  __u64 closure;
+  __u32 type;
+  __u32 rcode;
+  __u32 length;
+  __u32 tstamp;
+  __u32 data[];
+};
 union fw_cdev_event {
   struct fw_cdev_event_common common;
   struct fw_cdev_event_bus_reset bus_reset;
@@ -110,6 +135,9 @@ union fw_cdev_event {
   struct fw_cdev_event_iso_interrupt_mc iso_interrupt_mc;
   struct fw_cdev_event_iso_resource iso_resource;
   struct fw_cdev_event_phy_packet phy_packet;
+  struct fw_cdev_event_request3 request3;
+  struct fw_cdev_event_response2 response2;
+  struct fw_cdev_event_phy_packet2 phy_packet2;
 };
 #define FW_CDEV_IOC_GET_INFO _IOWR('#', 0x00, struct fw_cdev_get_info)
 #define FW_CDEV_IOC_SEND_REQUEST _IOW('#', 0x01, struct fw_cdev_send_request)

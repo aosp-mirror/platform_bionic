@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef __ARM_KVM_H__
 #define __ARM_KVM_H__
 #define KVM_SPSR_EL1 0
@@ -74,6 +62,7 @@ struct kvm_regs {
 #define KVM_ARM_VCPU_SVE 4
 #define KVM_ARM_VCPU_PTRAUTH_ADDRESS 5
 #define KVM_ARM_VCPU_PTRAUTH_GENERIC 6
+#define KVM_ARM_VCPU_HAS_EL2 7
 struct kvm_vcpu_init {
   __u32 target;
   __u32 features[7];
@@ -121,9 +110,13 @@ struct kvm_vcpu_events {
 struct kvm_arm_copy_mte_tags {
   __u64 guest_ipa;
   __u64 length;
-  void __user * addr;
+  void  * addr;
   __u64 flags;
   __u64 reserved[2];
+};
+struct kvm_arm_counter_offset {
+  __u64 counter_offset;
+  __u64 reserved;
 };
 #define KVM_ARM_TAGS_TO_GUEST 0
 #define KVM_ARM_TAGS_FROM_GUEST 1
@@ -203,6 +196,8 @@ enum {
   KVM_REG_ARM_VENDOR_HYP_BIT_FUNC_FEAT = 0,
   KVM_REG_ARM_VENDOR_HYP_BIT_PTP = 1,
 };
+#define KVM_ARM_VM_SMCCC_CTRL 0
+#define KVM_ARM_VM_SMCCC_FILTER 0
 #define KVM_DEV_ARM_VGIC_GRP_ADDR 0
 #define KVM_DEV_ARM_VGIC_GRP_DIST_REGS 1
 #define KVM_DEV_ARM_VGIC_GRP_CPU_REGS 2
@@ -236,6 +231,8 @@ enum {
 #define KVM_ARM_VCPU_TIMER_CTRL 1
 #define KVM_ARM_VCPU_TIMER_IRQ_VTIMER 0
 #define KVM_ARM_VCPU_TIMER_IRQ_PTIMER 1
+#define KVM_ARM_VCPU_TIMER_IRQ_HVTIMER 2
+#define KVM_ARM_VCPU_TIMER_IRQ_HPTIMER 3
 #define KVM_ARM_VCPU_PVTIME_CTRL 2
 #define KVM_ARM_VCPU_PVTIME_IPA 0
 #define KVM_ARM_IRQ_VCPU2_SHIFT 28
@@ -265,5 +262,26 @@ enum {
 #define KVM_PSCI_RET_DENIED PSCI_RET_DENIED
 #define KVM_SYSTEM_EVENT_RESET_FLAG_PSCI_RESET2 (1ULL << 0)
 #define KVM_EXIT_FAIL_ENTRY_CPU_UNSUPPORTED (1ULL << 0)
+enum kvm_smccc_filter_action {
+  KVM_SMCCC_FILTER_HANDLE = 0,
+  KVM_SMCCC_FILTER_DENY,
+  KVM_SMCCC_FILTER_FWD_TO_USER,
+};
+struct kvm_smccc_filter {
+  __u32 base;
+  __u32 nr_functions;
+  __u8 action;
+  __u8 pad[15];
+};
+#define KVM_HYPERCALL_EXIT_SMC (1U << 0)
+#define KVM_HYPERCALL_EXIT_16BIT (1U << 1)
+#define KVM_ARM_FEATURE_ID_RANGE_IDX(op0,op1,crn,crm,op2) ({ __u64 __op1 = (op1) & 3; __op1 -= (__op1 == 3); (__op1 << 6 | ((crm) & 7) << 3 | (op2)); })
+#define KVM_ARM_FEATURE_ID_RANGE 0
+#define KVM_ARM_FEATURE_ID_RANGE_SIZE (3 * 8 * 8)
+struct reg_mask_range {
+  __u64 addr;
+  __u32 range;
+  __u32 reserved[13];
+};
 #endif
 #endif

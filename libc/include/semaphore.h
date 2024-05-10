@@ -45,12 +45,12 @@ typedef struct {
 
 #define SEM_FAILED __BIONIC_CAST(reinterpret_cast, sem_t*, 0)
 
-int sem_clockwait(sem_t* __sem, clockid_t __clock, const struct timespec* __ts) __INTRODUCED_IN(30);
-int sem_destroy(sem_t* __sem);
-int sem_getvalue(sem_t* __sem, int* __value);
-int sem_init(sem_t* __sem, int __shared, unsigned int __value);
-int sem_post(sem_t* __sem);
-int sem_timedwait(sem_t* __sem, const struct timespec* __ts);
+int sem_clockwait(sem_t* _Nonnull __sem, clockid_t __clock, const struct timespec* _Nonnull __ts) __INTRODUCED_IN(30);
+int sem_destroy(sem_t* _Nonnull __sem);
+int sem_getvalue(sem_t* _Nonnull __sem, int* _Nonnull __value);
+int sem_init(sem_t* _Nonnull __sem, int __shared, unsigned int __value);
+int sem_post(sem_t* _Nonnull __sem);
+int sem_timedwait(sem_t* _Nonnull __sem, const struct timespec* _Nonnull __ts);
 /*
  * POSIX historically only supported using sem_timedwait() with CLOCK_REALTIME, however that is
  * typically inappropriate, since that clock can change dramatically, causing the timeout to either
@@ -59,14 +59,14 @@ int sem_timedwait(sem_t* __sem, const struct timespec* __ts);
  * Note that sem_clockwait() allows specifying an arbitrary clock and has superseded this
  * function.
  */
-int sem_timedwait_monotonic_np(sem_t* __sem, const struct timespec* __ts) __INTRODUCED_IN(28);
-int sem_trywait(sem_t* __sem);
-int sem_wait(sem_t* __sem);
+int sem_timedwait_monotonic_np(sem_t* _Nonnull __sem, const struct timespec* _Nonnull __ts) __INTRODUCED_IN(28);
+int sem_trywait(sem_t* _Nonnull __sem);
+int sem_wait(sem_t* _Nonnull __sem);
 
 /* These aren't actually implemented. */
-sem_t* sem_open(const char* __name, int _flags, ...);
-int sem_close(sem_t* __sem);
-int sem_unlink(const char* __name);
+sem_t* _Nullable sem_open(const char* _Nonnull __name, int _flags, ...);
+int sem_close(sem_t* _Nonnull __sem);
+int sem_unlink(const char* _Nonnull __name);
 
 __END_DECLS
 

@@ -66,31 +66,31 @@
 __BEGIN_DECLS
 
 struct passwd {
-  char* pw_name;
-  char* pw_passwd;
+  char* _Nullable pw_name;
+  char* _Nullable pw_passwd;
   uid_t pw_uid;
   gid_t pw_gid;
 #ifdef __LP64__
-  char* pw_gecos;
+  char* _Nullable pw_gecos;
 #else
   /* Note: On LP32, we define pw_gecos to pw_passwd since they're both NULL. */
 # define pw_gecos pw_passwd
 #endif
-  char* pw_dir;
-  char* pw_shell;
+  char* _Nullable pw_dir;
+  char* _Nullable pw_shell;
 };
 
-struct passwd* getpwnam(const char* __name);
-struct passwd* getpwuid(uid_t __uid);
+struct passwd* _Nullable getpwnam(const char* _Nonnull __name);
+struct passwd* _Nullable getpwuid(uid_t __uid);
 
 /* Note: Android has thousands and thousands of ids to iterate through */
-struct passwd* getpwent(void) __INTRODUCED_IN(26);
+struct passwd* _Nullable getpwent(void) __INTRODUCED_IN(26);
 
 void setpwent(void) __INTRODUCED_IN(26);
 void endpwent(void) __INTRODUCED_IN(26);
 
-int getpwnam_r(const char* __name, struct passwd* __pwd, char* __buf, size_t __n, struct passwd** __result);
-int getpwuid_r(uid_t __uid, struct passwd* __pwd, char* __buf, size_t __n, struct passwd** __result);
+int getpwnam_r(const char* _Nonnull __name, struct passwd* _Nonnull __pwd, char* _Nonnull __buf, size_t __n, struct passwd* _Nullable * _Nonnull __result);
+int getpwuid_r(uid_t __uid, struct passwd* _Nonnull __pwd, char* _Nonnull __buf, size_t __n, struct passwd* _Nullable * _Nonnull __result);
 
 __END_DECLS
 
