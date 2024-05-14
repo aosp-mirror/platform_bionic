@@ -57,7 +57,7 @@
 static gwp_asan::GuardedPoolAllocator GuardedAlloc;
 static const MallocDispatch* prev_dispatch;
 
-using Action = android_mallopt_gwp_asan_options_t::Action;
+using Mode = android_mallopt_gwp_asan_options_t::Mode;
 using Options = gwp_asan::options::Options;
 
 // basename() is a mess, see the manpage. Let's be explicit what handling we
@@ -261,8 +261,8 @@ void SetDefaultGwpAsanOptions(Options* options, unsigned* process_sample_rate,
   options->Recoverable = true;
   GwpAsanRecoverable = true;
 
-  if (mallopt_options.desire == Action::TURN_ON_WITH_SAMPLING ||
-      mallopt_options.desire == Action::TURN_ON_FOR_APP_SAMPLED_NON_CRASHING) {
+  if (mallopt_options.mode == Mode::SYSTEM_PROCESS_OR_SYSTEM_APP ||
+      mallopt_options.mode == Mode::APP_MANIFEST_DEFAULT) {
     *process_sample_rate = kDefaultProcessSampling;
   } else {
     *process_sample_rate = 1;
@@ -285,7 +285,7 @@ bool GetGwpAsanOptionImpl(char* value_out,
   // be used. Tests still continue to use the environment variable though.
   if (*basename != '\0') {
     const char* default_sysprop = system_sysprop;
-    if (mallopt_options.desire == Action::TURN_ON_FOR_APP) {
+    if (mallopt_options.mode == Mode::APP_MANIFEST_ALWAYS) {
       default_sysprop = app_sysprop;
     }
     async_safe_format_buffer(&program_specific_sysprop[0], kSyspropMaxLen, "%s%s",
@@ -425,7 +425,7 @@ bool MaybeInitGwpAsan(libc_globals* globals,
   Options options;
   unsigned process_sample_rate = kDefaultProcessSampling;
   if (!GetGwpAsanOptions(&options, &process_sample_rate, mallopt_options) &&
-      mallopt_options.desire == Action::DONT_TURN_ON_UNLESS_OVERRIDDEN) {
+      mallopt_options.mode == Mode::APP_MANIFEST_NEVER) {
     return false;
   }
 
@@ -492,7 +492,7 @@ bool MaybeInitGwpAsanFromLibc(libc_globals* globals) {
 
   android_mallopt_gwp_asan_options_t mallopt_options;
   mallopt_options.program_name = progname;
-  mallopt_options.desire = Action::TURN_ON_WITH_SAMPLING;
+  mallopt_options.mode = Mode::SYSTEM_PROCESS_OR_SYSTEM_APP;
 
   return MaybeInitGwpAsan(globals, mallopt_options);
 }
