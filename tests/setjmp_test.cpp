@@ -174,31 +174,23 @@ TEST(setjmp, sigsetjmp_1_signal_mask) {
   }
 }
 
-#if defined(__aarch64__)
+#if defined(__arm__)
+#define SET_FREG(n, v) asm volatile("vmov.f64 d"#n ", #"#v : : : "d"#n)
+#define GET_FREG(n) ({ double _r; asm volatile("fcpyd %P0, d"#n : "=w"(_r) : :); _r;})
+#define CLEAR_FREG(n) asm volatile("vmov.i64 d"#n ", #0x0" : : : "d"#n)
+#elif defined(__aarch64__)
 #define SET_FREG(n, v) asm volatile("fmov d"#n ", "#v : : : "d"#n)
+#define GET_FREG(n) ({ double _r; asm volatile("fmov %0, d"#n : "=r"(_r) : :); _r; })
 #define CLEAR_FREG(n) asm volatile("fmov d"#n ", xzr" : : : "d"#n)
+#endif
+
+#if defined(__arm__) || defined(__aarch64__)
 #define SET_FREGS \
   SET_FREG(8, 8.0); SET_FREG(9, 9.0); SET_FREG(10, 10.0); SET_FREG(11, 11.0); \
   SET_FREG(12, 12.0); SET_FREG(13, 13.0); SET_FREG(14, 14.0); SET_FREG(15, 15.0);
 #define CLEAR_FREGS \
   CLEAR_FREG(8); CLEAR_FREG(9); CLEAR_FREG(10); CLEAR_FREG(11); \
   CLEAR_FREG(12); CLEAR_FREG(13); CLEAR_FREG(14); CLEAR_FREG(15);
-#define GET_FREG(n) ({ double _r; asm volatile("fmov %0, d"#n : "=r"(_r) : :); _r; })
-#define CHECK_FREGS \
-    EXPECT_EQ(8.0, GET_FREG(8)); EXPECT_EQ(9.0, GET_FREG(9)); \
-    EXPECT_EQ(10.0, GET_FREG(10)); EXPECT_EQ(11.0, GET_FREG(11)); \
-    EXPECT_EQ(12.0, GET_FREG(12)); EXPECT_EQ(13.0, GET_FREG(13)); \
-    EXPECT_EQ(14.0, GET_FREG(14)); EXPECT_EQ(15.0, GET_FREG(15));
-#elif defined(__arm__)
-#define SET_FREG(n, v) \
-  ({ const double _v{v}; asm volatile("fcpyd d"#n ", %P0" : : "w"(_v) : "d"#n); })
-#define SET_FREGS \
-  SET_FREG(8, 8); SET_FREG(9, 9); SET_FREG(10, 10); SET_FREG(11, 11); \
-  SET_FREG(12, 12); SET_FREG(13, 13); SET_FREG(14, 14); SET_FREG(15, 15);
-#define CLEAR_FREGS \
-  SET_FREG(8, 0); SET_FREG(9, 0); SET_FREG(10, 0); SET_FREG(11, 0); \
-  SET_FREG(12, 0); SET_FREG(13, 0); SET_FREG(14, 0); SET_FREG(15, 0);
-#define GET_FREG(n) ({ double _r; asm volatile("fcpyd %P0, d"#n : "=w"(_r) : :); _r;})
 #define CHECK_FREGS \
     EXPECT_EQ(8.0, GET_FREG(8)); EXPECT_EQ(9.0, GET_FREG(9)); \
     EXPECT_EQ(10.0, GET_FREG(10)); EXPECT_EQ(11.0, GET_FREG(11)); \
