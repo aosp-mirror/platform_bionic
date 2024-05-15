@@ -36,7 +36,7 @@
 #include <linux/termios.h>
 
 #if !defined(__BIONIC_TERMIOS_WINSIZE_INLINE)
-#define __BIONIC_TERMIOS_WINSIZE_INLINE static inline
+#define __BIONIC_TERMIOS_WINSIZE_INLINE static __inline
 #endif
 
 __BEGIN_DECLS
