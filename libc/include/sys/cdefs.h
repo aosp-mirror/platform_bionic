@@ -260,7 +260,7 @@
  * them available externally. FORTIFY'ed functions try to be as close to possible as 'invisible';
  * having stack protectors detracts from that (b/182948263).
  */
-#  define __BIONIC_FORTIFY_INLINE static inline __attribute__((__no_stack_protector__)) \
+#  define __BIONIC_FORTIFY_INLINE static __inline__ __attribute__((__no_stack_protector__)) \
       __always_inline __VERSIONER_FORTIFY_INLINE
 /*
  * We should use __BIONIC_FORTIFY_VARIADIC instead of __BIONIC_FORTIFY_INLINE
@@ -268,7 +268,7 @@
  * The __always_inline attribute is useless, misleading, and could trigger
  * clang compiler bug to incorrectly inline variadic functions.
  */
-#  define __BIONIC_FORTIFY_VARIADIC static inline
+#  define __BIONIC_FORTIFY_VARIADIC static __inline__
 /* Error functions don't have bodies, so they can just be static. */
 #  define __BIONIC_ERROR_FUNCTION_VISIBILITY static __attribute__((__unused__))
 #else

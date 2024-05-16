@@ -38,7 +38,7 @@
 
 __BEGIN_DECLS
 
-static inline int __bionic_thrd_error(int __pthread_code) {
+static __inline int __bionic_thrd_error(int __pthread_code) {
   switch (__pthread_code) {
     case 0: return 0;
     case ENOMEM: return thrd_nomem;

@@ -297,6 +297,30 @@ static HeapTaggingLevel __get_tagging_level(const memtag_dynamic_entries_t* memt
   return level;
 }
 
+static int64_t __get_memtag_upgrade_secs() {
+  char* env = getenv("BIONIC_MEMTAG_UPGRADE_SECS");
+  if (!env) return 0;
+  int64_t timed_upgrade = 0;
+  static const char kAppProcessName[] = "app_process64";
+  const char* progname = __libc_shared_globals()->init_progname;
+  progname = progname ? __gnu_basename(progname) : nullptr;
+  // disable timed upgrade for zygote, as the thread spawned will violate the requirement
+  // that it be single-threaded.
+  if (!progname || strncmp(progname, kAppProcessName, sizeof(kAppProcessName)) != 0) {
+    char* endptr;
+    timed_upgrade = strtoll(env, &endptr, 10);
+    if (*endptr != '\0' || timed_upgrade < 0) {
+      async_safe_format_log(ANDROID_LOG_ERROR, "libc",
+                            "Invalid value for BIONIC_MEMTAG_UPGRADE_SECS: %s", env);
+      timed_upgrade = 0;
+    }
+  }
+  // Make sure that this does not get passed to potential processes inheriting
+  // this environment.
+  unsetenv("BIONIC_MEMTAG_UPGRADE_SECS");
+  return timed_upgrade;
+}
+
 // Figure out the desired memory tagging mode (sync/async, heap/globals/stack) for this executable.
 // This function is called from the linker before the main executable is relocated.
 __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(
@@ -313,31 +337,7 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(
     }
     memtag_stack = true;
   }
-  char* env = getenv("BIONIC_MEMTAG_UPGRADE_SECS");
-  static const char kAppProcessName[] = "app_process64";
-  const char* progname = __libc_shared_globals()->init_progname;
-  progname = progname ? __gnu_basename(progname) : nullptr;
-  if (progname &&
-      strncmp(progname, kAppProcessName, sizeof(kAppProcessName)) == 0) {
-    // disable timed upgrade for zygote, as the thread spawned will violate the requirement
-    // that it be single-threaded.
-    env = nullptr;
-  }
-  int64_t timed_upgrade = 0;
-  if (env) {
-    char* endptr;
-    timed_upgrade = strtoll(env, &endptr, 10);
-    if (*endptr != '\0' || timed_upgrade < 0) {
-      async_safe_format_log(ANDROID_LOG_ERROR, "libc",
-                            "Invalid value for BIONIC_MEMTAG_UPGRADE_SECS: %s",
-                            env);
-      timed_upgrade = 0;
-    }
-    // Make sure that this does not get passed to potential processes inheriting
-    // this environment.
-    unsetenv("BIONIC_MEMTAG_UPGRADE_SECS");
-  }
-  if (timed_upgrade) {
+  if (int64_t timed_upgrade = __get_memtag_upgrade_secs()) {
     if (level == M_HEAP_TAGGING_LEVEL_ASYNC) {
       async_safe_format_log(ANDROID_LOG_INFO, "libc",
                             "Attempting timed MTE upgrade from async to sync.");
