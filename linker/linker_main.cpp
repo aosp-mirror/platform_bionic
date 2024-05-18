@@ -422,20 +422,11 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
 
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(si->base);
 
-  // We haven't supported non-PIE since Lollipop for security reasons.
+  // For security reasons we dropped non-PIE support in API level 21,
+  // and the NDK no longer supports earlier API levels.
   if (elf_hdr->e_type != ET_DYN) {
-    // We don't use async_safe_fatal here because we don't want a tombstone:
-    // even after several years we still find ourselves on app compatibility
-    // investigations because some app's trying to launch an executable that
-    // hasn't worked in at least three years, and we've "helpfully" dropped a
-    // tombstone for them. The tombstone never provided any detail relevant to
-    // fixing the problem anyway, and the utility of drawing extra attention
-    // to the problem is non-existent at this late date.
-    async_safe_format_fd(STDERR_FILENO,
-                         "\"%s\": error: Android 5.0 and later only support "
-                         "position-independent executables (-fPIE).\n",
-                         g_argv[0]);
-    _exit(EXIT_FAILURE);
+    __linker_error("error: %s: Android only supports position-independent "
+                   "executables (-fPIE)\n", exe_info.path.c_str());
   }
 
   // Use LD_LIBRARY_PATH and LD_PRELOAD (but only if we aren't setuid/setgid).
