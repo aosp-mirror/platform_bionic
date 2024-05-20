@@ -38,6 +38,7 @@
 #endif
 
 #include <atomic>
+#include <iomanip>
 #include <string>
 #include <regex>
 
@@ -253,7 +254,7 @@ class ExecTestHelper {
     AssertChildExited(pid, expected_exit_status, &error_msg);
     if (expected_output_regex != nullptr) {
       if (!std::regex_search(output_, std::regex(expected_output_regex))) {
-        FAIL() << "regex " << expected_output_regex << " didn't match " << output_;
+        FAIL() << "regex " << std::quoted(expected_output_regex) << " didn't match " << std::quoted(output_);
       }
     }
   }
