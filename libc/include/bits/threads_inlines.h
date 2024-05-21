@@ -124,7 +124,7 @@ struct __bionic_thrd_data {
 };
 #pragma clang diagnostic pop
 
-static inline void* _Nonnull __bionic_thrd_trampoline(void* _Nonnull __arg) {
+static __inline void* _Nonnull __bionic_thrd_trampoline(void* _Nonnull __arg) {
   struct __bionic_thrd_data __data =
       *__BIONIC_CAST(static_cast, struct __bionic_thrd_data*, __arg);
   free(__arg);
