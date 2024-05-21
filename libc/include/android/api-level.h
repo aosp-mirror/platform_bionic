@@ -168,7 +168,10 @@ __BEGIN_DECLS
  */
 #define __ANDROID_API_U__ 34
 
-/** Names the "V" API level (35), for comparison against `__ANDROID_API__`. */
+/**
+ * Names the Android 15 (aka "V" or "VanillaIceCream") API level (35),
+ * for comparison against `__ANDROID_API__`.
+ */
 #define __ANDROID_API_V__ 35
 
 /* This file is included in <features.h>, and might be used from .S files. */

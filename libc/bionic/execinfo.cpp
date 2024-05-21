@@ -73,6 +73,11 @@ static _Unwind_Reason_Code TraceFunction(_Unwind_Context* context, void* arg) {
 #elif defined(__aarch64__)
     // All instructions are 4 bytes long, skip back one instruction.
     ip -= 4;
+#elif defined(__riscv)
+    // C instructions are the shortest at 2 bytes long. (Unlike thumb, it's
+    // non-trivial to recognize C instructions when going backwards in the
+    // instruction stream.)
+    ip -= 2;
 #elif defined(__i386__) || defined(__x86_64__)
     // It's difficult to decode exactly where the previous instruction is,
     // so subtract 1 to estimate where the instruction lives.
