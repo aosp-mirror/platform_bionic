@@ -87,9 +87,12 @@
 #define	__STRING(x)	#x
 #define	___STRING(x)	__STRING(x)
 
-#if defined(__cplusplus)
-#define	__inline	inline		/* convert to C++ keyword */
-#endif /* !__cplusplus */
+// C++ has `inline` as a keyword, as does C99, but ANSI C (aka C89 aka C90)
+// does not. Everything accepts the `__inline__` extension though. We could
+// just use that directly in our own code, but there's historical precedent
+// for `__inline` meaning it's still used in upstream BSD code (and potentially
+// downstream in vendor or app code).
+#define	__inline __inline__
 
 #define __always_inline __attribute__((__always_inline__))
 #define __attribute_const__ __attribute__((__const__))
@@ -260,7 +263,7 @@
  * them available externally. FORTIFY'ed functions try to be as close to possible as 'invisible';
  * having stack protectors detracts from that (b/182948263).
  */
-#  define __BIONIC_FORTIFY_INLINE static __inline__ __attribute__((__no_stack_protector__)) \
+#  define __BIONIC_FORTIFY_INLINE static __inline __attribute__((__no_stack_protector__)) \
       __always_inline __VERSIONER_FORTIFY_INLINE
 /*
  * We should use __BIONIC_FORTIFY_VARIADIC instead of __BIONIC_FORTIFY_INLINE
@@ -268,9 +271,9 @@
  * The __always_inline attribute is useless, misleading, and could trigger
  * clang compiler bug to incorrectly inline variadic functions.
  */
-#  define __BIONIC_FORTIFY_VARIADIC static __inline__
+#  define __BIONIC_FORTIFY_VARIADIC static __inline
 /* Error functions don't have bodies, so they can just be static. */
-#  define __BIONIC_ERROR_FUNCTION_VISIBILITY static __attribute__((__unused__))
+#  define __BIONIC_ERROR_FUNCTION_VISIBILITY static __unused
 #else
 /* Further increase sharing for some inline functions */
 #  define __pass_object_size_n(n)
