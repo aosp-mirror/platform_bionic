@@ -34,6 +34,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/mman.h>
+#include <sys/uio.h>
+#include <unistd.h>
 
 #include <vector>
 
@@ -69,111 +71,100 @@ static MapEntry* parse_line(char* line) {
 
   MapEntry* entry = new MapEntry(start, end, offset, name, name_len, flags);
   if (!(flags & PROT_READ)) {
-    // Any unreadable map will just get a zero load bias.
-    entry->load_bias = 0;
-    entry->init = true;
-    entry->valid = false;
+    // This will make sure that an unreadable map will prevent attempts to read
+    // elf data from the map.
+    entry->SetInvalid();
   }
   return entry;
 }
 
-template <typename T>
-static inline bool get_val(MapEntry* entry, uintptr_t addr, T* store) {
-  if (!(entry->flags & PROT_READ) || addr < entry->start || addr + sizeof(T) > entry->end) {
-    return false;
+void MapEntry::Init() {
+  if (init_) {
+    return;
   }
-  // Make sure the address is aligned properly.
-  if (addr & (sizeof(T) - 1)) {
-    return false;
-  }
-  *store = *reinterpret_cast<T*>(addr);
-  return true;
-}
+  init_ = true;
 
-static bool valid_elf(MapEntry* entry) {
-  uintptr_t addr = entry->start;
-  uintptr_t end;
-  if (__builtin_add_overflow(addr, SELFMAG, &end) || end >= entry->end) {
-    return false;
+  uintptr_t end_addr;
+  if (__builtin_add_overflow(start_, SELFMAG, &end_addr) || end_addr >= end_) {
+    return;
   }
 
-  return memcmp(reinterpret_cast<void*>(addr), ELFMAG, SELFMAG) == 0;
-}
-
-static void read_loadbias(MapEntry* entry) {
-  entry->load_bias = 0;
-  uintptr_t addr = entry->start;
   ElfW(Ehdr) ehdr;
-  if (!get_val<ElfW(Half)>(entry, addr + offsetof(ElfW(Ehdr), e_phnum), &ehdr.e_phnum)) {
-    return;
+  struct iovec src_io = {.iov_base = reinterpret_cast<void*>(start_), .iov_len = SELFMAG};
+  struct iovec dst_io = {.iov_base = ehdr.e_ident, .iov_len = SELFMAG};
+  ssize_t rc = process_vm_readv(getpid(), &dst_io, 1, &src_io, 1, 0);
+  valid_ = rc == SELFMAG && IS_ELF(ehdr);
+}
+
+uintptr_t MapEntry::GetLoadBias() {
+  if (!valid_) {
+    return 0;
   }
-  if (!get_val<ElfW(Off)>(entry, addr + offsetof(ElfW(Ehdr), e_phoff), &ehdr.e_phoff)) {
-    return;
+
+  if (load_bias_read_) {
+    return load_bias_;
   }
-  addr += ehdr.e_phoff;
+
+  load_bias_read_ = true;
+
+  ElfW(Ehdr) ehdr;
+  struct iovec src_io = {.iov_base = reinterpret_cast<void*>(start_), .iov_len = sizeof(ehdr)};
+  struct iovec dst_io = {.iov_base = &ehdr, .iov_len = sizeof(ehdr)};
+  ssize_t rc = process_vm_readv(getpid(), &dst_io, 1, &src_io, 1, 0);
+  if (rc != sizeof(ehdr)) {
+    return 0;
+  }
+
+  uintptr_t addr = start_ + ehdr.e_phoff;
   for (size_t i = 0; i < ehdr.e_phnum; i++) {
     ElfW(Phdr) phdr;
-    if (!get_val<ElfW(Word)>(entry, addr + offsetof(ElfW(Phdr), p_type), &phdr.p_type)) {
-      return;
-    }
-    if (!get_val<ElfW(Word)>(entry, addr + offsetof(ElfW(Phdr), p_flags), &phdr.p_flags)) {
-      return;
-    }
-    if (!get_val<ElfW(Off)>(entry, addr + offsetof(ElfW(Phdr), p_offset), &phdr.p_offset)) {
-      return;
+
+    src_io.iov_base = reinterpret_cast<void*>(addr);
+    src_io.iov_len = sizeof(phdr);
+    dst_io.iov_base = &phdr;
+    dst_io.iov_len = sizeof(phdr);
+    rc = process_vm_readv(getpid(), &dst_io, 1, &src_io, 1, 0);
+    if (rc != sizeof(phdr)) {
+      return 0;
     }
     if ((phdr.p_type == PT_LOAD) && (phdr.p_flags & PF_X) ) {
-      if (!get_val<ElfW(Addr)>(entry, addr + offsetof(ElfW(Phdr), p_vaddr), &phdr.p_vaddr)) {
-        return;
-      }
-      entry->load_bias = phdr.p_vaddr - phdr.p_offset;
-      return;
+      load_bias_ = phdr.p_vaddr - phdr.p_offset;
+      return load_bias_;
     }
     addr += sizeof(phdr);
   }
+  return 0;
 }
 
-static void inline init(MapEntry* entry) {
-  if (entry->init) {
-    return;
-  }
-  entry->init = true;
-  if (valid_elf(entry)) {
-    entry->valid = true;
-    read_loadbias(entry);
-  }
-}
-
-bool MapData::ReadMaps() {
+void MapData::ReadMaps() {
+  std::lock_guard<std::mutex> lock(m_);
   FILE* fp = fopen("/proc/self/maps", "re");
   if (fp == nullptr) {
-    return false;
+    return;
   }
+
+  ClearEntries();
 
   std::vector<char> buffer(1024);
   while (fgets(buffer.data(), buffer.size(), fp) != nullptr) {
     MapEntry* entry = parse_line(buffer.data());
     if (entry == nullptr) {
-      fclose(fp);
-      return false;
+      break;
     }
-
-    auto it = entries_.find(entry);
-    if (it == entries_.end()) {
-      entries_.insert(entry);
-    } else {
-      delete entry;
-    }
+    entries_.insert(entry);
   }
   fclose(fp);
-  return true;
 }
 
-MapData::~MapData() {
+void MapData::ClearEntries() {
   for (auto* entry : entries_) {
     delete entry;
   }
   entries_.clear();
+}
+
+MapData::~MapData() {
+  ClearEntries();
 }
 
 // Find the containing map info for the PC.
@@ -181,36 +172,31 @@ const MapEntry* MapData::find(uintptr_t pc, uintptr_t* rel_pc) {
   MapEntry pc_entry(pc);
 
   std::lock_guard<std::mutex> lock(m_);
-
   auto it = entries_.find(&pc_entry);
-  if (it == entries_.end()) {
-    ReadMaps();
-  }
-  it = entries_.find(&pc_entry);
   if (it == entries_.end()) {
     return nullptr;
   }
 
   MapEntry* entry = *it;
-  init(entry);
+  entry->Init();
 
   if (rel_pc != nullptr) {
     // Need to check to see if this is a read-execute map and the read-only
     // map is the previous one.
-    if (!entry->valid && it != entries_.begin()) {
+    if (!entry->valid() && it != entries_.begin()) {
       MapEntry* prev_entry = *--it;
-      if (prev_entry->flags == PROT_READ && prev_entry->offset < entry->offset &&
-          prev_entry->name == entry->name) {
-        init(prev_entry);
+      if (prev_entry->flags() == PROT_READ && prev_entry->offset() < entry->offset() &&
+          prev_entry->name() == entry->name()) {
+        prev_entry->Init();
 
-        if (prev_entry->valid) {
-          entry->elf_start_offset = prev_entry->offset;
-          *rel_pc = pc - entry->start + entry->offset + prev_entry->load_bias;
+        if (prev_entry->valid()) {
+          entry->set_elf_start_offset(prev_entry->offset());
+          *rel_pc = pc - entry->start() + entry->offset() + prev_entry->GetLoadBias();
           return entry;
         }
       }
     }
-    *rel_pc = pc - entry->start + entry->offset + entry->load_bias;
+    *rel_pc = pc - entry->start() + entry->offset() + entry->GetLoadBias();
   }
   return entry;
 }
