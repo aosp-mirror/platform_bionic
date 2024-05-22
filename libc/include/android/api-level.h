@@ -168,7 +168,10 @@ __BEGIN_DECLS
  */
 #define __ANDROID_API_U__ 34
 
-/** Names the "V" API level (35), for comparison against `__ANDROID_API__`. */
+/**
+ * Names the Android 15 (aka "V" or "VanillaIceCream") API level (35),
+ * for comparison against `__ANDROID_API__`.
+ */
 #define __ANDROID_API_V__ 35
 
 /* This file is included in <features.h>, and might be used from .S files. */
@@ -191,7 +194,7 @@ int android_get_application_target_sdk_version() __INTRODUCED_IN(24);
 #if __ANDROID_API__ < 29
 
 /* android_get_device_api_level is a static inline before API level 29. */
-#define __BIONIC_GET_DEVICE_API_LEVEL_INLINE static inline
+#define __BIONIC_GET_DEVICE_API_LEVEL_INLINE static __inline
 #include <bits/get_device_api_level_inlines.h>
 #undef __BIONIC_GET_DEVICE_API_LEVEL_INLINE
 
