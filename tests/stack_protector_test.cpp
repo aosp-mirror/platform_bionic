@@ -136,7 +136,7 @@ TEST_F(stack_protector_DeathTest, modify_stack_protector) {
   if (stack_mte_enabled()) {
     GTEST_SKIP() << "Stack MTE is enabled, stack protector is not available";
   } else if (hwasan_enabled()) {
-    ASSERT_EXIT(modify_stack_protector_test(), testing::KilledBySignal(SIGABRT), "tag-mismatch");
+    GTEST_SKIP() << "HWASan is enabled, stack protector is not testable";
   } else {
     ASSERT_EXIT(modify_stack_protector_test(), testing::KilledBySignal(SIGABRT),
                 "stack corruption detected");

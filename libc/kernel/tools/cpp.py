@@ -2345,11 +2345,11 @@ struct something_s {
 
     def test_function_keep_attribute_structs(self):
         text = """\
-static inline struct some_struct1 * function(struct some_struct2 * e) {
+static __inline__ struct some_struct1 * function(struct some_struct2 * e) {
 }
 """
         expected = """\
-static inline struct some_struct1 * function(struct some_struct2 * e) {
+static __inline__ struct some_struct1 * function(struct some_struct2 * e) {
 }
 """
         self.assertEqual(self.parse(text, set(["function"])), expected)

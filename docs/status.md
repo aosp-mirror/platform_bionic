@@ -397,22 +397,25 @@ automatic bounds checking for common libc functions. If a buffer
 overrun is detected, the program is safely aborted as in this
 [example](https://source.android.com/devices/tech/debug/native-crash#fortify).
 
-Note that in recent releases Android's FORTIFY has been extended to
-cover other issues. It can now detect, for example, passing `O_CREAT`
-to open(2) without specifying a mode. It also performs some checking
-regardless of whether the caller was built with FORTIFY enabled. In P,
-for example, calling a `pthread_mutex_` function on a destroyed mutex,
-calling a `<dirent.h>` function on a null pointer, using `%n` with the
-printf(3) family, or using the scanf(3) `m` modifier incorrectly will
-all result in FORTIFY failures even for code not built with FORTIFY.
+Note that Android's FORTIFY has been extended to cover other issues. It can
+detect, for example, passing `O_CREAT` to open(2) without specifying a mode. It
+also performs some checking regardless of whether the caller was built with
+FORTIFY enabled. From API level 28, for example, calling a `pthread_mutex_`
+function on a destroyed mutex, calling a `<dirent.h>` function on a null
+pointer, using `%n` with the printf(3) family, or using the scanf(3) `m`
+modifier incorrectly will all result in FORTIFY failures even for code not built
+with FORTIFY.
 
 More background information is available in our
 [FORTIFY in Android](https://android-developers.googleblog.com/2017/04/fortify-in-android.html)
-blog post.
+blog post, and there's more detail about the implementation in
+[The Anatomy of Clang FORTIFY](clang_fortify_anatomy.md).
 
-The Android platform is built with `-D_FORTIFY_SOURCE=2`, but NDK users
-need to manually enable FORTIFY by setting that themselves in whatever
-build system they're using. The exact subset of FORTIFY available to
+The Android platform is built with `-D_FORTIFY_SOURCE=2`. Users of ndk-build
+or the NDK's CMake toolchain file also get this by default with NDK r21 or
+newer. Users of other build systems
+need to manually enable FORTIFY by setting `_FORTIFY_SOURCE` themselves in
+whatever build system they're using. The exact subset of FORTIFY available to
 NDK users will depend on their target ABI level, because when a FORTIFY
 check can't be guaranteed at compile-time, a call to a run-time `_chk`
 function is added.
