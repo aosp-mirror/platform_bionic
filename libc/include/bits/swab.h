@@ -33,7 +33,7 @@
 #include <sys/types.h>
 
 #if !defined(__BIONIC_SWAB_INLINE)
-#define __BIONIC_SWAB_INLINE static inline
+#define __BIONIC_SWAB_INLINE static __inline
 #endif
 
 __BEGIN_DECLS

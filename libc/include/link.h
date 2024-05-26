@@ -25,8 +25,13 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _LINK_H_
-#define _LINK_H_
+
+#pragma once
+
+/**
+ * @file link.h
+ * @brief Extra dynamic linker functionality (see also <dlfcn.h>).
+ */
 
 #include <stdint.h>
 #include <sys/cdefs.h>
@@ -37,32 +42,80 @@
 __BEGIN_DECLS
 
 #if defined(__LP64__)
+/** Convenience macro to get the appropriate 32-bit or 64-bit <elf.h> type for the caller's bitness. */
 #define ElfW(type) Elf64_ ## type
 #else
+/** Convenience macro to get the appropriate 32-bit or 64-bit <elf.h> type for the caller's bitness. */
 #define ElfW(type) Elf32_ ## type
 #endif
 
+/**
+ * Information passed by dl_iterate_phdr() to the callback.
+ */
 struct dl_phdr_info {
+  /** The address of the shared object. */
   ElfW(Addr) dlpi_addr;
+  /** The name of the shared object. */
   const char* _Nullable dlpi_name;
+  /** Pointer to the shared object's program headers. */
   const ElfW(Phdr)* _Nullable dlpi_phdr;
+  /** Number of program headers pointed to by `dlpi_phdr`. */
   ElfW(Half) dlpi_phnum;
 
-  // These fields were added in Android R.
+  /**
+   * The total number of library load events at the time dl_iterate_phdr() was
+   * called.
+   *
+   * This field is only available since API level 30; you can use the size
+   * passed to the callback to determine whether you have the full struct,
+   * or just the fields up to and including `dlpi_phnum`.
+   */
   unsigned long long dlpi_adds;
+  /**
+   * The total number of library unload events at the time dl_iterate_phdr() was
+   * called.
+   *
+   * This field is only available since API level 30; you can use the size
+   * passed to the callback to determine whether you have the full struct,
+   * or just the fields up to and including `dlpi_phnum`.
+   */
   unsigned long long dlpi_subs;
+  /**
+   * The module ID for TLS relocations in this shared object.
+   *
+   * This field is only available since API level 30; you can use the size
+   * passed to the callback to determine whether you have the full struct,
+   * or just the fields up to and including `dlpi_phnum`.
+   */
   size_t dlpi_tls_modid;
+  /**
+   * The caller's TLS data for this shared object.
+   *
+   * This field is only available since API level 30; you can use the size
+   * passed to the callback to determine whether you have the full struct,
+   * or just the fields up to and including `dlpi_phnum`.
+   */
   void* _Nullable dlpi_tls_data;
 };
 
-int dl_iterate_phdr(int (* _Nonnull __callback)(struct dl_phdr_info* _Nonnull, size_t, void* _Nullable), void* _Nullable __data);
+/**
+ * [dl_iterate_phdr(3)](http://man7.org/linux/man-pages/man3/dl_iterate_phdr.3.html)
+ * calls the given callback once for every loaded shared object. The size
+ * argument to the callback lets you determine whether you have a smaller
+ * `dl_phdr_info` from before API level 30, or the newer full one.
+ * The data argument to the callback is whatever you pass as the data argument
+ * to dl_iterate_phdr().
+ *
+ * Returns the value returned by the final call to the callback.
+ */
+int dl_iterate_phdr(int (* _Nonnull __callback)(struct dl_phdr_info* _Nonnull __info, size_t __size, void* _Nullable __data), void* _Nullable __data);
 
 #ifdef __arm__
 typedef uintptr_t _Unwind_Ptr;
 _Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr, int* _Nonnull);
 #endif
 
-/* Used by the dynamic linker to communicate with the debugger. */
+/** Used by the dynamic linker to communicate with the debugger. */
 struct link_map {
   ElfW(Addr) l_addr;
   char* _Nullable l_name;
@@ -71,7 +124,7 @@ struct link_map {
   struct link_map* _Nullable l_prev;
 };
 
-/* Used by the dynamic linker to communicate with the debugger. */
+/** Used by the dynamic linker to communicate with the debugger. */
 struct r_debug {
   int32_t r_version;
   struct link_map* _Nullable r_map;
@@ -85,5 +138,3 @@ struct r_debug {
 };
 
 __END_DECLS
-
-#endif

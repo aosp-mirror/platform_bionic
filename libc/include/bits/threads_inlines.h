@@ -38,7 +38,7 @@
 
 __BEGIN_DECLS
 
-static inline int __bionic_thrd_error(int __pthread_code) {
+static __inline int __bionic_thrd_error(int __pthread_code) {
   switch (__pthread_code) {
     case 0: return 0;
     case ENOMEM: return thrd_nomem;
@@ -124,7 +124,7 @@ struct __bionic_thrd_data {
 };
 #pragma clang diagnostic pop
 
-static inline void* _Nonnull __bionic_thrd_trampoline(void* _Nonnull __arg) {
+static __inline void* _Nonnull __bionic_thrd_trampoline(void* _Nonnull __arg) {
   struct __bionic_thrd_data __data =
       *__BIONIC_CAST(static_cast, struct __bionic_thrd_data*, __arg);
   free(__arg);
