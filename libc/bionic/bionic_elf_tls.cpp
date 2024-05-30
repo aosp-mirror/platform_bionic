@@ -400,9 +400,10 @@ __attribute__((noinline)) static void* tls_get_addr_slow_path(const TlsIndex* ti
 // segment.
 //
 // On most targets, this accessor function is __tls_get_addr and
-// TLS_GET_ADDR_CCONV is unset. 32-bit x86 uses ___tls_get_addr instead and a
-// regparm() calling convention.
-extern "C" void* TLS_GET_ADDR(const TlsIndex* ti) TLS_GET_ADDR_CCONV {
+// TLS_GET_ADDR_CALLING_CONVENTION is unset, but 32-bit x86 uses
+// ___tls_get_addr (with three underscores) instead, and a regparm
+// calling convention.
+extern "C" void* TLS_GET_ADDR(const TlsIndex* ti) TLS_GET_ADDR_CALLING_CONVENTION {
   TlsDtv* dtv = __get_tcb_dtv(__get_bionic_tcb());
 
   // TODO: See if we can use a relaxed memory ordering here instead.
