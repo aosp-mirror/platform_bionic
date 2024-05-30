@@ -113,8 +113,22 @@ pid_t _Fork(void) __INTRODUCED_IN(35);
  */
 pid_t vfork(void) __returns_twice;
 
+/**
+ * [getpid(2)](http://man7.org/linux/man-pages/man2/getpid.2.html) returns
+ * the caller's process ID.
+ *
+ * Returns the caller's process ID.
+ */
 pid_t  getpid(void);
-pid_t  gettid(void) __attribute_const__;
+
+/**
+ * [gettid(2)](http://man7.org/linux/man-pages/man2/gettid.2.html) returns
+ * the caller's thread ID.
+ *
+ * Returns the caller's thread ID.
+ */
+pid_t  gettid(void);
+
 pid_t  getpgid(pid_t __pid);
 int    setpgid(pid_t __pid, pid_t __pgid);
 pid_t  getppid(void);
