@@ -30,6 +30,9 @@
 
 #include <thread>
 
+#include "gtest_globals.h"
+#include "utils.h"
+
 // Specify the LE access model explicitly. This file is compiled into the
 // bionic-unit-tests executable, but the compiler sees an -fpic object file
 // output into a static library, so it defaults to dynamic TLS accesses.
@@ -86,4 +89,18 @@ TEST(elftls, general) {
   std::thread([] {
     ASSERT_EQ(31, ++tlsvar_general);
   }).join();
+}
+
+TEST(elftls, align_test) {
+  std::string helper = GetTestLibRoot() + "/elftls_align_test_helper";
+  ExecTestHelper eth;
+  eth.SetArgs({helper.c_str(), nullptr});
+  eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0, nullptr);
+}
+
+TEST(elftls, skew_align_test) {
+  std::string helper = GetTestLibRoot() + "/elftls_skew_align_test_helper";
+  ExecTestHelper eth;
+  eth.SetArgs({helper.c_str(), nullptr});
+  eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0, nullptr);
 }

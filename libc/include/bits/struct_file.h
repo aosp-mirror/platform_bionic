@@ -39,6 +39,6 @@ struct __sFILE {
 #else
   char __private[84];
 #endif
-} __attribute__((aligned(sizeof(void*))));
+} __attribute__((__aligned__(sizeof(void*))));
 
 __END_DECLS

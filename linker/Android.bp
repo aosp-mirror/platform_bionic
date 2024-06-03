@@ -334,6 +334,13 @@ cc_defaults {
         "-Wl,-Bsymbolic",
         "-Wl,--exclude-libs,ALL",
         "-Wl,-soname,ld-android.so",
+        // When the linker applies its own IRELATIVE relocations, it will only read DT_REL[A] and
+        // DT_JMPREL, not DT_ANDROID_REL[A], which can also theoretically contain IRELATIVE
+        // relocations. lld has been taught to not store them there as a bug workaround (see
+        // https://llvm.org/pr86751) but the workaround could be removed at some point in the
+        // future. So we explicitly prevent it from doing so by disabling DT_ANDROID_REL[A] when
+        // linking the linker (DT_RELR cannot encode IRELATIVE relocations).
+        "-Wl,--pack-dyn-relocs=relr",
     ],
 
     // we are going to link libc++_static manually because
@@ -360,7 +367,9 @@ cc_defaults {
         "liblinker_main",
         "liblinker_malloc",
 
-        "libc++_static",
+        // Use a version of libc++ built without exceptions, because accessing EH globals uses
+        // ELF TLS, which is not supported in the loader.
+        "libc++_static_noexcept",
         "libc_nomalloc",
         "libc_dynamic_dispatch",
         "libm",
@@ -427,7 +436,7 @@ cc_binary {
                 "linker_debuggerd_android.cpp",
             ],
             static_libs: [
-                "libc++demangle",
+                "libc++demangle_noexcept",
                 "libdebuggerd_handler_fallback",
             ],
         },

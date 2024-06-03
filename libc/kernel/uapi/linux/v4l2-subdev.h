@@ -59,7 +59,8 @@ struct v4l2_subdev_frame_interval {
   __u32 pad;
   struct v4l2_fract interval;
   __u32 stream;
-  __u32 reserved[8];
+  __u32 which;
+  __u32 reserved[7];
 };
 struct v4l2_subdev_frame_interval_enum {
   __u32 index;
@@ -104,6 +105,7 @@ struct v4l2_subdev_routing {
   __u32 reserved[6];
 };
 #define V4L2_SUBDEV_CLIENT_CAP_STREAMS (1ULL << 0)
+#define V4L2_SUBDEV_CLIENT_CAP_INTERVAL_USES_WHICH (1ULL << 1)
 struct v4l2_subdev_client_capability {
   __u64 capabilities;
 };

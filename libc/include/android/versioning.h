@@ -20,15 +20,15 @@
 // we should only annotate headers when we are running versioner.
 #if defined(__BIONIC_VERSIONER)
 
-#define __INTRODUCED_IN(api_level) __attribute__((annotate("introduced_in=" #api_level)))
-#define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level) __attribute__((annotate("introduced_in=" #api_level))) __VERSIONER_NO_GUARD
-#define __DEPRECATED_IN(api_level) __attribute__((annotate("deprecated_in=" #api_level)))
-#define __REMOVED_IN(api_level) __attribute__((annotate("obsoleted_in=" #api_level)))
-#define __INTRODUCED_IN_32(api_level) __attribute__((annotate("introduced_in_32=" #api_level)))
-#define __INTRODUCED_IN_64(api_level) __attribute__((annotate("introduced_in_64=" #api_level)))
+#define __INTRODUCED_IN(api_level) __attribute__((__annotate__("introduced_in=" #api_level)))
+#define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level) __attribute__((__annotate__("introduced_in=" #api_level))) __VERSIONER_NO_GUARD
+#define __DEPRECATED_IN(api_level, ...) __attribute__((__annotate__("deprecated_in=" #api_level)))
+#define __REMOVED_IN(api_level, ...) __attribute__((__annotate__("obsoleted_in=" #api_level)))
+#define __INTRODUCED_IN_32(api_level) __attribute__((__annotate__("introduced_in_32=" #api_level)))
+#define __INTRODUCED_IN_64(api_level) __attribute__((__annotate__("introduced_in_64=" #api_level)))
 
-#define __VERSIONER_NO_GUARD __attribute__((annotate("versioner_no_guard")))
-#define __VERSIONER_FORTIFY_INLINE __attribute__((annotate("versioner_fortify_inline")))
+#define __VERSIONER_NO_GUARD __attribute__((__annotate__("versioner_no_guard")))
+#define __VERSIONER_FORTIFY_INLINE __attribute__((__annotate__("versioner_fortify_inline")))
 
 #else
 
@@ -47,16 +47,16 @@
 // libc++ doesn't currently guard these calls. There's no risk to the apps though because using
 // those APIs will still cause a link error.
 #if defined(__ANDROID_UNAVAILABLE_SYMBOLS_ARE_WEAK__)
-#define __BIONIC_AVAILABILITY(__what) __attribute__((__availability__(android,__what)))
+#define __BIONIC_AVAILABILITY(__what, ...) __attribute__((__availability__(android,__what __VA_OPT__(,) __VA_ARGS__)))
 #define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level) __INTRODUCED_IN(api_level)
 #else
-#define __BIONIC_AVAILABILITY(__what) __attribute__((__availability__(android,strict,__what)))
+#define __BIONIC_AVAILABILITY(__what, ...) __attribute__((__availability__(android,strict,__what __VA_OPT__(,) __VA_ARGS__)))
 #define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level)
 #endif
 
 #define __INTRODUCED_IN(api_level) __BIONIC_AVAILABILITY(introduced=api_level)
-#define __DEPRECATED_IN(api_level) __BIONIC_AVAILABILITY(deprecated=api_level)
-#define __REMOVED_IN(api_level) __BIONIC_AVAILABILITY(obsoleted=api_level)
+#define __DEPRECATED_IN(api_level, ...) __BIONIC_AVAILABILITY(deprecated=api_level __VA_OPT__(,message=) __VA_ARGS__)
+#define __REMOVED_IN(api_level, ...) __BIONIC_AVAILABILITY(obsoleted=api_level __VA_OPT__(,message=) __VA_ARGS__)
 
 // The same availability attribute can't be annotated multiple times. Therefore, the macros are
 // defined for the configuration that it is valid for so that declarations like the below doesn't
@@ -80,5 +80,5 @@
 // Vendor modules do not follow SDK versioning. Ignore NDK guards for vendor modules.
 #if defined(__ANDROID_VENDOR__)
 #undef __BIONIC_AVAILABILITY
-#define __BIONIC_AVAILABILITY(x)
+#define __BIONIC_AVAILABILITY(api_level, ...)
 #endif // defined(__ANDROID_VENDOR__)

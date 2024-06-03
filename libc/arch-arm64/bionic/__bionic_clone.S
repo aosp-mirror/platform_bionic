@@ -39,7 +39,7 @@ ENTRY_PRIVATE(__bionic_clone)
     svc     #0
 
     # Are we the child?
-    cbz     x0, .L_bc_child
+    cbz     x0, L(child)
 
     # Set errno if something went wrong.
     cmn     x0, #(MAX_ERRNO + 1)
@@ -48,7 +48,7 @@ ENTRY_PRIVATE(__bionic_clone)
 
     ret
 
-.L_bc_child:
+L(child):
     # We're in the child now. Set the end of the frame record chain.
     mov     x29, #0
     # Setting x30 to 0 will make the unwinder stop at __start_thread.

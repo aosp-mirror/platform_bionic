@@ -609,6 +609,17 @@ bool soinfo::relocate(const SymbolLookupList& lookup_list) {
   relocator.tlsdesc_args = &tlsdesc_args_;
   relocator.tls_tp_base = __libc_shared_globals()->static_tls_layout.offset_thread_pointer();
 
+  // The linker already applied its RELR relocations in an earlier pass, so
+  // skip the RELR relocations for the linker.
+  if (relr_ != nullptr && !is_linker()) {
+    DEBUG("[ relocating %s relr ]", get_realpath());
+    const ElfW(Relr)* begin = relr_;
+    const ElfW(Relr)* end = relr_ + relr_count_;
+    if (!relocate_relr(begin, end, load_bias)) {
+      return false;
+    }
+  }
+
   if (android_relocs_ != nullptr) {
     // check signature
     if (android_relocs_size_ > 3 &&
@@ -626,13 +637,6 @@ bool soinfo::relocate(const SymbolLookupList& lookup_list) {
       }
     } else {
       DL_ERR("bad android relocation header.");
-      return false;
-    }
-  }
-
-  if (relr_ != nullptr) {
-    DEBUG("[ relocating %s relr ]", get_realpath());
-    if (!relocate_relr()) {
       return false;
     }
   }

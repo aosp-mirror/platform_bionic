@@ -55,7 +55,9 @@ libc_common_flags = [
 cc_defaults {
     name: "libc_defaults",
     defaults: ["linux_bionic_supported"],
-    cflags: libc_common_flags,
+    cflags: libc_common_flags + [
+        "-DUSE_SCUDO",
+    ],
     asflags: libc_common_flags,
     conlyflags: ["-std=gnu99"],
     cppflags: [],
@@ -98,8 +100,8 @@ cc_defaults {
         malloc_pattern_fill_contents: {
             cflags: ["-DSCUDO_PATTERN_FILL_CONTENTS"],
         },
-        malloc_not_svelte: {
-            cflags: ["-DUSE_SCUDO"],
+        malloc_low_memory: {
+            cflags: ["-UUSE_SCUDO"],
         },
     },
 
@@ -112,32 +114,31 @@ cc_defaults {
     tidy_disabled_srcs: ["upstream-*/**/*.c"],
 }
 
-libc_scudo_product_variables = {
-    malloc_not_svelte: {
-        cflags: ["-DUSE_SCUDO"],
-        whole_static_libs: ["libscudo"],
-        exclude_static_libs: [
-            "libjemalloc5",
-            "libc_jemalloc_wrapper",
-        ],
-    },
-}
-
 // Defaults for native allocator libs/includes to make it
 // easier to change.
-// To disable scudo for the non-svelte config remove the line:
-//     product_variables: libc_scudo_product_variables,
-// in the cc_defaults below.
 // ========================================================
 cc_defaults {
     name: "libc_native_allocator_defaults",
 
     whole_static_libs: [
-        "libjemalloc5",
-        "libc_jemalloc_wrapper",
+        "libscudo",
+    ],
+    cflags: [
+        "-DUSE_SCUDO",
     ],
     header_libs: ["gwp_asan_headers"],
-    product_variables: libc_scudo_product_variables,
+    product_variables: {
+        malloc_low_memory: {
+            cflags: ["-UUSE_SCUDO"],
+            whole_static_libs: [
+                "libjemalloc5",
+                "libc_jemalloc_wrapper",
+            ],
+            exclude_static_libs: [
+                "libscudo",
+            ],
+        },
+    },
 }
 
 // Functions not implemented by jemalloc directly, or that need to
@@ -1075,6 +1076,8 @@ cc_library_static {
                 "arch-arm64/bionic/setjmp.S",
                 "arch-arm64/bionic/syscall.S",
                 "arch-arm64/bionic/vfork.S",
+                "arch-arm64/oryon/memcpy-nt.S",
+                "arch-arm64/oryon/memset-nt.S",
             ],
         },
 
@@ -2987,4 +2990,9 @@ cc_genrule {
 filegroup {
     name: "versioner-dependencies",
     srcs: ["versioner-dependencies/**/*"],
+}
+
+filegroup {
+    name: "linux_capability_header",
+    srcs: ["kernel/uapi/linux/capability.h"],
 }

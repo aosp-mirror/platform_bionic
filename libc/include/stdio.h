@@ -69,7 +69,7 @@ extern FILE* _Nonnull stderr __INTRODUCED_IN(23);
 #define stderr stderr
 #else
 /* Before M the actual symbols for stdin and friends had different names. */
-extern FILE __sF[] __REMOVED_IN(23);
+extern FILE __sF[] __REMOVED_IN(23, "Use stdin/stdout/stderr");
 
 #define stdin (&__sF[0])
 #define stdout (&__sF[1])
@@ -141,7 +141,7 @@ int vdprintf(int __fd, const char* _Nonnull __fmt, va_list __args) __printflike(
 
 #if (defined(__STDC_VERSION__) && __STDC_VERSION__ < 201112L) || \
     (defined(__cplusplus) && __cplusplus <= 201103L)
-char* _Nullable gets(char* _Nonnull __buf) __attribute__((deprecated("gets is unsafe, use fgets instead")));
+char* _Nullable gets(char* _Nonnull __buf) __attribute__((__deprecated__("gets is unsafe, use fgets instead")));
 #endif
 int sprintf(char* __BIONIC_COMPLICATED_NULLNESS __s, const char* _Nonnull __fmt, ...)
     __printflike(2, 3) __warnattr_strict("sprintf is often misused; please use snprintf");

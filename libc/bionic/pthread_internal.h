@@ -240,7 +240,7 @@ __LIBC_HIDDEN__ void pthread_key_clean_all(void);
 // On LP64, we could use more but there's no obvious advantage to doing
 // so, and the various media processes use RLIMIT_AS as a way to limit
 // the amount of allocation they'll do.
-#define PTHREAD_GUARD_SIZE max_page_size()
+#define PTHREAD_GUARD_SIZE max_android_page_size()
 
 // SIGSTKSZ (8KiB) is not big enough.
 // An snprintf to a stack buffer of size PATH_MAX consumes ~7KiB of stack.

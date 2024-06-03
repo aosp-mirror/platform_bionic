@@ -42,23 +42,8 @@ extern const char* __progname;
 
 #define PROTO_NORMAL(x)
 
-/* OpenBSD's <ctype.h> uses these names, which conflicted with stlport.
- * Additionally, we changed the numeric/digit type from N to D for libcxx.
- */
-#define _U _CTYPE_U
-#define _L _CTYPE_L
-#define _N _CTYPE_D
-#define _S _CTYPE_S
-#define _P _CTYPE_P
-#define _C _CTYPE_C
-#define _X _CTYPE_X
-#define _B _CTYPE_B
-
-/* OpenBSD has this, but we can't really implement it correctly on Linux. */
-#define issetugid() 0
-
 #if !defined(ANDROID_HOST_MUSL)
-#define explicit_bzero(p, s) memset(p, 0, s)
+#define explicit_bzero(p, s) memset_explicit(p, 0, s)
 #endif
 
 #if defined(ANDROID_HOST_MUSL)

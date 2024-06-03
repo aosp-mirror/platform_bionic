@@ -29,7 +29,9 @@
 #include "linker_main.h"
 
 #include <link.h>
+#include <stdlib.h>
 #include <sys/auxv.h>
+#include <sys/prctl.h>
 
 #include "linker.h"
 #include "linker_auxv.h"
@@ -220,14 +222,10 @@ static ExecutableInfo get_executable_info(const char* arg_path) {
     exe_path = arg_path;
   }
 
-  // Path might be a symlink
+  // Path might be a symlink; we need the target so that we get the right
+  // linker configuration later.
   char sym_path[PATH_MAX];
-  ssize_t sym_path_len = readlink(exe_path, sym_path, sizeof(sym_path));
-  if (sym_path_len > 0 && sym_path_len < static_cast<ssize_t>(sizeof(sym_path))) {
-    result.path = std::string(sym_path, sym_path_len);
-  } else {
-    result.path = std::string(exe_path, strlen(exe_path));
-  }
+  result.path = std::string(realpath(exe_path, sym_path) != nullptr ? sym_path : exe_path);
 
   result.phdr = reinterpret_cast<const ElfW(Phdr)*>(getauxval(AT_PHDR));
   result.phdr_count = getauxval(AT_PHNUM);
@@ -425,20 +423,11 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
 
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(si->base);
 
-  // We haven't supported non-PIE since Lollipop for security reasons.
+  // For security reasons we dropped non-PIE support in API level 21,
+  // and the NDK no longer supports earlier API levels.
   if (elf_hdr->e_type != ET_DYN) {
-    // We don't use async_safe_fatal here because we don't want a tombstone:
-    // even after several years we still find ourselves on app compatibility
-    // investigations because some app's trying to launch an executable that
-    // hasn't worked in at least three years, and we've "helpfully" dropped a
-    // tombstone for them. The tombstone never provided any detail relevant to
-    // fixing the problem anyway, and the utility of drawing extra attention
-    // to the problem is non-existent at this late date.
-    async_safe_format_fd(STDERR_FILENO,
-                         "\"%s\": error: Android 5.0 and later only support "
-                         "position-independent executables (-fPIE).\n",
-                         g_argv[0]);
-    _exit(EXIT_FAILURE);
+    __linker_error("error: %s: Android only supports position-independent "
+                   "executables (-fPIE)\n", exe_info.path.c_str());
   }
 
   // Use LD_LIBRARY_PATH and LD_PRELOAD (but only if we aren't setuid/setgid).
@@ -635,9 +624,10 @@ static void call_ifunc_resolvers_for_section(RelType* begin, RelType* end) {
   }
 }
 
-static void call_ifunc_resolvers() {
-  // Find the IRELATIVE relocations using the DT_JMPREL and DT_PLTRELSZ, or DT_RELA? and DT_RELA?SZ
-  // dynamic tags.
+static void relocate_linker() {
+  // The linker should only have relative relocations (in RELR) and IRELATIVE
+  // relocations. Find the IRELATIVE relocations using the DT_JMPREL and
+  // DT_PLTRELSZ, or DT_RELA/DT_RELASZ (DT_REL/DT_RELSZ on ILP32).
   auto ehdr = reinterpret_cast<ElfW(Addr)>(&__ehdr_start);
   auto* phdr = reinterpret_cast<ElfW(Phdr)*>(ehdr + __ehdr_start.e_phoff);
   for (size_t i = 0; i != __ehdr_start.e_phnum; ++i) {
@@ -645,17 +635,32 @@ static void call_ifunc_resolvers() {
       continue;
     }
     auto *dyn = reinterpret_cast<ElfW(Dyn)*>(ehdr + phdr[i].p_vaddr);
-    ElfW(Addr) pltrel = 0, pltrelsz = 0, rel = 0, relsz = 0;
+    ElfW(Addr) relr = 0, relrsz = 0, pltrel = 0, pltrelsz = 0, rel = 0, relsz = 0;
     for (size_t j = 0, size = phdr[i].p_filesz / sizeof(ElfW(Dyn)); j != size; ++j) {
-      if (dyn[j].d_tag == DT_JMPREL) {
-        pltrel = dyn[j].d_un.d_ptr;
-      } else if (dyn[j].d_tag == DT_PLTRELSZ) {
-        pltrelsz = dyn[j].d_un.d_ptr;
-      } else if (dyn[j].d_tag == kRelTag) {
-        rel = dyn[j].d_un.d_ptr;
-      } else if (dyn[j].d_tag == kRelSzTag) {
-        relsz = dyn[j].d_un.d_ptr;
+      const auto tag = dyn[j].d_tag;
+      const auto val = dyn[j].d_un.d_ptr;
+      // We don't currently handle IRELATIVE relocations in DT_ANDROID_REL[A].
+      // We disabled DT_ANDROID_REL[A] at build time; verify that it was actually disabled.
+      CHECK(tag != DT_ANDROID_REL && tag != DT_ANDROID_RELA);
+      if (tag == DT_RELR || tag == DT_ANDROID_RELR) {
+        relr = val;
+      } else if (tag == DT_RELRSZ || tag == DT_ANDROID_RELRSZ) {
+        relrsz = val;
+      } else if (tag == DT_JMPREL) {
+        pltrel = val;
+      } else if (tag == DT_PLTRELSZ) {
+        pltrelsz = val;
+      } else if (tag == kRelTag) {
+        rel = val;
+      } else if (tag == kRelSzTag) {
+        relsz = val;
       }
+    }
+    // Apply RELR relocations first so that the GOT is initialized for ifunc
+    // resolvers.
+    if (relr && relrsz) {
+      relocate_relr(reinterpret_cast<ElfW(Relr*)>(ehdr + relr),
+                    reinterpret_cast<ElfW(Relr*)>(ehdr + relr + relrsz), ehdr);
     }
     if (pltrel && pltrelsz) {
       call_ifunc_resolvers_for_section(reinterpret_cast<RelType*>(ehdr + pltrel),
@@ -734,8 +739,12 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(linker_addr);
   ElfW(Phdr)* phdr = reinterpret_cast<ElfW(Phdr)*>(linker_addr + elf_hdr->e_phoff);
 
-  // string.h functions must not be used prior to calling the linker's ifunc resolvers.
-  call_ifunc_resolvers();
+  // Relocate the linker. This step will initialize the GOT, which is needed for
+  // accessing non-hidden global variables. (On some targets, the stack
+  // protector uses GOT accesses rather than TLS.) Relocating the linker will
+  // also call the linker's ifunc resolvers so that string.h functions can be
+  // used.
+  relocate_linker();
 
   soinfo tmp_linker_so(nullptr, nullptr, nullptr, 0, 0);
 
@@ -747,7 +756,6 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   tmp_linker_so.phnum = elf_hdr->e_phnum;
   tmp_linker_so.set_linker_flag();
 
-  // Prelink the linker so we can access linker globals.
   if (!tmp_linker_so.prelink_image()) __linker_cannot_link(args.argv[0]);
   if (!tmp_linker_so.link_image(SymbolLookupList(&tmp_linker_so), &tmp_linker_so, nullptr, nullptr)) __linker_cannot_link(args.argv[0]);
 
