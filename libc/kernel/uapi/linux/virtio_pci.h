@@ -126,30 +126,30 @@ struct virtio_pci_cfg_cap {
 #define VIRTIO_ADMIN_CMD_LEGACY_DEV_CFG_WRITE 0x4
 #define VIRTIO_ADMIN_CMD_LEGACY_DEV_CFG_READ 0x5
 #define VIRTIO_ADMIN_CMD_LEGACY_NOTIFY_INFO 0x6
-struct __attribute__((__packed__)) virtio_admin_cmd_hdr {
+struct virtio_admin_cmd_hdr {
   __le16 opcode;
   __le16 group_type;
   __u8 reserved1[12];
   __le64 group_member_id;
 };
-struct __attribute__((__packed__)) virtio_admin_cmd_status {
+struct virtio_admin_cmd_status {
   __le16 status;
   __le16 status_qualifier;
   __u8 reserved2[4];
 };
-struct __attribute__((__packed__)) virtio_admin_cmd_legacy_wr_data {
+struct virtio_admin_cmd_legacy_wr_data {
   __u8 offset;
   __u8 reserved[7];
   __u8 registers[];
 };
-struct __attribute__((__packed__)) virtio_admin_cmd_legacy_rd_data {
+struct virtio_admin_cmd_legacy_rd_data {
   __u8 offset;
 };
 #define VIRTIO_ADMIN_CMD_NOTIFY_INFO_FLAGS_END 0
 #define VIRTIO_ADMIN_CMD_NOTIFY_INFO_FLAGS_OWNER_DEV 0x1
 #define VIRTIO_ADMIN_CMD_NOTIFY_INFO_FLAGS_OWNER_MEM 0x2
 #define VIRTIO_ADMIN_CMD_MAX_NOTIFY_INFO 4
-struct __attribute__((__packed__)) virtio_admin_cmd_notify_info_data {
+struct virtio_admin_cmd_notify_info_data {
   __u8 flags;
   __u8 bar;
   __u8 padding[6];

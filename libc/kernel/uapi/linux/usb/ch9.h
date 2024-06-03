@@ -286,6 +286,7 @@ struct usb_otg20_descriptor {
 #define USB_OTG_SRP (1 << 0)
 #define USB_OTG_HNP (1 << 1)
 #define USB_OTG_ADP (1 << 2)
+#define USB_OTG_RSP (1 << 3)
 #define OTG_STS_SELECTOR 0xF000
 struct usb_debug_descriptor {
   __u8 bLength;
