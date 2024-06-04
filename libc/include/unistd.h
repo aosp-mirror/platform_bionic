@@ -353,7 +353,7 @@ int acct(const char* _Nullable __path);
 /**
  * [getpagesize(2)](https://man7.org/linux/man-pages/man2/getpagesize.2.html)
  * returns the system's page size. This is slightly faster than going via
- * sysconf().
+ * sysconf(), and avoids the linear search in getauxval().
  *
  * Returns the system's page size in bytes.
  */
