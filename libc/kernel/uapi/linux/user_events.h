@@ -9,11 +9,13 @@
 #include <linux/types.h>
 #include <linux/ioctl.h>
 #define USER_EVENTS_SYSTEM "user_events"
+#define USER_EVENTS_MULTI_SYSTEM "user_events_multi"
 #define USER_EVENTS_PREFIX "u:"
 #define DYN_LOC(offset,size) ((size) << 16 | (offset))
 enum user_reg_flag {
   USER_EVENT_REG_PERSIST = 1U << 0,
-  USER_EVENT_REG_MAX = 1U << 1,
+  USER_EVENT_REG_MULTI_FORMAT = 1U << 1,
+  USER_EVENT_REG_MAX = 1U << 2,
 };
 struct user_reg {
   __u32 size;
