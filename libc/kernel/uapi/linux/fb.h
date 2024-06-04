@@ -8,6 +8,7 @@
 #define _UAPI_LINUX_FB_H
 #include <linux/types.h>
 #include <linux/i2c.h>
+#include <linux/vesa.h>
 #define FB_MAX 32
 #define FBIOGET_VSCREENINFO 0x4600
 #define FBIOPUT_VSCREENINFO 0x4601
@@ -235,10 +236,6 @@ struct fb_con2fbmap {
   __u32 console;
   __u32 framebuffer;
 };
-#define VESA_NO_BLANKING 0
-#define VESA_VSYNC_SUSPEND 1
-#define VESA_HSYNC_SUSPEND 2
-#define VESA_POWERDOWN 3
 enum {
   FB_BLANK_UNBLANK = VESA_NO_BLANKING,
   FB_BLANK_NORMAL = VESA_NO_BLANKING + 1,
