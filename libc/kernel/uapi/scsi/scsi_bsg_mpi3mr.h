@@ -176,7 +176,7 @@ struct mpi3mr_bsg_in_reply_buf {
   __u8 mpi_reply_type;
   __u8 rsvd1;
   __u16 rsvd2;
-  __u8 reply_buf[1];
+  __u8 reply_buf[];
 };
 struct mpi3mr_buf_entry {
   __u8 buf_type;

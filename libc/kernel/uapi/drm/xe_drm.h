@@ -129,6 +129,17 @@ struct drm_xe_query_engine_cycles {
   __u64 cpu_timestamp;
   __u64 cpu_delta;
 };
+struct drm_xe_query_uc_fw_version {
+#define XE_QUERY_UC_TYPE_GUC_SUBMISSION 0
+  __u16 uc_type;
+  __u16 pad;
+  __u32 branch_ver;
+  __u32 major_ver;
+  __u32 minor_ver;
+  __u32 patch_ver;
+  __u32 pad2;
+  __u64 reserved;
+};
 struct drm_xe_device_query {
   __u64 extensions;
 #define DRM_XE_DEVICE_QUERY_ENGINES 0
@@ -138,6 +149,7 @@ struct drm_xe_device_query {
 #define DRM_XE_DEVICE_QUERY_HWCONFIG 4
 #define DRM_XE_DEVICE_QUERY_GT_TOPOLOGY 5
 #define DRM_XE_DEVICE_QUERY_ENGINE_CYCLES 6
+#define DRM_XE_DEVICE_QUERY_UC_FW_VERSION 7
   __u32 query;
   __u32 size;
   __u64 data;
