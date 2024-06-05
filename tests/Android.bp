@@ -1139,11 +1139,14 @@ cc_test {
     shared_libs: [
         "libbase",
     ],
-    data_libs: ["libtest_simple_memtag_stack", "libtest_depends_on_simple_memtag_stack"],
+    data_libs: [
+        "libtest_simple_memtag_stack",
+        "libtest_depends_on_simple_memtag_stack",
+    ],
     data_bins: [
         "testbinary_depends_on_simple_memtag_stack",
         "testbinary_depends_on_depends_on_simple_memtag_stack",
-        "testbinary_is_stack_mte_after_dlopen"
+        "testbinary_is_stack_mte_after_dlopen",
     ],
     header_libs: ["bionic_libc_platform_headers"],
     test_suites: ["device-tests"],
@@ -1318,4 +1321,47 @@ cc_test_host {
     },
 }
 
-subdirs = ["*"]
+cc_defaults {
+    name: "bionic_compile_time_tests_defaults",
+    enabled: false,
+    target: {
+        linux_x86: {
+            enabled: true,
+        },
+        linux_x86_64: {
+            enabled: true,
+        },
+    },
+    tidy: false,
+    clang_verify: true,
+    cflags: [
+        "-Wall",
+        "-Wno-error",
+        "-fno-color-diagnostics",
+        "-ferror-limit=10000",
+        "-DCOMPILATION_TESTS=1",
+        "-Wformat-nonliteral",
+        "-U_FORTIFY_SOURCE",
+    ],
+    srcs: ["clang_fortify_tests.cpp"],
+}
+
+cc_library_static {
+    name: "bionic-compile-time-tests1-clang++",
+    defaults: [
+        "bionic_compile_time_tests_defaults",
+    ],
+    cppflags: [
+        "-D_FORTIFY_SOURCE=1",
+    ],
+}
+
+cc_library_static {
+    name: "bionic-compile-time-tests2-clang++",
+    defaults: [
+        "bionic_compile_time_tests_defaults",
+    ],
+    cppflags: [
+        "-D_FORTIFY_SOURCE=2",
+    ],
+}
