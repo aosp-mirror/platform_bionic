@@ -214,14 +214,14 @@ struct TlsIndex {
 };
 
 #if defined(__i386__)
-#define TLS_GET_ADDR_CCONV __attribute__((regparm(1)))
+#define TLS_GET_ADDR_CALLING_CONVENTION __attribute__((regparm(1)))
 #define TLS_GET_ADDR ___tls_get_addr
 #else
-#define TLS_GET_ADDR_CCONV
+#define TLS_GET_ADDR_CALLING_CONVENTION
 #define TLS_GET_ADDR __tls_get_addr
 #endif
 
-extern "C" void* TLS_GET_ADDR(const TlsIndex* ti) TLS_GET_ADDR_CCONV;
+extern "C" void* TLS_GET_ADDR(const TlsIndex* ti) TLS_GET_ADDR_CALLING_CONVENTION;
 
 struct bionic_tcb;
 void __free_dynamic_tls(bionic_tcb* tcb);

@@ -97,6 +97,7 @@ enum rkisp1_cif_isp_version {
   RKISP1_V11,
   RKISP1_V12,
   RKISP1_V13,
+  RKISP1_V_IMX8MP,
 };
 enum rkisp1_cif_isp_histogram_mode {
   RKISP1_CIF_ISP_HISTOGRAM_MODE_DISABLE,
