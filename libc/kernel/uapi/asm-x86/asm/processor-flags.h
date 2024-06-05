@@ -123,6 +123,12 @@
 #define X86_CR4_CET _BITUL(X86_CR4_CET_BIT)
 #define X86_CR4_LAM_SUP_BIT 28
 #define X86_CR4_LAM_SUP _BITUL(X86_CR4_LAM_SUP_BIT)
+#ifdef __x86_64__
+#define X86_CR4_FRED_BIT 32
+#define X86_CR4_FRED _BITUL(X86_CR4_FRED_BIT)
+#else
+#define X86_CR4_FRED (0)
+#endif
 #define X86_CR8_TPR _AC(0x0000000f, UL)
 #define CX86_PCR0 0x20
 #define CX86_GCR 0xb8
