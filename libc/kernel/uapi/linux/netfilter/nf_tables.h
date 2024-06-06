@@ -103,8 +103,9 @@ enum nft_hook_attributes {
 enum nft_table_flags {
   NFT_TABLE_F_DORMANT = 0x1,
   NFT_TABLE_F_OWNER = 0x2,
+  NFT_TABLE_F_PERSIST = 0x4,
 };
-#define NFT_TABLE_F_MASK (NFT_TABLE_F_DORMANT | NFT_TABLE_F_OWNER)
+#define NFT_TABLE_F_MASK (NFT_TABLE_F_DORMANT | NFT_TABLE_F_OWNER | NFT_TABLE_F_PERSIST)
 enum nft_table_attributes {
   NFTA_TABLE_UNSPEC,
   NFTA_TABLE_NAME,
