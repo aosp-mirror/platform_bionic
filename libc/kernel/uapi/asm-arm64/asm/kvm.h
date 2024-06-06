@@ -18,9 +18,7 @@
 #include <linux/types.h>
 #include <asm/ptrace.h>
 #include <asm/sve_context.h>
-#define __KVM_HAVE_GUEST_DEBUG
 #define __KVM_HAVE_IRQ_LINE
-#define __KVM_HAVE_READONLY_MEM
 #define __KVM_HAVE_VCPU_EVENTS
 #define KVM_COALESCED_MMIO_PAGE_OFFSET 1
 #define KVM_DIRTY_LOG_PAGE_OFFSET 64
@@ -40,9 +38,9 @@ struct kvm_regs {
 #define KVM_ARM_TARGET_GENERIC_V8 5
 #define KVM_ARM_NUM_TARGETS 6
 #define KVM_ARM_DEVICE_TYPE_SHIFT 0
-#define KVM_ARM_DEVICE_TYPE_MASK GENMASK(KVM_ARM_DEVICE_TYPE_SHIFT + 15, KVM_ARM_DEVICE_TYPE_SHIFT)
+#define KVM_ARM_DEVICE_TYPE_MASK __GENMASK(KVM_ARM_DEVICE_TYPE_SHIFT + 15, KVM_ARM_DEVICE_TYPE_SHIFT)
 #define KVM_ARM_DEVICE_ID_SHIFT 16
-#define KVM_ARM_DEVICE_ID_MASK GENMASK(KVM_ARM_DEVICE_ID_SHIFT + 15, KVM_ARM_DEVICE_ID_SHIFT)
+#define KVM_ARM_DEVICE_ID_MASK __GENMASK(KVM_ARM_DEVICE_ID_SHIFT + 15, KVM_ARM_DEVICE_ID_SHIFT)
 #define KVM_ARM_DEVICE_VGIC_V2 0
 #define KVM_VGIC_V2_ADDR_TYPE_DIST 0
 #define KVM_VGIC_V2_ADDR_TYPE_CPU 1
@@ -89,6 +87,9 @@ struct kvm_debug_exit_arch {
 struct kvm_sync_regs {
   __u64 device_irq_level;
 };
+#define KVM_ARM_DEV_EL1_VTIMER (1 << 0)
+#define KVM_ARM_DEV_EL1_PTIMER (1 << 1)
+#define KVM_ARM_DEV_PMU (1 << 2)
 struct kvm_pmu_event_filter {
   __u16 base_event;
   __u16 nevents;
