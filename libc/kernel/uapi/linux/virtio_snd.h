@@ -7,10 +7,14 @@
 #ifndef VIRTIO_SND_IF_H
 #define VIRTIO_SND_IF_H
 #include <linux/virtio_types.h>
+enum {
+  VIRTIO_SND_F_CTLS = 0
+};
 struct virtio_snd_config {
   __le32 jacks;
   __le32 streams;
   __le32 chmaps;
+  __le32 controls;
 };
 enum {
   VIRTIO_SND_VQ_CONTROL = 0,
@@ -33,10 +37,18 @@ enum {
   VIRTIO_SND_R_PCM_START,
   VIRTIO_SND_R_PCM_STOP,
   VIRTIO_SND_R_CHMAP_INFO = 0x0200,
+  VIRTIO_SND_R_CTL_INFO = 0x0300,
+  VIRTIO_SND_R_CTL_ENUM_ITEMS,
+  VIRTIO_SND_R_CTL_READ,
+  VIRTIO_SND_R_CTL_WRITE,
+  VIRTIO_SND_R_CTL_TLV_READ,
+  VIRTIO_SND_R_CTL_TLV_WRITE,
+  VIRTIO_SND_R_CTL_TLV_COMMAND,
   VIRTIO_SND_EVT_JACK_CONNECTED = 0x1000,
   VIRTIO_SND_EVT_JACK_DISCONNECTED,
   VIRTIO_SND_EVT_PCM_PERIOD_ELAPSED = 0x1100,
   VIRTIO_SND_EVT_PCM_XRUN,
+  VIRTIO_SND_EVT_CTL_NOTIFY = 0x1200,
   VIRTIO_SND_S_OK = 0x8000,
   VIRTIO_SND_S_BAD_MSG,
   VIRTIO_SND_S_NOT_SUPP,
@@ -208,5 +220,84 @@ struct virtio_snd_chmap_info {
   __u8 direction;
   __u8 channels;
   __u8 positions[VIRTIO_SND_CHMAP_MAX_SIZE];
+};
+struct virtio_snd_ctl_hdr {
+  struct virtio_snd_hdr hdr;
+  __le32 control_id;
+};
+enum {
+  VIRTIO_SND_CTL_ROLE_UNDEFINED = 0,
+  VIRTIO_SND_CTL_ROLE_VOLUME,
+  VIRTIO_SND_CTL_ROLE_MUTE,
+  VIRTIO_SND_CTL_ROLE_GAIN
+};
+enum {
+  VIRTIO_SND_CTL_TYPE_BOOLEAN = 0,
+  VIRTIO_SND_CTL_TYPE_INTEGER,
+  VIRTIO_SND_CTL_TYPE_INTEGER64,
+  VIRTIO_SND_CTL_TYPE_ENUMERATED,
+  VIRTIO_SND_CTL_TYPE_BYTES,
+  VIRTIO_SND_CTL_TYPE_IEC958
+};
+enum {
+  VIRTIO_SND_CTL_ACCESS_READ = 0,
+  VIRTIO_SND_CTL_ACCESS_WRITE,
+  VIRTIO_SND_CTL_ACCESS_VOLATILE,
+  VIRTIO_SND_CTL_ACCESS_INACTIVE,
+  VIRTIO_SND_CTL_ACCESS_TLV_READ,
+  VIRTIO_SND_CTL_ACCESS_TLV_WRITE,
+  VIRTIO_SND_CTL_ACCESS_TLV_COMMAND
+};
+struct virtio_snd_ctl_info {
+  struct virtio_snd_info hdr;
+  __le32 role;
+  __le32 type;
+  __le32 access;
+  __le32 count;
+  __le32 index;
+  __u8 name[44];
+  union {
+    struct {
+      __le32 min;
+      __le32 max;
+      __le32 step;
+    } integer;
+    struct {
+      __le64 min;
+      __le64 max;
+      __le64 step;
+    } integer64;
+    struct {
+      __le32 items;
+    } enumerated;
+  } value;
+};
+struct virtio_snd_ctl_enum_item {
+  __u8 item[64];
+};
+struct virtio_snd_ctl_iec958 {
+  __u8 status[24];
+  __u8 subcode[147];
+  __u8 pad;
+  __u8 dig_subframe[4];
+};
+struct virtio_snd_ctl_value {
+  union {
+    __le32 integer[128];
+    __le64 integer64[64];
+    __le32 enumerated[128];
+    __u8 bytes[512];
+    struct virtio_snd_ctl_iec958 iec958;
+  } value;
+};
+enum {
+  VIRTIO_SND_CTL_EVT_MASK_VALUE = 0,
+  VIRTIO_SND_CTL_EVT_MASK_INFO,
+  VIRTIO_SND_CTL_EVT_MASK_TLV
+};
+struct virtio_snd_ctl_event {
+  struct virtio_snd_hdr hdr;
+  __le16 control_id;
+  __le16 mask;
 };
 #endif
