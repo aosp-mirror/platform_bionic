@@ -281,11 +281,13 @@ static void fdtrack_dump_impl(bool fatal) {
 
     if (!stack) {
       async_safe_format_buffer(buf, sizeof(buf),
-                               "aborting due to fd leak: failed to find most common stack");
+                               "aborting due to fd leak: see \"open files\" in the tombstone; "
+                               "no stacks?!");
     } else {
       char* p = buf;
       p += async_safe_format_buffer(buf, sizeof(buf),
-                                    "aborting due to fd leak: most common stack =\n");
+                                    "aborting due to fd leak: see \"open files\" in the tombstone; "
+                                    "most common stack (%zu/%zu) is\n", max, stacks.count);
 
       for (size_t i = 0; i < stack->stack_depth; ++i) {
         ssize_t bytes_left = buf + sizeof(buf) - p;
