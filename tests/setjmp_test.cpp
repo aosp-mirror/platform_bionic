@@ -174,6 +174,9 @@ TEST(setjmp, sigsetjmp_1_signal_mask) {
   }
 }
 
+#if defined(__arm__) || defined(__aarch64__)
+// arm and arm64 have the same callee save fp registers (8-15),
+// but use different instructions for accessing them.
 #if defined(__arm__)
 #define SET_FREG(n, v) asm volatile("vmov.f64 d"#n ", #"#v : : : "d"#n)
 #define GET_FREG(n) ({ double _r; asm volatile("fcpyd %P0, d"#n : "=w"(_r) : :); _r;})
@@ -183,21 +186,53 @@ TEST(setjmp, sigsetjmp_1_signal_mask) {
 #define GET_FREG(n) ({ double _r; asm volatile("fmov %0, d"#n : "=r"(_r) : :); _r; })
 #define CLEAR_FREG(n) asm volatile("fmov d"#n ", xzr" : : : "d"#n)
 #endif
-
-#if defined(__arm__) || defined(__aarch64__)
 #define SET_FREGS \
   SET_FREG(8, 8.0); SET_FREG(9, 9.0); SET_FREG(10, 10.0); SET_FREG(11, 11.0); \
-  SET_FREG(12, 12.0); SET_FREG(13, 13.0); SET_FREG(14, 14.0); SET_FREG(15, 15.0);
+  SET_FREG(12, 12.0); SET_FREG(13, 13.0); SET_FREG(14, 14.0); SET_FREG(15, 15.0)
 #define CLEAR_FREGS \
   CLEAR_FREG(8); CLEAR_FREG(9); CLEAR_FREG(10); CLEAR_FREG(11); \
-  CLEAR_FREG(12); CLEAR_FREG(13); CLEAR_FREG(14); CLEAR_FREG(15);
+  CLEAR_FREG(12); CLEAR_FREG(13); CLEAR_FREG(14); CLEAR_FREG(15)
 #define CHECK_FREGS \
-    EXPECT_EQ(8.0, GET_FREG(8)); EXPECT_EQ(9.0, GET_FREG(9)); \
-    EXPECT_EQ(10.0, GET_FREG(10)); EXPECT_EQ(11.0, GET_FREG(11)); \
-    EXPECT_EQ(12.0, GET_FREG(12)); EXPECT_EQ(13.0, GET_FREG(13)); \
-    EXPECT_EQ(14.0, GET_FREG(14)); EXPECT_EQ(15.0, GET_FREG(15));
+  EXPECT_EQ(8.0, GET_FREG(8)); EXPECT_EQ(9.0, GET_FREG(9)); \
+  EXPECT_EQ(10.0, GET_FREG(10)); EXPECT_EQ(11.0, GET_FREG(11)); \
+  EXPECT_EQ(12.0, GET_FREG(12)); EXPECT_EQ(13.0, GET_FREG(13)); \
+  EXPECT_EQ(14.0, GET_FREG(14)); EXPECT_EQ(15.0, GET_FREG(15))
+
+#elif defined(__riscv)
+// riscv64 has callee save registers fs0-fs11.
+// TODO: use Zfa to get 1.0 rather than the one_p trick.
+#define SET_FREGS \
+  double one = 1, *one_p = &one; \
+  asm volatile("fmv.d.x fs0, zero ; fld fs1, (%0) ; \
+                fadd.d fs2, fs1, fs1 ; fadd.d fs3, fs2, fs1 ; \
+                fadd.d fs4, fs3, fs1 ; fadd.d fs5, fs4, fs1 ; \
+                fadd.d fs6, fs5, fs1 ; fadd.d fs7, fs6, fs1 ; \
+                fadd.d fs8, fs7, fs1 ; fadd.d fs9, fs8, fs1 ; \
+                fadd.d fs10, fs9, fs1 ; fadd.d fs11, fs10, fs1" \
+               : \
+               : "r"(one_p) \
+               : "fs0", "fs1", "fs2", "fs3", "fs4", "fs5", \
+                  "fs6", "fs7", "fs8", "fs9", "fs10", "fs11")
+#define CLEAR_FREGS \
+  asm volatile("fmv.d.x fs0, zero ; fmv.d.x fs1, zero ; \
+                fmv.d.x fs2, zero ; fmv.d.x fs3, zero ; \
+                fmv.d.x fs4, zero ; fmv.d.x fs5, zero ; \
+                fmv.d.x fs6, zero ; fmv.d.x fs7, zero ; \
+                fmv.d.x fs8, zero ; fmv.d.x fs9, zero ; \
+                fmv.d.x fs10, zero ; fmv.d.x fs11, zero" \
+               : : : "fs0", "fs1", "fs2", "fs3", "fs4", "fs5", \
+                     "fs6", "fs7", "fs8", "fs9", "fs10", "fs11")
+#define GET_FREG(n) ({ double _r; asm volatile("fmv.d %0, fs"#n : "=f"(_r) : :); _r; })
+#define CHECK_FREGS \
+  EXPECT_EQ(0.0, GET_FREG(0)); EXPECT_EQ(1.0, GET_FREG(1)); \
+  EXPECT_EQ(2.0, GET_FREG(2)); EXPECT_EQ(3.0, GET_FREG(3)); \
+  EXPECT_EQ(4.0, GET_FREG(4)); EXPECT_EQ(5.0, GET_FREG(5)); \
+  EXPECT_EQ(6.0, GET_FREG(6)); EXPECT_EQ(7.0, GET_FREG(7)); \
+  EXPECT_EQ(8.0, GET_FREG(8)); EXPECT_EQ(9.0, GET_FREG(9)); \
+  EXPECT_EQ(10.0, GET_FREG(10)); EXPECT_EQ(11.0, GET_FREG(11))
+
 #else
-/* The other architectures don't save/restore fp registers. */
+// x86 and x86-64 don't save/restore fp registers.
 #define SET_FREGS
 #define CLEAR_FREGS
 #define CHECK_FREGS
