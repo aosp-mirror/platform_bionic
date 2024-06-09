@@ -8,7 +8,7 @@
 #define _LINUX_FUSE_H
 #include <stdint.h>
 #define FUSE_KERNEL_VERSION 7
-#define FUSE_KERNEL_MINOR_VERSION 39
+#define FUSE_KERNEL_MINOR_VERSION 40
 #define FUSE_ROOT_ID 1
 struct fuse_attr {
   uint64_t ino;
@@ -93,6 +93,7 @@ struct fuse_file_lock {
 #define FOPEN_STREAM (1 << 4)
 #define FOPEN_NOFLUSH (1 << 5)
 #define FOPEN_PARALLEL_DIRECT_WRITES (1 << 6)
+#define FOPEN_PASSTHROUGH (1 << 7)
 #define FUSE_ASYNC_READ (1 << 0)
 #define FUSE_POSIX_LOCKS (1 << 1)
 #define FUSE_FILE_OPS (1 << 2)
@@ -130,12 +131,10 @@ struct fuse_file_lock {
 #define FUSE_CREATE_SUPP_GROUP (1ULL << 34)
 #define FUSE_HAS_EXPIRE_ONLY (1ULL << 35)
 #define FUSE_DIRECT_IO_ALLOW_MMAP (1ULL << 36)
+#define FUSE_PASSTHROUGH (1ULL << 37)
+#define FUSE_NO_EXPORT_SUPPORT (1ULL << 38)
+#define FUSE_HAS_RESEND (1ULL << 39)
 #define FUSE_DIRECT_IO_RELAX FUSE_DIRECT_IO_ALLOW_MMAP
-#if FUSE_KERNEL_VERSION > 7 || FUSE_KERNEL_VERSION == 7 && FUSE_KERNEL_MINOR_VERSION >= 36
-#define FUSE_PASSTHROUGH (1ULL << 63)
-#else
-#define FUSE_PASSTHROUGH (1 << 31)
-#endif
 #define CUSE_UNRESTRICTED_IOCTL (1 << 0)
 #define FUSE_RELEASE_FLUSH (1 << 0)
 #define FUSE_RELEASE_FLOCK_UNLOCK (1 << 1)
@@ -215,7 +214,6 @@ enum fuse_opcode {
   FUSE_SYNCFS = 50,
   FUSE_TMPFILE = 51,
   FUSE_STATX = 52,
-  FUSE_CANONICAL_PATH = 2016,
   CUSE_INIT = 4096,
   CUSE_INIT_BSWAP_RESERVED = 1048576,
   FUSE_INIT_BSWAP_RESERVED = 436207616,
@@ -227,6 +225,7 @@ enum fuse_notify_code {
   FUSE_NOTIFY_STORE = 4,
   FUSE_NOTIFY_RETRIEVE = 5,
   FUSE_NOTIFY_DELETE = 6,
+  FUSE_NOTIFY_RESEND = 7,
   FUSE_NOTIFY_CODE_MAX,
 };
 #define FUSE_MIN_READ_BUFFER 8192
@@ -330,7 +329,7 @@ struct fuse_create_in {
 struct fuse_open_out {
   uint64_t fh;
   uint32_t open_flags;
-  uint32_t passthrough_fh;
+  int32_t backing_id;
 };
 struct fuse_release_in {
   uint64_t fh;
@@ -427,7 +426,8 @@ struct fuse_init_out {
   uint16_t max_pages;
   uint16_t map_alignment;
   uint32_t flags2;
-  uint32_t unused[7];
+  uint32_t max_stack_depth;
+  uint32_t unused[6];
 };
 #define CUSE_INIT_INFO_MAX 4096
 struct cuse_init_in {
@@ -496,6 +496,7 @@ struct fuse_fallocate_in {
   uint32_t mode;
   uint32_t padding;
 };
+#define FUSE_UNIQUE_RESEND (1ULL << 63)
 struct fuse_in_header {
   uint32_t len;
   uint32_t opcode;
@@ -566,9 +567,15 @@ struct fuse_notify_retrieve_in {
   uint64_t dummy3;
   uint64_t dummy4;
 };
+struct fuse_backing_map {
+  int32_t fd;
+  uint32_t flags;
+  uint64_t padding;
+};
 #define FUSE_DEV_IOC_MAGIC 229
 #define FUSE_DEV_IOC_CLONE _IOR(FUSE_DEV_IOC_MAGIC, 0, uint32_t)
-#define FUSE_DEV_IOC_PASSTHROUGH_OPEN _IOW(FUSE_DEV_IOC_MAGIC, 126, uint32_t)
+#define FUSE_DEV_IOC_BACKING_OPEN _IOW(FUSE_DEV_IOC_MAGIC, 1, struct fuse_backing_map)
+#define FUSE_DEV_IOC_BACKING_CLOSE _IOW(FUSE_DEV_IOC_MAGIC, 2, uint32_t)
 struct fuse_lseek_in {
   uint64_t fh;
   uint64_t offset;

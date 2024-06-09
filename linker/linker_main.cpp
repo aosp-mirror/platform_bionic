@@ -31,6 +31,7 @@
 #include <link.h>
 #include <stdlib.h>
 #include <sys/auxv.h>
+#include <sys/prctl.h>
 
 #include "linker.h"
 #include "linker_auxv.h"
