@@ -34,6 +34,7 @@
 #include <platform/bionic/malloc.h>
 #include <sanitizer/hwasan_interface.h>
 #include <sys/auxv.h>
+#include <sys/prctl.h>
 
 extern "C" void scudo_malloc_disable_memory_tagging();
 extern "C" void scudo_malloc_set_track_allocation_stacks(int);
