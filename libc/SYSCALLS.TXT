@@ -174,20 +174,21 @@ int utimensat(int, const char*, const struct timespec times[2], int)  all
 off_t lseek(int, off_t, int) lp32
 int __llseek:_llseek(int, unsigned long, unsigned long, off64_t*, int) lp32
 off_t lseek|lseek64(int, off_t, int) lp64
-int ftruncate64(int, off64_t) lp32
-int ftruncate|ftruncate64(int, off_t) lp64
 ssize_t sendfile(int out_fd, int in_fd, off_t* offset, size_t count) lp32
 ssize_t sendfile64(int out_fd, int in_fd, off64_t* offset, size_t count) lp32
 ssize_t sendfile|sendfile64(int out_fd, int in_fd, off_t* offset, size_t count) lp64
 int truncate(const char*, off_t) lp32
 int truncate64(const char*, off64_t) lp32
 int truncate|truncate64(const char*, off_t) lp64
-# (mmap only gets two lines because we only used the 64-bit variant on 32-bit systems.)
-void* __mmap2:mmap2(void*, size_t, int, int, int, long)   lp32
-void* mmap|mmap64(void*, size_t, int, int, int, off_t)  lp64
 # (fallocate only gets two lines because there is no 32-bit variant.)
 int fallocate64:fallocate(int, int, off64_t, off64_t) lp32
 int fallocate|fallocate64(int, int, off_t, off_t) lp64
+# (ftruncate only gets two lines because 32-bit bionic only uses the 64-bit call.)
+int ftruncate64(int, off64_t) lp32
+int ftruncate|ftruncate64(int, off_t) lp64
+# (mmap only gets two lines because 32-bit bionic only uses the 64-bit call.)
+void* __mmap2:mmap2(void*, size_t, int, int, int, long) lp32
+void* mmap|mmap64(void*, size_t, int, int, int, off_t) lp64
 
 # posix_fadvise64 is awkward: arm has shuffled arguments,
 # the POSIX functions don't set errno, and no architecture has posix_fadvise.
