@@ -121,9 +121,10 @@ static void AssertFileIs(FILE* fp, const char* expected, bool is_fmemopen = fals
   EXPECT_SWPRINTF_N(expected, static_cast<int>(wcslen(expected)), fmt __VA_OPT__(, ) __VA_ARGS__)
 
 TEST(STDIO_TEST, flockfile_18208568_stderr) {
-  // Check that we have a _recursive_ mutex for flockfile.
   flockfile(stderr);
-  feof(stderr); // We don't care about the result, but this needs to take the lock.
+  // Check that we're using a _recursive_ mutex for flockfile() by calling
+  // something that will take the lock.
+  ASSERT_EQ(0, feof(stderr));
   funlockfile(stderr);
 }
 
@@ -132,7 +133,9 @@ TEST(STDIO_TEST, flockfile_18208568_regular) {
   FILE* fp = fopen("/dev/null", "w");
   ASSERT_TRUE(fp != nullptr);
   flockfile(fp);
-  feof(fp);
+  // Check that we're using a _recursive_ mutex for flockfile() by calling
+  // something that will take the lock.
+  ASSERT_EQ(0, feof(fp));
   funlockfile(fp);
   fclose(fp);
 }

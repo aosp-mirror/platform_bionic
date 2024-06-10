@@ -61,7 +61,7 @@ void __libc_register_thread_exit_callback(thread_exit_cb_t cb) {
   if (modules.first_thread_exit_callback == nullptr) {
     modules.first_thread_exit_callback = cb;
     return;
-  };
+  }
 
   BionicAllocator& allocator = __libc_shared_globals()->tls_allocator;
   CallbackHolder* new_node =

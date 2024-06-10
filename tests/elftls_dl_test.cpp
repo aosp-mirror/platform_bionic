@@ -107,6 +107,22 @@ TEST(elftls_dl, bump_local_vars) {
   void* lib = dlopen("libtest_elftls_dynamic.so", RTLD_LOCAL | RTLD_NOW);
   ASSERT_NE(nullptr, lib);
 
+  auto get_local_var2 = reinterpret_cast<int(*)()>(dlsym(lib, "get_local_var2"));
+  ASSERT_NE(nullptr, get_local_var2);
+
+  auto get_local_var1 = reinterpret_cast<int(*)()>(dlsym(lib, "get_local_var1"));
+  ASSERT_NE(nullptr, get_local_var1);
+
+  auto get_local_var1_addr = reinterpret_cast<int*(*)()>(dlsym(lib, "get_local_var1_addr"));
+  ASSERT_NE(nullptr, get_local_var1_addr);
+
+  // Make sure subsequent accesses return the same pointer.
+  ASSERT_EQ(get_local_var1_addr(), get_local_var1_addr());
+
+  // Check the initial values are correct.
+  ASSERT_EQ(25, get_local_var2());
+  ASSERT_EQ(15, get_local_var1());
+
   auto bump_local_vars = reinterpret_cast<int(*)()>(dlsym(lib, "bump_local_vars"));
   ASSERT_NE(nullptr, bump_local_vars);
 
@@ -135,7 +151,7 @@ TEST(elftls_dl, tprel_missing_weak) {
 // TLSDESC, the result is NULL. With __tls_get_addr, the result is the
 // generation count (or maybe undefined behavior)? This test only tests TLSDESC.
 TEST(elftls_dl, tlsdesc_missing_weak) {
-#if defined(__aarch64__)
+#if defined(__aarch64__) || defined(__riscv)
   void* lib = dlopen("libtest_elftls_dynamic.so", RTLD_LOCAL | RTLD_NOW);
   ASSERT_NE(nullptr, lib);
 
