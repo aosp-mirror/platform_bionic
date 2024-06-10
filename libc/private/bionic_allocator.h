@@ -28,13 +28,9 @@
 
 #pragma once
 
-#include <errno.h>
-#include <stdlib.h>
 #include <sys/cdefs.h>
-#include <sys/mman.h>
-#include <sys/prctl.h>
 #include <stddef.h>
-#include <unistd.h>
+#include <stdint.h>
 
 const uint32_t kSmallObjectMaxSizeLog2 = 10;
 const uint32_t kSmallObjectMinSizeLog2 = 4;
@@ -120,7 +116,8 @@ class BionicAllocator {
   inline void* alloc_impl(size_t align, size_t size);
   inline page_info* get_page_info_unchecked(void* ptr);
   inline page_info* get_page_info(void* ptr);
-  BionicSmallObjectAllocator* get_small_object_allocator(uint32_t type);
+  BionicSmallObjectAllocator* get_small_object_allocator_unchecked(uint32_t type);
+  BionicSmallObjectAllocator* get_small_object_allocator(page_info* pi, void* ptr);
   void initialize_allocators();
 
   BionicSmallObjectAllocator* allocators_;
