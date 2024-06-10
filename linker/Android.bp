@@ -231,6 +231,7 @@ filegroup {
     name: "linker_sources_riscv64",
     srcs: [
         "arch/riscv64/begin.S",
+        "arch/riscv64/tlsdesc_resolver.S",
     ],
 }
 
