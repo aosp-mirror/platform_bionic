@@ -20,5 +20,15 @@ enum {
   CAN_RAW_FD_FRAMES,
   CAN_RAW_JOIN_FILTERS,
   CAN_RAW_XL_FRAMES,
+  CAN_RAW_XL_VCID_OPTS,
 };
+struct can_raw_vcid_options {
+  __u8 flags;
+  __u8 tx_vcid;
+  __u8 rx_vcid;
+  __u8 rx_vcid_mask;
+};
+#define CAN_RAW_XL_VCID_TX_SET 0x01
+#define CAN_RAW_XL_VCID_TX_PASS 0x02
+#define CAN_RAW_XL_VCID_RX_FILTER 0x04
 #endif

@@ -30,6 +30,7 @@
 #define UBLK_U_CMD_END_USER_RECOVERY _IOWR('u', UBLK_CMD_END_USER_RECOVERY, struct ublksrv_ctrl_cmd)
 #define UBLK_U_CMD_GET_DEV_INFO2 _IOR('u', UBLK_CMD_GET_DEV_INFO2, struct ublksrv_ctrl_cmd)
 #define UBLK_U_CMD_GET_FEATURES _IOR('u', 0x13, struct ublksrv_ctrl_cmd)
+#define UBLK_U_CMD_DEL_DEV_ASYNC _IOR('u', 0x14, struct ublksrv_ctrl_cmd)
 #define UBLK_FEATURES_LEN 8
 #define UBLK_IO_FETCH_REQ 0x20
 #define UBLK_IO_COMMIT_AND_FETCH_REQ 0x21
