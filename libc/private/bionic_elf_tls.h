@@ -34,6 +34,8 @@
 #include <stdint.h>
 #include <sys/cdefs.h>
 
+#include "bionic_elf_dtv_offset.h"
+
 __LIBC_HIDDEN__ extern _Atomic(size_t) __libc_tls_generation_copy;
 
 struct TlsAlign {
@@ -214,30 +216,16 @@ struct TlsIndex {
 };
 
 #if defined(__i386__)
-#define TLS_GET_ADDR_CCONV __attribute__((regparm(1)))
+#define TLS_GET_ADDR_CALLING_CONVENTION __attribute__((regparm(1)))
 #define TLS_GET_ADDR ___tls_get_addr
 #else
-#define TLS_GET_ADDR_CCONV
+#define TLS_GET_ADDR_CALLING_CONVENTION
 #define TLS_GET_ADDR __tls_get_addr
 #endif
 
-extern "C" void* TLS_GET_ADDR(const TlsIndex* ti) TLS_GET_ADDR_CCONV;
+extern "C" void* TLS_GET_ADDR(const TlsIndex* ti) TLS_GET_ADDR_CALLING_CONVENTION;
 
 struct bionic_tcb;
 void __free_dynamic_tls(bionic_tcb* tcb);
 void __notify_thread_exit_callbacks();
 
-#if defined(__riscv)
-// TLS_DTV_OFFSET is a constant used in relocation fields, defined in RISC-V ELF Specification[1]
-// The front of the TCB contains a pointer to the DTV, and each pointer in DTV
-// points to 0x800 past the start of a TLS block to make full use of the range
-// of load/store instructions, refer to [2].
-//
-// [1]: RISC-V ELF Specification.
-// https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc#constants
-// [2]: Documentation of TLS data structures
-// https://github.com/riscv-non-isa/riscv-elf-psabi-doc/issues/53
-#define TLS_DTV_OFFSET 0x800
-#else
-#define TLS_DTV_OFFSET 0
-#endif

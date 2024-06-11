@@ -105,7 +105,14 @@ __wur char* _Nullable realpath(const char* _Nonnull __path, char* _Nullable __re
  */
 int system(const char* _Nonnull __command);
 
-void* _Nullable bsearch(const void* _Nonnull __key, const void* _Nullable __base, size_t __nmemb, size_t __size, int (* _Nonnull __comparator)(const void* _Nonnull __lhs, const void* _Nonnull __rhs));
+/**
+ * [bsearch(3)](http://man7.org/linux/man-pages/man3/bsearch.3.html) searches
+ * a sorted array.
+ *
+ * Returns a pointer to a matching item on success,
+ * or NULL if no matching item is found.
+ */
+__wur void* _Nullable bsearch(const void* _Nonnull __key, const void* _Nullable __base, size_t __nmemb, size_t __size, int (* _Nonnull __comparator)(const void* _Nonnull __lhs, const void* _Nonnull __rhs));
 
 void qsort(void* _Nullable __base, size_t __nmemb, size_t __size, int (* _Nonnull __comparator)(const void* _Nullable __lhs, const void* _Nullable __rhs));
 

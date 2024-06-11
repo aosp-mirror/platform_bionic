@@ -110,7 +110,7 @@ void* _Nullable memalign(size_t __alignment, size_t __byte_count) __mallocfunc _
  * [malloc_usable_size(3)](http://man7.org/linux/man-pages/man3/malloc_usable_size.3.html)
  * returns the actual size of the given heap block.
  */
-size_t malloc_usable_size(const void* _Nullable __ptr);
+size_t malloc_usable_size(const void* _Nullable __ptr) __wur;
 
 #define __MALLINFO_BODY \
   /** Total number of non-mmapped bytes currently allocated from OS. */ \
