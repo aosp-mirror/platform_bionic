@@ -66,6 +66,18 @@ extern "C" int bump_local_vars() {
   return ++local_var_1 + ++local_var_2;
 }
 
+extern "C" int get_local_var1() {
+  return local_var_1;
+}
+
+extern "C" int* get_local_var1_addr() {
+  return &local_var_1;
+}
+
+extern "C" int get_local_var2() {
+  return local_var_2;
+}
+
 __attribute__((weak)) extern "C" __thread int missing_weak_dyn_tls;
 
 extern "C" int* missing_weak_dyn_tls_addr() {
