@@ -52,12 +52,15 @@ int wcwidth(wchar_t wc) {
     return -1;
    case U_NON_SPACING_MARK:
    case U_ENCLOSING_MARK:
-   case U_FORMAT_CHAR:
     return 0;
+   case U_FORMAT_CHAR:
+    // A special case for soft hyphen (U+00AD) to match historical practice.
+    // See the tests for more commentary.
+    return (wc == 0x00ad) ? 1 : 0;
   }
-  if (__icu_hasBinaryProperty(wc, UCHAR_DEFAULT_IGNORABLE_CODE_POINT, nullptr)) return 0;
 
-  // Medial and final jamo render as zero width when used correctly.
+  // Medial and final jamo render as zero width when used correctly,
+  // so we handle them specially rather than relying on East Asian Width.
   switch (__icu_getIntPropertyValue(wc, UCHAR_HANGUL_SYLLABLE_TYPE)) {
    case U_HST_VOWEL_JAMO:
    case U_HST_TRAILING_JAMO:
@@ -68,6 +71,11 @@ int wcwidth(wchar_t wc) {
     return 2;
   }
 
+  // Hangeul choseong filler U+115F is default ignorable, so we check default
+  // ignorability only after we've already handled Hangeul jamo above.
+  if (__icu_hasBinaryProperty(wc, UCHAR_DEFAULT_IGNORABLE_CODE_POINT, nullptr)) return 0;
+
+  // A few weird special cases where EastAsianWidth is not helpful for us.
   if (wc >= 0x3248 && wc <= 0x4dff) {
     // Circled two-digit CJK "speed sign" numbers. EastAsianWidth is ambiguous,
     // but wide makes more sense.
@@ -77,6 +85,7 @@ int wcwidth(wchar_t wc) {
   }
 
   // The EastAsianWidth property is at least defined by the Unicode standard!
+  // https://www.unicode.org/reports/tr11/
   switch (__icu_getIntPropertyValue(wc, UCHAR_EAST_ASIAN_WIDTH)) {
    case U_EA_AMBIGUOUS:
    case U_EA_HALFWIDTH:

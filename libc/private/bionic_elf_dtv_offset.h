@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,36 +26,19 @@
  * SUCH DAMAGE.
  */
 
-#include <errno.h>
-#include <stdint.h>
-#include <sys/mman.h>
-#include <unistd.h>
+#pragma once
 
-#include "platform/bionic/macros.h"
-#include "platform/bionic/page.h"
-#include "private/ErrnoRestorer.h"
-
-// mmap2(2) is like mmap(2), but the offset is in 4096-byte blocks, not bytes.
-extern "C" void*  __mmap2(void*, size_t, int, int, int, size_t);
-
-#define MMAP2_SHIFT 12 // 2**12 == 4096
-
-void* mmap64(void* addr, size_t size, int prot, int flags, int fd, off64_t offset) {
-  if (offset < 0 || (offset & ((1UL << MMAP2_SHIFT)-1)) != 0) {
-    errno = EINVAL;
-    return MAP_FAILED;
-  }
-
-  // Prevent allocations large enough for `end - start` to overflow.
-  size_t rounded = __BIONIC_ALIGN(size, page_size());
-  if (rounded < size || rounded > PTRDIFF_MAX) {
-    errno = ENOMEM;
-    return MAP_FAILED;
-  }
-
-  return __mmap2(addr, size, prot, flags, fd, offset >> MMAP2_SHIFT);
-}
-
-void* mmap(void* addr, size_t size, int prot, int flags, int fd, off_t offset) {
-  return mmap64(addr, size, prot, flags, fd, static_cast<off64_t>(offset));
-}
+#if defined(__riscv)
+// TLS_DTV_OFFSET is a constant used in relocation fields, defined in RISC-V ELF Specification[1]
+// The front of the TCB contains a pointer to the DTV, and each pointer in DTV
+// points to 0x800 past the start of a TLS block to make full use of the range
+// of load/store instructions, refer to [2].
+//
+// [1]: RISC-V ELF Specification.
+// https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc#constants
+// [2]: Documentation of TLS data structures
+// https://github.com/riscv-non-isa/riscv-elf-psabi-doc/issues/53
+#define TLS_DTV_OFFSET 0x800
+#else
+#define TLS_DTV_OFFSET 0
+#endif

@@ -901,6 +901,7 @@ struct drm_i915_query_item {
 #define DRM_I915_QUERY_MEMORY_REGIONS 4
 #define DRM_I915_QUERY_HWCONFIG_BLOB 5
 #define DRM_I915_QUERY_GEOMETRY_SUBSLICES 6
+#define DRM_I915_QUERY_GUC_SUBMISSION_VERSION 7
   __s32 length;
   __u32 flags;
 #define DRM_I915_QUERY_PERF_CONFIG_LIST 1
@@ -975,6 +976,12 @@ struct drm_i915_query_memory_regions {
   __u32 num_regions;
   __u32 rsvd[3];
   struct drm_i915_memory_region_info regions[];
+};
+struct drm_i915_query_guc_submission_version {
+  __u32 branch;
+  __u32 major;
+  __u32 minor;
+  __u32 patch;
 };
 struct drm_i915_gem_create_ext {
   __u64 size;

@@ -1224,9 +1224,6 @@ cc_library_static {
                 // off64_t/time64_t support on LP32.
                 "bionic/legacy_32_bit_support.cpp",
                 "bionic/time64.c",
-
-                // TODO: move to libc/bionic/legacy_32_bit_support.cpp or #if __LP64__ instead.
-                "bionic/mmap.cpp",
             ],
         },
     },
