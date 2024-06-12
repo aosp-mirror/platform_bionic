@@ -879,7 +879,6 @@ cc_library_static {
         "bionic/mkfifo.cpp",
         "bionic/mknod.cpp",
         "bionic/mntent.cpp",
-        "bionic/mremap.cpp",
         "bionic/netdb.cpp",
         "bionic/net_if.cpp",
         "bionic/netinet_ether.cpp",
