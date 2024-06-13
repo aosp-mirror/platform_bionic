@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,35 +26,19 @@
  * SUCH DAMAGE.
  */
 
-#include <stddef.h>
-#include <sys/cdefs.h>
-#include <sys/auxv.h>
-#include <private/bionic_auxv.h>
-#include <private/bionic_globals.h>
-#include <private/bionic_ifuncs.h>
-#include <elf.h>
-#include <errno.h>
+#pragma once
 
-// This function needs to be safe to call before TLS is set up, so it can't
-// access errno or the stack protector.
-// Cannot use HWASan, as this is called during setup of the HWASan runtime to
-// determine the page size.
-__LIBC_HIDDEN__ unsigned long __bionic_getauxval(unsigned long type, bool* exists) __attribute__((no_sanitize("hwaddress"))) {
-  for (ElfW(auxv_t)* v = __libc_shared_globals()->auxv; v->a_type != AT_NULL; ++v) {
-    if (v->a_type == type) {
-      *exists = true;
-      return v->a_un.a_val;
-    }
-  }
-  *exists = false;
-  return 0;
-}
-
-// Cannot use HWASan, as this is called during setup of the HWASan runtime to
-// determine the page size.
-extern "C" unsigned long getauxval(unsigned long type) __attribute__((no_sanitize("hwaddress"))) {
-  bool exists;
-  unsigned long result = __bionic_getauxval(type, &exists);
-  if (!exists) errno = ENOENT;
-  return result;
-}
+#if defined(__riscv)
+// TLS_DTV_OFFSET is a constant used in relocation fields, defined in RISC-V ELF Specification[1]
+// The front of the TCB contains a pointer to the DTV, and each pointer in DTV
+// points to 0x800 past the start of a TLS block to make full use of the range
+// of load/store instructions, refer to [2].
+//
+// [1]: RISC-V ELF Specification.
+// https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc#constants
+// [2]: Documentation of TLS data structures
+// https://github.com/riscv-non-isa/riscv-elf-psabi-doc/issues/53
+#define TLS_DTV_OFFSET 0x800
+#else
+#define TLS_DTV_OFFSET 0
+#endif
