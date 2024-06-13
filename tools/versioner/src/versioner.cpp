@@ -146,7 +146,7 @@ static CompilationRequirements collectRequirements(const Arch& arch,
         continue;
       }
 
-      if (header.endswith("/" + it.first)) {
+      if (header.ends_with("/" + it.first)) {
         return true;
       }
     }
