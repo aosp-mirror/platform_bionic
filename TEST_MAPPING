@@ -51,6 +51,9 @@
       "name": "bionic-unit-tests"
     },
     {
+      "name": "bionic-unit-tests-static"
+    },
+    {
       "name": "linker-unit-tests"
     },
     {
