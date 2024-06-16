@@ -27,6 +27,7 @@ cc_library_shared {
         "libunwindstack",
         "liblzma",
         "liblog",
+        "libz",
     ],
     target: {
         recovery: {
