@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,33 +26,19 @@
  * SUCH DAMAGE.
  */
 
-#include <errno.h>
-#include <sys/mman.h>
-#include <stdarg.h>
-#include <stdint.h>
-#include <unistd.h>
+#pragma once
 
-#include "platform/bionic/macros.h"
-#include "platform/bionic/page.h"
-
-extern "C" void* __mremap(void*, size_t, size_t, int, void*);
-
-void* mremap(void* old_address, size_t old_size, size_t new_size, int flags, ...) {
-  // prevent allocations large enough for `end - start` to overflow
-  size_t rounded = __BIONIC_ALIGN(new_size, page_size());
-  if (rounded < new_size || rounded > PTRDIFF_MAX) {
-    errno = ENOMEM;
-    return MAP_FAILED;
-  }
-
-  void* new_address = nullptr;
-  // The optional argument is only valid if the MREMAP_FIXED flag is set,
-  // so we assume it's not present otherwise.
-  if ((flags & MREMAP_FIXED) != 0) {
-    va_list ap;
-    va_start(ap, flags);
-    new_address = va_arg(ap, void*);
-    va_end(ap);
-  }
-  return __mremap(old_address, old_size, new_size, flags, new_address);
-}
+#if defined(__riscv)
+// TLS_DTV_OFFSET is a constant used in relocation fields, defined in RISC-V ELF Specification[1]
+// The front of the TCB contains a pointer to the DTV, and each pointer in DTV
+// points to 0x800 past the start of a TLS block to make full use of the range
+// of load/store instructions, refer to [2].
+//
+// [1]: RISC-V ELF Specification.
+// https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc#constants
+// [2]: Documentation of TLS data structures
+// https://github.com/riscv-non-isa/riscv-elf-psabi-doc/issues/53
+#define TLS_DTV_OFFSET 0x800
+#else
+#define TLS_DTV_OFFSET 0
+#endif
