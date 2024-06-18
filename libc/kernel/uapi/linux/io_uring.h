@@ -174,6 +174,7 @@ enum io_uring_op {
   IORING_OP_FUTEX_WAKE,
   IORING_OP_FUTEX_WAITV,
   IORING_OP_FIXED_FD_INSTALL,
+  IORING_OP_FTRUNCATE,
   IORING_OP_LAST,
 };
 #define IORING_URING_CMD_FIXED (1U << 0)
@@ -316,6 +317,8 @@ enum {
   IORING_REGISTER_SYNC_CANCEL = 24,
   IORING_REGISTER_FILE_ALLOC_RANGE = 25,
   IORING_REGISTER_PBUF_STATUS = 26,
+  IORING_REGISTER_NAPI = 27,
+  IORING_UNREGISTER_NAPI = 28,
   IORING_REGISTER_LAST,
   IORING_REGISTER_USE_REGISTERED_RING = 1U << 31
 };
@@ -405,6 +408,12 @@ struct io_uring_buf_status {
   __u32 buf_group;
   __u32 head;
   __u32 resv[8];
+};
+struct io_uring_napi {
+  __u32 busy_poll_to;
+  __u8 prefer_busy_poll;
+  __u8 pad[3];
+  __u64 resv;
 };
 enum {
   IORING_RESTRICTION_REGISTER_OP = 0,

@@ -1,15 +1,11 @@
-# bionic
+# bionic maintainer overview
 
 [bionic](https://en.wikipedia.org/wiki/Bionic_(software)) is Android's
 C library, math library, and dynamic linker.
 
-# Using bionic as an app developer
-
-See the [user documentation](docs/).
-
-# Working on bionic itself
-
-This documentation is about making changes to bionic itself.
+This document is a high-level overview of making changes to bionic itself.
+If you're trying to _use_ bionic, or want more in-depth information about
+some part of the implementation, see [all the bionic documentation](docs/).
 
 ## What are the big pieces of bionic?
 

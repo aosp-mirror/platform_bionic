@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,35 +26,50 @@
  * SUCH DAMAGE.
  */
 
-#include <stddef.h>
+#pragma once
+
+/**
+ * @file sys/io.h
+ * @brief The x86/x86-64 I/O port functions iopl() and ioperm().
+ */
+
 #include <sys/cdefs.h>
-#include <sys/auxv.h>
-#include <private/bionic_auxv.h>
-#include <private/bionic_globals.h>
-#include <private/bionic_ifuncs.h>
-#include <elf.h>
+
 #include <errno.h>
+#include <sys/syscall.h>
+#include <unistd.h>
 
-// This function needs to be safe to call before TLS is set up, so it can't
-// access errno or the stack protector.
-// Cannot use HWASan, as this is called during setup of the HWASan runtime to
-// determine the page size.
-__LIBC_HIDDEN__ unsigned long __bionic_getauxval(unsigned long type, bool* exists) __attribute__((no_sanitize("hwaddress"))) {
-  for (ElfW(auxv_t)* v = __libc_shared_globals()->auxv; v->a_type != AT_NULL; ++v) {
-    if (v->a_type == type) {
-      *exists = true;
-      return v->a_un.a_val;
-    }
-  }
-  *exists = false;
-  return 0;
-}
+__BEGIN_DECLS
 
-// Cannot use HWASan, as this is called during setup of the HWASan runtime to
-// determine the page size.
-extern "C" unsigned long getauxval(unsigned long type) __attribute__((no_sanitize("hwaddress"))) {
-  bool exists;
-  unsigned long result = __bionic_getauxval(type, &exists);
-  if (!exists) errno = ENOENT;
-  return result;
+/**
+ * [iopl(2)](http://man7.org/linux/man-pages/man2/iopl.2.html) changes the I/O
+ * privilege level for all x86/x8-64 I/O ports, for the calling thread.
+ *
+ * New callers should use ioperm() instead.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ *
+ * Only available for x86/x86-64.
+ */
+#if defined(__NR_iopl)
+__attribute__((__deprecated__("use ioperm() instead"))) static __inline int iopl(int __level) {
+  return syscall(__NR_iopl, __level);
 }
+#endif
+
+/**
+ * [ioperm(2)](http://man7.org/linux/man-pages/man2/ioperm.2.html) sets the I/O
+ * permissions for the given number of x86/x86-64 I/O ports, starting at the
+ * given port.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ *
+ * Only available for x86/x86-64.
+ */
+#if defined(__NR_iopl)
+static __inline int ioperm(unsigned long __from, unsigned long __n, int __enabled) {
+  return syscall(__NR_ioperm, __from, __n, __enabled);
+}
+#endif
+
+__END_DECLS
