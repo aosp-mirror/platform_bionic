@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,35 +26,31 @@
  * SUCH DAMAGE.
  */
 
-#include <stddef.h>
+#pragma once
+
+/**
+ * @file netinet/igmp.h
+ * @brief Internet Group Management Protocol (IGMP).
+ */
+
 #include <sys/cdefs.h>
-#include <sys/auxv.h>
-#include <private/bionic_auxv.h>
-#include <private/bionic_globals.h>
-#include <private/bionic_ifuncs.h>
-#include <elf.h>
-#include <errno.h>
+#include <netinet/in.h>
 
-// This function needs to be safe to call before TLS is set up, so it can't
-// access errno or the stack protector.
-// Cannot use HWASan, as this is called during setup of the HWASan runtime to
-// determine the page size.
-__LIBC_HIDDEN__ unsigned long __bionic_getauxval(unsigned long type, bool* exists) __attribute__((no_sanitize("hwaddress"))) {
-  for (ElfW(auxv_t)* v = __libc_shared_globals()->auxv; v->a_type != AT_NULL; ++v) {
-    if (v->a_type == type) {
-      *exists = true;
-      return v->a_un.a_val;
-    }
-  }
-  *exists = false;
-  return 0;
-}
+#include <linux/igmp.h>
 
-// Cannot use HWASan, as this is called during setup of the HWASan runtime to
-// determine the page size.
-extern "C" unsigned long getauxval(unsigned long type) __attribute__((no_sanitize("hwaddress"))) {
-  bool exists;
-  unsigned long result = __bionic_getauxval(type, &exists);
-  if (!exists) errno = ENOENT;
-  return result;
-}
+/**
+ * The uapi type is called `igmphdr`,
+ * doesn't have the `igmp_` prefix on each field,
+ * and uses a `__be32` for the group address.
+ *
+ * This is the type that BSDs and musl/glibc expose to userspace.
+ */
+struct igmp {
+  uint8_t igmp_type;
+  uint8_t igmp_code;
+  uint16_t igmp_cksum;
+  struct in_addr igmp_group;
+};
+
+/** Commonly-used BSD synonym for the Linux constant. */
+#define IGMP_MEMBERSHIP_QUERY IGMP_HOST_MEMBERSHIP_QUERY
