@@ -120,12 +120,12 @@ cc_defaults {
 // ========================================================
 cc_defaults {
     name: "bug_24465209_workaround",
-    arch: {
-        arm: {
+    target: {
+        android_arm: {
             pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
         },
-        x86: {
+        android_x86: {
             pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
         }
