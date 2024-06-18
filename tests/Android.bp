@@ -369,7 +369,10 @@ cc_test_library {
 
 cc_test_library {
     name: "libBionicStandardTests",
-    defaults: ["bionic_tests_defaults"],
+    defaults: [
+        "bionic_tests_defaults",
+        "large_system_property_node_defaults",
+    ],
     tidy_disabled_srcs: [
         "malloc_test.cpp", // timed out with clang-tidy, and too many warnings
     ],
@@ -430,6 +433,7 @@ cc_test_library {
         "netdb_test.cpp",
         "net_if_test.cpp",
         "netinet_ether_test.cpp",
+        "netinet_igmp_test.cpp",
         "netinet_in_test.cpp",
         "netinet_ip_icmp_test.cpp",
         "netinet_udp_test.cpp",
@@ -474,6 +478,7 @@ cc_test_library {
         "sys_cachectl_test.cpp",
         "sys_epoll_test.cpp",
         "sys_hwprobe_test.cpp",
+        "sys_io_test.cpp",
         "sys_mman_test.cpp",
         "sys_msg_test.cpp",
         "sys_param_test.cpp",
