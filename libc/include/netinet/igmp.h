@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,36 +26,31 @@
  * SUCH DAMAGE.
  */
 
-#include <errno.h>
-#include <stdint.h>
-#include <sys/mman.h>
-#include <unistd.h>
+#pragma once
 
-#include "platform/bionic/macros.h"
-#include "platform/bionic/page.h"
-#include "private/ErrnoRestorer.h"
+/**
+ * @file netinet/igmp.h
+ * @brief Internet Group Management Protocol (IGMP).
+ */
 
-// mmap2(2) is like mmap(2), but the offset is in 4096-byte blocks, not bytes.
-extern "C" void*  __mmap2(void*, size_t, int, int, int, size_t);
+#include <sys/cdefs.h>
+#include <netinet/in.h>
 
-#define MMAP2_SHIFT 12 // 2**12 == 4096
+#include <linux/igmp.h>
 
-void* mmap64(void* addr, size_t size, int prot, int flags, int fd, off64_t offset) {
-  if (offset < 0 || (offset & ((1UL << MMAP2_SHIFT)-1)) != 0) {
-    errno = EINVAL;
-    return MAP_FAILED;
-  }
+/**
+ * The uapi type is called `igmphdr`,
+ * doesn't have the `igmp_` prefix on each field,
+ * and uses a `__be32` for the group address.
+ *
+ * This is the type that BSDs and musl/glibc expose to userspace.
+ */
+struct igmp {
+  uint8_t igmp_type;
+  uint8_t igmp_code;
+  uint16_t igmp_cksum;
+  struct in_addr igmp_group;
+};
 
-  // Prevent allocations large enough for `end - start` to overflow.
-  size_t rounded = __BIONIC_ALIGN(size, page_size());
-  if (rounded < size || rounded > PTRDIFF_MAX) {
-    errno = ENOMEM;
-    return MAP_FAILED;
-  }
-
-  return __mmap2(addr, size, prot, flags, fd, offset >> MMAP2_SHIFT);
-}
-
-void* mmap(void* addr, size_t size, int prot, int flags, int fd, off_t offset) {
-  return mmap64(addr, size, prot, flags, fd, static_cast<off64_t>(offset));
-}
+/** Commonly-used BSD synonym for the Linux constant. */
+#define IGMP_MEMBERSHIP_QUERY IGMP_HOST_MEMBERSHIP_QUERY
