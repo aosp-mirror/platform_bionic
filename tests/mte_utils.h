@@ -40,4 +40,10 @@ __attribute__((target("mte"))) static bool is_stack_mte_on() {
   return p == p_cpy;
 }
 
+static void* mte_tls() {
+  void** dst;
+  __asm__("mrs %0, TPIDR_EL0" : "=r"(dst) :);
+  return dst[-3];
+}
+
 #endif
