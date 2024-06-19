@@ -131,17 +131,30 @@ void RecordData::WriteData(int, siginfo_t*, void*) {
   record_obj_->WriteEntries();
 }
 
+void RecordData::WriteEntriesOnExit() {
+  if (record_obj_ == nullptr) return;
+
+  // Append the current pid to the file name to avoid multiple processes
+  // writing to the same file.
+  std::string file(record_obj_->file());
+  file += "." + std::to_string(getpid());
+  record_obj_->WriteEntries(file);
+}
+
 void RecordData::WriteEntries() {
+  WriteEntries(file_);
+}
+
+void RecordData::WriteEntries(const std::string& file) {
   std::lock_guard<std::mutex> entries_lock(entries_lock_);
   if (cur_index_ == 0) {
     info_log("No alloc entries to write.");
     return;
   }
 
-  int dump_fd =
-      open(dump_file_.c_str(), O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC | O_NOFOLLOW, 0755);
+  int dump_fd = open(file.c_str(), O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC | O_NOFOLLOW, 0755);
   if (dump_fd == -1) {
-    error_log("Cannot create record alloc file %s: %s", dump_file_.c_str(), strerror(errno));
+    error_log("Cannot create record alloc file %s: %s", file.c_str(), strerror(errno));
     return;
   }
 
@@ -179,7 +192,7 @@ bool RecordData::Initialize(const Config& config) {
 
   entries_.resize(config.record_allocs_num_entries());
   cur_index_ = 0U;
-  dump_file_ = config.record_allocs_file();
+  file_ = config.record_allocs_file();
 
   return true;
 }
