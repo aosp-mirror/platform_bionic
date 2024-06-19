@@ -162,19 +162,23 @@ class RecordData {
   void AddEntry(const RecordEntry* entry);
   void AddEntryOnly(const RecordEntry* entry);
 
+  const std::string& file() { return file_; }
   pthread_key_t key() { return key_; }
+
+  static void WriteEntriesOnExit();
 
  private:
   static void WriteData(int, siginfo_t*, void*);
   static RecordData* record_obj_;
 
   void WriteEntries();
+  void WriteEntries(const std::string& file);
 
   std::mutex entries_lock_;
   pthread_key_t key_;
   std::vector<std::unique_ptr<const RecordEntry>> entries_;
   size_t cur_index_;
-  std::string dump_file_;
+  std::string file_;
 
   BIONIC_DISALLOW_COPY_AND_ASSIGN(RecordData);
 };
