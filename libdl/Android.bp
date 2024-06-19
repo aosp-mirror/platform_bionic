@@ -60,7 +60,10 @@ cc_library {
     native_bridge_supported: true,
     static_ndk_lib: true,
 
-    defaults: ["linux_bionic_supported"],
+    defaults: [
+        "linux_bionic_supported",
+        "bug_24465209_workaround",
+    ],
 
     // NOTE: --exclude-libs=libgcc.a makes sure that any symbols libdl.so pulls from
     // libgcc.a are made static to libdl.so.  This in turn ensures that libraries that
@@ -70,7 +73,6 @@ cc_library {
     // libgcc.a it uses.
     //
     // DO NOT REMOVE --exclude-libs!
-
     ldflags: [
         "-Wl,--exclude-libs=libgcc.a",
         "-Wl,--exclude-libs=libgcc_stripped.a",
@@ -81,12 +83,9 @@ cc_library {
         "-Wl,--exclude-libs=libclang_rt.builtins-x86_64-android.a",
     ],
 
-    // for x86, exclude libgcc_eh.a for the same reasons as above
     arch: {
         arm: {
             version_script: ":libdl.arm.map",
-            pack_relocations: false,
-            ldflags: ["-Wl,--hash-style=both"],
         },
         arm64: {
             version_script: ":libdl.arm64.map",
@@ -95,14 +94,12 @@ cc_library {
             version_script: ":libdl.riscv64.map",
         },
         x86: {
-            pack_relocations: false,
-            ldflags: [
-                "-Wl,--exclude-libs=libgcc_eh.a",
-                "-Wl,--hash-style=both",
-            ],
+            // Exclude libgcc_eh.a for the same reasons as above
+            ldflags: ["-Wl,--exclude-libs=libgcc_eh.a"],
             version_script: ":libdl.x86.map",
         },
         x86_64: {
+            // Exclude libgcc_eh.a for the same reasons as above
             ldflags: ["-Wl,--exclude-libs=libgcc_eh.a"],
             version_script: ":libdl.x86_64.map",
         },
