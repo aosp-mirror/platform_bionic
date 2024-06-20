@@ -273,8 +273,9 @@ __LIBC_HIDDEN__ extern void __bionic_atfork_run_prepare();
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_child();
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_parent();
 
-// Re-map all threads and successively launched threads with PROT_MTE.
-__LIBC_HIDDEN__ void __pthread_internal_remap_stack_with_mte();
+// Re-map all threads and successively launched threads with PROT_MTE. Returns 'true' if remapping
+// took place, 'false' on error or if the stacks were already remapped in the past.
+__LIBC_HIDDEN__ bool __pthread_internal_remap_stack_with_mte();
 
 extern "C" bool android_run_on_all_threads(bool (*func)(void*), void* arg);
 
