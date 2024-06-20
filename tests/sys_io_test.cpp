@@ -26,24 +26,28 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <gtest/gtest.h>
 
-#if defined(__BIONIC__) && defined(__aarch64__)
+#include <sys/io.h>
 
-__attribute__((target("mte"))) static bool is_stack_mte_on() {
-  alignas(16) int x = 0;
-  void* p = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(&x) + (1UL << 57));
-  void* p_cpy = p;
-  __builtin_arm_stg(p);
-  p = __builtin_arm_ldg(p);
-  __builtin_arm_stg(&x);
-  return p == p_cpy;
-}
+#include "utils.h"
 
-static void* mte_tls() {
-  void** dst;
-  __asm__("mrs %0, TPIDR_EL0" : "=r"(dst) :);
-  return dst[-3];
-}
-
+TEST(sys_io, iopl) {
+#if defined(__i386__) || defined(__x86_64__)
+  errno = 0;
+  ASSERT_EQ(-1, iopl(4));
+  ASSERT_ERRNO(EINVAL);
+#else
+  GTEST_SKIP() << "iopl requires x86/x86-64";
 #endif
+}
+
+TEST(sys_io, ioperm) {
+#if defined(__i386__) || defined(__x86_64__)
+  errno = 0;
+  ASSERT_EQ(-1, ioperm(65535, 4, 0));
+  ASSERT_ERRNO(EINVAL);
+#else
+  GTEST_SKIP() << "ioperm requires x86/x86-64";
+#endif
+}
