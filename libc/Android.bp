@@ -128,7 +128,7 @@ cc_defaults {
         android_x86: {
             pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
-        }
+        },
     },
 }
 
