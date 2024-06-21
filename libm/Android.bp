@@ -21,7 +21,10 @@ license {
 
 cc_library {
     name: "libm",
-    defaults: ["linux_bionic_supported"],
+    defaults: [
+        "linux_bionic_supported",
+        "bug_24465209_workaround",
+    ],
     ramdisk_available: true,
     vendor_ramdisk_available: true,
     recovery_available: true,
@@ -282,8 +285,6 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/s_ceilf.c",
             ],
             instruction_set: "arm",
-            pack_relocations: false,
-            ldflags: ["-Wl,--hash-style=both"],
             version_script: ":libm.arm.map",
             no_libcrt: true,
             shared: {
@@ -368,11 +369,9 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/s_truncf.c",
             ],
             local_include_dirs: ["i387"],
-            pack_relocations: false,
             // The x86 ABI doesn't include this, which is needed for the
             // roundss/roundsd instructions that we've used since Android M.
             cflags: ["-msse4.1"],
-            ldflags: ["-Wl,--hash-style=both"],
             version_script: ":libm.x86.map",
         },
 
