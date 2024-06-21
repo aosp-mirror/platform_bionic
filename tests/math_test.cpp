@@ -309,9 +309,7 @@ TEST(math_h, isinf_function) {
 // Historical BSD cruft that isn't exposed in <math.h> any more.
 extern "C" int __isinf(double);
 extern "C" int __isinff(float);
-extern "C" int isinff(float);
 extern "C" int __isinfl(long double);
-extern "C" int isinfl(long double);
 
 TEST(math_h, __isinf) {
 #if defined(ANDROID_HOST_MUSL)
