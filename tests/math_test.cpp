@@ -367,9 +367,7 @@ TEST(math_h, isnan_function) {
 // Historical BSD cruft that isn't exposed in <math.h> any more.
 extern "C" int __isnan(double);
 extern "C" int __isnanf(float);
-extern "C" int isnanf(float);
 extern "C" int __isnanl(long double);
-extern "C" int isnanl(long double);
 
 TEST(math_h, __isnan) {
 #if defined(ANDROID_HOST_MUSL)
