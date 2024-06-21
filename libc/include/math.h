@@ -68,10 +68,7 @@ typedef __float_t float_t;
 
 #define isnormal(x) __builtin_isnormal(x)
 
-#define signbit(x) \
-    ((sizeof(x) == sizeof(float)) ? __builtin_signbitf(x) \
-    : (sizeof(x) == sizeof(double)) ? __builtin_signbit(x) \
-    : __builtin_signbitl(x))
+#define signbit(x) __builtin_signbit(x)
 
 double acos(double __x);
 float acosf(float __x);
