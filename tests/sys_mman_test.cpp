@@ -243,6 +243,20 @@ TEST(sys_mman, mremap_PTRDIFF_MAX) {
   ASSERT_EQ(0, munmap(map, kPageSize));
 }
 
+TEST(sys_mman, mremap_MREMAP_FIXED) {
+  // We're not trying to test the kernel here; that's external/ltp's job.
+  // We just want to check that optional argument (mremap() is varargs)
+  // gets passed through in an MREMAP_FIXED call.
+  void* vma1 = mmap(NULL, getpagesize(), PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  ASSERT_NE(MAP_FAILED, vma1);
+
+  void* vma2 = mmap(NULL, getpagesize(), PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  ASSERT_NE(MAP_FAILED, vma2);
+
+  void* vma3 = mremap(vma1, getpagesize(), getpagesize(), MREMAP_FIXED | MREMAP_MAYMOVE, vma2);
+  ASSERT_EQ(vma2, vma3);
+}
+
 TEST(sys_mman, mmap_bug_27265969) {
   char* base = reinterpret_cast<char*>(
       mmap(nullptr, kPageSize * 2, PROT_EXEC | PROT_READ, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0));
