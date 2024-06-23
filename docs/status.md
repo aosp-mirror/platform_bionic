@@ -125,6 +125,7 @@ New libc functions in Q (API level 29):
   * `getloadavg` (BSD/GNU extension in <stdlib.h>)
 
 New libc behavior in Q (API level 29):
+  * Support for [ELF TLS](elf-tls.md).
   * Whole printf family now supports the GNU `%m` extension, rather than a
     special-case hack in `syslog`.
   * `popen` now always uses `O_CLOEXEC`, not just with the `e` extension.

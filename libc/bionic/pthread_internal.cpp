@@ -176,12 +176,12 @@ void __find_main_stack_limits(uintptr_t* low, uintptr_t* high) {
   async_safe_fatal("stack not found in /proc/self/maps");
 }
 
-void __pthread_internal_remap_stack_with_mte() {
+bool __pthread_internal_remap_stack_with_mte() {
 #if defined(__aarch64__)
   // If process doesn't have MTE enabled, we don't need to do anything.
-  if (!atomic_load(&__libc_globals->memtag)) return;
+  if (!atomic_load(&__libc_globals->memtag)) return false;
   bool prev = atomic_exchange(&__libc_memtag_stack, true);
-  if (prev) return;
+  if (prev) return false;
   uintptr_t lo, hi;
   __find_main_stack_limits(&lo, &hi);
 
@@ -198,7 +198,10 @@ void __pthread_internal_remap_stack_with_mte() {
       async_safe_fatal("error: failed to set PROT_MTE on thread: %d", t->tid);
     }
   }
-#endif
+  return true;
+#else
+  return false;
+#endif  // defined(__aarch64__)
 }
 
 bool android_run_on_all_threads(bool (*func)(void*), void* arg) {
