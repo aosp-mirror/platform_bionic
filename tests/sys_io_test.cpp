@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,33 +26,28 @@
  * SUCH DAMAGE.
  */
 
-#include <errno.h>
-#include <sys/mman.h>
-#include <stdarg.h>
-#include <stdint.h>
-#include <unistd.h>
+#include <gtest/gtest.h>
 
-#include "platform/bionic/macros.h"
-#include "platform/bionic/page.h"
+#include <sys/io.h>
 
-extern "C" void* __mremap(void*, size_t, size_t, int, void*);
+#include "utils.h"
 
-void* mremap(void* old_address, size_t old_size, size_t new_size, int flags, ...) {
-  // prevent allocations large enough for `end - start` to overflow
-  size_t rounded = __BIONIC_ALIGN(new_size, page_size());
-  if (rounded < new_size || rounded > PTRDIFF_MAX) {
-    errno = ENOMEM;
-    return MAP_FAILED;
-  }
+TEST(sys_io, iopl) {
+#if defined(__i386__) || defined(__x86_64__)
+  errno = 0;
+  ASSERT_EQ(-1, iopl(4));
+  ASSERT_ERRNO(EINVAL);
+#else
+  GTEST_SKIP() << "iopl requires x86/x86-64";
+#endif
+}
 
-  void* new_address = nullptr;
-  // The optional argument is only valid if the MREMAP_FIXED flag is set,
-  // so we assume it's not present otherwise.
-  if ((flags & MREMAP_FIXED) != 0) {
-    va_list ap;
-    va_start(ap, flags);
-    new_address = va_arg(ap, void*);
-    va_end(ap);
-  }
-  return __mremap(old_address, old_size, new_size, flags, new_address);
+TEST(sys_io, ioperm) {
+#if defined(__i386__) || defined(__x86_64__)
+  errno = 0;
+  ASSERT_EQ(-1, ioperm(65535, 4, 0));
+  ASSERT_ERRNO(EINVAL);
+#else
+  GTEST_SKIP() << "ioperm requires x86/x86-64";
+#endif
 }
