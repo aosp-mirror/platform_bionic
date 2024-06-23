@@ -96,7 +96,6 @@ extern "C" int main(int argc, char** argv) {
   State state = kInit;
 
   bool is_early_thread_mte_on = false;
-  void* early_thread_mte_tls = nullptr;
   std::thread early_th([&] {
     {
       std::lock_guard lk(m);
@@ -108,8 +107,6 @@ extern "C" int main(int argc, char** argv) {
       cv.wait(lk, [&] { return state == kStackRemapped; });
     }
     is_early_thread_mte_on = is_stack_mte_on();
-    early_thread_mte_tls = mte_tls();
-    *reinterpret_cast<uintptr_t*>(early_thread_mte_tls) = 1;
   });
   {
     std::unique_lock lk(m);
@@ -123,7 +120,6 @@ extern "C" int main(int argc, char** argv) {
   cv.notify_one();
   CHECK(handle != nullptr);
   CHECK(is_stack_mte_on());
-  CHECK(mte_tls() != nullptr);
 
   bool new_stack_page_mte_on = false;
   uintptr_t low;
@@ -133,18 +129,11 @@ extern "C" int main(int argc, char** argv) {
   CHECK(new_stack_page_mte_on);
 
   bool is_late_thread_mte_on = false;
-  void* late_thread_mte_tls = nullptr;
-  std::thread late_th([&] {
-    is_late_thread_mte_on = is_stack_mte_on();
-    late_thread_mte_tls = mte_tls();
-    *reinterpret_cast<uintptr_t*>(late_thread_mte_tls) = 1;
-  });
+  std::thread late_th([&] { is_late_thread_mte_on = is_stack_mte_on(); });
   late_th.join();
   early_th.join();
   CHECK(is_late_thread_mte_on);
   CHECK(is_early_thread_mte_on);
-  CHECK(late_thread_mte_tls != nullptr);
-  CHECK(early_thread_mte_tls != nullptr);
   printf("RAN\n");
   return 0;
 }

@@ -17,36 +17,37 @@
 #define _GNU_SOURCE 1
 #include <math.h>
 
-// This include (and the associated definition of __test_capture_signbit)
-// must be placed before any files that include <cmath> (gtest.h in this case).
+// <math.h> is required to define type-generic macros: fpclassify, signbit,
+// isfinite, isinf, isnan, isnormal, isgreater, isgreaterequal, isless,
+// islessequal, islessgreater, and isunordered.
 //
-// <math.h> is required to define generic macros signbit, isfinite and
-// several other such functions.
+// <cmath> is required to #undef these macros and make equivalent sets of
+// _overloaded_ functions available in namespace std. So the isnan() macro,
+// for example, is replaced by std::isnan(float), std::isnan(double),
+// and std::isnan(long double).
 //
-// <cmath> is required to undef declarations of these macros in the global
-// namespace and make equivalent functions available in namespace std. Our
-// stlport implementation does this only for signbit, isfinite, isinf and
-// isnan.
-//
-// NOTE: We don't write our test using std::signbit because we want to be
-// sure that we're testing the bionic version of signbit. The C++ libraries
-// are free to reimplement signbit or delegate to compiler builtins if they
-// please.
+// We're trying to test the bionic macros rather than whatever libc++'s
+// implementation happens to be, so we #include <math.h> and "capture" the
+// macros in our own _template_ functions in the global namespace before
+// we #include any files that include <cmath>, such as <gtest.h>.
 
-namespace {
-template<typename T> inline int test_capture_signbit(const T in) {
-  return signbit(in);
-}
-template<typename T> inline int test_capture_isfinite(const T in) {
-  return isfinite(in);
-}
-template<typename T> inline int test_capture_isnan(const T in) {
-  return isnan(in);
-}
-template<typename T> inline int test_capture_isinf(const T in) {
-  return isinf(in);
-}
-}
+#define capture_generic_macro(capture_function_name, generic_macro_name) \
+  template <typename T> inline int capture_function_name(const T in) { \
+    return generic_macro_name(in); \
+  }
+
+capture_generic_macro(test_capture_fpclassify, fpclassify)
+capture_generic_macro(test_capture_signbit, signbit)
+capture_generic_macro(test_capture_isfinite, isfinite)
+capture_generic_macro(test_capture_isinf, isinf)
+capture_generic_macro(test_capture_isnan, isnan)
+capture_generic_macro(test_capture_isnormal, isnormal)
+capture_generic_macro(test_capture_isgreater, isgreater)
+capture_generic_macro(test_capture_isgreaterequal, isgreaterequal)
+capture_generic_macro(test_capture_isless, isless)
+capture_generic_macro(test_capture_islessequal, islessequal)
+capture_generic_macro(test_capture_islessgreater, islessgreater)
+capture_generic_macro(test_capture_isunordered, isunordered)
 
 #include "math_data_test.h"
 
@@ -59,6 +60,22 @@ template<typename T> inline int test_capture_isinf(const T in) {
 #include <sys/cdefs.h>
 
 #include <android-base/scopeguard.h>
+
+// Now we've included all the headers we need, we can redefine the generic
+// function-like macros to point to the bionic <math.h> versions we captured
+// earlier.
+#define fpclassify test_capture_fpclassify
+#define signbit test_capture_signbit
+#define isfinite test_capture_isfinite
+#define isinf test_capture_isinf
+#define isnan test_capture_isnan
+#define isnormal test_capture_isnormal
+#define isgreater test_capture_isgreater
+#define isgreaterequal test_capture_isgreaterequal
+#define isless test_capture_isless
+#define islessequal test_capture_islessequal
+#define islessgreater test_capture_islessgreater
+#define isunordered test_capture_isunordered
 
 static float float_subnormal() {
   union {
@@ -124,36 +141,36 @@ TEST(math_h, fpclassify) {
 }
 
 TEST(math_h, isfinite) {
-  ASSERT_TRUE(test_capture_isfinite(123.0f));
-  ASSERT_TRUE(test_capture_isfinite(123.0));
-  ASSERT_TRUE(test_capture_isfinite(123.0L));
-  ASSERT_FALSE(test_capture_isfinite(HUGE_VALF));
-  ASSERT_FALSE(test_capture_isfinite(-HUGE_VALF));
-  ASSERT_FALSE(test_capture_isfinite(HUGE_VAL));
-  ASSERT_FALSE(test_capture_isfinite(-HUGE_VAL));
-  ASSERT_FALSE(test_capture_isfinite(HUGE_VALL));
-  ASSERT_FALSE(test_capture_isfinite(-HUGE_VALL));
+  ASSERT_TRUE(isfinite(123.0f));
+  ASSERT_TRUE(isfinite(123.0));
+  ASSERT_TRUE(isfinite(123.0L));
+  ASSERT_FALSE(isfinite(HUGE_VALF));
+  ASSERT_FALSE(isfinite(-HUGE_VALF));
+  ASSERT_FALSE(isfinite(HUGE_VAL));
+  ASSERT_FALSE(isfinite(-HUGE_VAL));
+  ASSERT_FALSE(isfinite(HUGE_VALL));
+  ASSERT_FALSE(isfinite(-HUGE_VALL));
 }
 
 TEST(math_h, isinf) {
-  ASSERT_FALSE(test_capture_isinf(123.0f));
-  ASSERT_FALSE(test_capture_isinf(123.0));
-  ASSERT_FALSE(test_capture_isinf(123.0L));
-  ASSERT_TRUE(test_capture_isinf(HUGE_VALF));
-  ASSERT_TRUE(test_capture_isinf(-HUGE_VALF));
-  ASSERT_TRUE(test_capture_isinf(HUGE_VAL));
-  ASSERT_TRUE(test_capture_isinf(-HUGE_VAL));
-  ASSERT_TRUE(test_capture_isinf(HUGE_VALL));
-  ASSERT_TRUE(test_capture_isinf(-HUGE_VALL));
+  ASSERT_FALSE(isinf(123.0f));
+  ASSERT_FALSE(isinf(123.0));
+  ASSERT_FALSE(isinf(123.0L));
+  ASSERT_TRUE(isinf(HUGE_VALF));
+  ASSERT_TRUE(isinf(-HUGE_VALF));
+  ASSERT_TRUE(isinf(HUGE_VAL));
+  ASSERT_TRUE(isinf(-HUGE_VAL));
+  ASSERT_TRUE(isinf(HUGE_VALL));
+  ASSERT_TRUE(isinf(-HUGE_VALL));
 }
 
 TEST(math_h, isnan) {
-  ASSERT_FALSE(test_capture_isnan(123.0f));
-  ASSERT_FALSE(test_capture_isnan(123.0));
-  ASSERT_FALSE(test_capture_isnan(123.0L));
-  ASSERT_TRUE(test_capture_isnan(nanf("")));
-  ASSERT_TRUE(test_capture_isnan(nan("")));
-  ASSERT_TRUE(test_capture_isnan(nanl("")));
+  ASSERT_FALSE(isnan(123.0f));
+  ASSERT_FALSE(isnan(123.0));
+  ASSERT_FALSE(isnan(123.0L));
+  ASSERT_TRUE(isnan(nanf("")));
+  ASSERT_TRUE(isnan(nan("")));
+  ASSERT_TRUE(isnan(nanl("")));
 }
 
 TEST(math_h, isnormal) {
@@ -167,17 +184,17 @@ TEST(math_h, isnormal) {
 
 // TODO: isgreater, isgreaterequals, isless, islessequal, islessgreater, isunordered
 TEST(math_h, signbit) {
-  ASSERT_EQ(0, test_capture_signbit(0.0f));
-  ASSERT_EQ(0, test_capture_signbit(0.0));
-  ASSERT_EQ(0, test_capture_signbit(0.0L));
+  ASSERT_EQ(0, signbit(0.0f));
+  ASSERT_EQ(0, signbit(0.0));
+  ASSERT_EQ(0, signbit(0.0L));
 
-  ASSERT_EQ(0, test_capture_signbit(1.0f));
-  ASSERT_EQ(0, test_capture_signbit(1.0));
-  ASSERT_EQ(0, test_capture_signbit(1.0L));
+  ASSERT_EQ(0, signbit(1.0f));
+  ASSERT_EQ(0, signbit(1.0));
+  ASSERT_EQ(0, signbit(1.0L));
 
-  ASSERT_NE(0, test_capture_signbit(-1.0f));
-  ASSERT_NE(0, test_capture_signbit(-1.0));
-  ASSERT_NE(0, test_capture_signbit(-1.0L));
+  ASSERT_NE(0, signbit(-1.0f));
+  ASSERT_NE(0, signbit(-1.0));
+  ASSERT_NE(0, signbit(-1.0L));
 }
 
 // Historical BSD cruft that isn't exposed in <math.h> any more.
@@ -309,9 +326,7 @@ TEST(math_h, isinf_function) {
 // Historical BSD cruft that isn't exposed in <math.h> any more.
 extern "C" int __isinf(double);
 extern "C" int __isinff(float);
-extern "C" int isinff(float);
 extern "C" int __isinfl(long double);
-extern "C" int isinfl(long double);
 
 TEST(math_h, __isinf) {
 #if defined(ANDROID_HOST_MUSL)
@@ -367,9 +382,7 @@ TEST(math_h, isnan_function) {
 // Historical BSD cruft that isn't exposed in <math.h> any more.
 extern "C" int __isnan(double);
 extern "C" int __isnanf(float);
-extern "C" int isnanf(float);
 extern "C" int __isnanl(long double);
-extern "C" int isnanl(long double);
 
 TEST(math_h, __isnan) {
 #if defined(ANDROID_HOST_MUSL)
