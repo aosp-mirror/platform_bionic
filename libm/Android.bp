@@ -199,11 +199,6 @@ cc_library {
         "upstream-netbsd/lib/libm/complex/ctanhl.c",
         "upstream-netbsd/lib/libm/complex/ctanl.c",
 
-        // TODO: this comes from from upstream's libc, not libm, but it's an
-        // implementation detail that should have hidden visibility, so it needs
-        // to be in whatever library the math code is in.
-        "digittoint.c",
-
         // Functionality not in the BSDs.
         "significandl.c",
         "fake_long_double.c",

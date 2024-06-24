@@ -1,9 +1,4 @@
-# Android ELF TLS (Draft)
-
-Internal links:
- * [go/android-elf-tls](http://go/android-elf-tls)
- * [One-pager](https://docs.google.com/document/d/1leyPTnwSs24P2LGiqnU6HetnN5YnDlZkihigi6qdf_M)
- * Tracking bugs: http://b/110100012, http://b/78026329
+# Android ELF TLS
 
 [TOC]
 
