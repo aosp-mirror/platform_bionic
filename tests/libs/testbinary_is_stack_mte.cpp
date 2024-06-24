@@ -36,7 +36,9 @@
 #if defined(__BIONIC__) && defined(__aarch64__)
 
 extern "C" int main(int, char**) {
-  int ret = is_stack_mte_on() ? 0 : 1;
+  void* mte_tls_ptr = mte_tls();
+  *reinterpret_cast<uintptr_t*>(mte_tls_ptr) = 1;
+  int ret = is_stack_mte_on() && mte_tls_ptr != nullptr ? 0 : 1;
   printf("RAN\n");
   return ret;
 }
