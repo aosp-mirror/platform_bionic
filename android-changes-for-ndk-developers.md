@@ -445,6 +445,18 @@ are possible workarounds.
 | No `dlclose`      | Works                      | Works   | Works |
 
 
+## ELF TLS (Available for API level >= 29)
+
+Android supports [ELF TLS](docs/elf-tls.md) starting at API level 29. Since
+NDK r26, clang will automatically enable ELF TLS for `minSdkVersion 29` or
+higher. Otherwise, the existing emutls implementation (which uses
+`pthread_key_create()` behind the scenes) will continue to be used. This
+means that convenient C/C++ thread-local syntax is available at any API level;
+at worst it will perform similarly to "roll your own" thread locals using
+`pthread_key_create()` but at best you'll get the performance benefit of
+ELF TLS, and the NDK will take care of the details.
+
+
 ## Use of IFUNC in libc (True for all API levels on devices running Android 10)
 
 On devices running API level 29, libc uses
