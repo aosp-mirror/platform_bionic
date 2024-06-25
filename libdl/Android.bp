@@ -65,24 +65,6 @@ cc_library {
         "bug_24465209_workaround",
     ],
 
-    // NOTE: --exclude-libs=libgcc.a makes sure that any symbols libdl.so pulls from
-    // libgcc.a are made static to libdl.so.  This in turn ensures that libraries that
-    // a) pull symbols from libgcc.a and b) depend on libdl.so will not rely on libdl.so
-    // to provide those symbols, but will instead pull them from libgcc.a.  Specifically,
-    // we use this property to make sure libc.so has its own copy of the code from
-    // libgcc.a it uses.
-    //
-    // DO NOT REMOVE --exclude-libs!
-    ldflags: [
-        "-Wl,--exclude-libs=libgcc.a",
-        "-Wl,--exclude-libs=libgcc_stripped.a",
-        "-Wl,--exclude-libs=libclang_rt.builtins-arm-android.a",
-        "-Wl,--exclude-libs=libclang_rt.builtins-aarch64-android.a",
-        "-Wl,--exclude-libs=libclang_rt.builtins-i686-android.a",
-        "-Wl,--exclude-libs=libclang_rt.builtins-riscv64-android.a",
-        "-Wl,--exclude-libs=libclang_rt.builtins-x86_64-android.a",
-    ],
-
     arch: {
         arm: {
             version_script: ":libdl.arm.map",
@@ -94,13 +76,9 @@ cc_library {
             version_script: ":libdl.riscv64.map",
         },
         x86: {
-            // Exclude libgcc_eh.a for the same reasons as above
-            ldflags: ["-Wl,--exclude-libs=libgcc_eh.a"],
             version_script: ":libdl.x86.map",
         },
         x86_64: {
-            // Exclude libgcc_eh.a for the same reasons as above
-            ldflags: ["-Wl,--exclude-libs=libgcc_eh.a"],
             version_script: ":libdl.x86_64.map",
         },
     },
@@ -158,37 +136,6 @@ cc_library {
     vendor_ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
-
-    // NOTE: --exclude-libs=libgcc.a makes sure that any symbols libdl.so pulls from
-    // libgcc.a are made static to libdl.so.  This in turn ensures that libraries that
-    // a) pull symbols from libgcc.a and b) depend on libdl.so will not rely on libdl.so
-    // to provide those symbols, but will instead pull them from libgcc.a.  Specifically,
-    // we use this property to make sure libc.so has its own copy of the code from
-    // libgcc.a it uses.
-    //
-    // DO NOT REMOVE --exclude-libs!
-
-    ldflags: [
-        "-Wl,--exclude-libs=libgcc.a",
-        "-Wl,--exclude-libs=libgcc_stripped.a",
-        "-Wl,--exclude-libs=libclang_rt.builtins-arm-android.a",
-        "-Wl,--exclude-libs=libclang_rt.builtins-aarch64-android.a",
-        "-Wl,--exclude-libs=libclang_rt.builtins-i686-android.a",
-        "-Wl,--exclude-libs=libclang_rt.builtins-riscv64-android.a",
-        "-Wl,--exclude-libs=libclang_rt.builtins-x86_64-android.a",
-    ],
-
-    // for x86, exclude libgcc_eh.a for the same reasons as above
-    arch: {
-        x86: {
-            ldflags: [
-                "-Wl,--exclude-libs=libgcc_eh.a",
-            ],
-        },
-        x86_64: {
-            ldflags: ["-Wl,--exclude-libs=libgcc_eh.a"],
-        },
-    },
 
     srcs: ["libdl_android.cpp"],
     version_script: "libdl_android.map.txt",

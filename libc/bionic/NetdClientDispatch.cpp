@@ -20,18 +20,12 @@
 
 #include "private/bionic_fdtrack.h"
 
-#ifdef __i386__
-#define __socketcall __attribute__((__cdecl__))
-#else
-#define __socketcall
-#endif
-
-extern "C" __socketcall int __accept4(int, sockaddr*, socklen_t*, int);
-extern "C" __socketcall int __connect(int, const sockaddr*, socklen_t);
-extern "C" __socketcall int __sendmmsg(int, const mmsghdr*, unsigned int, int);
-extern "C" __socketcall ssize_t __sendmsg(int, const msghdr*, unsigned int);
-extern "C" __socketcall int __sendto(int, const void*, size_t, int, const sockaddr*, socklen_t);
-extern "C" __socketcall int __socket(int, int, int);
+extern "C" int __accept4(int, sockaddr*, socklen_t*, int);
+extern "C" int __connect(int, const sockaddr*, socklen_t);
+extern "C" int __sendmmsg(int, const mmsghdr*, unsigned int, int);
+extern "C" ssize_t __sendmsg(int, const msghdr*, unsigned int);
+extern "C" int __sendto(int, const void*, size_t, int, const sockaddr*, socklen_t);
+extern "C" int __socket(int, int, int);
 
 static unsigned fallBackNetIdForResolv(unsigned netId) {
     return netId;

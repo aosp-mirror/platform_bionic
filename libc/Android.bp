@@ -128,7 +128,7 @@ cc_defaults {
         android_x86: {
             pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
-        }
+        },
     },
 }
 
@@ -1584,14 +1584,6 @@ cc_defaults {
 
     // Do not pack libc.so relocations; see http://b/20645321 for details.
     pack_relocations: false,
-
-    // WARNING: The only libraries libc.so should depend on are libdl.so and ld-android.so!
-    // If you add other libraries, make sure to add -Wl,--exclude-libs=libgcc.a to the
-    // LOCAL_LDFLAGS for those libraries.  This ensures that symbols that are pulled into
-    // those new libraries from libgcc.a are not declared external; if that were the case,
-    // then libc would not pull those symbols from libgcc.a as it should, instead relying
-    // on the external symbols from the dependent libraries.  That would create a "cloaked"
-    // dependency on libgcc.a in libc though the libraries, which is not what you wanted!
 
     shared_libs: [
         "ld-android",
