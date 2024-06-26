@@ -33,10 +33,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/mman.h>
+#include <sys/prctl.h>
 
 #include <async_safe/log.h>
 #include <bionic/reserved_signals.h>
 
+#include "bionic/tls_defines.h"
 #include "private/ErrnoRestorer.h"
 #include "private/ScopedRWLock.h"
 #include "private/bionic_futex.h"
@@ -71,8 +73,21 @@ void __pthread_internal_remove(pthread_internal_t* thread) {
     g_thread_list = thread->next;
   }
 }
+// N.B. that this is NOT the pagesize, but 4096. This is hardcoded in the codegen.
+// See
+// https://github.com/search?q=repo%3Allvm/llvm-project%20AArch64StackTagging%3A%3AinsertBaseTaggedPointer&type=code
+constexpr size_t kStackMteRingbufferSizeMultiplier = 4096;
 
 static void __pthread_internal_free(pthread_internal_t* thread) {
+#ifdef __aarch64__
+  if (void* stack_mte_tls = thread->bionic_tcb->tls_slot(TLS_SLOT_STACK_MTE)) {
+    size_t size =
+        kStackMteRingbufferSizeMultiplier * (reinterpret_cast<uintptr_t>(stack_mte_tls) >> 56ULL);
+    void* ptr = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(stack_mte_tls) &
+                                        ((1ULL << 56ULL) - 1ULL));
+    munmap(ptr, size);
+  }
+#endif
   if (thread->mmap_size != 0) {
     // Free mapped space, including thread stack and pthread_internal_t.
     munmap(thread->mmap_base, thread->mmap_size);
@@ -176,12 +191,70 @@ void __find_main_stack_limits(uintptr_t* low, uintptr_t* high) {
   async_safe_fatal("stack not found in /proc/self/maps");
 }
 
+__LIBC_HIDDEN__ void* __allocate_stack_mte_ringbuffer(size_t n, pthread_internal_t* thread) {
+  if (n > 7) async_safe_fatal("error: invalid mte stack ring buffer size");
+  // Allocation needs to be aligned to 2*size to make the fancy code-gen work.
+  // So we allocate 3*size - pagesz bytes, which will always contain size bytes
+  // aligned to 2*size, and unmap the unneeded part.
+  // See
+  // https://github.com/search?q=repo%3Allvm/llvm-project%20AArch64StackTagging%3A%3AinsertBaseTaggedPointer&type=code
+  //
+  // In the worst case, we get an allocation that is one page past the properly
+  // aligned address, in which case we have to unmap the previous
+  // 2*size - pagesz bytes. In that case, we still have size properly aligned
+  // bytes left.
+  size_t size = (1 << n) * kStackMteRingbufferSizeMultiplier;
+  size_t pgsize = page_size();
+
+  size_t alloc_size = __BIONIC_ALIGN(3 * size - pgsize, pgsize);
+  void* allocation_ptr =
+      mmap(nullptr, alloc_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  if (allocation_ptr == MAP_FAILED)
+    async_safe_fatal("error: failed to allocate stack mte ring buffer");
+  uintptr_t allocation = reinterpret_cast<uintptr_t>(allocation_ptr);
+
+  size_t alignment = 2 * size;
+  uintptr_t aligned_allocation = __BIONIC_ALIGN(allocation, alignment);
+  if (allocation != aligned_allocation) {
+    munmap(reinterpret_cast<void*>(allocation), aligned_allocation - allocation);
+  }
+  if (aligned_allocation + size != allocation + alloc_size) {
+    munmap(reinterpret_cast<void*>(aligned_allocation + size),
+           (allocation + alloc_size) - (aligned_allocation + size));
+  }
+
+  const char* name;
+  if (thread == nullptr) {
+    name = "stack_mte_ring:main";
+  } else {
+    // The kernel doesn't copy the name string, but this variable will last at least as long as the
+    // mapped area. We unmap the ring buffer before unmapping the rest of the thread storage.
+    auto& name_buffer = thread->stack_mte_ringbuffer_vma_name_buffer;
+    static_assert(arraysize(name_buffer) >= arraysize("stack_mte_ring:") + 11 + 1);
+    async_safe_format_buffer(name_buffer, arraysize(name_buffer), "stack_mte_ring:%d", thread->tid);
+    name = name_buffer;
+  }
+  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, reinterpret_cast<void*>(aligned_allocation), size, name);
+
+  // We store the size in the top byte of the pointer (which is ignored)
+  return reinterpret_cast<void*>(aligned_allocation | ((1ULL << n) << 56ULL));
+}
+
 bool __pthread_internal_remap_stack_with_mte() {
 #if defined(__aarch64__)
-  // If process doesn't have MTE enabled, we don't need to do anything.
+  ScopedWriteLock creation_locker(&g_thread_creation_lock);
+  ScopedReadLock list_locker(&g_thread_list_lock);
+  // If process already uses memtag-stack ABI, we don't need to do anything.
+  if (__libc_memtag_stack_abi) return false;
+  __libc_memtag_stack_abi = true;
+
+  for (pthread_internal_t* t = g_thread_list; t != nullptr; t = t->next) {
+    if (t->terminating) continue;
+    t->bionic_tcb->tls_slot(TLS_SLOT_STACK_MTE) =
+        __allocate_stack_mte_ringbuffer(0, t->is_main() ? nullptr : t);
+  }
   if (!atomic_load(&__libc_globals->memtag)) return false;
-  bool prev = atomic_exchange(&__libc_memtag_stack, true);
-  if (prev) return false;
+  if (atomic_exchange(&__libc_memtag_stack, true)) return false;
   uintptr_t lo, hi;
   __find_main_stack_limits(&lo, &hi);
 
@@ -189,8 +262,6 @@ bool __pthread_internal_remap_stack_with_mte() {
                PROT_READ | PROT_WRITE | PROT_MTE | PROT_GROWSDOWN)) {
     async_safe_fatal("error: failed to set PROT_MTE on main thread");
   }
-  ScopedWriteLock creation_locker(&g_thread_creation_lock);
-  ScopedReadLock list_locker(&g_thread_list_lock);
   for (pthread_internal_t* t = g_thread_list; t != nullptr; t = t->next) {
     if (t->terminating || t->is_main()) continue;
     if (mprotect(t->mmap_base_unguarded, t->mmap_size_unguarded,
