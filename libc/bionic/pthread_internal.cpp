@@ -33,9 +33,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/mman.h>
+#include <sys/prctl.h>
 
 #include <async_safe/log.h>
+#include <bionic/mte.h>
 #include <bionic/reserved_signals.h>
+#include <bionic/tls_defines.h>
 
 #include "private/ErrnoRestorer.h"
 #include "private/ScopedRWLock.h"
@@ -73,6 +76,15 @@ void __pthread_internal_remove(pthread_internal_t* thread) {
 }
 
 static void __pthread_internal_free(pthread_internal_t* thread) {
+#ifdef __aarch64__
+  if (void* stack_mte_tls = thread->bionic_tcb->tls_slot(TLS_SLOT_STACK_MTE)) {
+    size_t size =
+        stack_mte_ringbuffer_size_from_pointer(reinterpret_cast<uintptr_t>(stack_mte_tls));
+    void* ptr = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(stack_mte_tls) &
+                                        ((1ULL << 56ULL) - 1ULL));
+    munmap(ptr, size);
+  }
+#endif
   if (thread->mmap_size != 0) {
     // Free mapped space, including thread stack and pthread_internal_t.
     munmap(thread->mmap_base, thread->mmap_size);
@@ -176,12 +188,40 @@ void __find_main_stack_limits(uintptr_t* low, uintptr_t* high) {
   async_safe_fatal("stack not found in /proc/self/maps");
 }
 
-void __pthread_internal_remap_stack_with_mte() {
 #if defined(__aarch64__)
-  // If process doesn't have MTE enabled, we don't need to do anything.
-  if (!atomic_load(&__libc_globals->memtag)) return;
-  bool prev = atomic_exchange(&__libc_memtag_stack, true);
-  if (prev) return;
+__LIBC_HIDDEN__ void* __allocate_stack_mte_ringbuffer(size_t n, pthread_internal_t* thread) {
+  const char* name;
+  if (thread == nullptr) {
+    name = "stack_mte_ring:main";
+  } else {
+    // The kernel doesn't copy the name string, but this variable will last at least as long as the
+    // mapped area. We unmap the ring buffer before unmapping the rest of the thread storage.
+    auto& name_buffer = thread->stack_mte_ringbuffer_vma_name_buffer;
+    static_assert(arraysize(name_buffer) >= arraysize("stack_mte_ring:") + 11 + 1);
+    async_safe_format_buffer(name_buffer, arraysize(name_buffer), "stack_mte_ring:%d", thread->tid);
+    name = name_buffer;
+  }
+  void* ret = stack_mte_ringbuffer_allocate(n, name);
+  if (!ret) async_safe_fatal("error: failed to allocate stack mte ring buffer");
+  return ret;
+}
+#endif
+
+bool __pthread_internal_remap_stack_with_mte() {
+#if defined(__aarch64__)
+  ScopedWriteLock creation_locker(&g_thread_creation_lock);
+  ScopedReadLock list_locker(&g_thread_list_lock);
+  // If process already uses memtag-stack ABI, we don't need to do anything.
+  if (__libc_memtag_stack_abi) return false;
+  __libc_memtag_stack_abi = true;
+
+  for (pthread_internal_t* t = g_thread_list; t != nullptr; t = t->next) {
+    if (t->terminating) continue;
+    t->bionic_tcb->tls_slot(TLS_SLOT_STACK_MTE) =
+        __allocate_stack_mte_ringbuffer(0, t->is_main() ? nullptr : t);
+  }
+  if (!atomic_load(&__libc_globals->memtag)) return false;
+  if (atomic_exchange(&__libc_memtag_stack, true)) return false;
   uintptr_t lo, hi;
   __find_main_stack_limits(&lo, &hi);
 
@@ -189,8 +229,6 @@ void __pthread_internal_remap_stack_with_mte() {
                PROT_READ | PROT_WRITE | PROT_MTE | PROT_GROWSDOWN)) {
     async_safe_fatal("error: failed to set PROT_MTE on main thread");
   }
-  ScopedWriteLock creation_locker(&g_thread_creation_lock);
-  ScopedReadLock list_locker(&g_thread_list_lock);
   for (pthread_internal_t* t = g_thread_list; t != nullptr; t = t->next) {
     if (t->terminating || t->is_main()) continue;
     if (mprotect(t->mmap_base_unguarded, t->mmap_size_unguarded,
@@ -198,7 +236,10 @@ void __pthread_internal_remap_stack_with_mte() {
       async_safe_fatal("error: failed to set PROT_MTE on thread: %d", t->tid);
     }
   }
-#endif
+  return true;
+#else
+  return false;
+#endif  // defined(__aarch64__)
 }
 
 bool android_run_on_all_threads(bool (*func)(void*), void* arg) {
