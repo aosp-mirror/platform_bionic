@@ -85,7 +85,8 @@
 // [1] "Addenda to, and Errata in, the ABI for the ARM Architecture". Section 3.
 // http://infocenter.arm.com/help/topic/com.arm.doc.ihi0045e/IHI0045E_ABI_addenda.pdf
 
-#define MIN_TLS_SLOT (-2)  // update this value when reserving a slot
+#define MIN_TLS_SLOT (-3)  // update this value when reserving a slot
+#define TLS_SLOT_STACK_MTE (-3)
 #define TLS_SLOT_NATIVE_BRIDGE_GUEST_STATE (-2)
 #define TLS_SLOT_BIONIC_TLS     (-1)
 #define TLS_SLOT_DTV              0
