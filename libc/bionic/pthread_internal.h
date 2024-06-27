@@ -178,6 +178,10 @@ class pthread_internal_t {
   bionic_tls* bionic_tls;
 
   int errno_value;
+
+  bionic_tcb* bionic_tcb;
+  char stack_mte_ringbuffer_vma_name_buffer[32];
+
   bool is_main() { return start_routine == nullptr; }
 };
 
@@ -209,6 +213,9 @@ __LIBC_HIDDEN__ pid_t __pthread_internal_gettid(pthread_t pthread_id, const char
 __LIBC_HIDDEN__ void __pthread_internal_remove(pthread_internal_t* thread);
 __LIBC_HIDDEN__ void __pthread_internal_remove_and_free(pthread_internal_t* thread);
 __LIBC_HIDDEN__ void __find_main_stack_limits(uintptr_t* low, uintptr_t* high);
+#if defined(__aarch64__)
+__LIBC_HIDDEN__ void* __allocate_stack_mte_ringbuffer(size_t n, pthread_internal_t* thread);
+#endif
 
 static inline __always_inline bionic_tcb* __get_bionic_tcb() {
   return reinterpret_cast<bionic_tcb*>(&__get_tls()[MIN_TLS_SLOT]);
