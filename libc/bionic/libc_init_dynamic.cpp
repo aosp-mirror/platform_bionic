@@ -61,8 +61,9 @@ extern "C" {
 };
 
 void memtag_stack_dlopen_callback() {
-  async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "remapping stacks as PROT_MTE");
-  __pthread_internal_remap_stack_with_mte();
+  if (__pthread_internal_remap_stack_with_mte()) {
+    async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "remapped stacks as PROT_MTE");
+  }
 }
 
 // Use an initializer so __libc_sysinfo will have a fallback implementation
