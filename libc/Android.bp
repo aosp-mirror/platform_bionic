@@ -1560,7 +1560,6 @@ cc_defaults {
         cflags: ["-DLIBC_STATIC"],
         whole_static_libs: [
             "gwp_asan",
-            "gwp_asan_crash_handler",
             "libc_init_static",
             "libc_common_static",
             "libc_unwind_static",
@@ -1570,7 +1569,6 @@ cc_defaults {
         srcs: [":libc_sources_shared"],
         whole_static_libs: [
             "gwp_asan",
-            "gwp_asan_crash_handler",
             "libc_init_dynamic",
             "libc_common_shared",
             "libunwind-exported",
