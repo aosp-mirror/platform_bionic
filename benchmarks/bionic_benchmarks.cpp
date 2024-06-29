@@ -372,7 +372,7 @@ args_vector_t* ResolveArgs(args_vector_t* to_populate, std::string args,
 
 void RegisterGoogleBenchmarks(bench_opts_t primary_opts, bench_opts_t secondary_opts,
                               const std::string& fn_name, args_vector_t* run_args) {
-  if (g_str_to_func.find(fn_name) == g_str_to_func.end()) {
+  if (!g_str_to_func.contains(fn_name)) {
     errx(1, "ERROR: No benchmark for function %s", fn_name.c_str());
   }
   long iterations_to_use = primary_opts.num_iterations ? primary_opts.num_iterations :
