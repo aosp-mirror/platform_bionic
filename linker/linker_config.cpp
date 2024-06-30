@@ -304,7 +304,7 @@ static bool parse_config_file(const char* ld_config_file_path,
     }
 
     if (result == ConfigParser::kPropertyAssign) {
-      if (properties->find(name) != properties->end()) {
+      if (properties->contains(name)) {
         DL_WARN("%s:%zd: warning: redefining property \"%s\" (overriding previous value)",
                 ld_config_file_path,
                 cp.lineno(),
@@ -313,7 +313,7 @@ static bool parse_config_file(const char* ld_config_file_path,
 
       (*properties)[name] = PropertyValue(std::move(value), cp.lineno());
     } else if (result == ConfigParser::kPropertyAppend) {
-      if (properties->find(name) == properties->end()) {
+      if (!properties->contains(name)) {
         DL_WARN("%s:%zd: warning: appending to undefined property \"%s\" (treating as assignment)",
                 ld_config_file_path,
                 cp.lineno(),
@@ -526,7 +526,7 @@ bool Config::read_binary_config(const char* ld_config_file_path,
         properties.get_strings(property_name_prefix + ".links", &lineno);
 
     for (const auto& linked_ns_name : linked_namespaces) {
-      if (namespace_configs.find(linked_ns_name) == namespace_configs.end()) {
+      if (!namespace_configs.contains(linked_ns_name)) {
         *error_msg = create_error_msg(ld_config_file_path,
                                       lineno,
                                       std::string("undefined namespace: ") + linked_ns_name);
