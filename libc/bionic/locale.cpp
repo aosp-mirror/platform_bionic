@@ -35,17 +35,8 @@
 #include <time.h>
 #include <wchar.h>
 
-#include "platform/bionic/macros.h"
-
-#if defined(__BIONIC_BUILD_FOR_ANDROID_SUPPORT)
-#define USE_TLS_SLOT 0
-#else
-#define USE_TLS_SLOT 1
-#endif
-
-#if USE_TLS_SLOT
 #include "bionic/pthread_internal.h"
-#endif
+#include "platform/bionic/macros.h"
 
 // We only support two locales, the "C" locale (also known as "POSIX"),
 // and the "C.UTF-8" locale (also known as "en_US.UTF-8").
@@ -81,10 +72,6 @@ static inline size_t get_locale_mb_cur_max(locale_t l) {
 size_t __ctype_get_mb_cur_max() {
   return get_locale_mb_cur_max(uselocale(nullptr));
 }
-
-#if !USE_TLS_SLOT
-static thread_local locale_t g_current_locale;
-#endif
 
 static pthread_once_t g_locale_once = PTHREAD_ONCE_INIT;
 static lconv g_locale;
@@ -180,11 +167,7 @@ char* setlocale(int category, const char* locale_name) {
 }
 
 static locale_t* get_current_locale_ptr() {
-#if USE_TLS_SLOT
   return &__get_bionic_tls().locale;
-#else
-  return &g_current_locale;
-#endif
 }
 
 locale_t uselocale(locale_t new_locale) {

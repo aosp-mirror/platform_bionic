@@ -186,6 +186,9 @@ bool SetHeapTaggingLevel(HeapTaggingLevel tag_level) {
 
 #ifdef __aarch64__
 static inline __attribute__((no_sanitize("memtag"))) void untag_memory(void* from, void* to) {
+  if (from == to) {
+    return;
+  }
   __asm__ __volatile__(
       ".arch_extension mte\n"
       "1:\n"
