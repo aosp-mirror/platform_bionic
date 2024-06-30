@@ -887,7 +887,7 @@ void soinfo::generate_handle() {
     handle_ = handle_ | 1;
   } while (handle_ == reinterpret_cast<uintptr_t>(RTLD_DEFAULT) ||
            handle_ == reinterpret_cast<uintptr_t>(RTLD_NEXT) ||
-           g_soinfo_handles_map.find(handle_) != g_soinfo_handles_map.end());
+           g_soinfo_handles_map.contains(handle_));
 
   g_soinfo_handles_map[handle_] = this;
 }
