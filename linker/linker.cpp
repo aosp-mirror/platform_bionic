@@ -3595,7 +3595,7 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
   // 2. Initialize other namespaces
 
   for (auto& ns_config : namespace_configs) {
-    if (namespaces.find(ns_config->name()) != namespaces.end()) {
+    if (namespaces.contains(ns_config->name())) {
       continue;
     }
 

@@ -29,7 +29,10 @@
 #pragma once
 
 #include <sys/auxv.h>
+#include <sys/mman.h>
 #include <sys/prctl.h>
+
+#include "page.h"
 
 // Note: Most PR_MTE_* constants come from the upstream kernel. This tag mask
 // allows for the hardware to provision any nonzero tag. Zero tags are reserved
@@ -63,6 +66,65 @@ class ScopedDisableMTE {
     }
   }
 };
+
+// N.B. that this is NOT the pagesize, but 4096. This is hardcoded in the codegen.
+// See
+// https://github.com/search?q=repo%3Allvm/llvm-project%20AArch64StackTagging%3A%3AinsertBaseTaggedPointer&type=code
+constexpr size_t kStackMteRingbufferSizeMultiplier = 4096;
+
+inline size_t stack_mte_ringbuffer_size(uintptr_t size_cls) {
+  return kStackMteRingbufferSizeMultiplier * (1 << size_cls);
+}
+
+inline size_t stack_mte_ringbuffer_size_from_pointer(uintptr_t ptr) {
+  // The size in the top byte is not the size_cls, but the number of "pages" (not OS pages, but
+  // kStackMteRingbufferSizeMultiplier).
+  return kStackMteRingbufferSizeMultiplier * (ptr >> 56ULL);
+}
+
+inline uintptr_t stack_mte_ringbuffer_size_add_to_pointer(uintptr_t ptr, uintptr_t size_cls) {
+  return ptr | ((1ULL << size_cls) << 56ULL);
+}
+
+inline void* stack_mte_ringbuffer_allocate(size_t n, const char* name) {
+  if (n > 7) return nullptr;
+  // Allocation needs to be aligned to 2*size to make the fancy code-gen work.
+  // So we allocate 3*size - pagesz bytes, which will always contain size bytes
+  // aligned to 2*size, and unmap the unneeded part.
+  // See
+  // https://github.com/search?q=repo%3Allvm/llvm-project%20AArch64StackTagging%3A%3AinsertBaseTaggedPointer&type=code
+  //
+  // In the worst case, we get an allocation that is one page past the properly
+  // aligned address, in which case we have to unmap the previous
+  // 2*size - pagesz bytes. In that case, we still have size properly aligned
+  // bytes left.
+  size_t size = stack_mte_ringbuffer_size(n);
+  size_t pgsize = page_size();
+
+  size_t alloc_size = __BIONIC_ALIGN(3 * size - pgsize, pgsize);
+  void* allocation_ptr =
+      mmap(nullptr, alloc_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  if (allocation_ptr == MAP_FAILED)
+    return nullptr;
+  uintptr_t allocation = reinterpret_cast<uintptr_t>(allocation_ptr);
+
+  size_t alignment = 2 * size;
+  uintptr_t aligned_allocation = __BIONIC_ALIGN(allocation, alignment);
+  if (allocation != aligned_allocation) {
+    munmap(reinterpret_cast<void*>(allocation), aligned_allocation - allocation);
+  }
+  if (aligned_allocation + size != allocation + alloc_size) {
+    munmap(reinterpret_cast<void*>(aligned_allocation + size),
+           (allocation + alloc_size) - (aligned_allocation + size));
+  }
+
+  if (name) {
+    prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, reinterpret_cast<void*>(aligned_allocation), size, name);
+  }
+
+  // We store the size in the top byte of the pointer (which is ignored)
+  return reinterpret_cast<void*>(stack_mte_ringbuffer_size_add_to_pointer(aligned_allocation, n));
+}
 #else
 struct ScopedDisableMTE {
   // Silence unused variable warnings in non-aarch64 builds.
