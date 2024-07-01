@@ -48,7 +48,7 @@ struct stack_protector_checker {
     printf("[thread %d] TLS stack guard = %p\n", tid, guard);
 
     // Duplicate tid. gettid(2) bug? Seeing this would be very upsetting.
-    ASSERT_TRUE(tids.find(tid) == tids.end());
+    ASSERT_FALSE(tids.contains(tid));
 
     // Uninitialized guard. Our bug. Note this is potentially flaky; we _could_
     // get four random zero bytes, but it should be vanishingly unlikely.

@@ -289,11 +289,7 @@ static HeapTaggingLevel __get_tagging_level(const memtag_dynamic_entries_t* memt
 
   // We can't short-circuit the environment override, as `stack` is still inherited from the
   // binary's settings.
-  if (get_environment_memtag_setting(&level)) {
-    if (level == M_HEAP_TAGGING_LEVEL_NONE || level == M_HEAP_TAGGING_LEVEL_TBI) {
-      *stack = false;
-    }
-  }
+  get_environment_memtag_setting(&level);
   return level;
 }
 
@@ -329,13 +325,14 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(
   bool memtag_stack = false;
   HeapTaggingLevel level =
       __get_tagging_level(memtag_dynamic_entries, phdr_start, phdr_ct, load_bias, &memtag_stack);
-  // This is used by the linker (in linker.cpp) to communicate than any library linked by this
-  // executable enables memtag-stack.
-  if (__libc_shared_globals()->initial_memtag_stack) {
-    if (!memtag_stack) {
-      async_safe_format_log(ANDROID_LOG_INFO, "libc", "enabling PROT_MTE as requested by linker");
-    }
+  // initial_memtag_stack is used by the linker (in linker.cpp) to communicate than any library
+  // linked by this executable enables memtag-stack.
+  // memtag_stack is also set for static executables if they request memtag stack via the note,
+  // in which case it will differ from initial_memtag_stack.
+  if (__libc_shared_globals()->initial_memtag_stack || memtag_stack) {
     memtag_stack = true;
+    __libc_shared_globals()->initial_memtag_stack_abi = true;
+    __get_bionic_tcb()->tls_slot(TLS_SLOT_STACK_MTE) = __allocate_stack_mte_ringbuffer(0, nullptr);
   }
   if (int64_t timed_upgrade = __get_memtag_upgrade_secs()) {
     if (level == M_HEAP_TAGGING_LEVEL_ASYNC) {

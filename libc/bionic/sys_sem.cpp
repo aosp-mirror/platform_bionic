@@ -41,19 +41,11 @@ int semctl(int id, int num, int cmd, ...) {
   va_start(ap, cmd);
   semun arg = va_arg(ap, semun);
   va_end(ap);
-#if defined(SYS_semctl)
   return syscall(SYS_semctl, id, num, cmd, arg);
-#else
-  return syscall(SYS_ipc, SEMCTL, id, num, cmd, &arg, 0);
-#endif
 }
 
 int semget(key_t key, int n, int flags) {
-#if defined(SYS_semget)
   return syscall(SYS_semget, key, n, flags);
-#else
-  return syscall(SYS_ipc, SEMGET, key, n, flags, 0, 0);
-#endif
 }
 
 int semop(int id, sembuf* ops, size_t op_count) {
@@ -64,6 +56,9 @@ int semtimedop(int id, sembuf* ops, size_t op_count, const timespec* ts) {
 #if defined(SYS_semtimedop)
   return syscall(SYS_semtimedop, id, ops, op_count, ts);
 #else
+  // 32-bit x86 -- the only architecture without semtimedop(2) -- only has
+  // semtimedop_time64(2), but since we don't have any timespec64 stuff,
+  // it's less painful for us to just stick with the legacy ipc(2) here.
   return syscall(SYS_ipc, SEMTIMEDOP, id, op_count, 0, ops, ts);
 #endif
 }
