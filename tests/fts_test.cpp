@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,36 +26,23 @@
  * SUCH DAMAGE.
  */
 
-#include <errno.h>
-#include <stdint.h>
-#include <sys/mman.h>
-#include <unistd.h>
+#include <gtest/gtest.h>
 
-#include "platform/bionic/macros.h"
-#include "platform/bionic/page.h"
-#include "private/ErrnoRestorer.h"
+#if !defined(__GLIBC__)
+#include <fts.h>
+#endif
 
-// mmap2(2) is like mmap(2), but the offset is in 4096-byte blocks, not bytes.
-extern "C" void*  __mmap2(void*, size_t, int, int, int, size_t);
-
-#define MMAP2_SHIFT 12 // 2**12 == 4096
-
-void* mmap64(void* addr, size_t size, int prot, int flags, int fd, off64_t offset) {
-  if (offset < 0 || (offset & ((1UL << MMAP2_SHIFT)-1)) != 0) {
-    errno = EINVAL;
-    return MAP_FAILED;
+TEST(fts, smoke) {
+#if !defined(__GLIBC__)
+  char* const paths[] = { const_cast<char*>("."), NULL };
+  FTS* fts = fts_open(paths, FTS_PHYSICAL, NULL);
+  ASSERT_TRUE(fts != NULL);
+  FTSENT* e;
+  while ((e = fts_read(fts)) != NULL) {
+    ASSERT_EQ(0, fts_set(fts, e, FTS_SKIP));
   }
-
-  // Prevent allocations large enough for `end - start` to overflow.
-  size_t rounded = __BIONIC_ALIGN(size, page_size());
-  if (rounded < size || rounded > PTRDIFF_MAX) {
-    errno = ENOMEM;
-    return MAP_FAILED;
-  }
-
-  return __mmap2(addr, size, prot, flags, fd, offset >> MMAP2_SHIFT);
-}
-
-void* mmap(void* addr, size_t size, int prot, int flags, int fd, off_t offset) {
-  return mmap64(addr, size, prot, flags, fd, static_cast<off64_t>(offset));
+  ASSERT_EQ(0, fts_close(fts));
+#else
+  GTEST_SKIP() << "no _FILE_OFFSET_BITS=64 <fts.h> in our old glibc";
+#endif
 }

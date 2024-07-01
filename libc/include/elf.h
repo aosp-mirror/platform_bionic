@@ -223,8 +223,6 @@ typedef Elf64_Xword Elf64_Relr;
 #undef SHT_NUM
 #define SHT_NUM 20
 
-#define SHT_RISCV_ATTRIBUTES 0x70000003
-
 /*
  * Experimental support for SHT_RELR sections. For details, see proposal
  * at https://groups.google.com/forum/#!topic/generic-abi/bX460iggiKg.
@@ -254,6 +252,8 @@ typedef Elf64_Xword Elf64_Relr;
 #define DT_ANDROID_RELA 0x60000011 // DT_LOOS + 4
 #define DT_ANDROID_RELASZ 0x60000012 // DT_LOOS + 5
 
+/* arm64 psabi. */
+
 /* TODO: upstreamed to FreeBSD as https://github.com/freebsd/freebsd-src/pull/1141/. */
 #define DT_AARCH64_MEMTAG_MODE 0x70000009
 #define DT_AARCH64_MEMTAG_HEAP 0x7000000b
@@ -270,6 +270,8 @@ typedef Elf64_Xword Elf64_Relr;
 #define R_ARM_TLS_DESC 13
 #define R_ARM_IRELATIVE 160
 
+/* riscv64 psabi. */
+
 /* FreeBSD is missing these, found in
  * https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc#relocations
  * so I've sent https://github.com/freebsd/freebsd-src/pull/1141 upstream.
@@ -282,6 +284,12 @@ typedef Elf64_Xword Elf64_Relr;
 #define R_RISCV_TLSDESC_LOAD_LO12 63
 #define R_RISCV_TLSDESC_ADD_LO12 64
 #define R_RISCV_TLSDESC_CALL 65
+
+/* https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc#program-header-table */
+#define PT_RISCV_ATTRIBUTES 0x70000003
+
+/* https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc#section-types */
+#define SHT_RISCV_ATTRIBUTES 0x70000003
 
 /* FreeBSD spells this slightly differently to Linux. Linux is correct according to
  * https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc#file-header
