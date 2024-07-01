@@ -451,6 +451,10 @@ void debug_finalize() {
     PointerData::LogLeaks();
   }
 
+  if ((g_debug->config().options() & RECORD_ALLOCS) && g_debug->config().record_allocs_on_exit()) {
+    RecordData::WriteEntriesOnExit();
+  }
+
   if ((g_debug->config().options() & BACKTRACE) && g_debug->config().backtrace_dump_on_exit()) {
     debug_dump_heap(android::base::StringPrintf("%s.%d.exit.txt",
                                                 g_debug->config().backtrace_dump_prefix().c_str(),

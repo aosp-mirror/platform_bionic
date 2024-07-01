@@ -28,22 +28,48 @@
 
 #pragma once
 
-#if defined(__BIONIC__) && defined(__aarch64__)
+/**
+ * @file sys/io.h
+ * @brief The x86/x86-64 I/O port functions iopl() and ioperm().
+ */
 
-__attribute__((target("mte"))) static bool is_stack_mte_on() {
-  alignas(16) int x = 0;
-  void* p = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(&x) + (1UL << 57));
-  void* p_cpy = p;
-  __builtin_arm_stg(p);
-  p = __builtin_arm_ldg(p);
-  __builtin_arm_stg(&x);
-  return p == p_cpy;
+#include <sys/cdefs.h>
+
+#include <errno.h>
+#include <sys/syscall.h>
+#include <unistd.h>
+
+__BEGIN_DECLS
+
+/**
+ * [iopl(2)](http://man7.org/linux/man-pages/man2/iopl.2.html) changes the I/O
+ * privilege level for all x86/x8-64 I/O ports, for the calling thread.
+ *
+ * New callers should use ioperm() instead.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ *
+ * Only available for x86/x86-64.
+ */
+#if defined(__NR_iopl)
+__attribute__((__deprecated__("use ioperm() instead"))) static __inline int iopl(int __level) {
+  return syscall(__NR_iopl, __level);
 }
-
-static void* mte_tls() {
-  void** dst;
-  __asm__("mrs %0, TPIDR_EL0" : "=r"(dst) :);
-  return dst[-3];
-}
-
 #endif
+
+/**
+ * [ioperm(2)](http://man7.org/linux/man-pages/man2/ioperm.2.html) sets the I/O
+ * permissions for the given number of x86/x86-64 I/O ports, starting at the
+ * given port.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ *
+ * Only available for x86/x86-64.
+ */
+#if defined(__NR_iopl)
+static __inline int ioperm(unsigned long __from, unsigned long __n, int __enabled) {
+  return syscall(__NR_ioperm, __from, __n, __enabled);
+}
+#endif
+
+__END_DECLS
