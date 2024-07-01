@@ -456,6 +456,19 @@ will be placed.
 
 **NOTE**: This option is not available until the O release of Android.
 
+### record\_allocs\_on\_exit
+This option only has meaning if record\_allocs is set. It indicates that
+when the process terminates, the record file should be created
+automatically.
+
+The only caveat to this option is that when the process terminates,
+the file that will contain the records will be the normal file name
+with **.PID** appended. Where PID is the pid of the process that has
+terminated. This is to avoid cases where a number of processes exit
+at the same time and attempt to write to the same file.
+
+**NOTE**: This option is not available until the V release of Android.
+
 ### verify\_pointers
 Track all live allocations to determine if a pointer is used that does not
 exist. This option is a lightweight way to verify that all

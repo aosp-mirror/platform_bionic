@@ -96,7 +96,7 @@ TEST(termios, cfmakeraw) {
   EXPECT_EQ(0U, (t.c_oflag & OPOST));
   EXPECT_EQ(0U, (t.c_lflag & (ECHO|ECHONL|ICANON|ISIG|IEXTEN)));
   EXPECT_EQ(0U, (t.c_cflag & PARENB));
-  EXPECT_EQ(CS8, static_cast<int>(t.c_cflag & CSIZE));
+  EXPECT_EQ(static_cast<unsigned>(CS8), (t.c_cflag & CSIZE));
   EXPECT_EQ(1, t.c_cc[VMIN]);
   EXPECT_EQ(0, t.c_cc[VTIME]);
 }
