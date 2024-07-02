@@ -32,7 +32,11 @@
 #include <math.h> // For M_PI_2/M_PI_2l.
 
 // Prettify gtest Complex printing.
+// Macro 'complex' defined in complex.h conflicts with iostream.
+#pragma push_macro("complex")
+#undef complex
 #include <iostream>
+#pragma pop_macro("complex")
 namespace testing {
 namespace internal {
 inline void PrintTo(const double _Complex& c, std::ostream* os) {
