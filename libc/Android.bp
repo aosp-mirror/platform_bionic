@@ -1016,11 +1016,6 @@ cc_library_static {
         "stdio/stdio_ext.cpp",
         "stdio/vfscanf.cpp",
         "stdio/vfwscanf.cpp",
-
-        // TODO: why isn't this in a static-libc-only module?
-        // This contains a weak stub implementation of __find_icu_symbol for wctype.cpp,
-        // which will be overridden by the actual one in libc.so.
-        "bionic/icu_static.cpp",
     ],
 
     arch: {
@@ -1523,6 +1518,7 @@ filegroup {
     srcs: [
         "bionic/gwp_asan_wrappers.cpp",
         "bionic/heap_tagging.cpp",
+        "bionic/icu_static.cpp",
         "bionic/malloc_common.cpp",
         "bionic/malloc_limit.cpp",
     ],
