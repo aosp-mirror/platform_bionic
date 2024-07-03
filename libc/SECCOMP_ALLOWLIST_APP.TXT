@@ -4,36 +4,36 @@
 # This file is processed by a python script named genseccomp.py.
 
 # Needed for debugging 32-bit Chrome
-int	pipe:pipe(int pipefd[2])	lp32
+int	pipe(int pipefd[2])	lp32
 
 # b/34651972
-int	access:access(const char *pathname, int mode)	lp32
-int	stat64:stat64(const char*, struct stat64*)	lp32
+int	access(const char *pathname, int mode)	lp32
+int	stat64(const char*, struct stat64*)	lp32
 
 # b/34813887
-int	open:open(const char *path, int oflag, ... ) lp32,x86_64
-int	getdents:getdents(unsigned int fd, struct linux_dirent *dirp, unsigned int count) lp32,x86_64
+int	open(const char *path, int oflag, ... ) lp32,x86_64
+int	getdents(unsigned int fd, struct linux_dirent *dirp, unsigned int count) lp32,x86_64
 
 # b/34719286
-int	eventfd:eventfd(unsigned int initval, int flags)	lp32
+int	eventfd(unsigned int initval, int flags)	lp32
 
 # b/34817266
-int	epoll_wait:epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout)	lp32
+int	epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout)	lp32
 
 # b/34908783
-int	epoll_create:epoll_create(int size)	lp32
+int	epoll_create(int size)	lp32
 
 # b/34979910
-int	creat:creat(const char *pathname, mode_t mode)	lp32
-int	unlink:unlink(const char *pathname)	lp32
+int	creat(const char *pathname, mode_t mode)	lp32
+int	unlink(const char *pathname)	lp32
 
 # b/35059702
-int	lstat64:lstat64(const char*, struct stat64*)	lp32
+int	lstat64(const char*, struct stat64*)	lp32
 
 # b/35217603
-int	fcntl:fcntl(int fd, int cmd, ... /* arg */ )	lp32
-pid_t	fork:fork()	lp32
-int	poll:poll(struct pollfd *fds, nfds_t nfds, int timeout)	lp32
+int	fcntl(int fd, int cmd, ... /* arg */ )	lp32
+pid_t	fork()	lp32
+int	poll(struct pollfd *fds, nfds_t nfds, int timeout)	lp32
 
 # b/35906875
 int	inotify_init()	lp32
