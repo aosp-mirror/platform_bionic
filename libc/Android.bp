@@ -87,10 +87,6 @@ cc_defaults {
     recovery_available: true,
     native_bridge_supported: true,
 
-    // lld complains about duplicate symbols in libcrt and libgcc. Suppress the
-    // warning since this is intended right now.
-    ldflags: ["-Wl,-z,muldefs"],
-
     product_variables: {
         malloc_zero_contents: {
             cflags: ["-DSCUDO_ZERO_CONTENTS"],
