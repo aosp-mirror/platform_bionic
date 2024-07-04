@@ -128,6 +128,45 @@ cc_defaults {
     },
 }
 
+// Leave the symbols in the shared library so that stack unwinders can produce
+// meaningful name resolution. This is a bit more ugly than it sounds because
+// arm32 is a bit broken.
+// ========================================================
+cc_defaults {
+    name: "keep_symbols",
+    arch: {
+        arm: {
+            // arm32 does not produce complete exidx unwind information,
+            // so keep the .debug_frame which is relatively small and does
+            // include needed unwind information.
+            // See b/132992102 for details.
+            strip: {
+                keep_symbols_and_debug_frame: true,
+            },
+        },
+        arm64: {
+            strip: {
+                keep_symbols: true,
+            },
+        },
+        riscv64: {
+            strip: {
+                keep_symbols: true,
+            },
+        },
+        x86: {
+            strip: {
+                keep_symbols: true,
+            },
+        },
+        x86_64: {
+            strip: {
+                keep_symbols: true,
+            },
+        },
+    },
+}
+
 // Defaults for native allocator libs/includes to make it
 // easier to change.
 // ========================================================
@@ -1016,11 +1055,6 @@ cc_library_static {
         "stdio/stdio_ext.cpp",
         "stdio/vfscanf.cpp",
         "stdio/vfwscanf.cpp",
-
-        // TODO: why isn't this in a static-libc-only module?
-        // This contains a weak stub implementation of __find_icu_symbol for wctype.cpp,
-        // which will be overridden by the actual one in libc.so.
-        "bionic/icu_static.cpp",
     ],
 
     arch: {
@@ -1523,6 +1557,7 @@ filegroup {
     srcs: [
         "bionic/gwp_asan_wrappers.cpp",
         "bionic/heap_tagging.cpp",
+        "bionic/icu_static.cpp",
         "bionic/malloc_common.cpp",
         "bionic/malloc_limit.cpp",
     ],
@@ -1544,6 +1579,7 @@ cc_defaults {
         "libc_defaults",
         "libc_native_allocator_defaults",
         "bug_24465209_workaround",
+        "keep_symbols",
     ],
     name: "libc_library_defaults",
     product_variables: {
@@ -1591,12 +1627,6 @@ cc_defaults {
 
     arch: {
         arm: {
-            ldflags: [
-                // Since we are preserving the debug_frame, do not compress
-                // in this case to make unwinds as fast as possible.
-                "-Wl,--compress-debug-sections=none",
-            ],
-
             version_script: ":libc.arm.map",
             no_libcrt: true,
 
@@ -1604,59 +1634,33 @@ cc_defaults {
                 srcs: [":libc_sources_shared_arm"],
                 // special for arm
                 cflags: ["-DCRT_LEGACY_WORKAROUND"],
-                // For backwards-compatibility, some arm32 builtins are exported from libc.so.
+                // For backwards compatibility, some arm32 builtins are exported from libc.so.
                 static_libs: ["libclang_rt.builtins-exported"],
             },
 
-            // Arm 32 bit does not produce complete exidx unwind information
-            // so keep the .debug_frame which is relatively small and does
-            // include needed unwind information.
-            // See b/132992102 for details.
-            strip: {
-                keep_symbols_and_debug_frame: true,
-            },
+            ldflags: [
+                // Since we preserve the debug_frame for libc, do not compress
+                // in this case to make unwinds as fast as possible.
+                "-Wl,--compress-debug-sections=none",
+            ],
         },
         arm64: {
             version_script: ":libc.arm64.map",
-
-            // Leave the symbols in the shared library so that stack unwinders can produce
-            // meaningful name resolution.
-            strip: {
-                keep_symbols: true,
-            },
         },
         riscv64: {
             version_script: ":libc.riscv64.map",
-
-            // Leave the symbols in the shared library so that stack unwinders can produce
-            // meaningful name resolution.
-            strip: {
-                keep_symbols: true,
-            },
         },
         x86: {
             version_script: ":libc.x86.map",
             no_libcrt: true,
 
             shared: {
-                // For backwards-compatibility, some x86 builtins are exported from libc.so.
+                // For backwards compatibility, some x86 builtins are exported from libc.so.
                 static_libs: ["libclang_rt.builtins-exported"],
-            },
-
-            // Leave the symbols in the shared library so that stack unwinders can produce
-            // meaningful name resolution.
-            strip: {
-                keep_symbols: true,
             },
         },
         x86_64: {
             version_script: ":libc.x86_64.map",
-
-            // Leave the symbols in the shared library so that stack unwinders can produce
-            // meaningful name resolution.
-            strip: {
-                keep_symbols: true,
-            },
         },
     },
 
