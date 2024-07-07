@@ -448,7 +448,7 @@ bool preprocessHeaders(const std::string& dst_dir, const std::string& src_dir,
 
   while (FTSENT* ent = fts_read(fts.get())) {
     llvm::StringRef path = ent->fts_path;
-    if (!path.startswith(src_dir)) {
+    if (!path.starts_with(src_dir)) {
       err(1, "path '%s' doesn't start with source dir '%s'", ent->fts_path, src_dir.c_str());
     }
 
@@ -489,7 +489,7 @@ bool preprocessHeaders(const std::string& dst_dir, const std::string& src_dir,
     // TODO: Merge adjacent non-identical guards.
     mergeGuards(file_lines[file_path.str()], guard_map);
 
-    if (!file_path.startswith(src_dir)) {
+    if (!file_path.starts_with(src_dir)) {
       errx(1, "input file %s is not in %s\n", file_path.str().c_str(), src_dir.c_str());
     }
 
