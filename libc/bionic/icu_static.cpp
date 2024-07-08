@@ -29,6 +29,6 @@
 #include "private/icu.h"
 
 // We don't have dlopen/dlsym for static binaries yet.
-__attribute__((weak)) void* __find_icu_symbol(const char*) {
+void* __find_icu_symbol(const char*) {
   return nullptr;
 }

@@ -66,7 +66,9 @@ DEFINE_IFUNC_FOR(memcmp) {
 
 typedef void* memcpy_func(void*, const void*, size_t);
 DEFINE_IFUNC_FOR(memcpy) {
-    if (__bionic_is_oryon(arg->_hwcap)) {
+    if (arg->_hwcap2 & HWCAP2_MOPS) {
+        RETURN_FUNC(memcpy_func, __memmove_aarch64_mops);
+    } else if (__bionic_is_oryon(arg->_hwcap)) {
         RETURN_FUNC(memcpy_func, __memcpy_aarch64_nt);
     } else if (arg->_hwcap & HWCAP_ASIMD) {
         RETURN_FUNC(memcpy_func, __memcpy_aarch64_simd);
@@ -77,7 +79,9 @@ DEFINE_IFUNC_FOR(memcpy) {
 
 typedef void* memmove_func(void*, const void*, size_t);
 DEFINE_IFUNC_FOR(memmove) {
-  if (__bionic_is_oryon(arg->_hwcap)) {
+  if (arg->_hwcap2 & HWCAP2_MOPS) {
+    RETURN_FUNC(memmove_func, __memmove_aarch64_mops);
+  } else if (__bionic_is_oryon(arg->_hwcap)) {
     RETURN_FUNC(memcpy_func, __memmove_aarch64_nt);
   } else if (arg->_hwcap & HWCAP_ASIMD) {
     RETURN_FUNC(memmove_func, __memmove_aarch64_simd);
@@ -93,7 +97,9 @@ DEFINE_IFUNC_FOR(memrchr) {
 
 typedef int memset_func(void*, int, size_t);
 DEFINE_IFUNC_FOR(memset) {
-    if (__bionic_is_oryon(arg->_hwcap)) {
+    if (arg->_hwcap2 & HWCAP2_MOPS) {
+        RETURN_FUNC(memset_func, __memset_aarch64_mops);
+    } else if (__bionic_is_oryon(arg->_hwcap)) {
         RETURN_FUNC(memset_func, __memset_aarch64_nt);
     } else {
         RETURN_FUNC(memset_func, __memset_aarch64);

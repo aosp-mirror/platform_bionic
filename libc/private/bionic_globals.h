@@ -76,10 +76,23 @@ struct memtag_dynamic_entries_t {
 };
 
 __LIBC_HIDDEN__ extern WriteProtected<libc_globals> __libc_globals;
-// This cannot be in __libc_globals, because we cannot access the
+// These cannot be in __libc_globals, because we cannot access the
 // WriteProtected in a thread-safe way.
 // See b/328256432.
+//
+// __libc_memtag_stack says whether stack MTE is enabled on the process, i.e.
+// whether the stack pages are mapped with PROT_MTE. This is always false if
+// MTE is disabled for the process (i.e. libc_globals.memtag is false).
 __LIBC_HIDDEN__ extern _Atomic(bool) __libc_memtag_stack;
+// __libc_memtag_stack_abi says whether the process contains any code that was
+// compiled with memtag-stack. This is true even if the process does not have
+// MTE enabled (e.g. because it was overridden using MEMTAG_OPTIONS, or because
+// MTE is disabled for the device).
+// Code compiled with memtag-stack needs a stack history buffer in
+// TLS_SLOT_STACK_MTE, because the codegen will emit an unconditional
+// (to keep the code branchless) write to it.
+// Protected by g_heap_creation_lock.
+__LIBC_HIDDEN__ extern bool __libc_memtag_stack_abi;
 
 struct abort_msg_t;
 struct crash_detail_page_t;
@@ -133,7 +146,9 @@ struct libc_shared_globals {
   size_t scudo_stack_depot_size = 0;
 
   HeapTaggingLevel initial_heap_tagging_level = M_HEAP_TAGGING_LEVEL_NONE;
+  // See comments for __libc_memtag_stack / __libc_memtag_stack_abi above.
   bool initial_memtag_stack = false;
+  bool initial_memtag_stack_abi = false;
   int64_t heap_tagging_upgrade_timer_sec = 0;
 
   void (*memtag_stack_dlopen_callback)() = nullptr;
