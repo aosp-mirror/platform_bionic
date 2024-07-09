@@ -34,6 +34,7 @@
 #include <string.h>
 #include <wchar.h>
 
+#include "bionic/macros.h"
 #include "private/icu.h"
 
 enum {
@@ -95,21 +96,12 @@ int iswupper_l(wint_t c, locale_t) { return iswupper(c); }
 int iswxdigit_l(wint_t c, locale_t) { return iswxdigit(c); }
 
 int iswctype(wint_t wc, wctype_t char_class) {
-  switch (char_class) {
-    case WC_TYPE_ALNUM: return iswalnum(wc);
-    case WC_TYPE_ALPHA: return iswalpha(wc);
-    case WC_TYPE_BLANK: return iswblank(wc);
-    case WC_TYPE_CNTRL: return iswcntrl(wc);
-    case WC_TYPE_DIGIT: return iswdigit(wc);
-    case WC_TYPE_GRAPH: return iswgraph(wc);
-    case WC_TYPE_LOWER: return iswlower(wc);
-    case WC_TYPE_PRINT: return iswprint(wc);
-    case WC_TYPE_PUNCT: return iswpunct(wc);
-    case WC_TYPE_SPACE: return iswspace(wc);
-    case WC_TYPE_UPPER: return iswupper(wc);
-    case WC_TYPE_XDIGIT: return iswxdigit(wc);
-    default: return 0;
-  }
+  if (char_class < WC_TYPE_ALNUM || char_class > WC_TYPE_XDIGIT) return 0;
+  static int (*fns[])(wint_t) = {
+    iswalnum, iswalpha, iswblank, iswcntrl, iswdigit, iswgraph,
+    iswlower, iswprint, iswpunct, iswspace, iswupper, iswxdigit
+  };
+  return fns[char_class - WC_TYPE_ALNUM](wc);
 }
 
 int iswctype_l(wint_t wc, wctype_t char_class, locale_t) {
@@ -144,14 +136,13 @@ wint_t towupper_l(wint_t c, locale_t) { return towupper(c); }
 wint_t towlower_l(wint_t c, locale_t) { return towlower(c); }
 
 wctype_t wctype(const char* property) {
-  static const char* const  properties[WC_TYPE_MAX] = {
-    "<invalid>",
+  static const char* const  properties[WC_TYPE_MAX - 1] = {
     "alnum", "alpha", "blank", "cntrl", "digit", "graph",
     "lower", "print", "punct", "space", "upper", "xdigit"
   };
-  for (size_t i = 0; i < WC_TYPE_MAX; ++i) {
+  for (size_t i = 0; i < arraysize(properties); ++i) {
     if (!strcmp(properties[i], property)) {
-      return static_cast<wctype_t>(i);
+      return static_cast<wctype_t>(WC_TYPE_ALNUM + i);
     }
   }
   return static_cast<wctype_t>(0);
