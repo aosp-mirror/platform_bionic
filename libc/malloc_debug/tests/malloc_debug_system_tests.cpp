@@ -77,7 +77,7 @@ class LogReader {
       // This avoids accidentally grabbing data from a previous process with
       // the same pid.
       log_start_time_ = {};
-      logger_list* list = android_logger_list_open(LOG_ID_MAIN, ANDROID_LOG_NONBLOCK, 1000, 0);
+      logger_list* list = android_logger_list_open(LOG_ID_MAIN, ANDROID_LOG_NONBLOCK, INT_MAX, 0);
       if (list == nullptr) {
         return;
       }
@@ -111,7 +111,7 @@ class LogReader {
       while (true) {
         // Do not use non-blocking mode so that the two threads
         // are essentially asleep and not consuming any cpu.
-        list = android_logger_list_open(log, 0, 1000, pid);
+        list = android_logger_list_open(log, 0, INT_MAX, pid);
         if (list != nullptr) {
           break;
         }

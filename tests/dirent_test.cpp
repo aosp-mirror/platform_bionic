@@ -33,11 +33,11 @@
 
 static void CheckProcSelf(std::set<std::string>& names) {
   // We have a good idea of what should be in /proc/self.
-  ASSERT_TRUE(names.find(".") != names.end());
-  ASSERT_TRUE(names.find("..") != names.end());
-  ASSERT_TRUE(names.find("cmdline") != names.end());
-  ASSERT_TRUE(names.find("fd") != names.end());
-  ASSERT_TRUE(names.find("stat") != names.end());
+  ASSERT_TRUE(names.contains("."));
+  ASSERT_TRUE(names.contains(".."));
+  ASSERT_TRUE(names.contains("cmdline"));
+  ASSERT_TRUE(names.contains("fd"));
+  ASSERT_TRUE(names.contains("stat"));
 }
 
 template <typename DirEntT>
