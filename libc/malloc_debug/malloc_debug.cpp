@@ -461,6 +461,10 @@ void debug_finalize() {
                                                 getpid()).c_str());
   }
 
+  if (g_debug->config().options() & LOG_ALLOCATOR_STATS_ON_EXIT) {
+    LogAllocatorStats::Log();
+  }
+
   backtrace_shutdown();
 
   // In order to prevent any issues of threads freeing previous pointers
