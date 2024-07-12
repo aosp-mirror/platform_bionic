@@ -109,6 +109,8 @@ TEST(wctype, towlower) {
   EXPECT_EQ(wint_t('!'), towlower(L'!'));
   EXPECT_EQ(wint_t('a'), towlower(L'a'));
   EXPECT_EQ(wint_t('a'), towlower(L'A'));
+  EXPECT_EQ(wint_t('z'), towlower(L'z'));
+  EXPECT_EQ(wint_t('z'), towlower(L'Z'));
   if (have_dl()) {
     EXPECT_EQ(wint_t(L'ç'), towlower(L'ç'));
     EXPECT_EQ(wint_t(L'ç'), towlower(L'Ç'));
@@ -125,6 +127,8 @@ TEST(wctype, towlower_l) {
   EXPECT_EQ(wint_t('!'), towlower_l(L'!', l.l));
   EXPECT_EQ(wint_t('a'), towlower_l(L'a', l.l));
   EXPECT_EQ(wint_t('a'), towlower_l(L'A', l.l));
+  EXPECT_EQ(wint_t('z'), towlower_l(L'z', l.l));
+  EXPECT_EQ(wint_t('z'), towlower_l(L'Z', l.l));
   if (have_dl()) {
     EXPECT_EQ(wint_t(L'ç'), towlower_l(L'ç', l.l));
     EXPECT_EQ(wint_t(L'ç'), towlower_l(L'Ç', l.l));
@@ -140,6 +144,8 @@ TEST(wctype, towupper) {
   EXPECT_EQ(wint_t('!'), towupper(L'!'));
   EXPECT_EQ(wint_t('A'), towupper(L'a'));
   EXPECT_EQ(wint_t('A'), towupper(L'A'));
+  EXPECT_EQ(wint_t('Z'), towupper(L'z'));
+  EXPECT_EQ(wint_t('Z'), towupper(L'Z'));
   if (have_dl()) {
     EXPECT_EQ(wint_t(L'Ç'), towupper(L'ç'));
     EXPECT_EQ(wint_t(L'Ç'), towupper(L'Ç'));
@@ -156,6 +162,8 @@ TEST(wctype, towupper_l) {
   EXPECT_EQ(wint_t('!'), towupper_l(L'!', l.l));
   EXPECT_EQ(wint_t('A'), towupper_l(L'a', l.l));
   EXPECT_EQ(wint_t('A'), towupper_l(L'A', l.l));
+  EXPECT_EQ(wint_t('Z'), towupper_l(L'z', l.l));
+  EXPECT_EQ(wint_t('Z'), towupper_l(L'Z', l.l));
   if (have_dl()) {
     EXPECT_EQ(wint_t(L'Ç'), towupper_l(L'ç', l.l));
     EXPECT_EQ(wint_t(L'Ç'), towupper_l(L'Ç', l.l));
