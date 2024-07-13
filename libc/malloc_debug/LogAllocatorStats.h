@@ -35,6 +35,8 @@ namespace LogAllocatorStats {
 
 bool Initialize(const Config& config);
 
+void Log();
+
 void CheckIfShouldLog();
 
 }  // namespace LogAllocatorStats
