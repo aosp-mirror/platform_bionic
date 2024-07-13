@@ -34,6 +34,7 @@
 #include <string.h>
 #include <wchar.h>
 
+#include "bionic/macros.h"
 #include "private/icu.h"
 
 enum {
@@ -95,21 +96,12 @@ int iswupper_l(wint_t c, locale_t) { return iswupper(c); }
 int iswxdigit_l(wint_t c, locale_t) { return iswxdigit(c); }
 
 int iswctype(wint_t wc, wctype_t char_class) {
-  switch (char_class) {
-    case WC_TYPE_ALNUM: return iswalnum(wc);
-    case WC_TYPE_ALPHA: return iswalpha(wc);
-    case WC_TYPE_BLANK: return iswblank(wc);
-    case WC_TYPE_CNTRL: return iswcntrl(wc);
-    case WC_TYPE_DIGIT: return iswdigit(wc);
-    case WC_TYPE_GRAPH: return iswgraph(wc);
-    case WC_TYPE_LOWER: return iswlower(wc);
-    case WC_TYPE_PRINT: return iswprint(wc);
-    case WC_TYPE_PUNCT: return iswpunct(wc);
-    case WC_TYPE_SPACE: return iswspace(wc);
-    case WC_TYPE_UPPER: return iswupper(wc);
-    case WC_TYPE_XDIGIT: return iswxdigit(wc);
-    default: return 0;
-  }
+  if (char_class < WC_TYPE_ALNUM || char_class > WC_TYPE_XDIGIT) return 0;
+  static int (*fns[])(wint_t) = {
+    iswalnum, iswalpha, iswblank, iswcntrl, iswdigit, iswgraph,
+    iswlower, iswprint, iswpunct, iswspace, iswupper, iswxdigit
+  };
+  return fns[char_class - WC_TYPE_ALNUM](wc);
 }
 
 int iswctype_l(wint_t wc, wctype_t char_class, locale_t) {
@@ -117,10 +109,7 @@ int iswctype_l(wint_t wc, wctype_t char_class, locale_t) {
 }
 
 wint_t towlower(wint_t wc) {
-  if (wc < 0x80) {
-    if (wc >= 'A' && wc <= 'Z') return wc | 0x20;
-    return wc;
-  }
+  if (wc < 0x80) return tolower(wc);
 
   typedef UChar32 (*FnT)(UChar32);
   static auto u_tolower = reinterpret_cast<FnT>(__find_icu_symbol("u_tolower"));
@@ -128,12 +117,7 @@ wint_t towlower(wint_t wc) {
 }
 
 wint_t towupper(wint_t wc) {
-  if (wc < 0x80) {
-    // Using EOR rather than AND makes no difference on arm, but saves an
-    // instruction on arm64.
-    if (wc >= 'a' && wc <= 'z') return wc ^ 0x20;
-    return wc;
-  }
+  if (wc < 0x80) return toupper(wc);
 
   typedef UChar32 (*FnT)(UChar32);
   static auto u_toupper = reinterpret_cast<FnT>(__find_icu_symbol("u_toupper"));
@@ -144,14 +128,13 @@ wint_t towupper_l(wint_t c, locale_t) { return towupper(c); }
 wint_t towlower_l(wint_t c, locale_t) { return towlower(c); }
 
 wctype_t wctype(const char* property) {
-  static const char* const  properties[WC_TYPE_MAX] = {
-    "<invalid>",
+  static const char* const  properties[WC_TYPE_MAX - 1] = {
     "alnum", "alpha", "blank", "cntrl", "digit", "graph",
     "lower", "print", "punct", "space", "upper", "xdigit"
   };
-  for (size_t i = 0; i < WC_TYPE_MAX; ++i) {
+  for (size_t i = 0; i < arraysize(properties); ++i) {
     if (!strcmp(properties[i], property)) {
-      return static_cast<wctype_t>(i);
+      return static_cast<wctype_t>(WC_TYPE_ALNUM + i);
     }
   }
   return static_cast<wctype_t>(0);
@@ -167,6 +150,7 @@ static wctrans_t wctrans_toupper = wctrans_t(2);
 wctrans_t wctrans(const char* name) {
   if (strcmp(name, "tolower") == 0) return wctrans_tolower;
   if (strcmp(name, "toupper") == 0) return wctrans_toupper;
+  errno = EINVAL;
   return nullptr;
 }
 
@@ -178,7 +162,7 @@ wint_t towctrans(wint_t c, wctrans_t t) {
   if (t == wctrans_tolower) return towlower(c);
   if (t == wctrans_toupper) return towupper(c);
   errno = EINVAL;
-  return 0;
+  return c;
 }
 
 wint_t towctrans_l(wint_t c, wctrans_t t, locale_t) {
