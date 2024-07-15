@@ -19,6 +19,12 @@ tests into suites.
 By default, `bionic-benchmarks` runs all of the benchmarks in alphabetical order. Pass
 `--benchmark_filter=getpid` to run just the benchmarks with "getpid" in their name.
 
+Note that we also build _static_ benchmark binaries.
+They're useful for testing on devices running different versions of Android, or running non-Android OSes.
+Those binaries are called `bionic-benchmarks-static` instead.
+Copy from `out/target/product/<device>/symbols/data/benchmarktest64/bionic-benchmarks-static` instead of
+`out/target/product/<device>/data/benchmarktest64/bionic-benchmarks-static` if you want symbols for perf(1).
+
 ### Host benchmarks
 
 See the `benchmarks/run-on-host.sh` script. The host benchmarks can be run with 32-bit or 64-bit
