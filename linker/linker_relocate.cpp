@@ -627,7 +627,7 @@ bool soinfo::relocate(const SymbolLookupList& lookup_list) {
         android_relocs_[1] == 'P' &&
         android_relocs_[2] == 'S' &&
         android_relocs_[3] == '2') {
-      DEBUG("[ android relocating %s ]", get_realpath());
+      DEBUG("[ relocating %s android rel/rela ]", get_realpath());
 
       const uint8_t* packed_relocs = android_relocs_ + 4;
       const size_t packed_relocs_size = android_relocs_size_ - 4;
