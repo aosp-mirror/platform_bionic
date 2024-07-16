@@ -195,7 +195,7 @@ TEST(link, r_debug) {
     }
     void AddModule(dl_phdr_info* info, size_t s) {
       ASSERT_EQ(sizeof(dl_phdr_info), s);
-      ASSERT_TRUE(dl_iter_mods.find(info->dlpi_addr) == dl_iter_mods.end());
+      ASSERT_FALSE(dl_iter_mods.contains(info->dlpi_addr));
       ASSERT_TRUE(info->dlpi_name != nullptr);
       dl_iter_mods[info->dlpi_addr] = {
         .name = info->dlpi_name,
