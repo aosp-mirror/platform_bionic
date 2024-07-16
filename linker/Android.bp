@@ -410,6 +410,10 @@ cc_binary {
     },
 
     afdo: true,
+
+    // FIXME: Workaround compat issue with obfuscation libraries.
+    // http://b/352456802
+    lto_O0: true,
 }
 
 // ========================================================
