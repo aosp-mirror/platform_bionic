@@ -26,24 +26,15 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <gtest/gtest.h>
 
-#if defined(__BIONIC__) && defined(__aarch64__)
+#include <netinet/igmp.h>
 
-__attribute__((target("mte"))) static bool is_stack_mte_on() {
-  alignas(16) int x = 0;
-  void* p = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(&x) + (1UL << 57));
-  void* p_cpy = p;
-  __builtin_arm_stg(p);
-  p = __builtin_arm_ldg(p);
-  __builtin_arm_stg(&x);
-  return p == p_cpy;
+TEST(netinet_igmp, smoke) {
+  // Just check that the fields exist, so code is likely to compile.
+  struct igmp i;
+  i.igmp_type = IGMP_MEMBERSHIP_QUERY;
+  i.igmp_code = 0;
+  i.igmp_cksum = 0;
+  i.igmp_group.s_addr = htonl(INADDR_ANY);
 }
-
-static void* mte_tls() {
-  void** dst;
-  __asm__("mrs %0, TPIDR_EL0" : "=r"(dst) :);
-  return dst[-3];
-}
-
-#endif

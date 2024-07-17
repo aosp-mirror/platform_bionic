@@ -27,7 +27,7 @@ ENTRY(%(func)s)
 # ARM assembler templates for each syscall stub
 #
 
-arm_eabi_call_default = syscall_stub_header + """\
+arm_call_default = syscall_stub_header + """\
     mov     ip, r7
     .cfi_register r7, ip
     ldr     r7, =%(__NR_name)s
@@ -41,7 +41,7 @@ arm_eabi_call_default = syscall_stub_header + """\
 END(%(func)s)
 """
 
-arm_eabi_call_long = syscall_stub_header + """\
+arm_call_long = syscall_stub_header + """\
     mov     ip, sp
     stmfd   sp!, {r4, r5, r6, r7}
     .cfi_def_cfa_offset 16
@@ -230,11 +230,11 @@ def add_footer(pointer_length, stub, syscall):
     return stub
 
 
-def arm_eabi_genstub(syscall):
+def arm_genstub(syscall):
     num_regs = count_arm_param_registers(syscall["params"])
     if num_regs > 4:
-        return arm_eabi_call_long % syscall
-    return arm_eabi_call_default % syscall
+        return arm_call_long % syscall
+    return arm_call_default % syscall
 
 
 def arm64_genstub(syscall):
@@ -456,7 +456,7 @@ def main(arch, syscall_file):
         syscall["__NR_name"] = make__NR_name(syscall["name"])
 
         if "arm" in syscall:
-            syscall["asm-arm"] = add_footer(32, arm_eabi_genstub(syscall), syscall)
+            syscall["asm-arm"] = add_footer(32, arm_genstub(syscall), syscall)
 
         if "arm64" in syscall:
             syscall["asm-arm64"] = add_footer(64, arm64_genstub(syscall), syscall)

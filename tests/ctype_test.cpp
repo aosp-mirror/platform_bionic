@@ -293,40 +293,57 @@ TEST(ctype, isxdigit_l) {
 }
 
 TEST(ctype, toascii) {
-  EXPECT_EQ('a', toascii('a'));
-  EXPECT_EQ('a', toascii(0x80 | 'a'));
+  // POSIX explicitly says that toascii() returns (c & 0x7f),
+  // so there's no EOF-preserving behavior here and we start from 0.
+  for (int i = 0; i < kMax; ++i) {
+    if (i <= 0x7f) {
+      EXPECT_EQ(i, toascii(i));
+    } else {
+      EXPECT_EQ(i & 0x7f, toascii(i));
+    }
+  }
 }
 
 TEST(ctype, tolower) {
   EXPECT_EQ('!', tolower('!'));
   EXPECT_EQ('a', tolower('a'));
   EXPECT_EQ('a', tolower('A'));
+  EXPECT_EQ('z', tolower('z'));
+  EXPECT_EQ('z', tolower('Z'));
 }
 
 TEST(ctype, tolower_l) {
   EXPECT_EQ('!', tolower_l('!', LC_GLOBAL_LOCALE));
   EXPECT_EQ('a', tolower_l('a', LC_GLOBAL_LOCALE));
   EXPECT_EQ('a', tolower_l('A', LC_GLOBAL_LOCALE));
+  EXPECT_EQ('z', tolower_l('z', LC_GLOBAL_LOCALE));
+  EXPECT_EQ('z', tolower_l('Z', LC_GLOBAL_LOCALE));
 }
 
 TEST(ctype, _tolower) {
   // _tolower may mangle characters for which isupper is false.
   EXPECT_EQ('a', _tolower('A'));
+  EXPECT_EQ('z', _tolower('Z'));
 }
 
 TEST(ctype, toupper) {
   EXPECT_EQ('!', toupper('!'));
   EXPECT_EQ('A', toupper('a'));
   EXPECT_EQ('A', toupper('A'));
+  EXPECT_EQ('Z', toupper('z'));
+  EXPECT_EQ('Z', toupper('Z'));
 }
 
 TEST(ctype, toupper_l) {
   EXPECT_EQ('!', toupper_l('!', LC_GLOBAL_LOCALE));
   EXPECT_EQ('A', toupper_l('a', LC_GLOBAL_LOCALE));
   EXPECT_EQ('A', toupper_l('A', LC_GLOBAL_LOCALE));
+  EXPECT_EQ('Z', toupper_l('z', LC_GLOBAL_LOCALE));
+  EXPECT_EQ('Z', toupper_l('Z', LC_GLOBAL_LOCALE));
 }
 
 TEST(ctype, _toupper) {
   // _toupper may mangle characters for which islower is false.
   EXPECT_EQ('A', _toupper('a'));
+  EXPECT_EQ('Z', _toupper('z'));
 }

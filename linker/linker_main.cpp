@@ -333,11 +333,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
 
   if (getenv("LD_SHOW_AUXV") != nullptr) ld_show_auxv(args.auxv);
 
-#if defined(__LP64__)
-  INFO("[ Android dynamic linker (64-bit) ]");
-#else
-  INFO("[ Android dynamic linker (32-bit) ]");
-#endif
+  INFO("[ Android dynamic linker (" ABI_STRING ") ]");
 
   // These should have been sanitized by __libc_init_AT_SECURE, but the test
   // doesn't cost us anything.
