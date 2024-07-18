@@ -245,6 +245,7 @@ static void __linker_error(const char* fmt, ...) {
 
   va_start(ap, fmt);
   async_safe_format_fd_va_list(STDERR_FILENO, fmt, ap);
+  write(STDERR_FILENO, "\n", 1);
   va_end(ap);
 
   va_start(ap, fmt);
@@ -255,7 +256,7 @@ static void __linker_error(const char* fmt, ...) {
 }
 
 static void __linker_cannot_link(const char* argv0) {
-  __linker_error("CANNOT LINK EXECUTABLE \"%s\": %s\n",
+  __linker_error("CANNOT LINK EXECUTABLE \"%s\": %s",
                  argv0,
                  linker_get_error_buffer());
 }
@@ -267,26 +268,26 @@ static ExecutableInfo load_executable(const char* orig_path) {
   ExecutableInfo result = {};
 
   if (orig_path[0] != '/') {
-    __linker_error("error: expected absolute path: \"%s\"\n", orig_path);
+    __linker_error("error: expected absolute path: \"%s\"", orig_path);
   }
 
   off64_t file_offset;
   android::base::unique_fd fd(open_executable(orig_path, &file_offset, &result.path));
   if (fd.get() == -1) {
-    __linker_error("error: unable to open file \"%s\"\n", orig_path);
+    __linker_error("error: unable to open file \"%s\"", orig_path);
   }
 
   if (TEMP_FAILURE_RETRY(fstat(fd.get(), &result.file_stat)) == -1) {
-    __linker_error("error: unable to stat \"%s\": %s\n", result.path.c_str(), strerror(errno));
+    __linker_error("error: unable to stat \"%s\": %m", result.path.c_str());
   }
 
   ElfReader elf_reader;
   if (!elf_reader.Read(result.path.c_str(), fd.get(), file_offset, result.file_stat.st_size)) {
-    __linker_error("error: %s\n", linker_get_error_buffer());
+    __linker_error("error: %s", linker_get_error_buffer());
   }
   address_space_params address_space;
   if (!elf_reader.Load(&address_space)) {
-    __linker_error("error: %s\n", linker_get_error_buffer());
+    __linker_error("error: %s", linker_get_error_buffer());
   }
 
   result.phdr = elf_reader.loaded_phdr();
@@ -333,11 +334,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
 
   if (getenv("LD_SHOW_AUXV") != nullptr) ld_show_auxv(args.auxv);
 
-#if defined(__LP64__)
-  INFO("[ Android dynamic linker (64-bit) ]");
-#else
-  INFO("[ Android dynamic linker (32-bit) ]");
-#endif
+  INFO("[ Android dynamic linker (" ABI_STRING ") ]");
 
   // These should have been sanitized by __libc_init_AT_SECURE, but the test
   // doesn't cost us anything.
@@ -401,8 +398,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
     if (note_gnu_property.IsBTICompatible() &&
         (phdr_table_protect_segments(somain->phdr, somain->phnum, somain->load_bias,
                                      somain->should_pad_segments(), &note_gnu_property) < 0)) {
-      __linker_error("error: can't protect segments for \"%s\": %s", exe_info.path.c_str(),
-                     strerror(errno));
+      __linker_error("error: can't protect segments for \"%s\": %m", exe_info.path.c_str());
     }
   }
 #endif
@@ -427,7 +423,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   // and the NDK no longer supports earlier API levels.
   if (elf_hdr->e_type != ET_DYN) {
     __linker_error("error: %s: Android only supports position-independent "
-                   "executables (-fPIE)\n", exe_info.path.c_str());
+                   "executables (-fPIE)", exe_info.path.c_str());
   }
 
   // Use LD_LIBRARY_PATH and LD_PRELOAD (but only if we aren't setuid/setgid).
@@ -695,7 +691,7 @@ __attribute__((constructor(1))) static void detect_self_exec() {
   // fallback.
   __libc_sysinfo = reinterpret_cast<void*>(__libc_int0x80);
 #endif
-  __linker_error("error: linker cannot load itself\n");
+  __linker_error("error: linker cannot load itself");
 }
 
 static ElfW(Addr) __attribute__((noinline))

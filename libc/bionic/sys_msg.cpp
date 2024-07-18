@@ -36,33 +36,17 @@ int msgctl(int id, int cmd, msqid_ds* buf) {
   // Annoyingly, the kernel requires this for 32-bit but rejects it for 64-bit.
   cmd |= IPC_64;
 #endif
-#if defined(SYS_msgctl)
   return syscall(SYS_msgctl, id, cmd, buf);
-#else
-  return syscall(SYS_ipc, MSGCTL, id, cmd, 0, buf, 0);
-#endif
 }
 
 int msgget(key_t key, int flags) {
-#if defined(SYS_msgget)
   return syscall(SYS_msgget, key, flags);
-#else
-  return syscall(SYS_ipc, MSGGET, key, flags, 0, 0, 0);
-#endif
 }
 
 ssize_t msgrcv(int id, void* msg, size_t n, long type, int flags) {
-#if defined(SYS_msgrcv)
   return syscall(SYS_msgrcv, id, msg, n, type, flags);
-#else
-  return syscall(SYS_ipc, IPCCALL(1, MSGRCV), id, n, flags, msg, type);
-#endif
 }
 
 int msgsnd(int id, const void* msg, size_t n, int flags) {
-#if defined(SYS_msgsnd)
   return syscall(SYS_msgsnd, id, msg, n, flags);
-#else
-  return syscall(SYS_ipc, MSGSND, id, n, flags, msg, 0);
-#endif
 }

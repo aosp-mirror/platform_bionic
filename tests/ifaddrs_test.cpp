@@ -137,7 +137,7 @@ static void CheckAddressIsInSet(const std::string& if_name, bool unicast,
   sockaddr_in* sock = reinterpret_cast<sockaddr_in*>(&ifr.ifr_addr);
   in_addr_t addr = sock->sin_addr.s_addr;
 
-  EXPECT_TRUE(addrs.find(addr) != addrs.end()) << if_name << ' ' << std::hex << ntohl(addr);
+  EXPECT_TRUE(addrs.contains(addr)) << if_name << ' ' << std::hex << ntohl(addr);
 }
 
 TEST(ifaddrs, getifaddrs_INET) {
