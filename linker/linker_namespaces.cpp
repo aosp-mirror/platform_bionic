@@ -100,7 +100,7 @@ bool android_namespace_t::is_accessible(soinfo* s) {
     // be searched.
     if (allow_secondary) {
       const android_namespace_list_t& secondary_namespaces = si->get_secondary_namespaces();
-      if (secondary_namespaces.find(this) != secondary_namespaces.end()) {
+      if (secondary_namespaces.contains(this)) {
         return true;
       }
     }
