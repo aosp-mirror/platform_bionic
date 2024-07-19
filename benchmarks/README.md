@@ -189,6 +189,5 @@ otherwise prints:
 
 Some devices have a `perf-setup.sh` script that locks CPU and GPU frequencies. Some TradeFed
 benchmarks appear to be using the script. For more information:
- * run `get_build_var BOARD_PERFSETUP_SCRIPT`
- * run `m perf-setup` to install the script into `${OUT}/data/local/tmp/perf-setup.sh`
+ * run `adb shell perf-setup.sh` to execute the script, it is already by default be installed on device for eng and userdebug build
  * see: https://android.googlesource.com/platform/platform_testing/+/refs/heads/main/scripts/perf-setup/
