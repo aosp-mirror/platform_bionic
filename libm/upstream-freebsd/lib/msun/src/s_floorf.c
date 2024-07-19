@@ -13,9 +13,6 @@
  * ====================================================
  */
 
-#include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
-
 /*
  * floorf(x)
  * Return x rounded toward -inf to integral value
