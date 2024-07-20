@@ -22,11 +22,13 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- *
  */
 
 #include <math.h>
 
+// This function is only in glibc.
+// musl and NetBSD/OpenBSD just have the double and float variants,
+// while FreeBSD and iOS/macOS have none.
 long double significandl(long double x) {
   return scalbnl(x, -ilogbl(x));
 }
