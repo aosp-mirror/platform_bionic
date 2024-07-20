@@ -503,6 +503,8 @@ genrule {
     cmd: "$(location generate-version-script) x86_64 $(in) $(out)",
 }
 
+// Because of a historical accidnt, ldexp() is in libc,
+// even though ldexpf() and ldexpl() are in libm.
 filegroup {
     name: "libc_ldexp_srcs",
     srcs: ["upstream-freebsd/lib/msun/src/s_scalbn.c"],
