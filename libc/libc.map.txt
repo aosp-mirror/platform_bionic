@@ -1341,7 +1341,7 @@ LIBC_O {
     wctrans_l; # introduced=26
 } LIBC_N;
 
-LIBC_P { # introduced=P
+LIBC_P { # introduced=28
   global:
     __freading;
     __free_hook;
@@ -1442,7 +1442,7 @@ LIBC_P { # introduced=P
     wcstoul_l;
 } LIBC_O;
 
-LIBC_Q { # introduced=Q
+LIBC_Q { # introduced=29
   global:
     ___tls_get_addr; # x86
     __aeabi_read_tp; # arm
@@ -1478,7 +1478,7 @@ LIBC_Q { # introduced=Q
     android_mallopt; # apex llndk
 } LIBC_P;
 
-LIBC_R { # introduced=R
+LIBC_R { # introduced=30
   global:
     __mempcpy_chk;
     __tls_get_addr; # arm64
@@ -1548,7 +1548,7 @@ LIBC_R { # introduced=R
     _Unwind_VRS_Set; # arm
 } LIBC_Q;
 
-LIBC_S { # introduced=S
+LIBC_S { # introduced=31
   global:
     __libc_get_static_tls_bounds;
     __libc_register_thread_exit_callback;
@@ -1563,7 +1563,7 @@ LIBC_S { # introduced=S
     process_madvise;
 } LIBC_R;
 
-LIBC_T { # introduced=Tiramisu
+LIBC_T { # introduced=33
   global:
     backtrace;
     backtrace_symbols;
@@ -1574,7 +1574,7 @@ LIBC_T { # introduced=Tiramisu
     pwritev64v2;
 } LIBC_S;
 
-LIBC_U { # introduced=UpsideDownCake
+LIBC_U { # introduced=34
   global:
     __freadahead;
     close_range;
@@ -1584,7 +1584,7 @@ LIBC_U { # introduced=UpsideDownCake
     posix_spawn_file_actions_addfchdir_np;
 } LIBC_T;
 
-LIBC_V { # introduced=VanillaIceCream
+LIBC_V { # introduced=35
   global:
     android_crash_detail_register;
     android_crash_detail_unregister;
