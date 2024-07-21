@@ -109,10 +109,7 @@ int iswctype_l(wint_t wc, wctype_t char_class, locale_t) {
 }
 
 wint_t towlower(wint_t wc) {
-  if (wc < 0x80) {
-    if (wc >= 'A' && wc <= 'Z') return wc | 0x20;
-    return wc;
-  }
+  if (wc < 0x80) return tolower(wc);
 
   typedef UChar32 (*FnT)(UChar32);
   static auto u_tolower = reinterpret_cast<FnT>(__find_icu_symbol("u_tolower"));
@@ -120,12 +117,7 @@ wint_t towlower(wint_t wc) {
 }
 
 wint_t towupper(wint_t wc) {
-  if (wc < 0x80) {
-    // Using EOR rather than AND makes no difference on arm, but saves an
-    // instruction on arm64.
-    if (wc >= 'a' && wc <= 'z') return wc ^ 0x20;
-    return wc;
-  }
+  if (wc < 0x80) return toupper(wc);
 
   typedef UChar32 (*FnT)(UChar32);
   static auto u_toupper = reinterpret_cast<FnT>(__find_icu_symbol("u_toupper"));
@@ -158,6 +150,7 @@ static wctrans_t wctrans_toupper = wctrans_t(2);
 wctrans_t wctrans(const char* name) {
   if (strcmp(name, "tolower") == 0) return wctrans_tolower;
   if (strcmp(name, "toupper") == 0) return wctrans_toupper;
+  errno = EINVAL;
   return nullptr;
 }
 
@@ -169,7 +162,7 @@ wint_t towctrans(wint_t c, wctrans_t t) {
   if (t == wctrans_tolower) return towlower(c);
   if (t == wctrans_toupper) return towupper(c);
   errno = EINVAL;
-  return 0;
+  return c;
 }
 
 wint_t towctrans_l(wint_t c, wctrans_t t, locale_t) {

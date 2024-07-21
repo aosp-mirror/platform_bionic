@@ -426,7 +426,7 @@ TEST_F(MallocDebugTest, all_options) {
   Init(
       "guard backtrace backtrace_enable_on_signal fill expand_alloc free_track leak_track "
       "record_allocs verify_pointers abort_on_error verbose check_unreachable_on_signal "
-      "log_allocator_stats_on_signal");
+      "log_allocator_stats_on_signal log_allocator_stats_on_exit");
   VerifyAllocCalls(true);
 }
 
@@ -2833,6 +2833,25 @@ TEST_F(MallocDebugTest, log_allocator_stats_on_signal) {
   void* pointer = debug_malloc(110);
   ASSERT_TRUE(pointer != nullptr);
   debug_free(pointer);
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  if (!running_with_hwasan()) {
+    // Do an exact match because the mallopt should not fail in normal operation.
+    ASSERT_STREQ("4 malloc_debug Logging allocator stats...\n", getFakeLogPrint().c_str());
+  } else {
+    // mallopt fails with hwasan, so just verify that the message is present.
+    ASSERT_MATCH(getFakeLogPrint(), "4 malloc_debug Logging allocator stats...\\n");
+  }
+}
+
+TEST_F(MallocDebugTest, log_allocator_stats_on_exit) {
+  Init("log_allocator_stats_on_exit");
+
+  void* pointer = debug_malloc(110);
+  ASSERT_TRUE(pointer != nullptr);
+  debug_free(pointer);
+
+  debug_finalize();
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   if (!running_with_hwasan()) {
