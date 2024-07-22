@@ -22,8 +22,8 @@
 
 #define __INTRODUCED_IN(api_level) __attribute__((__annotate__("introduced_in=" #api_level)))
 #define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level) __attribute__((__annotate__("introduced_in=" #api_level))) __VERSIONER_NO_GUARD
-#define __DEPRECATED_IN(api_level, ...) __attribute__((__annotate__("deprecated_in=" #api_level)))
-#define __REMOVED_IN(api_level, ...) __attribute__((__annotate__("obsoleted_in=" #api_level)))
+#define __DEPRECATED_IN(api_level, msg) __attribute__((__annotate__("deprecated_in=" #api_level)))
+#define __REMOVED_IN(api_level, msg) __attribute__((__annotate__("obsoleted_in=" #api_level)))
 #define __INTRODUCED_IN_32(api_level) __attribute__((__annotate__("introduced_in_32=" #api_level)))
 #define __INTRODUCED_IN_64(api_level) __attribute__((__annotate__("introduced_in_64=" #api_level)))
 
@@ -55,8 +55,8 @@
 #endif
 
 #define __INTRODUCED_IN(api_level) __BIONIC_AVAILABILITY(introduced=api_level)
-#define __DEPRECATED_IN(api_level, ...) __BIONIC_AVAILABILITY(deprecated=api_level __VA_OPT__(,message=) __VA_ARGS__)
-#define __REMOVED_IN(api_level, ...) __BIONIC_AVAILABILITY(obsoleted=api_level __VA_OPT__(,message=) __VA_ARGS__)
+#define __DEPRECATED_IN(api_level, msg) __BIONIC_AVAILABILITY(deprecated=api_level, message=msg)
+#define __REMOVED_IN(api_level, msg) __BIONIC_AVAILABILITY(obsoleted=api_level, message=msg)
 
 // The same availability attribute can't be annotated multiple times. Therefore, the macros are
 // defined for the configuration that it is valid for so that declarations like the below doesn't
