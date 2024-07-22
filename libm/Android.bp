@@ -271,7 +271,7 @@ cc_library {
     arch: {
         arm: {
             srcs: [
-                "arm/fenv.c",
+                "fenv-arm.c",
             ],
             armv7_a_neon: {
                 // armv7 arm32 has no instructions to implement these as
@@ -301,7 +301,7 @@ cc_library {
 
         arm64: {
             srcs: [
-                "arm64/fenv.c",
+                "fenv-arm64.c",
             ],
             exclude_srcs: [
                 "upstream-freebsd/lib/msun/src/s_fma.c",
@@ -326,7 +326,7 @@ cc_library {
 
         riscv64: {
             srcs: [
-                "riscv64/fenv.c",
+                "fenv-riscv64.c",
             ],
 
             exclude_srcs: [
@@ -352,7 +352,7 @@ cc_library {
 
         x86: {
             srcs: [
-                "i387/fenv.c",
+                "fenv-x86.c",
                 "x86/lrint.S",
                 "x86/lrintf.S",
             ],
@@ -360,7 +360,6 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/s_lrint.c",
                 "upstream-freebsd/lib/msun/src/s_lrintf.c",
             ],
-            local_include_dirs: ["i387"],
             // The x86 ABI doesn't include this, which is needed for the
             // roundss/roundsd instructions that we've used since Android M.
             cflags: ["-msse4.1"],
@@ -369,7 +368,7 @@ cc_library {
 
         x86_64: {
             srcs: [
-                "amd64/fenv.c",
+                "fenv-x86_64.c",
                 "x86_64/lrint.S",
                 "x86_64/lrintf.S",
             ],
