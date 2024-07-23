@@ -3370,7 +3370,7 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
   }
 #endif
 
-  if (!relocate(lookup_list)) {
+  if (this != solist_get_vdso() && !relocate(lookup_list)) {
     return false;
   }
 
