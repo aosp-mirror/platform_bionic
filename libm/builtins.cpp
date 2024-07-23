@@ -59,7 +59,7 @@ float fminf(float x, float y) { return __builtin_fminf(x, y); }
 double fmin(double x, double y) { return __builtin_fmin(x, y); }
 #endif
 
-#if defined(__aarch64__) || defined(__riscv)
+#if defined(__aarch64__) || defined(__riscv) || defined(__i386__) || defined(__x86_64__)
 long lrint(double x) { return __builtin_lrint(x); }
 long lrintf(float x) { return __builtin_lrintf(x); }
 long long llrint(double x) { return __builtin_llrint(x); }
