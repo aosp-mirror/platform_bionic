@@ -26,9 +26,6 @@
  * s_sinl.c and s_cosl.c merged by Steven G. Kargl.
  */
 
-#include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
-
 #include <float.h>
 #ifdef __i386__
 #include <ieeefp.h>
