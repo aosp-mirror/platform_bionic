@@ -388,7 +388,6 @@ cc_library {
     ],
 
     cflags: [
-        "-D_BSD_SOURCE",
         "-include freebsd-compat.h",
         "-fno-builtin",
         "-fno-math-errno",
