@@ -44,9 +44,7 @@
 
 #elif defined(__riscv)
 
-// No `lga` in clang unless https://reviews.llvm.org/D107278 lands.
-// `la` is equivalent when using PIC (which we do) though.
-#define GOT_RELOC(sym) la a0, sym
+#define GOT_RELOC(sym) lga a0, sym
 #define CALL(sym) call sym@plt
 #define DATA_WORD(val) .quad val
 #define MAIN .globl main; main: li a0, 0; ret

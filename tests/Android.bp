@@ -361,15 +361,17 @@ cc_prebuilt_test_library_shared {
 cc_test_library {
     name: "clang_diagnostic_tests",
     cflags: [
-        "-Xclang",
-        "-verify",
+        "-Xclang -verify",
     ],
     srcs: ["sys_ioctl_diag_test.cpp"],
 }
 
 cc_test_library {
     name: "libBionicStandardTests",
-    defaults: ["bionic_tests_defaults"],
+    defaults: [
+        "bionic_tests_defaults",
+        "large_system_property_node_defaults",
+    ],
     tidy_disabled_srcs: [
         "malloc_test.cpp", // timed out with clang-tidy, and too many warnings
     ],
@@ -401,6 +403,7 @@ cc_test_library {
         "_FILE_OFFSET_BITS_test.cpp",
         "float_test.cpp",
         "fnmatch_test.cpp",
+        "fts_test.cpp",
         "ftw_test.cpp",
         "getauxval_test.cpp",
         "getcwd_test.cpp",
@@ -430,6 +433,7 @@ cc_test_library {
         "netdb_test.cpp",
         "net_if_test.cpp",
         "netinet_ether_test.cpp",
+        "netinet_igmp_test.cpp",
         "netinet_in_test.cpp",
         "netinet_ip_icmp_test.cpp",
         "netinet_udp_test.cpp",
@@ -474,6 +478,7 @@ cc_test_library {
         "sys_cachectl_test.cpp",
         "sys_epoll_test.cpp",
         "sys_hwprobe_test.cpp",
+        "sys_io_test.cpp",
         "sys_mman_test.cpp",
         "sys_msg_test.cpp",
         "sys_param_test.cpp",
@@ -577,6 +582,9 @@ cc_test_library {
     ],
     include_dirs: [
         "bionic/libc",
+    ],
+    static_libs: [
+        "libbase",
     ],
     shared: {
         enabled: false,
@@ -834,7 +842,10 @@ cc_defaults {
     data_bins: [
         "cfi_test_helper",
         "cfi_test_helper2",
+        "elftls_align_test_helper",
         "elftls_dlopen_ie_error_helper",
+        "elftls_dtv_resize_helper",
+        "elftls_skew_align_test_helper",
         "exec_linker_helper",
         "exec_linker_helper_lib",
         "heap_tagging_async_helper",
@@ -937,6 +948,8 @@ cc_defaults {
         "libtest_elftls_dynamic_filler_1",
         "libtest_elftls_dynamic_filler_2",
         "libtest_elftls_dynamic_filler_3",
+        "libtest_elftls_dynamic_filler_4",
+        "libtest_elftls_dynamic_filler_5",
         "libtest_elftls_shared_var",
         "libtest_elftls_shared_var_ie",
         "libtest_elftls_tprel",
@@ -1128,11 +1141,14 @@ cc_test {
     shared_libs: [
         "libbase",
     ],
-    data_libs: ["libtest_simple_memtag_stack", "libtest_depends_on_simple_memtag_stack"],
+    data_libs: [
+        "libtest_simple_memtag_stack",
+        "libtest_depends_on_simple_memtag_stack",
+    ],
     data_bins: [
         "testbinary_depends_on_simple_memtag_stack",
         "testbinary_depends_on_depends_on_simple_memtag_stack",
-        "testbinary_is_stack_mte_after_dlopen"
+        "testbinary_is_stack_mte_after_dlopen",
     ],
     header_libs: ["bionic_libc_platform_headers"],
     test_suites: ["device-tests"],
@@ -1186,9 +1202,9 @@ cc_test {
         "gtest_globals.cpp",
         "gtest_main.cpp",
 
-        // The Bionic allocator has its own C++ API. It isn't packaged into its
-        // own library, so it can only be tested when it's part of libc.a.
+        // Test internal parts of Bionic that aren't exposed via libc.so.
         "bionic_allocator_test.cpp",
+        "static_tls_layout_test.cpp",
     ],
     include_dirs: [
         "bionic/libc",
@@ -1218,6 +1234,8 @@ cc_test {
         never: true,
     },
     data_bins: [
+        "elftls_align_test_helper",
+        "elftls_skew_align_test_helper",
         "heap_tagging_async_helper",
         "heap_tagging_disabled_helper",
         "heap_tagging_static_async_helper",
@@ -1305,4 +1323,47 @@ cc_test_host {
     },
 }
 
-subdirs = ["*"]
+cc_defaults {
+    name: "bionic_compile_time_tests_defaults",
+    enabled: false,
+    target: {
+        linux_x86: {
+            enabled: true,
+        },
+        linux_x86_64: {
+            enabled: true,
+        },
+    },
+    tidy: false,
+    clang_verify: true,
+    cflags: [
+        "-Wall",
+        "-Wno-error",
+        "-fno-color-diagnostics",
+        "-ferror-limit=10000",
+        "-DCOMPILATION_TESTS=1",
+        "-Wformat-nonliteral",
+        "-U_FORTIFY_SOURCE",
+    ],
+    srcs: ["clang_fortify_tests.cpp"],
+}
+
+cc_library_static {
+    name: "bionic-compile-time-tests1-clang++",
+    defaults: [
+        "bionic_compile_time_tests_defaults",
+    ],
+    cppflags: [
+        "-D_FORTIFY_SOURCE=1",
+    ],
+}
+
+cc_library_static {
+    name: "bionic-compile-time-tests2-clang++",
+    defaults: [
+        "bionic_compile_time_tests_defaults",
+    ],
+    cppflags: [
+        "-D_FORTIFY_SOURCE=2",
+    ],
+}

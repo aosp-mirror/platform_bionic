@@ -24,6 +24,7 @@ enum {
   IOMMUFD_CMD_GET_HW_INFO,
   IOMMUFD_CMD_HWPT_SET_DIRTY_TRACKING,
   IOMMUFD_CMD_HWPT_GET_DIRTY_BITMAP,
+  IOMMUFD_CMD_HWPT_INVALIDATE,
 };
 struct iommu_destroy {
   __u32 size;
@@ -200,4 +201,26 @@ struct iommu_hwpt_get_dirty_bitmap {
   __aligned_u64 data;
 };
 #define IOMMU_HWPT_GET_DIRTY_BITMAP _IO(IOMMUFD_TYPE, IOMMUFD_CMD_HWPT_GET_DIRTY_BITMAP)
+enum iommu_hwpt_invalidate_data_type {
+  IOMMU_HWPT_INVALIDATE_DATA_VTD_S1,
+};
+enum iommu_hwpt_vtd_s1_invalidate_flags {
+  IOMMU_VTD_INV_FLAGS_LEAF = 1 << 0,
+};
+struct iommu_hwpt_vtd_s1_invalidate {
+  __aligned_u64 addr;
+  __aligned_u64 npages;
+  __u32 flags;
+  __u32 __reserved;
+};
+struct iommu_hwpt_invalidate {
+  __u32 size;
+  __u32 hwpt_id;
+  __aligned_u64 data_uptr;
+  __u32 data_type;
+  __u32 entry_len;
+  __u32 entry_num;
+  __u32 __reserved;
+};
+#define IOMMU_HWPT_INVALIDATE _IO(IOMMUFD_TYPE, IOMMUFD_CMD_HWPT_INVALIDATE)
 #endif

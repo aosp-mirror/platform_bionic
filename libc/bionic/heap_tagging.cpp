@@ -34,9 +34,15 @@
 #include <platform/bionic/malloc.h>
 #include <sanitizer/hwasan_interface.h>
 #include <sys/auxv.h>
+#include <sys/prctl.h>
 
 extern "C" void scudo_malloc_disable_memory_tagging();
 extern "C" void scudo_malloc_set_track_allocation_stacks(int);
+
+extern "C" const char* __scudo_get_stack_depot_addr();
+extern "C" const char* __scudo_get_ring_buffer_addr();
+extern "C" size_t __scudo_get_ring_buffer_size();
+extern "C" size_t __scudo_get_stack_depot_size();
 
 // Protected by `g_heap_tagging_lock`.
 static HeapTaggingLevel heap_tagging_level = M_HEAP_TAGGING_LEVEL_NONE;
@@ -46,6 +52,8 @@ void SetDefaultHeapTaggingLevel() {
 #if !__has_feature(hwaddress_sanitizer)
   heap_tagging_level = __libc_shared_globals()->initial_heap_tagging_level;
 #endif
+
+  __libc_memtag_stack_abi = __libc_shared_globals()->initial_memtag_stack_abi;
 
   __libc_globals.mutate([](libc_globals* globals) {
     switch (heap_tagging_level) {
@@ -58,14 +66,14 @@ void SetDefaultHeapTaggingLevel() {
       case M_HEAP_TAGGING_LEVEL_SYNC:
       case M_HEAP_TAGGING_LEVEL_ASYNC:
         atomic_store(&globals->memtag, true);
-        atomic_store(&globals->memtag_stack, __libc_shared_globals()->initial_memtag_stack);
+        atomic_store(&__libc_memtag_stack, __libc_shared_globals()->initial_memtag_stack);
         break;
       default:
         break;
     };
   });
 
-#if defined(USE_SCUDO)
+#if defined(USE_SCUDO) && !__has_feature(hwaddress_sanitizer)
   switch (heap_tagging_level) {
     case M_HEAP_TAGGING_LEVEL_TBI:
     case M_HEAP_TAGGING_LEVEL_NONE:
@@ -113,7 +121,7 @@ bool SetHeapTaggingLevel(HeapTaggingLevel tag_level) {
           // tagged and checks no longer happen.
           globals->heap_pointer_tag = static_cast<uintptr_t>(0xffull << UNTAG_SHIFT);
         }
-        atomic_store(&globals->memtag_stack, false);
+        atomic_store(&__libc_memtag_stack, false);
         atomic_store(&globals->memtag, false);
       });
 
@@ -123,7 +131,7 @@ bool SetHeapTaggingLevel(HeapTaggingLevel tag_level) {
           return false;
         }
       }
-#if defined(USE_SCUDO)
+#if defined(USE_SCUDO) && !__has_feature(hwaddress_sanitizer)
       scudo_malloc_disable_memory_tagging();
 #endif
       break;
@@ -151,13 +159,17 @@ bool SetHeapTaggingLevel(HeapTaggingLevel tag_level) {
         if (!set_tcf_on_all_threads(PR_MTE_TCF_ASYNC | PR_MTE_TCF_SYNC)) {
           set_tcf_on_all_threads(PR_MTE_TCF_ASYNC);
         }
-#if defined(USE_SCUDO)
+#if defined(USE_SCUDO) && !__has_feature(hwaddress_sanitizer)
         scudo_malloc_set_track_allocation_stacks(0);
 #endif
       } else if (tag_level == M_HEAP_TAGGING_LEVEL_SYNC) {
         set_tcf_on_all_threads(PR_MTE_TCF_SYNC);
-#if defined(USE_SCUDO)
+#if defined(USE_SCUDO) && !__has_feature(hwaddress_sanitizer)
         scudo_malloc_set_track_allocation_stacks(1);
+        __libc_shared_globals()->scudo_ring_buffer = __scudo_get_ring_buffer_addr();
+        __libc_shared_globals()->scudo_ring_buffer_size = __scudo_get_ring_buffer_size();
+        __libc_shared_globals()->scudo_stack_depot = __scudo_get_stack_depot_addr();
+        __libc_shared_globals()->scudo_stack_depot_size = __scudo_get_stack_depot_size();
 #endif
       }
       break;
@@ -174,6 +186,9 @@ bool SetHeapTaggingLevel(HeapTaggingLevel tag_level) {
 
 #ifdef __aarch64__
 static inline __attribute__((no_sanitize("memtag"))) void untag_memory(void* from, void* to) {
+  if (from == to) {
+    return;
+  }
   __asm__ __volatile__(
       ".arch_extension mte\n"
       "1:\n"
@@ -192,17 +207,29 @@ static constexpr size_t kUntagLimit = 128 * 1024 * 1024;
 #endif  // __aarch64__
 
 extern "C" __LIBC_HIDDEN__ __attribute__((no_sanitize("memtag"))) void memtag_handle_longjmp(
-    void* sp_dst __unused) {
+    void* sp_dst __unused, void* sp_src __unused) {
+  // A usual longjmp looks like this, where sp_dst was the LR in the call to setlongjmp (i.e.
+  // the SP of the frame calling setlongjmp).
+  // ┌─────────────────────┐                  │
+  // │                     │                  │
+  // ├─────────────────────┤◄──────── sp_dst  │ stack
+  // │         ...         │                  │ grows
+  // ├─────────────────────┤                  │ to lower
+  // │         ...         │                  │ addresses
+  // ├─────────────────────┤◄──────── sp_src  │
+  // │siglongjmp           │                  │
+  // ├─────────────────────┤                  │
+  // │memtag_handle_longjmp│                  │
+  // └─────────────────────┘                  ▼
 #ifdef __aarch64__
-  if (__libc_globals->memtag_stack) {
-    void* sp = __builtin_frame_address(0);
-    size_t distance = reinterpret_cast<uintptr_t>(sp_dst) - reinterpret_cast<uintptr_t>(sp);
+  if (atomic_load(&__libc_memtag_stack)) {
+    size_t distance = reinterpret_cast<uintptr_t>(sp_dst) - reinterpret_cast<uintptr_t>(sp_src);
     if (distance > kUntagLimit) {
       async_safe_fatal(
-          "memtag_handle_longjmp: stack adjustment too large! %p -> %p, distance %zx > %zx\n", sp,
-          sp_dst, distance, kUntagLimit);
+          "memtag_handle_longjmp: stack adjustment too large! %p -> %p, distance %zx > %zx\n",
+          sp_src, sp_dst, distance, kUntagLimit);
     } else {
-      untag_memory(sp, sp_dst);
+      untag_memory(sp_src, sp_dst);
     }
   }
 #endif  // __aarch64__

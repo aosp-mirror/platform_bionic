@@ -46,7 +46,7 @@
 #include "private/CFIShadow.h" // For kLibraryAlignment
 #include "private/elf_note.h"
 
-#include <procinfo/process_map.h>
+#include <android-base/file.h>
 
 static int GetTargetElfMachine() {
 #if defined(__arm__)
@@ -298,7 +298,6 @@ bool ElfReader::VerifyElfHeader() {
   }
 
   if (header_.e_shentsize != sizeof(ElfW(Shdr))) {
-    // Fail if app is targeting Android O or above
     if (get_application_target_sdk_version() >= 26) {
       DL_ERR_AND_LOG("\"%s\" has unsupported e_shentsize: 0x%x (expected 0x%zx)",
                      name_.c_str(), header_.e_shentsize, sizeof(ElfW(Shdr)));
@@ -312,12 +311,10 @@ bool ElfReader::VerifyElfHeader() {
   }
 
   if (header_.e_shstrndx == 0) {
-    // Fail if app is targeting Android O or above
     if (get_application_target_sdk_version() >= 26) {
       DL_ERR_AND_LOG("\"%s\" has invalid e_shstrndx", name_.c_str());
       return false;
     }
-
     DL_WARN_documented_change(26,
                               "invalid-elf-header_section-headers-enforced-for-api-level-26",
                               "\"%s\" has invalid e_shstrndx", name_.c_str());
@@ -709,8 +706,28 @@ bool ElfReader::ReserveAddressSpace(address_space_params* address_space) {
   return true;
 }
 
+/*
+ * Returns true if the kernel supports page size migration, else false.
+ */
+bool page_size_migration_supported() {
+  static bool pgsize_migration_enabled = []() {
+    std::string enabled;
+    if (!android::base::ReadFileToString("/sys/kernel/mm/pgsize_migration/enabled", &enabled)) {
+      return false;
+    }
+    return enabled.find("1") != std::string::npos;
+  }();
+  return pgsize_migration_enabled;
+}
+
 // Find the ELF note of type NT_ANDROID_TYPE_PAD_SEGMENT and check that the desc value is 1.
 bool ElfReader::ReadPadSegmentNote() {
+  if (!page_size_migration_supported()) {
+    // Don't attempt to read the note, since segment extension isn't
+    // supported; but return true so that loading can continue normally.
+    return true;
+  }
+
   // The ELF can have multiple PT_NOTE's, check them all
   for (size_t i = 0; i < phdr_num_; ++i) {
     const ElfW(Phdr)* phdr = &phdr_table_[i];
@@ -723,6 +740,16 @@ bool ElfReader::ReadPadSegmentNote() {
     // point to any part of the ELF (p_memsz == 0). Skip these since there is
     // nothing to decode. See: b/324468126
     if (phdr->p_memsz == 0) {
+      continue;
+    }
+
+    // If the PT_NOTE extends beyond the file. The ELF is doing something
+    // strange -- obfuscation, embedding hidden loaders, ...
+    //
+    // It doesn't contain the pad_segment note. Skip it to avoid SIGBUS
+    // by accesses beyond the file.
+    off64_t note_end_off = file_offset_ + phdr->p_offset + phdr->p_filesz;
+    if (note_end_off > file_size_) {
       continue;
     }
 
@@ -765,7 +792,16 @@ static inline void _extend_load_segment_vma(const ElfW(Phdr)* phdr_table, size_t
   const ElfW(Phdr)* next = nullptr;
   size_t next_idx = phdr_idx + 1;
 
-  if (phdr->p_align == kPageSize || !should_pad_segments) {
+  // Don't do segment extension for p_align > 64KiB, such ELFs already existed in the
+  // field e.g. 2MiB p_align for THPs and are relatively small in number.
+  //
+  // The kernel can only represent padding for p_align up to 64KiB. This is because
+  // the kernel uses 4 available bits in the vm_area_struct to represent padding
+  // extent; and so cannot enable mitigations to avoid breaking app compatibility for
+  // p_aligns > 64KiB.
+  //
+  // Don't perform segment extension on these to avoid app compatibility issues.
+  if (phdr->p_align <= kPageSize || phdr->p_align > 64*1024 || !should_pad_segments) {
     return;
   }
 
@@ -869,25 +905,38 @@ bool ElfReader::LoadSegments() {
       }
     }
 
-    // if the segment is writable, and its memory map extends beyond
-    // the segment contents on file (p_filesz); zero-fill it until the
-    // end of the mapping backed by the file, rounded to the next
-    // page boundary; as this portion of the mapping corresponds to either
-    // garbage (partial page at the end) or data from other segments.
+    // if the segment is writable, and does not end on a page boundary,
+    // zero-fill it until the page limit.
     //
-    // If any part of the mapping extends beyond the file size there is
-    // no need to zero it since that region is not touchable by userspace
-    // and attempting to do so will causes the kernel to throw a SIGBUS.
+    // Do not attempt to zero the extended region past the first partial page,
+    // since doing so may:
+    //   1) Result in a SIGBUS, as the region is not backed by the underlying
+    //      file.
+    //   2) Break the COW backing, faulting in new anon pages for a region
+    //      that will not be used.
+
+    uint64_t unextended_seg_file_end = seg_start + phdr->p_filesz;
+    if ((phdr->p_flags & PF_W) != 0 && page_offset(unextended_seg_file_end) > 0) {
+      memset(reinterpret_cast<void*>(unextended_seg_file_end), 0,
+             kPageSize - page_offset(unextended_seg_file_end));
+    }
+
+    // Pages may be brought in due to readahead.
+    // Drop the padding (zero) pages, to avoid reclaim work later.
     //
-    // See: system/libprocinfo/include/procinfo/process_map_size.h
-    uint64_t file_backed_size = ::android::procinfo::MappedFileSize(seg_page_start,
-                                page_end(seg_page_start + file_length),
-                                file_offset_ + file_page_start, file_size_);
-    // _seg_file_end = unextended seg_file_end
-    uint64_t _seg_file_end = seg_start + phdr->p_filesz;
-    uint64_t zero_fill_len = file_backed_size - (_seg_file_end - seg_page_start);
-    if ((phdr->p_flags & PF_W) != 0 && zero_fill_len > 0) {
-      memset(reinterpret_cast<void*>(_seg_file_end), 0, zero_fill_len);
+    // NOTE: The madvise() here is special, as it also serves to hint to the
+    // kernel the portion of the LOAD segment that is padding.
+    //
+    // See: [1] https://android-review.googlesource.com/c/kernel/common/+/3032411
+    //      [2] https://android-review.googlesource.com/c/kernel/common/+/3048835
+    uint64_t pad_start = page_end(unextended_seg_file_end);
+    uint64_t pad_end = page_end(seg_file_end);
+    CHECK(pad_start <= pad_end);
+    uint64_t pad_len = pad_end - pad_start;
+    if (page_size_migration_supported() && pad_len > 0 &&
+        madvise(reinterpret_cast<void*>(pad_start), pad_len, MADV_DONTNEED)) {
+      DL_WARN("\"%s\": madvise(0x%" PRIx64 ", 0x%" PRIx64 ", MADV_DONTNEED) failed: %m",
+              name_.c_str(), pad_start, pad_len);
     }
 
     seg_file_end = page_end(seg_file_end);
@@ -1277,11 +1326,6 @@ int phdr_table_map_gnu_relro(const ElfW(Phdr)* phdr_table,
 
 
 #if defined(__arm__)
-
-#  ifndef PT_ARM_EXIDX
-#    define PT_ARM_EXIDX    0x70000001      /* .ARM.exidx segment */
-#  endif
-
 /* Return the address and size of the .ARM.exidx section in memory,
  * if present.
  *

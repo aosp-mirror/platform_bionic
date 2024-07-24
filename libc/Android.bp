@@ -1,5 +1,3 @@
-// Define the common source files for all the libc instances
-// =========================================================
 package {
     default_applicable_licenses: ["bionic_libc_license"],
 }
@@ -55,7 +53,9 @@ libc_common_flags = [
 cc_defaults {
     name: "libc_defaults",
     defaults: ["linux_bionic_supported"],
-    cflags: libc_common_flags,
+    cflags: libc_common_flags + [
+        "-DUSE_SCUDO",
+    ],
     asflags: libc_common_flags,
     conlyflags: ["-std=gnu99"],
     cppflags: [],
@@ -87,10 +87,6 @@ cc_defaults {
     recovery_available: true,
     native_bridge_supported: true,
 
-    // lld complains about duplicate symbols in libcrt and libgcc. Suppress the
-    // warning since this is intended right now.
-    ldflags: ["-Wl,-z,muldefs"],
-
     product_variables: {
         malloc_zero_contents: {
             cflags: ["-DSCUDO_ZERO_CONTENTS"],
@@ -98,8 +94,8 @@ cc_defaults {
         malloc_pattern_fill_contents: {
             cflags: ["-DSCUDO_PATTERN_FILL_CONTENTS"],
         },
-        malloc_not_svelte: {
-            cflags: ["-DUSE_SCUDO"],
+        malloc_low_memory: {
+            cflags: ["-UUSE_SCUDO"],
         },
     },
 
@@ -112,32 +108,90 @@ cc_defaults {
     tidy_disabled_srcs: ["upstream-*/**/*.c"],
 }
 
-libc_scudo_product_variables = {
-    malloc_not_svelte: {
-        cflags: ["-DUSE_SCUDO"],
-        whole_static_libs: ["libscudo"],
-        exclude_static_libs: [
-            "libjemalloc5",
-            "libc_jemalloc_wrapper",
-        ],
+// Workaround for b/24465209.
+// We're unlikely to be able to remove this before we just
+// remove ILP32 support completely.
+// Note that we also still have `pack_relocations: false`
+// for both libc and libm, even on LP64.
+// ========================================================
+cc_defaults {
+    name: "bug_24465209_workaround",
+    target: {
+        android_arm: {
+            pack_relocations: false,
+            ldflags: ["-Wl,--hash-style=both"],
+        },
+        android_x86: {
+            pack_relocations: false,
+            ldflags: ["-Wl,--hash-style=both"],
+        },
+    },
+}
+
+// Leave the symbols in the shared library so that stack unwinders can produce
+// meaningful name resolution. This is a bit more ugly than it sounds because
+// arm32 is a bit broken.
+// ========================================================
+cc_defaults {
+    name: "keep_symbols",
+    arch: {
+        arm: {
+            // arm32 does not produce complete exidx unwind information,
+            // so keep the .debug_frame which is relatively small and does
+            // include needed unwind information.
+            // See b/132992102 for details.
+            strip: {
+                keep_symbols_and_debug_frame: true,
+            },
+        },
+        arm64: {
+            strip: {
+                keep_symbols: true,
+            },
+        },
+        riscv64: {
+            strip: {
+                keep_symbols: true,
+            },
+        },
+        x86: {
+            strip: {
+                keep_symbols: true,
+            },
+        },
+        x86_64: {
+            strip: {
+                keep_symbols: true,
+            },
+        },
     },
 }
 
 // Defaults for native allocator libs/includes to make it
 // easier to change.
-// To disable scudo for the non-svelte config remove the line:
-//     product_variables: libc_scudo_product_variables,
-// in the cc_defaults below.
 // ========================================================
 cc_defaults {
     name: "libc_native_allocator_defaults",
 
     whole_static_libs: [
-        "libjemalloc5",
-        "libc_jemalloc_wrapper",
+        "libscudo",
+    ],
+    cflags: [
+        "-DUSE_SCUDO",
     ],
     header_libs: ["gwp_asan_headers"],
-    product_variables: libc_scudo_product_variables,
+    product_variables: {
+        malloc_low_memory: {
+            cflags: ["-UUSE_SCUDO"],
+            whole_static_libs: [
+                "libjemalloc5",
+                "libc_jemalloc_wrapper",
+            ],
+            exclude_static_libs: [
+                "libscudo",
+            ],
+        },
+    },
 }
 
 // Functions not implemented by jemalloc directly, or that need to
@@ -878,7 +932,6 @@ cc_library_static {
         "bionic/mkfifo.cpp",
         "bionic/mknod.cpp",
         "bionic/mntent.cpp",
-        "bionic/mremap.cpp",
         "bionic/netdb.cpp",
         "bionic/net_if.cpp",
         "bionic/netinet_ether.cpp",
@@ -1002,11 +1055,6 @@ cc_library_static {
         "stdio/stdio_ext.cpp",
         "stdio/vfscanf.cpp",
         "stdio/vfwscanf.cpp",
-
-        // TODO: why isn't this in a static-libc-only module?
-        // This contains a weak stub implementation of __find_icu_symbol for wctype.cpp,
-        // which will be overridden by the actual one in libc.so.
-        "bionic/icu_static.cpp",
     ],
 
     arch: {
@@ -1075,6 +1123,8 @@ cc_library_static {
                 "arch-arm64/bionic/setjmp.S",
                 "arch-arm64/bionic/syscall.S",
                 "arch-arm64/bionic/vfork.S",
+                "arch-arm64/oryon/memcpy-nt.S",
+                "arch-arm64/oryon/memset-nt.S",
             ],
         },
 
@@ -1221,9 +1271,6 @@ cc_library_static {
                 // off64_t/time64_t support on LP32.
                 "bionic/legacy_32_bit_support.cpp",
                 "bionic/time64.c",
-
-                // TODO: move to libc/bionic/legacy_32_bit_support.cpp or #if __LP64__ instead.
-                "bionic/mmap.cpp",
             ],
         },
     },
@@ -1510,6 +1557,7 @@ filegroup {
     srcs: [
         "bionic/gwp_asan_wrappers.cpp",
         "bionic/heap_tagging.cpp",
+        "bionic/icu_static.cpp",
         "bionic/malloc_common.cpp",
         "bionic/malloc_limit.cpp",
     ],
@@ -1530,6 +1578,8 @@ cc_defaults {
     defaults: [
         "libc_defaults",
         "libc_native_allocator_defaults",
+        "bug_24465209_workaround",
+        "keep_symbols",
     ],
     name: "libc_library_defaults",
     product_variables: {
@@ -1542,7 +1592,6 @@ cc_defaults {
         cflags: ["-DLIBC_STATIC"],
         whole_static_libs: [
             "gwp_asan",
-            "gwp_asan_crash_handler",
             "libc_init_static",
             "libc_common_static",
             "libc_unwind_static",
@@ -1552,7 +1601,6 @@ cc_defaults {
         srcs: [":libc_sources_shared"],
         whole_static_libs: [
             "gwp_asan",
-            "gwp_asan_crash_handler",
             "libc_init_dynamic",
             "libc_common_shared",
             "libunwind-exported",
@@ -1567,14 +1615,6 @@ cc_defaults {
     // Do not pack libc.so relocations; see http://b/20645321 for details.
     pack_relocations: false,
 
-    // WARNING: The only libraries libc.so should depend on are libdl.so and ld-android.so!
-    // If you add other libraries, make sure to add -Wl,--exclude-libs=libgcc.a to the
-    // LOCAL_LDFLAGS for those libraries.  This ensures that symbols that are pulled into
-    // those new libraries from libgcc.a are not declared external; if that were the case,
-    // then libc would not pull those symbols from libgcc.a as it should, instead relying
-    // on the external symbols from the dependent libraries.  That would create a "cloaked"
-    // dependency on libgcc.a in libc though the libraries, which is not what you wanted!
-
     shared_libs: [
         "ld-android",
         "libdl",
@@ -1587,15 +1627,6 @@ cc_defaults {
 
     arch: {
         arm: {
-            // TODO: This is to work around b/24465209. Remove after root cause is fixed.
-            pack_relocations: false,
-            ldflags: [
-                "-Wl,--hash-style=both",
-                // Since we are preserving the debug_frame, do not compress
-                // in this case to make unwinds as fast as possible.
-                "-Wl,--compress-debug-sections=none",
-            ],
-
             version_script: ":libc.arm.map",
             no_libcrt: true,
 
@@ -1603,63 +1634,33 @@ cc_defaults {
                 srcs: [":libc_sources_shared_arm"],
                 // special for arm
                 cflags: ["-DCRT_LEGACY_WORKAROUND"],
-                // For backwards-compatibility, some arm32 builtins are exported from libc.so.
+                // For backwards compatibility, some arm32 builtins are exported from libc.so.
                 static_libs: ["libclang_rt.builtins-exported"],
             },
 
-            // Arm 32 bit does not produce complete exidx unwind information
-            // so keep the .debug_frame which is relatively small and does
-            // include needed unwind information.
-            // See b/132992102 for details.
-            strip: {
-                keep_symbols_and_debug_frame: true,
-            },
+            ldflags: [
+                // Since we preserve the debug_frame for libc, do not compress
+                // in this case to make unwinds as fast as possible.
+                "-Wl,--compress-debug-sections=none",
+            ],
         },
         arm64: {
             version_script: ":libc.arm64.map",
-
-            // Leave the symbols in the shared library so that stack unwinders can produce
-            // meaningful name resolution.
-            strip: {
-                keep_symbols: true,
-            },
         },
         riscv64: {
             version_script: ":libc.riscv64.map",
-
-            // Leave the symbols in the shared library so that stack unwinders can produce
-            // meaningful name resolution.
-            strip: {
-                keep_symbols: true,
-            },
         },
         x86: {
-            // TODO: This is to work around b/24465209. Remove after root cause is fixed.
-            pack_relocations: false,
-            ldflags: ["-Wl,--hash-style=both"],
-
             version_script: ":libc.x86.map",
             no_libcrt: true,
 
             shared: {
-                // For backwards-compatibility, some x86 builtins are exported from libc.so.
+                // For backwards compatibility, some x86 builtins are exported from libc.so.
                 static_libs: ["libclang_rt.builtins-exported"],
-            },
-
-            // Leave the symbols in the shared library so that stack unwinders can produce
-            // meaningful name resolution.
-            strip: {
-                keep_symbols: true,
             },
         },
         x86_64: {
             version_script: ":libc.x86_64.map",
-
-            // Leave the symbols in the shared library so that stack unwinders can produce
-            // meaningful name resolution.
-            strip: {
-                keep_symbols: true,
-            },
         },
     },
 
@@ -1917,7 +1918,10 @@ cc_library_headers {
 // ========================================================
 
 cc_library {
-    defaults: ["libc_defaults"],
+    defaults: [
+        "libc_defaults",
+        "bug_24465209_workaround",
+    ],
     include_dirs: ["bionic/libstdc++/include"],
     srcs: [
         "bionic/__cxa_guard.cpp",
@@ -1942,12 +1946,8 @@ cc_library {
         },
     },
 
-    //TODO (dimitry): This is to work around b/24465209. Remove after root cause is fixed
     arch: {
         arm: {
-            // TODO: This is to work around b/24465209. Remove after root cause is fixed.
-            pack_relocations: false,
-            ldflags: ["-Wl,--hash-style=both"],
             version_script: ":libstdc++.arm.map",
         },
         arm64: {
@@ -1957,8 +1957,6 @@ cc_library {
             version_script: ":libstdc++.riscv64.map",
         },
         x86: {
-            pack_relocations: false,
-            ldflags: ["-Wl,--hash-style=both"],
             version_script: ":libstdc++.x86.map",
         },
         x86_64: {
@@ -2061,11 +2059,10 @@ cc_defaults {
 
 cc_object {
     name: "crtbrand",
-    // crtbrand.c needs <stdint.h> and a #define for the platform SDK version.
     local_include_dirs: [
-        "include",
         "private", // crtbrand.S depends on private/bionic_asm_note.h
     ],
+    // crtbrand.S needs to know the platform SDK version.
     product_variables: {
         platform_sdk_version: {
             asflags: ["-DPLATFORM_SDK_VERSION=%d"],
@@ -2092,7 +2089,6 @@ cc_object {
 cc_object {
     name: "crtend_so",
     local_include_dirs: [
-        "include",
         "private", // crtend_so.S depends on private/bionic_asm_arm64.h
     ],
     srcs: ["arch-common/bionic/crtend_so.S"],
@@ -2146,7 +2142,6 @@ cc_object {
     // name clash between gcc and bionic.
     name: "crtend_android",
     local_include_dirs: [
-        "include",
         "private", // crtend.S depends on private/bionic_asm_arm64.h
     ],
     srcs: ["arch-common/bionic/crtend.S"],
@@ -2157,7 +2152,6 @@ cc_object {
 cc_object {
     name: "crt_pad_segment",
     local_include_dirs: [
-        "include",
         "private", // crt_pad_segment.S depends on private/bionic_asm_note.h
     ],
     srcs: ["arch-common/bionic/crt_pad_segment.S"],
@@ -2232,7 +2226,7 @@ cc_library_static {
     nocrt: true,
     stl: "none",
     visibility: [
-        "//packages/modules/Virtualization/vmbase",
+        "//packages/modules/Virtualization/libs/libvmbase",
     ],
 }
 
@@ -2991,4 +2985,9 @@ cc_genrule {
 filegroup {
     name: "versioner-dependencies",
     srcs: ["versioner-dependencies/**/*"],
+}
+
+filegroup {
+    name: "linux_capability_header",
+    srcs: ["kernel/uapi/linux/capability.h"],
 }

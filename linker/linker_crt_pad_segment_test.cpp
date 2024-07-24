@@ -72,13 +72,22 @@ bool GetPadSegment(const std::string& elf_path) {
 };  // anonymous namespace
 
 TEST(crt_pad_segment, note_absent) {
+  if (!page_size_migration_supported()) {
+    GTEST_SKIP() << "Kernel does not support page size migration";
+  }
   ASSERT_FALSE(GetPadSegment("no_crt_pad_segment.so"));
 }
 
 TEST(crt_pad_segment, note_present_and_enabled) {
+  if (!page_size_migration_supported()) {
+    GTEST_SKIP() << "Kernel does not support page size migration";
+  }
   ASSERT_TRUE(GetPadSegment("crt_pad_segment_enabled.so"));
 }
 
 TEST(crt_pad_segment, note_present_and_disabled) {
+  if (!page_size_migration_supported()) {
+    GTEST_SKIP() << "Kernel does not support page size migration";
+  }
   ASSERT_FALSE(GetPadSegment("crt_pad_segment_disabled.so"));
 }

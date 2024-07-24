@@ -59,14 +59,21 @@ struct usb_os_desc_header {
 struct usb_ext_compat_desc {
   __u8 bFirstInterfaceNumber;
   __u8 Reserved1;
-  __u8 CompatibleID[8];
+  __struct_group(, IDs,, __u8 CompatibleID[8];
   __u8 SubCompatibleID[8];
+ );
   __u8 Reserved2[6];
 };
 struct usb_ext_prop_desc {
   __le32 dwSize;
   __le32 dwPropertyDataType;
   __le16 wPropertyNameLength;
+} __attribute__((packed));
+#define USB_FFS_DMABUF_TRANSFER_MASK 0x0
+struct usb_ffs_dmabuf_transfer_req {
+  int fd;
+  __u32 flags;
+  __u64 length;
 } __attribute__((packed));
 struct usb_functionfs_strings_head {
   __le32 magic;
@@ -96,4 +103,7 @@ struct usb_functionfs_event {
 #define FUNCTIONFS_INTERFACE_REVMAP _IO('g', 128)
 #define FUNCTIONFS_ENDPOINT_REVMAP _IO('g', 129)
 #define FUNCTIONFS_ENDPOINT_DESC _IOR('g', 130, struct usb_endpoint_descriptor)
+#define FUNCTIONFS_DMABUF_ATTACH _IOW('g', 131, int)
+#define FUNCTIONFS_DMABUF_DETACH _IOW('g', 132, int)
+#define FUNCTIONFS_DMABUF_TRANSFER _IOW('g', 133, struct usb_ffs_dmabuf_transfer_req)
 #endif

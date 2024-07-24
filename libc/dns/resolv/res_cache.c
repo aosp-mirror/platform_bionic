@@ -1166,23 +1166,19 @@ entry_free( Entry*  e )
     }
 }
 
-static __inline__ void
-entry_mru_remove( Entry*  e )
-{
-    e->mru_prev->mru_next = e->mru_next;
-    e->mru_next->mru_prev = e->mru_prev;
+static __inline__ void entry_mru_remove(Entry* e) {
+  e->mru_prev->mru_next = e->mru_next;
+  e->mru_next->mru_prev = e->mru_prev;
 }
 
-static __inline__ void
-entry_mru_add( Entry*  e, Entry*  list )
-{
-    Entry*  first = list->mru_next;
+static __inline__ void entry_mru_add(Entry* e, Entry* list) {
+  Entry* first = list->mru_next;
 
-    e->mru_next = first;
-    e->mru_prev = list;
+  e->mru_next = first;
+  e->mru_prev = list;
 
-    list->mru_next  = e;
-    first->mru_prev = e;
+  list->mru_next = e;
+  first->mru_prev = e;
 }
 
 /* compute the hash of a given entry, this is a hash of most

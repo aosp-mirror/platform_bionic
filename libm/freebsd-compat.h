@@ -16,9 +16,12 @@
 
 #pragma once
 
+// Since we're implementing all the extensions,
+// we need to make sure we get all their declarations when we include <math.h>.
+#define _BSD_SOURCE
+
 // Some FreeBSD source includes <complex.h> and assumes <math.h> from that.
 #include <math.h>
-#include <float.h>
 
 #define __weak_reference(sym,alias)     \
     __asm__(".weak " #alias);           \
@@ -27,18 +30,12 @@
 #define __strong_reference(sym,aliassym) \
     extern __typeof (sym) aliassym __attribute__ ((__alias__ (#sym)))
 
-#define __warn_references(sym,msg) /* ignored */
-
-// digittoint is in BSD's <ctype.h>, but not ours, so we have a secret
-// implementation in libm. We reuse parts of libm in the NDK's
-// libandroid_support, where it's a static library, so we want all our
-// "hidden" functions start with a double underscore --- being HIDDEN
-// in the ELF sense is not sufficient.
-#define digittoint __libm_digittoint
-int digittoint(char ch);
-
-// Similarly rename _scan_nan.
-#define _scan_nan __libm_scan_nan
+// digittoint is in BSD's <ctype.h> but not ours.
+#include <ctype.h>
+static inline int digittoint(char ch) {
+  if (!isxdigit(ch)) return -1;
+  return isdigit(ch) ? (ch - '0') : (_tolower(ch) - 'a');
+}
 
 // FreeBSD exports these in <math.h> but we don't.
 double cospi(double);

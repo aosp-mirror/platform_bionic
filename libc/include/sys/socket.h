@@ -277,40 +277,32 @@ struct ucred {
 
 #define IPX_TYPE 1
 
-#ifdef __i386__
-# define __socketcall extern __attribute__((__cdecl__))
-#else
-# define __socketcall extern
-#endif
-
-__socketcall int accept(int __fd, struct sockaddr* _Nullable __addr, socklen_t* _Nullable __addr_length);
-__socketcall int accept4(int __fd, struct sockaddr* _Nullable __addr, socklen_t* _Nullable __addr_length, int __flags);
-__socketcall int bind(int __fd, const struct sockaddr* _Nonnull __addr, socklen_t __addr_length);
-__socketcall int connect(int __fd, const struct sockaddr* _Nonnull __addr, socklen_t __addr_length);
-__socketcall int getpeername(int __fd, struct sockaddr* _Nonnull __addr, socklen_t* _Nonnull __addr_length);
-__socketcall int getsockname(int __fd, struct sockaddr* _Nonnull __addr, socklen_t* _Nonnull __addr_length);
-__socketcall int getsockopt(int __fd, int __level, int __option, void* _Nullable __value, socklen_t* _Nonnull __value_length);
-__socketcall int listen(int __fd, int __backlog);
-__socketcall int recvmmsg(int __fd, struct mmsghdr* _Nonnull __msgs, unsigned int __msg_count, int __flags, const struct timespec* _Nullable __timeout);
-__socketcall ssize_t recvmsg(int __fd, struct msghdr* _Nonnull __msg, int __flags);
-__socketcall int sendmmsg(int __fd, const struct mmsghdr* _Nonnull __msgs, unsigned int __msg_count, int __flags);
-__socketcall ssize_t sendmsg(int __fd, const struct msghdr* _Nonnull __msg, int __flags);
-__socketcall int setsockopt(int __fd, int __level, int __option, const void* _Nullable __value, socklen_t __value_length);
-__socketcall int shutdown(int __fd, int __how);
-__socketcall int socket(int __af, int __type, int __protocol);
-__socketcall int socketpair(int __af, int __type, int __protocol, int __fds[_Nonnull 2]);
+int accept(int __fd, struct sockaddr* _Nullable __addr, socklen_t* _Nullable __addr_length);
+int accept4(int __fd, struct sockaddr* _Nullable __addr, socklen_t* _Nullable __addr_length, int __flags);
+int bind(int __fd, const struct sockaddr* _Nonnull __addr, socklen_t __addr_length);
+int connect(int __fd, const struct sockaddr* _Nonnull __addr, socklen_t __addr_length);
+int getpeername(int __fd, struct sockaddr* _Nonnull __addr, socklen_t* _Nonnull __addr_length);
+int getsockname(int __fd, struct sockaddr* _Nonnull __addr, socklen_t* _Nonnull __addr_length);
+int getsockopt(int __fd, int __level, int __option, void* _Nullable __value, socklen_t* _Nonnull __value_length);
+int listen(int __fd, int __backlog);
+int recvmmsg(int __fd, struct mmsghdr* _Nonnull __msgs, unsigned int __msg_count, int __flags, const struct timespec* _Nullable __timeout);
+ssize_t recvmsg(int __fd, struct msghdr* _Nonnull __msg, int __flags);
+int sendmmsg(int __fd, const struct mmsghdr* _Nonnull __msgs, unsigned int __msg_count, int __flags);
+ssize_t sendmsg(int __fd, const struct msghdr* _Nonnull __msg, int __flags);
+int setsockopt(int __fd, int __level, int __option, const void* _Nullable __value, socklen_t __value_length);
+int shutdown(int __fd, int __how);
+int socket(int __af, int __type, int __protocol);
+int socketpair(int __af, int __type, int __protocol, int __fds[_Nonnull 2]);
 
 ssize_t recv(int __fd, void* _Nullable __buf, size_t __n, int __flags);
 ssize_t send(int __fd, const void* _Nonnull __buf, size_t __n, int __flags);
 
-__socketcall ssize_t sendto(int __fd, const void* _Nonnull __buf, size_t __n, int __flags, const struct sockaddr* _Nullable __dst_addr, socklen_t __dst_addr_length);
-__socketcall ssize_t recvfrom(int __fd, void* _Nullable __buf, size_t __n, int __flags, struct sockaddr* _Nullable __src_addr, socklen_t* _Nullable __src_addr_length);
+ssize_t sendto(int __fd, const void* _Nonnull __buf, size_t __n, int __flags, const struct sockaddr* _Nullable __dst_addr, socklen_t __dst_addr_length);
+ssize_t recvfrom(int __fd, void* _Nullable __buf, size_t __n, int __flags, struct sockaddr* _Nullable __src_addr, socklen_t* _Nullable __src_addr_length);
 
 #if defined(__BIONIC_INCLUDE_FORTIFY_HEADERS)
 #include <bits/fortify/socket.h>
 #endif
-
-#undef __socketcall
 
 __END_DECLS
 

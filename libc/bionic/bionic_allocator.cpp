@@ -299,7 +299,7 @@ inline void* BionicAllocator::alloc_impl(size_t align, size_t size) {
     log2_size = kSmallObjectMinSizeLog2;
   }
 
-  return get_small_object_allocator(log2_size)->alloc();
+  return get_small_object_allocator_unchecked(log2_size)->alloc();
 }
 
 void* BionicAllocator::alloc(size_t size) {
@@ -330,9 +330,10 @@ inline page_info* BionicAllocator::get_page_info_unchecked(void* ptr) {
 inline page_info* BionicAllocator::get_page_info(void* ptr) {
   page_info* info = get_page_info_unchecked(ptr);
   if (memcmp(info->signature, kSignature, sizeof(kSignature)) != 0) {
-    async_safe_fatal("invalid pointer %p (page signature mismatch)", ptr);
+    async_safe_fatal("invalid pointer %p (page signature %04x instead of %04x)", ptr,
+                     *reinterpret_cast<const unsigned*>(info->signature),
+                     *reinterpret_cast<const unsigned*>(kSignature));
   }
-
   return info;
 }
 
@@ -353,12 +354,7 @@ void* BionicAllocator::realloc(void* ptr, size_t size) {
   if (info->type == kLargeObject) {
     old_size = info->allocated_size - (static_cast<char*>(ptr) - reinterpret_cast<char*>(info));
   } else {
-    BionicSmallObjectAllocator* allocator = get_small_object_allocator(info->type);
-    if (allocator != info->allocator_addr) {
-      async_safe_fatal("invalid pointer %p (page signature mismatch)", ptr);
-    }
-
-    old_size = allocator->get_block_size();
+    old_size = get_small_object_allocator(info, ptr)->get_block_size();
   }
 
   if (old_size < size) {
@@ -377,16 +373,10 @@ void BionicAllocator::free(void* ptr) {
   }
 
   page_info* info = get_page_info(ptr);
-
   if (info->type == kLargeObject) {
     munmap(info, info->allocated_size);
   } else {
-    BionicSmallObjectAllocator* allocator = get_small_object_allocator(info->type);
-    if (allocator != info->allocator_addr) {
-      async_safe_fatal("invalid pointer %p (invalid allocator address for the page)", ptr);
-    }
-
-    allocator->free(ptr);
+    get_small_object_allocator(info, ptr)->free(ptr);
   }
 }
 
@@ -402,7 +392,7 @@ size_t BionicAllocator::get_chunk_size(void* ptr) {
     return info->allocated_size - (static_cast<char*>(ptr) - reinterpret_cast<char*>(info));
   }
 
-  BionicSmallObjectAllocator* allocator = get_small_object_allocator(info->type);
+  BionicSmallObjectAllocator* allocator = get_small_object_allocator_unchecked(info->type);
   if (allocator != info->allocator_addr) {
     // Invalid pointer.
     return 0;
@@ -410,11 +400,19 @@ size_t BionicAllocator::get_chunk_size(void* ptr) {
   return allocator->get_block_size();
 }
 
-BionicSmallObjectAllocator* BionicAllocator::get_small_object_allocator(uint32_t type) {
+BionicSmallObjectAllocator* BionicAllocator::get_small_object_allocator_unchecked(uint32_t type) {
   if (type < kSmallObjectMinSizeLog2 || type > kSmallObjectMaxSizeLog2) {
     async_safe_fatal("invalid type: %u", type);
   }
 
   initialize_allocators();
   return &allocators_[type - kSmallObjectMinSizeLog2];
+}
+
+BionicSmallObjectAllocator* BionicAllocator::get_small_object_allocator(page_info* pi, void* ptr) {
+  BionicSmallObjectAllocator* result = get_small_object_allocator_unchecked(pi->type);
+  if (result != pi->allocator_addr) {
+    async_safe_fatal("invalid pointer %p (invalid allocator address for the page)", ptr);
+  }
+  return result;
 }

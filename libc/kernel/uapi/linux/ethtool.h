@@ -433,7 +433,8 @@ struct ethtool_rxfh {
   __u32 indir_size;
   __u32 key_size;
   __u8 hfunc;
-  __u8 rsvd8[3];
+  __u8 input_xfrm;
+  __u8 rsvd8[2];
   __u32 rsvd32;
   __u32 rss_config[];
 };
@@ -857,6 +858,8 @@ enum ethtool_link_mode_bit_indices {
 #define WAKE_MAGICSECURE (1 << 6)
 #define WAKE_FILTER (1 << 7)
 #define WOL_MODE_COUNT 8
+#define RXH_XFRM_SYM_XOR (1 << 0)
+#define RXH_XFRM_NO_CHANGE 0xff
 #define TCP_V4_FLOW 0x01
 #define UDP_V4_FLOW 0x02
 #define SCTP_V4_FLOW 0x03
@@ -875,6 +878,18 @@ enum ethtool_link_mode_bit_indices {
 #define IPV4_FLOW 0x10
 #define IPV6_FLOW 0x11
 #define ETHER_FLOW 0x12
+#define GTPU_V4_FLOW 0x13
+#define GTPU_V6_FLOW 0x14
+#define GTPC_V4_FLOW 0x15
+#define GTPC_V6_FLOW 0x16
+#define GTPC_TEID_V4_FLOW 0x17
+#define GTPC_TEID_V6_FLOW 0x18
+#define GTPU_EH_V4_FLOW 0x19
+#define GTPU_EH_V6_FLOW 0x1a
+#define GTPU_UL_V4_FLOW 0x1b
+#define GTPU_UL_V6_FLOW 0x1c
+#define GTPU_DL_V4_FLOW 0x1d
+#define GTPU_DL_V6_FLOW 0x1e
 #define FLOW_EXT 0x80000000
 #define FLOW_MAC_EXT 0x40000000
 #define FLOW_RSS 0x20000000
@@ -885,6 +900,7 @@ enum ethtool_link_mode_bit_indices {
 #define RXH_IP_DST (1 << 5)
 #define RXH_L4_B_0_1 (1 << 6)
 #define RXH_L4_B_2_3 (1 << 7)
+#define RXH_GTP_TEID (1 << 8)
 #define RXH_DISCARD (1 << 31)
 #define RX_CLS_FLOW_DISC 0xffffffffffffffffULL
 #define RX_CLS_FLOW_WAKE 0xfffffffffffffffeULL

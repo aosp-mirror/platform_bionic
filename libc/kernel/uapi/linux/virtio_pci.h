@@ -78,6 +78,8 @@ struct virtio_pci_modern_common_cfg {
   struct virtio_pci_common_cfg cfg;
   __le16 queue_notify_data;
   __le16 queue_reset;
+  __le16 admin_queue_index;
+  __le16 admin_queue_num;
 };
 struct virtio_pci_cfg_cap {
   struct virtio_pci_cap cap;
@@ -112,5 +114,48 @@ struct virtio_pci_cfg_cap {
 #define VIRTIO_PCI_COMMON_Q_USEDHI 52
 #define VIRTIO_PCI_COMMON_Q_NDATA 56
 #define VIRTIO_PCI_COMMON_Q_RESET 58
+#define VIRTIO_PCI_COMMON_ADM_Q_IDX 60
+#define VIRTIO_PCI_COMMON_ADM_Q_NUM 62
 #endif
+#define VIRTIO_ADMIN_STATUS_OK 0
+#define VIRTIO_ADMIN_CMD_LIST_QUERY 0x0
+#define VIRTIO_ADMIN_CMD_LIST_USE 0x1
+#define VIRTIO_ADMIN_GROUP_TYPE_SRIOV 0x1
+#define VIRTIO_ADMIN_CMD_LEGACY_COMMON_CFG_WRITE 0x2
+#define VIRTIO_ADMIN_CMD_LEGACY_COMMON_CFG_READ 0x3
+#define VIRTIO_ADMIN_CMD_LEGACY_DEV_CFG_WRITE 0x4
+#define VIRTIO_ADMIN_CMD_LEGACY_DEV_CFG_READ 0x5
+#define VIRTIO_ADMIN_CMD_LEGACY_NOTIFY_INFO 0x6
+struct virtio_admin_cmd_hdr {
+  __le16 opcode;
+  __le16 group_type;
+  __u8 reserved1[12];
+  __le64 group_member_id;
+};
+struct virtio_admin_cmd_status {
+  __le16 status;
+  __le16 status_qualifier;
+  __u8 reserved2[4];
+};
+struct virtio_admin_cmd_legacy_wr_data {
+  __u8 offset;
+  __u8 reserved[7];
+  __u8 registers[];
+};
+struct virtio_admin_cmd_legacy_rd_data {
+  __u8 offset;
+};
+#define VIRTIO_ADMIN_CMD_NOTIFY_INFO_FLAGS_END 0
+#define VIRTIO_ADMIN_CMD_NOTIFY_INFO_FLAGS_OWNER_DEV 0x1
+#define VIRTIO_ADMIN_CMD_NOTIFY_INFO_FLAGS_OWNER_MEM 0x2
+#define VIRTIO_ADMIN_CMD_MAX_NOTIFY_INFO 4
+struct virtio_admin_cmd_notify_info_data {
+  __u8 flags;
+  __u8 bar;
+  __u8 padding[6];
+  __le64 offset;
+};
+struct virtio_admin_cmd_notify_info_result {
+  struct virtio_admin_cmd_notify_info_data entries[VIRTIO_ADMIN_CMD_MAX_NOTIFY_INFO];
+};
 #endif
