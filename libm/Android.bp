@@ -353,10 +353,10 @@ cc_library {
         x86: {
             srcs: [
                 "fenv-x86.c",
-                "x86/lrint.S",
-                "x86/lrintf.S",
             ],
             exclude_srcs: [
+                "upstream-freebsd/lib/msun/src/s_llrint.c",
+                "upstream-freebsd/lib/msun/src/s_llrintf.c",
                 "upstream-freebsd/lib/msun/src/s_lrint.c",
                 "upstream-freebsd/lib/msun/src/s_lrintf.c",
             ],
@@ -369,8 +369,6 @@ cc_library {
         x86_64: {
             srcs: [
                 "fenv-x86_64.c",
-                "x86_64/lrint.S",
-                "x86_64/lrintf.S",
             ],
             exclude_srcs: [
                 "upstream-freebsd/lib/msun/src/s_llrint.c",

@@ -29,9 +29,7 @@ long double fmodl(long double a1, long double a2) { return fmod(a1, a2); }
 long double fminl(long double a1, long double a2) { return fmin(a1, a2); }
 int ilogbl(long double a1) { return ilogb(a1); }
 long long llrintl(long double a1) { return llrint(a1); }
-#if !defined(__i386__) // x86 has an assembler lrint/lrintl.
 long lrintl(long double a1) { return lrint(a1); }
-#endif
 long long llroundl(long double a1) { return llround(a1); }
 long lroundl(long double a1) { return lround(a1); }
 long double modfl(long double a1, long double* a2) { double i; double f = modf(a1, &i); *a2 = i; return f; }
