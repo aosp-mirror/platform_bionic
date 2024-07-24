@@ -110,7 +110,7 @@ void* _Nullable memalign(size_t __alignment, size_t __byte_count) __mallocfunc _
  * [malloc_usable_size(3)](http://man7.org/linux/man-pages/man3/malloc_usable_size.3.html)
  * returns the actual size of the given heap block.
  */
-size_t malloc_usable_size(const void* _Nullable __ptr);
+size_t malloc_usable_size(const void* _Nullable __ptr) __wur;
 
 #define __MALLINFO_BODY \
   /** Total number of non-mmapped bytes currently allocated from OS. */ \
@@ -186,7 +186,11 @@ struct mallinfo2 mallinfo2(void) __RENAME(mallinfo);
 int malloc_info(int __must_be_zero, FILE* _Nonnull __fp) __INTRODUCED_IN(23);
 
 /**
- * mallopt() option to set the decay time. Valid values are 0 and 1.
+ * mallopt() option to set the decay time. Valid values are -1, 0 and 1.
+ *   -1 : Disable the releasing of unused pages. This value is available since
+ *        API level 35.
+ *    0 : Release the unused pages immediately.
+ *    1 : Release the unused pages at a device-specific interval.
  *
  * Available since API level 27.
  */

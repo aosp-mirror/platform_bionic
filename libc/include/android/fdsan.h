@@ -126,6 +126,9 @@ enum android_fdsan_owner_type {
 
   /* native_handle_t */
   ANDROID_FDSAN_OWNER_TYPE_NATIVE_HANDLE = 13,
+
+  /* android::Parcel */
+  ANDROID_FDSAN_OWNER_TYPE_PARCEL = 14,
 };
 
 /*

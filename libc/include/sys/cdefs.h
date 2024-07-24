@@ -87,9 +87,12 @@
 #define	__STRING(x)	#x
 #define	___STRING(x)	__STRING(x)
 
-#if defined(__cplusplus)
-#define	__inline	inline		/* convert to C++ keyword */
-#endif /* !__cplusplus */
+// C++ has `inline` as a keyword, as does C99, but ANSI C (aka C89 aka C90)
+// does not. Everything accepts the `__inline__` extension though. We could
+// just use that directly in our own code, but there's historical precedent
+// for `__inline` meaning it's still used in upstream BSD code (and potentially
+// downstream in vendor or app code).
+#define	__inline __inline__
 
 #define __always_inline __attribute__((__always_inline__))
 #define __attribute_const__ __attribute__((__const__))
@@ -139,12 +142,12 @@
 
 #define __wur __attribute__((__warn_unused_result__))
 
-#define __errorattr(msg) __attribute__((unavailable(msg)))
-#define __warnattr(msg) __attribute__((deprecated(msg)))
-#define __warnattr_real(msg) __attribute__((deprecated(msg)))
-#define __enable_if(cond, msg) __attribute__((enable_if(cond, msg)))
-#define __clang_error_if(cond, msg) __attribute__((diagnose_if(cond, msg, "error")))
-#define __clang_warning_if(cond, msg) __attribute__((diagnose_if(cond, msg, "warning")))
+#define __errorattr(msg) __attribute__((__unavailable__(msg)))
+#define __warnattr(msg) __attribute__((__deprecated__(msg)))
+#define __warnattr_real(msg) __attribute__((__deprecated__(msg)))
+#define __enable_if(cond, msg) __attribute__((__enable_if__(cond, msg)))
+#define __clang_error_if(cond, msg) __attribute__((__diagnose_if__(cond, msg, "error")))
+#define __clang_warning_if(cond, msg) __attribute__((__diagnose_if__(cond, msg, "warning")))
 
 #if defined(ANDROID_STRICT)
 /*
@@ -248,7 +251,7 @@
 
 #if defined(__BIONIC_FORTIFY)
 #  define __bos0(s) __bosn((s), 0)
-#  define __pass_object_size_n(n) __attribute__((pass_object_size(n)))
+#  define __pass_object_size_n(n) __attribute__((__pass_object_size__(n)))
 /*
  * FORTIFY'ed functions all have either enable_if or pass_object_size, which
  * makes taking their address impossible. Saying (&read)(foo, bar, baz); will
@@ -260,7 +263,7 @@
  * them available externally. FORTIFY'ed functions try to be as close to possible as 'invisible';
  * having stack protectors detracts from that (b/182948263).
  */
-#  define __BIONIC_FORTIFY_INLINE static __inline__ __attribute__((no_stack_protector)) \
+#  define __BIONIC_FORTIFY_INLINE static __inline __attribute__((__no_stack_protector__)) \
       __always_inline __VERSIONER_FORTIFY_INLINE
 /*
  * We should use __BIONIC_FORTIFY_VARIADIC instead of __BIONIC_FORTIFY_INLINE
@@ -268,9 +271,9 @@
  * The __always_inline attribute is useless, misleading, and could trigger
  * clang compiler bug to incorrectly inline variadic functions.
  */
-#  define __BIONIC_FORTIFY_VARIADIC static __inline__
+#  define __BIONIC_FORTIFY_VARIADIC static __inline
 /* Error functions don't have bodies, so they can just be static. */
-#  define __BIONIC_ERROR_FUNCTION_VISIBILITY static __attribute__((unused))
+#  define __BIONIC_ERROR_FUNCTION_VISIBILITY static __unused
 #else
 /* Further increase sharing for some inline functions */
 #  define __pass_object_size_n(n)
@@ -300,47 +303,32 @@
 #  define __BIONIC_INCLUDE_FORTIFY_HEADERS 1
 #endif
 
-#define __overloadable __attribute__((overloadable))
+#define __overloadable __attribute__((__overloadable__))
 
-#define __diagnose_as_builtin(...) __attribute__((diagnose_as_builtin(__VA_ARGS__)))
+#define __diagnose_as_builtin(...) __attribute__((__diagnose_as_builtin__(__VA_ARGS__)))
 
 /* Used to tag non-static symbols that are private and never exposed by the shared library. */
-#define __LIBC_HIDDEN__ __attribute__((visibility("hidden")))
+#define __LIBC_HIDDEN__ __attribute__((__visibility__("hidden")))
 
 /*
  * Used to tag symbols that should be hidden for 64-bit,
  * but visible to preserve binary compatibility for LP32.
  */
 #ifdef __LP64__
-#define __LIBC32_LEGACY_PUBLIC__ __attribute__((visibility("hidden")))
+#define __LIBC32_LEGACY_PUBLIC__ __attribute__((__visibility__("hidden")))
 #else
-#define __LIBC32_LEGACY_PUBLIC__ __attribute__((visibility("default")))
+#define __LIBC32_LEGACY_PUBLIC__ __attribute__((__visibility__("default")))
 #endif
 
 /* Used to rename functions so that the compiler emits a call to 'x' rather than the function this was applied to. */
 #define __RENAME(x) __asm__(#x)
 
-#if __has_builtin(__builtin_umul_overflow) || __GNUC__ >= 5
-#if defined(__LP64__)
-#define __size_mul_overflow(a, b, result) __builtin_umull_overflow(a, b, result)
-#else
-#define __size_mul_overflow(a, b, result) __builtin_umul_overflow(a, b, result)
-#endif
-#else
-extern __inline__ __always_inline __attribute__((gnu_inline))
-int __size_mul_overflow(__SIZE_TYPE__ a, __SIZE_TYPE__ b, __SIZE_TYPE__ *result) {
-    *result = a * b;
-    static const __SIZE_TYPE__ mul_no_overflow = 1UL << (sizeof(__SIZE_TYPE__) * 4);
-    return (a >= mul_no_overflow || b >= mul_no_overflow) && a > 0 && (__SIZE_TYPE__)-1 / a < b;
-}
-#endif
-
 /*
  * Used when we need to check for overflow when multiplying x and y. This
- * should only be used where __size_mul_overflow can not work, because it makes
- * assumptions that __size_mul_overflow doesn't (x and y are positive, ...),
+ * should only be used where __builtin_umull_overflow can not work, because it makes
+ * assumptions that __builtin_umull_overflow doesn't (x and y are positive, ...),
  * *and* doesn't make use of compiler intrinsics, so it's probably slower than
- * __size_mul_overflow.
+ * __builtin_umull_overflow.
  */
 #define __unsafe_check_mul_overflow(x, y) ((__SIZE_TYPE__)-1 / (x) < (y))
 

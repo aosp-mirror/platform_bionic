@@ -2788,7 +2788,7 @@ bool soinfo::lookup_version_info(const VersionTracker& version_tracker, ElfW(Wor
   return true;
 }
 
-void soinfo::apply_relr_reloc(ElfW(Addr) offset) {
+static void apply_relr_reloc(ElfW(Addr) offset, ElfW(Addr) load_bias) {
   ElfW(Addr) address = offset + load_bias;
   *reinterpret_cast<ElfW(Addr)*>(address) += load_bias;
 }
@@ -2796,20 +2796,18 @@ void soinfo::apply_relr_reloc(ElfW(Addr) offset) {
 // Process relocations in SHT_RELR section (experimental).
 // Details of the encoding are described in this post:
 //   https://groups.google.com/d/msg/generic-abi/bX460iggiKg/Pi9aSwwABgAJ
-bool soinfo::relocate_relr() {
-  ElfW(Relr)* begin = relr_;
-  ElfW(Relr)* end = relr_ + relr_count_;
+bool relocate_relr(const ElfW(Relr)* begin, const ElfW(Relr)* end, ElfW(Addr) load_bias) {
   constexpr size_t wordsize = sizeof(ElfW(Addr));
 
   ElfW(Addr) base = 0;
-  for (ElfW(Relr)* current = begin; current < end; ++current) {
+  for (const ElfW(Relr)* current = begin; current < end; ++current) {
     ElfW(Relr) entry = *current;
     ElfW(Addr) offset;
 
     if ((entry&1) == 0) {
       // Even entry: encodes the offset for next relocation.
       offset = static_cast<ElfW(Addr)>(entry);
-      apply_relr_reloc(offset);
+      apply_relr_reloc(offset, load_bias);
       // Set base offset for subsequent bitmap entries.
       base = offset + wordsize;
       continue;
@@ -2820,7 +2818,7 @@ bool soinfo::relocate_relr() {
     while (entry != 0) {
       entry >>= 1;
       if ((entry&1) != 0) {
-        apply_relr_reloc(offset);
+        apply_relr_reloc(offset, load_bias);
       }
       offset += wordsize;
     }
@@ -2866,11 +2864,12 @@ bool soinfo::prelink_image() {
 
   TlsSegment tls_segment;
   if (__bionic_get_tls_segment(phdr, phnum, load_bias, &tls_segment)) {
-    if (!__bionic_check_tls_alignment(&tls_segment.alignment)) {
-      if (!relocating_linker) {
-        DL_ERR("TLS segment alignment in \"%s\" is not a power of 2: %zu",
-               get_realpath(), tls_segment.alignment);
-      }
+    // The loader does not (currently) support ELF TLS, so it shouldn't have
+    // a TLS segment.
+    CHECK(!relocating_linker && "TLS not supported in loader");
+    if (!__bionic_check_tls_align(tls_segment.aligned_size.align.value)) {
+      DL_ERR("TLS segment alignment in \"%s\" is not a power of 2: %zu", get_realpath(),
+             tls_segment.aligned_size.align.value);
       return false;
     }
     tls_ = std::make_unique<soinfo_tls>();
@@ -3371,7 +3370,7 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
   }
 #endif
 
-  if (!relocate(lookup_list)) {
+  if (this != solist_get_vdso() && !relocate(lookup_list)) {
     return false;
   }
 
@@ -3596,7 +3595,7 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
   // 2. Initialize other namespaces
 
   for (auto& ns_config : namespace_configs) {
-    if (namespaces.find(ns_config->name()) != namespaces.end()) {
+    if (namespaces.contains(ns_config->name())) {
       continue;
     }
 

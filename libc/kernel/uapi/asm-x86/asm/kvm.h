@@ -6,6 +6,8 @@
  */
 #ifndef _ASM_X86_KVM_H
 #define _ASM_X86_KVM_H
+#include <linux/const.h>
+#include <linux/bits.h>
 #include <linux/types.h>
 #include <linux/ioctl.h>
 #include <linux/stddef.h>
@@ -35,7 +37,6 @@
 #define __KVM_HAVE_IRQ_LINE
 #define __KVM_HAVE_MSI
 #define __KVM_HAVE_USER_NMI
-#define __KVM_HAVE_GUEST_DEBUG
 #define __KVM_HAVE_MSIX
 #define __KVM_HAVE_MCE
 #define __KVM_HAVE_PIT_STATE2
@@ -44,7 +45,6 @@
 #define __KVM_HAVE_DEBUGREGS
 #define __KVM_HAVE_XSAVE
 #define __KVM_HAVE_XCRS
-#define __KVM_HAVE_READONLY_MEM
 #define KVM_NR_INTERRUPTS 256
 struct kvm_pic_state {
   __u8 last_irr;
@@ -398,15 +398,260 @@ struct kvm_pmu_event_filter {
 };
 #define KVM_PMU_EVENT_ALLOW 0
 #define KVM_PMU_EVENT_DENY 1
-#define KVM_PMU_EVENT_FLAG_MASKED_EVENTS BIT(0)
+#define KVM_PMU_EVENT_FLAG_MASKED_EVENTS _BITUL(0)
 #define KVM_PMU_EVENT_FLAGS_VALID_MASK (KVM_PMU_EVENT_FLAG_MASKED_EVENTS)
+struct kvm_x86_mce {
+  __u64 status;
+  __u64 addr;
+  __u64 misc;
+  __u64 mcg_status;
+  __u8 bank;
+  __u8 pad1[7];
+  __u64 pad2[3];
+};
+#define KVM_XEN_HVM_CONFIG_HYPERCALL_MSR (1 << 0)
+#define KVM_XEN_HVM_CONFIG_INTERCEPT_HCALL (1 << 1)
+#define KVM_XEN_HVM_CONFIG_SHARED_INFO (1 << 2)
+#define KVM_XEN_HVM_CONFIG_RUNSTATE (1 << 3)
+#define KVM_XEN_HVM_CONFIG_EVTCHN_2LEVEL (1 << 4)
+#define KVM_XEN_HVM_CONFIG_EVTCHN_SEND (1 << 5)
+#define KVM_XEN_HVM_CONFIG_RUNSTATE_UPDATE_FLAG (1 << 6)
+#define KVM_XEN_HVM_CONFIG_PVCLOCK_TSC_UNSTABLE (1 << 7)
+#define KVM_XEN_HVM_CONFIG_SHARED_INFO_HVA (1 << 8)
+struct kvm_xen_hvm_config {
+  __u32 flags;
+  __u32 msr;
+  __u64 blob_addr_32;
+  __u64 blob_addr_64;
+  __u8 blob_size_32;
+  __u8 blob_size_64;
+  __u8 pad2[30];
+};
+struct kvm_xen_hvm_attr {
+  __u16 type;
+  __u16 pad[3];
+  union {
+    __u8 long_mode;
+    __u8 vector;
+    __u8 runstate_update_flag;
+    union {
+      __u64 gfn;
+#define KVM_XEN_INVALID_GFN ((__u64) - 1)
+      __u64 hva;
+    } shared_info;
+    struct {
+      __u32 send_port;
+      __u32 type;
+      __u32 flags;
+#define KVM_XEN_EVTCHN_DEASSIGN (1 << 0)
+#define KVM_XEN_EVTCHN_UPDATE (1 << 1)
+#define KVM_XEN_EVTCHN_RESET (1 << 2)
+      union {
+        struct {
+          __u32 port;
+          __u32 vcpu;
+          __u32 priority;
+        } port;
+        struct {
+          __u32 port;
+          __s32 fd;
+        } eventfd;
+        __u32 padding[4];
+      } deliver;
+    } evtchn;
+    __u32 xen_version;
+    __u64 pad[8];
+  } u;
+};
+#define KVM_XEN_ATTR_TYPE_LONG_MODE 0x0
+#define KVM_XEN_ATTR_TYPE_SHARED_INFO 0x1
+#define KVM_XEN_ATTR_TYPE_UPCALL_VECTOR 0x2
+#define KVM_XEN_ATTR_TYPE_EVTCHN 0x3
+#define KVM_XEN_ATTR_TYPE_XEN_VERSION 0x4
+#define KVM_XEN_ATTR_TYPE_RUNSTATE_UPDATE_FLAG 0x5
+#define KVM_XEN_ATTR_TYPE_SHARED_INFO_HVA 0x6
+struct kvm_xen_vcpu_attr {
+  __u16 type;
+  __u16 pad[3];
+  union {
+    __u64 gpa;
+#define KVM_XEN_INVALID_GPA ((__u64) - 1)
+    __u64 hva;
+    __u64 pad[8];
+    struct {
+      __u64 state;
+      __u64 state_entry_time;
+      __u64 time_running;
+      __u64 time_runnable;
+      __u64 time_blocked;
+      __u64 time_offline;
+    } runstate;
+    __u32 vcpu_id;
+    struct {
+      __u32 port;
+      __u32 priority;
+      __u64 expires_ns;
+    } timer;
+    __u8 vector;
+  } u;
+};
+#define KVM_XEN_VCPU_ATTR_TYPE_VCPU_INFO 0x0
+#define KVM_XEN_VCPU_ATTR_TYPE_VCPU_TIME_INFO 0x1
+#define KVM_XEN_VCPU_ATTR_TYPE_RUNSTATE_ADDR 0x2
+#define KVM_XEN_VCPU_ATTR_TYPE_RUNSTATE_CURRENT 0x3
+#define KVM_XEN_VCPU_ATTR_TYPE_RUNSTATE_DATA 0x4
+#define KVM_XEN_VCPU_ATTR_TYPE_RUNSTATE_ADJUST 0x5
+#define KVM_XEN_VCPU_ATTR_TYPE_VCPU_ID 0x6
+#define KVM_XEN_VCPU_ATTR_TYPE_TIMER 0x7
+#define KVM_XEN_VCPU_ATTR_TYPE_UPCALL_VECTOR 0x8
+#define KVM_XEN_VCPU_ATTR_TYPE_VCPU_INFO_HVA 0x9
+enum sev_cmd_id {
+  KVM_SEV_INIT = 0,
+  KVM_SEV_ES_INIT,
+  KVM_SEV_LAUNCH_START,
+  KVM_SEV_LAUNCH_UPDATE_DATA,
+  KVM_SEV_LAUNCH_UPDATE_VMSA,
+  KVM_SEV_LAUNCH_SECRET,
+  KVM_SEV_LAUNCH_MEASURE,
+  KVM_SEV_LAUNCH_FINISH,
+  KVM_SEV_SEND_START,
+  KVM_SEV_SEND_UPDATE_DATA,
+  KVM_SEV_SEND_UPDATE_VMSA,
+  KVM_SEV_SEND_FINISH,
+  KVM_SEV_RECEIVE_START,
+  KVM_SEV_RECEIVE_UPDATE_DATA,
+  KVM_SEV_RECEIVE_UPDATE_VMSA,
+  KVM_SEV_RECEIVE_FINISH,
+  KVM_SEV_GUEST_STATUS,
+  KVM_SEV_DBG_DECRYPT,
+  KVM_SEV_DBG_ENCRYPT,
+  KVM_SEV_CERT_EXPORT,
+  KVM_SEV_GET_ATTESTATION_REPORT,
+  KVM_SEV_SEND_CANCEL,
+  KVM_SEV_NR_MAX,
+};
+struct kvm_sev_cmd {
+  __u32 id;
+  __u32 pad0;
+  __u64 data;
+  __u32 error;
+  __u32 sev_fd;
+};
+struct kvm_sev_launch_start {
+  __u32 handle;
+  __u32 policy;
+  __u64 dh_uaddr;
+  __u32 dh_len;
+  __u32 pad0;
+  __u64 session_uaddr;
+  __u32 session_len;
+  __u32 pad1;
+};
+struct kvm_sev_launch_update_data {
+  __u64 uaddr;
+  __u32 len;
+  __u32 pad0;
+};
+struct kvm_sev_launch_secret {
+  __u64 hdr_uaddr;
+  __u32 hdr_len;
+  __u32 pad0;
+  __u64 guest_uaddr;
+  __u32 guest_len;
+  __u32 pad1;
+  __u64 trans_uaddr;
+  __u32 trans_len;
+  __u32 pad2;
+};
+struct kvm_sev_launch_measure {
+  __u64 uaddr;
+  __u32 len;
+  __u32 pad0;
+};
+struct kvm_sev_guest_status {
+  __u32 handle;
+  __u32 policy;
+  __u32 state;
+};
+struct kvm_sev_dbg {
+  __u64 src_uaddr;
+  __u64 dst_uaddr;
+  __u32 len;
+  __u32 pad0;
+};
+struct kvm_sev_attestation_report {
+  __u8 mnonce[16];
+  __u64 uaddr;
+  __u32 len;
+  __u32 pad0;
+};
+struct kvm_sev_send_start {
+  __u32 policy;
+  __u32 pad0;
+  __u64 pdh_cert_uaddr;
+  __u32 pdh_cert_len;
+  __u32 pad1;
+  __u64 plat_certs_uaddr;
+  __u32 plat_certs_len;
+  __u32 pad2;
+  __u64 amd_certs_uaddr;
+  __u32 amd_certs_len;
+  __u32 pad3;
+  __u64 session_uaddr;
+  __u32 session_len;
+  __u32 pad4;
+};
+struct kvm_sev_send_update_data {
+  __u64 hdr_uaddr;
+  __u32 hdr_len;
+  __u32 pad0;
+  __u64 guest_uaddr;
+  __u32 guest_len;
+  __u32 pad1;
+  __u64 trans_uaddr;
+  __u32 trans_len;
+  __u32 pad2;
+};
+struct kvm_sev_receive_start {
+  __u32 handle;
+  __u32 policy;
+  __u64 pdh_uaddr;
+  __u32 pdh_len;
+  __u32 pad0;
+  __u64 session_uaddr;
+  __u32 session_len;
+  __u32 pad1;
+};
+struct kvm_sev_receive_update_data {
+  __u64 hdr_uaddr;
+  __u32 hdr_len;
+  __u32 pad0;
+  __u64 guest_uaddr;
+  __u32 guest_len;
+  __u32 pad1;
+  __u64 trans_uaddr;
+  __u32 trans_len;
+  __u32 pad2;
+};
+#define KVM_X2APIC_API_USE_32BIT_IDS (1ULL << 0)
+#define KVM_X2APIC_API_DISABLE_BROADCAST_QUIRK (1ULL << 1)
+struct kvm_hyperv_eventfd {
+  __u32 conn_id;
+  __s32 fd;
+  __u32 flags;
+  __u32 padding[3];
+};
+#define KVM_HYPERV_CONN_ID_MASK 0x00ffffff
+#define KVM_HYPERV_EVENTFD_DEASSIGN (1 << 0)
 #define KVM_PMU_ENCODE_MASKED_ENTRY(event_select,mask,match,exclude) (((event_select) & 0xFFULL) | (((event_select) & 0XF00ULL) << 24) | (((mask) & 0xFFULL) << 56) | (((match) & 0xFFULL) << 8) | ((__u64) (! ! (exclude)) << 55))
-#define KVM_PMU_MASKED_ENTRY_EVENT_SELECT (GENMASK_ULL(7, 0) | GENMASK_ULL(35, 32))
-#define KVM_PMU_MASKED_ENTRY_UMASK_MASK (GENMASK_ULL(63, 56))
-#define KVM_PMU_MASKED_ENTRY_UMASK_MATCH (GENMASK_ULL(15, 8))
-#define KVM_PMU_MASKED_ENTRY_EXCLUDE (BIT_ULL(55))
+#define KVM_PMU_MASKED_ENTRY_EVENT_SELECT (__GENMASK_ULL(7, 0) | __GENMASK_ULL(35, 32))
+#define KVM_PMU_MASKED_ENTRY_UMASK_MASK (__GENMASK_ULL(63, 56))
+#define KVM_PMU_MASKED_ENTRY_UMASK_MATCH (__GENMASK_ULL(15, 8))
+#define KVM_PMU_MASKED_ENTRY_EXCLUDE (_BITULL(55))
 #define KVM_PMU_MASKED_ENTRY_UMASK_MASK_SHIFT (56)
 #define KVM_VCPU_TSC_CTRL 0
 #define KVM_VCPU_TSC_OFFSET 0
-#define KVM_EXIT_HYPERCALL_LONG_MODE BIT(0)
+#define KVM_EXIT_HYPERCALL_LONG_MODE _BITULL(0)
+#define KVM_X86_DEFAULT_VM 0
+#define KVM_X86_SW_PROTECTED_VM 1
 #endif

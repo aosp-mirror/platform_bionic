@@ -138,11 +138,11 @@ typedef enum {
  * 7.17.4 Fences.
  */
 
-static __inline void atomic_thread_fence(memory_order __order __attribute__((unused))) {
+static __inline void atomic_thread_fence(memory_order __order __attribute__((__unused__))) {
 	__c11_atomic_thread_fence(__order);
 }
 
-static __inline void atomic_signal_fence(memory_order __order __attribute__((unused))) {
+static __inline void atomic_signal_fence(memory_order __order __attribute__((__unused__))) {
 	__c11_atomic_signal_fence(__order);
 }
 

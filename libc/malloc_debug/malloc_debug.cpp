@@ -70,7 +70,7 @@ bool* g_zygote_child;
 
 const MallocDispatch* g_dispatch;
 
-static __always_inline uint64_t Nanotime() {
+static inline __always_inline uint64_t Nanotime() {
   struct timespec t = {};
   clock_gettime(CLOCK_MONOTONIC, &t);
   return static_cast<uint64_t>(t.tv_sec) * 1000000000LL + t.tv_nsec;
@@ -451,10 +451,18 @@ void debug_finalize() {
     PointerData::LogLeaks();
   }
 
+  if ((g_debug->config().options() & RECORD_ALLOCS) && g_debug->config().record_allocs_on_exit()) {
+    RecordData::WriteEntriesOnExit();
+  }
+
   if ((g_debug->config().options() & BACKTRACE) && g_debug->config().backtrace_dump_on_exit()) {
     debug_dump_heap(android::base::StringPrintf("%s.%d.exit.txt",
                                                 g_debug->config().backtrace_dump_prefix().c_str(),
                                                 getpid()).c_str());
+  }
+
+  if (g_debug->config().options() & LOG_ALLOCATOR_STATS_ON_EXIT) {
+    LogAllocatorStats::Log();
   }
 
   backtrace_shutdown();

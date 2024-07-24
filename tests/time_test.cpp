@@ -31,6 +31,8 @@
 #include <thread>
 
 #include "SignalUtils.h"
+#include "android-base/file.h"
+#include "android-base/strings.h"
 #include "utils.h"
 
 using namespace std::chrono_literals;
@@ -797,21 +799,41 @@ TEST(time, timer_create_NULL) {
   ASSERT_EQ(1, timer_create_NULL_signal_handler_invocation_count);
 }
 
-TEST(time, timer_create_EINVAL) {
-  clockid_t invalid_clock = 16;
+static int GetThreadCount() {
+  std::string status;
+  if (android::base::ReadFileToString("/proc/self/status", &status)) {
+    for (const auto& line : android::base::Split(status, "\n")) {
+      int thread_count;
+      if (sscanf(line.c_str(), "Threads: %d", &thread_count) == 1) {
+        return thread_count;
+      }
+    }
+  }
+  return -1;
+}
 
-  // A SIGEV_SIGNAL timer is easy; the kernel does all that.
+TEST(time, timer_create_EINVAL) {
+  const clockid_t kInvalidClock = 16;
+
+  // A SIGEV_SIGNAL timer failure is easy; that's the kernel's problem.
   timer_t timer_id;
-  ASSERT_EQ(-1, timer_create(invalid_clock, nullptr, &timer_id));
+  ASSERT_EQ(-1, timer_create(kInvalidClock, nullptr, &timer_id));
   ASSERT_ERRNO(EINVAL);
 
-  // A SIGEV_THREAD timer is more interesting because we have stuff to clean up.
-  sigevent se;
-  memset(&se, 0, sizeof(se));
+  // A SIGEV_THREAD timer failure is more interesting because we have a thread
+  // to clean up (https://issuetracker.google.com/340125671).
+  sigevent se = {};
   se.sigev_notify = SIGEV_THREAD;
   se.sigev_notify_function = NoOpNotifyFunction;
-  ASSERT_EQ(-1, timer_create(invalid_clock, &se, &timer_id));
+  ASSERT_EQ(-1, timer_create(kInvalidClock, &se, &timer_id));
   ASSERT_ERRNO(EINVAL);
+
+  // timer_create() doesn't guarantee that the thread will be dead _before_
+  // it returns because that would require extra synchronization that's
+  // unnecessary in the normal (successful) case. A timeout here means we
+  // leaked a thread.
+  while (GetThreadCount() > 1) {
+  }
 }
 
 TEST(time, timer_create_multiple) {

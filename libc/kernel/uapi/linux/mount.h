@@ -88,4 +88,41 @@ struct mount_attr {
   __u64 userns_fd;
 };
 #define MOUNT_ATTR_SIZE_VER0 32
+struct statmount {
+  __u32 size;
+  __u32 __spare1;
+  __u64 mask;
+  __u32 sb_dev_major;
+  __u32 sb_dev_minor;
+  __u64 sb_magic;
+  __u32 sb_flags;
+  __u32 fs_type;
+  __u64 mnt_id;
+  __u64 mnt_parent_id;
+  __u32 mnt_id_old;
+  __u32 mnt_parent_id_old;
+  __u64 mnt_attr;
+  __u64 mnt_propagation;
+  __u64 mnt_peer_group;
+  __u64 mnt_master;
+  __u64 propagate_from;
+  __u32 mnt_root;
+  __u32 mnt_point;
+  __u64 __spare2[50];
+  char str[];
+};
+struct mnt_id_req {
+  __u32 size;
+  __u32 spare;
+  __u64 mnt_id;
+  __u64 param;
+};
+#define MNT_ID_REQ_SIZE_VER0 24
+#define STATMOUNT_SB_BASIC 0x00000001U
+#define STATMOUNT_MNT_BASIC 0x00000002U
+#define STATMOUNT_PROPAGATE_FROM 0x00000004U
+#define STATMOUNT_MNT_ROOT 0x00000008U
+#define STATMOUNT_MNT_POINT 0x00000010U
+#define STATMOUNT_FS_TYPE 0x00000020U
+#define LSMT_ROOT 0xffffffffffffffff
 #endif

@@ -185,6 +185,7 @@ std::string ShowDiffs(uint8_t* a, uint8_t* b, size_t size) {
 }
 
 static void VerifyRecords(std::vector<std::string>& expected, std::string& actual) {
+  ASSERT_TRUE(expected.size() != 0);
   size_t offset = 0;
   for (std::string& str : expected) {
     ASSERT_STREQ(str.c_str(), actual.substr(offset, str.size()).c_str());
@@ -425,7 +426,7 @@ TEST_F(MallocDebugTest, all_options) {
   Init(
       "guard backtrace backtrace_enable_on_signal fill expand_alloc free_track leak_track "
       "record_allocs verify_pointers abort_on_error verbose check_unreachable_on_signal "
-      "log_allocator_stats_on_signal");
+      "log_allocator_stats_on_signal log_allocator_stats_on_exit");
   VerifyAllocCalls(true);
 }
 
@@ -1512,7 +1513,7 @@ TEST_F(MallocDebugTest, backtrace_dump_on_exit) {
 
     // Call the exit function manually.
     debug_finalize();
-    exit(0);
+    _exit(0);
   }
   ASSERT_NE(-1, pid);
   ASSERT_EQ(pid, TEMP_FAILURE_RETRY(waitpid(pid, nullptr, 0)));
@@ -1561,7 +1562,7 @@ TEST_F(MallocDebugTest, backtrace_dump_on_exit_shared_backtrace) {
 
     // Call the exit function manually.
     debug_finalize();
-    exit(0);
+    _exit(0);
   }
   ASSERT_NE(-1, pid);
   ASSERT_EQ(pid, TEMP_FAILURE_RETRY(waitpid(pid, nullptr, 0)));
@@ -1619,7 +1620,7 @@ TEST_F(MallocDebugTest, backtrace_full_dump_on_exit) {
 
     // Call the exit function manually.
     debug_finalize();
-    exit(0);
+    _exit(0);
   }
   ASSERT_NE(-1, pid);
   ASSERT_EQ(pid, TEMP_FAILURE_RETRY(waitpid(pid, nullptr, 0)));
@@ -2429,6 +2430,33 @@ TEST_F(MallocDebugTest, record_allocs_write_entries_does_not_allocate) {
   ASSERT_STREQ("", getFakeLogPrint().c_str());
 }
 
+TEST_F(MallocDebugTest, record_allocs_on_exit) {
+  InitRecordAllocs("record_allocs record_allocs_on_exit");
+
+  // The filename created on exit always appends the pid.
+  // Modify the variable so the file is deleted at the end of the test.
+  record_filename += '.' + std::to_string(getpid());
+
+  std::vector<std::string> expected;
+  void* ptr = debug_malloc(100);
+  expected.push_back(android::base::StringPrintf("%d: malloc %p 100", getpid(), ptr));
+  ptr = debug_malloc(200);
+  expected.push_back(android::base::StringPrintf("%d: malloc %p 200", getpid(), ptr));
+  ptr = debug_malloc(400);
+  expected.push_back(android::base::StringPrintf("%d: malloc %p 400", getpid(), ptr));
+
+  // Call the exit function manually.
+  debug_finalize();
+
+  // Read all of the contents.
+  std::string actual;
+  ASSERT_TRUE(android::base::ReadFileToString(record_filename, &actual));
+  VerifyRecords(expected, actual);
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ("", getFakeLogPrint().c_str());
+}
+
 TEST_F(MallocDebugTest, verify_pointers) {
   Init("verify_pointers");
 
@@ -2805,6 +2833,25 @@ TEST_F(MallocDebugTest, log_allocator_stats_on_signal) {
   void* pointer = debug_malloc(110);
   ASSERT_TRUE(pointer != nullptr);
   debug_free(pointer);
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  if (!running_with_hwasan()) {
+    // Do an exact match because the mallopt should not fail in normal operation.
+    ASSERT_STREQ("4 malloc_debug Logging allocator stats...\n", getFakeLogPrint().c_str());
+  } else {
+    // mallopt fails with hwasan, so just verify that the message is present.
+    ASSERT_MATCH(getFakeLogPrint(), "4 malloc_debug Logging allocator stats...\\n");
+  }
+}
+
+TEST_F(MallocDebugTest, log_allocator_stats_on_exit) {
+  Init("log_allocator_stats_on_exit");
+
+  void* pointer = debug_malloc(110);
+  ASSERT_TRUE(pointer != nullptr);
+  debug_free(pointer);
+
+  debug_finalize();
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   if (!running_with_hwasan()) {

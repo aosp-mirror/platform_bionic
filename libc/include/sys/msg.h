@@ -46,7 +46,7 @@ typedef __kernel_ulong_t msgqnum_t;
 typedef __kernel_ulong_t msglen_t;
 
 /** Not useful on Android; disallowed by SELinux. */
-int msgctl(int __msg_id, int __cmd, struct msqid_ds* _Nullable __buf) __INTRODUCED_IN(26);
+int msgctl(int __msg_id, int __op, struct msqid_ds* _Nullable __buf) __INTRODUCED_IN(26);
 /** Not useful on Android; disallowed by SELinux. */
 int msgget(key_t __key, int __flags) __INTRODUCED_IN(26);
 /** Not useful on Android; disallowed by SELinux. */

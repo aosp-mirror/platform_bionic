@@ -34,11 +34,32 @@
 #include <stdint.h>
 #include <sys/cdefs.h>
 
+#include "bionic_elf_dtv_offset.h"
+
 __LIBC_HIDDEN__ extern _Atomic(size_t) __libc_tls_generation_copy;
 
-struct TlsSegment {
+struct TlsAlign {
+  size_t value = 1;
+  size_t skew = 0;  // p_vaddr % p_align
+
+  template <typename T>
+  static constexpr TlsAlign of_type() {
+    return TlsAlign{.value = alignof(T)};
+  }
+};
+
+struct TlsAlignedSize {
   size_t size = 0;
-  size_t alignment = 1;
+  TlsAlign align;
+
+  template <typename T>
+  static constexpr TlsAlignedSize of_type() {
+    return TlsAlignedSize{.size = sizeof(T), .align = TlsAlign::of_type<T>()};
+  }
+};
+
+struct TlsSegment {
+  TlsAlignedSize aligned_size;
   const void* init_ptr = "";    // Field is non-null even when init_size is 0.
   size_t init_size = 0;
 };
@@ -46,44 +67,50 @@ struct TlsSegment {
 __LIBC_HIDDEN__ bool __bionic_get_tls_segment(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                               ElfW(Addr) load_bias, TlsSegment* out);
 
-__LIBC_HIDDEN__ bool __bionic_check_tls_alignment(size_t* alignment);
+__LIBC_HIDDEN__ bool __bionic_check_tls_align(size_t align);
 
 struct StaticTlsLayout {
   constexpr StaticTlsLayout() {}
-
-private:
-  size_t offset_ = 0;
-  size_t alignment_ = 1;
-  bool overflowed_ = false;
-
-  // Offsets to various Bionic TLS structs from the beginning of static TLS.
-  size_t offset_bionic_tcb_ = SIZE_MAX;
-  size_t offset_bionic_tls_ = SIZE_MAX;
 
 public:
   size_t offset_bionic_tcb() const { return offset_bionic_tcb_; }
   size_t offset_bionic_tls() const { return offset_bionic_tls_; }
   size_t offset_thread_pointer() const;
+  size_t offset_exe() const { return offset_exe_; }
 
-  size_t size() const { return offset_; }
-  size_t alignment() const { return alignment_; }
-  bool overflowed() const { return overflowed_; }
+  size_t size() const { return cursor_; }
 
   size_t reserve_exe_segment_and_tcb(const TlsSegment* exe_segment, const char* progname);
-  void reserve_bionic_tls();
-  size_t reserve_solib_segment(const TlsSegment& segment) {
-    return reserve(segment.size, segment.alignment);
-  }
+  size_t reserve_bionic_tls();
+  size_t reserve_solib_segment(const TlsSegment& segment) { return reserve(segment.aligned_size); }
   void finish_layout();
 
-private:
-  size_t reserve(size_t size, size_t alignment);
+#if !defined(STATIC_TLS_LAYOUT_TEST)
+ private:
+#endif
+  size_t cursor_ = 0;
+  size_t align_ = 1;
+
+  // Offsets to various Bionic TLS structs from the beginning of static TLS.
+  size_t offset_bionic_tcb_ = SIZE_MAX;
+  size_t offset_bionic_tls_ = SIZE_MAX;
+
+  size_t offset_exe_ = SIZE_MAX;
+
+  struct TpAllocations {
+    size_t before;
+    size_t tp;
+    size_t after;
+  };
+
+  size_t align_cursor(TlsAlign align);
+  size_t align_cursor_unskewed(size_t align);
+  size_t reserve(TlsAlignedSize aligned_size);
+  TpAllocations reserve_tp_pair(TlsAlignedSize before, TlsAlignedSize after);
 
   template <typename T> size_t reserve_type() {
-    return reserve(sizeof(T), alignof(T));
+    return reserve(TlsAlignedSize::of_type<T>());
   }
-
-  size_t round_up_with_overflow_check(size_t value, size_t alignment);
 };
 
 static constexpr size_t kTlsGenerationNone = 0;
@@ -189,30 +216,16 @@ struct TlsIndex {
 };
 
 #if defined(__i386__)
-#define TLS_GET_ADDR_CCONV __attribute__((regparm(1)))
+#define TLS_GET_ADDR_CALLING_CONVENTION __attribute__((regparm(1)))
 #define TLS_GET_ADDR ___tls_get_addr
 #else
-#define TLS_GET_ADDR_CCONV
+#define TLS_GET_ADDR_CALLING_CONVENTION
 #define TLS_GET_ADDR __tls_get_addr
 #endif
 
-extern "C" void* TLS_GET_ADDR(const TlsIndex* ti) TLS_GET_ADDR_CCONV;
+extern "C" void* TLS_GET_ADDR(const TlsIndex* ti) TLS_GET_ADDR_CALLING_CONVENTION;
 
 struct bionic_tcb;
 void __free_dynamic_tls(bionic_tcb* tcb);
 void __notify_thread_exit_callbacks();
 
-#if defined(__riscv)
-// TLS_DTV_OFFSET is a constant used in relocation fields, defined in RISC-V ELF Specification[1]
-// The front of the TCB contains a pointer to the DTV, and each pointer in DTV
-// points to 0x800 past the start of a TLS block to make full use of the range
-// of load/store instructions, refer to [2].
-//
-// [1]: RISC-V ELF Specification.
-// https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc#constants
-// [2]: Documentation of TLS data structures
-// https://github.com/riscv-non-isa/riscv-elf-psabi-doc/issues/53
-#define TLS_DTV_OFFSET 0x800
-#else
-#define TLS_DTV_OFFSET 0
-#endif

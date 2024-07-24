@@ -34,6 +34,8 @@
 #include <string.h>
 #include <time.h>
 
+#include "private/bionic_lock.h"
+
 // System calls.
 extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);
 extern "C" int __rt_sigtimedwait(const sigset64_t*, siginfo_t*, const timespec*, size_t);
@@ -60,6 +62,7 @@ struct PosixTimer {
   int sigev_notify;
 
   // The fields below are only needed for a SIGEV_THREAD timer.
+  Lock startup_handshake_lock;
   pthread_t callback_thread;
   void (*callback)(sigval_t);
   sigval_t callback_argument;
@@ -72,6 +75,18 @@ static __kernel_timer_t to_kernel_timer_id(timer_t timer) {
 
 static void* __timer_thread_start(void* arg) {
   PosixTimer* timer = reinterpret_cast<PosixTimer*>(arg);
+
+  // Check that our parent managed to create the kernel timer and bail if not...
+  timer->startup_handshake_lock.lock();
+  if (timer->kernel_timer_id == -1) {
+    free(timer);
+    return nullptr;
+  }
+
+  // Give ourselves a specific meaningful name now we have a kernel timer.
+  char name[16]; // 16 is the kernel-imposed limit.
+  snprintf(name, sizeof(name), "POSIX timer %d", to_kernel_timer_id(timer));
+  pthread_setname_np(timer->callback_thread, name);
 
   sigset64_t sigset = {};
   sigaddset64(&sigset, TIMER_SIGNAL);
@@ -109,6 +124,7 @@ int timer_create(clockid_t clock_id, sigevent* evp, timer_t* timer_id) {
     return -1;
   }
 
+  timer->kernel_timer_id = -1;
   timer->sigev_notify = (evp == nullptr) ? SIGEV_SIGNAL : evp->sigev_notify;
 
   // If not a SIGEV_THREAD timer, the kernel can handle it without our help.
@@ -149,6 +165,10 @@ int timer_create(clockid_t clock_id, sigevent* evp, timer_t* timer_id) {
   sigaddset64(&sigset, TIMER_SIGNAL);
   sigset64_t old_sigset;
 
+  // Prevent the child thread from running until the timer has been created.
+  timer->startup_handshake_lock.init(false);
+  timer->startup_handshake_lock.lock();
+
   // Use __rt_sigprocmask instead of sigprocmask64 to avoid filtering out TIMER_SIGNAL.
   __rt_sigprocmask(SIG_BLOCK, &sigset, &old_sigset, sizeof(sigset));
 
@@ -162,20 +182,20 @@ int timer_create(clockid_t clock_id, sigevent* evp, timer_t* timer_id) {
     return -1;
   }
 
+  // Try to create the kernel timer.
   sigevent se = *evp;
   se.sigev_signo = TIMER_SIGNAL;
   se.sigev_notify = SIGEV_THREAD_ID;
   se.sigev_notify_thread_id = pthread_gettid_np(timer->callback_thread);
-  if (__timer_create(clock_id, &se, &timer->kernel_timer_id) == -1) {
-    __timer_thread_stop(timer);
+  rc = __timer_create(clock_id, &se, &timer->kernel_timer_id);
+
+  // Let the child run (whether we created the kernel timer or not).
+  timer->startup_handshake_lock.unlock();
+  // If __timer_create(2) failed, the child will kill itself and free the
+  // timer struct, so we just need to exit.
+  if (rc == -1) {
     return -1;
   }
-
-  // Give the thread a specific meaningful name.
-  // It can't do this itself because the kernel timer isn't created until after it's running.
-  char name[16]; // 16 is the kernel-imposed limit.
-  snprintf(name, sizeof(name), "POSIX timer %d", to_kernel_timer_id(timer));
-  pthread_setname_np(timer->callback_thread, name);
 
   *timer_id = timer;
   return 0;

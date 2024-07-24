@@ -16,68 +16,47 @@
 
 #include <ctype.h>
 
+#include <array>
+#include <numeric>
+#include <random>
+
 #include <benchmark/benchmark.h>
 #include "util.h"
 
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isalnum_y1, isalnum('A'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isalnum_y2, isalnum('a'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isalnum_y3, isalnum('0'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isalnum_n, isalnum('_'));
+static std::array<int, 128> RandomAscii() {
+  std::array<int, 128> result;
+  std::iota(result.begin(), result.end(), 0);
+  std::shuffle(result.begin(), result.end(), std::mt19937{std::random_device{}()});
+  return result;
+}
 
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isalpha_y1, isalpha('A'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isalpha_y2, isalpha('a'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isalpha_n, isalpha('_'));
+#define CTYPE_BENCHMARK(__benchmark, fn)                        \
+  static void __benchmark##_##fn(benchmark::State& state) {     \
+    auto chars = RandomAscii();                                 \
+    for (auto _ : state) {                                      \
+      for (char ch : chars) {                                   \
+        benchmark::DoNotOptimize(fn(ch));                       \
+      }                                                         \
+    }                                                           \
+    state.SetBytesProcessed(state.iterations() * chars.size()); \
+  }                                                             \
+  BIONIC_BENCHMARK(__benchmark##_##fn)
 
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isascii_y, isascii('x'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isascii_n, isascii(0x88));
+CTYPE_BENCHMARK(BM_ctype, isalpha);
+CTYPE_BENCHMARK(BM_ctype, isalnum);
+CTYPE_BENCHMARK(BM_ctype, isascii);
+CTYPE_BENCHMARK(BM_ctype, isblank);
+CTYPE_BENCHMARK(BM_ctype, iscntrl);
+CTYPE_BENCHMARK(BM_ctype, isgraph);
+CTYPE_BENCHMARK(BM_ctype, islower);
+CTYPE_BENCHMARK(BM_ctype, isprint);
+CTYPE_BENCHMARK(BM_ctype, ispunct);
+CTYPE_BENCHMARK(BM_ctype, isspace);
+CTYPE_BENCHMARK(BM_ctype, isupper);
+CTYPE_BENCHMARK(BM_ctype, isxdigit);
 
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isblank_y1, isblank(' '));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isblank_y2, isblank('\t'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isblank_n, isblank('_'));
-
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_iscntrl_y1, iscntrl('\b'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_iscntrl_y2, iscntrl('\x7f'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_iscntrl_n, iscntrl('_'));
-
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isdigit_y, iscntrl('0'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isdigit_n, iscntrl('_'));
-
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isgraph_y1, isgraph('A'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isgraph_y2, isgraph('a'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isgraph_y3, isgraph('0'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isgraph_y4, isgraph('_'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isgraph_n, isgraph(' '));
-
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_islower_y, islower('x'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_islower_n, islower('X'));
-
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isprint_y1, isprint('A'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isprint_y2, isprint('a'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isprint_y3, isprint('0'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isprint_y4, isprint('_'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isprint_y5, isprint(' '));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isprint_n, isprint('\b'));
-
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_ispunct_y, ispunct('_'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_ispunct_n, ispunct('A'));
-
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isspace_y1, isspace(' '));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isspace_y2, isspace('\t'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isspace_n, isspace('A'));
-
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isupper_y, isupper('X'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isupper_n, isupper('x'));
-
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isxdigit_y1, isxdigit('0'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isxdigit_y2, isxdigit('a'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isxdigit_y3, isxdigit('A'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_isxdigit_n, isxdigit('_'));
-
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_toascii_y, isascii('x'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_toascii_n, isascii(0x88));
-
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_tolower_y, tolower('X'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_tolower_n, tolower('x'));
-
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_toupper_y, toupper('x'));
-BIONIC_TRIVIAL_BENCHMARK(BM_ctype_toupper_n, toupper('X'));
+CTYPE_BENCHMARK(BM_ctype, toascii);
+CTYPE_BENCHMARK(BM_ctype, tolower);
+CTYPE_BENCHMARK(BM_ctype, _tolower);
+CTYPE_BENCHMARK(BM_ctype, toupper);
+CTYPE_BENCHMARK(BM_ctype, _toupper);

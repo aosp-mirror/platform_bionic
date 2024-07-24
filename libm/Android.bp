@@ -21,7 +21,10 @@ license {
 
 cc_library {
     name: "libm",
-    defaults: ["linux_bionic_supported"],
+    defaults: [
+        "linux_bionic_supported",
+        "bug_24465209_workaround",
+    ],
     ramdisk_available: true,
     vendor_ramdisk_available: true,
     recovery_available: true,
@@ -158,8 +161,6 @@ cc_library {
         "upstream-freebsd/lib/msun/src/s_nextafterf.c",
         "upstream-freebsd/lib/msun/src/s_remquo.c",
         "upstream-freebsd/lib/msun/src/s_remquof.c",
-        "upstream-freebsd/lib/msun/src/s_rint.c",
-        "upstream-freebsd/lib/msun/src/s_rintf.c",
         "upstream-freebsd/lib/msun/src/s_round.c",
         "upstream-freebsd/lib/msun/src/s_roundf.c",
         "upstream-freebsd/lib/msun/src/s_scalbln.c",
@@ -176,17 +177,15 @@ cc_library {
         "upstream-freebsd/lib/msun/src/s_tanh.c",
         "upstream-freebsd/lib/msun/src/s_tanhf.c",
         "upstream-freebsd/lib/msun/src/s_tgammaf.c",
-        "upstream-freebsd/lib/msun/src/s_trunc.c",
-        "upstream-freebsd/lib/msun/src/s_truncf.c",
         "upstream-freebsd/lib/msun/src/w_cabs.c",
         "upstream-freebsd/lib/msun/src/w_cabsf.c",
         "upstream-freebsd/lib/msun/src/w_cabsl.c",
         "upstream-freebsd/lib/msun/src/w_drem.c",
         "upstream-freebsd/lib/msun/src/w_dremf.c",
 
-        // The FreeBSD complex functions appear to be better, but they're incomplete.
-        // We take the FreeBSD implementations when they exist, but fill out the rest
-        // of <complex.h> from NetBSD...
+        // The FreeBSD complex function implementations appear to be better
+        // than the other BSDs', but they're incomplete. We take the FreeBSD
+        // implementations when they exist, but fill out the rest from NetBSD...
         "upstream-netbsd/lib/libm/complex/ccoshl.c",
         "upstream-netbsd/lib/libm/complex/ccosl.c",
         "upstream-netbsd/lib/libm/complex/cephes_subrl.c",
@@ -195,11 +194,6 @@ cc_library {
         "upstream-netbsd/lib/libm/complex/csinl.c",
         "upstream-netbsd/lib/libm/complex/ctanhl.c",
         "upstream-netbsd/lib/libm/complex/ctanl.c",
-
-        // TODO: this comes from from upstream's libc, not libm, but it's an
-        // implementation detail that should have hidden visibility, so it needs
-        // to be in whatever library the math code is in.
-        "digittoint.c",
 
         // Functionality not in the BSDs.
         "significandl.c",
@@ -277,13 +271,24 @@ cc_library {
     arch: {
         arm: {
             srcs: [
-                "arm/fenv.c",
-                "upstream-freebsd/lib/msun/src/s_ceil.c",
-                "upstream-freebsd/lib/msun/src/s_ceilf.c",
+                "fenv-arm.c",
             ],
+            armv7_a_neon: {
+                // armv7 arm32 has no instructions to implement these as
+                // builtins, so we build the portable implementations for armv7,
+                // because the NDK still supports armv7.
+                srcs: [
+                    "upstream-freebsd/lib/msun/src/s_ceil.c",
+                    "upstream-freebsd/lib/msun/src/s_ceilf.c",
+                    "upstream-freebsd/lib/msun/src/s_floor.c",
+                    "upstream-freebsd/lib/msun/src/s_floorf.c",
+                    "upstream-freebsd/lib/msun/src/s_rint.c",
+                    "upstream-freebsd/lib/msun/src/s_rintf.c",
+                    "upstream-freebsd/lib/msun/src/s_trunc.c",
+                    "upstream-freebsd/lib/msun/src/s_truncf.c",
+                ],
+            },
             instruction_set: "arm",
-            pack_relocations: false,
-            ldflags: ["-Wl,--hash-style=both"],
             version_script: ":libm.arm.map",
             no_libcrt: true,
             shared: {
@@ -296,7 +301,7 @@ cc_library {
 
         arm64: {
             srcs: [
-                "arm64/fenv.c",
+                "fenv-arm64.c",
             ],
             exclude_srcs: [
                 "upstream-freebsd/lib/msun/src/s_fma.c",
@@ -313,19 +318,15 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/s_lrintf.c",
                 "upstream-freebsd/lib/msun/src/s_lround.c",
                 "upstream-freebsd/lib/msun/src/s_lroundf.c",
-                "upstream-freebsd/lib/msun/src/s_rint.c",
-                "upstream-freebsd/lib/msun/src/s_rintf.c",
                 "upstream-freebsd/lib/msun/src/s_round.c",
                 "upstream-freebsd/lib/msun/src/s_roundf.c",
-                "upstream-freebsd/lib/msun/src/s_trunc.c",
-                "upstream-freebsd/lib/msun/src/s_truncf.c",
             ],
             version_script: ":libm.arm64.map",
         },
 
         riscv64: {
             srcs: [
-                "riscv64/fenv.c",
+                "fenv-riscv64.c",
             ],
 
             exclude_srcs: [
@@ -343,54 +344,37 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/s_lrintf.c",
                 "upstream-freebsd/lib/msun/src/s_lround.c",
                 "upstream-freebsd/lib/msun/src/s_lroundf.c",
-                "upstream-freebsd/lib/msun/src/s_rint.c",
-                "upstream-freebsd/lib/msun/src/s_rintf.c",
                 "upstream-freebsd/lib/msun/src/s_round.c",
                 "upstream-freebsd/lib/msun/src/s_roundf.c",
-                "upstream-freebsd/lib/msun/src/s_trunc.c",
-                "upstream-freebsd/lib/msun/src/s_truncf.c",
             ],
             version_script: ":libm.riscv64.map",
         },
 
         x86: {
             srcs: [
-                "i387/fenv.c",
-                "x86/lrint.S",
-                "x86/lrintf.S",
-            ],
-            exclude_srcs: [
-                "upstream-freebsd/lib/msun/src/s_lrint.c",
-                "upstream-freebsd/lib/msun/src/s_lrintf.c",
-                "upstream-freebsd/lib/msun/src/s_rint.c",
-                "upstream-freebsd/lib/msun/src/s_rintf.c",
-                "upstream-freebsd/lib/msun/src/s_trunc.c",
-                "upstream-freebsd/lib/msun/src/s_truncf.c",
-            ],
-            local_include_dirs: ["i387"],
-            pack_relocations: false,
-            // The x86 ABI doesn't include this, which is needed for the
-            // roundss/roundsd instructions that we've used since Android M.
-            cflags: ["-msse4.1"],
-            ldflags: ["-Wl,--hash-style=both"],
-            version_script: ":libm.x86.map",
-        },
-
-        x86_64: {
-            srcs: [
-                "amd64/fenv.c",
-                "x86_64/lrint.S",
-                "x86_64/lrintf.S",
+                "fenv-x86.c",
             ],
             exclude_srcs: [
                 "upstream-freebsd/lib/msun/src/s_llrint.c",
                 "upstream-freebsd/lib/msun/src/s_llrintf.c",
                 "upstream-freebsd/lib/msun/src/s_lrint.c",
                 "upstream-freebsd/lib/msun/src/s_lrintf.c",
-                "upstream-freebsd/lib/msun/src/s_rint.c",
-                "upstream-freebsd/lib/msun/src/s_rintf.c",
-                "upstream-freebsd/lib/msun/src/s_trunc.c",
-                "upstream-freebsd/lib/msun/src/s_truncf.c",
+            ],
+            // The x86 ABI doesn't include this, which is needed for the
+            // roundss/roundsd instructions that we've used since Android M.
+            cflags: ["-msse4.1"],
+            version_script: ":libm.x86.map",
+        },
+
+        x86_64: {
+            srcs: [
+                "fenv-x86_64.c",
+            ],
+            exclude_srcs: [
+                "upstream-freebsd/lib/msun/src/s_llrint.c",
+                "upstream-freebsd/lib/msun/src/s_llrintf.c",
+                "upstream-freebsd/lib/msun/src/s_lrint.c",
+                "upstream-freebsd/lib/msun/src/s_lrintf.c",
             ],
             version_script: ":libm.x86_64.map",
         },
@@ -402,10 +386,7 @@ cc_library {
     ],
 
     cflags: [
-        "-D_BSD_SOURCE",
-        "-DFLT_EVAL_METHOD=0",
         "-include freebsd-compat.h",
-        "-include fenv-access.h",
         "-fno-builtin",
         "-fno-math-errno",
         "-Wall",
@@ -509,6 +490,8 @@ genrule {
     cmd: "$(location generate-version-script) x86_64 $(in) $(out)",
 }
 
+// Because of a historical accidnt, ldexp() is in libc,
+// even though ldexpf() and ldexpl() are in libm.
 filegroup {
     name: "libc_ldexp_srcs",
     srcs: ["upstream-freebsd/lib/msun/src/s_scalbn.c"],

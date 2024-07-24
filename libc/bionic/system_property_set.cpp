@@ -49,21 +49,34 @@
 #include "private/ScopedFd.h"
 
 static const char property_service_socket[] = "/dev/socket/" PROP_SERVICE_NAME;
+static const char property_service_for_system_socket[] =
+    "/dev/socket/" PROP_SERVICE_FOR_SYSTEM_NAME;
 static const char* kServiceVersionPropertyName = "ro.property_service.version";
 
 class PropertyServiceConnection {
  public:
-  PropertyServiceConnection() : last_error_(0) {
+  PropertyServiceConnection(const char* name) : last_error_(0) {
     socket_.reset(::socket(AF_LOCAL, SOCK_STREAM | SOCK_CLOEXEC, 0));
     if (socket_.get() == -1) {
       last_error_ = errno;
       return;
     }
 
-    const size_t namelen = strlen(property_service_socket);
+    // If we're trying to set "sys.powerctl" from a privileged process, use the special
+    // socket. Because this socket is only accessible to privileged processes, it can't
+    // be DoSed directly by malicious apps. (The shell user should be able to reboot,
+    // though, so we don't just always use the special socket for "sys.powerctl".)
+    // See b/262237198 for context
+    const char* socket = property_service_socket;
+    if (strcmp(name, "sys.powerctl") == 0 &&
+        access(property_service_for_system_socket, W_OK) == 0) {
+      socket = property_service_for_system_socket;
+    }
+
+    const size_t namelen = strlen(socket);
     sockaddr_un addr;
     memset(&addr, 0, sizeof(addr));
-    strlcpy(addr.sun_path, property_service_socket, sizeof(addr.sun_path));
+    strlcpy(addr.sun_path, socket, sizeof(addr.sun_path));
     addr.sun_family = AF_LOCAL;
     socklen_t alen = namelen + offsetof(sockaddr_un, sun_path) + 1;
 
@@ -176,7 +189,7 @@ struct prop_msg {
 };
 
 static int send_prop_msg(const prop_msg* msg) {
-  PropertyServiceConnection connection;
+  PropertyServiceConnection connection(msg->name);
   if (!connection.IsValid()) {
     return connection.GetLastError();
   }
@@ -244,6 +257,21 @@ static void detect_protocol_version() {
   }
 }
 
+static const char* __prop_error_to_string(int error) {
+  switch (error) {
+  case PROP_ERROR_READ_CMD: return "PROP_ERROR_READ_CMD";
+  case PROP_ERROR_READ_DATA: return "PROP_ERROR_READ_DATA";
+  case PROP_ERROR_READ_ONLY_PROPERTY: return "PROP_ERROR_READ_ONLY_PROPERTY";
+  case PROP_ERROR_INVALID_NAME: return "PROP_ERROR_INVALID_NAME";
+  case PROP_ERROR_INVALID_VALUE: return "PROP_ERROR_INVALID_VALUE";
+  case PROP_ERROR_PERMISSION_DENIED: return "PROP_ERROR_PERMISSION_DENIED";
+  case PROP_ERROR_INVALID_CMD: return "PROP_ERROR_INVALID_CMD";
+  case PROP_ERROR_HANDLE_CONTROL_MESSAGE: return "PROP_ERROR_HANDLE_CONTROL_MESSAGE";
+  case PROP_ERROR_SET_FAILED: return "PROP_ERROR_SET_FAILED";
+  }
+  return "<unknown>";
+}
+
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int __system_property_set(const char* key, const char* value) {
   if (key == nullptr) return -1;
@@ -269,7 +297,7 @@ int __system_property_set(const char* key, const char* value) {
     // New protocol only allows long values for ro. properties only.
     if (strlen(value) >= PROP_VALUE_MAX && strncmp(key, "ro.", 3) != 0) return -1;
     // Use proper protocol
-    PropertyServiceConnection connection;
+    PropertyServiceConnection connection(key);
     if (!connection.IsValid()) {
       errno = connection.GetLastError();
       async_safe_format_log(ANDROID_LOG_WARN, "libc",
@@ -297,8 +325,8 @@ int __system_property_set(const char* key, const char* value) {
 
     if (result != PROP_SUCCESS) {
       async_safe_format_log(ANDROID_LOG_WARN, "libc",
-                            "Unable to set property \"%s\" to \"%s\": error code: 0x%x", key, value,
-                            result);
+                            "Unable to set property \"%s\" to \"%s\": %s (0x%x)", key, value,
+                            __prop_error_to_string(result), result);
       return -1;
     }
 

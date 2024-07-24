@@ -123,7 +123,7 @@ extern "C" int mallopt(int param, int value) {
   // Track the M_DECAY_TIME mallopt calls.
   if (param == M_DECAY_TIME && retval == 1) {
     __libc_globals.mutate([value](libc_globals* globals) {
-      if (value == 0) {
+      if (value <= 0) {
         atomic_store(&globals->decay_time_enabled, false);
       } else {
         atomic_store(&globals->decay_time_enabled, true);
@@ -353,7 +353,7 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
       errno = EINVAL;
       return false;
     }
-    *reinterpret_cast<bool*>(arg) = atomic_load(&__libc_globals->memtag_stack);
+    *reinterpret_cast<bool*>(arg) = atomic_load(&__libc_memtag_stack);
     return true;
   }
   if (opcode == M_GET_DECAY_TIME_ENABLED) {
