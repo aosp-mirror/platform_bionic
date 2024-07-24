@@ -78,8 +78,10 @@ void __libc_init_globals() {
 #if !defined(__LP64__)
 static void __check_max_thread_id() {
   if (gettid() > 65535) {
-    async_safe_fatal("Limited by the size of pthread_mutex_t, 32 bit bionic libc only accepts "
-                     "pid <= 65535, but current pid is %d", gettid());
+    async_safe_fatal("32-bit pthread_mutex_t only supports pids <= 65535; "
+                     "current pid %d; "
+                     "`echo 65535 > /proc/sys/kernel/pid_max` as root",
+                     gettid());
   }
 }
 #endif
