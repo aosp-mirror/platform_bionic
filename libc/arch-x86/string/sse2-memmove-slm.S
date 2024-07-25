@@ -29,7 +29,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #define FOR_SILVERMONT
-#include "cache.h"
 
 #ifndef MEMMOVE
 # define MEMMOVE	memmove_generic
@@ -93,6 +92,8 @@ name:		\
 #define ENTRANCE	PUSH (%ebx);
 #define RETURN_END	POP (%ebx); ret
 #define RETURN		RETURN_END; CFI_PUSH (%ebx)
+
+#define SETUP_PIC_REG(x)	call	__x86.get_pc_thunk.x
 
 	.section .text.sse2,"ax",@progbits
 ENTRY (MEMMOVE)
@@ -193,7 +194,13 @@ L(mm_len_128_or_more_forward):
 	cmp	%edi, %ebx
 	jbe	L(mm_copy_remaining_forward)
 
-	cmp	$SHARED_CACHE_SIZE_HALF, %ecx
+	PUSH(%ebx)
+	SETUP_PIC_REG(bx)
+	add	$_GLOBAL_OFFSET_TABLE_, %ebx
+	cmp	__x86_shared_cache_size_half@GOTOFF(%ebx), %ecx
+	/* Restore ebx. We can place a pop before jump as it doesn't affect any flags. */
+	POP(%ebx)
+
 	jae	L(mm_large_page_loop_forward)
 
 	.p2align 4
@@ -424,7 +431,13 @@ L(mm_len_128_or_more_backward):
 	cmp	%edi, %ebx
 	jae	L(mm_main_loop_backward_end)
 
-	cmp	$SHARED_CACHE_SIZE_HALF, %ecx
+	PUSH(%ebx)
+	SETUP_PIC_REG(bx)
+	add	$_GLOBAL_OFFSET_TABLE_, %ebx
+	cmp	__x86_shared_cache_size_half@GOTOFF(%ebx), %ecx
+	/* Restore ebx. We can place a pop before jump as it doesn't affect any flags. */
+	POP(%ebx)
+
 	jae	L(mm_large_page_loop_backward)
 
 	.p2align 4
