@@ -183,9 +183,9 @@ cc_library {
         "upstream-freebsd/lib/msun/src/w_drem.c",
         "upstream-freebsd/lib/msun/src/w_dremf.c",
 
-        // The FreeBSD complex functions appear to be better, but they're incomplete.
-        // We take the FreeBSD implementations when they exist, but fill out the rest
-        // of <complex.h> from NetBSD...
+        // The FreeBSD complex function implementations appear to be better
+        // than the other BSDs', but they're incomplete. We take the FreeBSD
+        // implementations when they exist, but fill out the rest from NetBSD...
         "upstream-netbsd/lib/libm/complex/ccoshl.c",
         "upstream-netbsd/lib/libm/complex/ccosl.c",
         "upstream-netbsd/lib/libm/complex/cephes_subrl.c",
@@ -353,10 +353,10 @@ cc_library {
         x86: {
             srcs: [
                 "fenv-x86.c",
-                "x86/lrint.S",
-                "x86/lrintf.S",
             ],
             exclude_srcs: [
+                "upstream-freebsd/lib/msun/src/s_llrint.c",
+                "upstream-freebsd/lib/msun/src/s_llrintf.c",
                 "upstream-freebsd/lib/msun/src/s_lrint.c",
                 "upstream-freebsd/lib/msun/src/s_lrintf.c",
             ],
@@ -369,8 +369,6 @@ cc_library {
         x86_64: {
             srcs: [
                 "fenv-x86_64.c",
-                "x86_64/lrint.S",
-                "x86_64/lrintf.S",
             ],
             exclude_srcs: [
                 "upstream-freebsd/lib/msun/src/s_llrint.c",
@@ -388,7 +386,6 @@ cc_library {
     ],
 
     cflags: [
-        "-D_BSD_SOURCE",
         "-include freebsd-compat.h",
         "-fno-builtin",
         "-fno-math-errno",
