@@ -29,7 +29,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #define FOR_ATOM
-#include "cache.h"
 
 #ifndef MEMCPY
 # define MEMCPY	memcpy_atom
