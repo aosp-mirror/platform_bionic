@@ -2226,7 +2226,7 @@ cc_library_static {
     nocrt: true,
     stl: "none",
     visibility: [
-        "//packages/modules/Virtualization/vmbase",
+        "//packages/modules/Virtualization/libs/libvmbase",
     ],
 }
 
