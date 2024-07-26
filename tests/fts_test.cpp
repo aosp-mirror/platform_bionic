@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,8 +26,23 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <gtest/gtest.h>
 
-#if defined(__x86_64__) || defined(__i386__)
-#pragma STDC FENV_ACCESS ON
+#if !defined(__GLIBC__)
+#include <fts.h>
 #endif
+
+TEST(fts, smoke) {
+#if !defined(__GLIBC__)
+  char* const paths[] = { const_cast<char*>("."), NULL };
+  FTS* fts = fts_open(paths, FTS_PHYSICAL, NULL);
+  ASSERT_TRUE(fts != NULL);
+  FTSENT* e;
+  while ((e = fts_read(fts)) != NULL) {
+    ASSERT_EQ(0, fts_set(fts, e, FTS_SKIP));
+  }
+  ASSERT_EQ(0, fts_close(fts));
+#else
+  GTEST_SKIP() << "no _FILE_OFFSET_BITS=64 <fts.h> in our old glibc";
+#endif
+}
