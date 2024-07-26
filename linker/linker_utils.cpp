@@ -207,7 +207,7 @@ std::string resolve_path(const std::string& path) {
   if (realpath(original_path, resolved_path) != nullptr) {
     struct stat s;
     if (stat(resolved_path, &s) == -1) {
-      DL_WARN("Warning: cannot stat file \"%s\": %s (ignoring)", resolved_path, strerror(errno));
+      DL_WARN("Warning: cannot stat file \"%s\": %m (ignoring)", resolved_path);
       return "";
     }
     if (!S_ISDIR(s.st_mode)) {
@@ -226,8 +226,7 @@ std::string resolve_path(const std::string& path) {
     std::string entry_path;
     if (parse_zip_path(normalized_path.c_str(), &zip_path, &entry_path)) {
       if (realpath(zip_path.c_str(), resolved_path) == nullptr) {
-        DL_WARN("Warning: unable to resolve \"%s\": %s (ignoring)",
-                zip_path.c_str(), strerror(errno));
+        DL_WARN("Warning: unable to resolve \"%s\": %m (ignoring)", zip_path.c_str());
         return "";
       }
 
