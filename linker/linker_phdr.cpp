@@ -221,17 +221,24 @@ const char* ElfReader::get_string(ElfW(Word) index) const {
 }
 
 bool ElfReader::ReadElfHeader() {
-  ssize_t rc = TEMP_FAILURE_RETRY(pread64(fd_, &header_, sizeof(header_), file_offset_));
-  if (rc < 0) {
-    DL_ERR("can't read file \"%s\": %s", name_.c_str(), strerror(errno));
+  size_t map_size = file_size_ - file_offset_;
+  if (map_size < sizeof(header_)) {
+    DL_ERR("\"%s\" is too small to be an ELF executable: only found %zd bytes", name_.c_str(),
+           map_size);
     return false;
   }
 
-  if (rc != sizeof(header_)) {
-    DL_ERR("\"%s\" is too small to be an ELF executable: only found %zd bytes", name_.c_str(),
-           static_cast<size_t>(rc));
+#if !defined(__LP64__)
+  // Map at most 1MiB which should cover most cases
+  map_size = std::min(map_size, static_cast<size_t>(1 * 1024 * 1024));
+#endif
+
+  if (!file_fragment_.Map(fd_, file_offset_, 0, map_size)) {
+    DL_ERR("\"%s\" header mmap failed: %m", name_.c_str());
     return false;
   }
+
+  header_ = *static_cast<ElfW(Ehdr)*>(file_fragment_.data());
   return true;
 }
 
@@ -340,6 +347,24 @@ bool ElfReader::CheckFileRange(ElfW(Addr) offset, size_t size, size_t alignment)
          ((offset % alignment) == 0);
 }
 
+void* ElfReader::MapData(MappedFileFragment* fragment, off64_t offs, off64_t size) {
+  off64_t end;
+  CHECK(safe_add(&end, offs, size));
+
+  // If the data is already mapped just return it
+  if (static_cast<off64_t>(file_fragment_.size()) >= end) {
+    return static_cast<char*>(file_fragment_.data()) + offs;
+  }
+  // Use the passed-in fragment if area is not mapped. We can't remap the original fragment
+  // because that invalidates all previous pointers if the file is remapped to a different
+  // virtual address. A local variable can't be used in place of the passed-in fragment because
+  // the area would be unmapped as soon as the local object goes out of scope.
+  if (fragment->Map(fd_, file_offset_, offs, size)) {
+    return fragment->data();
+  }
+  return nullptr;
+}
+
 // Loads the program header table from an ELF file into a read-only private
 // anonymous mmap-ed block.
 bool ElfReader::ReadProgramHeaders() {
@@ -362,12 +387,13 @@ bool ElfReader::ReadProgramHeaders() {
     return false;
   }
 
-  if (!phdr_fragment_.Map(fd_, file_offset_, header_.e_phoff, size)) {
-    DL_ERR("\"%s\" phdr mmap failed: %s", name_.c_str(), strerror(errno));
+  void* phdr_data = MapData(&phdr_fragment_, header_.e_phoff, size);
+  if (phdr_data == nullptr) {
+    DL_ERR("\"%s\" phdr mmap failed: %m", name_.c_str());
     return false;
   }
 
-  phdr_table_ = static_cast<ElfW(Phdr)*>(phdr_fragment_.data());
+  phdr_table_ = static_cast<ElfW(Phdr)*>(phdr_data);
   return true;
 }
 
@@ -388,12 +414,13 @@ bool ElfReader::ReadSectionHeaders() {
     return false;
   }
 
-  if (!shdr_fragment_.Map(fd_, file_offset_, header_.e_shoff, size)) {
-    DL_ERR("\"%s\" shdr mmap failed: %s", name_.c_str(), strerror(errno));
+  void* shdr_data = MapData(&shdr_fragment_, header_.e_shoff, size);
+  if (shdr_data == nullptr) {
+    DL_ERR("\"%s\" shdr mmap failed: %m", name_.c_str());
     return false;
   }
 
-  shdr_table_ = static_cast<const ElfW(Shdr)*>(shdr_fragment_.data());
+  shdr_table_ = static_cast<const ElfW(Shdr)*>(shdr_data);
   return true;
 }
 
@@ -481,12 +508,13 @@ bool ElfReader::ReadDynamicSection() {
     return false;
   }
 
-  if (!dynamic_fragment_.Map(fd_, file_offset_, dynamic_shdr->sh_offset, dynamic_shdr->sh_size)) {
-    DL_ERR("\"%s\" dynamic section mmap failed: %s", name_.c_str(), strerror(errno));
+  void* dynamic_data = MapData(&dynamic_fragment_, dynamic_shdr->sh_offset, dynamic_shdr->sh_size);
+  if (dynamic_data == nullptr) {
+    DL_ERR("\"%s\" dynamic section mmap failed: %m", name_.c_str());
     return false;
   }
 
-  dynamic_ = static_cast<const ElfW(Dyn)*>(dynamic_fragment_.data());
+  dynamic_ = static_cast<const ElfW(Dyn)*>(dynamic_data);
 
   if (!CheckFileRange(strtab_shdr->sh_offset, strtab_shdr->sh_size, alignof(const char))) {
     DL_ERR_AND_LOG("\"%s\" has invalid offset/size of the .strtab section linked from .dynamic section",
@@ -494,13 +522,14 @@ bool ElfReader::ReadDynamicSection() {
     return false;
   }
 
-  if (!strtab_fragment_.Map(fd_, file_offset_, strtab_shdr->sh_offset, strtab_shdr->sh_size)) {
-    DL_ERR("\"%s\" strtab section mmap failed: %s", name_.c_str(), strerror(errno));
+  void* strtab_data = MapData(&strtab_fragment_, strtab_shdr->sh_offset, strtab_shdr->sh_size);
+  if (strtab_data == nullptr) {
+    DL_ERR("\"%s\" strtab section mmap failed: %m", name_.c_str());
     return false;
   }
 
-  strtab_ = static_cast<const char*>(strtab_fragment_.data());
-  strtab_size_ = strtab_fragment_.size();
+  strtab_ = static_cast<const char*>(strtab_data);
+  strtab_size_ = strtab_shdr->sh_size;
   return true;
 }
 
@@ -756,7 +785,8 @@ bool ElfReader::ReadPadSegmentNote() {
     // note_fragment is scoped to within the loop so that there is
     // at most 1 PT_NOTE mapped at anytime during this search.
     MappedFileFragment note_fragment;
-    if (!note_fragment.Map(fd_, file_offset_, phdr->p_offset, phdr->p_memsz)) {
+    void* note_data = MapData(&note_fragment, phdr->p_offset, phdr->p_memsz);
+    if (note_data == nullptr) {
       DL_ERR("\"%s\": PT_NOTE mmap(nullptr, %p, PROT_READ, MAP_PRIVATE, %d, %p) failed: %m",
              name_.c_str(), reinterpret_cast<void*>(phdr->p_memsz), fd_,
              reinterpret_cast<void*>(page_start(file_offset_ + phdr->p_offset)));
@@ -766,7 +796,7 @@ bool ElfReader::ReadPadSegmentNote() {
     const ElfW(Nhdr)* note_hdr = nullptr;
     const char* note_desc = nullptr;
     if (!__get_elf_note(NT_ANDROID_TYPE_PAD_SEGMENT, "Android",
-                        reinterpret_cast<ElfW(Addr)>(note_fragment.data()),
+                        reinterpret_cast<ElfW(Addr)>(note_data),
                         phdr, &note_hdr, &note_desc)) {
       continue;
     }
@@ -893,7 +923,7 @@ bool ElfReader::LoadSegments() {
                             fd_,
                             file_offset_ + file_page_start);
       if (seg_addr == MAP_FAILED) {
-        DL_ERR("couldn't map \"%s\" segment %zd: %s", name_.c_str(), i, strerror(errno));
+        DL_ERR("couldn't map \"%s\" segment %zd: %m", name_.c_str(), i);
         return false;
       }
 
@@ -954,7 +984,7 @@ bool ElfReader::LoadSegments() {
                            -1,
                            0);
       if (zeromap == MAP_FAILED) {
-        DL_ERR("couldn't zero fill \"%s\" gap: %s", name_.c_str(), strerror(errno));
+        DL_ERR("couldn't zero fill \"%s\" gap: %m", name_.c_str());
         return false;
       }
 
