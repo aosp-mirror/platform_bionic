@@ -234,7 +234,7 @@ bool ElfReader::ReadElfHeader() {
 #endif
 
   if (!file_fragment_.Map(fd_, file_offset_, 0, map_size)) {
-    DL_ERR("\"%s\" header mmap failed: %s", name_.c_str(), strerror(errno));
+    DL_ERR("\"%s\" header mmap failed: %m", name_.c_str());
     return false;
   }
 
@@ -389,7 +389,7 @@ bool ElfReader::ReadProgramHeaders() {
 
   void* phdr_data = MapData(&phdr_fragment_, header_.e_phoff, size);
   if (phdr_data == nullptr) {
-    DL_ERR("\"%s\" phdr mmap failed: %s", name_.c_str(), strerror(errno));
+    DL_ERR("\"%s\" phdr mmap failed: %m", name_.c_str());
     return false;
   }
 
@@ -416,7 +416,7 @@ bool ElfReader::ReadSectionHeaders() {
 
   void* shdr_data = MapData(&shdr_fragment_, header_.e_shoff, size);
   if (shdr_data == nullptr) {
-    DL_ERR("\"%s\" shdr mmap failed: %s", name_.c_str(), strerror(errno));
+    DL_ERR("\"%s\" shdr mmap failed: %m", name_.c_str());
     return false;
   }
 
@@ -510,7 +510,7 @@ bool ElfReader::ReadDynamicSection() {
 
   void* dynamic_data = MapData(&dynamic_fragment_, dynamic_shdr->sh_offset, dynamic_shdr->sh_size);
   if (dynamic_data == nullptr) {
-    DL_ERR("\"%s\" dynamic section mmap failed: %s", name_.c_str(), strerror(errno));
+    DL_ERR("\"%s\" dynamic section mmap failed: %m", name_.c_str());
     return false;
   }
 
@@ -524,7 +524,7 @@ bool ElfReader::ReadDynamicSection() {
 
   void* strtab_data = MapData(&strtab_fragment_, strtab_shdr->sh_offset, strtab_shdr->sh_size);
   if (strtab_data == nullptr) {
-    DL_ERR("\"%s\" strtab section mmap failed: %s", name_.c_str(), strerror(errno));
+    DL_ERR("\"%s\" strtab section mmap failed: %m", name_.c_str());
     return false;
   }
 
@@ -923,7 +923,7 @@ bool ElfReader::LoadSegments() {
                             fd_,
                             file_offset_ + file_page_start);
       if (seg_addr == MAP_FAILED) {
-        DL_ERR("couldn't map \"%s\" segment %zd: %s", name_.c_str(), i, strerror(errno));
+        DL_ERR("couldn't map \"%s\" segment %zd: %m", name_.c_str(), i);
         return false;
       }
 
@@ -984,7 +984,7 @@ bool ElfReader::LoadSegments() {
                            -1,
                            0);
       if (zeromap == MAP_FAILED) {
-        DL_ERR("couldn't zero fill \"%s\" gap: %s", name_.c_str(), strerror(errno));
+        DL_ERR("couldn't zero fill \"%s\" gap: %m", name_.c_str());
         return false;
       }
 
