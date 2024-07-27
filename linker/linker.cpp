@@ -387,7 +387,7 @@ static bool realpath_fd(int fd, std::string* realpath) {
   auto length = readlink(proc_self_fd, buf, sizeof(buf));
   if (length == -1) {
     if (!is_first_stage_init()) {
-      PRINT("readlink(\"%s\") failed: %s [fd=%d]", proc_self_fd, strerror(errno), fd);
+      PRINT("readlink(\"%s\" [fd=%d]) failed: %m", proc_self_fd, fd);
     }
     return false;
   }
@@ -1185,7 +1185,7 @@ static bool load_library(android_namespace_t* ns,
 
   struct stat file_stat;
   if (TEMP_FAILURE_RETRY(fstat(task->get_fd(), &file_stat)) != 0) {
-    DL_OPEN_ERR("unable to stat file for the library \"%s\": %s", name, strerror(errno));
+    DL_OPEN_ERR("unable to stat file for the library \"%s\": %m", name);
     return false;
   }
   if (file_offset >= file_stat.st_size) {
@@ -1215,7 +1215,7 @@ static bool load_library(android_namespace_t* ns,
 
   struct statfs fs_stat;
   if (TEMP_FAILURE_RETRY(fstatfs(task->get_fd(), &fs_stat)) != 0) {
-    DL_OPEN_ERR("unable to fstatfs file for the library \"%s\": %s", name, strerror(errno));
+    DL_OPEN_ERR("unable to fstatfs file for the library \"%s\": %m", name);
     return false;
   }
 
@@ -3364,7 +3364,7 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
                               get_realpath());
     add_dlwarning(get_realpath(), "text relocations");
     if (phdr_table_unprotect_segments(phdr, phnum, load_bias, should_pad_segments_) < 0) {
-      DL_ERR("can't unprotect loadable segments for \"%s\": %s", get_realpath(), strerror(errno));
+      DL_ERR("can't unprotect loadable segments for \"%s\": %m", get_realpath());
       return false;
     }
   }
@@ -3380,8 +3380,7 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
   if (has_text_relocations) {
     // All relocations are done, we can protect our segments back to read-only.
     if (phdr_table_protect_segments(phdr, phnum, load_bias, should_pad_segments_) < 0) {
-      DL_ERR("can't protect segments for \"%s\": %s",
-             get_realpath(), strerror(errno));
+      DL_ERR("can't protect segments for \"%s\": %m", get_realpath());
       return false;
     }
   }
@@ -3397,15 +3396,13 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
   if (extinfo && (extinfo->flags & ANDROID_DLEXT_WRITE_RELRO)) {
     if (phdr_table_serialize_gnu_relro(phdr, phnum, load_bias,
                                        extinfo->relro_fd, relro_fd_offset) < 0) {
-      DL_ERR("failed serializing GNU RELRO section for \"%s\": %s",
-             get_realpath(), strerror(errno));
+      DL_ERR("failed serializing GNU RELRO section for \"%s\": %m", get_realpath());
       return false;
     }
   } else if (extinfo && (extinfo->flags & ANDROID_DLEXT_USE_RELRO)) {
     if (phdr_table_map_gnu_relro(phdr, phnum, load_bias,
                                  extinfo->relro_fd, relro_fd_offset) < 0) {
-      DL_ERR("failed mapping GNU RELRO section for \"%s\": %s",
-             get_realpath(), strerror(errno));
+      DL_ERR("failed mapping GNU RELRO section for \"%s\": %m", get_realpath());
       return false;
     }
   }
@@ -3418,8 +3415,7 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
 
 bool soinfo::protect_relro() {
   if (phdr_table_protect_gnu_relro(phdr, phnum, load_bias, should_pad_segments_) < 0) {
-    DL_ERR("can't enable GNU RELRO protection for \"%s\": %s",
-           get_realpath(), strerror(errno));
+    DL_ERR("can't enable GNU RELRO protection for \"%s\": %m", get_realpath());
     return false;
   }
   return true;
