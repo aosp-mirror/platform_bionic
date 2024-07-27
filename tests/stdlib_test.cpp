@@ -29,6 +29,7 @@
 
 #include <limits>
 #include <string>
+#include <thread>
 
 #include <android-base/file.h>
 #include <android-base/macros.h>
@@ -648,6 +649,58 @@ TEST(stdlib, at_quick_exit) {
   }
 
   AssertChildExited(pid, 99);
+}
+
+static void exit_from_atexit_func4() {
+  std::thread([] { exit(4); }).detach();
+  usleep(1000);
+  fprintf(stderr, "4");
+}
+
+static void exit_from_atexit_func3() {
+  std::thread([] { exit(3); }).detach();
+  fprintf(stderr, "3");
+  usleep(1000);
+  // This should cause us to exit with status 99,
+  // but not before printing "4",
+  // and without re-running the previous atexit handlers.
+  exit(99);
+}
+
+static void exit_from_atexit_func2() {
+  std::thread([] { exit(2); }).detach();
+  fprintf(stderr, "2");
+  usleep(1000);
+  // Register another atexit handler from within an atexit handler.
+  atexit(exit_from_atexit_func3);
+}
+
+static void exit_from_atexit_func1() {
+  // These atexit handlers all spawn another thread that tries to exit,
+  // and sleep to try to lose the race.
+  // The lock in exit() should ensure that only the first thread to call
+  // exit() can ever win (but see exit_from_atexit_func3() for a subtelty).
+  std::thread([] { exit(1); }).detach();
+  usleep(1000);
+  fprintf(stderr, "1");
+}
+
+static void exit_torturer() {
+  atexit(exit_from_atexit_func4);
+  // We deliberately don't register exit_from_atexit_func3() here;
+  // see exit_from_atexit_func2().
+  atexit(exit_from_atexit_func2);
+  atexit(exit_from_atexit_func1);
+  exit(0);
+}
+
+TEST(stdlib, exit_torture) {
+  // Test that the atexit() handlers are run in the defined order (reverse
+  // order of registration), even though one of them is registered by another
+  // when it runs, and that we get the exit code from the last call to exit()
+  // on the first thread to call exit() (rather than one of the other threads
+  // or a deadlock from the second call on the same thread).
+  ASSERT_EXIT(exit_torturer(), testing::ExitedWithCode(99), "1234");
 }
 
 TEST(unistd, _Exit) {
