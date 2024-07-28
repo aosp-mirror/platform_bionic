@@ -73,6 +73,25 @@ static void set_bss_vma_name(soinfo* si);
 void __libc_init_mte(const memtag_dynamic_entries_t* memtag_dynamic_entries, const void* phdr_start,
                      size_t phdr_count, uintptr_t load_bias, void* stack_top);
 
+__printflike(1, 2) static void __linker_error(const char* fmt, ...) {
+  va_list ap;
+
+  va_start(ap, fmt);
+  async_safe_format_fd_va_list(STDERR_FILENO, fmt, ap);
+  write(STDERR_FILENO, "\n", 1);
+  va_end(ap);
+
+  va_start(ap, fmt);
+  async_safe_format_log_va_list(ANDROID_LOG_FATAL, "linker", fmt, ap);
+  va_end(ap);
+
+  _exit(EXIT_FAILURE);
+}
+
+static void __linker_cannot_link(const char* argv0) {
+  __linker_error("CANNOT LINK EXECUTABLE \"%s\": %s", argv0, linker_get_error_buffer());
+}
+
 // These should be preserved static to avoid emitting
 // RELATIVE relocations for the part of the code running
 // before linker links itself.
@@ -167,22 +186,21 @@ static void add_vdso() {
     return;
   }
 
-  soinfo* si = soinfo_alloc(&g_default_namespace, "[vdso]", nullptr, 0, 0);
+  vdso = soinfo_alloc(&g_default_namespace, "[vdso]", nullptr, 0, 0);
 
-  si->phdr = reinterpret_cast<ElfW(Phdr)*>(reinterpret_cast<char*>(ehdr_vdso) + ehdr_vdso->e_phoff);
-  si->phnum = ehdr_vdso->e_phnum;
-  si->base = reinterpret_cast<ElfW(Addr)>(ehdr_vdso);
-  si->size = phdr_table_get_load_size(si->phdr, si->phnum);
-  si->load_bias = get_elf_exec_load_bias(ehdr_vdso);
+  vdso->phdr = reinterpret_cast<ElfW(Phdr)*>(reinterpret_cast<char*>(ehdr_vdso) + ehdr_vdso->e_phoff);
+  vdso->phnum = ehdr_vdso->e_phnum;
+  vdso->base = reinterpret_cast<ElfW(Addr)>(ehdr_vdso);
+  vdso->size = phdr_table_get_load_size(vdso->phdr, vdso->phnum);
+  vdso->load_bias = get_elf_exec_load_bias(ehdr_vdso);
 
-  si->prelink_image();
-  si->link_image(SymbolLookupList(si), si, nullptr, nullptr);
-  // prevents accidental unloads...
-  si->set_dt_flags_1(si->get_dt_flags_1() | DF_1_NODELETE);
-  si->set_linked();
-  si->call_constructors();
+  if (!vdso->prelink_image() || !vdso->link_image(SymbolLookupList(vdso), vdso, nullptr, nullptr)) {
+    __linker_cannot_link(g_argv[0]);
+  }
 
-  vdso = si;
+  // Prevent accidental unloads...
+  vdso->set_dt_flags_1(vdso->get_dt_flags_1() | DF_1_NODELETE);
+  vdso->set_linked();
 }
 
 // Initializes an soinfo's link_map_head field using other fields from the
@@ -216,8 +234,7 @@ static ExecutableInfo get_executable_info(const char* arg_path) {
   if (TEMP_FAILURE_RETRY(stat(exe_path, &result.file_stat) == -1)) {
     // Fallback to argv[0] for the case where /proc isn't available
     if (TEMP_FAILURE_RETRY(stat(arg_path, &result.file_stat) == -1)) {
-      async_safe_fatal("unable to stat either \"/proc/self/exe\" or \"%s\": %s",
-          arg_path, strerror(errno));
+      async_safe_fatal("unable to stat either \"/proc/self/exe\" or \"%s\": %m", arg_path);
     }
     exe_path = arg_path;
   }
@@ -238,28 +255,6 @@ static char kFallbackLinkerPath[] = "/system/bin/linker64";
 #else
 static char kFallbackLinkerPath[] = "/system/bin/linker";
 #endif
-
-__printflike(1, 2)
-static void __linker_error(const char* fmt, ...) {
-  va_list ap;
-
-  va_start(ap, fmt);
-  async_safe_format_fd_va_list(STDERR_FILENO, fmt, ap);
-  write(STDERR_FILENO, "\n", 1);
-  va_end(ap);
-
-  va_start(ap, fmt);
-  async_safe_format_log_va_list(ANDROID_LOG_FATAL, "linker", fmt, ap);
-  va_end(ap);
-
-  _exit(EXIT_FAILURE);
-}
-
-static void __linker_cannot_link(const char* argv0) {
-  __linker_error("CANNOT LINK EXECUTABLE \"%s\": %s",
-                 argv0,
-                 linker_get_error_buffer());
-}
 
 // Load an executable. Normally the kernel has already loaded the executable when the linker
 // starts. The linker can be invoked directly on an executable, though, and then the linker must
