@@ -254,11 +254,10 @@ static bool parse_config_file(const char* ld_config_file_path,
         // the failure with INFO rather than DL_WARN. e.g. A binary in
         // /data/local/tmp may attempt to stat /postinstall. See
         // http://b/120996057.
-        INFO("%s:%zd: warning: path \"%s\" couldn't be resolved: %s",
+        INFO("%s:%zd: warning: path \"%s\" couldn't be resolved: %m",
              ld_config_file_path,
              cp.lineno(),
-             value.c_str(),
-             strerror(errno));
+             value.c_str());
         resolved_path = value;
       }
 
