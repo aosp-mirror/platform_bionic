@@ -26,24 +26,22 @@
  * SUCH DAMAGE.
  */
 
+#include <pthread.h>
 #include <stdlib.h>
 #include <unistd.h>
 
 #include "private/bionic_defs.h"
-#include "pthread_internal.h"
 
 extern "C" void __cxa_finalize(void* dso_handle);
 extern "C" void __cxa_thread_finalize();
-extern "C" __noreturn void __exit_group(int status);
 
-__attribute__((no_sanitize("memtag"))) void _exit(int status) {
-  __exit_group(status);
-}
-
-__strong_alias(_Exit, _exit);
+static pthread_mutex_t g_exit_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
 
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 void exit(int status) {
+  // https://austingroupbugs.net/view.php?id=1845
+  pthread_mutex_lock(&g_exit_mutex);
+
   __cxa_thread_finalize();
   __cxa_finalize(nullptr);
   _exit(status);

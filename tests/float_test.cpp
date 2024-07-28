@@ -122,3 +122,7 @@ TEST(float_h, macros) {
 #error LDBL_HAS_SUBNORM
 #endif
 }
+
+TEST(float_h, FLT_EVAL_METHOD_exact) {
+  ASSERT_EQ(0, FLT_EVAL_METHOD);
+}
