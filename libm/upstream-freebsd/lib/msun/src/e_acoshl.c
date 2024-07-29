@@ -1,6 +1,5 @@
 /* from: FreeBSD: head/lib/msun/src/e_acosh.c 176451 2008-02-22 02:30:36Z das */
 
-/* @(#)e_acosh.c 1.3 95/01/18 */
 /*
  * ====================================================
  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
@@ -12,9 +11,6 @@
  * ====================================================
  *
  */
-
-#include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
 
 /*
  * See e_acosh.c for complete comments.

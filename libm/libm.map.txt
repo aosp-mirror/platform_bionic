@@ -271,7 +271,7 @@ LIBC {
     *;
 };
 
-LIBC_O { # introduced=O
+LIBC_O { # introduced=26
   global:
     cacoshl;
     cacosl;
