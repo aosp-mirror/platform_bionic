@@ -118,12 +118,15 @@ static void __init_alternate_signal_stack(pthread_internal_t* thread) {
 
 static void __init_shadow_call_stack(pthread_internal_t* thread __unused) {
 #if defined(__aarch64__) || defined(__riscv)
-  // Allocate the stack and the guard region.
+  // Allocate the shadow call stack and its guard region.
   char* scs_guard_region = reinterpret_cast<char*>(
-      mmap(nullptr, SCS_GUARD_REGION_SIZE, 0, MAP_PRIVATE | MAP_ANON, -1, 0));
+      mmap(nullptr, SCS_GUARD_REGION_SIZE, PROT_NONE, MAP_PRIVATE | MAP_ANON, -1, 0));
+  if (scs_guard_region == MAP_FAILED) {
+    async_safe_fatal("failed to allocate shadow stack: %m");
+  }
   thread->shadow_call_stack_guard_region = scs_guard_region;
 
-  // The address is aligned to SCS_SIZE so that we only need to store the lower log2(SCS_SIZE) bits
+  // Align the address to SCS_SIZE so that we only need to store the lower log2(SCS_SIZE) bits
   // in jmp_buf. See the SCS commentary in pthread_internal.h for more detail.
   char* scs_aligned_guard_region =
       reinterpret_cast<char*>(align_up(reinterpret_cast<uintptr_t>(scs_guard_region), SCS_SIZE));
