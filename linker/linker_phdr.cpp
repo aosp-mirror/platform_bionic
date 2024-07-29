@@ -228,10 +228,8 @@ bool ElfReader::ReadElfHeader() {
     return false;
   }
 
-#if !defined(__LP64__)
   // Map at most 1MiB which should cover most cases
   map_size = std::min(map_size, static_cast<size_t>(1 * 1024 * 1024));
-#endif
 
   if (!file_fragment_.Map(fd_, file_offset_, 0, map_size)) {
     DL_ERR("\"%s\" header mmap failed: %m", name_.c_str());
