@@ -349,7 +349,7 @@ void __set_stack_and_tls_vma_name(bool is_main_thread) {
 extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);
 
 __attribute__((no_sanitize("hwaddress")))
-#ifdef __aarch64__
+#if defined(__aarch64__)
 // This function doesn't return, but it does appear in stack traces. Avoid using return PAC in this
 // function because we may end up resetting IA, which may confuse unwinders due to mismatching keys.
 __attribute__((target("branch-protection=bti")))
@@ -368,13 +368,13 @@ static int __pthread_start(void* arg) {
   __set_stack_and_tls_vma_name(false);
   __init_additional_stacks(thread);
   __rt_sigprocmask(SIG_SETMASK, &thread->start_mask, nullptr, sizeof(thread->start_mask));
-#ifdef __aarch64__
+#if defined(__aarch64__)
   // Chrome's sandbox prevents this prctl, so only reset IA if the target SDK level is high enough.
   // Furthermore, processes loaded from vendor partitions may have their own sandboxes that would
-  // reject the prctl. Because no devices launched with PAC enabled before S, we can avoid issues on
-  // upgrading devices by checking for PAC support before issuing the prctl.
+  // reject the prctl. Because no devices launched with PAC enabled before API level 31, we can
+  // avoid issues on upgrading devices by checking for PAC support before issuing the prctl.
   static const bool pac_supported = getauxval(AT_HWCAP) & HWCAP_PACA;
-  if (pac_supported && android_get_application_target_sdk_version() >= __ANDROID_API_S__) {
+  if (pac_supported && android_get_application_target_sdk_version() >= 31) {
     prctl(PR_PAC_RESET_KEYS, PR_PAC_APIAKEY, 0, 0, 0);
   }
 #endif
