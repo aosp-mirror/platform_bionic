@@ -234,8 +234,7 @@ static ExecutableInfo get_executable_info(const char* arg_path) {
   if (TEMP_FAILURE_RETRY(stat(exe_path, &result.file_stat) == -1)) {
     // Fallback to argv[0] for the case where /proc isn't available
     if (TEMP_FAILURE_RETRY(stat(arg_path, &result.file_stat) == -1)) {
-      async_safe_fatal("unable to stat either \"/proc/self/exe\" or \"%s\": %s",
-          arg_path, strerror(errno));
+      async_safe_fatal("unable to stat either \"/proc/self/exe\" or \"%s\": %m", arg_path);
     }
     exe_path = arg_path;
   }
