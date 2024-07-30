@@ -1,6 +1,5 @@
 /* from: FreeBSD: head/lib/msun/src/s_tanhl.c XXX */
 
-/* @(#)s_tanh.c 5.1 93/09/24 */
 /*
  * ====================================================
  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
@@ -11,9 +10,6 @@
  * is preserved.
  * ====================================================
  */
-
-#include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
 
 /*
  * See s_tanh.c for complete comments.

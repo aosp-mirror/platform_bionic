@@ -571,6 +571,25 @@ TEST_F(MallocDebugConfigTest, record_allocs_file) {
   ASSERT_STREQ("", getFakeLogPrint().c_str());
 }
 
+TEST_F(MallocDebugConfigTest, record_allocs_on_exit) {
+  ASSERT_TRUE(InitConfig("record_allocs_on_exit")) << getFakeLogPrint();
+  ASSERT_EQ(0U, config->options());
+  ASSERT_TRUE(config->record_allocs_on_exit());
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ("", getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, record_allocs_on_exit_error) {
+  ASSERT_FALSE(InitConfig("record_allocs_on_exit=something")) << getFakeLogPrint();
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: value set for option 'record_allocs_on_exit' "
+      "which does not take a value\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}
+
 TEST_F(MallocDebugConfigTest, guard_min_error) {
   ASSERT_FALSE(InitConfig("guard=0"));
 
@@ -838,6 +857,24 @@ TEST_F(MallocDebugConfigTest, trigger_log_allocator_stats_on_signal_fail) {
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   std::string log_msg(
       "6 malloc_debug malloc_testing: value set for option 'log_allocator_stats_on_signal' "
+      "which does not take a value\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, log_allocator_stats_on_exit) {
+  ASSERT_TRUE(InitConfig("log_allocator_stats_on_exit")) << getFakeLogPrint();
+  ASSERT_EQ(LOG_ALLOCATOR_STATS_ON_EXIT, config->options());
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ("", getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, trigger_log_allocator_stats_on_exit_fail) {
+  ASSERT_FALSE(InitConfig("log_allocator_stats_on_exit=200")) << getFakeLogPrint();
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: value set for option 'log_allocator_stats_on_exit' "
       "which does not take a value\n");
   ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
 }

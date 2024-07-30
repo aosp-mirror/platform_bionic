@@ -504,15 +504,7 @@ u_int __res_randomid(void);
 // ...but NetBSD calls it res_randomid.
 #define res_randomid __res_randomid
 
-#ifdef __i386__
-# define __socketcall extern __attribute__((__cdecl__))
-#else
-# define __socketcall extern
-#endif
-
-__socketcall int __connect(int, const struct sockaddr*, socklen_t);
-
-#undef __socketcall
+int __connect(int, const struct sockaddr*, socklen_t);
 
 // Symbols that are supposed to be in resolv.h, but that we aren't exporting.
 int ns_parserr2(ns_msg*, ns_sect, int, ns_rr2*);

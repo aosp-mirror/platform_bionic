@@ -30,6 +30,7 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <stdarg.h>
 #include <stdint.h>
 #include <sys/mman.h>
 #include <sys/resource.h>
@@ -134,4 +135,29 @@ void* mmap64(void* addr, size_t size, int prot, int flags, int fd, off64_t offse
 
 void* mmap(void* addr, size_t size, int prot, int flags, int fd, off_t offset) {
   return mmap64(addr, size, prot, flags, fd, static_cast<off64_t>(offset));
+}
+
+// The only difference here is that the libc API uses varargs for the
+// optional `new_address` argument that's only used by MREMAP_FIXED.
+extern "C" void* __mremap(void*, size_t, size_t, int, void*);
+
+void* mremap(void* old_address, size_t old_size, size_t new_size, int flags, ...) {
+  // Prevent allocations large enough for `end - start` to overflow,
+  // to avoid security bugs.
+  size_t rounded = __BIONIC_ALIGN(new_size, page_size());
+  if (rounded < new_size || rounded > PTRDIFF_MAX) {
+    errno = ENOMEM;
+    return MAP_FAILED;
+  }
+
+  // The optional argument is only valid if the MREMAP_FIXED flag is set,
+  // so we assume it's not present otherwise.
+  void* new_address = nullptr;
+  if ((flags & MREMAP_FIXED) != 0) {
+    va_list ap;
+    va_start(ap, flags);
+    new_address = va_arg(ap, void*);
+    va_end(ap);
+  }
+  return __mremap(old_address, old_size, new_size, flags, new_address);
 }

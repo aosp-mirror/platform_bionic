@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,8 +26,28 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <gtest/gtest.h>
 
-#if defined(__x86_64__) || defined(__i386__)
-#pragma STDC FENV_ACCESS ON
+#include <sys/io.h>
+
+#include "utils.h"
+
+TEST(sys_io, iopl) {
+#if defined(__i386__) || defined(__x86_64__)
+  errno = 0;
+  ASSERT_EQ(-1, iopl(4));
+  ASSERT_ERRNO(EINVAL);
+#else
+  GTEST_SKIP() << "iopl requires x86/x86-64";
 #endif
+}
+
+TEST(sys_io, ioperm) {
+#if defined(__i386__) || defined(__x86_64__)
+  errno = 0;
+  ASSERT_EQ(-1, ioperm(65535, 4, 0));
+  ASSERT_ERRNO(EINVAL);
+#else
+  GTEST_SKIP() << "ioperm requires x86/x86-64";
+#endif
+}

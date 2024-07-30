@@ -14,9 +14,6 @@
  * ====================================================
  */
 
-#include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
-
 /* __ieee754_rem_pio2f(x,y)
  *
  * return the remainder of x rem pi/2 in *y
@@ -41,7 +38,7 @@ pio2_1  =  1.57079631090164184570e+00, /* 0x3FF921FB, 0x50000000 */
 pio2_1t =  1.58932547735281966916e-08; /* 0x3E5110b4, 0x611A6263 */
 
 #ifdef INLINE_REM_PIO2F
-static __inline __always_inline
+static __always_inline
 #endif
 int
 __ieee754_rem_pio2f(float x, double *y)
@@ -70,7 +67,7 @@ __ieee754_rem_pio2f(float x, double *y)
 	}
     /* set z = scalbn(|x|,ilogb(|x|)-23) */
 	e0 = (ix>>23)-150;		/* e0 = ilogb(|x|)-23; */
-	SET_FLOAT_WORD(z, ix - ((int32_t)(e0<<23)));
+	SET_FLOAT_WORD(z, ix - ((int32_t)((u_int32_t)e0<<23)));
 	tx[0] = z;
 	n  =  __kernel_rem_pio2(tx,ty,e0,1,0);
 	if(hx<0) {*y = -ty[0]; return -n;}

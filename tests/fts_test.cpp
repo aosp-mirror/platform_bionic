@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,33 +26,23 @@
  * SUCH DAMAGE.
  */
 
-#include <errno.h>
-#include <sys/mman.h>
-#include <stdarg.h>
-#include <stdint.h>
-#include <unistd.h>
+#include <gtest/gtest.h>
 
-#include "platform/bionic/macros.h"
-#include "platform/bionic/page.h"
+#if !defined(__GLIBC__)
+#include <fts.h>
+#endif
 
-extern "C" void* __mremap(void*, size_t, size_t, int, void*);
-
-void* mremap(void* old_address, size_t old_size, size_t new_size, int flags, ...) {
-  // prevent allocations large enough for `end - start` to overflow
-  size_t rounded = __BIONIC_ALIGN(new_size, page_size());
-  if (rounded < new_size || rounded > PTRDIFF_MAX) {
-    errno = ENOMEM;
-    return MAP_FAILED;
+TEST(fts, smoke) {
+#if !defined(__GLIBC__)
+  char* const paths[] = { const_cast<char*>("."), NULL };
+  FTS* fts = fts_open(paths, FTS_PHYSICAL, NULL);
+  ASSERT_TRUE(fts != NULL);
+  FTSENT* e;
+  while ((e = fts_read(fts)) != NULL) {
+    ASSERT_EQ(0, fts_set(fts, e, FTS_SKIP));
   }
-
-  void* new_address = nullptr;
-  // The optional argument is only valid if the MREMAP_FIXED flag is set,
-  // so we assume it's not present otherwise.
-  if ((flags & MREMAP_FIXED) != 0) {
-    va_list ap;
-    va_start(ap, flags);
-    new_address = va_arg(ap, void*);
-    va_end(ap);
-  }
-  return __mremap(old_address, old_size, new_size, flags, new_address);
+  ASSERT_EQ(0, fts_close(fts));
+#else
+  GTEST_SKIP() << "no _FILE_OFFSET_BITS=64 <fts.h> in our old glibc";
+#endif
 }

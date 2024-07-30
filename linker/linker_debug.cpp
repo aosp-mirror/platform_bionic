@@ -30,13 +30,14 @@
 
 #include <unistd.h>
 
-void linker_log_va_list(int prio __unused, const char* fmt, va_list ap) {
-#if LINKER_DEBUG_TO_LOG
-  async_safe_format_log_va_list(5 - prio, "linker", fmt, ap);
-#else
-  async_safe_format_fd_va_list(STDOUT_FILENO, fmt, ap);
-  write(STDOUT_FILENO, "\n", 1);
-#endif
+void linker_log_va_list(int prio, const char* fmt, va_list ap) {
+  va_list ap2;
+  va_copy(ap2, ap);
+  async_safe_format_log_va_list(5 - prio, "linker", fmt, ap2);
+  va_end(ap2);
+
+  async_safe_format_fd_va_list(STDERR_FILENO, fmt, ap);
+  write(STDERR_FILENO, "\n", 1);
 }
 
 void linker_log(int prio, const char* fmt, ...) {

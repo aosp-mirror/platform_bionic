@@ -269,8 +269,10 @@ static void fdtrack_dump_impl(bool fatal) {
   if (fatal) {
     // Find the most common stack.
     size_t max = 0;
+    size_t total = 0;
     StackInfo* stack = nullptr;
     for (size_t i = 0; i < stacks.count; ++i) {
+      total += stacks.data[i].count;
       if (stacks.data[i].count > max) {
         stack = &stacks.data[i];
         max = stack->count;
@@ -287,7 +289,7 @@ static void fdtrack_dump_impl(bool fatal) {
       char* p = buf;
       p += async_safe_format_buffer(buf, sizeof(buf),
                                     "aborting due to fd leak: see \"open files\" in the tombstone; "
-                                    "most common stack (%zu/%zu) is\n", max, stacks.count);
+                                    "most common stack (%zu/%zu) is\n", max, total);
 
       for (size_t i = 0; i < stack->stack_depth; ++i) {
         ssize_t bytes_left = buf + sizeof(buf) - p;
