@@ -103,7 +103,7 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
     }
 
     std::string declaration_name = getDeclName(named_decl);
-    bool is_extern = named_decl->getFormalLinkage() == ExternalLinkage;
+    bool is_extern = named_decl->getFormalLinkage() == Linkage::External;
     bool is_definition = false;
     bool no_guard = false;
     bool fortify_inline = false;

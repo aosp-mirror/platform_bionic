@@ -41,10 +41,8 @@
 
 #include "private/FdPath.h"
 #include "private/__bionic_get_shell_path.h"
-#include "pthread_internal.h"
 
 extern "C" char** environ;
-extern "C" int __execve(const char* pathname, char* const* argv, char* const* envp);
 
 enum { ExecL, ExecLE, ExecLP };
 
@@ -182,9 +180,4 @@ int fexecve(int fd, char* const* argv, char* const* envp) {
   execve(FdPath(fd).c_str(), argv, envp);
   if (errno == ENOENT) errno = EBADF;
   return -1;
-}
-
-__attribute__((no_sanitize("memtag"))) int execve(const char* pathname, char* const* argv,
-                                                  char* const* envp) {
-  return __execve(pathname, argv, envp);
 }
