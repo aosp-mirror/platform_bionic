@@ -1,4 +1,3 @@
-/* From: @(#)e_rem_pio2.c 1.4 95/01/18 */
 /*
  * ====================================================
  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
@@ -12,9 +11,6 @@
  *
  * Optimized by Bruce D. Evans.
  */
-
-#include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
 
 /* ld128 version of __ieee754_rem_pio2l(x,y)
  * 
@@ -58,7 +54,7 @@ pio2_2t =  2.0670321098263988236496903051604844e-43L,	/*  0x127044533e63a0105df5
 pio2_3  =  2.0670321098263988236499468110329591e-43L,	/*  0x127044533e63a0105e00000000000.0p-254 */
 pio2_3t = -2.5650587247459238361625433492959285e-65L;	/* -0x159c4ec64ddaeb5f78671cbfb2210.0p-327 */
 
-static inline __always_inline int
+static __always_inline int
 __ieee754_rem_pio2l(long double x, long double *y)
 {
 	union IEEEl2bits u,u1;
