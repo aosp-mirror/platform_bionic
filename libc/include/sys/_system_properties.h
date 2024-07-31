@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _INCLUDE_SYS__SYSTEM_PROPERTIES_H
-#define _INCLUDE_SYS__SYSTEM_PROPERTIES_H
+#pragma once
 
 #include <sys/cdefs.h>
 #include <stdint.h>
@@ -40,13 +39,67 @@
 
 __BEGIN_DECLS
 
+/**
+ * Reads the global serial number of the system properties _area_.
+ *
+ * Called to predict if a series of cached __system_property_find()
+ * objects will have seen __system_property_serial() values change.
+ * Also aids the converse, as changes in the global serial can
+ * also be used to predict if a failed __system_property_find()
+ * could in turn now find a new object; thus preventing the
+ * cycles of effort to poll __system_property_find().
+ *
+ * Typically called at beginning of a cache cycle to signal if _any_ possible
+ * changes have occurred since last. If there is, one may check each individual
+ * __system_property_serial() to confirm dirty, or __system_property_find()
+ * to check if the property now exists. If a call to __system_property_add()
+ * or __system_property_update() has completed between two calls to
+ * __system_property_area_serial() then the second call will return a larger
+ * value than the first call. Beware of race conditions as changes to the
+ * properties are not atomic, the main value of this call is to determine
+ * whether the expensive __system_property_find() is worth retrying to see if
+ * a property now exists.
+ *
+ * Returns the serial number on success, -1 on error.
+ */
+uint32_t __system_property_area_serial(void);
+
+/**
+ * Reads the serial number of a specific system property previously returned by
+ * __system_property_find(). This is a cheap way to check whether a system
+ * property has changed or not.
+ *
+ * Returns the serial number on success, -1 on error.
+ */
+uint32_t __system_property_serial(const prop_info* _Nonnull __pi);
+
+//
+// libc implementation detail.
+//
+
+/**
+ * Initializes the system properties area in read-only mode.
+ *
+ * This is called automatically during libc initialization,
+ * so user code should never need to call this.
+ *
+ * Returns 0 on success, -1 otherwise.
+ */
+int __system_properties_init(void);
+
+//
+// init implementation details.
+//
+
 #define PROP_SERVICE_NAME "property_service"
 #define PROP_SERVICE_FOR_SYSTEM_NAME "property_service_for_system"
 #define PROP_DIRNAME "/dev/__properties__"
 
+// Messages sent to init.
 #define PROP_MSG_SETPROP 1
 #define PROP_MSG_SETPROP2 0x00020001
 
+// Status codes returned by init (but not passed from libc to the caller).
 #define PROP_SUCCESS 0
 #define PROP_ERROR_READ_CMD 0x0004
 #define PROP_ERROR_READ_DATA 0x0008
@@ -58,93 +111,62 @@ __BEGIN_DECLS
 #define PROP_ERROR_HANDLE_CONTROL_MESSAGE 0x0020
 #define PROP_ERROR_SET_FAILED 0x0024
 
-/*
-** This was previously for testing, but now that SystemProperties is its own testable class,
-** there is never a reason to call this function and its implementation simply returns -1.
-*/
-int __system_property_set_filename(const char* __unused __filename);
-
-/*
-** Initialize the area to be used to store properties.  Can
-** only be done by a single process that has write access to
-** the property area.
-*/
+/**
+ * Initializes the area to be used to store properties.
+ *
+ * Can only be done by the process that has write access to the property area,
+ * typically init.
+ *
+ * See __system_properties_init() for the equivalent for all other processes.
+ */
 int __system_property_area_init(void);
 
-/* Read the global serial number of the system properties
-**
-** Called to predict if a series of cached __system_property_find
-** objects will have seen __system_property_serial values change.
-** But also aids the converse, as changes in the global serial can
-** also be used to predict if a failed __system_property_find
-** could in-turn now find a new object; thus preventing the
-** cycles of effort to poll __system_property_find.
-**
-** Typically called at beginning of a cache cycle to signal if _any_ possible
-** changes have occurred since last. If there is, one may check each individual
-** __system_property_serial to confirm dirty, or __system_property_find
-** to check if the property now exists. If a call to __system_property_add
-** or __system_property_update has completed between two calls to
-** __system_property_area_serial then the second call will return a larger
-** value than the first call. Beware of race conditions as changes to the
-** properties are not atomic, the main value of this call is to determine
-** whether the expensive __system_property_find is worth retrying to see if
-** a property now exists.
-**
-** Returns the serial number on success, -1 on error.
-*/
-uint32_t __system_property_area_serial(void);
-
-/* Add a new system property.  Can only be done by a single
-** process that has write access to the property area, and
-** that process must handle sequencing to ensure the property
-** does not already exist and that only one property is added
-** or updated at a time.
-**
-** Returns 0 on success, -1 if the property area is full.
-*/
+/**
+ * Adds a new system property.
+ * Can only be done by the process that has write access to the property area --
+ * typically init -- which must handle sequencing to ensure that only one property is
+ * updated at a time.
+ *
+ * Returns 0 on success, -1 if the property area is full.
+ */
 int __system_property_add(const char* _Nonnull __name, unsigned int __name_length, const char* _Nonnull __value, unsigned int __value_length);
 
-/* Update the value of a system property returned by
-** __system_property_find.  Can only be done by a single process
-** that has write access to the property area, and that process
-** must handle sequencing to ensure that only one property is
-** updated at a time.
-**
-** Returns 0 on success, -1 if the parameters are incorrect.
-*/
+/**
+ * Updates the value of a system property returned by __system_property_find().
+ * Can only be done by the process that has write access to the property area --
+ * typically init -- which must handle sequencing to ensure that only one property is
+ * updated at a time.
+ *
+ * Returns 0 on success, -1 if the parameters are incorrect.
+ */
 int __system_property_update(prop_info* _Nonnull __pi, const char* _Nonnull __value, unsigned int __value_length);
 
-/* Read the serial number of a system property returned by
-** __system_property_find.
-**
-** Returns the serial number on success, -1 on error.
-*/
-uint32_t __system_property_serial(const prop_info* _Nonnull __pi);
-
-/* Initialize the system properties area in read only mode.
- * Should be done by all processes that need to read system
- * properties.
+/**
+ * Reloads the system properties from disk.
+ * Not intended for use by any apps except the Zygote.
+ * Should only be called from the main thread.
+ *
+ * Pointers received from functions such as __system_property_find()
+ * may be invalidated by calls to this function.
  *
  * Returns 0 on success, -1 otherwise.
- */
-int __system_properties_init(void);
-
-/*
- * Reloads the system properties from disk.
- * Not intended for use by any apps except the Zygote. Should only be called from the main thread.
  *
- * NOTE: Any pointers received from methods such as __system_property_find should be assumed to be
- * invalid after this method is called.
- *
- * Returns 0 on success, -1 if the system properties failed to re-initialize (same conditions as
- * __system properties_init)
+ * Available since API level 35.
  */
-int __system_properties_zygote_reload(void) __INTRODUCED_IN(__ANDROID_API_V__);
+int __system_properties_zygote_reload(void) __INTRODUCED_IN(35);
 
-/* Deprecated: use __system_property_wait instead. */
+//
+// Deprecated functions.
+//
+
+/** Deprecated: use __system_property_wait instead. */
 uint32_t __system_property_wait_any(uint32_t __old_serial);
 
-__END_DECLS
+/**
+ * Deprecated: previously for testing, but now that SystemProperties is its own
+ * testable class, there is never a reason to call this function and its
+ * implementation simply returns -1.
+ */
+int __system_property_set_filename(const char* __unused __filename);
 
-#endif
+__END_DECLS
