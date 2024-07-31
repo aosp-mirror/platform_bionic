@@ -26,12 +26,10 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/cdefs.h>
 #include <fenv.h>
 #include <math.h>
 
 #ifndef type
-__FBSDID("$FreeBSD$");
 #define type		double
 #define	roundit		rint
 #define dtype		long

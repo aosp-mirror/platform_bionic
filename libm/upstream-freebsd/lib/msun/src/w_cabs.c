@@ -5,9 +5,6 @@
  * Placed into the Public Domain, 1994.
  */
 
-#include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
-
 #include <complex.h>
 #include <float.h>
 #include <math.h>
