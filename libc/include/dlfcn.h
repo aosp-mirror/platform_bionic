@@ -146,7 +146,11 @@ int dladdr(const void* _Nonnull __addr, Dl_info* _Nonnull __info);
  */
 #define RTLD_LOCAL    0
 
-/** Not supported on Android; Android always uses RTLD_NOW. */
+/**
+ * Not supported on Android. Android always uses RTLD_NOW for security reasons.
+ * Resolving all undefined symbols before dlopen() returns means that RELRO
+ * protections can be applied to the PLT before dlopen() returns.
+ */
 #define RTLD_LAZY     0x00001
 
 /** A dlopen() flag to resolve all undefined symbols before dlopen() returns. */

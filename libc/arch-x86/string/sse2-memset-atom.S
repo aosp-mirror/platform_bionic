@@ -31,7 +31,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <private/bionic_asm.h>
 
 #define FOR_ATOM
-#include "cache.h"
 
 #ifndef L
 # define L(label)	.L##label
@@ -63,6 +62,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define RETURN_END	POP(%ebx); ret
 #define RETURN		RETURN_END; CFI_PUSH(%ebx)
 #define JMPTBL(I, B)	I - B
+
+#define SETUP_PIC_REG(x)	call	__x86.get_pc_thunk.x
 
 /* Load an entry in a jump table into EBX and branch to it.  TABLE is a
    jump table with relative offsets.   */
@@ -256,14 +257,20 @@ L(aligned_16_less128bytes):
 	ALIGN(4)
 L(128bytesormore):
 	PUSH(%ebx)
-	mov	$SHARED_CACHE_SIZE, %ebx
+	SETUP_PIC_REG(bx)
+	add	$_GLOBAL_OFFSET_TABLE_, %ebx
+	mov	__x86_shared_cache_size@GOTOFF(%ebx), %ebx
 	cmp	%ebx, %ecx
 	jae	L(128bytesormore_nt_start)
 
 
 	POP(%ebx)
 # define RESTORE_EBX_STATE CFI_PUSH(%ebx)
-	cmp	$DATA_CACHE_SIZE, %ecx
+	PUSH(%ebx)
+	SETUP_PIC_REG(bx)
+	add	$_GLOBAL_OFFSET_TABLE_, %ebx
+	cmp	__x86_data_cache_size@GOTOFF(%ebx), %ecx
+	POP(%ebx)
 
 	jae	L(128bytes_L2_normal)
 	subl	$128, %ecx

@@ -65,7 +65,7 @@ int kill(pid_t, int) all
 int tgkill(pid_t tgid, pid_t tid, int sig) all
 
 void* __brk:brk(void*) all
-int __execve:execve(const char*, char* const*, char* const*)  all
+int execve(const char*, char* const*, char* const*)  all
 int __ptrace:ptrace(int request, int pid, void* addr, void* data) all
 
 # <sys/resource.h>
@@ -330,7 +330,7 @@ int __epoll_pwait2:epoll_pwait2(int, struct epoll_event*, int, const timespec64*
 
 int __eventfd:eventfd2(unsigned int, int)  all
 
-void __exit_group:exit_group(int)  all
+void _exit|_Exit:exit_group(int)  all
 void __exit:exit(int)  all
 
 int inotify_init1(int)  all
