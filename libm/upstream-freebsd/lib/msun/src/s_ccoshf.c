@@ -30,9 +30,6 @@
  * Float version of ccosh().  See s_ccosh.c for details.
  */
 
-#include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
-
 #include <complex.h>
 #include <math.h>
 

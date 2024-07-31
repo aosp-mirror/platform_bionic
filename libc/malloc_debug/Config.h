@@ -49,6 +49,7 @@ constexpr uint64_t VERBOSE = 0x1000;
 constexpr uint64_t CHECK_UNREACHABLE_ON_SIGNAL = 0x2000;
 constexpr uint64_t BACKTRACE_SPECIFIC_SIZES = 0x4000;
 constexpr uint64_t LOG_ALLOCATOR_STATS_ON_SIGNAL = 0x8000;
+constexpr uint64_t LOG_ALLOCATOR_STATS_ON_EXIT = 0x10000;
 
 // In order to guarantee posix compliance, set the minimum alignment
 // to 8 bytes for 32 bit systems and 16 bytes for 64 bit systems.
