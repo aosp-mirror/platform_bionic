@@ -844,6 +844,7 @@ LIBC {
     pwrite;
     pwrite64;
     qsort;
+    qsort_r; # introduced=36
     quick_exit;
     raise;
     rand;
