@@ -567,9 +567,7 @@ size_t phdr_table_get_maximum_alignment(const ElfW(Phdr)* phdr_table, size_t phd
       continue;
     }
 
-    if (phdr->p_align > maximum_alignment) {
-      maximum_alignment = phdr->p_align;
-    }
+    maximum_alignment = std::max(maximum_alignment, static_cast<size_t>(phdr->p_align));
   }
 
 #if defined(__LP64__)
@@ -577,6 +575,30 @@ size_t phdr_table_get_maximum_alignment(const ElfW(Phdr)* phdr_table, size_t phd
 #else
   return page_size();
 #endif
+}
+
+// Returns the minimum p_align associated with a loadable segment in the ELF
+// program header table. Used to determine if the program alignment is compatible
+// with the page size of this system.
+size_t phdr_table_get_minimum_alignment(const ElfW(Phdr)* phdr_table, size_t phdr_count) {
+  size_t minimum_alignment = page_size();
+
+  for (size_t i = 0; i < phdr_count; ++i) {
+    const ElfW(Phdr)* phdr = &phdr_table[i];
+
+    // p_align must be 0, 1, or a positive, integral power of two.
+    if (phdr->p_type != PT_LOAD || ((phdr->p_align & (phdr->p_align - 1)) != 0)) {
+      continue;
+    }
+
+    if (phdr->p_align <= 1) {
+      continue;
+    }
+
+    minimum_alignment = std::min(minimum_alignment, static_cast<size_t>(phdr->p_align));
+  }
+
+  return minimum_alignment;
 }
 
 // Reserve a virtual address range such that if it's limits were extended to the next 2**align
@@ -830,6 +852,15 @@ static inline void _extend_load_segment_vma(const ElfW(Phdr)* phdr_table, size_t
 }
 
 bool ElfReader::LoadSegments() {
+  size_t min_palign = phdr_table_get_minimum_alignment(phdr_table_, phdr_num_);
+  // Only enforce this on 16 KB systems. Apps may rely on undefined behavior
+  // here on 4 KB systems, which is the norm before this change is introduced.
+  if (kPageSize >= 16384 && min_palign < kPageSize) {
+    DL_ERR("\"%s\" program alignment (%zu) cannot be smaller than system page size (%zu)",
+           name_.c_str(), min_palign, kPageSize);
+    return false;
+  }
+
   for (size_t i = 0; i < phdr_num_; ++i) {
     const ElfW(Phdr)* phdr = &phdr_table_[i];
 
