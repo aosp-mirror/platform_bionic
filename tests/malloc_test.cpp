@@ -1627,6 +1627,7 @@ TEST(malloc, zeroed_allocations_small_medium_sizes) {
 #if !defined(__BIONIC__)
   GTEST_SKIP() << "Only valid on bionic";
 #endif
+  SKIP_WITH_HWASAN << "Only test system allocator, not hwasan allocator.";
 
   if (IsLowRamDevice()) {
     GTEST_SKIP() << "Skipped on low memory devices.";
@@ -1657,6 +1658,7 @@ TEST(malloc, zeroed_allocations_large_sizes) {
 #if !defined(__BIONIC__)
   GTEST_SKIP() << "Only valid on bionic";
 #endif
+  SKIP_WITH_HWASAN << "Only test system allocator, not hwasan allocator.";
 
   if (IsLowRamDevice()) {
     GTEST_SKIP() << "Skipped on low memory devices.";
@@ -1687,6 +1689,7 @@ TEST(malloc, zeroed_allocations_realloc) {
 #if !defined(__BIONIC__)
   GTEST_SKIP() << "Only valid on bionic";
 #endif
+  SKIP_WITH_HWASAN << "Only test system allocator, not hwasan allocator.";
 
   if (IsLowRamDevice()) {
     GTEST_SKIP() << "Skipped on low memory devices.";
