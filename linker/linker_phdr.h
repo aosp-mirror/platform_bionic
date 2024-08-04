@@ -73,7 +73,7 @@ class ElfReader {
   [[nodiscard]] bool FindGnuPropertySection();
   [[nodiscard]] bool CheckPhdr(ElfW(Addr));
   [[nodiscard]] bool CheckFileRange(ElfW(Addr) offset, size_t size, size_t alignment);
-  [[nodiscard]] void* MapData(MappedFileFragment* fragment, off64_t offs, off64_t size);
+  [[nodiscard]] void* MapData(MappedFileFragment* fragment, off64_t offset, off64_t size);
 
   bool did_read_;
   bool did_load_;

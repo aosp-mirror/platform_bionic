@@ -137,18 +137,18 @@ class GnuPropertySectionBuilder {
     dump_member("entries ", entries);
     if (entries > 0) {
       std::cout << "    raw data:";
-      const uintptr_t offset = note->nhdr.n_descsz + 16;
-      for (uintptr_t offs = 16; offs < offset; ++offs) {
+      const uintptr_t end = note->nhdr.n_descsz + 16;
+      for (uintptr_t offset = 16; offset < end; ++offset) {
         std::cout << std::hex;
-        if ((offs % 8) == 0) {
+        if ((offset % 8) == 0) {
           std::cout << "\n   ";
         }
-        auto value = static_cast<unsigned>(section[offs]);
+        auto value = static_cast<unsigned>(section[offset]);
         std::cout << " ";
         if (value < 0x10) {
           std::cout << "0";
         }
-        std::cout << static_cast<unsigned>(section[offs]);
+        std::cout << static_cast<unsigned>(section[offset]);
       }
       std::cout << std::dec << "\n";
     }
