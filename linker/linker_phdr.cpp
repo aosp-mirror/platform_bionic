@@ -228,10 +228,8 @@ bool ElfReader::ReadElfHeader() {
     return false;
   }
 
-#if !defined(__LP64__)
   // Map at most 1MiB which should cover most cases
   map_size = std::min(map_size, static_cast<size_t>(1 * 1024 * 1024));
-#endif
 
   if (!file_fragment_.Map(fd_, file_offset_, 0, map_size)) {
     DL_ERR("\"%s\" header mmap failed: %m", name_.c_str());
@@ -347,19 +345,19 @@ bool ElfReader::CheckFileRange(ElfW(Addr) offset, size_t size, size_t alignment)
          ((offset % alignment) == 0);
 }
 
-void* ElfReader::MapData(MappedFileFragment* fragment, off64_t offs, off64_t size) {
+void* ElfReader::MapData(MappedFileFragment* fragment, off64_t offset, off64_t size) {
   off64_t end;
-  CHECK(safe_add(&end, offs, size));
+  CHECK(safe_add(&end, offset, size));
 
   // If the data is already mapped just return it
   if (static_cast<off64_t>(file_fragment_.size()) >= end) {
-    return static_cast<char*>(file_fragment_.data()) + offs;
+    return static_cast<char*>(file_fragment_.data()) + offset;
   }
   // Use the passed-in fragment if area is not mapped. We can't remap the original fragment
   // because that invalidates all previous pointers if the file is remapped to a different
   // virtual address. A local variable can't be used in place of the passed-in fragment because
   // the area would be unmapped as soon as the local object goes out of scope.
-  if (fragment->Map(fd_, file_offset_, offs, size)) {
+  if (fragment->Map(fd_, file_offset_, offset, size)) {
     return fragment->data();
   }
   return nullptr;
