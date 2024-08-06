@@ -844,6 +844,7 @@ LIBC {
     pwrite;
     pwrite64;
     qsort;
+    qsort_r; # introduced=36
     quick_exit;
     raise;
     rand;
@@ -955,7 +956,7 @@ LIBC {
     sigaction;
     sigaddset;
     sigaltstack;
-    sigblock; # arm x86 arm64 x86_64
+    sigblock;
     sigdelset;
     sigemptyset;
     sigfillset;
@@ -968,7 +969,7 @@ LIBC {
     sigprocmask;
     sigqueue; # introduced=23
     sigsetjmp;
-    sigsetmask; # arm x86 arm64 x86_64
+    sigsetmask;
     sigsuspend;
     sigtimedwait; # introduced=23
     sigwait;
