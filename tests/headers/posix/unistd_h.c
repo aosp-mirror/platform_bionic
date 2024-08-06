@@ -331,6 +331,9 @@ static void unistd_h() {
   FUNCTION(fdatasync, int (*f)(int));
   FUNCTION(fexecve, int (*f)(int, char* const[], char* const[]));
   FUNCTION(fork, pid_t (*f)(void));
+#if !defined(__GLIBC__) // Our glibc is too old.
+  FUNCTION(_Fork, pid_t (*f)(void));
+#endif
   FUNCTION(fpathconf, long (*f)(int, int));
   FUNCTION(fsync, int (*f)(int));
   FUNCTION(ftruncate, int (*f)(int, off_t));
