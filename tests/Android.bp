@@ -719,11 +719,6 @@ cc_defaults {
     ],
     srcs: ["clang_fortify_tests.cpp"],
     tidy: false,
-    target: {
-        host: {
-            cflags: ["-D__clang__"],
-        },
-    },
 }
 
 cc_test_library {
