@@ -73,7 +73,6 @@ class ElfReader {
   [[nodiscard]] bool FindGnuPropertySection();
   [[nodiscard]] bool CheckPhdr(ElfW(Addr));
   [[nodiscard]] bool CheckFileRange(ElfW(Addr) offset, size_t size, size_t alignment);
-  [[nodiscard]] void* MapData(MappedFileFragment* fragment, off64_t offset, off64_t size);
 
   bool did_read_;
   bool did_load_;
@@ -81,8 +80,6 @@ class ElfReader {
   int fd_;
   off64_t file_offset_;
   off64_t file_size_;
-
-  MappedFileFragment file_fragment_;
 
   ElfW(Ehdr) header_;
   size_t phdr_num_;
@@ -129,6 +126,7 @@ size_t phdr_table_get_load_size(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                 ElfW(Addr)* min_vaddr = nullptr, ElfW(Addr)* max_vaddr = nullptr);
 
 size_t phdr_table_get_maximum_alignment(const ElfW(Phdr)* phdr_table, size_t phdr_count);
+size_t phdr_table_get_minimum_alignment(const ElfW(Phdr)* phdr_table, size_t phdr_count);
 
 int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                 ElfW(Addr) load_bias, bool should_pad_segments,
