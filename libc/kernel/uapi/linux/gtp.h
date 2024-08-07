@@ -31,6 +31,9 @@ enum gtp_attrs {
   GTPA_I_TEI,
   GTPA_O_TEI,
   GTPA_PAD,
+  GTPA_PEER_ADDR6,
+  GTPA_MS_ADDR6,
+  GTPA_FAMILY,
   __GTPA_MAX,
 };
 #define GTPA_MAX (__GTPA_MAX - 1)
