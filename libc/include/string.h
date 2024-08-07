@@ -185,11 +185,10 @@ char* _Nonnull basename(const char* _Nonnull __path) __RENAME(__gnu_basename) __
 
 /* Const-correct overloads. Placed after FORTIFY so we call those functions, if possible. */
 #if defined(__cplusplus)
-/*
- * Use two enable_ifs so these overloads don't conflict with + are preferred over libcxx's. This can
- * be reduced to 1 after libcxx recognizes that we have const-correct overloads.
- */
-#define __prefer_this_overload __enable_if(true, "preferred overload") __enable_if(true, "")
+/* libcxx tries to provide these. Suppress that, since libcxx's impl doesn't respect FORTIFY. */
+#define __CORRECT_ISO_CPP_STRING_H_PROTO
+/* Used to make these preferable over regular <string.h> signatures for overload resolution. */
+#define __prefer_this_overload __enable_if(true, "")
 extern "C++" {
 inline __always_inline
 void* _Nullable __bionic_memchr(const void* _Nonnull const s __pass_object_size, int c, size_t n) {
