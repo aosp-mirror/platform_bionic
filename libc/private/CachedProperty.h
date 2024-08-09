@@ -29,9 +29,7 @@
 #pragma once
 
 #include <string.h>
-
-#define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
-#include <sys/_system_properties.h>
+#include <sys/system_properties.h>
 
 // Cached system property lookup. For code that needs to read the same property multiple times,
 // this class helps optimize those lookups.
