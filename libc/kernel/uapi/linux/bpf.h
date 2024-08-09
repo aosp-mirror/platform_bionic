@@ -272,6 +272,7 @@ enum bpf_attach_type {
   BPF_CGROUP_UNIX_GETSOCKNAME,
   BPF_NETKIT_PRIMARY,
   BPF_NETKIT_PEER,
+  BPF_TRACE_KPROBE_SESSION,
   __MAX_BPF_ATTACH_TYPE
 };
 #define MAX_BPF_ATTACH_TYPE __MAX_BPF_ATTACH_TYPE
@@ -290,6 +291,7 @@ enum bpf_link_type {
   BPF_LINK_TYPE_TCX = 11,
   BPF_LINK_TYPE_UPROBE_MULTI = 12,
   BPF_LINK_TYPE_NETKIT = 13,
+  BPF_LINK_TYPE_SOCKMAP = 14,
   __MAX_BPF_LINK_TYPE,
 };
 #define MAX_BPF_LINK_TYPE __MAX_BPF_LINK_TYPE
@@ -529,6 +531,8 @@ union bpf_attr {
   struct {
     __u64 name;
     __u32 prog_fd;
+    __u32 : 32;
+    __aligned_u64 cookie;
   } raw_tracepoint;
   struct {
     __aligned_u64 btf;
@@ -1150,6 +1154,10 @@ struct bpf_link_info {
       __u32 ifindex;
       __u32 attach_type;
     } netkit;
+    struct {
+      __u32 map_id;
+      __u32 attach_type;
+    } sockmap;
   };
 } __attribute__((aligned(8)));
 struct bpf_sock_addr {
@@ -1299,6 +1307,7 @@ enum {
   BPF_FIB_LOOKUP_SKIP_NEIGH = (1U << 2),
   BPF_FIB_LOOKUP_TBID = (1U << 3),
   BPF_FIB_LOOKUP_SRC = (1U << 4),
+  BPF_FIB_LOOKUP_MARK = (1U << 5),
 };
 enum {
   BPF_FIB_LKUP_RET_SUCCESS,
@@ -1320,7 +1329,7 @@ struct bpf_fib_lookup {
   union {
     __u16 tot_len;
     __u16 mtu_result;
-  };
+  } __attribute__((packed, aligned(2)));
   __u32 ifindex;
   union {
     __u8 tos;
@@ -1342,8 +1351,15 @@ struct bpf_fib_lookup {
     };
     __u32 tbid;
   };
-  __u8 smac[6];
-  __u8 dmac[6];
+  union {
+    struct {
+      __u32 mark;
+    };
+    struct {
+      __u8 smac[6];
+      __u8 dmac[6];
+    };
+  };
 };
 struct bpf_redir_neigh {
   __u32 nh_family;
@@ -1413,6 +1429,9 @@ struct bpf_spin_lock {
   __u32 val;
 };
 struct bpf_timer {
+  __u64 __opaque[2];
+} __attribute__((aligned(8)));
+struct bpf_wq {
   __u64 __opaque[2];
 } __attribute__((aligned(8)));
 struct bpf_dynptr {

@@ -982,3 +982,94 @@ TEST(signal, killpg_EINVAL) {
   ASSERT_EQ(-1, killpg(-1, SIGKILL));
   ASSERT_ERRNO(EINVAL);
 }
+
+TEST(signal, sig2str) {
+#if defined(__BIONIC__)
+  char str[SIG2STR_MAX];
+
+  // A regular signal.
+  ASSERT_EQ(0, sig2str(SIGHUP, str));
+  ASSERT_STREQ("HUP", str);
+
+  // A real-time signal.
+  ASSERT_EQ(0, sig2str(SIGRTMIN + 4, str));
+  ASSERT_STREQ("RTMIN+4", str);
+  ASSERT_EQ(0, sig2str(SIGRTMAX - 4, str));
+  ASSERT_STREQ("RTMAX-4", str);
+  // Special cases.
+  ASSERT_EQ(0, sig2str(SIGRTMAX, str));
+  ASSERT_STREQ("RTMAX", str);
+  ASSERT_EQ(0, sig2str(SIGRTMIN, str));
+  ASSERT_STREQ("RTMIN", str);
+  // One of the signals the C library keeps to itself.
+  ASSERT_EQ(-1, sig2str(32, str));  // __SIGRTMIN
+
+  // Errors.
+  ASSERT_EQ(-1, sig2str(-1, str));    // Too small.
+  ASSERT_EQ(-1, sig2str(0, str));     // Still too small.
+  ASSERT_EQ(-1, sig2str(1234, str));  // Too large.
+#else
+  GTEST_SKIP() << "our old glibc doesn't have sig2str";
+#endif
+}
+
+TEST(signal, str2sig) {
+#if defined(__BIONIC__)
+  int sig;
+
+  // A regular signal, by number.
+  sig = -1;
+  ASSERT_EQ(0, str2sig("9", &sig));
+  ASSERT_EQ(SIGKILL, sig);
+
+  // A regular signal, by name.
+  sig = -1;
+  ASSERT_EQ(0, str2sig("HUP", &sig));
+  ASSERT_EQ(SIGHUP, sig);
+
+  // A real-time signal, by number.
+  sig = -1;
+  ASSERT_EQ(0, str2sig("64", &sig));
+  ASSERT_EQ(SIGRTMAX, sig);
+
+  // A real-time signal, by name and offset.
+  sig = -1;
+  ASSERT_EQ(0, str2sig("RTMAX-4", &sig));
+  ASSERT_EQ(SIGRTMAX - 4, sig);
+  sig = -1;
+  ASSERT_EQ(0, str2sig("RTMIN+4", &sig));
+  ASSERT_EQ(SIGRTMIN + 4, sig);
+  // Unspecified by POSIX, but we try to be reasonable.
+  sig = -1;
+  ASSERT_EQ(0, str2sig("RTMAX-0", &sig));
+  ASSERT_EQ(SIGRTMAX, sig);
+  sig = -1;
+  ASSERT_EQ(0, str2sig("RTMIN+0", &sig));
+  ASSERT_EQ(SIGRTMIN, sig);
+  // One of the signals the C library keeps to itself, numerically.
+  ASSERT_EQ(-1, str2sig("32", &sig));  // __SIGRTMIN
+
+  // Special cases.
+  sig = -1;
+  ASSERT_EQ(0, str2sig("RTMAX", &sig));
+  ASSERT_EQ(SIGRTMAX, sig);
+  sig = -1;
+  ASSERT_EQ(0, str2sig("RTMIN", &sig));
+  ASSERT_EQ(SIGRTMIN, sig);
+
+  // Errors.
+  ASSERT_EQ(-1, str2sig("SIGHUP", &sig));     // No "SIG" prefix allowed.
+  ASSERT_EQ(-1, str2sig("-1", &sig));         // Too small.
+  ASSERT_EQ(-1, str2sig("0", &sig));          // Still too small.
+  ASSERT_EQ(-1, str2sig("1234", &sig));       // Too large.
+  ASSERT_EQ(-1, str2sig("RTMAX-666", &sig));  // Offset too small.
+  ASSERT_EQ(-1, str2sig("RTMIN+666", &sig));  // Offset too large.
+  ASSERT_EQ(-1, str2sig("RTMAX-+1", &sig));   // Silly.
+  ASSERT_EQ(-1, str2sig("RTMIN+-1", &sig));   // Silly.
+  ASSERT_EQ(-1, str2sig("HUPs", &sig));       // Trailing junk.
+  ASSERT_EQ(-1, str2sig("2b", &sig));         // Trailing junk.
+  ASSERT_EQ(-1, str2sig("RTMIN+2b", &sig));   // Trailing junk.
+#else
+  GTEST_SKIP() << "our old glibc doesn't have str2sig";
+#endif
+}

@@ -7,6 +7,7 @@
 #ifndef _SCSI_SCSI_H
 #define _SCSI_SCSI_H
 #include <linux/types.h>
+#include <asm/param.h>
 #include <scsi/scsi_proto.h>
 #include <scsi/scsi_status.h>
 struct ccs_modesel_head {
