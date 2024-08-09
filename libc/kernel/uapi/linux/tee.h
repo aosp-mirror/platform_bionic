@@ -18,6 +18,7 @@
 #define TEE_MEMREF_NULL (__u64) (- 1)
 #define TEE_IMPL_ID_OPTEE 1
 #define TEE_IMPL_ID_AMDTEE 2
+#define TEE_IMPL_ID_TSTEE 3
 #define TEE_OPTEE_CAP_TZ (1 << 0)
 struct tee_ioctl_version_data {
   __u32 impl_id;

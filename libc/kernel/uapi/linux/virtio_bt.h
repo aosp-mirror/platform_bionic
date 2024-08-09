@@ -13,7 +13,6 @@
 #define VIRTIO_BT_F_CONFIG_V2 3
 enum virtio_bt_config_type {
   VIRTIO_BT_CONFIG_TYPE_PRIMARY = 0,
-  VIRTIO_BT_CONFIG_TYPE_AMP = 1,
 };
 enum virtio_bt_config_vendor {
   VIRTIO_BT_CONFIG_VENDOR_NONE = 0,
