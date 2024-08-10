@@ -44,6 +44,7 @@
 //   38 (__SIGRTMIN + 6)        heapprofd ART managed heap dumps
 //   39 (__SIGRTMIN + 7)        fdtrack
 //   40 (__SIGRTMIN + 8)        android_run_on_all_threads (bionic/pthread_internal.cpp)
+//   41 (__SIGRTMIN + 9)        re-enable MTE on thread
 
 #define BIONIC_SIGNAL_POSIX_TIMERS (__SIGRTMIN + 0)
 #define BIONIC_SIGNAL_BACKTRACE (__SIGRTMIN + 1)
@@ -52,8 +53,9 @@
 #define BIONIC_SIGNAL_ART_PROFILER (__SIGRTMIN + 6)
 #define BIONIC_SIGNAL_FDTRACK (__SIGRTMIN + 7)
 #define BIONIC_SIGNAL_RUN_ON_ALL_THREADS (__SIGRTMIN + 8)
+#define BIONIC_ENABLE_MTE (__SIGRTMIN + 9)
 
-#define __SIGRT_RESERVED 9
+#define __SIGRT_RESERVED 10
 static inline __always_inline sigset64_t filter_reserved_signals(sigset64_t sigset, int how) {
   int (*block)(sigset64_t*, int);
   int (*unblock)(sigset64_t*, int);
@@ -83,5 +85,6 @@ static inline __always_inline sigset64_t filter_reserved_signals(sigset64_t sigs
   unblock(&sigset, __SIGRTMIN + 6);
   unblock(&sigset, __SIGRTMIN + 7);
   unblock(&sigset, __SIGRTMIN + 8);
+  unblock(&sigset, __SIGRTMIN + 9);
   return sigset;
 }
