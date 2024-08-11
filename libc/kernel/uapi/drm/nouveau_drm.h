@@ -25,10 +25,16 @@ extern "C" {
 #define NOUVEAU_GETPARAM_EXEC_PUSH_MAX 17
 #define NOUVEAU_GETPARAM_VRAM_BAR_SIZE 18
 #define NOUVEAU_GETPARAM_VRAM_USED 19
+#define NOUVEAU_GETPARAM_HAS_VMA_TILEMODE 20
 struct drm_nouveau_getparam {
   __u64 param;
   __u64 value;
 };
+#define NOUVEAU_FIFO_ENGINE_GR 0x01
+#define NOUVEAU_FIFO_ENGINE_VP 0x02
+#define NOUVEAU_FIFO_ENGINE_PPP 0x04
+#define NOUVEAU_FIFO_ENGINE_BSP 0x08
+#define NOUVEAU_FIFO_ENGINE_CE 0x30
 struct drm_nouveau_channel_alloc {
   __u32 fb_ctxdma_handle;
   __u32 tt_ctxdma_handle;
@@ -43,6 +49,16 @@ struct drm_nouveau_channel_alloc {
 };
 struct drm_nouveau_channel_free {
   __s32 channel;
+};
+struct drm_nouveau_notifierobj_alloc {
+  __u32 channel;
+  __u32 handle;
+  __u32 size;
+  __u32 offset;
+};
+struct drm_nouveau_gpuobj_free {
+  __s32 channel;
+  __u32 handle;
 };
 #define NOUVEAU_GEM_DOMAIN_CPU (1 << 0)
 #define NOUVEAU_GEM_DOMAIN_VRAM (1 << 1)

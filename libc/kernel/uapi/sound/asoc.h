@@ -336,48 +336,4 @@ struct snd_soc_tplg_dai {
   __le32 flags;
   struct snd_soc_tplg_private priv;
 } __attribute__((packed));
-struct snd_soc_tplg_manifest_v4 {
-  __le32 size;
-  __le32 control_elems;
-  __le32 widget_elems;
-  __le32 graph_elems;
-  __le32 pcm_elems;
-  __le32 dai_link_elems;
-  struct snd_soc_tplg_private priv;
-} __attribute__((__packed__));
-struct snd_soc_tplg_stream_caps_v4 {
-  __le32 size;
-  char name[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
-  __le64 formats;
-  __le32 rates;
-  __le32 rate_min;
-  __le32 rate_max;
-  __le32 channels_min;
-  __le32 channels_max;
-  __le32 periods_min;
-  __le32 periods_max;
-  __le32 period_size_min;
-  __le32 period_size_max;
-  __le32 buffer_size_min;
-  __le32 buffer_size_max;
-} __attribute__((__packed__));
-struct snd_soc_tplg_pcm_v4 {
-  __le32 size;
-  char pcm_name[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
-  char dai_name[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
-  __le32 pcm_id;
-  __le32 dai_id;
-  __le32 playback;
-  __le32 capture;
-  __le32 compress;
-  struct snd_soc_tplg_stream stream[SND_SOC_TPLG_STREAM_CONFIG_MAX];
-  __le32 num_streams;
-  struct snd_soc_tplg_stream_caps_v4 caps[2];
-} __attribute__((__packed__));
-struct snd_soc_tplg_link_config_v4 {
-  __le32 size;
-  __le32 id;
-  struct snd_soc_tplg_stream stream[SND_SOC_TPLG_STREAM_CONFIG_MAX];
-  __le32 num_streams;
-} __attribute__((__packed__));
 #endif
