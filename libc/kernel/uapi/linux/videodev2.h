@@ -249,6 +249,8 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_Y10BPACK v4l2_fourcc('Y', '1', '0', 'B')
 #define V4L2_PIX_FMT_Y10P v4l2_fourcc('Y', '1', '0', 'P')
 #define V4L2_PIX_FMT_IPU3_Y10 v4l2_fourcc('i', 'p', '3', 'y')
+#define V4L2_PIX_FMT_Y12P v4l2_fourcc('Y', '1', '2', 'P')
+#define V4L2_PIX_FMT_Y14P v4l2_fourcc('Y', '1', '4', 'P')
 #define V4L2_PIX_FMT_PAL8 v4l2_fourcc('P', 'A', 'L', '8')
 #define V4L2_PIX_FMT_UV8 v4l2_fourcc('U', 'V', '8', ' ')
 #define V4L2_PIX_FMT_YUYV v4l2_fourcc('Y', 'U', 'Y', 'V')
@@ -464,6 +466,7 @@ struct v4l2_fmtdesc {
 #define V4L2_FMT_FLAG_CSC_YCBCR_ENC 0x0080
 #define V4L2_FMT_FLAG_CSC_HSV_ENC V4L2_FMT_FLAG_CSC_YCBCR_ENC
 #define V4L2_FMT_FLAG_CSC_QUANTIZATION 0x0100
+#define V4L2_FMT_FLAG_META_LINE_BASED 0x0200
 enum v4l2_frmsizetypes {
   V4L2_FRMSIZE_TYPE_DISCRETE = 1,
   V4L2_FRMSIZE_TYPE_CONTINUOUS = 2,
@@ -563,6 +566,7 @@ struct v4l2_requestbuffers {
 #define V4L2_BUF_CAP_SUPPORTS_M2M_HOLD_CAPTURE_BUF (1 << 5)
 #define V4L2_BUF_CAP_SUPPORTS_MMAP_CACHE_HINTS (1 << 6)
 #define V4L2_BUF_CAP_SUPPORTS_MAX_NUM_BUFFERS (1 << 7)
+#define V4L2_BUF_CAP_SUPPORTS_REMOVE_BUFS (1 << 8)
 struct v4l2_plane {
   __u32 bytesused;
   __u32 length;
@@ -936,7 +940,7 @@ struct v4l2_ext_control {
     struct v4l2_ctrl_hdr10_cll_info  * p_hdr10_cll_info;
     struct v4l2_ctrl_hdr10_mastering_display  * p_hdr10_mastering_display;
     void  * ptr;
-  };
+  } __attribute__((packed));
 } __attribute__((packed));
 struct v4l2_ext_controls {
   union {
@@ -1311,6 +1315,9 @@ struct v4l2_sdr_format {
 struct v4l2_meta_format {
   __u32 dataformat;
   __u32 buffersize;
+  __u32 width;
+  __u32 height;
+  __u32 bytesperline;
 } __attribute__((packed));
 struct v4l2_format {
   __u32 type;
@@ -1435,6 +1442,12 @@ struct v4l2_create_buffers {
   __u32 max_num_buffers;
   __u32 reserved[5];
 };
+struct v4l2_remove_buffers {
+  __u32 index;
+  __u32 count;
+  __u32 type;
+  __u32 reserved[13];
+};
 #define VIDIOC_QUERYCAP _IOR('V', 0, struct v4l2_capability)
 #define VIDIOC_ENUM_FMT _IOWR('V', 2, struct v4l2_fmtdesc)
 #define VIDIOC_G_FMT _IOWR('V', 4, struct v4l2_format)
@@ -1517,6 +1530,7 @@ struct v4l2_create_buffers {
 #define VIDIOC_ENUM_FREQ_BANDS _IOWR('V', 101, struct v4l2_frequency_band)
 #define VIDIOC_DBG_G_CHIP_INFO _IOWR('V', 102, struct v4l2_dbg_chip_info)
 #define VIDIOC_QUERY_EXT_CTRL _IOWR('V', 103, struct v4l2_query_ext_ctrl)
+#define VIDIOC_REMOVE_BUFS _IOWR('V', 104, struct v4l2_remove_buffers)
 #define BASE_VIDIOC_PRIVATE 192
 #define V4L2_PIX_FMT_HM12 V4L2_PIX_FMT_NV12_16L16
 #define V4L2_PIX_FMT_SUNXI_TILED_NV12 V4L2_PIX_FMT_NV12_32L32
