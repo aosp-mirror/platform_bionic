@@ -40,7 +40,7 @@
 __BEGIN_DECLS
 
 /**
- * [times(2)](http://man7.org/linux/man-pages/man2/times.2.html) fills a buffer with the
+ * [times(2)](https://man7.org/linux/man-pages/man2/times.2.html) fills a buffer with the
  * calling process' CPU usage.
  *
  * Returns a (possibly overflowed) absolute time on success,
