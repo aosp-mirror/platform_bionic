@@ -68,6 +68,12 @@ int lockf64(int fd, int cmd, off64_t length) {
   return -1;
 }
 
+#if defined(__LP64__)
+// For LP64, off_t == off64_t.
+__strong_alias(lockf, lockf64);
+#else
+// For ILP32 we need a shim that truncates the off64_t to off_t.
 int lockf(int fd, int cmd, off_t length) {
   return lockf64(fd, cmd, length);
 }
+#endif
