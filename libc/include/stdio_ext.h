@@ -89,10 +89,8 @@ int __flbf(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
 /**
  * [__fpurge(3)](http://man7.org/linux/man-pages/man3/__fpurge.3.html) discards the contents of
  * the stream's buffer.
- *
- * Available since API level 23.
  */
-void __fpurge(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
+void __fpurge(FILE* _Nonnull __fp) __RENAME(fpurge);
 
 /**
  * [__fpending(3)](http://man7.org/linux/man-pages/man3/__fpending.3.html) returns the number of
