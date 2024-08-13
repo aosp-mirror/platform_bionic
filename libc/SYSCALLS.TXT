@@ -126,6 +126,7 @@ int mlock(const void* addr, size_t len)    all
 int mlock2(const void* addr, size_t len, int flags)    all
 int         munlock(const void* addr, size_t len)   all
 int         mlockall(int flags)   all
+int mseal(void*, size_t, unsigned long) lp64
 int         munlockall()   all
 int         mincore(void*  start, size_t  length, unsigned char*  vec)   all
 int         __ioctl:ioctl(int, int, void*)  all
