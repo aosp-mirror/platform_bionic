@@ -192,7 +192,7 @@ int getloadavg(double __averages[_Nonnull], int __n) __INTRODUCED_IN(29);
 const char* _Nullable getprogname(void);
 void setprogname(const char* _Nonnull __name);
 
-int mblen(const char* _Nullable __s, size_t __n) __INTRODUCED_IN_NO_GUARD_FOR_NDK(26);
+int mblen(const char* _Nullable __s, size_t __n) __INTRODUCED_IN(26);
 size_t mbstowcs(wchar_t* _Nullable __dst, const char* _Nullable __src, size_t __n);
 int mbtowc(wchar_t* _Nullable __wc_ptr, const char*  _Nullable __s, size_t __n);
 int wctomb(char* _Nullable __dst, wchar_t __wc);
