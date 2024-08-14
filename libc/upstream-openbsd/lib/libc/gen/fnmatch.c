@@ -46,11 +46,11 @@
  *
  * Derived from The Open Group Base Specifications Issue 7, IEEE Std 1003.1-2008
  * as described in;
- *   http://pubs.opengroup.org/onlinepubs/9699919799/functions/fnmatch.html
+ *   https://pubs.opengroup.org/onlinepubs/9799919799.2024edition/functions/fnmatch.html
  *
  * Filename pattern matches defined in section 2.13, "Pattern Matching Notation"
  * from chapter 2. "Shell Command Language"
- *   http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_13
+ *   https://pubs.opengroup.org/onlinepubs/9799919799.2024edition/utilities/V3_chap02.html#tag_18_13
  * where; 1. A bracket expression starting with an unquoted <circumflex> '^'
  * character CONTINUES to specify a non-matching list; 2. an explicit <period> '.'
  * in a bracket expression matching list, e.g. "[.abc]" does NOT match a leading
@@ -61,7 +61,7 @@
  *
  * Bracket expansion defined in section 9.3.5, "RE Bracket Expression",
  * from chapter 9, "Regular Expressions"
- *   http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap09.html#tag_09_03_05
+ *   https://pubs.opengroup.org/onlinepubs/9799919799.2024edition/basedefs/V1_chap09.html#tag_09_03_05
  * with no support for collating symbols, equivalence class expressions or
  * character class expressions.  A partial range expression with a leading
  * hyphen following a valid range expression will match only the ordinary
