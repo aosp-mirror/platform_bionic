@@ -36,7 +36,7 @@
 #include <sys/cdefs.h>
 
 /**
- * [alloca(3)](http://man7.org/linux/man-pages/man3/alloca.3.html) allocates space on the stack.
+ * [alloca(3)](https://man7.org/linux/man-pages/man3/alloca.3.html) allocates space on the stack.
  *
  * New code should not use alloca because it cannot report failure.
  * Use regular heap allocation instead.

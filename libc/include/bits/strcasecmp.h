@@ -40,7 +40,7 @@
 __BEGIN_DECLS
 
 /**
- * [strcasecmp(3)](http://man7.org/linux/man-pages/man3/strcasecmp.3.html) compares two strings
+ * [strcasecmp(3)](https://man7.org/linux/man-pages/man3/strcasecmp.3.html) compares two strings
  * ignoring case.
  *
  * Returns an integer less than, equal to, or greater than zero if the first string is less than,
@@ -54,7 +54,7 @@ int strcasecmp(const char* _Nonnull __s1, const char* _Nonnull __s2) __attribute
 int strcasecmp_l(const char* _Nonnull __s1, const char* _Nonnull __s2, locale_t _Nonnull __l) __attribute_pure__ __INTRODUCED_IN(23);
 
 /**
- * [strncasecmp(3)](http://man7.org/linux/man-pages/man3/strncasecmp.3.html) compares the first
+ * [strncasecmp(3)](https://man7.org/linux/man-pages/man3/strncasecmp.3.html) compares the first
  * `n` bytes of two strings ignoring case.
  *
  * Returns an integer less than, equal to, or greater than zero if the first `n` bytes of the

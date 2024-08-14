@@ -186,7 +186,7 @@ static int posix_spawn(pid_t* pid_ptr,
                        char* const argv[],
                        char* const env[],
                        int exec_fn(const char* path, char* const argv[], char* const env[])) {
-  // See http://man7.org/linux/man-pages/man3/posix_spawn.3.html
+  // See https://man7.org/linux/man-pages/man3/posix_spawn.3.html
   // and http://pubs.opengroup.org/onlinepubs/9699919799/functions/posix_spawn.html
 
   ScopedSignalBlocker ssb;
