@@ -42,8 +42,8 @@
 __BEGIN_DECLS
 
 /**
- * [epoll_create(2)](http://man7.org/linux/man-pages/man2/epoll_create.2.html)
- * creates a new [epoll](http://man7.org/linux/man-pages/man7/epoll.7.html)
+ * [epoll_create(2)](https://man7.org/linux/man-pages/man2/epoll_create.2.html)
+ * creates a new [epoll](https://man7.org/linux/man-pages/man7/epoll.7.html)
  * file descriptor.
  *
  * Returns a new file descriptor on success and returns -1 and sets `errno` on
@@ -52,8 +52,8 @@ __BEGIN_DECLS
 int epoll_create(int __size);
 
 /**
- * [epoll_create1(2)](http://man7.org/linux/man-pages/man2/epoll_create1.2.html)
- * creates a new [epoll](http://man7.org/linux/man-pages/man7/epoll.7.html)
+ * [epoll_create1(2)](https://man7.org/linux/man-pages/man2/epoll_create1.2.html)
+ * creates a new [epoll](https://man7.org/linux/man-pages/man7/epoll.7.html)
  * file descriptor with the given flags.
  *
  * Returns a new file descriptor on success and returns -1 and sets `errno` on
@@ -62,7 +62,7 @@ int epoll_create(int __size);
 int epoll_create1(int __flags);
 
 /**
- * [epoll_ctl(2)](http://man7.org/linux/man-pages/man2/epoll_ctl.2.html)
+ * [epoll_ctl(2)](https://man7.org/linux/man-pages/man2/epoll_ctl.2.html)
  * adds/modifies/removes file descriptors from the given epoll file descriptor.
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
@@ -70,7 +70,7 @@ int epoll_create1(int __flags);
 int epoll_ctl(int __epoll_fd, int __op, int __fd, struct epoll_event* __BIONIC_COMPLICATED_NULLNESS __event);
 
 /**
- * [epoll_wait(2)](http://man7.org/linux/man-pages/man2/epoll_wait.2.html)
+ * [epoll_wait(2)](https://man7.org/linux/man-pages/man2/epoll_wait.2.html)
  * waits for an event on the given epoll file descriptor.
  *
  * Returns the number of ready file descriptors on success, 0 on timeout,
