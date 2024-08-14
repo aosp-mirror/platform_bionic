@@ -1079,6 +1079,26 @@ int fflush_unlocked(FILE* fp) {
   return __sflush(fp);
 }
 
+int fpurge(FILE* fp) {
+  CHECK_FP(fp);
+
+  ScopedFileLock sfl(fp);
+
+  if (fp->_flags == 0) {
+    // Already freed!
+    errno = EBADF;
+    return EOF;
+  }
+
+  if (HASUB(fp)) FREEUB(fp);
+  WCIO_FREE(fp);
+  fp->_p = fp->_bf._base;
+  fp->_r = 0;
+  fp->_w = fp->_flags & (__SLBF | __SNBF) ? 0 : fp->_bf._size;
+  return 0;
+}
+__strong_alias(__fpurge, fpurge);
+
 size_t fread(void* buf, size_t size, size_t count, FILE* fp) {
   CHECK_FP(fp);
   ScopedFileLock sfl(fp);
