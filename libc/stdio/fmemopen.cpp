@@ -33,7 +33,7 @@
 
 #include "local.h"
 
-// See http://pubs.opengroup.org/onlinepubs/9699919799/functions/fmemopen.html
+// See https://pubs.opengroup.org/onlinepubs/9799919799.2024edition/functions/fmemopen.html
 // and https://man7.org/linux/man-pages/man3/fmemopen.3.html for documentation.
 
 struct fmemopen_cookie {
