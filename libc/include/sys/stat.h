@@ -205,7 +205,7 @@ int futimens(int __fd, const struct timespec __times[_Nullable 2]);
 
 #if defined(__USE_GNU)
 /**
- * [statx(2)](http://man7.org/linux/man-pages/man2/statx.2.html) returns
+ * [statx(2)](https://man7.org/linux/man-pages/man2/statx.2.html) returns
  * extended file status information.
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.

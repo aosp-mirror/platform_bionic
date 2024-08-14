@@ -70,12 +70,12 @@ struct option {
 __BEGIN_DECLS
 
 /**
- * [getopt_long(3)](http://man7.org/linux/man-pages/man3/getopt.3.html) parses command-line options.
+ * [getopt_long(3)](https://man7.org/linux/man-pages/man3/getopt.3.html) parses command-line options.
  */
 int getopt_long(int __argc, char* _Nonnull const* _Nonnull __argv, const char* _Nonnull __options, const struct option* _Nonnull __long_options, int* _Nullable __long_index);
 
 /**
- * [getopt_long_only(3)](http://man7.org/linux/man-pages/man3/getopt.3.html) parses command-line options.
+ * [getopt_long_only(3)](https://man7.org/linux/man-pages/man3/getopt.3.html) parses command-line options.
  */
 int getopt_long_only(int __argc, char* _Nonnull const* _Nonnull __argv, const char* _Nonnull __options, const struct option* _Nonnull __long_options, int* _Nullable __long_index);
 

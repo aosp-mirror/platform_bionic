@@ -72,7 +72,7 @@ struct ifaddrs {
 #define ifa_dstaddr ifa_ifu.ifu_dstaddr
 
 /**
- * [getifaddrs(3)](http://man7.org/linux/man-pages/man3/getifaddrs.3.html) creates a linked list
+ * [getifaddrs(3)](https://man7.org/linux/man-pages/man3/getifaddrs.3.html) creates a linked list
  * of `struct ifaddrs`. The list must be freed by freeifaddrs().
  *
  * Returns 0 and stores the list in `*__list_ptr` on success,
@@ -83,7 +83,7 @@ struct ifaddrs {
 int getifaddrs(struct ifaddrs* _Nullable * _Nonnull __list_ptr) __INTRODUCED_IN(24);
 
 /**
- * [freeifaddrs(3)](http://man7.org/linux/man-pages/man3/freeifaddrs.3.html) frees a linked list
+ * [freeifaddrs(3)](https://man7.org/linux/man-pages/man3/freeifaddrs.3.html) frees a linked list
  * of `struct ifaddrs` returned by getifaddrs().
  *
  * Available since API level 24.
