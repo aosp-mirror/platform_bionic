@@ -57,6 +57,7 @@ Current libc symbols: https://android.googlesource.com/platform/bionic/+/main/li
 
 New libc functions in API level 36:
   * `qsort_r`, `sig2str`/`str2sig` (POSIX Issue 8 additions).
+  * New system call wrapper: `mseal` (`<sys/mman.h>`).
 
 New libc functions in V (API level 35):
   * New `android_crash_detail_register`, `android_crash_detail_unregister`,
