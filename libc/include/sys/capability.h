@@ -39,7 +39,7 @@
 __BEGIN_DECLS
 
 /**
- * [capget(2)](http://man7.org/linux/man-pages/man2/capget.2.html) gets the calling
+ * [capget(2)](https://man7.org/linux/man-pages/man2/capget.2.html) gets the calling
  * thread's capabilities.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
@@ -47,7 +47,7 @@ __BEGIN_DECLS
 int capget(cap_user_header_t _Nonnull __hdr_ptr, cap_user_data_t _Nullable __data_ptr);
 
 /**
- * [capset(2)](http://man7.org/linux/man-pages/man2/capset.2.html) sets the calling
+ * [capset(2)](https://man7.org/linux/man-pages/man2/capset.2.html) sets the calling
  * thread's capabilities.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.

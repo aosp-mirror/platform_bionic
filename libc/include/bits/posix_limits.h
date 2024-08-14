@@ -40,7 +40,7 @@
     (((__ANDROID_API__) >= (level)) ? _POSIX_VERSION : __BIONIC_POSIX_FEATURE_MISSING)
 
 /* Availability macros. */
-/* See http://man7.org/linux/man-pages/man7/posixoptions.7.html for documentation. */
+/* See https://man7.org/linux/man-pages/man7/posixoptions.7.html for documentation. */
 /* Keep this list sorted by name. */
 #define _POSIX_ADVISORY_INFO __BIONIC_POSIX_FEATURE_SINCE(23) /* posix_memadvise arrived late. */
 #define _POSIX_ASYNCHRONOUS_IO __BIONIC_POSIX_FEATURE_MISSING

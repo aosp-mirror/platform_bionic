@@ -40,7 +40,7 @@
 __BEGIN_DECLS
 
 /**
- * [adjtimex(2)](http://man7.org/linux/man-pages/man2/adjtimex.2.html) adjusts the kernel clock.
+ * [adjtimex(2)](https://man7.org/linux/man-pages/man2/adjtimex.2.html) adjusts the kernel clock.
  *
  * Returns the clock state on success, and returns -1 and sets `errno` on failure.
  *
