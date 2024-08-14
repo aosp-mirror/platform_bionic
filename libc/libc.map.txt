@@ -670,6 +670,7 @@ LIBC {
     mprotect;
     mrand48;
     mremap;
+    mseal; # introduced=36
     msync;
     munlock;
     munlockall;
