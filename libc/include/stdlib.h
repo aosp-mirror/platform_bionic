@@ -89,7 +89,7 @@ long long atoll(const char* _Nonnull __s) __attribute_pure__;
 __wur char* _Nullable realpath(const char* _Nonnull __path, char* _Nullable __resolved);
 
 /**
- * [system(3)](http://man7.org/linux/man-pages/man3/system.3.html) executes
+ * [system(3)](https://man7.org/linux/man-pages/man3/system.3.html) executes
  * the given command in a new shell process.
  *
  * On Android, the special case of `system(NULL)` always returns 1,
@@ -100,13 +100,13 @@ __wur char* _Nullable realpath(const char* _Nonnull __path, char* _Nullable __re
  * or permanently (for lack of permission, say).
  *
  * Returns -1 and sets errno if process creation fails; returns a
- * [waitpid(2)](http://man7.org/linux/man-pages/man2/waitpid.2.html)
+ * [waitpid(2)](https://man7.org/linux/man-pages/man2/waitpid.2.html)
  * status otherwise.
  */
 int system(const char* _Nonnull __command);
 
 /**
- * [bsearch(3)](http://man7.org/linux/man-pages/man3/bsearch.3.html) searches
+ * [bsearch(3)](https://man7.org/linux/man-pages/man3/bsearch.3.html) searches
  * a sorted array.
  *
  * Returns a pointer to a matching item on success,
@@ -115,13 +115,13 @@ int system(const char* _Nonnull __command);
 __wur void* _Nullable bsearch(const void* _Nonnull __key, const void* _Nullable __base, size_t __nmemb, size_t __size, int (* _Nonnull __comparator)(const void* _Nonnull __lhs, const void* _Nonnull __rhs));
 
 /**
- * [qsort(3)](http://man7.org/linux/man-pages/man3/qsort.3.html) sorts an array
+ * [qsort(3)](https://man7.org/linux/man-pages/man3/qsort.3.html) sorts an array
  * of n elements each of the given size, using the given comparator.
  */
 void qsort(void* _Nullable __array, size_t __n, size_t __size, int (* _Nonnull __comparator)(const void* _Nullable __lhs, const void* _Nullable __rhs));
 
 /**
- * [qsort_r(3)](http://man7.org/linux/man-pages/man3/qsort_r.3.html) sorts an
+ * [qsort_r(3)](https://man7.org/linux/man-pages/man3/qsort_r.3.html) sorts an
  * array of n elements each of the given size, using the given comparator,
  * and passing the given context argument to the comparator.
  *
@@ -180,7 +180,7 @@ typedef struct {
 lldiv_t lldiv(long long __numerator, long long __denominator) __attribute_const__;
 
 /**
- * [getloadavg(3)](http://man7.org/linux/man-pages/man3/getloadavg.3.html) queries the
+ * [getloadavg(3)](https://man7.org/linux/man-pages/man3/getloadavg.3.html) queries the
  * number of runnable processes averaged over time. The Linux kernel supports averages
  * over the last 1, 5, and 15 minutes.
  *

@@ -41,7 +41,7 @@
 __BEGIN_DECLS
 
 /**
- * [signalfd(2)](http://man7.org/linux/man-pages/man2/signalfd.2.html) creates/manipulates a
+ * [signalfd(2)](https://man7.org/linux/man-pages/man2/signalfd.2.html) creates/manipulates a
  * file descriptor for reading signal events.
  *
  * Returns the file descriptor on success, and returns -1 and sets `errno` on failure.

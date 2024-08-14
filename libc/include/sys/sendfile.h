@@ -43,7 +43,7 @@ __BEGIN_DECLS
 ssize_t sendfile(int __out_fd, int __in_fd, off_t* _Nullable __offset, size_t __count) __RENAME(sendfile64);
 #else
 /**
- * [sendfile(2)](http://man7.org/linux/man-pages/man2/sendfile.2.html) copies data directly
+ * [sendfile(2)](https://man7.org/linux/man-pages/man2/sendfile.2.html) copies data directly
  * between two file descriptors.
  *
  * Returns the number of bytes copied on success, and returns -1 and sets `errno` on failure.

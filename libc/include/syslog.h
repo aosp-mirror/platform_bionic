@@ -212,34 +212,34 @@ static const CODE prioritynames[] = {
 #endif
 
 /**
- * [closelog(3)](http://man7.org/linux/man-pages/man3/closelog.3.html) does
+ * [closelog(3)](https://man7.org/linux/man-pages/man3/closelog.3.html) does
  * nothing on Android.
  */
 void closelog(void);
 
 /**
- * [openlog(3)](http://man7.org/linux/man-pages/man3/openlog.3.html) sets
+ * [openlog(3)](https://man7.org/linux/man-pages/man3/openlog.3.html) sets
  * the log tag to `__prefix`, which can be NULL to return to the default of
  * getprogname(). On Android, the other two arguments are ignored.
  */
 void openlog(const char* _Nullable __prefix, int __option, int __facility);
 
 /**
- * [setlogmask(3)](http://man7.org/linux/man-pages/man3/setlogmask.3.html)
+ * [setlogmask(3)](https://man7.org/linux/man-pages/man3/setlogmask.3.html)
  * sets which log priorities will actually be logged. See `LOG_MASK` and
  * `LOG_UPTO`.
  */
 int setlogmask(int __mask);
 
 /**
- * [syslog(3)](http://man7.org/linux/man-pages/man3/syslog.3.html) formats
+ * [syslog(3)](https://man7.org/linux/man-pages/man3/syslog.3.html) formats
  * the printf()-like message and logs it with the given priority, unless
  * suppressed by setlogmask(). On Android, the output goes to logcat.
  */
 void syslog(int __priority, const char* _Nonnull __fmt, ...) __printflike(2, 3);
 
 /**
- * [vsyslog(3)](http://man7.org/linux/man-pages/man3/vsyslog.3.html) formats
+ * [vsyslog(3)](https://man7.org/linux/man-pages/man3/vsyslog.3.html) formats
  * the vprintf()-like message and logs it with the given priority, unless
  * suppressed by setlogmask(). On Android, the output goes to logcat.
  */
