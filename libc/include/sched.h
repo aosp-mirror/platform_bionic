@@ -45,42 +45,42 @@ __BEGIN_DECLS
  *
  * (Linux's name for POSIX's SCHED_OTHER.)
  *
- * See [sched(7)](http://man7.org/linux/man-pages/man7/sched.7.html)
+ * See [sched(7)](https://man7.org/linux/man-pages/man7/sched.7.html)
  */
 
 /*
  * @def SCHED_FIFO
  * The real-time first-in/first-out scheduling policy.
  *
- * See [sched(7)](http://man7.org/linux/man-pages/man7/sched.7.html)
+ * See [sched(7)](https://man7.org/linux/man-pages/man7/sched.7.html)
  */
 
 /*
  * @def SCHED_RR
  * The real-time round-robin policy. (See also SCHED_NORMAL/SCHED_OTHER.)
  *
- * See [sched(7)](http://man7.org/linux/man-pages/man7/sched.7.html)
+ * See [sched(7)](https://man7.org/linux/man-pages/man7/sched.7.html)
  */
 
 /*
  * @def SCHED_BATCH
  * The batch scheduling policy.
  *
- * See [sched(7)](http://man7.org/linux/man-pages/man7/sched.7.html)
+ * See [sched(7)](https://man7.org/linux/man-pages/man7/sched.7.html)
  */
 
 /*
  * @def SCHED_IDLE
  * The low priority "only when otherwise idle" scheduling priority.
  *
- * See [sched(7)](http://man7.org/linux/man-pages/man7/sched.7.html)
+ * See [sched(7)](https://man7.org/linux/man-pages/man7/sched.7.html)
  */
 
 /*
  * @def SCHED_DEADLINE
  * The deadline scheduling policy.
  *
- * See [sched(7)](http://man7.org/linux/man-pages/man7/sched.7.html)
+ * See [sched(7)](https://man7.org/linux/man-pages/man7/sched.7.html)
  */
 
 /*
@@ -116,7 +116,7 @@ int sched_setscheduler(pid_t __pid, int __policy, const struct sched_param* _Non
 int sched_getscheduler(pid_t __pid);
 
 /**
- * [sched_yield(2)](http://man7.org/linux/man-pages/man2/sched_yield.2.html)
+ * [sched_yield(2)](https://man7.org/linux/man-pages/man2/sched_yield.2.html)
  * voluntarily gives up using the CPU so that another thread can run.
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
@@ -124,7 +124,7 @@ int sched_getscheduler(pid_t __pid);
 int sched_yield(void);
 
 /**
- * [sched_get_priority_max(2)](http://man7.org/linux/man-pages/man2/sched_get_priority_max.2.html)
+ * [sched_get_priority_max(2)](https://man7.org/linux/man-pages/man2/sched_get_priority_max.2.html)
  * gets the maximum priority value allowed for the given scheduling policy.
  *
  * Returns a priority on success and returns -1 and sets `errno` on failure.
@@ -132,7 +132,7 @@ int sched_yield(void);
 int sched_get_priority_max(int __policy);
 
 /**
- * [sched_get_priority_min(2)](http://man7.org/linux/man-pages/man2/sched_get_priority_min.2.html)
+ * [sched_get_priority_min(2)](https://man7.org/linux/man-pages/man2/sched_get_priority_min.2.html)
  * gets the minimum priority value allowed for the given scheduling policy.
  *
  * Returns a priority on success and returns -1 and sets `errno` on failure.
@@ -140,7 +140,7 @@ int sched_get_priority_max(int __policy);
 int sched_get_priority_min(int __policy);
 
 /**
- * [sched_setparam(2)](http://man7.org/linux/man-pages/man2/sched_setparam.2.html)
+ * [sched_setparam(2)](https://man7.org/linux/man-pages/man2/sched_setparam.2.html)
  * sets the scheduling parameters for the given thread.
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
@@ -148,7 +148,7 @@ int sched_get_priority_min(int __policy);
 int sched_setparam(pid_t __pid, const struct sched_param* _Nonnull __param);
 
 /**
- * [sched_getparam(2)](http://man7.org/linux/man-pages/man2/sched_getparam.2.html)
+ * [sched_getparam(2)](https://man7.org/linux/man-pages/man2/sched_getparam.2.html)
  * gets the scheduling parameters for the given thread.
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
@@ -156,7 +156,7 @@ int sched_setparam(pid_t __pid, const struct sched_param* _Nonnull __param);
 int sched_getparam(pid_t __pid, struct sched_param* _Nonnull __param);
 
 /**
- * [sched_rr_get_interval(2)](http://man7.org/linux/man-pages/man2/sched_rr_get_interval.2.html)
+ * [sched_rr_get_interval(2)](https://man7.org/linux/man-pages/man2/sched_rr_get_interval.2.html)
  * queries the round-robin time quantum for the given thread.
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
@@ -166,7 +166,7 @@ int sched_rr_get_interval(pid_t __pid, struct timespec* _Nonnull __quantum);
 #if defined(__USE_GNU)
 
 /**
- * [clone(2)](http://man7.org/linux/man-pages/man2/clone.2.html)
+ * [clone(2)](https://man7.org/linux/man-pages/man2/clone.2.html)
  * creates a new child process.
  *
  * Returns the pid of the child to the caller on success and
@@ -175,7 +175,7 @@ int sched_rr_get_interval(pid_t __pid, struct timespec* _Nonnull __quantum);
 int clone(int (* __BIONIC_COMPLICATED_NULLNESS __fn)(void* __BIONIC_COMPLICATED_NULLNESS ), void* __BIONIC_COMPLICATED_NULLNESS __child_stack, int __flags, void* _Nullable __arg, ...);
 
 /**
- * [unshare(2)](http://man7.org/linux/man-pages/man2/unshare.2.html)
+ * [unshare(2)](https://man7.org/linux/man-pages/man2/unshare.2.html)
  * disassociates part of the caller's execution context.
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
@@ -183,7 +183,7 @@ int clone(int (* __BIONIC_COMPLICATED_NULLNESS __fn)(void* __BIONIC_COMPLICATED_
 int unshare(int __flags);
 
 /**
- * [setns(2)](http://man7.org/linux/man-pages/man2/setns.2.html)
+ * [setns(2)](https://man7.org/linux/man-pages/man2/setns.2.html)
  * reassociates a thread with a different namespace.
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
@@ -191,7 +191,7 @@ int unshare(int __flags);
 int setns(int __fd, int __ns_type);
 
 /**
- * [sched_getcpu(3)](http://man7.org/linux/man-pages/man3/sched_getcpu.3.html)
+ * [sched_getcpu(3)](https://man7.org/linux/man-pages/man3/sched_getcpu.3.html)
  * reports which CPU the caller is running on.
  *
  * Returns a non-negative CPU number on success and returns -1 and sets
@@ -219,7 +219,7 @@ typedef struct {
 } cpu_set_t;
 
 /**
- * [sched_setaffinity(2)](http://man7.org/linux/man-pages/man2/sched_setaffinity.2.html)
+ * [sched_setaffinity(2)](https://man7.org/linux/man-pages/man2/sched_setaffinity.2.html)
  * sets the CPU affinity mask for the given thread.
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
@@ -227,7 +227,7 @@ typedef struct {
 int sched_setaffinity(pid_t __pid, size_t __set_size, const cpu_set_t* _Nonnull __set);
 
 /**
- * [sched_getaffinity(2)](http://man7.org/linux/man-pages/man2/sched_getaffinity.2.html)
+ * [sched_getaffinity(2)](https://man7.org/linux/man-pages/man2/sched_getaffinity.2.html)
  * gets the CPU affinity mask for the given thread.
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.

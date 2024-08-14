@@ -43,7 +43,7 @@
 __BEGIN_DECLS
 
 /**
- * [err(3)](http://man7.org/linux/man-pages/man3/err.3.html) outputs the program name,
+ * [err(3)](https://man7.org/linux/man-pages/man3/err.3.html) outputs the program name,
  * the printf()-like formatted message, and the result of strerror() if `errno` is non-zero.
  *
  * Calls exit() with `__status`.
@@ -53,7 +53,7 @@ __BEGIN_DECLS
 __noreturn void err(int __status, const char* _Nullable __fmt, ...) __printflike(2, 3);
 
 /**
- * [verr(3)](http://man7.org/linux/man-pages/man3/verr.3.html) outputs the program name,
+ * [verr(3)](https://man7.org/linux/man-pages/man3/verr.3.html) outputs the program name,
  * the vprintf()-like formatted message, and the result of strerror() if `errno` is non-zero.
  *
  * Calls exit() with `__status`.
@@ -63,7 +63,7 @@ __noreturn void err(int __status, const char* _Nullable __fmt, ...) __printflike
 __noreturn void verr(int __status, const char* _Nullable __fmt, va_list __args) __printflike(2, 0);
 
 /**
- * [errx(3)](http://man7.org/linux/man-pages/man3/errx.3.html) outputs the program name, and
+ * [errx(3)](https://man7.org/linux/man-pages/man3/errx.3.html) outputs the program name, and
  * the printf()-like formatted message.
  *
  * Calls exit() with `__status`.
@@ -73,7 +73,7 @@ __noreturn void verr(int __status, const char* _Nullable __fmt, va_list __args) 
 __noreturn void errx(int __status, const char* _Nullable __fmt, ...) __printflike(2, 3);
 
 /**
- * [verrx(3)](http://man7.org/linux/man-pages/man3/err.3.html) outputs the program name, and
+ * [verrx(3)](https://man7.org/linux/man-pages/man3/err.3.html) outputs the program name, and
  * the vprintf()-like formatted message.
  *
  * Calls exit() with `__status`.
@@ -83,7 +83,7 @@ __noreturn void errx(int __status, const char* _Nullable __fmt, ...) __printflik
 __noreturn void verrx(int __status, const char* _Nullable __fmt, va_list __args) __printflike(2, 0);
 
 /**
- * [warn(3)](http://man7.org/linux/man-pages/man3/warn.3.html) outputs the program name,
+ * [warn(3)](https://man7.org/linux/man-pages/man3/warn.3.html) outputs the program name,
  * the printf()-like formatted message, and the result of strerror() if `errno` is non-zero.
  *
  * New code should consider error() in `<error.h>`.
@@ -91,7 +91,7 @@ __noreturn void verrx(int __status, const char* _Nullable __fmt, va_list __args)
 void warn(const char* _Nullable __fmt, ...) __printflike(1, 2);
 
 /**
- * [vwarn(3)](http://man7.org/linux/man-pages/man3/vwarn.3.html) outputs the program name,
+ * [vwarn(3)](https://man7.org/linux/man-pages/man3/vwarn.3.html) outputs the program name,
  * the vprintf()-like formatted message, and the result of strerror() if `errno` is non-zero.
  *
  * New code should consider error() in `<error.h>`.
@@ -99,7 +99,7 @@ void warn(const char* _Nullable __fmt, ...) __printflike(1, 2);
 void vwarn(const char* _Nullable __fmt, va_list __args) __printflike(1, 0);
 
 /**
- * [warnx(3)](http://man7.org/linux/man-pages/man3/warnx.3.html) outputs the program name, and
+ * [warnx(3)](https://man7.org/linux/man-pages/man3/warnx.3.html) outputs the program name, and
  * the printf()-like formatted message.
  *
  * New code should consider error() in `<error.h>`.
@@ -107,7 +107,7 @@ void vwarn(const char* _Nullable __fmt, va_list __args) __printflike(1, 0);
 void warnx(const char* _Nullable __fmt, ...) __printflike(1, 2);
 
 /**
- * [vwarnx(3)](http://man7.org/linux/man-pages/man3/warn.3.html) outputs the program name, and
+ * [vwarnx(3)](https://man7.org/linux/man-pages/man3/warn.3.html) outputs the program name, and
  * the vprintf()-like formatted message.
  *
  * New code should consider error() in `<error.h>`.
