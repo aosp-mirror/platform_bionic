@@ -1,5 +1,3 @@
-// Define the common source files for all the libc instances
-// =========================================================
 package {
     default_applicable_licenses: ["bionic_libc_license"],
 }
@@ -89,10 +87,6 @@ cc_defaults {
     recovery_available: true,
     native_bridge_supported: true,
 
-    // lld complains about duplicate symbols in libcrt and libgcc. Suppress the
-    // warning since this is intended right now.
-    ldflags: ["-Wl,-z,muldefs"],
-
     product_variables: {
         malloc_zero_contents: {
             cflags: ["-DSCUDO_ZERO_CONTENTS"],
@@ -112,6 +106,65 @@ cc_defaults {
     apex_available: ["com.android.runtime"],
 
     tidy_disabled_srcs: ["upstream-*/**/*.c"],
+}
+
+// Workaround for b/24465209.
+// We're unlikely to be able to remove this before we just
+// remove ILP32 support completely.
+// Note that we also still have `pack_relocations: false`
+// for both libc and libm, even on LP64.
+// ========================================================
+cc_defaults {
+    name: "bug_24465209_workaround",
+    target: {
+        android_arm: {
+            pack_relocations: false,
+            ldflags: ["-Wl,--hash-style=both"],
+        },
+        android_x86: {
+            pack_relocations: false,
+            ldflags: ["-Wl,--hash-style=both"],
+        },
+    },
+}
+
+// Leave the symbols in the shared library so that stack unwinders can produce
+// meaningful name resolution. This is a bit more ugly than it sounds because
+// arm32 is a bit broken.
+// ========================================================
+cc_defaults {
+    name: "keep_symbols",
+    arch: {
+        arm: {
+            // arm32 does not produce complete exidx unwind information,
+            // so keep the .debug_frame which is relatively small and does
+            // include needed unwind information.
+            // See b/132992102 for details.
+            strip: {
+                keep_symbols_and_debug_frame: true,
+            },
+        },
+        arm64: {
+            strip: {
+                keep_symbols: true,
+            },
+        },
+        riscv64: {
+            strip: {
+                keep_symbols: true,
+            },
+        },
+        x86: {
+            strip: {
+                keep_symbols: true,
+            },
+        },
+        x86_64: {
+            strip: {
+                keep_symbols: true,
+            },
+        },
+    },
 }
 
 // Defaults for native allocator libs/includes to make it
@@ -336,6 +389,7 @@ cc_library_static {
         "upstream-freebsd/lib/libc/stdlib/hdestroy_r.c",
         "upstream-freebsd/lib/libc/stdlib/hsearch_r.c",
         "upstream-freebsd/lib/libc/stdlib/qsort.c",
+        "upstream-freebsd/lib/libc/stdlib/qsort_r.c",
         "upstream-freebsd/lib/libc/stdlib/quick_exit.c",
         "upstream-freebsd/lib/libc/string/wcpcpy.c",
         "upstream-freebsd/lib/libc/string/wcpncpy.c",
@@ -517,7 +571,6 @@ cc_library_static {
         "upstream-openbsd/lib/libc/stdio/fgetwc.c",
         "upstream-openbsd/lib/libc/stdio/fgetws.c",
         "upstream-openbsd/lib/libc/stdio/flags.c",
-        "upstream-openbsd/lib/libc/stdio/fpurge.c",
         "upstream-openbsd/lib/libc/stdio/fputwc.c",
         "upstream-openbsd/lib/libc/stdio/fputws.c",
         "upstream-openbsd/lib/libc/stdio/fvwrite.c",
@@ -879,7 +932,6 @@ cc_library_static {
         "bionic/mkfifo.cpp",
         "bionic/mknod.cpp",
         "bionic/mntent.cpp",
-        "bionic/mremap.cpp",
         "bionic/netdb.cpp",
         "bionic/net_if.cpp",
         "bionic/netinet_ether.cpp",
@@ -979,7 +1031,6 @@ cc_library_static {
         "bionic/thread_private.cpp",
         "bionic/threads.cpp",
         "bionic/time.cpp",
-        "bionic/time_l.cpp",
         "bionic/tmpfile.cpp",
         "bionic/umount.cpp",
         "bionic/unlink.cpp",
@@ -1003,11 +1054,6 @@ cc_library_static {
         "stdio/stdio_ext.cpp",
         "stdio/vfscanf.cpp",
         "stdio/vfwscanf.cpp",
-
-        // TODO: why isn't this in a static-libc-only module?
-        // This contains a weak stub implementation of __find_icu_symbol for wctype.cpp,
-        // which will be overridden by the actual one in libc.so.
-        "bionic/icu_static.cpp",
     ],
 
     arch: {
@@ -1510,6 +1556,7 @@ filegroup {
     srcs: [
         "bionic/gwp_asan_wrappers.cpp",
         "bionic/heap_tagging.cpp",
+        "bionic/icu_static.cpp",
         "bionic/malloc_common.cpp",
         "bionic/malloc_limit.cpp",
     ],
@@ -1530,6 +1577,8 @@ cc_defaults {
     defaults: [
         "libc_defaults",
         "libc_native_allocator_defaults",
+        "bug_24465209_workaround",
+        "keep_symbols",
     ],
     name: "libc_library_defaults",
     product_variables: {
@@ -1542,7 +1591,6 @@ cc_defaults {
         cflags: ["-DLIBC_STATIC"],
         whole_static_libs: [
             "gwp_asan",
-            "gwp_asan_crash_handler",
             "libc_init_static",
             "libc_common_static",
             "libc_unwind_static",
@@ -1552,7 +1600,6 @@ cc_defaults {
         srcs: [":libc_sources_shared"],
         whole_static_libs: [
             "gwp_asan",
-            "gwp_asan_crash_handler",
             "libc_init_dynamic",
             "libc_common_shared",
             "libunwind-exported",
@@ -1567,14 +1614,6 @@ cc_defaults {
     // Do not pack libc.so relocations; see http://b/20645321 for details.
     pack_relocations: false,
 
-    // WARNING: The only libraries libc.so should depend on are libdl.so and ld-android.so!
-    // If you add other libraries, make sure to add -Wl,--exclude-libs=libgcc.a to the
-    // LOCAL_LDFLAGS for those libraries.  This ensures that symbols that are pulled into
-    // those new libraries from libgcc.a are not declared external; if that were the case,
-    // then libc would not pull those symbols from libgcc.a as it should, instead relying
-    // on the external symbols from the dependent libraries.  That would create a "cloaked"
-    // dependency on libgcc.a in libc though the libraries, which is not what you wanted!
-
     shared_libs: [
         "ld-android",
         "libdl",
@@ -1587,15 +1626,6 @@ cc_defaults {
 
     arch: {
         arm: {
-            // TODO: This is to work around b/24465209. Remove after root cause is fixed.
-            pack_relocations: false,
-            ldflags: [
-                "-Wl,--hash-style=both",
-                // Since we are preserving the debug_frame, do not compress
-                // in this case to make unwinds as fast as possible.
-                "-Wl,--compress-debug-sections=none",
-            ],
-
             version_script: ":libc.arm.map",
             no_libcrt: true,
 
@@ -1603,63 +1633,33 @@ cc_defaults {
                 srcs: [":libc_sources_shared_arm"],
                 // special for arm
                 cflags: ["-DCRT_LEGACY_WORKAROUND"],
-                // For backwards-compatibility, some arm32 builtins are exported from libc.so.
+                // For backwards compatibility, some arm32 builtins are exported from libc.so.
                 static_libs: ["libclang_rt.builtins-exported"],
             },
 
-            // Arm 32 bit does not produce complete exidx unwind information
-            // so keep the .debug_frame which is relatively small and does
-            // include needed unwind information.
-            // See b/132992102 for details.
-            strip: {
-                keep_symbols_and_debug_frame: true,
-            },
+            ldflags: [
+                // Since we preserve the debug_frame for libc, do not compress
+                // in this case to make unwinds as fast as possible.
+                "-Wl,--compress-debug-sections=none",
+            ],
         },
         arm64: {
             version_script: ":libc.arm64.map",
-
-            // Leave the symbols in the shared library so that stack unwinders can produce
-            // meaningful name resolution.
-            strip: {
-                keep_symbols: true,
-            },
         },
         riscv64: {
             version_script: ":libc.riscv64.map",
-
-            // Leave the symbols in the shared library so that stack unwinders can produce
-            // meaningful name resolution.
-            strip: {
-                keep_symbols: true,
-            },
         },
         x86: {
-            // TODO: This is to work around b/24465209. Remove after root cause is fixed.
-            pack_relocations: false,
-            ldflags: ["-Wl,--hash-style=both"],
-
             version_script: ":libc.x86.map",
             no_libcrt: true,
 
             shared: {
-                // For backwards-compatibility, some x86 builtins are exported from libc.so.
+                // For backwards compatibility, some x86 builtins are exported from libc.so.
                 static_libs: ["libclang_rt.builtins-exported"],
-            },
-
-            // Leave the symbols in the shared library so that stack unwinders can produce
-            // meaningful name resolution.
-            strip: {
-                keep_symbols: true,
             },
         },
         x86_64: {
             version_script: ":libc.x86_64.map",
-
-            // Leave the symbols in the shared library so that stack unwinders can produce
-            // meaningful name resolution.
-            strip: {
-                keep_symbols: true,
-            },
         },
     },
 
@@ -1917,7 +1917,10 @@ cc_library_headers {
 // ========================================================
 
 cc_library {
-    defaults: ["libc_defaults"],
+    defaults: [
+        "libc_defaults",
+        "bug_24465209_workaround",
+    ],
     include_dirs: ["bionic/libstdc++/include"],
     srcs: [
         "bionic/__cxa_guard.cpp",
@@ -1942,12 +1945,8 @@ cc_library {
         },
     },
 
-    //TODO (dimitry): This is to work around b/24465209. Remove after root cause is fixed
     arch: {
         arm: {
-            // TODO: This is to work around b/24465209. Remove after root cause is fixed.
-            pack_relocations: false,
-            ldflags: ["-Wl,--hash-style=both"],
             version_script: ":libstdc++.arm.map",
         },
         arm64: {
@@ -1957,8 +1956,6 @@ cc_library {
             version_script: ":libstdc++.riscv64.map",
         },
         x86: {
-            pack_relocations: false,
-            ldflags: ["-Wl,--hash-style=both"],
             version_script: ":libstdc++.x86.map",
         },
         x86_64: {
@@ -2228,7 +2225,7 @@ cc_library_static {
     nocrt: true,
     stl: "none",
     visibility: [
-        "//packages/modules/Virtualization/vmbase",
+        "//packages/modules/Virtualization/libs/libvmbase",
     ],
 }
 
@@ -2260,6 +2257,11 @@ ndk_headers {
         "kernel/uapi/xen/**/*.h",
     ],
     license: "NOTICE",
+    // These don't pass the bad verification we do because many of them are
+    // arch-specific, and they aren't necessarily independently includable.
+    // That's not much of a problem though, since C-incompaitibilities in the
+    // UAPI headers should run into problems long before they reach us.
+    skip_verification: true,
 }
 
 ndk_headers {
@@ -2276,6 +2278,7 @@ ndk_headers {
     to: "scsi",
     srcs: ["kernel/android/scsi/**/*.h"],
     license: "NOTICE",
+    skip_verification: true,
 }
 
 ndk_headers {
@@ -2284,6 +2287,7 @@ ndk_headers {
     to: "arm-linux-androideabi",
     srcs: ["kernel/uapi/asm-arm/**/*.h"],
     license: "NOTICE",
+    skip_verification: true,
 }
 
 ndk_headers {
@@ -2292,6 +2296,7 @@ ndk_headers {
     to: "aarch64-linux-android",
     srcs: ["kernel/uapi/asm-arm64/**/*.h"],
     license: "NOTICE",
+    skip_verification: true,
 }
 
 ndk_headers {
@@ -2300,6 +2305,7 @@ ndk_headers {
     to: "riscv64-linux-android",
     srcs: ["kernel/uapi/asm-riscv/**/*.h"],
     license: "NOTICE",
+    skip_verification: true,
 }
 
 ndk_headers {
@@ -2308,6 +2314,7 @@ ndk_headers {
     to: "i686-linux-android",
     srcs: ["kernel/uapi/asm-x86/**/*.h"],
     license: "NOTICE",
+    skip_verification: true,
 }
 
 ndk_headers {
@@ -2316,6 +2323,7 @@ ndk_headers {
     to: "x86_64-linux-android",
     srcs: ["kernel/uapi/asm-x86/**/*.h"],
     license: "NOTICE",
+    skip_verification: true,
 }
 
 ndk_library {

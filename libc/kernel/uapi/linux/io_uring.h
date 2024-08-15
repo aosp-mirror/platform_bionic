@@ -59,6 +59,7 @@ struct io_uring_sqe {
     __u32 waitid_flags;
     __u32 futex_flags;
     __u32 install_fd_flags;
+    __u32 nop_flags;
   };
   __u64 user_data;
   union {
@@ -85,7 +86,7 @@ struct io_uring_sqe {
   };
 };
 #define IORING_FILE_INDEX_ALLOC (~0U)
-enum {
+enum io_uring_sqe_flags_bit {
   IOSQE_FIXED_FILE_BIT,
   IOSQE_IO_DRAIN_BIT,
   IOSQE_IO_LINK_BIT,
@@ -204,15 +205,19 @@ enum io_uring_op {
 #define IORING_RECV_MULTISHOT (1U << 1)
 #define IORING_RECVSEND_FIXED_BUF (1U << 2)
 #define IORING_SEND_ZC_REPORT_USAGE (1U << 3)
+#define IORING_RECVSEND_BUNDLE (1U << 4)
 #define IORING_NOTIF_USAGE_ZC_COPIED (1U << 31)
 #define IORING_ACCEPT_MULTISHOT (1U << 0)
-enum {
+#define IORING_ACCEPT_DONTWAIT (1U << 1)
+#define IORING_ACCEPT_POLL_FIRST (1U << 2)
+enum io_uring_msg_ring_flags {
   IORING_MSG_DATA,
   IORING_MSG_SEND_FD,
 };
 #define IORING_MSG_RING_CQE_SKIP (1U << 0)
 #define IORING_MSG_RING_FLAGS_PASS (1U << 1)
 #define IORING_FIXED_FD_NO_CLOEXEC (1U << 0)
+#define IORING_NOP_INJECT_RESULT (1U << 0)
 struct io_uring_cqe {
   __u64 user_data;
   __s32 res;
@@ -223,9 +228,7 @@ struct io_uring_cqe {
 #define IORING_CQE_F_MORE (1U << 1)
 #define IORING_CQE_F_SOCK_NONEMPTY (1U << 2)
 #define IORING_CQE_F_NOTIF (1U << 3)
-enum {
-  IORING_CQE_BUFFER_SHIFT = 16,
-};
+#define IORING_CQE_BUFFER_SHIFT 16
 #define IORING_OFF_SQ_RING 0ULL
 #define IORING_OFF_CQ_RING 0x8000000ULL
 #define IORING_OFF_SQES 0x10000000ULL
@@ -289,7 +292,8 @@ struct io_uring_params {
 #define IORING_FEAT_CQE_SKIP (1U << 11)
 #define IORING_FEAT_LINKED_FILE (1U << 12)
 #define IORING_FEAT_REG_REG_RING (1U << 13)
-enum {
+#define IORING_FEAT_RECVSEND_BUNDLE (1U << 14)
+enum io_uring_register_op {
   IORING_REGISTER_BUFFERS = 0,
   IORING_UNREGISTER_BUFFERS = 1,
   IORING_REGISTER_FILES = 2,
@@ -322,7 +326,7 @@ enum {
   IORING_REGISTER_LAST,
   IORING_REGISTER_USE_REGISTERED_RING = 1U << 31
 };
-enum {
+enum io_wq_type {
   IO_WQ_BOUND,
   IO_WQ_UNBOUND,
 };
@@ -394,7 +398,7 @@ struct io_uring_buf_ring {
     __DECLARE_FLEX_ARRAY(struct io_uring_buf, bufs);
   };
 };
-enum {
+enum io_uring_register_pbuf_ring_flags {
   IOU_PBUF_RING_MMAP = 1,
 };
 struct io_uring_buf_reg {
@@ -415,7 +419,7 @@ struct io_uring_napi {
   __u8 pad[3];
   __u64 resv;
 };
-enum {
+enum io_uring_register_restriction_op {
   IORING_RESTRICTION_REGISTER_OP = 0,
   IORING_RESTRICTION_SQE_OP = 1,
   IORING_RESTRICTION_SQE_FLAGS_ALLOWED = 2,
@@ -448,7 +452,7 @@ struct io_uring_recvmsg_out {
   __u32 payloadlen;
   __u32 flags;
 };
-enum {
+enum io_uring_socket_op {
   SOCKET_URING_OP_SIOCINQ = 0,
   SOCKET_URING_OP_SIOCOUTQ,
   SOCKET_URING_OP_GETSOCKOPT,

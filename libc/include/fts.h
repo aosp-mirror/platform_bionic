@@ -119,7 +119,7 @@ __BEGIN_DECLS
 
 FTSENT* _Nullable fts_children(FTS* _Nonnull __fts, int __options);
 int fts_close(FTS* _Nonnull __fts);
-FTS* _Nullable fts_open(char* _Nonnull const* _Nonnull __path, int __options, int (* _Nullable __comparator)(const FTSENT* _Nonnull * _Nonnull  __lhs, const FTSENT* _Nonnull * _Nonnull __rhs));
+FTS* _Nullable fts_open(char* _Nullable const* _Nonnull __path, int __options, int (* _Nullable __comparator)(const FTSENT* _Nonnull * _Nonnull  __lhs, const FTSENT* _Nonnull * _Nonnull __rhs));
 FTSENT* _Nullable fts_read(FTS* _Nonnull __fts);
 int fts_set(FTS* _Nonnull __fts, FTSENT* _Nonnull __entry, int __options);
 

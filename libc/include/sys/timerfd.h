@@ -46,7 +46,7 @@ __BEGIN_DECLS
 #define TFD_NONBLOCK O_NONBLOCK
 
 /**
- * [timerfd_create(2)](http://man7.org/linux/man-pages/man2/timerfd_create.2.html) creates a
+ * [timerfd_create(2)](https://man7.org/linux/man-pages/man2/timerfd_create.2.html) creates a
  * timer file descriptor.
  *
  * Returns the new file descriptor on success, and returns -1 and sets `errno` on failure.
@@ -59,7 +59,7 @@ int timerfd_create(clockid_t __clock, int __flags);
 #define TFD_TIMER_CANCEL_ON_SET (1 << 1)
 
 /**
- * [timerfd_settime(2)](http://man7.org/linux/man-pages/man2/timerfd_settime.2.html) starts or
+ * [timerfd_settime(2)](https://man7.org/linux/man-pages/man2/timerfd_settime.2.html) starts or
  * stops a timer.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
@@ -67,7 +67,7 @@ int timerfd_create(clockid_t __clock, int __flags);
 int timerfd_settime(int __fd, int __flags, const struct itimerspec* _Nonnull __new_value, struct itimerspec* _Nullable __old_value);
 
 /**
- * [timerfd_gettime(2)](http://man7.org/linux/man-pages/man2/timerfd_gettime.2.html) queries the
+ * [timerfd_gettime(2)](https://man7.org/linux/man-pages/man2/timerfd_gettime.2.html) queries the
  * current timer settings.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.

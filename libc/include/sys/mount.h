@@ -50,7 +50,7 @@ __BEGIN_DECLS
 #define UMOUNT_NOFOLLOW 8
 
 /**
- * [mount(2)](http://man7.org/linux/man-pages/man2/mount.2.html) mounts the filesystem `source` at
+ * [mount(2)](https://man7.org/linux/man-pages/man2/mount.2.html) mounts the filesystem `source` at
  * the mount point `target`.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
@@ -58,7 +58,7 @@ __BEGIN_DECLS
 int mount(const char* __BIONIC_COMPLICATED_NULLNESS __source, const char* _Nonnull __target, const char* __BIONIC_COMPLICATED_NULLNESS __fs_type, unsigned long __flags, const void* _Nullable __data);
 
 /**
- * [umount(2)](http://man7.org/linux/man-pages/man2/umount.2.html) unmounts the filesystem at
+ * [umount(2)](https://man7.org/linux/man-pages/man2/umount.2.html) unmounts the filesystem at
  * the given mount point.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
@@ -66,7 +66,7 @@ int mount(const char* __BIONIC_COMPLICATED_NULLNESS __source, const char* _Nonnu
 int umount(const char* _Nonnull __target);
 
 /**
- * [umount2(2)](http://man7.org/linux/man-pages/man2/umount2.2.html) unmounts the filesystem at
+ * [umount2(2)](https://man7.org/linux/man-pages/man2/umount2.2.html) unmounts the filesystem at
  * the given mount point, according to the supplied flags.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.

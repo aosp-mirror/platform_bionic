@@ -90,7 +90,7 @@ struct dirent64 { __DIRENT64_BODY };
 typedef struct DIR DIR;
 
 /**
- * [opendir(3)](http://man7.org/linux/man-pages/man3/opendir.3.html)
+ * [opendir(3)](https://man7.org/linux/man-pages/man3/opendir.3.html)
  * opens a directory stream for the directory at `__path`.
  *
  * Returns null and sets `errno` on failure.
@@ -98,7 +98,7 @@ typedef struct DIR DIR;
 DIR* _Nullable opendir(const char* _Nonnull __path);
 
 /**
- * [fopendir(3)](http://man7.org/linux/man-pages/man3/opendir.3.html)
+ * [fopendir(3)](https://man7.org/linux/man-pages/man3/opendir.3.html)
  * opens a directory stream for the directory at `__dir_fd`.
  *
  * Returns null and sets `errno` on failure.
@@ -106,7 +106,7 @@ DIR* _Nullable opendir(const char* _Nonnull __path);
 DIR* _Nullable fdopendir(int __dir_fd);
 
 /**
- * [readdir(3)](http://man7.org/linux/man-pages/man3/readdir.3.html)
+ * [readdir(3)](https://man7.org/linux/man-pages/man3/readdir.3.html)
  * returns the next directory entry in the given directory.
  *
  * Returns a pointer to a directory entry on success,
@@ -116,7 +116,7 @@ DIR* _Nullable fdopendir(int __dir_fd);
 struct dirent* _Nullable readdir(DIR* _Nonnull __dir);
 
 /**
- * [readdir64(3)](http://man7.org/linux/man-pages/man3/readdir.3.html)
+ * [readdir64(3)](https://man7.org/linux/man-pages/man3/readdir.3.html)
  * returns the next directory entry in the given directory.
  *
  * Returns a pointer to a directory entry on success,
@@ -129,7 +129,7 @@ int readdir_r(DIR* _Nonnull __dir, struct dirent* _Nonnull __entry, struct diren
 int readdir64_r(DIR* _Nonnull __dir, struct dirent64* _Nonnull __entry, struct dirent64* _Nullable * _Nonnull __buffer) __attribute__((__deprecated__("readdir64_r is deprecated; use readdir64 instead")));
 
 /**
- * [closedir(3)](http://man7.org/linux/man-pages/man3/closedir.3.html)
+ * [closedir(3)](https://man7.org/linux/man-pages/man3/closedir.3.html)
  * closes a directory stream.
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
@@ -137,13 +137,13 @@ int readdir64_r(DIR* _Nonnull __dir, struct dirent64* _Nonnull __entry, struct d
 int closedir(DIR* _Nonnull __dir);
 
 /**
- * [rewinddir(3)](http://man7.org/linux/man-pages/man3/rewinddir.3.html)
+ * [rewinddir(3)](https://man7.org/linux/man-pages/man3/rewinddir.3.html)
  * rewinds a directory stream to the first entry.
  */
 void rewinddir(DIR* _Nonnull __dir);
 
 /**
- * [seekdir(3)](http://man7.org/linux/man-pages/man3/seekdir.3.html)
+ * [seekdir(3)](https://man7.org/linux/man-pages/man3/seekdir.3.html)
  * seeks a directory stream to the given entry, which must be a value returned
  * by telldir().
  *
@@ -152,7 +152,7 @@ void rewinddir(DIR* _Nonnull __dir);
 void seekdir(DIR* _Nonnull __dir, long __location) __INTRODUCED_IN(23);
 
 /**
- * [telldir(3)](http://man7.org/linux/man-pages/man3/telldir.3.html)
+ * [telldir(3)](https://man7.org/linux/man-pages/man3/telldir.3.html)
  * returns a value representing the current position in the directory
  * for use with seekdir().
  *
@@ -163,7 +163,7 @@ void seekdir(DIR* _Nonnull __dir, long __location) __INTRODUCED_IN(23);
 long telldir(DIR* _Nonnull __dir) __INTRODUCED_IN(23);
 
 /**
- * [dirfd(3)](http://man7.org/linux/man-pages/man3/dirfd.3.html)
+ * [dirfd(3)](https://man7.org/linux/man-pages/man3/dirfd.3.html)
  * returns the file descriptor backing the given directory stream.
  *
  * Returns a file descriptor on success and returns -1 and sets `errno` on failure.
@@ -171,19 +171,19 @@ long telldir(DIR* _Nonnull __dir) __INTRODUCED_IN(23);
 int dirfd(DIR* _Nonnull __dir);
 
 /**
- * [alphasort](http://man7.org/linux/man-pages/man3/alphasort.3.html) is a
+ * [alphasort](https://man7.org/linux/man-pages/man3/alphasort.3.html) is a
  * comparator for use with scandir() that uses strcoll().
  */
 int alphasort(const struct dirent* _Nonnull * _Nonnull __lhs, const struct dirent* _Nonnull * _Nonnull __rhs);
 
 /**
- * [alphasort64](http://man7.org/linux/man-pages/man3/alphasort.3.html) is a
+ * [alphasort64](https://man7.org/linux/man-pages/man3/alphasort.3.html) is a
  * comparator for use with scandir64() that uses strcmp().
  */
 int alphasort64(const struct dirent64* _Nonnull * _Nonnull __lhs, const struct dirent64* _Nonnull * _Nonnull __rhs);
 
 /**
- * [scandir(3)](http://man7.org/linux/man-pages/man3/scandir.3.html)
+ * [scandir(3)](https://man7.org/linux/man-pages/man3/scandir.3.html)
  * scans all the directory `__path`, filtering entries with `__filter` and
  * sorting them with qsort() using the given `__comparator`, and storing them
  * into `__name_list`. Passing NULL as the filter accepts all entries.
@@ -195,7 +195,7 @@ int alphasort64(const struct dirent64* _Nonnull * _Nonnull __lhs, const struct d
 int scandir(const char* _Nonnull __path, struct dirent* _Nonnull * _Nonnull * _Nonnull __name_list, int (* _Nullable __filter)(const struct dirent* _Nonnull), int (* _Nullable __comparator)(const struct dirent* _Nonnull * _Nonnull, const struct dirent* _Nonnull * _Nonnull));
 
 /**
- * [scandir64(3)](http://man7.org/linux/man-pages/man3/scandir.3.html)
+ * [scandir64(3)](https://man7.org/linux/man-pages/man3/scandir.3.html)
  * scans all the directory `__path`, filtering entries with `__filter` and
  * sorting them with qsort() using the given `__comparator`, and storing them
  * into `__name_list`. Passing NULL as the filter accepts all entries.
@@ -209,7 +209,7 @@ int scandir64(const char* _Nonnull __path, struct dirent64* _Nonnull * _Nonnull 
 #if defined(__USE_GNU)
 
 /**
- * [scandirat64(3)](http://man7.org/linux/man-pages/man3/scandirat.3.html)
+ * [scandirat64(3)](https://man7.org/linux/man-pages/man3/scandirat.3.html)
  * scans all the directory referenced by the pair of `__dir_fd` and `__path`,
  * filtering entries with `__filter` and sorting them with qsort() using the
  * given `__comparator`, and storing them into `__name_list`. Passing NULL as
@@ -224,7 +224,7 @@ int scandir64(const char* _Nonnull __path, struct dirent64* _Nonnull * _Nonnull 
 int scandirat64(int __dir_fd, const char* _Nonnull __path, struct dirent64* _Nonnull * _Nonnull * _Nonnull __name_list, int (* _Nullable __filter)(const struct dirent64* _Nonnull), int (* _Nullable __comparator)(const struct dirent64* _Nonnull * _Nonnull, const struct dirent64* _Nonnull * _Nonnull)) __INTRODUCED_IN(24);
 
 /**
- * [scandirat(3)](http://man7.org/linux/man-pages/man3/scandirat.3.html)
+ * [scandirat(3)](https://man7.org/linux/man-pages/man3/scandirat.3.html)
  * scans all the directory referenced by the pair of `__dir_fd` and `__path`,
  * filtering entries with `__filter` and sorting them with qsort() using the
  * given `__comparator`, and storing them into `__name_list`. Passing NULL as
