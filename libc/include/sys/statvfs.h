@@ -92,7 +92,7 @@ struct statvfs64 { __STATVFS64_BODY __STATVFS64_CODA };
 #define ST_NOSYMFOLLOW 0x2000
 
 /**
- * [statvfs(3)](http://man7.org/linux/man-pages/man3/statvfs.3.html)
+ * [statvfs(3)](https://man7.org/linux/man-pages/man3/statvfs.3.html)
  * queries filesystem statistics for the given path.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
@@ -100,7 +100,7 @@ struct statvfs64 { __STATVFS64_BODY __STATVFS64_CODA };
 int statvfs(const char* _Nonnull __path, struct statvfs* _Nonnull __buf);
 
 /**
- * [fstatvfs(3)](http://man7.org/linux/man-pages/man3/fstatvfs.3.html)
+ * [fstatvfs(3)](https://man7.org/linux/man-pages/man3/fstatvfs.3.html)
  * queries filesystem statistics for the given file descriptor.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
