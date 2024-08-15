@@ -2227,6 +2227,12 @@ cc_library_static {
     visibility: [
         "//packages/modules/Virtualization/libs/libvmbase",
     ],
+
+    // b/358211032: This library gets linked into a rust rlib.  Disable LTO
+    // until cross-language lto is supported.
+    lto: {
+        never: true,
+    },
 }
 
 // ========================================================
