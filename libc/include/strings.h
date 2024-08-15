@@ -72,7 +72,7 @@ static __inline __always_inline void __bionic_bzero(void* _Nonnull b, size_t len
 }
 
 /**
- * [ffs(3)](http://man7.org/linux/man-pages/man3/ffs.3.html) finds the
+ * [ffs(3)](https://man7.org/linux/man-pages/man3/ffs.3.html) finds the
  * first set bit in `__n`.
  *
  * Returns 0 if no bit is set, or the index of the lowest set bit (counting
@@ -83,7 +83,7 @@ __BIONIC_STRINGS_INLINE int ffs(int __n) {
 }
 
 /**
- * [ffsl(3)](http://man7.org/linux/man-pages/man3/ffsl.3.html) finds the
+ * [ffsl(3)](https://man7.org/linux/man-pages/man3/ffsl.3.html) finds the
  * first set bit in `__n`.
  *
  * Returns 0 if no bit is set, or the index of the lowest set bit (counting
@@ -94,7 +94,7 @@ __BIONIC_STRINGS_INLINE int ffsl(long __n) {
 }
 
 /**
- * [ffsll(3)](http://man7.org/linux/man-pages/man3/ffsll.3.html) finds the
+ * [ffsll(3)](https://man7.org/linux/man-pages/man3/ffsll.3.html) finds the
  * first set bit in `__n`.
  *
  * Returns 0 if no bit is set, or the index of the lowest set bit (counting

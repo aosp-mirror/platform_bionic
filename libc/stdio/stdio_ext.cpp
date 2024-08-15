@@ -59,10 +59,6 @@ int __flbf(FILE* fp) {
   return (fp->_flags & __SLBF) != 0;
 }
 
-void __fpurge(FILE* fp) {
-  fpurge(fp);
-}
-
 size_t __fpending(FILE* fp) {
   return fp->_p - fp->_bf._base;
 }

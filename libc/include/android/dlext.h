@@ -30,7 +30,7 @@
 /**
  * \file
  * Advanced dynamic library opening support. Most users will want to use
- * the standard [dlopen(3)](http://man7.org/linux/man-pages/man3/dlopen.3.html)
+ * the standard [dlopen(3)](https://man7.org/linux/man-pages/man3/dlopen.3.html)
  * functionality in `<dlfcn.h>` instead.
  */
 
@@ -174,7 +174,7 @@ typedef struct {
 
 /**
  * Opens the given library. The `__filename` and `__flags` arguments are
- * the same as for [dlopen(3)](http://man7.org/linux/man-pages/man3/dlopen.3.html),
+ * the same as for [dlopen(3)](https://man7.org/linux/man-pages/man3/dlopen.3.html),
  * with the Android-specific flags supplied via the `flags` member of `__info`.
  */
 void* _Nullable android_dlopen_ext(const char* _Nullable __filename, int __flags, const android_dlextinfo* _Nullable __info);

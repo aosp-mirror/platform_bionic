@@ -41,7 +41,7 @@
 __BEGIN_DECLS
 
 /**
- * [basename(3)](http://man7.org/linux/man-pages/man3/basename.3.html)
+ * [basename(3)](https://man7.org/linux/man-pages/man3/basename.3.html)
  * returns the final component of the given path.
  *
  * See `<string.h>` for the GNU basename(). Including `<libgen.h>`,
@@ -59,7 +59,7 @@ char* _Nullable __posix_basename(const char* _Nullable __path) __RENAME(basename
 #define basename __posix_basename
 
 /**
- * [dirname(3)](http://man7.org/linux/man-pages/man3/dirname.3.html)
+ * [dirname(3)](https://man7.org/linux/man-pages/man3/dirname.3.html)
  * returns all but the final component of the given path.
  *
  * Note that Android's cv-qualifiers differ from POSIX; Android's implementation doesn't
