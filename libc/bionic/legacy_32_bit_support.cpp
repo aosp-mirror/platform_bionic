@@ -161,3 +161,9 @@ void* mremap(void* old_address, size_t old_size, size_t new_size, int flags, ...
   }
   return __mremap(old_address, old_size, new_size, flags, new_address);
 }
+
+// mseal(2) is LP64-only.
+int mseal(void*, size_t, unsigned long) {
+  errno = ENOSYS;
+  return -1;
+}

@@ -111,7 +111,7 @@ int setjmp(jmp_buf __env) __returns_twice;
 __noreturn void longjmp(jmp_buf __env, int __value);
 
 /**
- * [sigsetjmp(3)](http://man7.org/linux/man-pages/man3/sigsetjmp.3.html)
+ * [sigsetjmp(3)](https://man7.org/linux/man-pages/man3/sigsetjmp.3.html)
  * sets the target of a future siglongjmp() call, saving or not saving the
  * current signal mask based on the second argument.
  *
@@ -121,7 +121,7 @@ __noreturn void longjmp(jmp_buf __env, int __value);
 int sigsetjmp(sigjmp_buf __env, int __save_signal_mask) __returns_twice;
 
 /**
- * [siglongjmp(3)](http://man7.org/linux/man-pages/man3/siglongjmp.3.html)
+ * [siglongjmp(3)](https://man7.org/linux/man-pages/man3/siglongjmp.3.html)
  * transfers control back to the site of the sigsetjmp() call that initialized
  * the given jump buffer, returning the given value.
  *
