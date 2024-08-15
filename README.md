@@ -1,15 +1,11 @@
-# bionic
+# bionic maintainer overview
 
 [bionic](https://en.wikipedia.org/wiki/Bionic_(software)) is Android's
 C library, math library, and dynamic linker.
 
-# Using bionic as an app developer
-
-See the [user documentation](docs/).
-
-# Working on bionic itself
-
-This documentation is about making changes to bionic itself.
+This document is a high-level overview of making changes to bionic itself.
+If you're trying to _use_ bionic, or want more in-depth information about
+some part of the implementation, see [all the bionic documentation](docs/).
 
 ## What are the big pieces of bionic?
 
@@ -181,7 +177,7 @@ users in different projects, and there isn't a more specific higher-level
 library that would make more sense as the place to add the wrapper.
 
 In all other cases, you should use
-[syscall(3)](http://man7.org/linux/man-pages/man2/syscall.2.html) instead.
+[syscall(3)](https://man7.org/linux/man-pages/man2/syscall.2.html) instead.
 
 Adding a system call usually involves:
 

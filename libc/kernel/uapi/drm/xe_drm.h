@@ -105,7 +105,11 @@ struct drm_xe_gt {
   __u32 reference_clock;
   __u64 near_mem_regions;
   __u64 far_mem_regions;
-  __u64 reserved[8];
+  __u16 ip_ver_major;
+  __u16 ip_ver_minor;
+  __u16 ip_ver_rev;
+  __u16 pad2;
+  __u64 reserved[7];
 };
 struct drm_xe_query_gt_list {
   __u32 num_gt;
@@ -114,9 +118,9 @@ struct drm_xe_query_gt_list {
 };
 struct drm_xe_query_topology_mask {
   __u16 gt_id;
-#define DRM_XE_TOPO_DSS_GEOMETRY (1 << 0)
-#define DRM_XE_TOPO_DSS_COMPUTE (1 << 1)
-#define DRM_XE_TOPO_EU_PER_DSS (1 << 2)
+#define DRM_XE_TOPO_DSS_GEOMETRY 1
+#define DRM_XE_TOPO_DSS_COMPUTE 2
+#define DRM_XE_TOPO_EU_PER_DSS 4
   __u16 type;
   __u32 num_bytes;
   __u8 mask[];
@@ -129,6 +133,18 @@ struct drm_xe_query_engine_cycles {
   __u64 cpu_timestamp;
   __u64 cpu_delta;
 };
+struct drm_xe_query_uc_fw_version {
+#define XE_QUERY_UC_TYPE_GUC_SUBMISSION 0
+#define XE_QUERY_UC_TYPE_HUC 1
+  __u16 uc_type;
+  __u16 pad;
+  __u32 branch_ver;
+  __u32 major_ver;
+  __u32 minor_ver;
+  __u32 patch_ver;
+  __u32 pad2;
+  __u64 reserved;
+};
 struct drm_xe_device_query {
   __u64 extensions;
 #define DRM_XE_DEVICE_QUERY_ENGINES 0
@@ -138,6 +154,7 @@ struct drm_xe_device_query {
 #define DRM_XE_DEVICE_QUERY_HWCONFIG 4
 #define DRM_XE_DEVICE_QUERY_GT_TOPOLOGY 5
 #define DRM_XE_DEVICE_QUERY_ENGINE_CYCLES 6
+#define DRM_XE_DEVICE_QUERY_UC_FW_VERSION 7
   __u32 query;
   __u32 size;
   __u64 data;
@@ -197,6 +214,8 @@ struct drm_xe_vm_bind_op {
 #define DRM_XE_VM_BIND_OP_UNMAP_ALL 0x3
 #define DRM_XE_VM_BIND_OP_PREFETCH 0x4
   __u32 op;
+#define DRM_XE_VM_BIND_FLAG_READONLY (1 << 0)
+#define DRM_XE_VM_BIND_FLAG_IMMEDIATE (1 << 1)
 #define DRM_XE_VM_BIND_FLAG_NULL (1 << 2)
 #define DRM_XE_VM_BIND_FLAG_DUMPABLE (1 << 3)
   __u32 flags;

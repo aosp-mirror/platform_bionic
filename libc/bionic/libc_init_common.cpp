@@ -58,10 +58,33 @@ extern "C" void scudo_malloc_set_pattern_fill_contents(int);
 
 __LIBC_HIDDEN__ constinit WriteProtected<libc_globals> __libc_globals;
 __LIBC_HIDDEN__ constinit _Atomic(bool) __libc_memtag_stack;
+__LIBC_HIDDEN__ constinit bool __libc_memtag_stack_abi;
 
 // Not public, but well-known in the BSDs.
 __BIONIC_WEAK_VARIABLE_FOR_NATIVE_BRIDGE
 const char* __progname;
+
+#if defined(__i386__) || defined(__x86_64__)
+// Default sizes based on the old hard-coded values for Atom/Silvermont (x86) and Core 2 (x86-64)...
+size_t __x86_data_cache_size = 24 * 1024;
+size_t __x86_data_cache_size_half = __x86_data_cache_size / 2;
+size_t __x86_shared_cache_size = sizeof(long) == 8 ? 4096 * 1024 : 1024 * 1024;
+size_t __x86_shared_cache_size_half = __x86_shared_cache_size / 2;
+// ...overwritten at runtime based on the cpu's reported cache sizes.
+static void __libc_init_x86_cache_info() {
+  // Handle the case where during early boot /sys fs may not yet be ready,
+  // resulting in sysconf() returning 0, leading to crashes.
+  // In that case (basically just init), we keep the defaults.
+  if (sysconf(_SC_LEVEL1_DCACHE_SIZE) != 0) {
+    __x86_data_cache_size = sysconf(_SC_LEVEL1_DCACHE_SIZE);
+    __x86_data_cache_size_half = __x86_data_cache_size / 2;
+  }
+  if (sysconf(_SC_LEVEL2_CACHE_SIZE) != 0) {
+    __x86_shared_cache_size = sysconf(_SC_LEVEL2_CACHE_SIZE);
+    __x86_shared_cache_size_half = __x86_shared_cache_size / 2;
+  }
+}
+#endif
 
 void __libc_init_globals() {
   // Initialize libc globals that are needed in both the linker and in libc.
@@ -77,8 +100,10 @@ void __libc_init_globals() {
 #if !defined(__LP64__)
 static void __check_max_thread_id() {
   if (gettid() > 65535) {
-    async_safe_fatal("Limited by the size of pthread_mutex_t, 32 bit bionic libc only accepts "
-                     "pid <= 65535, but current pid is %d", gettid());
+    async_safe_fatal("32-bit pthread_mutex_t only supports pids <= 65535; "
+                     "current pid %d; "
+                     "`echo 65535 > /proc/sys/kernel/pid_max` as root",
+                     gettid());
   }
 }
 #endif
@@ -172,6 +197,10 @@ void __libc_init_common() {
   __system_properties_init(); // Requires 'environ'.
   __libc_init_fdsan(); // Requires system properties (for debug.fdsan).
   __libc_init_fdtrack();
+
+#if defined(__i386__) || defined(__x86_64__)
+  __libc_init_x86_cache_info();
+#endif
 }
 
 void __libc_init_fork_handler() {
@@ -181,9 +210,9 @@ void __libc_init_fork_handler() {
 
 extern "C" void scudo_malloc_set_add_large_allocation_slack(int add_slack);
 
-__BIONIC_WEAK_FOR_NATIVE_BRIDGE void __libc_set_target_sdk_version(int target __unused) {
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE void __libc_set_target_sdk_version(int target_api_level __unused) {
 #if defined(USE_SCUDO) && !__has_feature(hwaddress_sanitizer)
-  scudo_malloc_set_add_large_allocation_slack(target < __ANDROID_API_S__);
+  scudo_malloc_set_add_large_allocation_slack(target_api_level < 31);
 #endif
 }
 

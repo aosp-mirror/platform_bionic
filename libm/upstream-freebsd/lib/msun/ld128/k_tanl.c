@@ -1,5 +1,3 @@
-/* From: @(#)k_tan.c 1.5 04/04/22 SMI */
-
 /*
  * ====================================================
  * Copyright 2004 Sun Microsystems, Inc.  All Rights Reserved.
@@ -10,9 +8,6 @@
  * is preserved.
  * ====================================================
  */
-
-#include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
 
 /*
  * ld128 version of k_tan.c.  See ../src/k_tan.c for most comments.

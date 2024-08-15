@@ -341,7 +341,7 @@ struct dtv_stats {
   union {
     __u64 uvalue;
     __s64 svalue;
-  };
+  } __attribute__((packed));
 } __attribute__((packed));
 #define MAX_DTV_STATS 4
 struct dtv_fe_stats {

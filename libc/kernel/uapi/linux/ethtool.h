@@ -270,6 +270,25 @@ enum ethtool_module_power_mode {
   ETHTOOL_MODULE_POWER_MODE_LOW = 1,
   ETHTOOL_MODULE_POWER_MODE_HIGH,
 };
+enum ethtool_pse_types {
+  ETHTOOL_PSE_UNKNOWN = 1 << 0,
+  ETHTOOL_PSE_PODL = 1 << 1,
+  ETHTOOL_PSE_C33 = 1 << 2,
+};
+enum ethtool_c33_pse_admin_state {
+  ETHTOOL_C33_PSE_ADMIN_STATE_UNKNOWN = 1,
+  ETHTOOL_C33_PSE_ADMIN_STATE_DISABLED,
+  ETHTOOL_C33_PSE_ADMIN_STATE_ENABLED,
+};
+enum ethtool_c33_pse_pw_d_status {
+  ETHTOOL_C33_PSE_PW_D_STATUS_UNKNOWN = 1,
+  ETHTOOL_C33_PSE_PW_D_STATUS_DISABLED,
+  ETHTOOL_C33_PSE_PW_D_STATUS_SEARCHING,
+  ETHTOOL_C33_PSE_PW_D_STATUS_DELIVERING,
+  ETHTOOL_C33_PSE_PW_D_STATUS_TEST,
+  ETHTOOL_C33_PSE_PW_D_STATUS_FAULT,
+  ETHTOOL_C33_PSE_PW_D_STATUS_OTHERFAULT,
+};
 enum ethtool_podl_pse_admin_state {
   ETHTOOL_PODL_PSE_ADMIN_STATE_UNKNOWN = 1,
   ETHTOOL_PODL_PSE_ADMIN_STATE_DISABLED,
@@ -878,6 +897,18 @@ enum ethtool_link_mode_bit_indices {
 #define IPV4_FLOW 0x10
 #define IPV6_FLOW 0x11
 #define ETHER_FLOW 0x12
+#define GTPU_V4_FLOW 0x13
+#define GTPU_V6_FLOW 0x14
+#define GTPC_V4_FLOW 0x15
+#define GTPC_V6_FLOW 0x16
+#define GTPC_TEID_V4_FLOW 0x17
+#define GTPC_TEID_V6_FLOW 0x18
+#define GTPU_EH_V4_FLOW 0x19
+#define GTPU_EH_V6_FLOW 0x1a
+#define GTPU_UL_V4_FLOW 0x1b
+#define GTPU_UL_V6_FLOW 0x1c
+#define GTPU_DL_V4_FLOW 0x1d
+#define GTPU_DL_V6_FLOW 0x1e
 #define FLOW_EXT 0x80000000
 #define FLOW_MAC_EXT 0x40000000
 #define FLOW_RSS 0x20000000
@@ -888,6 +919,7 @@ enum ethtool_link_mode_bit_indices {
 #define RXH_IP_DST (1 << 5)
 #define RXH_L4_B_0_1 (1 << 6)
 #define RXH_L4_B_2_3 (1 << 7)
+#define RXH_GTP_TEID (1 << 8)
 #define RXH_DISCARD (1 << 31)
 #define RX_CLS_FLOW_DISC 0xffffffffffffffffULL
 #define RX_CLS_FLOW_WAKE 0xfffffffffffffffeULL

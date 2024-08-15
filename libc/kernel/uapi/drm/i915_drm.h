@@ -365,6 +365,7 @@ typedef struct drm_i915_irq_wait {
 #define I915_PARAM_HAS_USERPTR_PROBE 56
 #define I915_PARAM_OA_TIMESTAMP_FREQUENCY 57
 #define I915_PARAM_PXP_STATUS 58
+#define I915_PARAM_HAS_CONTEXT_FREQ_HINT 59
 struct drm_i915_getparam {
   __s32 param;
   int  * value;
@@ -743,6 +744,7 @@ struct drm_i915_gem_context_param {
 #define I915_CONTEXT_PARAM_PERSISTENCE 0xb
 #define I915_CONTEXT_PARAM_RINGSIZE 0xc
 #define I915_CONTEXT_PARAM_PROTECTED_CONTENT 0xd
+#define I915_CONTEXT_PARAM_LOW_LATENCY 0xe
   __u64 value;
 };
 struct drm_i915_gem_context_param_sseu {
@@ -901,6 +903,7 @@ struct drm_i915_query_item {
 #define DRM_I915_QUERY_MEMORY_REGIONS 4
 #define DRM_I915_QUERY_HWCONFIG_BLOB 5
 #define DRM_I915_QUERY_GEOMETRY_SUBSLICES 6
+#define DRM_I915_QUERY_GUC_SUBMISSION_VERSION 7
   __s32 length;
   __u32 flags;
 #define DRM_I915_QUERY_PERF_CONFIG_LIST 1
@@ -975,6 +978,12 @@ struct drm_i915_query_memory_regions {
   __u32 num_regions;
   __u32 rsvd[3];
   struct drm_i915_memory_region_info regions[];
+};
+struct drm_i915_query_guc_submission_version {
+  __u32 branch;
+  __u32 major;
+  __u32 minor;
+  __u32 patch;
 };
 struct drm_i915_gem_create_ext {
   __u64 size;

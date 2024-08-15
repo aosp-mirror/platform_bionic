@@ -47,7 +47,7 @@ struct __iconv_t;
 typedef struct __iconv_t* iconv_t;
 
 /**
- * [iconv_open(3)](http://man7.org/linux/man-pages/man3/iconv_open.3.html) allocates a new converter
+ * [iconv_open(3)](https://man7.org/linux/man-pages/man3/iconv_open.3.html) allocates a new converter
  * from `__src_encoding` to `__dst_encoding`.
  *
  * Android supports the `utf8`, `ascii`, `usascii`, `utf16be`, `utf16le`, `utf32be`, `utf32le`,
@@ -63,7 +63,7 @@ typedef struct __iconv_t* iconv_t;
 iconv_t _Nonnull iconv_open(const char* _Nonnull __dst_encoding, const char* _Nonnull __src_encoding) __INTRODUCED_IN(28);
 
 /**
- * [iconv(3)](http://man7.org/linux/man-pages/man3/iconv.3.html) converts characters from one
+ * [iconv(3)](https://man7.org/linux/man-pages/man3/iconv.3.html) converts characters from one
  * encoding to another.
  *
  * Returns the number of characters converted on success and returns `((size_t) -1)` and
@@ -74,7 +74,7 @@ iconv_t _Nonnull iconv_open(const char* _Nonnull __dst_encoding, const char* _No
 size_t iconv(iconv_t _Nonnull __converter, char* _Nullable * _Nullable __src_buf, size_t* __BIONIC_COMPLICATED_NULLNESS __src_bytes_left, char* _Nullable * _Nullable __dst_buf, size_t* __BIONIC_COMPLICATED_NULLNESS __dst_bytes_left) __INTRODUCED_IN(28);
 
 /**
- * [iconv_close(3)](http://man7.org/linux/man-pages/man3/iconv_close.3.html) deallocates a converter
+ * [iconv_close(3)](https://man7.org/linux/man-pages/man3/iconv_close.3.html) deallocates a converter
  * returned by iconv_open().
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.

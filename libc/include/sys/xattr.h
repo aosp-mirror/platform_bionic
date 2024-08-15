@@ -40,7 +40,7 @@
 __BEGIN_DECLS
 
 /**
- * [fsetxattr(2)](http://man7.org/linux/man-pages/man2/fsetxattr.2.html)
+ * [fsetxattr(2)](https://man7.org/linux/man-pages/man2/fsetxattr.2.html)
  * sets an extended attribute on the file referred to by the given file
  * descriptor.
  *
@@ -55,7 +55,7 @@ __BEGIN_DECLS
 int fsetxattr(int __fd, const char* _Nonnull __name, const void* _Nullable __value, size_t __size, int __flags);
 
 /**
- * [setxattr(2)](http://man7.org/linux/man-pages/man2/setxattr.2.html)
+ * [setxattr(2)](https://man7.org/linux/man-pages/man2/setxattr.2.html)
  * sets an extended attribute on the file referred to by the given path.
  *
  * A `size` of 0 can be used to set an empty value, in which case `value` is
@@ -69,7 +69,7 @@ int fsetxattr(int __fd, const char* _Nonnull __name, const void* _Nullable __val
 int setxattr(const char* _Nonnull __path, const char* _Nonnull __name, const void* _Nullable __value, size_t __size, int __flags);
 
 /**
- * [lsetxattr(2)](http://man7.org/linux/man-pages/man2/lsetxattr.2.html)
+ * [lsetxattr(2)](https://man7.org/linux/man-pages/man2/lsetxattr.2.html)
  * sets an extended attribute on the file referred to by the given path, which
  * is the link itself rather than its target in the case of a symbolic link.
  *
@@ -84,7 +84,7 @@ int setxattr(const char* _Nonnull __path, const char* _Nonnull __name, const voi
 int lsetxattr(const char* _Nonnull __path, const char* _Nonnull __name, const void* _Nullable __value, size_t __size, int __flags);
 
 /**
- * [fgetxattr(2)](http://man7.org/linux/man-pages/man2/fgetxattr.2.html)
+ * [fgetxattr(2)](https://man7.org/linux/man-pages/man2/fgetxattr.2.html)
  * gets an extended attribute on the file referred to by the given file
  * descriptor.
  *
@@ -96,7 +96,7 @@ int lsetxattr(const char* _Nonnull __path, const char* _Nonnull __name, const vo
 ssize_t fgetxattr(int __fd, const char* _Nonnull __name, void* _Nullable __value, size_t __size);
 
 /**
- * [getxattr(2)](http://man7.org/linux/man-pages/man2/getxattr.2.html)
+ * [getxattr(2)](https://man7.org/linux/man-pages/man2/getxattr.2.html)
  * gets an extended attribute on the file referred to by the given path.
  *
  * A `size` of 0 can be used to query the current length, in which case `value` is ignored and may be null.
@@ -107,7 +107,7 @@ ssize_t fgetxattr(int __fd, const char* _Nonnull __name, void* _Nullable __value
 ssize_t getxattr(const char* _Nonnull __path, const char* _Nonnull __name, void* _Nullable __value, size_t __size);
 
 /**
- * [lgetxattr(2)](http://man7.org/linux/man-pages/man2/lgetxattr.2.html)
+ * [lgetxattr(2)](https://man7.org/linux/man-pages/man2/lgetxattr.2.html)
  * gets an extended attribute on the file referred to by the given path, which
  * is the link itself rather than its target in the case of a symbolic link.
  *
@@ -119,7 +119,7 @@ ssize_t getxattr(const char* _Nonnull __path, const char* _Nonnull __name, void*
 ssize_t lgetxattr(const char* _Nonnull __path, const char* _Nonnull __name, void* _Nullable __value, size_t __size);
 
 /**
- * [flistxattr(2)](http://man7.org/linux/man-pages/man2/flistxattr.2.html)
+ * [flistxattr(2)](https://man7.org/linux/man-pages/man2/flistxattr.2.html)
  * lists the extended attributes on the file referred to by the given file
  * descriptor.
  *
@@ -131,7 +131,7 @@ ssize_t lgetxattr(const char* _Nonnull __path, const char* _Nonnull __name, void
 ssize_t flistxattr(int __fd, char* _Nullable __list, size_t __size);
 
 /**
- * [listxattr(2)](http://man7.org/linux/man-pages/man2/listxattr.2.html)
+ * [listxattr(2)](https://man7.org/linux/man-pages/man2/listxattr.2.html)
  * lists the extended attributes on the file referred to by the given path.
  *
  * A `size` of 0 can be used to query the current length, in which case `list` is ignored and may be null.
@@ -142,7 +142,7 @@ ssize_t flistxattr(int __fd, char* _Nullable __list, size_t __size);
 ssize_t listxattr(const char* _Nonnull __path, char* _Nullable __list, size_t __size);
 
 /**
- * [llistxattr(2)](http://man7.org/linux/man-pages/man2/llistxattr.2.html)
+ * [llistxattr(2)](https://man7.org/linux/man-pages/man2/llistxattr.2.html)
  * lists the extended attributes on the file referred to by the given path, which
  * is the link itself rather than its target in the case of a symbolic link.
  *
@@ -154,7 +154,7 @@ ssize_t listxattr(const char* _Nonnull __path, char* _Nullable __list, size_t __
 ssize_t llistxattr(const char* _Nonnull __path, char* _Nullable __list, size_t __size);
 
 /**
- * [fremovexattr(2)](http://man7.org/linux/man-pages/man2/fremovexattr.2.html)
+ * [fremovexattr(2)](https://man7.org/linux/man-pages/man2/fremovexattr.2.html)
  * removes an extended attribute on the file referred to by the given file
  * descriptor.
  *
@@ -163,7 +163,7 @@ ssize_t llistxattr(const char* _Nonnull __path, char* _Nullable __list, size_t _
 int fremovexattr(int __fd, const char* _Nonnull __name);
 
 /**
- * [lremovexattr(2)](http://man7.org/linux/man-pages/man2/lremovexattr.2.html)
+ * [lremovexattr(2)](https://man7.org/linux/man-pages/man2/lremovexattr.2.html)
  * removes an extended attribute on the file referred to by the given path, which
  * is the link itself rather than its target in the case of a symbolic link.
  *
@@ -172,7 +172,7 @@ int fremovexattr(int __fd, const char* _Nonnull __name);
 int lremovexattr(const char* _Nonnull __path, const char* _Nonnull __name);
 
 /**
- * [removexattr(2)](http://man7.org/linux/man-pages/man2/removexattr.2.html)
+ * [removexattr(2)](https://man7.org/linux/man-pages/man2/removexattr.2.html)
  * removes an extended attribute on the file referred to by the given path.
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
