@@ -222,4 +222,16 @@ int memfd_create(const char* _Nonnull __name, unsigned __flags) __INTRODUCED_IN(
  */
 int posix_madvise(void* _Nonnull __addr, size_t __size, int __advice) __INTRODUCED_IN(23);
 
+/**
+ * [mseal(2)](https://man7.org/linux/man-pages/man2/mseal.2.html)
+ * seals the given range to prevent modifications such as mprotect() calls.
+ *
+ * Available since API level 36.
+ * Requires a Linux 6.10 or newer kernel.
+ * Always fails for 32-bit processes.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
+int mseal(void* _Nonnull __addr, size_t __size, unsigned long __flags) __INTRODUCED_IN(36);
+
 __END_DECLS
