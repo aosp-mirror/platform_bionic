@@ -320,3 +320,30 @@ TEST(sys_mman, memfd_create) {
   close(fd);
 #endif
 }
+
+TEST(sys_mseal, mseal) {
+#if defined(__GLIBC__)
+  GTEST_SKIP() << "needs glibc 2.40";
+#else
+  void* map = mmap(nullptr, kPageSize, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  ASSERT_NE(MAP_FAILED, map);
+
+#if defined(__LP64__)
+  int rc = mseal(map, kPageSize, 0);
+  if (rc == -1) {
+    ASSERT_ERRNO(ENOSYS);
+    GTEST_SKIP() << "needs kernel with mseal(2)";
+  }
+  ASSERT_EQ(-1, mprotect(map, kPageSize, PROT_READ));
+  ASSERT_ERRNO(EPERM);
+#else
+  // No mseal() for ILP32.
+  errno = 0;
+  ASSERT_EQ(-1, mseal(map, kPageSize, 0));
+  ASSERT_ERRNO(ENOSYS);
+  GTEST_SKIP() << "mseal(2) is LP64-only";
+#endif
+
+  // We can't munmap() our test mapping if mseal() actually succeeded :-)
+#endif
+}
