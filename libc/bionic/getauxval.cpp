@@ -26,14 +26,12 @@
  * SUCH DAMAGE.
  */
 
-#include <stddef.h>
-#include <sys/cdefs.h>
-#include <sys/auxv.h>
-#include <private/bionic_auxv.h>
-#include <private/bionic_globals.h>
-#include <private/bionic_ifuncs.h>
 #include <elf.h>
 #include <errno.h>
+#include <private/bionic_auxv.h>
+#include <private/bionic_globals.h>
+#include <stddef.h>
+#include <sys/auxv.h>
 
 // This function needs to be safe to call before TLS is set up, so it can't
 // access errno or the stack protector.

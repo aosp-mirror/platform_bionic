@@ -1416,43 +1416,13 @@ cc_library_static {
 }
 
 // ========================================================
-// libc_static_dispatch.a --- libc.a ifuncs
+// libc_static_dispatch.a/libc_dynamic_dispatch.a --- string/memory "ifuncs"
+// (Actually ifuncs for libc.so, but a home-grown alternative for libc.a.)
 // ========================================================
-cc_library_static {
+
+cc_defaults {
+    name: "libc_dispatch_defaults",
     defaults: ["libc_defaults"],
-    name: "libc_static_dispatch",
-
-    arch: {
-        x86_64: {
-            srcs: ["arch-x86_64/static_function_dispatch.S"],
-        },
-        x86: {
-            srcs: ["arch-x86/static_function_dispatch.S"],
-        },
-        arm: {
-            srcs: ["arch-arm/static_function_dispatch.S"],
-        },
-        arm64: {
-            srcs: ["arch-arm64/static_function_dispatch.S"],
-        },
-        riscv64: {
-            srcs: ["arch-riscv64/static_function_dispatch.S"],
-        },
-    },
-}
-
-// ========================================================
-// libc_dynamic_dispatch.a --- libc.so ifuncs
-// ========================================================
-cc_library_static {
-    defaults: ["libc_defaults"],
-    name: "libc_dynamic_dispatch",
-
-    cflags: [
-        "-ffreestanding",
-        "-fno-stack-protector",
-        "-fno-jump-tables",
-    ],
     arch: {
         x86_64: {
             srcs: ["arch-x86_64/dynamic_function_dispatch.cpp"],
@@ -1470,6 +1440,30 @@ cc_library_static {
             srcs: ["arch-riscv64/dynamic_function_dispatch.cpp"],
         },
     },
+    // Prevent the compiler from inserting calls to libc/taking the address of
+    // a jump table from within an ifunc (or, in the static case, code that
+    // can be executed arbitrarily early).
+    cflags: [
+        "-ffreestanding",
+        "-fno-stack-protector",
+        "-fno-jump-tables",
+    ],
+}
+
+cc_library_static {
+    name: "libc_static_dispatch",
+    defaults: ["libc_dispatch_defaults"],
+    cflags: [
+        "-DBIONIC_STATIC_DISPATCH",
+    ],
+}
+
+cc_library_static {
+    name: "libc_dynamic_dispatch",
+    defaults: ["libc_dispatch_defaults"],
+    cflags: [
+        "-DBIONIC_DYNAMIC_DISPATCH",
+    ],
 }
 
 // ========================================================
