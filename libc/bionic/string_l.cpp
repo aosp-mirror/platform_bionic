@@ -33,10 +33,6 @@ int strcoll_l(const char* s1, const char* s2, locale_t) {
   return strcoll(s1, s2);
 }
 
-char* strerror_l(int error, locale_t) {
-  return strerror(error);
-}
-
 size_t strxfrm_l(char* dst, const char* src, size_t n, locale_t) {
   return strxfrm(dst, src, n);
 }

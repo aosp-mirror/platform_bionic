@@ -29,6 +29,7 @@
 
 #include <limits>
 #include <string>
+#include <thread>
 
 #include <android-base/file.h>
 #include <android-base/macros.h>
@@ -430,6 +431,31 @@ TEST(stdlib, qsort) {
   ASSERT_STREQ("charlie", entries[2].name);
 }
 
+TEST(stdlib, qsort_r) {
+  struct s {
+    char name[16];
+    static int comparator(const void* lhs, const void* rhs, void* context) {
+      int* count_p = reinterpret_cast<int*>(context);
+      *count_p += 1;
+      return strcmp(reinterpret_cast<const s*>(lhs)->name, reinterpret_cast<const s*>(rhs)->name);
+    }
+  };
+  s entries[3];
+  strcpy(entries[0].name, "charlie");
+  strcpy(entries[1].name, "bravo");
+  strcpy(entries[2].name, "alpha");
+
+  int count;
+  void* context = &count;
+
+  count = 0;
+  qsort_r(entries, 3, sizeof(s), s::comparator, context);
+  ASSERT_STREQ("alpha", entries[0].name);
+  ASSERT_STREQ("bravo", entries[1].name);
+  ASSERT_STREQ("charlie", entries[2].name);
+  ASSERT_EQ(count, 3);
+}
+
 static void* TestBug57421_child(void* arg) {
   pthread_t main_thread = reinterpret_cast<pthread_t>(arg);
   pthread_join(main_thread, nullptr);
@@ -493,7 +519,7 @@ TEST(stdlib, system) {
 
 TEST(stdlib, system_NULL) {
   // "The system() function shall always return non-zero when command is NULL."
-  // http://pubs.opengroup.org/onlinepubs/9699919799/functions/system.html
+  // https://pubs.opengroup.org/onlinepubs/9799919799.2024edition/functions/system.html
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wnonnull"
   ASSERT_NE(0, system(nullptr));
@@ -648,6 +674,58 @@ TEST(stdlib, at_quick_exit) {
   }
 
   AssertChildExited(pid, 99);
+}
+
+static void exit_from_atexit_func4() {
+  std::thread([] { exit(4); }).detach();
+  usleep(1000);
+  fprintf(stderr, "4");
+}
+
+static void exit_from_atexit_func3() {
+  std::thread([] { exit(3); }).detach();
+  fprintf(stderr, "3");
+  usleep(1000);
+  // This should cause us to exit with status 99,
+  // but not before printing "4",
+  // and without re-running the previous atexit handlers.
+  exit(99);
+}
+
+static void exit_from_atexit_func2() {
+  std::thread([] { exit(2); }).detach();
+  fprintf(stderr, "2");
+  usleep(1000);
+  // Register another atexit handler from within an atexit handler.
+  atexit(exit_from_atexit_func3);
+}
+
+static void exit_from_atexit_func1() {
+  // These atexit handlers all spawn another thread that tries to exit,
+  // and sleep to try to lose the race.
+  // The lock in exit() should ensure that only the first thread to call
+  // exit() can ever win (but see exit_from_atexit_func3() for a subtelty).
+  std::thread([] { exit(1); }).detach();
+  usleep(1000);
+  fprintf(stderr, "1");
+}
+
+static void exit_torturer() {
+  atexit(exit_from_atexit_func4);
+  // We deliberately don't register exit_from_atexit_func3() here;
+  // see exit_from_atexit_func2().
+  atexit(exit_from_atexit_func2);
+  atexit(exit_from_atexit_func1);
+  exit(0);
+}
+
+TEST(stdlib, exit_torture) {
+  // Test that the atexit() handlers are run in the defined order (reverse
+  // order of registration), even though one of them is registered by another
+  // when it runs, and that we get the exit code from the last call to exit()
+  // on the first thread to call exit() (rather than one of the other threads
+  // or a deadlock from the second call on the same thread).
+  ASSERT_EXIT(exit_torturer(), testing::ExitedWithCode(99), "1234");
 }
 
 TEST(unistd, _Exit) {
