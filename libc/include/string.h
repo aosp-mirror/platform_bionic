@@ -108,8 +108,35 @@ char* _Nullable strcasestr(const char* _Nonnull __haystack, const char* _Nonnull
 char* _Nullable strtok(char* _Nullable __s, const char* _Nonnull __delimiter);
 char* _Nullable strtok_r(char* _Nullable __s, const char* _Nonnull __delimiter, char* _Nonnull * _Nonnull __pos_ptr);
 
+/**
+ * [strerror(3)](https://man7.org/linux/man-pages/man3/strerror.3.html)
+ * returns a string describing the given errno value.
+ * `strerror(EINVAL)` would return "Invalid argument", for example.
+ *
+ * On Android, unknown errno values return a string such as "Unknown error 666".
+ * These unknown errno value strings live in thread-local storage, and are valid
+ * until the next call of strerror() on the same thread.
+ *
+ * Returns a pointer to a string.
+ */
 char* _Nonnull strerror(int __errno_value);
-char* _Nonnull strerror_l(int __errno_value, locale_t _Nonnull __l) __INTRODUCED_IN(23);
+
+/**
+ * Equivalent to strerror() on Android where only C/POSIX locales are available.
+ */
+char* _Nonnull strerror_l(int __errno_value, locale_t _Nonnull __l) __RENAME(strerror);
+
+/**
+ * [strerror_r(3)](https://man7.org/linux/man-pages/man3/strerror_r.3.html)
+ * writes a string describing the given errno value into the given buffer.
+ *
+ * There are two variants of this function, POSIX and GNU.
+ * The GNU variant returns a pointer to the buffer.
+ * The POSIX variant returns 0 on success or an errno value on failure.
+ *
+ * The GNU variant is available since API level 23 if `_GNU_SOURCE` is defined.
+ * The POSIX variant is available otherwise.
+ */
 #if defined(__USE_GNU) && __ANDROID_API__ >= 23
 char* _Nonnull strerror_r(int __errno_value, char* _Nullable __buf, size_t __n) __RENAME(__gnu_strerror_r) __INTRODUCED_IN(23);
 #else /* POSIX */
