@@ -361,8 +361,7 @@ cc_prebuilt_test_library_shared {
 cc_test_library {
     name: "clang_diagnostic_tests",
     cflags: [
-        "-Xclang",
-        "-verify",
+        "-Xclang -verify",
     ],
     srcs: ["sys_ioctl_diag_test.cpp"],
 }
@@ -720,11 +719,6 @@ cc_defaults {
     ],
     srcs: ["clang_fortify_tests.cpp"],
     tidy: false,
-    target: {
-        host: {
-            cflags: ["-D__clang__"],
-        },
-    },
 }
 
 cc_test_library {

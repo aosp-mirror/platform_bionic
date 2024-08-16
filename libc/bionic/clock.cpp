@@ -32,7 +32,7 @@
 
 #include "private/bionic_constants.h"
 
-// http://pubs.opengroup.org/onlinepubs/9699919799/functions/clock.html
+// https://pubs.opengroup.org/onlinepubs/9799919799.2024edition/functions/clock.html
 clock_t clock() {
   timespec ts;
   clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts);

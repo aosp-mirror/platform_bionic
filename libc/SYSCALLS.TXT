@@ -65,7 +65,7 @@ int kill(pid_t, int) all
 int tgkill(pid_t tgid, pid_t tid, int sig) all
 
 void* __brk:brk(void*) all
-int __execve:execve(const char*, char* const*, char* const*)  all
+int execve(const char*, char* const*, char* const*)  all
 int __ptrace:ptrace(int request, int pid, void* addr, void* data) all
 
 # <sys/resource.h>
@@ -126,6 +126,7 @@ int mlock(const void* addr, size_t len)    all
 int mlock2(const void* addr, size_t len, int flags)    all
 int         munlock(const void* addr, size_t len)   all
 int         mlockall(int flags)   all
+int mseal(void*, size_t, unsigned long) lp64
 int         munlockall()   all
 int         mincore(void*  start, size_t  length, unsigned char*  vec)   all
 int         __ioctl:ioctl(int, int, void*)  all
@@ -330,7 +331,7 @@ int __epoll_pwait2:epoll_pwait2(int, struct epoll_event*, int, const timespec64*
 
 int __eventfd:eventfd2(unsigned int, int)  all
 
-void __exit_group:exit_group(int)  all
+void _exit|_Exit:exit_group(int)  all
 void __exit:exit(int)  all
 
 int inotify_init1(int)  all
@@ -350,7 +351,7 @@ int __set_tid_address:set_tid_address(int*)  all
 int setdomainname(const char*, size_t)  all
 int sethostname(const char*, size_t)  all
 
-int __sync_file_range:sync_file_range(int, off64_t, off64_t, unsigned int) x86,lp64
+int sync_file_range(int, off64_t, off64_t, unsigned int) x86,lp64
 int __sync_file_range2:sync_file_range2(int, unsigned int, off64_t, off64_t) arm
 
 pid_t wait4(pid_t, int*, int, struct rusage*)  all

@@ -109,6 +109,8 @@ TEST(wctype, towlower) {
   EXPECT_EQ(wint_t('!'), towlower(L'!'));
   EXPECT_EQ(wint_t('a'), towlower(L'a'));
   EXPECT_EQ(wint_t('a'), towlower(L'A'));
+  EXPECT_EQ(wint_t('z'), towlower(L'z'));
+  EXPECT_EQ(wint_t('z'), towlower(L'Z'));
   if (have_dl()) {
     EXPECT_EQ(wint_t(L'ç'), towlower(L'ç'));
     EXPECT_EQ(wint_t(L'ç'), towlower(L'Ç'));
@@ -125,6 +127,8 @@ TEST(wctype, towlower_l) {
   EXPECT_EQ(wint_t('!'), towlower_l(L'!', l.l));
   EXPECT_EQ(wint_t('a'), towlower_l(L'a', l.l));
   EXPECT_EQ(wint_t('a'), towlower_l(L'A', l.l));
+  EXPECT_EQ(wint_t('z'), towlower_l(L'z', l.l));
+  EXPECT_EQ(wint_t('z'), towlower_l(L'Z', l.l));
   if (have_dl()) {
     EXPECT_EQ(wint_t(L'ç'), towlower_l(L'ç', l.l));
     EXPECT_EQ(wint_t(L'ç'), towlower_l(L'Ç', l.l));
@@ -140,6 +144,8 @@ TEST(wctype, towupper) {
   EXPECT_EQ(wint_t('!'), towupper(L'!'));
   EXPECT_EQ(wint_t('A'), towupper(L'a'));
   EXPECT_EQ(wint_t('A'), towupper(L'A'));
+  EXPECT_EQ(wint_t('Z'), towupper(L'z'));
+  EXPECT_EQ(wint_t('Z'), towupper(L'Z'));
   if (have_dl()) {
     EXPECT_EQ(wint_t(L'Ç'), towupper(L'ç'));
     EXPECT_EQ(wint_t(L'Ç'), towupper(L'Ç'));
@@ -156,6 +162,8 @@ TEST(wctype, towupper_l) {
   EXPECT_EQ(wint_t('!'), towupper_l(L'!', l.l));
   EXPECT_EQ(wint_t('A'), towupper_l(L'a', l.l));
   EXPECT_EQ(wint_t('A'), towupper_l(L'A', l.l));
+  EXPECT_EQ(wint_t('Z'), towupper_l(L'z', l.l));
+  EXPECT_EQ(wint_t('Z'), towupper_l(L'Z', l.l));
   if (have_dl()) {
     EXPECT_EQ(wint_t(L'Ç'), towupper_l(L'ç', l.l));
     EXPECT_EQ(wint_t(L'Ç'), towupper_l(L'Ç', l.l));
@@ -218,34 +226,64 @@ TEST(wctype, iswctype_l) {
   EXPECT_EQ(0, iswctype_l(WEOF, wctype_l("alnum", l.l), l.l));
 }
 
-TEST(wctype, towctrans) {
+TEST(wctype, wctrans) {
   EXPECT_TRUE(wctrans("tolower") != nullptr);
   EXPECT_TRUE(wctrans("toupper") != nullptr);
 
+  errno = 0;
   EXPECT_TRUE(wctrans("monkeys") == nullptr);
-}
-
-TEST(wctype, towctrans_l) {
-  UtfLocale l;
-  EXPECT_TRUE(wctrans_l("tolower", l.l) != nullptr);
-  EXPECT_TRUE(wctrans_l("toupper", l.l) != nullptr);
-
-  EXPECT_TRUE(wctrans_l("monkeys", l.l) == nullptr);
-}
-
-TEST(wctype, wctrans) {
-  EXPECT_EQ(wint_t('a'), towctrans(L'A', wctrans("tolower")));
-  EXPECT_EQ(WEOF, towctrans(WEOF, wctrans("tolower")));
-
-  EXPECT_EQ(wint_t('A'), towctrans(L'a', wctrans("toupper")));
-  EXPECT_EQ(WEOF, towctrans(WEOF, wctrans("toupper")));
+  #if defined(__BIONIC__)
+  // Android/FreeBSD/iOS set errno, but musl/glibc don't.
+  EXPECT_ERRNO(EINVAL);
+  #endif
 }
 
 TEST(wctype, wctrans_l) {
   UtfLocale l;
-  EXPECT_EQ(wint_t('a'), towctrans_l(L'A', wctrans_l("tolower", l.l), l.l));
-  EXPECT_EQ(WEOF, towctrans_l(WEOF, wctrans_l("tolower", l.l), l.l));
+  EXPECT_TRUE(wctrans_l("tolower", l.l) != nullptr);
+  EXPECT_TRUE(wctrans_l("toupper", l.l) != nullptr);
 
-  EXPECT_EQ(wint_t('A'), towctrans_l(L'a', wctrans_l("toupper", l.l), l.l));
-  EXPECT_EQ(WEOF, towctrans_l(WEOF, wctrans_l("toupper", l.l), l.l));
+  errno = 0;
+  EXPECT_TRUE(wctrans_l("monkeys", l.l) == nullptr);
+  #if defined(__BIONIC__)
+  // Android/FreeBSD/iOS set errno, but musl/glibc don't.
+  EXPECT_ERRNO(EINVAL);
+  #endif
+}
+
+TEST(wctype, towctrans) {
+  wctrans_t lower = wctrans("tolower");
+  EXPECT_EQ(wint_t('a'), towctrans(L'A', lower));
+  EXPECT_EQ(WEOF, towctrans(WEOF, lower));
+
+  wctrans_t upper = wctrans("toupper");
+  EXPECT_EQ(wint_t('A'), towctrans(L'a', upper));
+  EXPECT_EQ(WEOF, towctrans(WEOF, upper));
+
+  wctrans_t invalid = wctrans("monkeys");
+  errno = 0;
+  EXPECT_EQ(wint_t('a'), towctrans(L'a', invalid));
+  #if defined(__BIONIC__)
+  // Android/FreeBSD/iOS set errno, but musl/glibc don't.
+  EXPECT_ERRNO(EINVAL);
+  #endif
+}
+
+TEST(wctype, towctrans_l) {
+  UtfLocale l;
+  wctrans_t lower = wctrans_l("tolower", l.l);
+  EXPECT_EQ(wint_t('a'), towctrans_l(L'A', lower, l.l));
+  EXPECT_EQ(WEOF, towctrans_l(WEOF, lower, l.l));
+
+  wctrans_t upper = wctrans_l("toupper", l.l);
+  EXPECT_EQ(wint_t('A'), towctrans_l(L'a', upper, l.l));
+  EXPECT_EQ(WEOF, towctrans_l(WEOF, upper, l.l));
+
+  wctrans_t invalid = wctrans_l("monkeys", l.l);
+  errno = 0;
+  EXPECT_EQ(wint_t('a'), towctrans_l(L'a', invalid, l.l));
+  #if defined(__BIONIC__)
+  // Android/FreeBSD/iOS set errno, but musl/glibc don't.
+  EXPECT_ERRNO(EINVAL);
+  #endif
 }
