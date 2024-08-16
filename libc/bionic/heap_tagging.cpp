@@ -53,6 +53,8 @@ void SetDefaultHeapTaggingLevel() {
   heap_tagging_level = __libc_shared_globals()->initial_heap_tagging_level;
 #endif
 
+  __libc_memtag_stack_abi = __libc_shared_globals()->initial_memtag_stack_abi;
+
   __libc_globals.mutate([](libc_globals* globals) {
     switch (heap_tagging_level) {
       case M_HEAP_TAGGING_LEVEL_TBI:
@@ -184,6 +186,9 @@ bool SetHeapTaggingLevel(HeapTaggingLevel tag_level) {
 
 #ifdef __aarch64__
 static inline __attribute__((no_sanitize("memtag"))) void untag_memory(void* from, void* to) {
+  if (from == to) {
+    return;
+  }
   __asm__ __volatile__(
       ".arch_extension mte\n"
       "1:\n"

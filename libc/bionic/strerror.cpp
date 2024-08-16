@@ -102,3 +102,4 @@ char* strerror(int error_number) {
   strerror_r(error_number, result, sizeof(tls.strerror_buf));
   return result;
 }
+__strong_alias(strerror_l, strerror);

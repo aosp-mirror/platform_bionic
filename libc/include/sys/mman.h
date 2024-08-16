@@ -43,7 +43,7 @@ __BEGIN_DECLS
 #define MAP_FAILED __BIONIC_CAST(reinterpret_cast, void*, -1)
 
 /**
- * [mmap(2)](http://man7.org/linux/man-pages/man2/mmap.2.html)
+ * [mmap(2)](https://man7.org/linux/man-pages/man2/mmap.2.html)
  * creates a memory mapping for the given range.
  *
  * Returns the address of the mapping on success,
@@ -63,7 +63,7 @@ void* _Nonnull mmap(void* _Nullable __addr, size_t __size, int __prot, int __fla
 void* _Nonnull mmap64(void* _Nullable __addr, size_t __size, int __prot, int __flags, int __fd, off64_t __offset);
 
 /**
- * [munmap(2)](http://man7.org/linux/man-pages/man2/munmap.2.html)
+ * [munmap(2)](https://man7.org/linux/man-pages/man2/munmap.2.html)
  * deletes a memory mapping for the given range.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
@@ -71,7 +71,7 @@ void* _Nonnull mmap64(void* _Nullable __addr, size_t __size, int __prot, int __f
 int munmap(void* _Nonnull __addr, size_t __size);
 
 /**
- * [msync(2)](http://man7.org/linux/man-pages/man2/msync.2.html)
+ * [msync(2)](https://man7.org/linux/man-pages/man2/msync.2.html)
  * flushes changes to a memory-mapped file to disk.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
@@ -79,7 +79,7 @@ int munmap(void* _Nonnull __addr, size_t __size);
 int msync(void* _Nonnull __addr, size_t __size, int __flags);
 
 /**
- * [mprotect(2)](http://man7.org/linux/man-pages/man2/mprotect.2.html)
+ * [mprotect(2)](https://man7.org/linux/man-pages/man2/mprotect.2.html)
  * sets the protection on a memory region.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
@@ -93,7 +93,7 @@ int mprotect(void* _Nonnull __addr, size_t __size, int __prot);
 #define MREMAP_FIXED    2
 
 /**
- * [mremap(2)](http://man7.org/linux/man-pages/man2/mremap.2.html)
+ * [mremap(2)](https://man7.org/linux/man-pages/man2/mremap.2.html)
  * expands or shrinks an existing memory mapping.
  *
  * Returns the address of the mapping on success,
@@ -102,7 +102,7 @@ int mprotect(void* _Nonnull __addr, size_t __size, int __prot);
 void* _Nonnull mremap(void* _Nonnull __old_addr, size_t __old_size, size_t __new_size, int __flags, ...);
 
 /**
- * [mlockall(2)](http://man7.org/linux/man-pages/man2/mlockall.2.html)
+ * [mlockall(2)](https://man7.org/linux/man-pages/man2/mlockall.2.html)
  * locks pages (preventing swapping).
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
@@ -110,7 +110,7 @@ void* _Nonnull mremap(void* _Nonnull __old_addr, size_t __old_size, size_t __new
 int mlockall(int __flags);
 
 /**
- * [munlockall(2)](http://man7.org/linux/man-pages/man2/munlockall.2.html)
+ * [munlockall(2)](https://man7.org/linux/man-pages/man2/munlockall.2.html)
  * unlocks pages (allowing swapping).
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
@@ -118,7 +118,7 @@ int mlockall(int __flags);
 int munlockall(void);
 
 /**
- * [mlock(2)](http://man7.org/linux/man-pages/man2/mlock.2.html)
+ * [mlock(2)](https://man7.org/linux/man-pages/man2/mlock.2.html)
  * locks pages (preventing swapping).
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
@@ -126,7 +126,7 @@ int munlockall(void);
 int mlock(const void* _Nonnull __addr, size_t __size);
 
 /**
- * [mlock2(2)](http://man7.org/linux/man-pages/man2/mlock.2.html)
+ * [mlock2(2)](https://man7.org/linux/man-pages/man2/mlock.2.html)
  * locks pages (preventing swapping), with optional flags.
  *
  * Available since API level 30.
@@ -136,7 +136,7 @@ int mlock(const void* _Nonnull __addr, size_t __size);
 int mlock2(const void* _Nonnull __addr, size_t __size, int __flags) __INTRODUCED_IN(30);
 
 /**
- * [munlock(2)](http://man7.org/linux/man-pages/man2/munlock.2.html)
+ * [munlock(2)](https://man7.org/linux/man-pages/man2/munlock.2.html)
  * unlocks pages (allowing swapping).
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
@@ -144,7 +144,7 @@ int mlock2(const void* _Nonnull __addr, size_t __size, int __flags) __INTRODUCED
 int munlock(const void* _Nonnull __addr, size_t __size);
 
 /**
- * [mincore(2)](http://man7.org/linux/man-pages/man2/mincore.2.html)
+ * [mincore(2)](https://man7.org/linux/man-pages/man2/mincore.2.html)
  * tests whether pages are resident in memory.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
@@ -152,7 +152,7 @@ int munlock(const void* _Nonnull __addr, size_t __size);
 int mincore(void* _Nonnull __addr, size_t __size, unsigned char* _Nonnull __vector);
 
 /**
- * [madvise(2)](http://man7.org/linux/man-pages/man2/madvise.2.html)
+ * [madvise(2)](https://man7.org/linux/man-pages/man2/madvise.2.html)
  * gives the kernel advice about future usage patterns.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
@@ -160,7 +160,7 @@ int mincore(void* _Nonnull __addr, size_t __size, unsigned char* _Nonnull __vect
 int madvise(void* _Nonnull __addr, size_t __size, int __advice);
 
 /**
- * [process_madvise(2)](http://man7.org/linux/man-pages/man2/process_madvise.2.html)
+ * [process_madvise(2)](https://man7.org/linux/man-pages/man2/process_madvise.2.html)
  * works just like madvise(2) but applies to the process specified by the given
  * PID file descriptor.
  *
@@ -176,7 +176,7 @@ ssize_t process_madvise(int __pid_fd, const struct iovec* _Nonnull __iov, size_t
 #if defined(__USE_GNU)
 
 /**
- * [memfd_create(2)](http://man7.org/linux/man-pages/man2/memfd_create.2.html)
+ * [memfd_create(2)](https://man7.org/linux/man-pages/man2/memfd_create.2.html)
  * creates an anonymous file.
  *
  * Available since API level 30.
@@ -212,7 +212,7 @@ int memfd_create(const char* _Nonnull __name, unsigned __flags) __INTRODUCED_IN(
 #endif
 
 /**
- * [posix_madvise(3)](http://man7.org/linux/man-pages/man3/posix_madvise.3.html)
+ * [posix_madvise(3)](https://man7.org/linux/man-pages/man3/posix_madvise.3.html)
  * gives the kernel advice about future usage patterns.
  *
  * Available since API level 23.
@@ -221,5 +221,17 @@ int memfd_create(const char* _Nonnull __name, unsigned __flags) __INTRODUCED_IN(
  * Returns 0 on success, and returns a positive error number on failure.
  */
 int posix_madvise(void* _Nonnull __addr, size_t __size, int __advice) __INTRODUCED_IN(23);
+
+/**
+ * [mseal(2)](https://man7.org/linux/man-pages/man2/mseal.2.html)
+ * seals the given range to prevent modifications such as mprotect() calls.
+ *
+ * Available since API level 36.
+ * Requires a Linux 6.10 or newer kernel.
+ * Always fails for 32-bit processes.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
+int mseal(void* _Nonnull __addr, size_t __size, unsigned long __flags) __INTRODUCED_IN(36);
 
 __END_DECLS

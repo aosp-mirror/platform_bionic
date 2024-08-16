@@ -693,6 +693,9 @@
 #if defined(__NR_mremap)
   #define SYS_mremap __NR_mremap
 #endif
+#if defined(__NR_mseal)
+  #define SYS_mseal __NR_mseal
+#endif
 #if defined(__NR_msgctl)
   #define SYS_msgctl __NR_msgctl
 #endif
