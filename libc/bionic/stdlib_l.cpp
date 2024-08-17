@@ -37,23 +37,6 @@ float strtof_l(const char* s, char** end_ptr, locale_t) {
   return strtof(s, end_ptr);
 }
 
-long strtol_l(const char* s, char** end_ptr, int base, locale_t) {
-  return strtol(s, end_ptr, base);
-}
-
 long double strtold_l(const char* s, char** end_ptr, locale_t) {
   return strtold(s, end_ptr);
 }
-
-long long strtoll_l(const char* s, char** end_ptr, int base, locale_t) {
-  return strtoll(s, end_ptr, base);
-}
-
-unsigned long strtoul_l(const char* s, char** end_ptr, int base, locale_t) {
-  return strtoul(s, end_ptr, base);
-}
-
-unsigned long long strtoull_l(const char* s, char** end_ptr, int base, locale_t) {
-  return strtoull(s, end_ptr, base);
-}
-

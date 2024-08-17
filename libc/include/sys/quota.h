@@ -45,7 +45,7 @@
 __BEGIN_DECLS
 
 /**
- * [quotactl(2)](http://man7.org/linux/man-pages/man2/quotactl.2.html) manipulates disk quotas.
+ * [quotactl(2)](https://man7.org/linux/man-pages/man2/quotactl.2.html) manipulates disk quotas.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  *

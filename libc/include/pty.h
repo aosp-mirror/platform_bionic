@@ -41,7 +41,7 @@
 __BEGIN_DECLS
 
 /**
- * [openpty(3)](http://man7.org/linux/man-pages/man3/openpty.3.html) finds
+ * [openpty(3)](https://man7.org/linux/man-pages/man3/openpty.3.html) finds
  * a free pseudoterminal and configures it with the given terminal and window
  * size settings.
  *
@@ -52,7 +52,7 @@ __BEGIN_DECLS
 int openpty(int* _Nonnull __pty_fd, int* _Nonnull __tty_fd, char* _Nullable __tty_name, const struct termios* _Nullable __termios_ptr, const struct winsize* _Nullable __winsize_ptr) __INTRODUCED_IN(23);
 
 /**
- * [forkpty(3)](http://man7.org/linux/man-pages/man3/forkpty.3.html) creates
+ * [forkpty(3)](https://man7.org/linux/man-pages/man3/forkpty.3.html) creates
  * a new process connected to a pseudoterminal from openpty().
  *
  * Returns 0 in the child/the pid of the child in the parent on success,

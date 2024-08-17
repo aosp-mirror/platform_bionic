@@ -41,7 +41,7 @@
 __BEGIN_DECLS
 
 /**
- * [flock(2)](http://man7.org/linux/man-pages/man2/flock.2.html) performs
+ * [flock(2)](https://man7.org/linux/man-pages/man2/flock.2.html) performs
  * advisory file lock operations.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
