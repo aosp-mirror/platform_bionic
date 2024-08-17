@@ -128,7 +128,7 @@ int sigwaitinfo64(const sigset64_t* _Nonnull __set, siginfo_t* _Nullable __info)
 #define SIG2STR_MAX 32
 
 /**
- * [sig2str(3)](http://man7.org/linux/man-pages/man3/sig2str.3.html)
+ * [sig2str(3)](https://man7.org/linux/man-pages/man3/sig2str.3.html)
  * converts the integer corresponding to SIGSEGV (say) into a string
  * like "SEGV" (not including the "SIG" used in the constants).
  * SIG2STR_MAX is a safe size to use for the buffer.
@@ -140,7 +140,7 @@ int sigwaitinfo64(const sigset64_t* _Nonnull __set, siginfo_t* _Nullable __info)
 int sig2str(int __signal, char* _Nonnull __buf) __INTRODUCED_IN(36);
 
 /**
- * [str2sig(3)](http://man7.org/linux/man-pages/man3/str2sig.3.html)
+ * [str2sig(3)](https://man7.org/linux/man-pages/man3/str2sig.3.html)
  * converts a string like "SEGV" (not including the "SIG" used in the constants)
  * into the integer corresponding to SIGSEGV.
  *
