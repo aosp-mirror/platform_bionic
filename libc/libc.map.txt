@@ -670,6 +670,7 @@ LIBC {
     mprotect;
     mrand48;
     mremap;
+    mseal; # introduced=36
     msync;
     munlock;
     munlockall;
@@ -953,6 +954,7 @@ LIBC {
     setvbuf;
     setxattr;
     shutdown;
+    sig2str; # introduced=36
     sigaction;
     sigaddset;
     sigaltstack;
@@ -995,6 +997,7 @@ LIBC {
     stdout; # var introduced=23
     stpcpy;
     stpncpy;
+    str2sig; # introduced=36
     strcasecmp;
     strcasecmp_l; # introduced=23
     strcasestr;

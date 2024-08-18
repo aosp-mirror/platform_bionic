@@ -28,13 +28,12 @@
 
 #include <fcntl.h>
 
-extern "C" int __sync_file_range(int, off64_t, off64_t, unsigned int);
-extern "C" int __sync_file_range2(int, unsigned int, off64_t, off64_t);
-
-int sync_file_range(int fd, off64_t offset, off64_t length, unsigned int flags) {
 #if __arm__
+// Only arm32 is missing the sync_file_range() syscall,
+// and needs us to manually re-order arguments for it.
+// (Because arm32 needs register pairs for 64-bit values to start on an even register.)
+extern "C" int __sync_file_range2(int, unsigned int, off64_t, off64_t);
+int sync_file_range(int fd, off64_t offset, off64_t length, unsigned int flags) {
   return __sync_file_range2(fd, flags, offset, length);
-#else
-  return __sync_file_range(fd, offset, length, flags);
-#endif
 }
+#endif
