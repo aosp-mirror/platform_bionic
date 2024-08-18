@@ -39,7 +39,7 @@
 __BEGIN_DECLS
 
 /**
- * [personality(2)](http://man7.org/linux/man-pages/man2/personality.2.html) sets the calling
+ * [personality(2)](https://man7.org/linux/man-pages/man2/personality.2.html) sets the calling
  * process' personality.
  *
  * Returns the previous persona on success, and returns -1 and sets `errno` on failure.

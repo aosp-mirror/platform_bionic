@@ -105,7 +105,11 @@ struct drm_xe_gt {
   __u32 reference_clock;
   __u64 near_mem_regions;
   __u64 far_mem_regions;
-  __u64 reserved[8];
+  __u16 ip_ver_major;
+  __u16 ip_ver_minor;
+  __u16 ip_ver_rev;
+  __u16 pad2;
+  __u64 reserved[7];
 };
 struct drm_xe_query_gt_list {
   __u32 num_gt;
@@ -114,9 +118,9 @@ struct drm_xe_query_gt_list {
 };
 struct drm_xe_query_topology_mask {
   __u16 gt_id;
-#define DRM_XE_TOPO_DSS_GEOMETRY (1 << 0)
-#define DRM_XE_TOPO_DSS_COMPUTE (1 << 1)
-#define DRM_XE_TOPO_EU_PER_DSS (1 << 2)
+#define DRM_XE_TOPO_DSS_GEOMETRY 1
+#define DRM_XE_TOPO_DSS_COMPUTE 2
+#define DRM_XE_TOPO_EU_PER_DSS 4
   __u16 type;
   __u32 num_bytes;
   __u8 mask[];
@@ -131,6 +135,7 @@ struct drm_xe_query_engine_cycles {
 };
 struct drm_xe_query_uc_fw_version {
 #define XE_QUERY_UC_TYPE_GUC_SUBMISSION 0
+#define XE_QUERY_UC_TYPE_HUC 1
   __u16 uc_type;
   __u16 pad;
   __u32 branch_ver;
@@ -209,6 +214,8 @@ struct drm_xe_vm_bind_op {
 #define DRM_XE_VM_BIND_OP_UNMAP_ALL 0x3
 #define DRM_XE_VM_BIND_OP_PREFETCH 0x4
   __u32 op;
+#define DRM_XE_VM_BIND_FLAG_READONLY (1 << 0)
+#define DRM_XE_VM_BIND_FLAG_IMMEDIATE (1 << 1)
 #define DRM_XE_VM_BIND_FLAG_NULL (1 << 2)
 #define DRM_XE_VM_BIND_FLAG_DUMPABLE (1 << 3)
   __u32 flags;
