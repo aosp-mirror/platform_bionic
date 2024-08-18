@@ -51,11 +51,7 @@ __BEGIN_DECLS
 
 struct __sbuf {
   unsigned char* _base;
-#if defined(__LP64__)
   size_t _size;
-#else
-  int _size;
-#endif
 };
 
 struct __sFILE {

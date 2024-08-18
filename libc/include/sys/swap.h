@@ -52,14 +52,14 @@ __BEGIN_DECLS
 #define SWAP_FLAG_PRIO_SHIFT 0
 
 /**
- * [swapon(2)](http://man7.org/linux/man-pages/man2/swapon.2.html) enables swapping.
+ * [swapon(2)](https://man7.org/linux/man-pages/man2/swapon.2.html) enables swapping.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
 int swapon(const char* _Nonnull __path,  int __flags);
 
 /**
- * [swapoff(2)](http://man7.org/linux/man-pages/man2/swapoff.2.html) disables swapping.
+ * [swapoff(2)](https://man7.org/linux/man-pages/man2/swapoff.2.html) disables swapping.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
