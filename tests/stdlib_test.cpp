@@ -519,7 +519,7 @@ TEST(stdlib, system) {
 
 TEST(stdlib, system_NULL) {
   // "The system() function shall always return non-zero when command is NULL."
-  // http://pubs.opengroup.org/onlinepubs/9699919799/functions/system.html
+  // https://pubs.opengroup.org/onlinepubs/9799919799.2024edition/functions/system.html
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wnonnull"
   ASSERT_NE(0, system(nullptr));
