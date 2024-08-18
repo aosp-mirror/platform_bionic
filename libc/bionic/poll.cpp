@@ -48,11 +48,17 @@ int poll(pollfd* fds, nfds_t fd_count, int ms) {
   return __ppoll(fds, fd_count, ts_ptr, nullptr, 0);
 }
 
+// The underlying ppoll(2) system call only takes `sigset64_t`.
+#if defined(__LP64__)
+// That's fine for LP64 where `sigset_t` and `sigset64_t` are the same.
+__strong_alias(ppoll, ppoll64);
+#else
+// ILP32 needs a shim.
 int ppoll(pollfd* fds, nfds_t fd_count, const timespec* ts, const sigset_t* ss) {
-  // The underlying `__ppoll` system call only takes `sigset64_t`.
   SigSetConverter set{ss};
   return ppoll64(fds, fd_count, ts, set.ptr);
 }
+#endif
 
 int ppoll64(pollfd* fds, nfds_t fd_count, const timespec* ts, const sigset64_t* ss) {
   // The underlying __ppoll system call modifies its `struct timespec` argument.
@@ -90,12 +96,19 @@ int select(int fd_count, fd_set* read_fds, fd_set* write_fds, fd_set* error_fds,
   return result;
 }
 
+// The underlying pselect6(2) system call only takes `sigset64_t`.
+#if defined(__LP64__)
+// That's fine for LP64 where `sigset_t` and `sigset64_t` are the same.
+__strong_alias(pselect, pselect64);
+#else
+// ILP32 needs a shim.
 int pselect(int fd_count, fd_set* read_fds, fd_set* write_fds, fd_set* error_fds,
             const timespec* ts, const sigset_t* ss) {
   // The underlying `__pselect6` system call only takes `sigset64_t`.
   SigSetConverter set{ss};
   return pselect64(fd_count, read_fds, write_fds, error_fds, ts, set.ptr);
 }
+#endif
 
 int pselect64(int fd_count, fd_set* read_fds, fd_set* write_fds, fd_set* error_fds,
               const timespec* ts, const sigset64_t* ss) {

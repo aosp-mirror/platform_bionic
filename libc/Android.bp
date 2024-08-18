@@ -571,7 +571,6 @@ cc_library_static {
         "upstream-openbsd/lib/libc/stdio/fgetwc.c",
         "upstream-openbsd/lib/libc/stdio/fgetws.c",
         "upstream-openbsd/lib/libc/stdio/flags.c",
-        "upstream-openbsd/lib/libc/stdio/fpurge.c",
         "upstream-openbsd/lib/libc/stdio/fputwc.c",
         "upstream-openbsd/lib/libc/stdio/fputws.c",
         "upstream-openbsd/lib/libc/stdio/fvwrite.c",
@@ -1032,7 +1031,6 @@ cc_library_static {
         "bionic/thread_private.cpp",
         "bionic/threads.cpp",
         "bionic/time.cpp",
-        "bionic/time_l.cpp",
         "bionic/tmpfile.cpp",
         "bionic/umount.cpp",
         "bionic/unlink.cpp",
@@ -1416,43 +1414,13 @@ cc_library_static {
 }
 
 // ========================================================
-// libc_static_dispatch.a --- libc.a ifuncs
+// libc_static_dispatch.a/libc_dynamic_dispatch.a --- string/memory "ifuncs"
+// (Actually ifuncs for libc.so, but a home-grown alternative for libc.a.)
 // ========================================================
-cc_library_static {
+
+cc_defaults {
+    name: "libc_dispatch_defaults",
     defaults: ["libc_defaults"],
-    name: "libc_static_dispatch",
-
-    arch: {
-        x86_64: {
-            srcs: ["arch-x86_64/static_function_dispatch.S"],
-        },
-        x86: {
-            srcs: ["arch-x86/static_function_dispatch.S"],
-        },
-        arm: {
-            srcs: ["arch-arm/static_function_dispatch.S"],
-        },
-        arm64: {
-            srcs: ["arch-arm64/static_function_dispatch.S"],
-        },
-        riscv64: {
-            srcs: ["arch-riscv64/static_function_dispatch.S"],
-        },
-    },
-}
-
-// ========================================================
-// libc_dynamic_dispatch.a --- libc.so ifuncs
-// ========================================================
-cc_library_static {
-    defaults: ["libc_defaults"],
-    name: "libc_dynamic_dispatch",
-
-    cflags: [
-        "-ffreestanding",
-        "-fno-stack-protector",
-        "-fno-jump-tables",
-    ],
     arch: {
         x86_64: {
             srcs: ["arch-x86_64/dynamic_function_dispatch.cpp"],
@@ -1470,6 +1438,30 @@ cc_library_static {
             srcs: ["arch-riscv64/dynamic_function_dispatch.cpp"],
         },
     },
+    // Prevent the compiler from inserting calls to libc/taking the address of
+    // a jump table from within an ifunc (or, in the static case, code that
+    // can be executed arbitrarily early).
+    cflags: [
+        "-ffreestanding",
+        "-fno-stack-protector",
+        "-fno-jump-tables",
+    ],
+}
+
+cc_library_static {
+    name: "libc_static_dispatch",
+    defaults: ["libc_dispatch_defaults"],
+    cflags: [
+        "-DBIONIC_STATIC_DISPATCH",
+    ],
+}
+
+cc_library_static {
+    name: "libc_dynamic_dispatch",
+    defaults: ["libc_dispatch_defaults"],
+    cflags: [
+        "-DBIONIC_DYNAMIC_DISPATCH",
+    ],
 }
 
 // ========================================================
@@ -2229,6 +2221,12 @@ cc_library_static {
     visibility: [
         "//packages/modules/Virtualization/libs/libvmbase",
     ],
+
+    // b/358211032: This library gets linked into a rust rlib.  Disable LTO
+    // until cross-language lto is supported.
+    lto: {
+        never: true,
+    },
 }
 
 // ========================================================
@@ -2259,6 +2257,11 @@ ndk_headers {
         "kernel/uapi/xen/**/*.h",
     ],
     license: "NOTICE",
+    // These don't pass the bad verification we do because many of them are
+    // arch-specific, and they aren't necessarily independently includable.
+    // That's not much of a problem though, since C-incompaitibilities in the
+    // UAPI headers should run into problems long before they reach us.
+    skip_verification: true,
 }
 
 ndk_headers {
@@ -2275,6 +2278,7 @@ ndk_headers {
     to: "scsi",
     srcs: ["kernel/android/scsi/**/*.h"],
     license: "NOTICE",
+    skip_verification: true,
 }
 
 ndk_headers {
@@ -2283,6 +2287,7 @@ ndk_headers {
     to: "arm-linux-androideabi",
     srcs: ["kernel/uapi/asm-arm/**/*.h"],
     license: "NOTICE",
+    skip_verification: true,
 }
 
 ndk_headers {
@@ -2291,6 +2296,7 @@ ndk_headers {
     to: "aarch64-linux-android",
     srcs: ["kernel/uapi/asm-arm64/**/*.h"],
     license: "NOTICE",
+    skip_verification: true,
 }
 
 ndk_headers {
@@ -2299,6 +2305,7 @@ ndk_headers {
     to: "riscv64-linux-android",
     srcs: ["kernel/uapi/asm-riscv/**/*.h"],
     license: "NOTICE",
+    skip_verification: true,
 }
 
 ndk_headers {
@@ -2307,6 +2314,7 @@ ndk_headers {
     to: "i686-linux-android",
     srcs: ["kernel/uapi/asm-x86/**/*.h"],
     license: "NOTICE",
+    skip_verification: true,
 }
 
 ndk_headers {
@@ -2315,6 +2323,7 @@ ndk_headers {
     to: "x86_64-linux-android",
     srcs: ["kernel/uapi/asm-x86/**/*.h"],
     license: "NOTICE",
+    skip_verification: true,
 }
 
 ndk_library {

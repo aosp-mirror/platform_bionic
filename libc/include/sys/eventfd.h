@@ -46,7 +46,7 @@ __BEGIN_DECLS
 #define EFD_NONBLOCK O_NONBLOCK
 
 /**
- * [eventfd(2)](http://man7.org/linux/man-pages/man2/eventfd.2.html) creates a file descriptor
+ * [eventfd(2)](https://man7.org/linux/man-pages/man2/eventfd.2.html) creates a file descriptor
  * for event notification.
  *
  * Returns a new file descriptor on success, and returns -1 and sets `errno` on failure.
@@ -57,7 +57,7 @@ int eventfd(unsigned int __initial_value, int __flags);
 typedef uint64_t eventfd_t;
 
 /**
- * [eventfd_read(3)](http://man7.org/linux/man-pages/man2/eventfd.2.html) is a convenience
+ * [eventfd_read(3)](https://man7.org/linux/man-pages/man2/eventfd.2.html) is a convenience
  * wrapper to read an `eventfd_t` from an eventfd file descriptor.
  *
  * Returns 0 on success, or returns -1 otherwise.
@@ -65,7 +65,7 @@ typedef uint64_t eventfd_t;
 int eventfd_read(int __fd, eventfd_t* _Nonnull __value);
 
 /**
- * [eventfd_write(3)](http://man7.org/linux/man-pages/man2/eventfd.2.html) is a convenience
+ * [eventfd_write(3)](https://man7.org/linux/man-pages/man2/eventfd.2.html) is a convenience
  * wrapper to write an `eventfd_t` to an eventfd file descriptor.
  *
  * Returns 0 on success, or returns -1 otherwise.
