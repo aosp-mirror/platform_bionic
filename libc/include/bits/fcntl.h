@@ -38,7 +38,7 @@
 __BEGIN_DECLS
 
 /**
- * [fcntl(3)](http://man7.org/linux/man-pages/man2/fcntl.2.html) performs various operations
+ * [fcntl(3)](https://man7.org/linux/man-pages/man2/fcntl.2.html) performs various operations
  * on file descriptors.
  *
  * The return value depends on the operation.

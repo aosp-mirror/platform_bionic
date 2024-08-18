@@ -46,7 +46,7 @@
  * Seek to the first data (non-hole) location in the file
  * greater than or equal to the given offset.
  *
- * See [lseek(2)](http://man7.org/linux/man-pages/man2/lseek.2.html).
+ * See [lseek(2)](https://man7.org/linux/man-pages/man2/lseek.2.html).
  */
 #define SEEK_DATA 3
 
@@ -54,7 +54,7 @@
  * Seek to the first hole (non-data) location in the file
  * greater than or equal to the given offset.
  *
- * See [lseek(2)](http://man7.org/linux/man-pages/man2/lseek.2.html).
+ * See [lseek(2)](https://man7.org/linux/man-pages/man2/lseek.2.html).
  */
 #define SEEK_HOLE 4
 

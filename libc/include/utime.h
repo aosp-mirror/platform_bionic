@@ -40,7 +40,7 @@
 __BEGIN_DECLS
 
 /**
- * [utime(2)](http://man7.org/linux/man-pages/man2/utime.2.html) changes the access and
+ * [utime(2)](https://man7.org/linux/man-pages/man2/utime.2.html) changes the access and
  * modification time of `__filename`. If `__times` is null, the current time is used.
  *
  * New code should prefer utimensat().
