@@ -177,7 +177,7 @@ users in different projects, and there isn't a more specific higher-level
 library that would make more sense as the place to add the wrapper.
 
 In all other cases, you should use
-[syscall(3)](http://man7.org/linux/man-pages/man2/syscall.2.html) instead.
+[syscall(3)](https://man7.org/linux/man-pages/man2/syscall.2.html) instead.
 
 Adding a system call usually involves:
 

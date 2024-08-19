@@ -365,6 +365,7 @@ typedef struct drm_i915_irq_wait {
 #define I915_PARAM_HAS_USERPTR_PROBE 56
 #define I915_PARAM_OA_TIMESTAMP_FREQUENCY 57
 #define I915_PARAM_PXP_STATUS 58
+#define I915_PARAM_HAS_CONTEXT_FREQ_HINT 59
 struct drm_i915_getparam {
   __s32 param;
   int  * value;
@@ -743,6 +744,7 @@ struct drm_i915_gem_context_param {
 #define I915_CONTEXT_PARAM_PERSISTENCE 0xb
 #define I915_CONTEXT_PARAM_RINGSIZE 0xc
 #define I915_CONTEXT_PARAM_PROTECTED_CONTENT 0xd
+#define I915_CONTEXT_PARAM_LOW_LATENCY 0xe
   __u64 value;
 };
 struct drm_i915_gem_context_param_sseu {

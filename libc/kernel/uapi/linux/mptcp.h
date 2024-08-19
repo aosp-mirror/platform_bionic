@@ -53,6 +53,10 @@ struct mptcp_info {
   __u64 mptcpi_bytes_received;
   __u64 mptcpi_bytes_acked;
   __u8 mptcpi_subflows_total;
+  __u8 reserved[3];
+  __u32 mptcpi_last_data_sent;
+  __u32 mptcpi_last_data_recv;
+  __u32 mptcpi_last_ack_recv;
 };
 #define MPTCP_RST_EUNSPEC 0
 #define MPTCP_RST_EMPTCP 1

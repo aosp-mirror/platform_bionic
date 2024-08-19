@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,33 +26,31 @@
  * SUCH DAMAGE.
  */
 
-#include <errno.h>
-#include <sys/mman.h>
-#include <stdarg.h>
-#include <stdint.h>
-#include <unistd.h>
+#pragma once
 
-#include "platform/bionic/macros.h"
-#include "platform/bionic/page.h"
+/**
+ * @file netinet/igmp.h
+ * @brief Internet Group Management Protocol (IGMP).
+ */
 
-extern "C" void* __mremap(void*, size_t, size_t, int, void*);
+#include <sys/cdefs.h>
+#include <netinet/in.h>
 
-void* mremap(void* old_address, size_t old_size, size_t new_size, int flags, ...) {
-  // prevent allocations large enough for `end - start` to overflow
-  size_t rounded = __BIONIC_ALIGN(new_size, page_size());
-  if (rounded < new_size || rounded > PTRDIFF_MAX) {
-    errno = ENOMEM;
-    return MAP_FAILED;
-  }
+#include <linux/igmp.h>
 
-  void* new_address = nullptr;
-  // The optional argument is only valid if the MREMAP_FIXED flag is set,
-  // so we assume it's not present otherwise.
-  if ((flags & MREMAP_FIXED) != 0) {
-    va_list ap;
-    va_start(ap, flags);
-    new_address = va_arg(ap, void*);
-    va_end(ap);
-  }
-  return __mremap(old_address, old_size, new_size, flags, new_address);
-}
+/**
+ * The uapi type is called `igmphdr`,
+ * doesn't have the `igmp_` prefix on each field,
+ * and uses a `__be32` for the group address.
+ *
+ * This is the type that BSDs and musl/glibc expose to userspace.
+ */
+struct igmp {
+  uint8_t igmp_type;
+  uint8_t igmp_code;
+  uint16_t igmp_cksum;
+  struct in_addr igmp_group;
+};
+
+/** Commonly-used BSD synonym for the Linux constant. */
+#define IGMP_MEMBERSHIP_QUERY IGMP_HOST_MEMBERSHIP_QUERY

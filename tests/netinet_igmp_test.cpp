@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,12 +26,15 @@
  * SUCH DAMAGE.
  */
 
-#include <private/bionic_asm.h>
+#include <gtest/gtest.h>
 
-#define FUNCTION_DELEGATE(name, impl) \
-ENTRY(name); \
-    jmp impl; \
-END(name)
+#include <netinet/igmp.h>
 
-FUNCTION_DELEGATE(memset, memset_generic)
-FUNCTION_DELEGATE(__memset_chk, __memset_chk_generic)
+TEST(netinet_igmp, smoke) {
+  // Just check that the fields exist, so code is likely to compile.
+  struct igmp i;
+  i.igmp_type = IGMP_MEMBERSHIP_QUERY;
+  i.igmp_code = 0;
+  i.igmp_cksum = 0;
+  i.igmp_group.s_addr = htonl(INADDR_ANY);
+}

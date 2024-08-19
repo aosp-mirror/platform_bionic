@@ -28,8 +28,7 @@ using namespace std::literals;
 
 #if defined(__BIONIC__)
 
-#define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
-#include <sys/_system_properties.h>
+#include <sys/system_properties.h>
 
 #include <benchmark/benchmark.h>
 #include <system_properties/system_properties.h>

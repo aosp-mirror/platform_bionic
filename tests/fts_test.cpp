@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,27 +26,23 @@
  * SUCH DAMAGE.
  */
 
-#include <private/bionic_asm.h>
+#include <gtest/gtest.h>
 
-#define FUNCTION_DELEGATE(name, impl) \
-ENTRY(name); \
-    jmp impl; \
-END(name)
+#if !defined(__GLIBC__)
+#include <fts.h>
+#endif
 
-FUNCTION_DELEGATE(memcmp, memcmp_generic)
-FUNCTION_DELEGATE(memset, memset_generic)
-FUNCTION_DELEGATE(__memset_chk, __memset_chk_generic)
-FUNCTION_DELEGATE(memcpy, memmove_generic)
-FUNCTION_DELEGATE(memmove, memmove_generic)
-FUNCTION_DELEGATE(strcpy, strcpy_generic)
-FUNCTION_DELEGATE(strncpy, strncpy_generic)
-FUNCTION_DELEGATE(strlen, strlen_generic)
-FUNCTION_DELEGATE(strcmp, strcmp_generic)
-FUNCTION_DELEGATE(strncmp, strncmp_generic)
-FUNCTION_DELEGATE(strcat, strcat_generic)
-FUNCTION_DELEGATE(wmemcmp, wmemcmp_freebsd)
-FUNCTION_DELEGATE(wcscat, wcscat_freebsd)
-FUNCTION_DELEGATE(strncat, strncat_openbsd)
-FUNCTION_DELEGATE(strlcat, strlcat_openbsd)
-FUNCTION_DELEGATE(strlcpy, strlcpy_openbsd)
-FUNCTION_DELEGATE(wcscpy, wcscpy_freebsd)
+TEST(fts, smoke) {
+#if !defined(__GLIBC__)
+  char* const paths[] = { const_cast<char*>("."), NULL };
+  FTS* fts = fts_open(paths, FTS_PHYSICAL, NULL);
+  ASSERT_TRUE(fts != NULL);
+  FTSENT* e;
+  while ((e = fts_read(fts)) != NULL) {
+    ASSERT_EQ(0, fts_set(fts, e, FTS_SKIP));
+  }
+  ASSERT_EQ(0, fts_close(fts));
+#else
+  GTEST_SKIP() << "no _FILE_OFFSET_BITS=64 <fts.h> in our old glibc";
+#endif
+}

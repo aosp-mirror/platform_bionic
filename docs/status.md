@@ -55,6 +55,10 @@ list of POSIX functions implemented by glibc but not by bionic.
 
 Current libc symbols: https://android.googlesource.com/platform/bionic/+/main/libc/libc.map.txt
 
+New libc functions in API level 36:
+  * `qsort_r`, `sig2str`/`str2sig` (POSIX Issue 8 additions).
+  * New system call wrapper: `mseal` (`<sys/mman.h>`).
+
 New libc functions in V (API level 35):
   * New `android_crash_detail_register`, `android_crash_detail_unregister`,
     `android_crash_detail_replace_name`, and `android_crash_detail_replace_data`
@@ -125,6 +129,7 @@ New libc functions in Q (API level 29):
   * `getloadavg` (BSD/GNU extension in <stdlib.h>)
 
 New libc behavior in Q (API level 29):
+  * Support for [ELF TLS](elf-tls.md).
   * Whole printf family now supports the GNU `%m` extension, rather than a
     special-case hack in `syslog`.
   * `popen` now always uses `O_CLOEXEC`, not just with the `e` extension.
@@ -282,23 +287,31 @@ New libc functions in J (API level 16):
 
 libc function count over time:
 
-| OS    | API level | Function count |
-|-------|-----------|----------------|
-| J     | 16        | 842            |
-| J MR1 | 17        | 870            |
-| J MR2 | 18        | 878            |
-| K     | 19        | 893            |
-| L     | 21        | 1118           |
-| M     | 23        | 1183           |
-| N     | 24        | 1228           |
-| O     | 26        | 1280           |
-| P     | 28        | 1378           |
-| Q     | 29        | 1394           |
+| API level | Function count |
+|-----------|----------------|
+| 16        | 842            |
+| 17        | 870            |
+| 18        | 878            |
+| 19        | 893            |
+| 21        | 1016           |
+| 22        | 1038           |
+| 23        | 1103           |
+| 24        | 1147           |
+| 25        | 1147           |
+| 26        | 1199           |
+| 27        | 1199           |
+| 28        | 1298           |
+| 29        | 1312           |
+| 30        | 1368           |
+| 31        | 1379           |
+| 32        | 1379           |
+| 33        | 1386           |
+| 34        | 1392           |
 
 Data collected by:
 ```
-ndk-r21$ for i in `ls -1v platforms/android-*/arch-arm/usr/lib/libc.so` ; do \
-  echo $i; nm $i | grep -w T | wc -l ; done
+ndk-r26c$ for i in `ls -1v toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/*/libc.so` ; \
+  do echo $i; nm $i | grep -w T | wc -l ; done
 ```
 
 ### libm

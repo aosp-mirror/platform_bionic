@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,27 +26,50 @@
  * SUCH DAMAGE.
  */
 
-#include <private/bionic_asm.h>
+#pragma once
 
-#define FUNCTION_DELEGATE(name, impl) \
-ENTRY(name); \
-    b impl; \
-END(name)
+/**
+ * @file sys/io.h
+ * @brief The x86/x86-64 I/O port functions iopl() and ioperm().
+ */
 
-FUNCTION_DELEGATE(memchr, __memchr_aarch64_mte)
-FUNCTION_DELEGATE(memcmp, __memcmp_aarch64)
-FUNCTION_DELEGATE(memcpy, __memcpy_aarch64)
-FUNCTION_DELEGATE(memmove, __memmove_aarch64)
-FUNCTION_DELEGATE(memrchr, __memrchr_aarch64)
-FUNCTION_DELEGATE(memset, __memset_aarch64)
-FUNCTION_DELEGATE(stpcpy, __stpcpy_aarch64)
-FUNCTION_DELEGATE(strchr, __strchr_aarch64_mte)
-FUNCTION_DELEGATE(strchrnul, __strchrnul_aarch64_mte)
-FUNCTION_DELEGATE(strcmp, __strcmp_aarch64)
-FUNCTION_DELEGATE(strcpy, __strcpy_aarch64)
-FUNCTION_DELEGATE(strlen, __strlen_aarch64_mte)
-FUNCTION_DELEGATE(strrchr, __strrchr_aarch64_mte)
-FUNCTION_DELEGATE(strncmp, __strncmp_aarch64)
-FUNCTION_DELEGATE(strnlen, __strnlen_aarch64)
+#include <sys/cdefs.h>
 
-NOTE_GNU_PROPERTY()
+#include <errno.h>
+#include <sys/syscall.h>
+#include <unistd.h>
+
+__BEGIN_DECLS
+
+/**
+ * [iopl(2)](https://man7.org/linux/man-pages/man2/iopl.2.html) changes the I/O
+ * privilege level for all x86/x8-64 I/O ports, for the calling thread.
+ *
+ * New callers should use ioperm() instead.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ *
+ * Only available for x86/x86-64.
+ */
+#if defined(__NR_iopl)
+__attribute__((__deprecated__("use ioperm() instead"))) static __inline int iopl(int __level) {
+  return syscall(__NR_iopl, __level);
+}
+#endif
+
+/**
+ * [ioperm(2)](https://man7.org/linux/man-pages/man2/ioperm.2.html) sets the I/O
+ * permissions for the given number of x86/x86-64 I/O ports, starting at the
+ * given port.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ *
+ * Only available for x86/x86-64.
+ */
+#if defined(__NR_iopl)
+static __inline int ioperm(unsigned long __from, unsigned long __n, int __enabled) {
+  return syscall(__NR_ioperm, __from, __n, __enabled);
+}
+#endif
+
+__END_DECLS

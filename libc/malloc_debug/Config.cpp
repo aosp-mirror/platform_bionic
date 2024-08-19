@@ -187,6 +187,10 @@ const std::unordered_map<std::string, Config::OptionInfo> Config::kOptions = {
         "record_allocs_file",
         {0, &Config::SetRecordAllocsFile},
     },
+    {
+        "record_allocs_on_exit",
+        {0, &Config::SetRecordAllocsOnExit},
+    },
 
     {
         "verify_pointers",
@@ -207,6 +211,10 @@ const std::unordered_map<std::string, Config::OptionInfo> Config::kOptions = {
     {
         "log_allocator_stats_on_signal",
         {LOG_ALLOCATOR_STATS_ON_SIGNAL, &Config::VerifyValueEmpty},
+    },
+    {
+        "log_allocator_stats_on_exit",
+        {LOG_ALLOCATOR_STATS_ON_EXIT, &Config::VerifyValueEmpty},
     },
 };
 
@@ -399,6 +407,14 @@ bool Config::SetRecordAllocsFile(const std::string&, const std::string& value) {
   }
   record_allocs_file_ = value;
   return true;
+}
+
+bool Config::SetRecordAllocsOnExit(const std::string& option, const std::string& value) {
+  if (Config::VerifyValueEmpty(option, value)) {
+    record_allocs_on_exit_ = true;
+    return true;
+  }
+  return false;
 }
 
 bool Config::VerifyValueEmpty(const std::string& option, const std::string& value) {

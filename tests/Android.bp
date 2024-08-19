@@ -361,8 +361,7 @@ cc_prebuilt_test_library_shared {
 cc_test_library {
     name: "clang_diagnostic_tests",
     cflags: [
-        "-Xclang",
-        "-verify",
+        "-Xclang -verify",
     ],
     srcs: ["sys_ioctl_diag_test.cpp"],
 }
@@ -404,6 +403,7 @@ cc_test_library {
         "_FILE_OFFSET_BITS_test.cpp",
         "float_test.cpp",
         "fnmatch_test.cpp",
+        "fts_test.cpp",
         "ftw_test.cpp",
         "getauxval_test.cpp",
         "getcwd_test.cpp",
@@ -433,6 +433,7 @@ cc_test_library {
         "netdb_test.cpp",
         "net_if_test.cpp",
         "netinet_ether_test.cpp",
+        "netinet_igmp_test.cpp",
         "netinet_in_test.cpp",
         "netinet_ip_icmp_test.cpp",
         "netinet_udp_test.cpp",
@@ -477,6 +478,7 @@ cc_test_library {
         "sys_cachectl_test.cpp",
         "sys_epoll_test.cpp",
         "sys_hwprobe_test.cpp",
+        "sys_io_test.cpp",
         "sys_mman_test.cpp",
         "sys_msg_test.cpp",
         "sys_param_test.cpp",
@@ -717,11 +719,6 @@ cc_defaults {
     ],
     srcs: ["clang_fortify_tests.cpp"],
     tidy: false,
-    target: {
-        host: {
-            cflags: ["-D__clang__"],
-        },
-    },
 }
 
 cc_test_library {
