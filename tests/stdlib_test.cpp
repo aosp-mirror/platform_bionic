@@ -431,6 +431,31 @@ TEST(stdlib, qsort) {
   ASSERT_STREQ("charlie", entries[2].name);
 }
 
+TEST(stdlib, qsort_r) {
+  struct s {
+    char name[16];
+    static int comparator(const void* lhs, const void* rhs, void* context) {
+      int* count_p = reinterpret_cast<int*>(context);
+      *count_p += 1;
+      return strcmp(reinterpret_cast<const s*>(lhs)->name, reinterpret_cast<const s*>(rhs)->name);
+    }
+  };
+  s entries[3];
+  strcpy(entries[0].name, "charlie");
+  strcpy(entries[1].name, "bravo");
+  strcpy(entries[2].name, "alpha");
+
+  int count;
+  void* context = &count;
+
+  count = 0;
+  qsort_r(entries, 3, sizeof(s), s::comparator, context);
+  ASSERT_STREQ("alpha", entries[0].name);
+  ASSERT_STREQ("bravo", entries[1].name);
+  ASSERT_STREQ("charlie", entries[2].name);
+  ASSERT_EQ(count, 3);
+}
+
 static void* TestBug57421_child(void* arg) {
   pthread_t main_thread = reinterpret_cast<pthread_t>(arg);
   pthread_join(main_thread, nullptr);
@@ -494,7 +519,7 @@ TEST(stdlib, system) {
 
 TEST(stdlib, system_NULL) {
   // "The system() function shall always return non-zero when command is NULL."
-  // http://pubs.opengroup.org/onlinepubs/9699919799/functions/system.html
+  // https://pubs.opengroup.org/onlinepubs/9799919799.2024edition/functions/system.html
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wnonnull"
   ASSERT_NE(0, system(nullptr));

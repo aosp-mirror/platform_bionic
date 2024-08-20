@@ -210,9 +210,9 @@ void __libc_init_fork_handler() {
 
 extern "C" void scudo_malloc_set_add_large_allocation_slack(int add_slack);
 
-__BIONIC_WEAK_FOR_NATIVE_BRIDGE void __libc_set_target_sdk_version(int target __unused) {
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE void __libc_set_target_sdk_version(int target_api_level __unused) {
 #if defined(USE_SCUDO) && !__has_feature(hwaddress_sanitizer)
-  scudo_malloc_set_add_large_allocation_slack(target < __ANDROID_API_S__);
+  scudo_malloc_set_add_large_allocation_slack(target_api_level < 31);
 #endif
 }
 

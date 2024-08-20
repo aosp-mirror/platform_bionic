@@ -39,7 +39,7 @@
 __BEGIN_DECLS
 
 /**
- * [getentropy(3)](http://man7.org/linux/man-pages/man3/getentropy.3.html) fills the given buffer
+ * [getentropy(3)](https://man7.org/linux/man-pages/man3/getentropy.3.html) fills the given buffer
  * with random bytes.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
