@@ -43,7 +43,7 @@
 
 #define PRINT(ptr, len)                          \
   do {                                           \
-    iovp->iov_base = (ptr);                      \
+    iovp->iov_base = (void*)(ptr);               \
     iovp->iov_len = (len);                       \
     uio.uio_resid += (len);                      \
     iovp++;                                      \
@@ -125,10 +125,10 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
    * below longer.
    */
 #define PADSIZE 16 /* pad chunk size */
-  static CHAR_TYPE blanks[PADSIZE] = {
+  static const CHAR_TYPE blanks[PADSIZE] = {
     ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '
   };
-  static CHAR_TYPE zeroes[PADSIZE] = {
+  static const CHAR_TYPE zeroes[PADSIZE] = {
     '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'
   };
 

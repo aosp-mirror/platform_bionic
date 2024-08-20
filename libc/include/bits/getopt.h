@@ -33,7 +33,7 @@
 __BEGIN_DECLS
 
 /**
- * [getopt(3)](http://man7.org/linux/man-pages/man3/getopt.3.html) parses command-line options.
+ * [getopt(3)](https://man7.org/linux/man-pages/man3/getopt.3.html) parses command-line options.
  *
  * Returns the next option character on success, returns -1 if all options have been parsed, and
  * returns `'?'` on error.

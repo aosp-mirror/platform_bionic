@@ -556,7 +556,7 @@ void TestWcsToIntLimits(WcsToIntFn<T> fn, const wchar_t* min_str,
   } else {
     // If the subject sequence begins with a <hyphen-minus>, the value resulting
     // from the conversion shall be negated.
-    // http://pubs.opengroup.org/onlinepubs/9699919799/functions/strtoul.html
+    // https://pubs.opengroup.org/onlinepubs/9799919799.2024edition/functions/strtoul.html
     ASSERT_EQ(std::numeric_limits<T>::max(), fn(min_str, nullptr, 0)) << min_str;
   }
   ASSERT_EQ(std::numeric_limits<T>::max(), fn(max_str, nullptr, 0)) << max_str;

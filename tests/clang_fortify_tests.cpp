@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-#ifndef __clang__
-#error "Non-clang isn't supported"
-#endif
-
 //
 // Clang compile-time and run-time tests for Bionic's FORTIFY.
 //
