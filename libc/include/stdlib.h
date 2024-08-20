@@ -75,7 +75,16 @@ unsigned long long strtoull(const char* _Nonnull __s, char* _Nullable * _Nullabl
 
 int posix_memalign(void* _Nullable * _Nullable __memptr, size_t __alignment, size_t __size);
 
-void* _Nullable aligned_alloc(size_t __alignment, size_t __size) __INTRODUCED_IN(28);
+/**
+ * [aligned_alloc(3)](https://man7.org/linux/man-pages/man3/aligned_alloc.3.html)
+ * allocates the given number of bytes with the given alignment.
+ *
+ * Returns a pointer to the allocated memory on success and returns a null
+ * pointer and sets `errno` on failure.
+ *
+ * Available since API level 28.
+ */
+__wur void* _Nullable aligned_alloc(size_t __alignment, size_t __size) __INTRODUCED_IN(28);
 
 double strtod(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr);
 long double strtold(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr);
