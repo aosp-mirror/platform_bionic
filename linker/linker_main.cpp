@@ -250,12 +250,6 @@ static ExecutableInfo get_executable_info(const char* arg_path) {
   return result;
 }
 
-#if defined(__LP64__)
-static char kFallbackLinkerPath[] = "/system/bin/linker64";
-#else
-static char kFallbackLinkerPath[] = "/system/bin/linker";
-#endif
-
 // Load an executable. Normally the kernel has already loaded the executable when the linker
 // starts. The linker can be invoked directly on an executable, though, and then the linker must
 // load it. This function doesn't load dependencies or resolve relocations.
@@ -380,7 +374,12 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   if (interp == nullptr) {
     // This case can happen if the linker attempts to execute itself
     // (e.g. "linker64 /system/bin/linker64").
-    interp = kFallbackLinkerPath;
+#if defined(__LP64__)
+#define DEFAULT_INTERP "/system/bin/linker64"
+#else
+#define DEFAULT_INTERP "/system/bin/linker"
+#endif
+    interp = DEFAULT_INTERP;
   }
   solinker->set_realpath(interp);
   init_link_map_head(*solinker);
