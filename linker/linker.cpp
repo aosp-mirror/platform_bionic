@@ -1698,11 +1698,19 @@ bool find_libraries(android_namespace_t* ns,
     }
   }
 
+  // The WebView loader uses RELRO sharing in order to promote page sharing of the large RELRO
+  // segment, as it's full of C++ vtables. Because MTE globals, by default, applies random tags to
+  // each global variable, the RELRO segment is polluted and unique for each process. In order to
+  // allow sharing, but still provide some protection, we use deterministic global tagging schemes
+  // for DSOs that are loaded through android_dlopen_ext, such as those loaded by WebView.
+  bool dlext_use_relro =
+      extinfo && extinfo->flags & (ANDROID_DLEXT_WRITE_RELRO | ANDROID_DLEXT_USE_RELRO);
+
   // Step 3: pre-link all DT_NEEDED libraries in breadth first order.
   bool any_memtag_stack = false;
   for (auto&& task : load_tasks) {
     soinfo* si = task->get_soinfo();
-    if (!si->is_linked() && !si->prelink_image()) {
+    if (!si->is_linked() && !si->prelink_image(dlext_use_relro)) {
       return false;
     }
     // si->memtag_stack() needs to be called after si->prelink_image() which populates
@@ -2847,7 +2855,7 @@ bool relocate_relr(const ElfW(Relr) * begin, const ElfW(Relr) * end, ElfW(Addr) 
 // An empty list of soinfos
 static soinfo_list_t g_empty_list;
 
-bool soinfo::prelink_image() {
+bool soinfo::prelink_image(bool dlext_use_relro) {
   if (flags_ & FLAG_PRELINKED) return true;
   /* Extract dynamic section */
   ElfW(Word) dynamic_flags = 0;
@@ -3344,7 +3352,7 @@ bool soinfo::prelink_image() {
   // pages is unnecessary on non-MTE devices (where we might still run MTE-globals enabled code).
   if (should_tag_memtag_globals() &&
       remap_memtag_globals_segments(phdr, phnum, base) == 0) {
-    tag_globals();
+    tag_globals(dlext_use_relro);
     protect_memtag_globals_ro_segments(phdr, phnum, base);
   }
 
@@ -3466,7 +3474,7 @@ bool soinfo::protect_relro() {
 }
 
 // https://github.com/ARM-software/abi-aa/blob/main/memtagabielf64/memtagabielf64.rst#global-variable-tagging
-void soinfo::tag_globals() {
+void soinfo::tag_globals(bool dlext_use_relro) {
   if (is_linked()) return;
   if (flags_ & FLAG_GLOBALS_TAGGED) return;
   flags_ |= FLAG_GLOBALS_TAGGED;
@@ -3483,6 +3491,7 @@ void soinfo::tag_globals() {
   // Don't ever generate tag zero, to easily distinguish between tagged and
   // untagged globals in register/tag dumps.
   uint64_t last_tag_mask = 1;
+  uint64_t last_tag = 1;
   constexpr uint64_t kDistanceReservedBits = 3;
 
   while (decoder.has_bytes()) {
@@ -3495,9 +3504,14 @@ void soinfo::tag_globals() {
 
     addr += distance;
     void* tagged_addr;
-    tagged_addr = insert_random_tag(reinterpret_cast<void*>(addr), last_tag_mask);
-    uint64_t tag = (reinterpret_cast<uint64_t>(tagged_addr) >> 56) & 0x0f;
-    last_tag_mask = 1 | (1 << tag);
+    if (dlext_use_relro) {
+      tagged_addr = reinterpret_cast<void*>(addr | (last_tag++ << 56));
+      if (last_tag > (1 << kTagGranuleSize)) last_tag = 1;
+    } else {
+      tagged_addr = insert_random_tag(reinterpret_cast<void*>(addr), last_tag_mask);
+      uint64_t tag = (reinterpret_cast<uint64_t>(tagged_addr) >> 56) & 0x0f;
+      last_tag_mask = 1 | (1 << tag);
+    }
 
     for (size_t k = 0; k < ngranules; k++) {
       auto* granule = static_cast<uint8_t*>(tagged_addr) + k * kTagGranuleSize;
