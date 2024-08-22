@@ -43,7 +43,6 @@ typedef struct {
 #endif
 } pthread_attr_t;
 
-#if __ANDROID_API__ >= 24
 typedef struct {
 #if defined(__LP64__)
   int64_t __private[4];
@@ -51,11 +50,8 @@ typedef struct {
   int32_t __private[8];
 #endif
 } pthread_barrier_t;
-#endif
 
-#if __ANDROID_API__ >= 24
 typedef int pthread_barrierattr_t;
-#endif
 
 typedef struct {
 #if defined(__LP64__)
@@ -91,7 +87,6 @@ typedef struct {
 
 typedef long pthread_rwlockattr_t;
 
-#if __ANDROID_API__ >= 24
 typedef struct {
 #if defined(__LP64__)
   int64_t __private;
@@ -99,6 +94,5 @@ typedef struct {
   int32_t __private[2];
 #endif
 } pthread_spinlock_t;
-#endif
 
 typedef long pthread_t;
