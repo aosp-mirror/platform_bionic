@@ -2231,11 +2231,10 @@ cc_library_static {
 // NDK headers.
 // ========================================================
 
-ndk_headers {
+versioned_ndk_headers {
     name: "common_libc",
     from: "include",
     to: "",
-    srcs: ["include/**/*.h"],
     license: "NOTICE",
 }
 
