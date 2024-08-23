@@ -3,17 +3,17 @@ SECTIONS {
   # appropriate alignment between them.
   . = SIZEOF_HEADERS;
   .rodata : {*(.rodata .rodata.*)}
-  . = ALIGN(0x1000);
+  . = ALIGN(CONSTANT (MAXPAGESIZE));
   .text : {*(.text .text.*)}
-  . = ALIGN(0x1000);
+  . = ALIGN(CONSTANT (MAXPAGESIZE));
   .dynamic : {*(.dynamic)}
-  . = ALIGN(0x1000);
+  . = ALIGN(CONSTANT (MAXPAGESIZE));
   .data : {*(.data .data.*)}
   .bss : {*(.bss .bss.*)}
 
   # Now create the gap. We need a text segment first to prevent the linker from
   # merging .bss with .custom_bss.
-  . = ALIGN(0x1000);
+  . = ALIGN(CONSTANT (MAXPAGESIZE));
   .custom_text : {
     *(.custom_text);
   }
