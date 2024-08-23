@@ -2231,11 +2231,17 @@ cc_library_static {
 // NDK headers.
 // ========================================================
 
-versioned_ndk_headers {
+ndk_headers {
     name: "common_libc",
     from: "include",
     to: "",
+    srcs: ["include/**/*.h"],
     license: "NOTICE",
+    // These don't pass the bad verification we do because many of them are
+    // arch-specific, and they aren't necessarily independently includable.
+    // That's not much of a problem though, since C-incompaitibilities in the
+    // UAPI headers should run into problems long before they reach us.
+    skip_verification: true,
 }
 
 ndk_headers {
@@ -2255,10 +2261,6 @@ ndk_headers {
         "kernel/uapi/xen/**/*.h",
     ],
     license: "NOTICE",
-    // These don't pass the bad verification we do because many of them are
-    // arch-specific, and they aren't necessarily independently includable.
-    // That's not much of a problem though, since C-incompaitibilities in the
-    // UAPI headers should run into problems long before they reach us.
     skip_verification: true,
 }
 
