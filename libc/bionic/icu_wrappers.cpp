@@ -40,10 +40,3 @@ int32_t __icu_getIntPropertyValue(wint_t wc, UProperty property) {
       reinterpret_cast<u_getIntPropertyValue_t>(__find_icu_symbol("u_getIntPropertyValue"));
   return u_getIntPropertyValue ? u_getIntPropertyValue(wc, property) : 0;
 }
-
-bool __icu_hasBinaryProperty(wint_t wc, UProperty property, int (*fallback)(int)) {
-  typedef UBool (*u_hasBinaryProperty_t)(UChar32, UProperty);
-  static auto u_hasBinaryProperty =
-      reinterpret_cast<u_hasBinaryProperty_t>(__find_icu_symbol("u_hasBinaryProperty"));
-  return u_hasBinaryProperty ? u_hasBinaryProperty(wc, property) : fallback(wc);
-}
