@@ -46,10 +46,6 @@ static __inline float strtof_l(const char* _Nonnull __s, char* _Nullable * _Null
   return strtof(__s, __end_ptr);
 }
 
-static __inline long strtol_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base, locale_t _Nonnull __l) {
-  return strtol(__s, __end_ptr, __base);
-}
-
 __END_DECLS
 
 #endif
