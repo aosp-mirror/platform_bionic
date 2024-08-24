@@ -54,26 +54,41 @@ enum {
   WC_TYPE_MAX
 };
 
-int iswalnum(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_POSIX_ALNUM, isalnum); }
+static u_hasBinaryProperty_t __find_u_hasBinaryProperty() {
+  static auto u_hasBinaryProperty =
+      reinterpret_cast<u_hasBinaryProperty_t>(__find_icu_symbol("u_hasBinaryProperty"));
+  return u_hasBinaryProperty;
+}
+
+#define DO_ISW(icu_constant, narrow_fn) \
+  u_hasBinaryProperty_t u_hasBinaryProperty; \
+  if (__predict_true(wc < 0x80) || \
+      !(u_hasBinaryProperty = __find_u_hasBinaryProperty())) { \
+    return narrow_fn(wc); \
+  } \
+  return u_hasBinaryProperty(wc, icu_constant); \
+
+int iswalnum(wint_t wc) { DO_ISW(UCHAR_POSIX_ALNUM, isalnum); }
 __strong_alias(iswalnum_l, iswalnum);
-int iswalpha(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_ALPHABETIC, isalpha); }
+int iswalpha(wint_t wc) { DO_ISW(UCHAR_ALPHABETIC, isalpha); }
 __strong_alias(iswalpha_l, iswalpha);
-int iswblank(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_POSIX_BLANK, isblank); }
+int iswblank(wint_t wc) { DO_ISW(UCHAR_POSIX_BLANK, isblank); }
 __strong_alias(iswblank_l, iswblank);
-int iswgraph(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_POSIX_GRAPH, isgraph); }
+int iswgraph(wint_t wc) { DO_ISW(UCHAR_POSIX_GRAPH, isgraph); }
 __strong_alias(iswgraph_l, iswgraph);
-int iswlower(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_LOWERCASE, islower); }
+int iswlower(wint_t wc) { DO_ISW(UCHAR_LOWERCASE, islower); }
 __strong_alias(iswlower_l, iswlower);
-int iswprint(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_POSIX_PRINT, isprint); }
+int iswprint(wint_t wc) { DO_ISW(UCHAR_POSIX_PRINT, isprint); }
 __strong_alias(iswprint_l, iswprint);
-int iswspace(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_WHITE_SPACE, isspace); }
+int iswspace(wint_t wc) { DO_ISW(UCHAR_WHITE_SPACE, isspace); }
 __strong_alias(iswspace_l, iswspace);
-int iswupper(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_UPPERCASE, isupper); }
+int iswupper(wint_t wc) { DO_ISW(UCHAR_UPPERCASE, isupper); }
 __strong_alias(iswupper_l, iswupper);
-int iswxdigit(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_POSIX_XDIGIT, isxdigit); }
+int iswxdigit(wint_t wc) { DO_ISW(UCHAR_POSIX_XDIGIT, isxdigit); }
 __strong_alias(iswxdigit_l, iswxdigit);
 
 int iswcntrl(wint_t wc) {
+  if (wc < 0x80) return iscntrl(wc);
   typedef int8_t (*FnT)(UChar32);
   static auto u_charType = reinterpret_cast<FnT>(__find_icu_symbol("u_charType"));
   return u_charType ? (u_charType(wc) == U_CONTROL_CHAR) : iscntrl(wc);
@@ -81,6 +96,7 @@ int iswcntrl(wint_t wc) {
 __strong_alias(iswcntrl_l, iswcntrl);
 
 int iswdigit(wint_t wc) {
+  if (wc < 0x80) return isdigit(wc);
   typedef UBool (*FnT)(UChar32);
   static auto u_isdigit = reinterpret_cast<FnT>(__find_icu_symbol("u_isdigit"));
   return u_isdigit ? u_isdigit(wc) : isdigit(wc);
@@ -88,6 +104,7 @@ int iswdigit(wint_t wc) {
 __strong_alias(iswdigit_l, iswdigit);
 
 int iswpunct(wint_t wc) {
+  if (wc < 0x80) return ispunct(wc);
   typedef UBool (*FnT)(UChar32);
   static auto u_ispunct = reinterpret_cast<FnT>(__find_icu_symbol("u_ispunct"));
   return u_ispunct ? u_ispunct(wc) : ispunct(wc);
