@@ -85,6 +85,10 @@ union arg {
 // Helper function for `fprintf to unbuffered unix file': creates a
 // temporary buffer.  We only work on write-only files; this avoids
 // worries about ungetc buffers and so forth.
+//
+// We prevent inlining because this massively increases the printf()
+// family's stack usage to support a rare case.
+__attribute__((__noinline__))
 static int __sbprintf(FILE* fp, const CHAR_TYPE* fmt, va_list ap) {
   FILE fake;
   struct __sfileext fakeext;
