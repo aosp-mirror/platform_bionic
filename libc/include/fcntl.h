@@ -93,14 +93,12 @@ __BEGIN_DECLS
 /** Flag for splice(). */
 #define SPLICE_F_GIFT 8
 
-#if __ANDROID_API__ >= 26
 /** Flag for sync_file_range(). */
 #define SYNC_FILE_RANGE_WAIT_BEFORE 1
 /** Flag for sync_file_range(). */
 #define SYNC_FILE_RANGE_WRITE 2
 /** Flag for sync_file_range(). */
 #define SYNC_FILE_RANGE_WAIT_AFTER 4
-#endif
 
 /**
  * [creat(2)](https://man7.org/linux/man-pages/man2/creat.2.html)
