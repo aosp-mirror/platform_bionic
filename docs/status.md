@@ -32,10 +32,14 @@ Missing functions are either obsolete or explicitly disallowed by SELinux:
   * `ualarm`
 
 Missing functionality:
-  * `<aio.h>`
+  * `<aio.h>`. No particular reason not to have this other than that no-one's
+    needed it yet, and it's relatively complex. If/when llvm-libc adds this,
+    maybe we'll just reuse that.
   * `<monetary.h>`. See
     [discussion](https://github.com/android/ndk/issues/1182).
-  * `<wordexp.h>`
+  * `<wordexp.h>`. Unsafe because it passes user input to the shell (!),
+    and often should just be a call to glob() anyway. See also
+    [OpenBSD's discussion about adding wordexp()](https://www.mail-archive.com/tech@openbsd.org/msg02325.html).
   * Locales. Although bionic contains the various `_l()` functions, the only
     locale supported is a UTF-8 C/POSIX locale. Most of the POSIX APIs are
     insufficient to support the wide range of languages used by Android users,
