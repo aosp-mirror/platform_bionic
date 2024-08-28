@@ -913,6 +913,7 @@ cc_library_static {
         "bionic/isatty.cpp",
         "bionic/killpg.cpp",
         "bionic/langinfo.cpp",
+        "bionic/lchmod.cpp",
         "bionic/lchown.cpp",
         "bionic/lfs64_support.cpp",
         "bionic/libc_init_common.cpp",
