@@ -41,11 +41,6 @@ using namespace std::chrono_literals;
 
 using android::base::unique_fd;
 
-// Host libc does not define this.
-#ifndef TRAP_HWBKPT
-#define TRAP_HWBKPT 4
-#endif
-
 class ChildGuard {
  public:
   explicit ChildGuard(pid_t pid) : pid(pid) {}

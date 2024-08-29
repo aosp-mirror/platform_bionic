@@ -38,7 +38,7 @@ size_t __strlcpy_chk(char* _Nonnull, const char* _Nonnull, size_t, size_t);
 size_t __strlcat_chk(char* _Nonnull, const char* _Nonnull, size_t, size_t);
 
 #if defined(__BIONIC_FORTIFY)
-extern void* _Nullable __memrchr_real(const void* _Nonnull, int, size_t) __RENAME(memrchr);
+void* _Nullable __memrchr_real(const void* _Nonnull, int, size_t) __RENAME(memrchr);
 
 #if __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
 /* No diag -- clang diagnoses misuses of this on its own.  */
