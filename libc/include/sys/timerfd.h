@@ -33,17 +33,20 @@
  * @brief Timer file descriptors.
  */
 
-#include <fcntl.h> /* For O_CLOEXEC and O_NONBLOCK. */
+#include <fcntl.h>
+#include <linux/timerfd.h>
 #include <time.h>
 #include <sys/cdefs.h>
 #include <sys/types.h>
 
 __BEGIN_DECLS
 
-/** The timerfd_create() flag for a close-on-exec file descriptor. */
-#define TFD_CLOEXEC O_CLOEXEC
-/** The timerfd_create() flag for a non-blocking file descriptor. */
-#define TFD_NONBLOCK O_NONBLOCK
+/*! \macro TFD_CLOEXEC
+ * The timerfd_create() flag for a close-on-exec file descriptor.
+ */
+/*! \macro TFD_NONBLOCK
+ * The timerfd_create() flag for a non-blocking file descriptor.
+ */
 
 /**
  * [timerfd_create(2)](https://man7.org/linux/man-pages/man2/timerfd_create.2.html) creates a
