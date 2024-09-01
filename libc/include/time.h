@@ -245,7 +245,7 @@ char* _Nullable strptime(const char* _Nonnull __s, const char* _Nonnull __fmt, s
 /**
  * Equivalent to strptime() on Android where only C/POSIX locales are available.
  */
-char* _Nullable strptime_l(const char* _Nonnull __s, const char* _Nonnull __fmt, struct tm* _Nonnull __tm, locale_t _Nonnull __l) __strftimelike(2) __INTRODUCED_IN(28);
+char* _Nullable strptime_l(const char* _Nonnull __s, const char* _Nonnull __fmt, struct tm* _Nonnull __tm, locale_t _Nonnull __l) __strftimelike(2) __RENAME(strptime);
 
 /**
  * [strftime(3)](https://man7.org/linux/man-pages/man3/strftime.3.html) formats
