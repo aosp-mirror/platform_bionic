@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,21 +26,11 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_INOTIFY_H_
-#define _SYS_INOTIFY_H_
-
-#include <sys/cdefs.h>
+#include <fcntl.h>
+#include <sys/stat.h>
 #include <sys/types.h>
-#include <stdint.h>
-#include <linux/inotify.h>
+#include <unistd.h>
 
-__BEGIN_DECLS
-
-int inotify_init(void);
-int inotify_init1(int __flags);
-int inotify_add_watch(int __fd, const char* _Nonnull __path, uint32_t __mask);
-int inotify_rm_watch(int __fd, uint32_t __watch_descriptor);
-
-__END_DECLS
-
-#endif
+int lchmod(const char* path, mode_t mode) {
+  return fchmodat(AT_FDCWD, path, mode, AT_SYMLINK_NOFOLLOW);
+}

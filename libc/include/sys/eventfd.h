@@ -35,15 +35,19 @@
 
 #include <sys/cdefs.h>
 #include <fcntl.h>
+#include <linux/eventfd.h>
 
 __BEGIN_DECLS
 
-/** The eventfd() flag to provide semaphore-like semantics for reads. */
-#define EFD_SEMAPHORE (1 << 0)
-/** The eventfd() flag for a close-on-exec file descriptor. */
-#define EFD_CLOEXEC O_CLOEXEC
-/** The eventfd() flag for a non-blocking file descriptor. */
-#define EFD_NONBLOCK O_NONBLOCK
+/*! \macro EFD_SEMAPHORE
+ * The eventfd() flag to provide semaphore-like semantics for reads.
+ */
+/*! \macro EFD_CLOEXEC
+ * The eventfd() flag for a close-on-exec file descriptor.
+ */
+/*! \macro EFD_NONBLOCK
+ * The eventfd() flag for a non-blocking file descriptor.
+ */
 
 /**
  * [eventfd(2)](https://man7.org/linux/man-pages/man2/eventfd.2.html) creates a file descriptor

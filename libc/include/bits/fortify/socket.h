@@ -30,8 +30,7 @@
 #error "Never include this file directly; instead, include <sys/socket.h>"
 #endif
 
-extern ssize_t __sendto_chk(int, const void* _Nonnull, size_t, size_t, int, const struct sockaddr* _Nullable,
-        socklen_t) __INTRODUCED_IN(26);
+ssize_t __sendto_chk(int, const void* _Nonnull, size_t, size_t, int, const struct sockaddr* _Nullable, socklen_t) __INTRODUCED_IN(26);
 ssize_t __recvfrom_chk(int, void* _Nullable, size_t, size_t, int, struct sockaddr* _Nullable, socklen_t* _Nullable);
 
 #if defined(__BIONIC_FORTIFY)
