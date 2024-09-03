@@ -1657,7 +1657,6 @@ cc_defaults {
     },
 
     apex_available: [
-        "//apex_available:platform",
         "com.android.runtime",
     ],
 
@@ -1687,8 +1686,7 @@ cc_library {
     llndk: {
         symbol_file: "libc.map.txt",
         export_headers_as_system: true,
-        export_preprocessed_headers: ["include"],
-        export_llndk_headers: ["libc_llndk_headers"],
+        export_llndk_headers: ["libc_headers"],
     },
 }
 
@@ -1799,7 +1797,7 @@ cc_library_headers {
 }
 
 cc_library_headers {
-    name: "libc_llndk_headers",
+    name: "libc_uapi_headers",
     visibility: [
         "//external/musl",
     ],
@@ -1894,13 +1892,13 @@ cc_library_headers {
     target: {
         android: {
             export_system_include_dirs: ["include"],
-            header_libs: ["libc_llndk_headers"],
-            export_header_lib_headers: ["libc_llndk_headers"],
+            header_libs: ["libc_uapi_headers"],
+            export_header_lib_headers: ["libc_uapi_headers"],
         },
         linux_bionic: {
             export_system_include_dirs: ["include"],
-            header_libs: ["libc_llndk_headers"],
-            export_header_lib_headers: ["libc_llndk_headers"],
+            header_libs: ["libc_uapi_headers"],
+            export_header_lib_headers: ["libc_uapi_headers"],
         },
     },
 }
