@@ -100,9 +100,10 @@ struct v4l2_subdev_route {
 };
 struct v4l2_subdev_routing {
   __u32 which;
-  __u32 num_routes;
+  __u32 len_routes;
   __u64 routes;
-  __u32 reserved[6];
+  __u32 num_routes;
+  __u32 reserved[11];
 };
 #define V4L2_SUBDEV_CLIENT_CAP_STREAMS (1ULL << 0)
 #define V4L2_SUBDEV_CLIENT_CAP_INTERVAL_USES_WHICH (1ULL << 1)

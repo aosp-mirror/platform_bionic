@@ -46,6 +46,8 @@ class PropertiesFilename {
   const char* c_str() { return filename_; }
 
  private:
-  // Typically something like "/dev/__properties__/properties_serial".
-  char filename_[128];
+  // Typically something like "/dev/__properties__/properties_serial", but can be as long as
+  // "/data/local/tmp/TemporaryDir-fntJb8/appcompat_override/u:object_r:PROPERTY_NAME_prop:s0"
+  // when running CTS.
+  char filename_[256];
 };
