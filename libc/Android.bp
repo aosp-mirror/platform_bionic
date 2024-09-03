@@ -1686,8 +1686,7 @@ cc_library {
     llndk: {
         symbol_file: "libc.map.txt",
         export_headers_as_system: true,
-        export_preprocessed_headers: ["include"],
-        export_llndk_headers: ["libc_uapi_headers"],
+        export_llndk_headers: ["libc_headers"],
     },
 }
 
