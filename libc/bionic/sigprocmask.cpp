@@ -41,18 +41,6 @@ extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);
 // can't allow clang to decide to inline sigprocmask.
 //
 
-int sigprocmask(int how,
-                const sigset_t* bionic_new_set,
-                sigset_t* bionic_old_set) __attribute__((__noinline__)) {
-  SigSetConverter new_set{bionic_new_set};
-  SigSetConverter old_set{bionic_old_set};
-  int rc = sigprocmask64(how, new_set.ptr, old_set.ptr);
-  if (rc == 0 && bionic_old_set != nullptr) {
-    old_set.copy_out();
-  }
-  return rc;
-}
-
 int sigprocmask64(int how,
                   const sigset64_t* new_set,
                   sigset64_t* old_set) __attribute__((__noinline__)) {
@@ -70,3 +58,21 @@ int sigprocmask64(int how,
   }
   return __rt_sigprocmask(how, mutable_new_set_ptr, old_set, sizeof(*new_set));
 }
+
+#if defined(__LP64__)
+// For LP64, `sigset64_t` and `sigset_t` are the same.
+__strong_alias(sigprocmask, sigprocmask64);
+#else
+// ILP32 needs a shim.
+int sigprocmask(int how,
+                const sigset_t* bionic_new_set,
+                sigset_t* bionic_old_set) __attribute__((__noinline__)) {
+  SigSetConverter new_set{bionic_new_set};
+  SigSetConverter old_set{bionic_old_set};
+  int rc = sigprocmask64(how, new_set.ptr, old_set.ptr);
+  if (rc == 0 && bionic_old_set != nullptr) {
+    old_set.copy_out();
+  }
+  return rc;
+}
+#endif

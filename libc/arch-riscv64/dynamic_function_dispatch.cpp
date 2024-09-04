@@ -27,11 +27,10 @@
  */
 
 #include <fcntl.h>
+#include <private/bionic_ifuncs.h>
 #include <stddef.h>
 #include <sys/syscall.h>
 #include <unistd.h>
-
-#include <private/bionic_ifuncs.h>
 
 extern "C" {
 
@@ -53,94 +52,94 @@ static bool have_fast_v() {
   return result;
 }
 
-typedef void* memchr_func(const void*, int, size_t);
 DEFINE_IFUNC_FOR(memchr) {
-  if (have_fast_v()) RETURN_FUNC(memchr_func, memchr_v);
-  RETURN_FUNC(memchr_func, memchr_gc);
+  if (have_fast_v()) RETURN_FUNC(memchr_func_t, memchr_v);
+  RETURN_FUNC(memchr_func_t, memchr_gc);
 }
+MEMCHR_SHIM()
 
-typedef int memcmp_func(const void*, const void*, size_t);
 DEFINE_IFUNC_FOR(memcmp) {
-  if (have_fast_v()) RETURN_FUNC(memcmp_func, memcmp_v);
-  RETURN_FUNC(memcmp_func, memcmp_gc);
+  if (have_fast_v()) RETURN_FUNC(memcmp_func_t, memcmp_v);
+  RETURN_FUNC(memcmp_func_t, memcmp_gc);
 }
+MEMCMP_SHIM()
 
-typedef void* memcpy_func(void*, const void*, size_t);
 DEFINE_IFUNC_FOR(memcpy) {
-  if (have_fast_v()) RETURN_FUNC(memcpy_func, memcpy_v);
-  RETURN_FUNC(memcpy_func, memcpy_gc);
+  if (have_fast_v()) RETURN_FUNC(memcpy_func_t, memcpy_v);
+  RETURN_FUNC(memcpy_func_t, memcpy_gc);
 }
+MEMCPY_SHIM()
 
-typedef void* memmove_func(void*, const void*, size_t);
 DEFINE_IFUNC_FOR(memmove) {
-  if (have_fast_v()) RETURN_FUNC(memmove_func, memmove_v);
-  RETURN_FUNC(memmove_func, memmove_gc);
+  if (have_fast_v()) RETURN_FUNC(memmove_func_t, memmove_v);
+  RETURN_FUNC(memmove_func_t, memmove_gc);
 }
+MEMMOVE_SHIM()
 
-typedef void* memset_func(void*, int, size_t);
 DEFINE_IFUNC_FOR(memset) {
-  if (have_fast_v()) RETURN_FUNC(memset_func, memset_v);
-  RETURN_FUNC(memset_func, memset_gc);
+  if (have_fast_v()) RETURN_FUNC(memset_func_t, memset_v);
+  RETURN_FUNC(memset_func_t, memset_gc);
 }
+MEMSET_SHIM()
 
-typedef char* stpcpy_func(char*, const char*);
 DEFINE_IFUNC_FOR(stpcpy) {
-  if (have_fast_v()) RETURN_FUNC(stpcpy_func, stpcpy_v);
-  RETURN_FUNC(stpcpy_func, stpcpy_gc);
+  if (have_fast_v()) RETURN_FUNC(stpcpy_func_t, stpcpy_v);
+  RETURN_FUNC(stpcpy_func_t, stpcpy_gc);
 }
+STPCPY_SHIM()
 
-typedef char* strcat_func(char*, const char*);
 DEFINE_IFUNC_FOR(strcat) {
-  if (have_fast_v()) RETURN_FUNC(strcat_func, strcat_v);
-  RETURN_FUNC(strcat_func, strcat_gc);
+  if (have_fast_v()) RETURN_FUNC(strcat_func_t, strcat_v);
+  RETURN_FUNC(strcat_func_t, strcat_gc);
 }
+STRCAT_SHIM()
 
-typedef char* strchr_func(const char*, int);
 DEFINE_IFUNC_FOR(strchr) {
-  if (have_fast_v()) RETURN_FUNC(strchr_func, strchr_v);
-  RETURN_FUNC(strchr_func, strchr_gc);
+  if (have_fast_v()) RETURN_FUNC(strchr_func_t, strchr_v);
+  RETURN_FUNC(strchr_func_t, strchr_gc);
 }
+STRCHR_SHIM()
 
-typedef int strcmp_func(const char*, const char*);
 DEFINE_IFUNC_FOR(strcmp) {
-  if (have_fast_v()) RETURN_FUNC(strcmp_func, strcmp_v);
-  RETURN_FUNC(strcmp_func, strcmp_gc);
+  if (have_fast_v()) RETURN_FUNC(strcmp_func_t, strcmp_v);
+  RETURN_FUNC(strcmp_func_t, strcmp_gc);
 }
+STRCMP_SHIM()
 
-typedef char* strcpy_func(char*, const char*);
 DEFINE_IFUNC_FOR(strcpy) {
-  if (have_fast_v()) RETURN_FUNC(strcpy_func, strcpy_v);
-  RETURN_FUNC(strcpy_func, strcpy_gc);
+  if (have_fast_v()) RETURN_FUNC(strcpy_func_t, strcpy_v);
+  RETURN_FUNC(strcpy_func_t, strcpy_gc);
 }
+STRCPY_SHIM()
 
-typedef size_t strlen_func(const char*);
 DEFINE_IFUNC_FOR(strlen) {
-  if (have_fast_v()) RETURN_FUNC(strlen_func, strlen_v);
-  RETURN_FUNC(strlen_func, strlen_gc);
+  if (have_fast_v()) RETURN_FUNC(strlen_func_t, strlen_v);
+  RETURN_FUNC(strlen_func_t, strlen_gc);
 }
+STRLEN_SHIM()
 
-typedef char* strncat_func(char*, const char*, size_t);
 DEFINE_IFUNC_FOR(strncat) {
-  if (have_fast_v()) RETURN_FUNC(strncat_func, strncat_v);
-  RETURN_FUNC(strncat_func, strncat_gc);
+  if (have_fast_v()) RETURN_FUNC(strncat_func_t, strncat_v);
+  RETURN_FUNC(strncat_func_t, strncat_gc);
 }
+STRNCAT_SHIM()
 
-typedef int strncmp_func(const char*, const char*, size_t);
 DEFINE_IFUNC_FOR(strncmp) {
-  if (have_fast_v()) RETURN_FUNC(strncmp_func, strncmp_v);
-  RETURN_FUNC(strncmp_func, strncmp_gc);
+  if (have_fast_v()) RETURN_FUNC(strncmp_func_t, strncmp_v);
+  RETURN_FUNC(strncmp_func_t, strncmp_gc);
 }
+STRNCMP_SHIM()
 
-typedef char* strncpy_func(char*, const char*, size_t);
 DEFINE_IFUNC_FOR(strncpy) {
-  if (have_fast_v()) RETURN_FUNC(strncpy_func, strncpy_v);
-  RETURN_FUNC(strncpy_func, strncpy_gc);
+  if (have_fast_v()) RETURN_FUNC(strncpy_func_t, strncpy_v);
+  RETURN_FUNC(strncpy_func_t, strncpy_gc);
 }
+STRNCPY_SHIM()
 
-typedef size_t strnlen_func(const char*, size_t);
 DEFINE_IFUNC_FOR(strnlen) {
-  if (have_fast_v()) RETURN_FUNC(strnlen_func, strnlen_v);
-  RETURN_FUNC(strnlen_func, strnlen_gc);
+  if (have_fast_v()) RETURN_FUNC(strnlen_func_t, strnlen_v);
+  RETURN_FUNC(strnlen_func_t, strnlen_gc);
 }
+STRNLEN_SHIM()
 
 }  // extern "C"
