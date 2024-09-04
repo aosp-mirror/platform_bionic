@@ -44,7 +44,7 @@ __BEGIN_DECLS
 typedef unsigned int nfds_t;
 
 /**
- * [poll(3)](http://man7.org/linux/man-pages/man3/poll.3.html) waits on a set of file descriptors.
+ * [poll(3)](https://man7.org/linux/man-pages/man3/poll.3.html) waits on a set of file descriptors.
  *
  * Returns the number of ready file descriptors on success, 0 for timeout,
  * and returns -1 and sets `errno` on failure.
@@ -52,7 +52,7 @@ typedef unsigned int nfds_t;
 int poll(struct pollfd* _Nullable __fds, nfds_t __count, int __timeout_ms);
 
 /**
- * [ppoll(3)](http://man7.org/linux/man-pages/man3/ppoll.3.html) waits on a set of file descriptors
+ * [ppoll(3)](https://man7.org/linux/man-pages/man3/ppoll.3.html) waits on a set of file descriptors
  * or a signal. Set `__timeout` to null for no timeout. Set `__mask` to null to not set the signal
  * mask.
  *

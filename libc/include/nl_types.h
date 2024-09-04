@@ -56,7 +56,7 @@ typedef void* nl_catd;
 typedef int nl_item;
 
 /**
- * [catopen(3)](http://man7.org/linux/man-pages/man3/catopen.3.html) opens a message catalog.
+ * [catopen(3)](https://man7.org/linux/man-pages/man3/catopen.3.html) opens a message catalog.
  *
  * On Android, this always returns failure: `((nl_catd) -1)`.
  *
@@ -65,7 +65,7 @@ typedef int nl_item;
 nl_catd _Nonnull catopen(const char* _Nonnull __name, int __flag) __INTRODUCED_IN(26);
 
 /**
- * [catgets(3)](http://man7.org/linux/man-pages/man3/catgets.3.html) translates the given message
+ * [catgets(3)](https://man7.org/linux/man-pages/man3/catgets.3.html) translates the given message
  * using the given message catalog.
  *
  * On Android, this always returns `__msg`.
@@ -75,7 +75,7 @@ nl_catd _Nonnull catopen(const char* _Nonnull __name, int __flag) __INTRODUCED_I
 char* _Nonnull catgets(nl_catd _Nonnull __catalog, int __set_number, int __msg_number, const char* _Nonnull __msg) __INTRODUCED_IN(26);
 
 /**
- * [catclose(3)](http://man7.org/linux/man-pages/man3/catclose.3.html) closes a message catalog.
+ * [catclose(3)](https://man7.org/linux/man-pages/man3/catclose.3.html) closes a message catalog.
  *
  * On Android, this always returns -1 with `errno` set to `EBADF`.
  */

@@ -64,19 +64,19 @@ struct hsearch_data {
 __BEGIN_DECLS
 
 /**
- * [insque(3)](http://man7.org/linux/man-pages/man3/insque.3.html) inserts
+ * [insque(3)](https://man7.org/linux/man-pages/man3/insque.3.html) inserts
  * an item in a queue (an intrusive doubly-linked list).
  */
 void insque(void* _Nonnull __element, void* _Nullable __previous);
 
 /**
- * [remque(3)](http://man7.org/linux/man-pages/man3/remque.3.html) removes
+ * [remque(3)](https://man7.org/linux/man-pages/man3/remque.3.html) removes
  * an item from a queue (an intrusive doubly-linked list).
  */
 void remque(void* _Nonnull __element);
 
 /**
- * [hcreate(3)](http://man7.org/linux/man-pages/man3/hcreate.3.html)
+ * [hcreate(3)](https://man7.org/linux/man-pages/man3/hcreate.3.html)
  * initializes the global hash table, with space for at least `__n` elements.
  *
  * See hcreate_r() if you need more than one hash table.
@@ -88,7 +88,7 @@ void remque(void* _Nonnull __element);
 int hcreate(size_t __n) __INTRODUCED_IN(28);
 
 /**
- * [hdestroy(3)](http://man7.org/linux/man-pages/man3/hdestroy.3.html) destroys
+ * [hdestroy(3)](https://man7.org/linux/man-pages/man3/hdestroy.3.html) destroys
  * the global hash table.
  *
  * See hdestroy_r() if you need more than one hash table.
@@ -98,7 +98,7 @@ int hcreate(size_t __n) __INTRODUCED_IN(28);
 void hdestroy(void) __INTRODUCED_IN(28);
 
 /**
- * [hsearch(3)](http://man7.org/linux/man-pages/man3/hsearch.3.html) finds or
+ * [hsearch(3)](https://man7.org/linux/man-pages/man3/hsearch.3.html) finds or
  * inserts `__entry` in the global hash table, based on `__action`.
  *
  * See hsearch_r() if you need more than one hash table.
@@ -113,7 +113,7 @@ ENTRY* _Nullable hsearch(ENTRY __entry, ACTION __action) __INTRODUCED_IN(28);
 #if defined(__USE_BSD) || defined(__USE_GNU)
 
 /**
- * [hcreate_r(3)](http://man7.org/linux/man-pages/man3/hcreate_r.3.html)
+ * [hcreate_r(3)](https://man7.org/linux/man-pages/man3/hcreate_r.3.html)
  * initializes a hash table `__table` with space for at least `__n` elements.
  *
  * Returns *non-zero* on success and returns 0 and sets `errno` on failure.
@@ -123,7 +123,7 @@ ENTRY* _Nullable hsearch(ENTRY __entry, ACTION __action) __INTRODUCED_IN(28);
 int hcreate_r(size_t __n, struct hsearch_data* _Nonnull __table) __INTRODUCED_IN(28);
 
 /**
- * [hdestroy_r(3)](http://man7.org/linux/man-pages/man3/hdestroy_r.3.html) destroys
+ * [hdestroy_r(3)](https://man7.org/linux/man-pages/man3/hdestroy_r.3.html) destroys
  * the hash table `__table`.
  *
  * Available since API level 28.
@@ -131,7 +131,7 @@ int hcreate_r(size_t __n, struct hsearch_data* _Nonnull __table) __INTRODUCED_IN
 void hdestroy_r(struct hsearch_data* _Nonnull __table) __INTRODUCED_IN(28);
 
 /**
- * [hsearch_r(3)](http://man7.org/linux/man-pages/man3/hsearch_r.3.html) finds or
+ * [hsearch_r(3)](https://man7.org/linux/man-pages/man3/hsearch_r.3.html) finds or
  * inserts `__entry` in the hash table `__table`, based on `__action`.
  *
  * Returns *non-zero* on success and returns 0 and sets `errno` on failure.
@@ -144,7 +144,7 @@ int hsearch_r(ENTRY __entry, ACTION __action, ENTRY* _Nullable * _Nonnull __resu
 #endif
 
 /**
- * [lfind(3)](http://man7.org/linux/man-pages/man3/lfind.3.html) brute-force
+ * [lfind(3)](https://man7.org/linux/man-pages/man3/lfind.3.html) brute-force
  * searches the unsorted array `__array` (of `__count` items each of size `__size`)
  * for `__key`, using `__comparator`.
  *
@@ -155,7 +155,7 @@ int hsearch_r(ENTRY __entry, ACTION __action, ENTRY* _Nullable * _Nonnull __resu
 void* _Nullable lfind(const void* _Nonnull __key, const void* _Nonnull __array, size_t* _Nonnull __count, size_t __size, int (* _Nonnull __comparator)(const void* _Nonnull, const void* _Nonnull));
 
 /**
- * [lsearch(3)](http://man7.org/linux/man-pages/man3/lsearch.3.html) brute-force
+ * [lsearch(3)](https://man7.org/linux/man-pages/man3/lsearch.3.html) brute-force
  * searches the unsorted array `__array` (of `__count` items each of size `__size`)
  * for `__key`, using `__comparator`.
  *
@@ -168,7 +168,7 @@ void* _Nullable lfind(const void* _Nonnull __key, const void* _Nonnull __array, 
 void* _Nonnull lsearch(const void* _Nonnull __key, void* _Nonnull __array, size_t* _Nonnull __count, size_t __size, int (* _Nonnull __comparator)(const void* _Nonnull, const void* _Nonnull));
 
 /**
- * [tdelete(3)](http://man7.org/linux/man-pages/man3/tdelete.3.html) searches
+ * [tdelete(3)](https://man7.org/linux/man-pages/man3/tdelete.3.html) searches
  * for and removes an element in the tree `*__root_ptr`. The search is performed
  * using `__comparator`.
  *
@@ -177,13 +177,13 @@ void* _Nonnull lsearch(const void* _Nonnull __key, void* _Nonnull __array, size_
 void* _Nullable tdelete(const void* _Nonnull __key, void* _Nullable * _Nullable __root_ptr, int (* _Nonnull __comparator)(const void* _Nonnull, const void* _Nonnull));
 
 /**
- * [tdestroy(3)](http://man7.org/linux/man-pages/man3/tdestroy.3.html) destroys
+ * [tdestroy(3)](https://man7.org/linux/man-pages/man3/tdestroy.3.html) destroys
  * the hash table `__root` using `__free_fn` on each node.
  */
 void tdestroy(void* _Nullable __root, void (* _Nullable __free_fn)(void* _Nullable));
 
 /**
- * [tfind(3)](http://man7.org/linux/man-pages/man3/tfind.3.html) searches
+ * [tfind(3)](https://man7.org/linux/man-pages/man3/tfind.3.html) searches
  * for an element in the tree `*__root_ptr`. The search is performed using
  * `__comparator`.
  *
@@ -192,7 +192,7 @@ void tdestroy(void* _Nullable __root, void (* _Nullable __free_fn)(void* _Nullab
 void* _Nullable tfind(const void* _Nonnull __key, void* _Nullable const* _Nullable __root_ptr, int (* _Nonnull __comparator)(const void* _Nonnull, const void* _Nonnull));
 
 /**
- * [tsearch(3)](http://man7.org/linux/man-pages/man3/tsearch.3.html) searches
+ * [tsearch(3)](https://man7.org/linux/man-pages/man3/tsearch.3.html) searches
  * for an element in the tree `*__root_ptr`. The search is performed using
  * `__comparator`.
  *
@@ -203,7 +203,7 @@ void* _Nullable tfind(const void* _Nonnull __key, void* _Nullable const* _Nullab
 void* _Nullable tsearch(const void* _Nonnull __key, void* _Nullable * _Nullable __root_ptr, int (* _Nonnull __comparator)(const void* _Nonnull, const void* _Nonnull));
 
 /**
- * [twalk(3)](http://man7.org/linux/man-pages/man3/twalk.3.html) calls
+ * [twalk(3)](https://man7.org/linux/man-pages/man3/twalk.3.html) calls
  * `__visitor` on every node in the tree.
  */
 void twalk(const void* _Nullable __root, void (* _Nullable __visitor)(const void* _Nullable, VISIT, int));
