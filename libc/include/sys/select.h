@@ -87,7 +87,7 @@ int __FD_ISSET_chk(int, const fd_set* _Nonnull, size_t);
 #define FD_ISSET(fd, set) __FD_ISSET_chk(fd, set, __bos(set))
 
 /**
- * [select(2)](http://man7.org/linux/man-pages/man2/select.2.html) waits on a
+ * [select(2)](https://man7.org/linux/man-pages/man2/select.2.html) waits on a
  * set of file descriptors.
  *
  * Use poll() instead.
@@ -98,7 +98,7 @@ int __FD_ISSET_chk(int, const fd_set* _Nonnull, size_t);
 int select(int __max_fd_plus_one, fd_set* _Nullable __read_fds, fd_set* _Nullable __write_fds, fd_set* _Nullable __exception_fds, struct timeval* _Nullable __timeout);
 
 /**
- * [pselect(2)](http://man7.org/linux/man-pages/man2/select.2.html) waits on a
+ * [pselect(2)](https://man7.org/linux/man-pages/man2/select.2.html) waits on a
  * set of file descriptors.
  *
  * Use ppoll() instead.
@@ -109,7 +109,7 @@ int select(int __max_fd_plus_one, fd_set* _Nullable __read_fds, fd_set* _Nullabl
 int pselect(int __max_fd_plus_one, fd_set* _Nullable __read_fds, fd_set* _Nullable __write_fds, fd_set* _Nullable __exception_fds, const struct timespec* _Nullable __timeout, const sigset_t* _Nullable __mask);
 
 /**
- * [pselect64(2)](http://man7.org/linux/man-pages/man2/select.2.html) waits on a
+ * [pselect64(2)](https://man7.org/linux/man-pages/man2/select.2.html) waits on a
  * set of file descriptors.
  *
  * Use ppoll64() instead.

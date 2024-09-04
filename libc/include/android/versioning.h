@@ -21,7 +21,6 @@
 #if defined(__BIONIC_VERSIONER)
 
 #define __INTRODUCED_IN(api_level) __attribute__((__annotate__("introduced_in=" #api_level)))
-#define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level) __attribute__((__annotate__("introduced_in=" #api_level))) __VERSIONER_NO_GUARD
 #define __DEPRECATED_IN(api_level, msg) __attribute__((__annotate__("deprecated_in=" #api_level)))
 #define __REMOVED_IN(api_level, msg) __attribute__((__annotate__("obsoleted_in=" #api_level)))
 #define __INTRODUCED_IN_32(api_level) __attribute__((__annotate__("introduced_in_32=" #api_level)))
@@ -41,17 +40,10 @@
 // be enforced. In the case, the absence of 'strict' makes it possible to call an unavailable API
 // without the __builtin_available check, which will cause a link error at runtime.
 // Android platform build system defines this macro along with -Wunguarded-availability
-//
-// The _NO_GUARD_FOR_NDK variants keep the __VERSIONER_NO_GUARD behavior working for the NDK. This
-// allows libc++ to refer to these functions in inlines without needing to guard them, needed since
-// libc++ doesn't currently guard these calls. There's no risk to the apps though because using
-// those APIs will still cause a link error.
 #if defined(__ANDROID_UNAVAILABLE_SYMBOLS_ARE_WEAK__)
 #define __BIONIC_AVAILABILITY(__what, ...) __attribute__((__availability__(android,__what __VA_OPT__(,) __VA_ARGS__)))
-#define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level) __INTRODUCED_IN(api_level)
 #else
 #define __BIONIC_AVAILABILITY(__what, ...) __attribute__((__availability__(android,strict,__what __VA_OPT__(,) __VA_ARGS__)))
-#define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level)
 #endif
 
 #define __INTRODUCED_IN(api_level) __BIONIC_AVAILABILITY(introduced=api_level)

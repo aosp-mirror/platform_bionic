@@ -94,11 +94,14 @@ float_type wcstod(const wchar_t* str, wchar_t** end, float_type strtod_fn(const 
 float wcstof(const wchar_t* s, wchar_t** end) {
   return wcstod<float>(s, end, strtof);
 }
+__strong_alias(wcstof_l, wcstof);
 
 double wcstod(const wchar_t* s, wchar_t** end) {
   return wcstod<double>(s, end, strtod);
 }
+__strong_alias(wcstod_l, wcstod);
 
 long double wcstold(const wchar_t* s, wchar_t** end) {
   return wcstod<long double>(s, end, strtold);
 }
+__strong_alias(wcstold_l, wcstold);

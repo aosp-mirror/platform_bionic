@@ -37,19 +37,19 @@
 #include <sys/endian.h>
 
 /**
- * [bswap_16(3)](http://man7.org/linux/man-pages/man3/bswap_16.3.html) swaps the bytes in a
+ * [bswap_16(3)](https://man7.org/linux/man-pages/man3/bswap_16.3.html) swaps the bytes in a
  * 16-bit value.
  */
 #define bswap_16(x) __swap16(x)
 
 /**
- * [bswap_32(3)](http://man7.org/linux/man-pages/man3/bswap_32.3.html) swaps the bytes in a
+ * [bswap_32(3)](https://man7.org/linux/man-pages/man3/bswap_32.3.html) swaps the bytes in a
  * 32-bit value.
  */
 #define bswap_32(x) __swap32(x)
 
 /**
- * [bswap_64(3)](http://man7.org/linux/man-pages/man3/bswap_64.3.html) swaps the bytes in a
+ * [bswap_64(3)](https://man7.org/linux/man-pages/man3/bswap_64.3.html) swaps the bytes in a
  * 64-bit value.
  */
 #define bswap_64(x) __swap64(x)
