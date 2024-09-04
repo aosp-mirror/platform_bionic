@@ -116,13 +116,10 @@ __BIONIC_THREADS_INLINE int mtx_unlock(mtx_t* _Nonnull __mtx) {
   return __bionic_thrd_error(pthread_mutex_unlock(__mtx));
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wnullability-completeness"
 struct __bionic_thrd_data {
-  thrd_start_t __func;
-  void* __arg;
+  thrd_start_t _Nonnull __func;
+  void* _Nullable __arg;
 };
-#pragma clang diagnostic pop
 
 static __inline void* _Nonnull __bionic_thrd_trampoline(void* _Nonnull __arg) {
   struct __bionic_thrd_data __data =
