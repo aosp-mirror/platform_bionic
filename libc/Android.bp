@@ -1686,8 +1686,7 @@ cc_library {
     llndk: {
         symbol_file: "libc.map.txt",
         export_headers_as_system: true,
-        export_preprocessed_headers: ["include"],
-        export_llndk_headers: ["libc_uapi_headers"],
+        export_llndk_headers: ["libc_headers"],
     },
 }
 
@@ -2330,17 +2329,6 @@ ndk_library {
     name: "libc",
     symbol_file: "libc.map.txt",
     first_version: "9",
-    export_header_libs: [
-        "common_libc",
-        "libc_uapi",
-        "libc_kernel_android_uapi_linux",
-        "libc_kernel_android_scsi",
-        "libc_asm_arm",
-        "libc_asm_arm64",
-        "libc_asm_riscv64",
-        "libc_asm_x86",
-        "libc_asm_x86_64",
-    ],
 }
 
 ndk_library {
