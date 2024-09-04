@@ -43,7 +43,7 @@
 __BEGIN_DECLS
 
 /**
- * [getrandom(2)](http://man7.org/linux/man-pages/man2/getrandom.2.html) fills the given buffer
+ * [getrandom(2)](https://man7.org/linux/man-pages/man2/getrandom.2.html) fills the given buffer
  * with random bytes.
  *
  * Returns the number of bytes copied on success, and returns -1 and sets `errno` on failure.

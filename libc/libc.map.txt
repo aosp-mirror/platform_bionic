@@ -591,6 +591,7 @@ LIBC {
     killpg;
     klogctl;
     labs;
+    lchmod; # introduced=36
     lchown;
     lcong48; # introduced=23
     ldexp;
@@ -670,6 +671,7 @@ LIBC {
     mprotect;
     mrand48;
     mremap;
+    mseal; # introduced=36
     msync;
     munlock;
     munlockall;
@@ -844,6 +846,7 @@ LIBC {
     pwrite;
     pwrite64;
     qsort;
+    qsort_r; # introduced=36
     quick_exit;
     raise;
     rand;
@@ -952,10 +955,11 @@ LIBC {
     setvbuf;
     setxattr;
     shutdown;
+    sig2str; # introduced=36
     sigaction;
     sigaddset;
     sigaltstack;
-    sigblock; # arm x86 arm64 x86_64
+    sigblock;
     sigdelset;
     sigemptyset;
     sigfillset;
@@ -968,7 +972,7 @@ LIBC {
     sigprocmask;
     sigqueue; # introduced=23
     sigsetjmp;
-    sigsetmask; # arm x86 arm64 x86_64
+    sigsetmask;
     sigsuspend;
     sigtimedwait; # introduced=23
     sigwait;
@@ -994,6 +998,7 @@ LIBC {
     stdout; # var introduced=23
     stpcpy;
     stpncpy;
+    str2sig; # introduced=36
     strcasecmp;
     strcasecmp_l; # introduced=23
     strcasestr;

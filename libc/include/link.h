@@ -99,7 +99,7 @@ struct dl_phdr_info {
 };
 
 /**
- * [dl_iterate_phdr(3)](http://man7.org/linux/man-pages/man3/dl_iterate_phdr.3.html)
+ * [dl_iterate_phdr(3)](https://man7.org/linux/man-pages/man3/dl_iterate_phdr.3.html)
  * calls the given callback once for every loaded shared object. The size
  * argument to the callback lets you determine whether you have a smaller
  * `dl_phdr_info` from before API level 30, or the newer full one.

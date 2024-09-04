@@ -389,6 +389,7 @@ cc_library_static {
         "upstream-freebsd/lib/libc/stdlib/hdestroy_r.c",
         "upstream-freebsd/lib/libc/stdlib/hsearch_r.c",
         "upstream-freebsd/lib/libc/stdlib/qsort.c",
+        "upstream-freebsd/lib/libc/stdlib/qsort_r.c",
         "upstream-freebsd/lib/libc/stdlib/quick_exit.c",
         "upstream-freebsd/lib/libc/string/wcpcpy.c",
         "upstream-freebsd/lib/libc/string/wcpncpy.c",
@@ -570,7 +571,6 @@ cc_library_static {
         "upstream-openbsd/lib/libc/stdio/fgetwc.c",
         "upstream-openbsd/lib/libc/stdio/fgetws.c",
         "upstream-openbsd/lib/libc/stdio/flags.c",
-        "upstream-openbsd/lib/libc/stdio/fpurge.c",
         "upstream-openbsd/lib/libc/stdio/fputwc.c",
         "upstream-openbsd/lib/libc/stdio/fputws.c",
         "upstream-openbsd/lib/libc/stdio/fvwrite.c",
@@ -624,10 +624,12 @@ cc_library_static {
         "upstream-openbsd/lib/libc/string/wcslcpy.c",
         "upstream-openbsd/lib/libc/string/wcswidth.c",
 
-        // This file is originally from OpenBSD, and benefits from
-        // being compiled with openbsd-compat.h.
-        // TODO: clean this up instead.
+        // These files are originally from OpenBSD,
+        // and benefit from being compiled with openbsd-compat.h.
+        // TODO: clean them up instead.
         "bionic/fts.c",
+        "stdio/vfprintf.cpp",
+        "stdio/vfwprintf.cpp",
     ],
 
     // Each architecture has optimized versions of some routines,
@@ -686,9 +688,11 @@ cc_library_static {
 
     local_include_dirs: [
         "private",
-        "upstream-openbsd/android/include",
         "stdio",
-        "upstream-openbsd/lib/libc/include",
+        "upstream-openbsd/android/include/",
+        "upstream-openbsd/lib/libc/gdtoa/",
+        "upstream-openbsd/lib/libc/include/",
+        "upstream-openbsd/lib/libc/stdio/",
     ],
 
     name: "libc_openbsd",
@@ -698,8 +702,6 @@ cc_library_static {
     name: "libc_openbsd_large_stack",
     defaults: ["libc_defaults"],
     srcs: [
-        "stdio/vfprintf.cpp",
-        "stdio/vfwprintf.cpp",
         "upstream-openbsd/lib/libc/string/memmem.c",
         "upstream-openbsd/lib/libc/string/strstr.c",
     ],
@@ -710,11 +712,7 @@ cc_library_static {
     ],
 
     local_include_dirs: [
-        "private",
         "upstream-openbsd/android/include/",
-        "upstream-openbsd/lib/libc/gdtoa/",
-        "upstream-openbsd/lib/libc/include/",
-        "upstream-openbsd/lib/libc/stdio/",
     ],
 }
 
@@ -915,6 +913,7 @@ cc_library_static {
         "bionic/isatty.cpp",
         "bionic/killpg.cpp",
         "bionic/langinfo.cpp",
+        "bionic/lchmod.cpp",
         "bionic/lchown.cpp",
         "bionic/lfs64_support.cpp",
         "bionic/libc_init_common.cpp",
@@ -1031,7 +1030,6 @@ cc_library_static {
         "bionic/thread_private.cpp",
         "bionic/threads.cpp",
         "bionic/time.cpp",
-        "bionic/time_l.cpp",
         "bionic/tmpfile.cpp",
         "bionic/umount.cpp",
         "bionic/unlink.cpp",
@@ -1415,43 +1413,13 @@ cc_library_static {
 }
 
 // ========================================================
-// libc_static_dispatch.a --- libc.a ifuncs
+// libc_static_dispatch.a/libc_dynamic_dispatch.a --- string/memory "ifuncs"
+// (Actually ifuncs for libc.so, but a home-grown alternative for libc.a.)
 // ========================================================
-cc_library_static {
+
+cc_defaults {
+    name: "libc_dispatch_defaults",
     defaults: ["libc_defaults"],
-    name: "libc_static_dispatch",
-
-    arch: {
-        x86_64: {
-            srcs: ["arch-x86_64/static_function_dispatch.S"],
-        },
-        x86: {
-            srcs: ["arch-x86/static_function_dispatch.S"],
-        },
-        arm: {
-            srcs: ["arch-arm/static_function_dispatch.S"],
-        },
-        arm64: {
-            srcs: ["arch-arm64/static_function_dispatch.S"],
-        },
-        riscv64: {
-            srcs: ["arch-riscv64/static_function_dispatch.S"],
-        },
-    },
-}
-
-// ========================================================
-// libc_dynamic_dispatch.a --- libc.so ifuncs
-// ========================================================
-cc_library_static {
-    defaults: ["libc_defaults"],
-    name: "libc_dynamic_dispatch",
-
-    cflags: [
-        "-ffreestanding",
-        "-fno-stack-protector",
-        "-fno-jump-tables",
-    ],
     arch: {
         x86_64: {
             srcs: ["arch-x86_64/dynamic_function_dispatch.cpp"],
@@ -1469,6 +1437,30 @@ cc_library_static {
             srcs: ["arch-riscv64/dynamic_function_dispatch.cpp"],
         },
     },
+    // Prevent the compiler from inserting calls to libc/taking the address of
+    // a jump table from within an ifunc (or, in the static case, code that
+    // can be executed arbitrarily early).
+    cflags: [
+        "-ffreestanding",
+        "-fno-stack-protector",
+        "-fno-jump-tables",
+    ],
+}
+
+cc_library_static {
+    name: "libc_static_dispatch",
+    defaults: ["libc_dispatch_defaults"],
+    cflags: [
+        "-DBIONIC_STATIC_DISPATCH",
+    ],
+}
+
+cc_library_static {
+    name: "libc_dynamic_dispatch",
+    defaults: ["libc_dispatch_defaults"],
+    cflags: [
+        "-DBIONIC_DYNAMIC_DISPATCH",
+    ],
 }
 
 // ========================================================
@@ -1665,7 +1657,6 @@ cc_defaults {
     },
 
     apex_available: [
-        "//apex_available:platform",
         "com.android.runtime",
     ],
 
@@ -1695,8 +1686,7 @@ cc_library {
     llndk: {
         symbol_file: "libc.map.txt",
         export_headers_as_system: true,
-        export_preprocessed_headers: ["include"],
-        export_llndk_headers: ["libc_llndk_headers"],
+        export_llndk_headers: ["libc_headers"],
     },
 }
 
@@ -1807,7 +1797,7 @@ cc_library_headers {
 }
 
 cc_library_headers {
-    name: "libc_llndk_headers",
+    name: "libc_uapi_headers",
     visibility: [
         "//external/musl",
     ],
@@ -1902,13 +1892,13 @@ cc_library_headers {
     target: {
         android: {
             export_system_include_dirs: ["include"],
-            header_libs: ["libc_llndk_headers"],
-            export_header_lib_headers: ["libc_llndk_headers"],
+            header_libs: ["libc_uapi_headers"],
+            export_header_lib_headers: ["libc_uapi_headers"],
         },
         linux_bionic: {
             export_system_include_dirs: ["include"],
-            header_libs: ["libc_llndk_headers"],
-            export_header_lib_headers: ["libc_llndk_headers"],
+            header_libs: ["libc_uapi_headers"],
+            export_header_lib_headers: ["libc_uapi_headers"],
         },
     },
 }
@@ -2228,17 +2218,29 @@ cc_library_static {
     visibility: [
         "//packages/modules/Virtualization/libs/libvmbase",
     ],
+
+    // b/358211032: This library gets linked into a rust rlib.  Disable LTO
+    // until cross-language lto is supported.
+    lto: {
+        never: true,
+    },
 }
 
 // ========================================================
 // NDK headers.
 // ========================================================
 
-versioned_ndk_headers {
+ndk_headers {
     name: "common_libc",
     from: "include",
     to: "",
+    srcs: ["include/**/*.h"],
     license: "NOTICE",
+    // These don't pass the bad verification we do because many of them are
+    // arch-specific, and they aren't necessarily independently includable.
+    // That's not much of a problem though, since C-incompaitibilities in the
+    // UAPI headers should run into problems long before they reach us.
+    skip_verification: true,
 }
 
 ndk_headers {
@@ -2258,6 +2260,7 @@ ndk_headers {
         "kernel/uapi/xen/**/*.h",
     ],
     license: "NOTICE",
+    skip_verification: true,
 }
 
 ndk_headers {
@@ -2274,6 +2277,7 @@ ndk_headers {
     to: "scsi",
     srcs: ["kernel/android/scsi/**/*.h"],
     license: "NOTICE",
+    skip_verification: true,
 }
 
 ndk_headers {
@@ -2282,6 +2286,7 @@ ndk_headers {
     to: "arm-linux-androideabi",
     srcs: ["kernel/uapi/asm-arm/**/*.h"],
     license: "NOTICE",
+    skip_verification: true,
 }
 
 ndk_headers {
@@ -2290,6 +2295,7 @@ ndk_headers {
     to: "aarch64-linux-android",
     srcs: ["kernel/uapi/asm-arm64/**/*.h"],
     license: "NOTICE",
+    skip_verification: true,
 }
 
 ndk_headers {
@@ -2298,6 +2304,7 @@ ndk_headers {
     to: "riscv64-linux-android",
     srcs: ["kernel/uapi/asm-riscv/**/*.h"],
     license: "NOTICE",
+    skip_verification: true,
 }
 
 ndk_headers {
@@ -2306,6 +2313,7 @@ ndk_headers {
     to: "i686-linux-android",
     srcs: ["kernel/uapi/asm-x86/**/*.h"],
     license: "NOTICE",
+    skip_verification: true,
 }
 
 ndk_headers {
@@ -2314,23 +2322,13 @@ ndk_headers {
     to: "x86_64-linux-android",
     srcs: ["kernel/uapi/asm-x86/**/*.h"],
     license: "NOTICE",
+    skip_verification: true,
 }
 
 ndk_library {
     name: "libc",
     symbol_file: "libc.map.txt",
     first_version: "9",
-    export_header_libs: [
-        "common_libc",
-        "libc_uapi",
-        "libc_kernel_android_uapi_linux",
-        "libc_kernel_android_scsi",
-        "libc_asm_arm",
-        "libc_asm_arm64",
-        "libc_asm_riscv64",
-        "libc_asm_x86",
-        "libc_asm_x86_64",
-    ],
 }
 
 ndk_library {

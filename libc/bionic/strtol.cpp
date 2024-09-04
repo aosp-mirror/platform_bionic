@@ -142,34 +142,42 @@ intmax_t wcstoimax(const wchar_t* s, wchar_t** end, int base) {
 long strtol(const char* s, char** end, int base) {
   return StrToI<long, LONG_MIN, LONG_MAX, char>(s, end, base);
 }
+__strong_alias(strtol_l, strtol);
 
 long wcstol(const wchar_t* s, wchar_t** end, int base) {
   return StrToI<long, LONG_MIN, LONG_MAX, wchar_t>(s, end, base);
 }
+__strong_alias(wcstol_l, wcstol);
 
 long long strtoll(const char* s, char** end, int base) {
   return StrToI<long long, LLONG_MIN, LLONG_MAX, char>(s, end, base);
 }
+__strong_alias(strtoll_l, strtoll);
 
 long long wcstoll(const wchar_t* s, wchar_t** end, int base) {
   return StrToI<long long, LLONG_MIN, LLONG_MAX, wchar_t>(s, end, base);
 }
+__strong_alias(wcstoll_l, wcstoll);
 
 unsigned long strtoul(const char* s, char** end, int base) {
   return StrToI<unsigned long, 0, ULONG_MAX, char>(s, end, base);
 }
+__strong_alias(strtoul_l, strtoul);
 
 unsigned long wcstoul(const wchar_t* s, wchar_t** end, int base) {
   return StrToI<unsigned long, 0, ULONG_MAX, wchar_t>(s, end, base);
 }
+__strong_alias(wcstoul_l, wcstoul);
 
 unsigned long long strtoull(const char* s, char** end, int base) {
   return StrToI<unsigned long long, 0, ULLONG_MAX, char>(s, end, base);
 }
+__strong_alias(strtoull_l, strtoull);
 
 unsigned long long wcstoull(const wchar_t* s, wchar_t** end, int base) {
   return StrToI<unsigned long long, 0, ULLONG_MAX, wchar_t>(s, end, base);
 }
+__strong_alias(wcstoull_l, wcstoull);
 
 uintmax_t strtoumax(const char* s, char** end, int base) {
   return StrToI<uintmax_t, 0, UINTMAX_MAX, char>(s, end, base);
