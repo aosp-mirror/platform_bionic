@@ -60,7 +60,7 @@ __BEGIN_DECLS
 #define FNM_FILE_NAME    FNM_PATHNAME
 
 /**
- * [fnmatch(3)](http://man7.org/linux/man-pages/man3/fnmatch.3.html) matches `__string` against
+ * [fnmatch(3)](https://man7.org/linux/man-pages/man3/fnmatch.3.html) matches `__string` against
  * the shell wildcard `__pattern`.
  *
  * Returns 0 on success, and returns `FNM_NOMATCH` on failure.

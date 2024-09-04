@@ -111,6 +111,10 @@ enum {
   XFRM_POLICY_MASK = 3,
   XFRM_POLICY_MAX = 3
 };
+enum xfrm_sa_dir {
+  XFRM_SA_DIR_IN = 1,
+  XFRM_SA_DIR_OUT = 2
+};
 enum {
   XFRM_SHARE_ANY,
   XFRM_SHARE_SESSION,
@@ -255,6 +259,7 @@ enum xfrm_attr_type_t {
   XFRMA_SET_MARK_MASK,
   XFRMA_IF_ID,
   XFRMA_MTIMER_THRESH,
+  XFRMA_SA_DIR,
   __XFRMA_MAX
 #define XFRMA_OUTPUT_MARK XFRMA_SET_MARK
 #define XFRMA_MAX (__XFRMA_MAX - 1)

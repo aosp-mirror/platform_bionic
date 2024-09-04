@@ -272,14 +272,12 @@ typedef Elf64_Xword Elf64_Relr;
 
 /* riscv64 psabi. */
 
-/* FreeBSD is missing these, found in
+/*
  * https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc#relocations
- * so I've sent https://github.com/freebsd/freebsd-src/pull/1141 upstream.
+ * Missing from FreeBSD and the Linux uapi headers.
+ * TODO: upstreamed to FreeBSD as https://github.com/freebsd/freebsd-src/pull/1141.
  */
 #define R_RISCV_TLSDESC 12
-#define R_RISCV_PLT32 59
-#define R_RISCV_SET_ULEB128 60
-#define R_RISCV_SUB_ULEB128 61
 #define R_RISCV_TLSDESC_HI20 62
 #define R_RISCV_TLSDESC_LOAD_LO12 63
 #define R_RISCV_TLSDESC_ADD_LO12 64

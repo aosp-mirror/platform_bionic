@@ -154,7 +154,7 @@ char* _Nullable tempnam(const char* _Nullable __dir, const char* _Nullable __pre
     __warnattr("tempnam is unsafe, use mkstemp or tmpfile instead");
 
 /**
- * [rename(2)](http://man7.org/linux/man-pages/man2/rename.2.html) changes
+ * [rename(2)](https://man7.org/linux/man-pages/man2/rename.2.html) changes
  * the name or location of a file.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
@@ -162,7 +162,7 @@ char* _Nullable tempnam(const char* _Nullable __dir, const char* _Nullable __pre
 int rename(const char* _Nonnull __old_path, const char* _Nonnull __new_path);
 
 /**
- * [renameat(2)](http://man7.org/linux/man-pages/man2/renameat.2.html) changes
+ * [renameat(2)](https://man7.org/linux/man-pages/man2/renameat.2.html) changes
  * the name or location of a file, interpreting relative paths using an fd.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
@@ -172,25 +172,25 @@ int renameat(int __old_dir_fd, const char* _Nonnull __old_path, int __new_dir_fd
 #if defined(__USE_GNU)
 
 /**
- * Flag for [renameat2(2)](http://man7.org/linux/man-pages/man2/renameat2.2.html)
+ * Flag for [renameat2(2)](https://man7.org/linux/man-pages/man2/renameat2.2.html)
  * to fail if the new path already exists.
  */
 #define RENAME_NOREPLACE (1<<0)
 
 /**
- * Flag for [renameat2(2)](http://man7.org/linux/man-pages/man2/renameat2.2.html)
+ * Flag for [renameat2(2)](https://man7.org/linux/man-pages/man2/renameat2.2.html)
  * to atomically exchange the two paths.
  */
 #define RENAME_EXCHANGE (1<<1)
 
 /**
- * Flag for [renameat2(2)](http://man7.org/linux/man-pages/man2/renameat2.2.html)
+ * Flag for [renameat2(2)](https://man7.org/linux/man-pages/man2/renameat2.2.html)
  * to create a union/overlay filesystem object.
  */
 #define RENAME_WHITEOUT (1<<2)
 
 /**
- * [renameat2(2)](http://man7.org/linux/man-pages/man2/renameat2.2.html) changes
+ * [renameat2(2)](https://man7.org/linux/man-pages/man2/renameat2.2.html) changes
  * the name or location of a file, interpreting relative paths using an fd,
  * with optional `RENAME_` flags.
  *
