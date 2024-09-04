@@ -57,7 +57,7 @@ void* _Nonnull mempcpy(void* _Nonnull __dst, const void* _Nonnull __src, size_t 
 void* _Nonnull memmove(void* _Nonnull __dst, const void* _Nonnull __src, size_t __n);
 
 /**
- * [memset(3)](http://man7.org/linux/man-pages/man3/memset.3.html) writes the
+ * [memset(3)](https://man7.org/linux/man-pages/man3/memset.3.html) writes the
  * bottom 8 bits of the given int to the next `n` bytes of `dst`.
  *
  * Returns `dst`.
@@ -65,7 +65,7 @@ void* _Nonnull memmove(void* _Nonnull __dst, const void* _Nonnull __src, size_t 
 void* _Nonnull memset(void* _Nonnull __dst, int __ch, size_t __n);
 
 /**
- * [memset_explicit(3)](http://man7.org/linux/man-pages/man3/memset_explicit.3.html)
+ * [memset_explicit(3)](https://man7.org/linux/man-pages/man3/memset_explicit.3.html)
  * writes the bottom 8 bits of the given int to the next `n` bytes of `dst`,
  * but won't be optimized out by the compiler.
  *
@@ -108,8 +108,35 @@ char* _Nullable strcasestr(const char* _Nonnull __haystack, const char* _Nonnull
 char* _Nullable strtok(char* _Nullable __s, const char* _Nonnull __delimiter);
 char* _Nullable strtok_r(char* _Nullable __s, const char* _Nonnull __delimiter, char* _Nonnull * _Nonnull __pos_ptr);
 
+/**
+ * [strerror(3)](https://man7.org/linux/man-pages/man3/strerror.3.html)
+ * returns a string describing the given errno value.
+ * `strerror(EINVAL)` would return "Invalid argument", for example.
+ *
+ * On Android, unknown errno values return a string such as "Unknown error 666".
+ * These unknown errno value strings live in thread-local storage, and are valid
+ * until the next call of strerror() on the same thread.
+ *
+ * Returns a pointer to a string.
+ */
 char* _Nonnull strerror(int __errno_value);
-char* _Nonnull strerror_l(int __errno_value, locale_t _Nonnull __l) __INTRODUCED_IN(23);
+
+/**
+ * Equivalent to strerror() on Android where only C/POSIX locales are available.
+ */
+char* _Nonnull strerror_l(int __errno_value, locale_t _Nonnull __l) __RENAME(strerror);
+
+/**
+ * [strerror_r(3)](https://man7.org/linux/man-pages/man3/strerror_r.3.html)
+ * writes a string describing the given errno value into the given buffer.
+ *
+ * There are two variants of this function, POSIX and GNU.
+ * The GNU variant returns a pointer to the buffer.
+ * The POSIX variant returns 0 on success or an errno value on failure.
+ *
+ * The GNU variant is available since API level 23 if `_GNU_SOURCE` is defined.
+ * The POSIX variant is available otherwise.
+ */
 #if defined(__USE_GNU) && __ANDROID_API__ >= 23
 char* _Nonnull strerror_r(int __errno_value, char* _Nullable __buf, size_t __n) __RENAME(__gnu_strerror_r) __INTRODUCED_IN(23);
 #else /* POSIX */
@@ -117,7 +144,7 @@ int strerror_r(int __errno_value, char* _Nonnull __buf, size_t __n);
 #endif
 
 /**
- * [strerrorname_np(3)](http://man7.org/linux/man-pages/man3/strerrordesc_np.3.html)
+ * [strerrorname_np(3)](https://man7.org/linux/man-pages/man3/strerrordesc_np.3.html)
  * returns the name of the errno constant corresponding to its argument.
  * `strerrorname_np(38)` would return "ENOSYS", because `ENOSYS` is errno 38. This
  * is mostly useful for error reporting in cases where a string like "ENOSYS" is
@@ -133,7 +160,7 @@ const char* _Nullable strerrorname_np(int __errno_value) __INTRODUCED_IN(35);
 #endif
 
 /**
- * [strerrordesc_np(3)](http://man7.org/linux/man-pages/man3/strerrordesc_np.3.html)
+ * [strerrordesc_np(3)](https://man7.org/linux/man-pages/man3/strerrordesc_np.3.html)
  * is like strerror() but without localization. Since Android's strerror()
  * does not localize, this is the same as strerror() on Android.
  *
@@ -185,11 +212,10 @@ char* _Nonnull basename(const char* _Nonnull __path) __RENAME(__gnu_basename) __
 
 /* Const-correct overloads. Placed after FORTIFY so we call those functions, if possible. */
 #if defined(__cplusplus)
-/*
- * Use two enable_ifs so these overloads don't conflict with + are preferred over libcxx's. This can
- * be reduced to 1 after libcxx recognizes that we have const-correct overloads.
- */
-#define __prefer_this_overload __enable_if(true, "preferred overload") __enable_if(true, "")
+/* libcxx tries to provide these. Suppress that, since libcxx's impl doesn't respect FORTIFY. */
+#define __CORRECT_ISO_CPP_STRING_H_PROTO
+/* Used to make these preferable over regular <string.h> signatures for overload resolution. */
+#define __prefer_this_overload __enable_if(true, "")
 extern "C++" {
 inline __always_inline
 void* _Nullable __bionic_memchr(const void* _Nonnull const s __pass_object_size, int c, size_t n) {

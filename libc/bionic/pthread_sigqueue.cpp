@@ -40,14 +40,16 @@ __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_sigqueue(pthread_t t, int sig, const union sigval value) {
   ErrnoRestorer errno_restorer;
 
+  pid_t pid = getpid();
+
   pid_t tid = __pthread_internal_gettid(t, "pthread_sigqueue");
   if (tid == -1) return ESRCH;
 
-  siginfo_t siginfo;
-  siginfo.si_code = SI_QUEUE;
-  siginfo.si_pid = getpid();
+  siginfo_t siginfo = { .si_code = SI_QUEUE };
+  siginfo.si_signo = sig;
+  siginfo.si_pid = pid;
   siginfo.si_uid = getuid();
   siginfo.si_value = value;
 
-  return syscall(__NR_rt_tgsigqueueinfo, getpid(), tid, sig, &siginfo) ? errno : 0;
+  return syscall(__NR_rt_tgsigqueueinfo, pid, tid, sig, &siginfo) ? errno : 0;
 }

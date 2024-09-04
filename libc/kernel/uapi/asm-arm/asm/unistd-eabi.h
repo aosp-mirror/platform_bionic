@@ -420,4 +420,5 @@
 #define __NR_lsm_get_self_attr (__NR_SYSCALL_BASE + 459)
 #define __NR_lsm_set_self_attr (__NR_SYSCALL_BASE + 460)
 #define __NR_lsm_list_modules (__NR_SYSCALL_BASE + 461)
+#define __NR_mseal (__NR_SYSCALL_BASE + 462)
 #endif

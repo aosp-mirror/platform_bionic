@@ -48,7 +48,7 @@
 __BEGIN_DECLS
 
 /**
- * [lockf(3)](http://man7.org/linux/man-pages/man3/lockf.3.html) manipulates POSIX file locks.
+ * [lockf(3)](https://man7.org/linux/man-pages/man3/lockf.3.html) manipulates POSIX file locks.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  *
