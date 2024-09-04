@@ -100,7 +100,7 @@ struct tm {
 #define TM_ZONE tm_zone
 
 /**
- * [time(2)](http://man7.org/linux/man-pages/man2/time.2.html) returns
+ * [time(2)](https://man7.org/linux/man-pages/man2/time.2.html) returns
  * the number of seconds since the Unix epoch (1970-01-01 00:00:00 +0000).
  *
  * Returns the time in seconds on success, and returns -1 and sets `errno` on failure.
@@ -108,7 +108,7 @@ struct tm {
 time_t time(time_t* _Nullable __t);
 
 /**
- * [nanosleep(2)](http://man7.org/linux/man-pages/man2/nanosleep.2.html) sleeps
+ * [nanosleep(2)](https://man7.org/linux/man-pages/man2/nanosleep.2.html) sleeps
  * for at least the given time (or until a signal arrives).
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure. If the sleep
@@ -118,7 +118,7 @@ time_t time(time_t* _Nullable __t);
 int nanosleep(const struct timespec* _Nonnull __duration, struct timespec* _Nullable __remainder);
 
 /**
- * [asctime(3)](http://man7.org/linux/man-pages/man3/asctime.3p.html) formats
+ * [asctime(3)](https://man7.org/linux/man-pages/man3/asctime.3p.html) formats
  * the time `tm` as a string.
  *
  * Returns a pointer to a string on success, and returns NULL on failure.
@@ -130,7 +130,7 @@ int nanosleep(const struct timespec* _Nonnull __duration, struct timespec* _Null
 char* _Nullable asctime(const struct tm* _Nonnull __tm);
 
 /**
- * [asctime_r(3)](http://man7.org/linux/man-pages/man3/asctime_r.3p.html) formats
+ * [asctime_r(3)](https://man7.org/linux/man-pages/man3/asctime_r.3p.html) formats
  * the time `tm` as a string in the given buffer `buf`.
  *
  * Returns a pointer to a string on success, and returns NULL on failure.
@@ -140,7 +140,7 @@ char* _Nullable asctime(const struct tm* _Nonnull __tm);
 char* _Nullable asctime_r(const struct tm* _Nonnull __tm, char* _Nonnull __buf);
 
 /**
- * [difftime(3)](http://man7.org/linux/man-pages/man3/difftime.3.html) returns
+ * [difftime(3)](https://man7.org/linux/man-pages/man3/difftime.3.html) returns
  * the difference between two times.
  *
  * Returns the difference in seconds.
@@ -148,7 +148,7 @@ char* _Nullable asctime_r(const struct tm* _Nonnull __tm, char* _Nonnull __buf);
 double difftime(time_t __lhs, time_t __rhs);
 
 /**
- * [mktime(3)](http://man7.org/linux/man-pages/man3/mktime.3p.html) converts
+ * [mktime(3)](https://man7.org/linux/man-pages/man3/mktime.3p.html) converts
  * broken-down time `tm` into the number of seconds since the Unix epoch.
  *
  * See tzset() for details of how the timezone is set, and mktime_rz()
@@ -169,7 +169,7 @@ time_t mktime(struct tm* _Nonnull __tm);
 time_t mktime_z(timezone_t _Nonnull __tz, struct tm* _Nonnull __tm) __INTRODUCED_IN(35);
 
 /**
- * [localtime(3)](http://man7.org/linux/man-pages/man3/localtime.3p.html) converts
+ * [localtime(3)](https://man7.org/linux/man-pages/man3/localtime.3p.html) converts
  * the number of seconds since the Unix epoch in `t` to a broken-down time, taking
  * the device's timezone into account.
  *
@@ -180,7 +180,7 @@ time_t mktime_z(timezone_t _Nonnull __tz, struct tm* _Nonnull __tm) __INTRODUCED
 struct tm* _Nullable localtime(const time_t* _Nonnull __t);
 
 /**
- * [localtime_r(3)](http://man7.org/linux/man-pages/man3/localtime_r.3p.html) converts
+ * [localtime_r(3)](https://man7.org/linux/man-pages/man3/localtime_r.3p.html) converts
  * the number of seconds since the Unix epoch in `t` to a broken-down time.
  * That broken-down time will be written to the given struct `tm`.
  *
@@ -208,7 +208,7 @@ struct tm* _Nullable localtime_rz(timezone_t _Nonnull __tz, const time_t* _Nonnu
 time_t timelocal(struct tm* _Nonnull __tm);
 
 /**
- * [gmtime(3)](http://man7.org/linux/man-pages/man3/gmtime.3p.html) converts
+ * [gmtime(3)](https://man7.org/linux/man-pages/man3/gmtime.3p.html) converts
  * the number of seconds since the Unix epoch in `t` to a broken-down time, using
  * UTC (historically also known as GMT).
  *
@@ -219,7 +219,7 @@ time_t timelocal(struct tm* _Nonnull __tm);
 struct tm* _Nullable gmtime(const time_t* _Nonnull __t);
 
 /**
- * [gmtime_r(3)](http://man7.org/linux/man-pages/man3/gmtime_r.3p.html) converts
+ * [gmtime_r(3)](https://man7.org/linux/man-pages/man3/gmtime_r.3p.html) converts
  * the number of seconds since the Unix epoch in `t` to a broken-down time, using
  * UTC (historically also known as GMT).
  *
@@ -235,7 +235,7 @@ struct tm* _Nullable gmtime_r(const time_t* _Nonnull __t, struct tm* _Nonnull __
 time_t timegm(struct tm* _Nonnull __tm);
 
 /**
- * [strptime(3)](http://man7.org/linux/man-pages/man3/strptime.3.html) parses
+ * [strptime(3)](https://man7.org/linux/man-pages/man3/strptime.3.html) parses
  * a string `s` assuming format `fmt` into broken-down time `tm`.
  *
  * Returns a pointer to the first character _not_ parsed, or null if no characters were parsed.
@@ -245,10 +245,10 @@ char* _Nullable strptime(const char* _Nonnull __s, const char* _Nonnull __fmt, s
 /**
  * Equivalent to strptime() on Android where only C/POSIX locales are available.
  */
-char* _Nullable strptime_l(const char* _Nonnull __s, const char* _Nonnull __fmt, struct tm* _Nonnull __tm, locale_t _Nonnull __l) __strftimelike(2) __INTRODUCED_IN(28);
+char* _Nullable strptime_l(const char* _Nonnull __s, const char* _Nonnull __fmt, struct tm* _Nonnull __tm, locale_t _Nonnull __l) __strftimelike(2) __RENAME(strptime);
 
 /**
- * [strftime(3)](http://man7.org/linux/man-pages/man3/strftime.3.html) formats
+ * [strftime(3)](https://man7.org/linux/man-pages/man3/strftime.3.html) formats
  * a broken-down time `tm` into the buffer `buf` using format `fmt`.
  *
  * Returns a pointer to the first character _not_ parsed, or null if no characters were parsed.
@@ -261,7 +261,7 @@ size_t strftime(char* _Nonnull __buf, size_t __n, const char* _Nonnull __fmt, co
 size_t strftime_l(char* _Nonnull __buf, size_t __n, const char* _Nonnull __fmt, const struct tm* _Nullable __tm, locale_t _Nonnull __l) __strftimelike(3);
 
 /**
- * [ctime(3)](http://man7.org/linux/man-pages/man3/ctime.3p.html) formats
+ * [ctime(3)](https://man7.org/linux/man-pages/man3/ctime.3p.html) formats
  * the time `tm` as a string.
  *
  * Returns a pointer to a string on success, and returns NULL on failure.
@@ -273,7 +273,7 @@ size_t strftime_l(char* _Nonnull __buf, size_t __n, const char* _Nonnull __fmt, 
 char* _Nullable ctime(const time_t* _Nonnull __t);
 
 /**
- * [ctime_r(3)](http://man7.org/linux/man-pages/man3/ctime.3p.html) formats
+ * [ctime_r(3)](https://man7.org/linux/man-pages/man3/ctime.3p.html) formats
  * the time `tm` as a string in the given buffer `buf`.
  *
  * Returns a pointer to a string on success, and returns NULL on failure.
@@ -283,7 +283,7 @@ char* _Nullable ctime(const time_t* _Nonnull __t);
 char* _Nullable ctime_r(const time_t* _Nonnull __t, char* _Nonnull __buf);
 
 /**
- * [tzset(3)](http://man7.org/linux/man-pages/man3/tzset.3.html) tells
+ * [tzset(3)](https://man7.org/linux/man-pages/man3/tzset.3.html) tells
  * libc that the timezone has changed.
  *
  * tzset() on Android looks at both the system property
@@ -328,7 +328,7 @@ timezone_t _Nullable tzalloc(const char* _Nullable __id) __INTRODUCED_IN(35);
 void tzfree(timezone_t _Nullable __tz) __INTRODUCED_IN(35);
 
 /**
- * [clock(3)](http://man7.org/linux/man-pages/man3/clock.3.html)
+ * [clock(3)](https://man7.org/linux/man-pages/man3/clock.3.html)
  * returns an approximation of CPU time used, equivalent to
  * `clock_gettime(CLOCK_PROCESS_CPUTIME_ID)` but with more confusing
  * units. Use `CLOCKS_PER_SEC` to convert the result to seconds.
@@ -340,7 +340,7 @@ void tzfree(timezone_t _Nullable __tz) __INTRODUCED_IN(35);
 clock_t clock(void);
 
 /**
- * [clock_getcpuclockid(3)](http://man7.org/linux/man-pages/man3/clock_getcpuclockid.3.html)
+ * [clock_getcpuclockid(3)](https://man7.org/linux/man-pages/man3/clock_getcpuclockid.3.html)
  * gets the clock ID of the cpu-time clock for the given `pid`.
  *
  * Returns 0 on success, and returns -1 and returns an error number on failure.
@@ -348,7 +348,7 @@ clock_t clock(void);
 int clock_getcpuclockid(pid_t __pid, clockid_t* _Nonnull __clock) __INTRODUCED_IN(23);
 
 /**
- * [clock_getres(2)](http://man7.org/linux/man-pages/man2/clock_getres.2.html)
+ * [clock_getres(2)](https://man7.org/linux/man-pages/man2/clock_getres.2.html)
  * gets the resolution of the given clock.
  *
  * Returns 0 on success, and returns -1 and returns an error number on failure.
@@ -356,7 +356,7 @@ int clock_getcpuclockid(pid_t __pid, clockid_t* _Nonnull __clock) __INTRODUCED_I
 int clock_getres(clockid_t __clock, struct timespec* _Nullable __resolution);
 
 /**
- * [clock_gettime(2)](http://man7.org/linux/man-pages/man2/clock_gettime.2.html)
+ * [clock_gettime(2)](https://man7.org/linux/man-pages/man2/clock_gettime.2.html)
  * gets the time according to the given clock.
  *
  * Returns 0 on success, and returns -1 and returns an error number on failure.
@@ -364,7 +364,7 @@ int clock_getres(clockid_t __clock, struct timespec* _Nullable __resolution);
 int clock_gettime(clockid_t __clock, struct timespec* _Nonnull __ts);
 
 /**
- * [clock_nanosleep(2)](http://man7.org/linux/man-pages/man2/clock_nanosleep.2.html)
+ * [clock_nanosleep(2)](https://man7.org/linux/man-pages/man2/clock_nanosleep.2.html)
  * sleeps for the given time (or until the given time if the TIMER_ABSTIME flag
  * is used), as measured by the given clock.
  *
@@ -375,7 +375,7 @@ int clock_gettime(clockid_t __clock, struct timespec* _Nonnull __ts);
 int clock_nanosleep(clockid_t __clock, int __flags, const struct timespec* _Nonnull __time, struct timespec* _Nullable __remainder);
 
 /**
- * [clock_settime(2)](http://man7.org/linux/man-pages/man2/clock_settime.2.html)
+ * [clock_settime(2)](https://man7.org/linux/man-pages/man2/clock_settime.2.html)
  * sets the time for the given clock.
  *
  * Returns 0 on success, and returns -1 and returns an error number on failure.
@@ -383,7 +383,7 @@ int clock_nanosleep(clockid_t __clock, int __flags, const struct timespec* _Nonn
 int clock_settime(clockid_t __clock, const struct timespec* _Nonnull __ts);
 
 /**
- * [timer_create(2)](http://man7.org/linux/man-pages/man2/timer_create.2.html)
+ * [timer_create(2)](https://man7.org/linux/man-pages/man2/timer_create.2.html)
  * creates a POSIX timer.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
@@ -391,7 +391,7 @@ int clock_settime(clockid_t __clock, const struct timespec* _Nonnull __ts);
 int timer_create(clockid_t __clock, struct sigevent* _Nullable __event, timer_t _Nonnull * _Nonnull __timer_ptr);
 
 /**
- * [timer_delete(2)](http://man7.org/linux/man-pages/man2/timer_delete.2.html)
+ * [timer_delete(2)](https://man7.org/linux/man-pages/man2/timer_delete.2.html)
  * destroys a POSIX timer.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
@@ -399,7 +399,7 @@ int timer_create(clockid_t __clock, struct sigevent* _Nullable __event, timer_t 
 int timer_delete(timer_t _Nonnull __timer);
 
 /**
- * [timer_settime(2)](http://man7.org/linux/man-pages/man2/timer_settime.2.html)
+ * [timer_settime(2)](https://man7.org/linux/man-pages/man2/timer_settime.2.html)
  * starts or stops a POSIX timer.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
@@ -407,7 +407,7 @@ int timer_delete(timer_t _Nonnull __timer);
 int timer_settime(timer_t _Nonnull __timer, int __flags, const struct itimerspec* _Nonnull __new_value, struct itimerspec* _Nullable __old_value);
 
 /**
- * [timer_gettime(2)](http://man7.org/linux/man-pages/man2/timer_gettime.2.html)
+ * [timer_gettime(2)](https://man7.org/linux/man-pages/man2/timer_gettime.2.html)
  * gets the time until the given timer next fires.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
@@ -415,7 +415,7 @@ int timer_settime(timer_t _Nonnull __timer, int __flags, const struct itimerspec
 int timer_gettime(timer_t _Nonnull _timer, struct itimerspec* _Nonnull __ts);
 
 /**
- * [timer_getoverrun(2)](http://man7.org/linux/man-pages/man2/timer_getoverrun.2.html)
+ * [timer_getoverrun(2)](https://man7.org/linux/man-pages/man2/timer_getoverrun.2.html)
  * gets the overrun count (the number of times the timer should have fired, but
  * didn't) for the last time the timer fired.
  *

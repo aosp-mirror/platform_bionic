@@ -38,7 +38,7 @@
 __BEGIN_DECLS
 
 /**
- * [ioctl(2)](http://man7.org/linux/man-pages/man2/ioctl.2.html) operates on device files.
+ * [ioctl(2)](https://man7.org/linux/man-pages/man2/ioctl.2.html) operates on device files.
  */
 int ioctl(int __fd, int __op, ...);
 
