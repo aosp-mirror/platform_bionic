@@ -924,6 +924,33 @@ void ElfReader::DropPaddingPages(const ElfW(Phdr)* phdr, uint64_t seg_file_end) 
   }
 }
 
+bool ElfReader::MapBssSection(const ElfW(Phdr)* phdr, ElfW(Addr) seg_page_end,
+                              ElfW(Addr) seg_file_end) {
+  // seg_file_end is now the first page address after the file content.
+  seg_file_end = page_end(seg_file_end);
+
+  if (seg_page_end <= seg_file_end) {
+    return true;
+  }
+
+  // If seg_page_end is larger than seg_file_end, we need to zero
+  // anything between them. This is done by using a private anonymous
+  // map for all extra pages
+  size_t zeromap_size = seg_page_end - seg_file_end;
+  void* zeromap =
+      mmap(reinterpret_cast<void*>(seg_file_end), zeromap_size, PFLAGS_TO_PROT(phdr->p_flags),
+           MAP_FIXED | MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+  if (zeromap == MAP_FAILED) {
+    DL_ERR("couldn't map .bss section for \"%s\": %m", name_.c_str());
+    return false;
+  }
+
+  // Set the VMA name using prctl
+  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, zeromap, zeromap_size, ".bss");
+
+  return true;
+}
+
 bool ElfReader::LoadSegments() {
   size_t min_palign = phdr_table_get_minimum_alignment(phdr_table_, phdr_num_);
   // Only enforce this on 16 KB systems. Apps may rely on undefined behavior
@@ -1000,26 +1027,8 @@ bool ElfReader::LoadSegments() {
 
     DropPaddingPages(phdr, seg_file_end);
 
-    seg_file_end = page_end(seg_file_end);
-
-    // seg_file_end is now the first page address after the file
-    // content. If seg_end is larger, we need to zero anything
-    // between them. This is done by using a private anonymous
-    // map for all extra pages.
-    if (seg_page_end > seg_file_end) {
-      size_t zeromap_size = seg_page_end - seg_file_end;
-      void* zeromap = mmap(reinterpret_cast<void*>(seg_file_end),
-                           zeromap_size,
-                           PFLAGS_TO_PROT(phdr->p_flags),
-                           MAP_FIXED|MAP_ANONYMOUS|MAP_PRIVATE,
-                           -1,
-                           0);
-      if (zeromap == MAP_FAILED) {
-        DL_ERR("couldn't zero fill \"%s\" gap: %m", name_.c_str());
-        return false;
-      }
-
-      prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, zeromap, zeromap_size, ".bss");
+    if (!MapBssSection(phdr, seg_page_end, seg_file_end)) {
+      return false;
     }
   }
   return true;
