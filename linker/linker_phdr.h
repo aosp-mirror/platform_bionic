@@ -68,6 +68,7 @@ class ElfReader {
   [[nodiscard]] bool ReadDynamicSection();
   [[nodiscard]] bool ReadPadSegmentNote();
   [[nodiscard]] bool ReserveAddressSpace(address_space_params* address_space);
+  [[nodiscard]] bool MapSegment(size_t seg_idx, size_t len);
   [[nodiscard]] bool LoadSegments();
   [[nodiscard]] bool FindPhdr();
   [[nodiscard]] bool FindGnuPropertySection();

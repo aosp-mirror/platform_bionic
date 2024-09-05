@@ -851,6 +851,33 @@ static inline void _extend_load_segment_vma(const ElfW(Phdr)* phdr_table, size_t
   *p_filesz += extend;
 }
 
+bool ElfReader::MapSegment(size_t seg_idx, size_t len) {
+  const ElfW(Phdr)* phdr = &phdr_table_[seg_idx];
+
+  void* start = reinterpret_cast<void*>(page_start(phdr->p_vaddr + load_bias_));
+
+  // The ELF could be being loaded directly from a zipped APK,
+  // the zip offset must be added to find the segment offset.
+  const ElfW(Addr) offset = file_offset_ + page_start(phdr->p_offset);
+
+  int prot = PFLAGS_TO_PROT(phdr->p_flags);
+
+  void* seg_addr = mmap64(start, len, prot, MAP_FIXED | MAP_PRIVATE, fd_, offset);
+
+  if (seg_addr == MAP_FAILED) {
+    DL_ERR("couldn't map \"%s\" segment %zd: %m", name_.c_str(), seg_idx);
+    return false;
+  }
+
+  // Mark segments as huge page eligible if they meet the requirements
+  if ((phdr->p_flags & PF_X) && phdr->p_align == kPmdSize &&
+      get_transparent_hugepages_supported()) {
+    madvise(seg_addr, len, MADV_HUGEPAGE);
+  }
+
+  return true;
+}
+
 bool ElfReader::LoadSegments() {
   size_t min_palign = phdr_table_get_minimum_alignment(phdr_table_, phdr_num_);
   // Only enforce this on 16 KB systems. Apps may rely on undefined behavior
@@ -917,22 +944,9 @@ bool ElfReader::LoadSegments() {
         add_dlwarning(name_.c_str(), "W+E load segments");
       }
 
-      void* seg_addr = mmap64(reinterpret_cast<void*>(seg_page_start),
-                            file_length,
-                            prot,
-                            MAP_FIXED|MAP_PRIVATE,
-                            fd_,
-                            file_offset_ + file_page_start);
-      if (seg_addr == MAP_FAILED) {
-        DL_ERR("couldn't map \"%s\" segment %zd: %m", name_.c_str(), i);
+      // Pass the file_length, since it may have been extended by _extend_load_segment_vma().
+      if (!MapSegment(i, file_length)) {
         return false;
-      }
-
-      // Mark segments as huge page eligible if they meet the requirements
-      // (executable and PMD aligned).
-      if ((phdr->p_flags & PF_X) && phdr->p_align == kPmdSize &&
-          get_transparent_hugepages_supported()) {
-        madvise(seg_addr, file_length, MADV_HUGEPAGE);
       }
     }
 
