@@ -69,6 +69,7 @@ class ElfReader {
   [[nodiscard]] bool ReadPadSegmentNote();
   [[nodiscard]] bool ReserveAddressSpace(address_space_params* address_space);
   [[nodiscard]] bool MapSegment(size_t seg_idx, size_t len);
+  void ZeroFillSegment(const ElfW(Phdr)* phdr);
   [[nodiscard]] bool LoadSegments();
   [[nodiscard]] bool FindPhdr();
   [[nodiscard]] bool FindGnuPropertySection();

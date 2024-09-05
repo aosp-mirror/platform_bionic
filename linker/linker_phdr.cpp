@@ -878,6 +878,25 @@ bool ElfReader::MapSegment(size_t seg_idx, size_t len) {
   return true;
 }
 
+void ElfReader::ZeroFillSegment(const ElfW(Phdr)* phdr) {
+  ElfW(Addr) seg_start = phdr->p_vaddr + load_bias_;
+  uint64_t unextended_seg_file_end = seg_start + phdr->p_filesz;
+
+  // If the segment is writable, and does not end on a page boundary,
+  // zero-fill it until the page limit.
+  //
+  // Do not attempt to zero the extended region past the first partial page,
+  // since doing so may:
+  //   1) Result in a SIGBUS, as the region is not backed by the underlying
+  //      file.
+  //   2) Break the COW backing, faulting in new anon pages for a region
+  //      that will not be used.
+  if ((phdr->p_flags & PF_W) != 0 && page_offset(unextended_seg_file_end) > 0) {
+    memset(reinterpret_cast<void*>(unextended_seg_file_end), 0,
+           kPageSize - page_offset(unextended_seg_file_end));
+  }
+}
+
 bool ElfReader::LoadSegments() {
   size_t min_palign = phdr_table_get_minimum_alignment(phdr_table_, phdr_num_);
   // Only enforce this on 16 KB systems. Apps may rely on undefined behavior
@@ -950,22 +969,9 @@ bool ElfReader::LoadSegments() {
       }
     }
 
-    // if the segment is writable, and does not end on a page boundary,
-    // zero-fill it until the page limit.
-    //
-    // Do not attempt to zero the extended region past the first partial page,
-    // since doing so may:
-    //   1) Result in a SIGBUS, as the region is not backed by the underlying
-    //      file.
-    //   2) Break the COW backing, faulting in new anon pages for a region
-    //      that will not be used.
+    ZeroFillSegment(phdr);
 
     uint64_t unextended_seg_file_end = seg_start + phdr->p_filesz;
-    if ((phdr->p_flags & PF_W) != 0 && page_offset(unextended_seg_file_end) > 0) {
-      memset(reinterpret_cast<void*>(unextended_seg_file_end), 0,
-             kPageSize - page_offset(unextended_seg_file_end));
-    }
-
     // Pages may be brought in due to readahead.
     // Drop the padding (zero) pages, to avoid reclaim work later.
     //
