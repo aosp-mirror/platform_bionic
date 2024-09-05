@@ -4,9 +4,11 @@
 
 fdtrack is a file descriptor leak checker added to Android in API level 30.
 
-fdtrack consists of two parts: a set of hooks in bionic to register a callback
-that's invoked on file descriptor operations, and a library that implements a
-hook to perform and store backtraces for file descriptor creation.
+fdtrack consists of several parts: a set of hooks in bionic to register a
+callback that's invoked on file descriptor operations, a library that implements
+a hook to perform and store backtraces for file descriptor creation, and
+code in frameworks to automatically enable it (and deliberately crash a process
+that's leaking).
 
 ### bionic hooks
 bionic provides a header in the `bionic_libc_platform_headers` header_lib at <[bionic/fdtrack.h](https://android.googlesource.com/platform/bionic/+/refs/heads/main/libc/platform/bionic/fdtrack.h)>.
@@ -21,6 +23,28 @@ not to call callbacks when this is the case).
 [libfdtrack](https://android.googlesource.com/platform/bionic/+/refs/heads/main/libfdtrack)
 implements a library that uses libunwindstack to unwind and store fd creation backtraces.
 
+### frameworks
+As the name implies, `spawnFdLeakCheckThread` in SystemServer spawns a thread
+to monitor the number of open file descriptors every so often.
+If that passes a certain threshold, fdtrack is enabled.
+If it passes another threshold, the process is aborted.
+These thresholds are configurable via system properties:
+```
+    // Number of open file descriptors before fdtrack starts; default 1600.
+    private static final String SYSPROP_FDTRACK_ENABLE_THRESHOLD =
+            "persist.sys.debug.fdtrack_enable_threshold";
+
+    // Number of open file descriptors before aborting; default 3000.
+    private static final String SYSPROP_FDTRACK_ABORT_THRESHOLD =
+            "persist.sys.debug.fdtrack_abort_threshold";
+
+    // Number of seconds between open fd count checks; default 120s.
+    private static final String SYSPROP_FDTRACK_INTERVAL =
+            "persist.sys.debug.fdtrack_interval";
+```
+Note that it's also possible to monitor the number of open file descriptors for
+a given process from the shell. `adb shell watch ls -l /proc/<pid>/fd` will show
+them (and you can choose your own update rate as an argument to `watch`).
 
 #### Using libfdtrack
 libfdtrack registers its hook upon being loaded, so to start capturing
