@@ -897,6 +897,33 @@ void ElfReader::ZeroFillSegment(const ElfW(Phdr)* phdr) {
   }
 }
 
+void ElfReader::DropPaddingPages(const ElfW(Phdr)* phdr, uint64_t seg_file_end) {
+  ElfW(Addr) seg_start = phdr->p_vaddr + load_bias_;
+  uint64_t unextended_seg_file_end = seg_start + phdr->p_filesz;
+
+  uint64_t pad_start = page_end(unextended_seg_file_end);
+  uint64_t pad_end = page_end(seg_file_end);
+  CHECK(pad_start <= pad_end);
+
+  uint64_t pad_len = pad_end - pad_start;
+  if (pad_len == 0 || !page_size_migration_supported()) {
+    return;
+  }
+
+  // Pages may be brought in due to readahead.
+  // Drop the padding (zero) pages, to avoid reclaim work later.
+  //
+  // NOTE: The madvise() here is special, as it also serves to hint to the
+  // kernel the portion of the LOAD segment that is padding.
+  //
+  // See: [1] https://android-review.googlesource.com/c/kernel/common/+/3032411
+  //      [2] https://android-review.googlesource.com/c/kernel/common/+/3048835
+  if (madvise(reinterpret_cast<void*>(pad_start), pad_len, MADV_DONTNEED)) {
+    DL_WARN("\"%s\": madvise(0x%" PRIx64 ", 0x%" PRIx64 ", MADV_DONTNEED) failed: %m",
+            name_.c_str(), pad_start, pad_len);
+  }
+}
+
 bool ElfReader::LoadSegments() {
   size_t min_palign = phdr_table_get_minimum_alignment(phdr_table_, phdr_num_);
   // Only enforce this on 16 KB systems. Apps may rely on undefined behavior
@@ -971,24 +998,7 @@ bool ElfReader::LoadSegments() {
 
     ZeroFillSegment(phdr);
 
-    uint64_t unextended_seg_file_end = seg_start + phdr->p_filesz;
-    // Pages may be brought in due to readahead.
-    // Drop the padding (zero) pages, to avoid reclaim work later.
-    //
-    // NOTE: The madvise() here is special, as it also serves to hint to the
-    // kernel the portion of the LOAD segment that is padding.
-    //
-    // See: [1] https://android-review.googlesource.com/c/kernel/common/+/3032411
-    //      [2] https://android-review.googlesource.com/c/kernel/common/+/3048835
-    uint64_t pad_start = page_end(unextended_seg_file_end);
-    uint64_t pad_end = page_end(seg_file_end);
-    CHECK(pad_start <= pad_end);
-    uint64_t pad_len = pad_end - pad_start;
-    if (page_size_migration_supported() && pad_len > 0 &&
-        madvise(reinterpret_cast<void*>(pad_start), pad_len, MADV_DONTNEED)) {
-      DL_WARN("\"%s\": madvise(0x%" PRIx64 ", 0x%" PRIx64 ", MADV_DONTNEED) failed: %m",
-              name_.c_str(), pad_start, pad_len);
-    }
+    DropPaddingPages(phdr, seg_file_end);
 
     seg_file_end = page_end(seg_file_end);
 
