@@ -55,7 +55,7 @@ __BEGIN_DECLS
  * other processes. Obviously this is not the case for apps, which will
  * be killed in preference to killing other processes.
  */
-void* _Nullable malloc(size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(1) __wur;
+__wur void* _Nullable malloc(size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(1);
 
 /**
  * [calloc(3)](https://man7.org/linux/man-pages/man3/calloc.3.html) allocates
@@ -64,7 +64,7 @@ void* _Nullable malloc(size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(1) 
  * Returns a pointer to the allocated memory on success and returns a null
  * pointer and sets `errno` on failure (but see the notes for malloc()).
  */
-void* _Nullable calloc(size_t __item_count, size_t __item_size) __mallocfunc __BIONIC_ALLOC_SIZE(1,2) __wur;
+__wur void* _Nullable calloc(size_t __item_count, size_t __item_size) __mallocfunc __BIONIC_ALLOC_SIZE(1,2);
 
 /**
  * [realloc(3)](https://man7.org/linux/man-pages/man3/realloc.3.html) resizes
@@ -74,7 +74,7 @@ void* _Nullable calloc(size_t __item_count, size_t __item_size) __mallocfunc __B
  * memory on success and returns a null pointer and sets `errno` on failure
  * (but see the notes for malloc()).
  */
-void* _Nullable realloc(void* _Nullable __ptr, size_t __byte_count) __BIONIC_ALLOC_SIZE(2) __wur;
+__wur void* _Nullable realloc(void* _Nullable __ptr, size_t __byte_count) __BIONIC_ALLOC_SIZE(2);
 
 /**
  * [reallocarray(3)](https://man7.org/linux/man-pages/man3/realloc.3.html) resizes
@@ -116,13 +116,13 @@ void free(void* _Nullable __ptr);
  *
  * See also posix_memalign().
  */
-void* _Nullable memalign(size_t __alignment, size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(2) __wur;
+__wur void* _Nullable memalign(size_t __alignment, size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(2);
 
 /**
  * [malloc_usable_size(3)](https://man7.org/linux/man-pages/man3/malloc_usable_size.3.html)
  * returns the actual size of the given heap block.
  */
-size_t malloc_usable_size(const void* _Nullable __ptr) __wur;
+__wur size_t malloc_usable_size(const void* _Nullable __ptr);
 
 #define __MALLINFO_BODY \
   /** Total number of non-mmapped bytes currently allocated from OS. */ \
