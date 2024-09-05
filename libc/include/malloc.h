@@ -87,7 +87,19 @@ void* _Nullable realloc(void* _Nullable __ptr, size_t __byte_count) __BIONIC_ALL
  * memory on success and returns a null pointer and sets `errno` on failure
  * (but see the notes for malloc()).
  */
-void* _Nullable reallocarray(void* _Nullable __ptr, size_t __item_count, size_t __item_size) __BIONIC_ALLOC_SIZE(2, 3) __wur __INTRODUCED_IN(29);
+#if __ANDROID_API__ >= 29
+__wur void* _Nullable reallocarray(void* _Nullable __ptr, size_t __item_count, size_t __item_size) __BIONIC_ALLOC_SIZE(2, 3) __INTRODUCED_IN(29);
+#else
+#include <errno.h>
+static __inline __wur void* _Nullable reallocarray(void* _Nullable __ptr, size_t __item_count, size_t __item_size) {
+  size_t __new_size;
+  if (__builtin_mul_overflow(__item_count, __item_size, &__new_size)) {
+    errno = ENOMEM;
+    return NULL;
+  }
+  return realloc(__ptr, __new_size);
+}
+#endif
 
 /**
  * [free(3)](https://man7.org/linux/man-pages/man3/free.3.html) deallocates
