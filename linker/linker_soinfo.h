@@ -369,6 +369,11 @@ struct soinfo {
   }
   bool should_pad_segments() const { return should_pad_segments_; }
 
+  void set_should_use_16kib_app_compat(bool should_use_16kib_app_compat) {
+    should_use_16kib_app_compat_ = should_use_16kib_app_compat;
+  }
+  bool should_use_16kib_app_compat() const { return should_use_16kib_app_compat_; }
+
  private:
   bool is_image_linked() const;
   void set_image_linked();
@@ -455,6 +460,9 @@ struct soinfo {
 
   // Pad gaps between segments when memory mapping?
   bool should_pad_segments_ = false;
+
+  // Use app compat mode when loading 4KiB max-page-size ELFs on 16KiB page-size devices?
+  bool should_use_16kib_app_compat_ = false;
 };
 
 // This function is used by dlvsym() to calculate hash of sym_ver
