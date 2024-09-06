@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,27 +26,11 @@
  * SUCH DAMAGE.
  */
 
-#include <private/bionic_asm.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
-#define FUNCTION_DELEGATE(name, impl) \
-ENTRY(name); \
-    b impl; \
-END(name)
-
-FUNCTION_DELEGATE(memchr, __memchr_aarch64_mte)
-FUNCTION_DELEGATE(memcmp, __memcmp_aarch64)
-FUNCTION_DELEGATE(memcpy, __memcpy_aarch64)
-FUNCTION_DELEGATE(memmove, __memmove_aarch64)
-FUNCTION_DELEGATE(memrchr, __memrchr_aarch64)
-FUNCTION_DELEGATE(memset, __memset_aarch64)
-FUNCTION_DELEGATE(stpcpy, __stpcpy_aarch64)
-FUNCTION_DELEGATE(strchr, __strchr_aarch64_mte)
-FUNCTION_DELEGATE(strchrnul, __strchrnul_aarch64_mte)
-FUNCTION_DELEGATE(strcmp, __strcmp_aarch64)
-FUNCTION_DELEGATE(strcpy, __strcpy_aarch64)
-FUNCTION_DELEGATE(strlen, __strlen_aarch64_mte)
-FUNCTION_DELEGATE(strrchr, __strrchr_aarch64_mte)
-FUNCTION_DELEGATE(strncmp, __strncmp_aarch64)
-FUNCTION_DELEGATE(strnlen, __strnlen_aarch64)
-
-NOTE_GNU_PROPERTY()
+int lchmod(const char* path, mode_t mode) {
+  return fchmodat(AT_FDCWD, path, mode, AT_SYMLINK_NOFOLLOW);
+}

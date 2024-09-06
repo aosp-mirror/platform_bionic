@@ -591,6 +591,7 @@ LIBC {
     killpg;
     klogctl;
     labs;
+    lchmod; # introduced=36
     lchown;
     lcong48; # introduced=23
     ldexp;

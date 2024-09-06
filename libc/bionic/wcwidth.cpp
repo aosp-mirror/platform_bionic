@@ -73,7 +73,9 @@ int wcwidth(wchar_t wc) {
 
   // Hangeul choseong filler U+115F is default ignorable, so we check default
   // ignorability only after we've already handled Hangeul jamo above.
-  if (__icu_hasBinaryProperty(wc, UCHAR_DEFAULT_IGNORABLE_CODE_POINT, nullptr)) return 0;
+  static auto u_hasBinaryProperty =
+      reinterpret_cast<u_hasBinaryProperty_t>(__find_icu_symbol("u_hasBinaryProperty"));
+  if (u_hasBinaryProperty && u_hasBinaryProperty(wc, UCHAR_DEFAULT_IGNORABLE_CODE_POINT)) return 0;
 
   // A few weird special cases where EastAsianWidth is not helpful for us.
   if (wc >= 0x3248 && wc <= 0x4dff) {
