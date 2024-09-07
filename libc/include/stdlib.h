@@ -79,9 +79,9 @@ int posix_memalign(void* _Nullable * _Nullable __memptr, size_t __alignment, siz
  *
  * Available since API level 28.
  */
-__wur void* _Nullable aligned_alloc(size_t __alignment, size_t __size) __INTRODUCED_IN(28);
+__nodiscard void* _Nullable aligned_alloc(size_t __alignment, size_t __size) __INTRODUCED_IN(28);
 
-__wur char* _Nullable realpath(const char* _Nonnull __path, char* _Nullable __resolved);
+__nodiscard char* _Nullable realpath(const char* _Nonnull __path, char* _Nullable __resolved);
 
 /**
  * [system(3)](https://man7.org/linux/man-pages/man3/system.3.html) executes
@@ -107,7 +107,7 @@ int system(const char* _Nonnull __command);
  * Returns a pointer to a matching item on success,
  * or NULL if no matching item is found.
  */
-__wur void* _Nullable bsearch(const void* _Nonnull __key, const void* _Nullable __base, size_t __nmemb, size_t __size, int (* _Nonnull __comparator)(const void* _Nonnull __lhs, const void* _Nonnull __rhs));
+__nodiscard void* _Nullable bsearch(const void* _Nonnull __key, const void* _Nullable __base, size_t __nmemb, size_t __size, int (* _Nonnull __comparator)(const void* _Nonnull __lhs, const void* _Nonnull __rhs));
 
 /**
  * [qsort(3)](https://man7.org/linux/man-pages/man3/qsort.3.html) sorts an array
