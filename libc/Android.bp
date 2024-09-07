@@ -913,6 +913,7 @@ cc_library_static {
         "bionic/isatty.cpp",
         "bionic/killpg.cpp",
         "bionic/langinfo.cpp",
+        "bionic/lchmod.cpp",
         "bionic/lchown.cpp",
         "bionic/lfs64_support.cpp",
         "bionic/libc_init_common.cpp",
@@ -1656,7 +1657,6 @@ cc_defaults {
     },
 
     apex_available: [
-        "//apex_available:platform",
         "com.android.runtime",
     ],
 
@@ -1686,8 +1686,7 @@ cc_library {
     llndk: {
         symbol_file: "libc.map.txt",
         export_headers_as_system: true,
-        export_preprocessed_headers: ["include"],
-        export_llndk_headers: ["libc_llndk_headers"],
+        export_llndk_headers: ["libc_headers"],
     },
 }
 
@@ -1798,7 +1797,7 @@ cc_library_headers {
 }
 
 cc_library_headers {
-    name: "libc_llndk_headers",
+    name: "libc_uapi_headers",
     visibility: [
         "//external/musl",
     ],
@@ -1893,13 +1892,13 @@ cc_library_headers {
     target: {
         android: {
             export_system_include_dirs: ["include"],
-            header_libs: ["libc_llndk_headers"],
-            export_header_lib_headers: ["libc_llndk_headers"],
+            header_libs: ["libc_uapi_headers"],
+            export_header_lib_headers: ["libc_uapi_headers"],
         },
         linux_bionic: {
             export_system_include_dirs: ["include"],
-            header_libs: ["libc_llndk_headers"],
-            export_header_lib_headers: ["libc_llndk_headers"],
+            header_libs: ["libc_uapi_headers"],
+            export_header_lib_headers: ["libc_uapi_headers"],
         },
     },
 }
@@ -2330,17 +2329,6 @@ ndk_library {
     name: "libc",
     symbol_file: "libc.map.txt",
     first_version: "9",
-    export_header_libs: [
-        "common_libc",
-        "libc_uapi",
-        "libc_kernel_android_uapi_linux",
-        "libc_kernel_android_scsi",
-        "libc_asm_arm",
-        "libc_asm_arm64",
-        "libc_asm_riscv64",
-        "libc_asm_x86",
-        "libc_asm_x86_64",
-    ],
 }
 
 ndk_library {

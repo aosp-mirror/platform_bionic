@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,8 +26,11 @@
  * SUCH DAMAGE.
  */
 
-// Stub some symbols to avoid linking issues
-void DL_WARN_documented_change(int api_level [[maybe_unused]],
-                               const char* doc_link [[maybe_unused]],
-                               const char* fmt [[maybe_unused]], ...) {}
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
+int lchmod(const char* path, mode_t mode) {
+  return fchmodat(AT_FDCWD, path, mode, AT_SYMLINK_NOFOLLOW);
+}
