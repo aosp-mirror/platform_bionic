@@ -123,6 +123,7 @@ cc_library {
     },
 
     apex_available: [
+        "//apex_available:platform",
         "com.android.runtime",
     ],
 }
@@ -169,6 +170,7 @@ cc_library {
     },
 
     apex_available: [
+        "//apex_available:platform",
         "com.android.runtime",
     ],
 }

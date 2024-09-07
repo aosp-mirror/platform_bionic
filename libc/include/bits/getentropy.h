@@ -48,6 +48,6 @@ __BEGIN_DECLS
  *
  * See also arc4random_buf() which is available in all API levels.
  */
-__wur int getentropy(void* _Nonnull __buffer, size_t __buffer_size) __INTRODUCED_IN(28);
+int getentropy(void* _Nonnull __buffer, size_t __buffer_size) __wur __INTRODUCED_IN(28);
 
 __END_DECLS
