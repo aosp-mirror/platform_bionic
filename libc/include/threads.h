@@ -72,8 +72,10 @@ enum {
   thrd_timedout = 4,
 };
 
-#if !defined(__cplusplus)
-#define thread_local _Thread_local
+/* `thread_local` is a keyword in C++11 and C23; C11 had `_Thread_local` instead. */
+#if !defined(__cplusplus) && (__STDC_VERSION__ >= 201112L && __STDC_VERSION__ < 202311L)
+# undef thread_local
+# define thread_local _Thread_local
 #endif
 
 __BEGIN_DECLS
