@@ -140,7 +140,8 @@
 #define	__predict_true(exp)	__builtin_expect((exp) != 0, 1)
 #define	__predict_false(exp)	__builtin_expect((exp) != 0, 0)
 
-#define __wur __attribute__((__warn_unused_result__))
+#define __nodiscard __attribute__((__warn_unused_result__))
+#define __wur __nodiscard
 
 #define __errorattr(msg) __attribute__((__unavailable__(msg)))
 #define __warnattr(msg) __attribute__((__deprecated__(msg)))
