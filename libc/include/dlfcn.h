@@ -48,7 +48,7 @@ typedef struct {
 } Dl_info;
 
 /**
- * [dlopen(3)](http://man7.org/linux/man-pages/man3/dlopen.3.html)
+ * [dlopen(3)](https://man7.org/linux/man-pages/man3/dlopen.3.html)
  * loads the given shared library.
  *
  * Returns a pointer to an opaque handle for use with other <dlfcn.h> functions
@@ -58,7 +58,7 @@ typedef struct {
 void* _Nullable dlopen(const char* _Nullable __filename, int __flag);
 
 /**
- * [dlclose(3)](http://man7.org/linux/man-pages/man3/dlclose.3.html)
+ * [dlclose(3)](https://man7.org/linux/man-pages/man3/dlclose.3.html)
  * decrements the reference count for the given shared library (and
  * any libraries brought in by that library's DT_NEEDED entries).
  *
@@ -84,7 +84,7 @@ void* _Nullable dlopen(const char* _Nullable __filename, int __flag);
 int dlclose(void* _Nonnull __handle);
 
 /**
- * [dlerror(3)](http://man7.org/linux/man-pages/man3/dlerror.3.html)
+ * [dlerror(3)](https://man7.org/linux/man-pages/man3/dlerror.3.html)
  * returns a human-readable error message describing the most recent
  * failure from one of the <dlfcn.h> functions on the calling thread.
  *
@@ -97,7 +97,7 @@ int dlclose(void* _Nonnull __handle);
 char* _Nullable dlerror(void);
 
 /**
- * [dlsym(3)](http://man7.org/linux/man-pages/man3/dlsym.3.html)
+ * [dlsym(3)](https://man7.org/linux/man-pages/man3/dlsym.3.html)
  * returns a pointer to the symbol with the given name in the shared
  * library represented by the given handle. The handle may have been
  * returned from dlopen(), or can be RTLD_DEFAULT or RTLD_NEXT.
@@ -108,7 +108,7 @@ char* _Nullable dlerror(void);
 void* _Nullable dlsym(void* __BIONIC_COMPLICATED_NULLNESS __handle, const char* _Nullable __symbol);
 
 /**
- * [dlvsym(3)](http://man7.org/linux/man-pages/man3/dlvsym.3.html)
+ * [dlvsym(3)](https://man7.org/linux/man-pages/man3/dlvsym.3.html)
  * returns a pointer to the symbol with the given name and version in the shared
  * library represented by the given handle. The handle may have been
  * returned from dlopen(), or can be RTLD_DEFAULT or RTLD_NEXT.
@@ -119,7 +119,7 @@ void* _Nullable dlsym(void* __BIONIC_COMPLICATED_NULLNESS __handle, const char* 
 void* _Nullable dlvsym(void* __BIONIC_COMPLICATED_NULLNESS __handle, const char* _Nullable __symbol, const char* _Nullable __version) __INTRODUCED_IN(24);
 
 /**
- * [dladdr(3)](http://man7.org/linux/man-pages/man3/dladdr.3.html)
+ * [dladdr(3)](https://man7.org/linux/man-pages/man3/dladdr.3.html)
  * returns information about the symbol at the given address.
  *
  * Returns non-zero on success, and returns 0 on failure. Note that unlike
@@ -146,7 +146,11 @@ int dladdr(const void* _Nonnull __addr, Dl_info* _Nonnull __info);
  */
 #define RTLD_LOCAL    0
 
-/** Not supported on Android; Android always uses RTLD_NOW. */
+/**
+ * Not supported on Android. Android always uses RTLD_NOW for security reasons.
+ * Resolving all undefined symbols before dlopen() returns means that RELRO
+ * protections can be applied to the PLT before dlopen() returns.
+ */
 #define RTLD_LAZY     0x00001
 
 /** A dlopen() flag to resolve all undefined symbols before dlopen() returns. */

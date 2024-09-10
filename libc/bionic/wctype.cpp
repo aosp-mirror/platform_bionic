@@ -34,6 +34,7 @@
 #include <string.h>
 #include <wchar.h>
 
+#include "bionic/macros.h"
 #include "private/icu.h"
 
 enum {
@@ -53,113 +54,104 @@ enum {
   WC_TYPE_MAX
 };
 
-int iswalnum(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_POSIX_ALNUM, isalnum); }
-int iswalpha(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_ALPHABETIC, isalpha); }
-int iswblank(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_POSIX_BLANK, isblank); }
-int iswgraph(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_POSIX_GRAPH, isgraph); }
-int iswlower(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_LOWERCASE, islower); }
-int iswprint(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_POSIX_PRINT, isprint); }
-int iswspace(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_WHITE_SPACE, isspace); }
-int iswupper(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_UPPERCASE, isupper); }
-int iswxdigit(wint_t wc) { return __icu_hasBinaryProperty(wc, UCHAR_POSIX_XDIGIT, isxdigit); }
+static u_hasBinaryProperty_t __find_u_hasBinaryProperty() {
+  static auto u_hasBinaryProperty =
+      reinterpret_cast<u_hasBinaryProperty_t>(__find_icu_symbol("u_hasBinaryProperty"));
+  return u_hasBinaryProperty;
+}
+
+#define DO_ISW(icu_constant, narrow_fn) \
+  u_hasBinaryProperty_t u_hasBinaryProperty; \
+  if (__predict_true(wc < 0x80) || \
+      !(u_hasBinaryProperty = __find_u_hasBinaryProperty())) { \
+    return narrow_fn(wc); \
+  } \
+  return u_hasBinaryProperty(wc, icu_constant); \
+
+int iswalnum(wint_t wc) { DO_ISW(UCHAR_POSIX_ALNUM, isalnum); }
+__strong_alias(iswalnum_l, iswalnum);
+int iswalpha(wint_t wc) { DO_ISW(UCHAR_ALPHABETIC, isalpha); }
+__strong_alias(iswalpha_l, iswalpha);
+int iswblank(wint_t wc) { DO_ISW(UCHAR_POSIX_BLANK, isblank); }
+__strong_alias(iswblank_l, iswblank);
+int iswgraph(wint_t wc) { DO_ISW(UCHAR_POSIX_GRAPH, isgraph); }
+__strong_alias(iswgraph_l, iswgraph);
+int iswlower(wint_t wc) { DO_ISW(UCHAR_LOWERCASE, islower); }
+__strong_alias(iswlower_l, iswlower);
+int iswprint(wint_t wc) { DO_ISW(UCHAR_POSIX_PRINT, isprint); }
+__strong_alias(iswprint_l, iswprint);
+int iswspace(wint_t wc) { DO_ISW(UCHAR_WHITE_SPACE, isspace); }
+__strong_alias(iswspace_l, iswspace);
+int iswupper(wint_t wc) { DO_ISW(UCHAR_UPPERCASE, isupper); }
+__strong_alias(iswupper_l, iswupper);
+int iswxdigit(wint_t wc) { DO_ISW(UCHAR_POSIX_XDIGIT, isxdigit); }
+__strong_alias(iswxdigit_l, iswxdigit);
 
 int iswcntrl(wint_t wc) {
+  if (wc < 0x80) return iscntrl(wc);
   typedef int8_t (*FnT)(UChar32);
   static auto u_charType = reinterpret_cast<FnT>(__find_icu_symbol("u_charType"));
   return u_charType ? (u_charType(wc) == U_CONTROL_CHAR) : iscntrl(wc);
 }
+__strong_alias(iswcntrl_l, iswcntrl);
 
 int iswdigit(wint_t wc) {
+  if (wc < 0x80) return isdigit(wc);
   typedef UBool (*FnT)(UChar32);
   static auto u_isdigit = reinterpret_cast<FnT>(__find_icu_symbol("u_isdigit"));
   return u_isdigit ? u_isdigit(wc) : isdigit(wc);
 }
+__strong_alias(iswdigit_l, iswdigit);
 
 int iswpunct(wint_t wc) {
+  if (wc < 0x80) return ispunct(wc);
   typedef UBool (*FnT)(UChar32);
   static auto u_ispunct = reinterpret_cast<FnT>(__find_icu_symbol("u_ispunct"));
   return u_ispunct ? u_ispunct(wc) : ispunct(wc);
 }
-
-int iswalnum_l(wint_t c, locale_t) { return iswalnum(c); }
-int iswalpha_l(wint_t c, locale_t) { return iswalpha(c); }
-int iswblank_l(wint_t c, locale_t) { return iswblank(c); }
-int iswcntrl_l(wint_t c, locale_t) { return iswcntrl(c); }
-int iswdigit_l(wint_t c, locale_t) { return iswdigit(c); }
-int iswgraph_l(wint_t c, locale_t) { return iswgraph(c); }
-int iswlower_l(wint_t c, locale_t) { return iswlower(c); }
-int iswprint_l(wint_t c, locale_t) { return iswprint(c); }
-int iswpunct_l(wint_t c, locale_t) { return iswpunct(c); }
-int iswspace_l(wint_t c, locale_t) { return iswspace(c); }
-int iswupper_l(wint_t c, locale_t) { return iswupper(c); }
-int iswxdigit_l(wint_t c, locale_t) { return iswxdigit(c); }
+__strong_alias(iswpunct_l, iswpunct);
 
 int iswctype(wint_t wc, wctype_t char_class) {
-  switch (char_class) {
-    case WC_TYPE_ALNUM: return iswalnum(wc);
-    case WC_TYPE_ALPHA: return iswalpha(wc);
-    case WC_TYPE_BLANK: return iswblank(wc);
-    case WC_TYPE_CNTRL: return iswcntrl(wc);
-    case WC_TYPE_DIGIT: return iswdigit(wc);
-    case WC_TYPE_GRAPH: return iswgraph(wc);
-    case WC_TYPE_LOWER: return iswlower(wc);
-    case WC_TYPE_PRINT: return iswprint(wc);
-    case WC_TYPE_PUNCT: return iswpunct(wc);
-    case WC_TYPE_SPACE: return iswspace(wc);
-    case WC_TYPE_UPPER: return iswupper(wc);
-    case WC_TYPE_XDIGIT: return iswxdigit(wc);
-    default: return 0;
-  }
+  if (char_class < WC_TYPE_ALNUM || char_class > WC_TYPE_XDIGIT) return 0;
+  static int (*fns[])(wint_t) = {
+    iswalnum, iswalpha, iswblank, iswcntrl, iswdigit, iswgraph,
+    iswlower, iswprint, iswpunct, iswspace, iswupper, iswxdigit
+  };
+  return fns[char_class - WC_TYPE_ALNUM](wc);
 }
-
-int iswctype_l(wint_t wc, wctype_t char_class, locale_t) {
-  return iswctype(wc, char_class);
-}
+__strong_alias(iswctype_l, iswctype);
 
 wint_t towlower(wint_t wc) {
-  if (wc < 0x80) {
-    if (wc >= 'A' && wc <= 'Z') return wc | 0x20;
-    return wc;
-  }
+  if (wc < 0x80) return tolower(wc);
 
   typedef UChar32 (*FnT)(UChar32);
   static auto u_tolower = reinterpret_cast<FnT>(__find_icu_symbol("u_tolower"));
   return u_tolower ? u_tolower(wc) : tolower(wc);
 }
+__strong_alias(towlower_l, towlower);
 
 wint_t towupper(wint_t wc) {
-  if (wc < 0x80) {
-    // Using EOR rather than AND makes no difference on arm, but saves an
-    // instruction on arm64.
-    if (wc >= 'a' && wc <= 'z') return wc ^ 0x20;
-    return wc;
-  }
+  if (wc < 0x80) return toupper(wc);
 
   typedef UChar32 (*FnT)(UChar32);
   static auto u_toupper = reinterpret_cast<FnT>(__find_icu_symbol("u_toupper"));
   return u_toupper ? u_toupper(wc) : toupper(wc);
 }
-
-wint_t towupper_l(wint_t c, locale_t) { return towupper(c); }
-wint_t towlower_l(wint_t c, locale_t) { return towlower(c); }
+__strong_alias(towupper_l, towupper);
 
 wctype_t wctype(const char* property) {
-  static const char* const  properties[WC_TYPE_MAX] = {
-    "<invalid>",
+  static const char* const  properties[WC_TYPE_MAX - 1] = {
     "alnum", "alpha", "blank", "cntrl", "digit", "graph",
     "lower", "print", "punct", "space", "upper", "xdigit"
   };
-  for (size_t i = 0; i < WC_TYPE_MAX; ++i) {
+  for (size_t i = 0; i < arraysize(properties); ++i) {
     if (!strcmp(properties[i], property)) {
-      return static_cast<wctype_t>(i);
+      return static_cast<wctype_t>(WC_TYPE_ALNUM + i);
     }
   }
   return static_cast<wctype_t>(0);
 }
-
-wctype_t wctype_l(const char* property, locale_t) {
-  return wctype(property);
-}
+__strong_alias(wctype_l, wctype);
 
 static wctrans_t wctrans_tolower = wctrans_t(1);
 static wctrans_t wctrans_toupper = wctrans_t(2);
@@ -167,20 +159,15 @@ static wctrans_t wctrans_toupper = wctrans_t(2);
 wctrans_t wctrans(const char* name) {
   if (strcmp(name, "tolower") == 0) return wctrans_tolower;
   if (strcmp(name, "toupper") == 0) return wctrans_toupper;
+  errno = EINVAL;
   return nullptr;
 }
-
-wctrans_t wctrans_l(const char* name, locale_t) {
-  return wctrans(name);
-}
+__strong_alias(wctrans_l, wctrans);
 
 wint_t towctrans(wint_t c, wctrans_t t) {
   if (t == wctrans_tolower) return towlower(c);
   if (t == wctrans_toupper) return towupper(c);
   errno = EINVAL;
-  return 0;
+  return c;
 }
-
-wint_t towctrans_l(wint_t c, wctrans_t t, locale_t) {
-  return towctrans(c, t);
-}
+__strong_alias(towctrans_l, towctrans);

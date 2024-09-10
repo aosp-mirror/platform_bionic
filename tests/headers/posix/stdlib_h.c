@@ -112,6 +112,9 @@ static void stdlib_h() {
   FUNCTION(ptsname, char* (*f)(int));
   FUNCTION(putenv, int (*f)(char*));
   FUNCTION(qsort, void (*f)(void*, size_t, size_t, int (*)(const void*, const void*)));
+#if !defined(__GLIBC__) // Our glibc is too old.
+  FUNCTION(qsort_r, void (*f)(void*, size_t, size_t, int (*)(const void*, const void*, void*), void*));
+#endif
   FUNCTION(rand, int (*f)(void));
   FUNCTION(rand_r, int (*f)(unsigned*));
   FUNCTION(random, long (*f)(void));

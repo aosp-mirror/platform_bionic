@@ -28,7 +28,6 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "cache.h"
 
 #ifndef MEMMOVE
 # define MEMMOVE		memmove
@@ -189,8 +188,9 @@ L(mm_len_128_or_more_forward):
 	cmp	%r8, %rbx
 	jbe	L(mm_copy_remaining_forward)
 
-	cmp	$SHARED_CACHE_SIZE_HALF, %rdx
-	jae	L(mm_large_page_loop_forward)
+	cmp	__x86_shared_cache_size_half(%rip), %rdx
+
+	ja      L(mm_overlapping_check_forward)
 
 	.p2align 4
 L(mm_main_loop_forward):
@@ -414,8 +414,9 @@ L(mm_len_128_or_more_backward):
 	cmp	%r9, %rbx
 	jae	L(mm_recalc_len)
 
-	cmp	$SHARED_CACHE_SIZE_HALF, %rdx
-	jae	L(mm_large_page_loop_backward)
+	cmp	__x86_shared_cache_size_half(%rip), %rdx
+
+	ja	L(mm_overlapping_check_backward)
 
 	.p2align 4
 L(mm_main_loop_backward):
@@ -481,6 +482,13 @@ L(mm_return):
 /* Big length copy forward part.  */
 
 	.p2align 4
+
+L(mm_overlapping_check_forward):
+	mov	%rsi, %r9
+	add	%rdx, %r9
+	cmp	__x86_shared_cache_size(%rip), %r9
+	jbe	L(mm_main_loop_forward)
+
 L(mm_large_page_loop_forward):
 	movdqu	(%r8, %rsi), %xmm0
 	movdqu	16(%r8, %rsi), %xmm1
@@ -498,6 +506,14 @@ L(mm_large_page_loop_forward):
 
 /* Big length copy backward part.  */
 	.p2align 4
+
+L(mm_overlapping_check_backward):
+	mov	%rdi, %r11
+	sub	%rsi, %r11 /* r11 = dst - src, diff */
+	add	%rdx, %r11
+	cmp	__x86_shared_cache_size(%rip), %r11
+	jbe	L(mm_main_loop_backward)
+
 L(mm_large_page_loop_backward):
 	movdqu	-64(%r9, %r8), %xmm0
 	movdqu	-48(%r9, %r8), %xmm1

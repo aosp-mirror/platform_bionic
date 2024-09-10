@@ -14,6 +14,16 @@ license {
     ],
 }
 
+linker_common_flags = [
+    "-fno-stack-protector",
+    "-Wstrict-overflow=5",
+    "-fvisibility=hidden",
+    "-Wall",
+    "-Wextra",
+    "-Wunused",
+    "-Werror",
+]
+
 // ========================================================
 // linker_wrapper - Linux Bionic (on the host)
 // ========================================================
@@ -36,15 +46,7 @@ cc_object {
         },
     },
 
-    cflags: [
-        "-fno-stack-protector",
-        "-Wstrict-overflow=5",
-        "-fvisibility=hidden",
-        "-Wall",
-        "-Wextra",
-        "-Wno-unused",
-        "-Werror",
-    ],
+    cflags: linker_common_flags,
 
     srcs: [
         "linker_wrapper.cpp",
@@ -83,26 +85,8 @@ cc_defaults {
         },
     },
 
-    cflags: [
-        "-fno-stack-protector",
-        "-Wstrict-overflow=5",
-        "-fvisibility=hidden",
-        "-Wall",
-        "-Wextra",
-        "-Wunused",
-        "-Werror",
-    ],
-
-    // TODO: split out the asflags.
-    asflags: [
-        "-fno-stack-protector",
-        "-Wstrict-overflow=5",
-        "-fvisibility=hidden",
-        "-Wall",
-        "-Wextra",
-        "-Wunused",
-        "-Werror",
-    ],
+    cflags: linker_common_flags,
+    asflags: linker_common_flags,
 
     product_variables: {
         debuggable: {

@@ -30,18 +30,76 @@
 
 #include <unistd.h>
 
-void linker_log_va_list(int prio __unused, const char* fmt, va_list ap) {
-#if LINKER_DEBUG_TO_LOG
-  async_safe_format_log_va_list(5 - prio, "linker", fmt, ap);
-#else
-  async_safe_format_fd_va_list(STDOUT_FILENO, fmt, ap);
-  write(STDOUT_FILENO, "\n", 1);
-#endif
+#include <android-base/strings.h>
+
+LinkerDebugConfig g_linker_debug_config;
+
+void init_LD_DEBUG(const std::string& value) {
+  if (value.empty()) return;
+  std::vector<std::string> options = android::base::Split(value, ",");
+  for (const auto& o : options) {
+    if (o == "calls") g_linker_debug_config.calls = true;
+    else if (o == "cfi") g_linker_debug_config.cfi = true;
+    else if (o == "dynamic") g_linker_debug_config.dynamic = true;
+    else if (o == "lookup") g_linker_debug_config.lookup = true;
+    else if (o == "props") g_linker_debug_config.props = true;
+    else if (o == "reloc") g_linker_debug_config.reloc = true;
+    else if (o == "statistics") g_linker_debug_config.statistics = true;
+    else if (o == "timing") g_linker_debug_config.timing = true;
+    else if (o == "all") {
+      g_linker_debug_config.calls = true;
+      g_linker_debug_config.cfi = true;
+      g_linker_debug_config.dynamic = true;
+      g_linker_debug_config.lookup = true;
+      g_linker_debug_config.props = true;
+      g_linker_debug_config.reloc = true;
+      g_linker_debug_config.statistics = true;
+      g_linker_debug_config.timing = true;
+    } else {
+      __linker_error("$LD_DEBUG is a comma-separated list of:\n"
+                     "\n"
+                     "  calls       ctors/dtors/ifuncs\n"
+                     "  cfi         control flow integrity messages\n"
+                     "  dynamic     dynamic section processing\n"
+                     "  lookup      symbol lookup\n"
+                     "  props       ELF property processing\n"
+                     "  reloc       relocation resolution\n"
+                     "  statistics  relocation statistics\n"
+                     "  timing      timing information\n"
+                     "\n"
+                     "or 'all' for all of the above.\n");
+    }
+  }
+  if (g_linker_debug_config.calls || g_linker_debug_config.cfi ||
+      g_linker_debug_config.dynamic || g_linker_debug_config.lookup ||
+      g_linker_debug_config.props || g_linker_debug_config.reloc ||
+      g_linker_debug_config.statistics || g_linker_debug_config.timing) {
+    g_linker_debug_config.any = true;
+  }
 }
 
-void linker_log(int prio, const char* fmt, ...) {
+static void linker_log_va_list(int prio, const char* fmt, va_list ap) {
+  va_list ap2;
+  va_copy(ap2, ap);
+  async_safe_format_log_va_list(prio, "linker", fmt, ap2);
+  va_end(ap2);
+
+  async_safe_format_fd_va_list(STDERR_FILENO, fmt, ap);
+  write(STDERR_FILENO, "\n", 1);
+}
+
+void __linker_log(int prio, const char* fmt, ...) {
   va_list ap;
   va_start(ap, fmt);
   linker_log_va_list(prio, fmt, ap);
   va_end(ap);
+}
+
+void __linker_error(const char* fmt, ...) {
+  va_list ap;
+  va_start(ap, fmt);
+  linker_log_va_list(ANDROID_LOG_FATAL, fmt, ap);
+  va_end(ap);
+
+  _exit(EXIT_FAILURE);
 }

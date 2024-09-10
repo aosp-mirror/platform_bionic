@@ -147,12 +147,13 @@ void count_relocation(RelocationKind kind) {
 }
 
 void print_linker_stats() {
-  PRINT("RELO STATS: %s: %d abs, %d rel, %d symbol (%d cached)",
-         g_argv[0],
-         linker_stats.count[kRelocAbsolute],
-         linker_stats.count[kRelocRelative],
-         linker_stats.count[kRelocSymbol],
-         linker_stats.count[kRelocSymbolCached]);
+  LD_DEBUG(statistics,
+           "RELO STATS: %s: %d abs, %d rel, %d symbol (%d cached)",
+           g_argv[0],
+           linker_stats.count[kRelocAbsolute],
+           linker_stats.count[kRelocRelative],
+           linker_stats.count[kRelocSymbol],
+           linker_stats.count[kRelocSymbolCached]);
 }
 
 static bool process_relocation_general(Relocator& relocator, const rel_t& reloc);
@@ -189,8 +190,7 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
     if (phdr_table_protect_segments(relocator.si->phdr, relocator.si->phnum,
                                     relocator.si->load_bias,
                                     relocator.si->should_pad_segments()) < 0) {
-      DL_ERR("can't protect segments for \"%s\": %s",
-             relocator.si->get_realpath(), strerror(errno));
+      DL_ERR("can't protect segments for \"%s\": %m", relocator.si->get_realpath());
       return false;
     }
     return true;
@@ -200,28 +200,17 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
     if (phdr_table_unprotect_segments(relocator.si->phdr, relocator.si->phnum,
                                       relocator.si->load_bias,
                                       relocator.si->should_pad_segments()) < 0) {
-      DL_ERR("can't unprotect loadable segments for \"%s\": %s",
-             relocator.si->get_realpath(), strerror(errno));
+      DL_ERR("can't unprotect loadable segments for \"%s\": %m",
+             relocator.si->get_realpath());
       return false;
     }
     return true;
   };
 #endif
 
-  auto trace_reloc = [](const char* fmt, ...) __printflike(2, 3) {
-    if (IsGeneral &&
-        g_ld_debug_verbosity > LINKER_VERBOSITY_TRACE &&
-        DO_TRACE_RELO) {
-      va_list ap;
-      va_start(ap, fmt);
-      linker_log_va_list(LINKER_VERBOSITY_TRACE, fmt, ap);
-      va_end(ap);
-    }
-  };
-
   // Skip symbol lookup for R_GENERIC_NONE relocations.
   if (__predict_false(r_type == R_GENERIC_NONE)) {
-    trace_reloc("RELO NONE");
+    LD_DEBUG(reloc && IsGeneral, "RELO NONE");
     return true;
   }
 
@@ -314,8 +303,8 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
     if (r_type == R_GENERIC_JUMP_SLOT) {
       count_relocation_if<IsGeneral>(kRelocAbsolute);
       const ElfW(Addr) result = sym_addr + get_addend_norel();
-      trace_reloc("RELO JMP_SLOT %16p <- %16p %s",
-                  rel_target, reinterpret_cast<void*>(result), sym_name);
+      LD_DEBUG(reloc && IsGeneral, "RELO JMP_SLOT %16p <- %16p %s",
+               rel_target, reinterpret_cast<void*>(result), sym_name);
       *static_cast<ElfW(Addr)*>(rel_target) = result;
       return true;
     }
@@ -328,8 +317,8 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
     if (r_type == R_GENERIC_ABSOLUTE) {
       count_relocation_if<IsGeneral>(kRelocAbsolute);
       const ElfW(Addr) result = sym_addr + get_addend_rel();
-      trace_reloc("RELO ABSOLUTE %16p <- %16p %s",
-                  rel_target, reinterpret_cast<void*>(result), sym_name);
+      LD_DEBUG(reloc && IsGeneral, "RELO ABSOLUTE %16p <- %16p %s",
+               rel_target, reinterpret_cast<void*>(result), sym_name);
       *static_cast<ElfW(Addr)*>(rel_target) = result;
       return true;
     } else if (r_type == R_GENERIC_GLOB_DAT) {
@@ -338,8 +327,8 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
       // it.
       count_relocation_if<IsGeneral>(kRelocAbsolute);
       const ElfW(Addr) result = sym_addr + get_addend_norel();
-      trace_reloc("RELO GLOB_DAT %16p <- %16p %s",
-                  rel_target, reinterpret_cast<void*>(result), sym_name);
+      LD_DEBUG(reloc && IsGeneral, "RELO GLOB_DAT %16p <- %16p %s",
+               rel_target, reinterpret_cast<void*>(result), sym_name);
       *static_cast<ElfW(Addr)*>(rel_target) = result;
       return true;
     } else if (r_type == R_GENERIC_RELATIVE) {
@@ -347,8 +336,8 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
       // referenced symbol (and abort if the symbol isn't found), even though it isn't used.
       count_relocation_if<IsGeneral>(kRelocRelative);
       const ElfW(Addr) result = relocator.si->load_bias + get_addend_rel();
-      trace_reloc("RELO RELATIVE %16p <- %16p",
-                  rel_target, reinterpret_cast<void*>(result));
+      LD_DEBUG(reloc && IsGeneral, "RELO RELATIVE %16p <- %16p",
+               rel_target, reinterpret_cast<void*>(result));
       *static_cast<ElfW(Addr)*>(rel_target) = result;
       return true;
     }
@@ -369,8 +358,8 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
       if (!relocator.si->is_linker()) {
         count_relocation_if<IsGeneral>(kRelocRelative);
         const ElfW(Addr) ifunc_addr = relocator.si->load_bias + get_addend_rel();
-        trace_reloc("RELO IRELATIVE %16p <- %16p",
-                    rel_target, reinterpret_cast<void*>(ifunc_addr));
+        LD_DEBUG(reloc && IsGeneral, "RELO IRELATIVE %16p <- %16p",
+                 rel_target, reinterpret_cast<void*>(ifunc_addr));
         if (handle_text_relocs && !protect_segments()) return false;
         const ElfW(Addr) result = call_ifunc_resolver(ifunc_addr);
         if (handle_text_relocs && !unprotect_segments()) return false;
@@ -407,8 +396,8 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
           }
         }
         tpoff += sym_addr + get_addend_rel();
-        trace_reloc("RELO TLS_TPREL %16p <- %16p %s",
-                    rel_target, reinterpret_cast<void*>(tpoff), sym_name);
+        LD_DEBUG(reloc && IsGeneral, "RELO TLS_TPREL %16p <- %16p %s",
+                 rel_target, reinterpret_cast<void*>(tpoff), sym_name);
         *static_cast<ElfW(Addr)*>(rel_target) = tpoff;
       }
       break;
@@ -423,8 +412,8 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
           module_id = found_in->get_tls()->module_id;
           CHECK(module_id != kTlsUninitializedModuleId);
         }
-        trace_reloc("RELO TLS_DTPMOD %16p <- %zu %s",
-                    rel_target, module_id, sym_name);
+        LD_DEBUG(reloc && IsGeneral, "RELO TLS_DTPMOD %16p <- %zu %s",
+                 rel_target, module_id, sym_name);
         *static_cast<ElfW(Addr)*>(rel_target) = module_id;
       }
       break;
@@ -432,8 +421,8 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
       count_relocation_if<IsGeneral>(kRelocRelative);
       {
         const ElfW(Addr) result = sym_addr + get_addend_rel() - TLS_DTV_OFFSET;
-        trace_reloc("RELO TLS_DTPREL %16p <- %16p %s",
-                    rel_target, reinterpret_cast<void*>(result), sym_name);
+        LD_DEBUG(reloc && IsGeneral, "RELO TLS_DTPREL %16p <- %16p %s",
+                 rel_target, reinterpret_cast<void*>(result), sym_name);
         *static_cast<ElfW(Addr)*>(rel_target) = result;
       }
       break;
@@ -450,8 +439,8 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
           // Unresolved weak relocation.
           desc->func = tlsdesc_resolver_unresolved_weak;
           desc->arg = addend;
-          trace_reloc("RELO TLSDESC %16p <- unresolved weak, addend 0x%zx %s",
-                      rel_target, static_cast<size_t>(addend), sym_name);
+          LD_DEBUG(reloc && IsGeneral, "RELO TLSDESC %16p <- unresolved weak, addend 0x%zx %s",
+                   rel_target, static_cast<size_t>(addend), sym_name);
         } else {
           CHECK(found_in->get_tls() != nullptr); // We rejected a missing TLS segment above.
           size_t module_id = found_in->get_tls()->module_id;
@@ -459,10 +448,10 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
           if (mod.static_offset != SIZE_MAX) {
             desc->func = tlsdesc_resolver_static;
             desc->arg = mod.static_offset - relocator.tls_tp_base + sym_addr + addend;
-            trace_reloc("RELO TLSDESC %16p <- static (0x%zx - 0x%zx + 0x%zx + 0x%zx) %s",
-                        rel_target, mod.static_offset, relocator.tls_tp_base,
-                        static_cast<size_t>(sym_addr), static_cast<size_t>(addend),
-                        sym_name);
+            LD_DEBUG(reloc && IsGeneral, "RELO TLSDESC %16p <- static (0x%zx - 0x%zx + 0x%zx + 0x%zx) %s",
+                     rel_target, mod.static_offset, relocator.tls_tp_base,
+                     static_cast<size_t>(sym_addr), static_cast<size_t>(addend),
+                     sym_name);
           } else {
             relocator.tlsdesc_args->push_back({
               .generation = mod.first_generation,
@@ -475,9 +464,9 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
               desc, relocator.tlsdesc_args->size() - 1
             });
             const TlsDynamicResolverArg& desc_arg = relocator.tlsdesc_args->back();
-            trace_reloc("RELO TLSDESC %16p <- dynamic (gen %zu, mod %zu, off %zu) %s",
-                        rel_target, desc_arg.generation, desc_arg.index.module_id,
-                        desc_arg.index.offset, sym_name);
+            LD_DEBUG(reloc && IsGeneral, "RELO TLSDESC %16p <- dynamic (gen %zu, mod %zu, off %zu) %s",
+                     rel_target, desc_arg.generation, desc_arg.index.module_id,
+                     desc_arg.index.offset, sym_name);
           }
         }
       }
@@ -489,8 +478,8 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
       count_relocation_if<IsGeneral>(kRelocAbsolute);
       {
         const Elf32_Addr result = sym_addr + reloc.r_addend;
-        trace_reloc("RELO R_X86_64_32 %16p <- 0x%08x %s",
-                    rel_target, result, sym_name);
+        LD_DEBUG(reloc && IsGeneral, "RELO R_X86_64_32 %16p <- 0x%08x %s",
+                 rel_target, result, sym_name);
         *static_cast<Elf32_Addr*>(rel_target) = result;
       }
       break;
@@ -500,9 +489,9 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
         const ElfW(Addr) target = sym_addr + reloc.r_addend;
         const ElfW(Addr) base = reinterpret_cast<ElfW(Addr)>(rel_target);
         const Elf32_Addr result = target - base;
-        trace_reloc("RELO R_X86_64_PC32 %16p <- 0x%08x (%16p - %16p) %s",
-                    rel_target, result, reinterpret_cast<void*>(target),
-                    reinterpret_cast<void*>(base), sym_name);
+        LD_DEBUG(reloc && IsGeneral, "RELO R_X86_64_PC32 %16p <- 0x%08x (%16p - %16p) %s",
+                 rel_target, result, reinterpret_cast<void*>(target),
+                 reinterpret_cast<void*>(base), sym_name);
         *static_cast<Elf32_Addr*>(rel_target) = result;
       }
       break;
@@ -513,9 +502,9 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
         const ElfW(Addr) target = sym_addr + get_addend_rel();
         const ElfW(Addr) base = reinterpret_cast<ElfW(Addr)>(rel_target);
         const ElfW(Addr) result = target - base;
-        trace_reloc("RELO R_386_PC32 %16p <- 0x%08x (%16p - %16p) %s",
-                    rel_target, result, reinterpret_cast<void*>(target),
-                    reinterpret_cast<void*>(base), sym_name);
+        LD_DEBUG(reloc && IsGeneral, "RELO R_386_PC32 %16p <- 0x%08x (%16p - %16p) %s",
+                 rel_target, result, reinterpret_cast<void*>(target),
+                 reinterpret_cast<void*>(base), sym_name);
         *static_cast<ElfW(Addr)*>(rel_target) = result;
       }
       break;
@@ -560,15 +549,11 @@ static bool packed_relocate_impl(Relocator& relocator, sleb128_decoder decoder) 
 }
 
 static bool needs_slow_relocate_loop(const Relocator& relocator __unused) {
-#if STATS
-  // TODO: This could become a run-time flag.
-  return true;
-#endif
 #if !defined(__LP64__)
   if (relocator.si->has_text_relocations) return true;
 #endif
-  if (g_ld_debug_verbosity > LINKER_VERBOSITY_TRACE) {
-    // If linker TRACE() is enabled, then each relocation is logged.
+  // Both LD_DEBUG relocation logging and statistics need the slow path.
+  if (g_linker_debug_config.any || g_linker_debug_config.statistics) {
     return true;
   }
   return false;
@@ -612,7 +597,7 @@ bool soinfo::relocate(const SymbolLookupList& lookup_list) {
   // The linker already applied its RELR relocations in an earlier pass, so
   // skip the RELR relocations for the linker.
   if (relr_ != nullptr && !is_linker()) {
-    DEBUG("[ relocating %s relr ]", get_realpath());
+    LD_DEBUG(reloc, "[ relocating %s relr ]", get_realpath());
     const ElfW(Relr)* begin = relr_;
     const ElfW(Relr)* end = relr_ + relr_count_;
     if (!relocate_relr(begin, end, load_bias)) {
@@ -627,7 +612,7 @@ bool soinfo::relocate(const SymbolLookupList& lookup_list) {
         android_relocs_[1] == 'P' &&
         android_relocs_[2] == 'S' &&
         android_relocs_[3] == '2') {
-      DEBUG("[ android relocating %s ]", get_realpath());
+      LD_DEBUG(reloc, "[ relocating %s android rel/rela ]", get_realpath());
 
       const uint8_t* packed_relocs = android_relocs_ + 4;
       const size_t packed_relocs_size = android_relocs_size_ - 4;
@@ -643,27 +628,27 @@ bool soinfo::relocate(const SymbolLookupList& lookup_list) {
 
 #if defined(USE_RELA)
   if (rela_ != nullptr) {
-    DEBUG("[ relocating %s rela ]", get_realpath());
+    LD_DEBUG(reloc, "[ relocating %s rela ]", get_realpath());
 
     if (!plain_relocate<RelocMode::Typical>(relocator, rela_, rela_count_)) {
       return false;
     }
   }
   if (plt_rela_ != nullptr) {
-    DEBUG("[ relocating %s plt rela ]", get_realpath());
+    LD_DEBUG(reloc, "[ relocating %s plt rela ]", get_realpath());
     if (!plain_relocate<RelocMode::JumpTable>(relocator, plt_rela_, plt_rela_count_)) {
       return false;
     }
   }
 #else
   if (rel_ != nullptr) {
-    DEBUG("[ relocating %s rel ]", get_realpath());
+    LD_DEBUG(reloc, "[ relocating %s rel ]", get_realpath());
     if (!plain_relocate<RelocMode::Typical>(relocator, rel_, rel_count_)) {
       return false;
     }
   }
   if (plt_rel_ != nullptr) {
-    DEBUG("[ relocating %s plt rel ]", get_realpath());
+   LD_DEBUG(reloc, "[ relocating %s plt rel ]", get_realpath());
     if (!plain_relocate<RelocMode::JumpTable>(relocator, plt_rel_, plt_rel_count_)) {
       return false;
     }

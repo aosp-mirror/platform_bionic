@@ -68,28 +68,23 @@ int mkstemp(char* _Nonnull __template);
 int mkstemps64(char* _Nonnull __template, int __flags) __INTRODUCED_IN(23);
 int mkstemps(char* _Nonnull __template, int __flags);
 
-long strtol(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base);
-long long strtoll(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base);
-unsigned long strtoul(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base);
-unsigned long long strtoull(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base);
-
 int posix_memalign(void* _Nullable * _Nullable __memptr, size_t __alignment, size_t __size);
 
-void* _Nullable aligned_alloc(size_t __alignment, size_t __size) __INTRODUCED_IN(28);
+/**
+ * [aligned_alloc(3)](https://man7.org/linux/man-pages/man3/aligned_alloc.3.html)
+ * allocates the given number of bytes with the given alignment.
+ *
+ * Returns a pointer to the allocated memory on success and returns a null
+ * pointer and sets `errno` on failure.
+ *
+ * Available since API level 28.
+ */
+__nodiscard void* _Nullable aligned_alloc(size_t __alignment, size_t __size) __INTRODUCED_IN(28);
 
-double strtod(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr);
-long double strtold(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr);
-
-unsigned long strtoul_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base, locale_t _Nonnull __l) __INTRODUCED_IN(26);
-
-int atoi(const char* _Nonnull __s) __attribute_pure__;
-long atol(const char* _Nonnull __s) __attribute_pure__;
-long long atoll(const char* _Nonnull __s) __attribute_pure__;
-
-__wur char* _Nullable realpath(const char* _Nonnull __path, char* _Nullable __resolved);
+__nodiscard char* _Nullable realpath(const char* _Nonnull __path, char* _Nullable __resolved);
 
 /**
- * [system(3)](http://man7.org/linux/man-pages/man3/system.3.html) executes
+ * [system(3)](https://man7.org/linux/man-pages/man3/system.3.html) executes
  * the given command in a new shell process.
  *
  * On Android, the special case of `system(NULL)` always returns 1,
@@ -100,21 +95,34 @@ __wur char* _Nullable realpath(const char* _Nonnull __path, char* _Nullable __re
  * or permanently (for lack of permission, say).
  *
  * Returns -1 and sets errno if process creation fails; returns a
- * [waitpid(2)](http://man7.org/linux/man-pages/man2/waitpid.2.html)
+ * [waitpid(2)](https://man7.org/linux/man-pages/man2/waitpid.2.html)
  * status otherwise.
  */
 int system(const char* _Nonnull __command);
 
 /**
- * [bsearch(3)](http://man7.org/linux/man-pages/man3/bsearch.3.html) searches
+ * [bsearch(3)](https://man7.org/linux/man-pages/man3/bsearch.3.html) searches
  * a sorted array.
  *
  * Returns a pointer to a matching item on success,
  * or NULL if no matching item is found.
  */
-__wur void* _Nullable bsearch(const void* _Nonnull __key, const void* _Nullable __base, size_t __nmemb, size_t __size, int (* _Nonnull __comparator)(const void* _Nonnull __lhs, const void* _Nonnull __rhs));
+__nodiscard void* _Nullable bsearch(const void* _Nonnull __key, const void* _Nullable __base, size_t __nmemb, size_t __size, int (* _Nonnull __comparator)(const void* _Nonnull __lhs, const void* _Nonnull __rhs));
 
-void qsort(void* _Nullable __base, size_t __nmemb, size_t __size, int (* _Nonnull __comparator)(const void* _Nullable __lhs, const void* _Nullable __rhs));
+/**
+ * [qsort(3)](https://man7.org/linux/man-pages/man3/qsort.3.html) sorts an array
+ * of n elements each of the given size, using the given comparator.
+ */
+void qsort(void* _Nullable __array, size_t __n, size_t __size, int (* _Nonnull __comparator)(const void* _Nullable __lhs, const void* _Nullable __rhs));
+
+/**
+ * [qsort_r(3)](https://man7.org/linux/man-pages/man3/qsort_r.3.html) sorts an
+ * array of n elements each of the given size, using the given comparator,
+ * and passing the given context argument to the comparator.
+ *
+ * Available since API level 36.
+ */
+void qsort_r(void* _Nullable __array, size_t __n, size_t __size, int (* _Nonnull __comparator)(const void* _Nullable __lhs, const void* _Nullable __rhs, void* _Nullable __context), void* _Nullable __context) __INTRODUCED_IN(36);
 
 uint32_t arc4random(void);
 uint32_t arc4random_uniform(uint32_t __upper_bound);
@@ -167,7 +175,7 @@ typedef struct {
 lldiv_t lldiv(long long __numerator, long long __denominator) __attribute_const__;
 
 /**
- * [getloadavg(3)](http://man7.org/linux/man-pages/man3/getloadavg.3.html) queries the
+ * [getloadavg(3)](https://man7.org/linux/man-pages/man3/getloadavg.3.html) queries the
  * number of runnable processes averaged over time. The Linux kernel supports averages
  * over the last 1, 5, and 15 minutes.
  *
@@ -179,7 +187,7 @@ int getloadavg(double __averages[_Nonnull], int __n) __INTRODUCED_IN(29);
 const char* _Nullable getprogname(void);
 void setprogname(const char* _Nonnull __name);
 
-int mblen(const char* _Nullable __s, size_t __n) __INTRODUCED_IN_NO_GUARD_FOR_NDK(26);
+int mblen(const char* _Nullable __s, size_t __n) __INTRODUCED_IN(26);
 size_t mbstowcs(wchar_t* _Nullable __dst, const char* _Nullable __src, size_t __n);
 int mbtowc(wchar_t* _Nullable __wc_ptr, const char*  _Nullable __s, size_t __n);
 int wctomb(char* _Nullable __dst, wchar_t __wc);
@@ -197,22 +205,134 @@ int abs(int __x) __attribute_const__;
 long labs(long __x) __attribute_const__;
 long long llabs(long long __x) __attribute_const__;
 
-float strtof(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr);
-double atof(const char* _Nonnull __s) __attribute_pure__;
 int rand(void);
 void srand(unsigned int __seed);
 long random(void);
 void srandom(unsigned int __seed);
 int grantpt(int __fd);
 
+/**
+ * [atof(3)](https://man7.org/linux/man-pages/man3/atof.3.html) converts a
+ * string to a double.
+ *
+ * Returns the double; use strtof() or strtod() if you need to detect errors.
+ */
+double atof(const char* _Nonnull __s) __attribute_pure__;
+
+/**
+ * [atoi(3)](https://man7.org/linux/man-pages/man3/atoi.3.html) converts a
+ * string to an int.
+ *
+ * Returns the int or 0 on error; use strtol() if you need to detect errors.
+ */
+int atoi(const char* _Nonnull __s) __attribute_pure__;
+
+/**
+ * [atol(3)](https://man7.org/linux/man-pages/man3/atol.3.html) converts a
+ * string to a long.
+ *
+ * Returns the long or 0 on error; use strtol() if you need to detect errors.
+ */
+long atol(const char* _Nonnull __s) __attribute_pure__;
+
+/**
+ * [atoll(3)](https://man7.org/linux/man-pages/man3/atoll.3.html) converts a
+ * string to a long long.
+ *
+ * Returns the long long or 0 on error; use strtol() if you need to detect errors.
+ */
+long long atoll(const char* _Nonnull __s) __attribute_pure__;
+
+/**
+ * [strtol(3)](https://man7.org/linux/man-pages/man3/strtol.3.html) converts a
+ * string to a long.
+ *
+ * Returns the long.
+ * `__end_ptr` is set to the last character in `__s` that was converted.
+ * errno is set to ERANGE if the result overflowed or underflowed.
+ */
+long strtol(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base);
+
+/** Equivalent to strtol() on Android. */
+long strtol_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int, locale_t _Nonnull __l) __RENAME(strtol);
+
+/**
+ * [strtoll(3)](https://man7.org/linux/man-pages/man3/strtoll.3.html) converts a
+ * string to a long long.
+ *
+ * Returns the long long.
+ * `__end_ptr` is set to the last character in `__s` that was converted.
+ * errno is set to ERANGE if the result overflowed or underflowed.
+ */
+long long strtoll(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base);
+
+/** Equivalent to strtoll() on Android. */
 long long strtoll_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base, locale_t _Nonnull __l);
+
+/**
+ * [strtoul(3)](https://man7.org/linux/man-pages/man3/strtoul.3.html) converts a
+ * string to an unsigned long.
+ *
+ * Returns the unsigned long.
+ * `__end_ptr` is set to the last character in `__s` that was converted.
+ * errno is set to ERANGE if the result overflowed or underflowed.
+ */
+unsigned long strtoul(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base);
+
+/** Equivalent to strtoul() on Android. */
+unsigned long strtoul_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base, locale_t _Nonnull __l) __RENAME(strtoul);
+
+/**
+ * [strtoull(3)](https://man7.org/linux/man-pages/man3/strtoull.3.html) converts a
+ * string to an unsigned long long.
+ *
+ * Returns the unsigned long long.
+ * `__end_ptr` is set to the last character in `__s` that was converted.
+ * errno is set to ERANGE if the result overflowed or underflowed.
+ */
+unsigned long long strtoull(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base);
+
+/** Equivalent to strtoull() on Android. */
 unsigned long long strtoull_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base, locale_t _Nonnull __l);
+
+/**
+ * [strtof(3)](https://man7.org/linux/man-pages/man3/strtof.3.html) converts a
+ * string to a float.
+ *
+ * Returns the float.
+ * `__end_ptr` is set to the last character in `__s` that was converted.
+ * errno is set to ERANGE if the result overflowed or underflowed.
+ */
+float strtof(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr);
+
+/**
+ * [strtod(3)](https://man7.org/linux/man-pages/man3/strtod.3.html) converts a
+ * string to a double.
+ *
+ * Returns the double.
+ * `__end_ptr` is set to the last character in `__s` that was converted.
+ * errno is set to ERANGE if the result overflowed or underflowed.
+ */
+double strtod(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr);
+
+/**
+ * [strtold(3)](https://man7.org/linux/man-pages/man3/strtold.3.html) converts a
+ * string to a long double.
+ *
+ * Returns the long double.
+ * `__end_ptr` is set to the last character in `__s` that was converted.
+ * errno is set to ERANGE if the result overflowed or underflowed.
+ */
+long double strtold(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr);
+
+/** Equivalent to strtold() on Android. */
 long double strtold_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, locale_t _Nonnull __l);
 
 #if __ANDROID_API__ >= 26
+/** Equivalent to strtod() on Android. */
 double strtod_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, locale_t _Nonnull __l) __INTRODUCED_IN(26);
+/** Equivalent to strtof() on Android. */
 float strtof_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, locale_t _Nonnull __l) __INTRODUCED_IN(26);
-long strtol_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int, locale_t _Nonnull __l) __INTRODUCED_IN(26);
 #else
 // Implemented as static inlines before 26.
 #endif

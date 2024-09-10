@@ -43,13 +43,17 @@ static void CallMalloptLogStats(int, struct siginfo*, void*) {
   g_call_mallopt = true;
 }
 
+void Log() {
+  info_log("Logging allocator stats...");
+  if (mallopt(M_LOG_STATS, 0) == 0) {
+    error_log("mallopt(M_LOG_STATS, 0) call failed.");
+  }
+}
+
 void CheckIfShouldLog() {
   bool expected = true;
   if (g_call_mallopt.compare_exchange_strong(expected, false)) {
-    info_log("Logging allocator stats...");
-    if (mallopt(M_LOG_STATS, 0) == 0) {
-      error_log("mallopt(M_LOG_STATS, 0) call failed.");
-    }
+    Log();
   }
 }
 

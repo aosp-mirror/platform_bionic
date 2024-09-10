@@ -49,7 +49,7 @@
 __BEGIN_DECLS
 
 /**
- * [feclearexcept(3)](http://man7.org/linux/man-pages/man3/feclearexcept.3.html)
+ * [feclearexcept(3)](https://man7.org/linux/man-pages/man3/feclearexcept.3.html)
  * clears the given `exceptions` in hardware.
  *
  * Returns 0 on success, and returns non-zero on failure.
@@ -57,7 +57,7 @@ __BEGIN_DECLS
 int feclearexcept(int __exceptions);
 
 /**
- * [fegetexceptflag(3)](http://man7.org/linux/man-pages/man3/fegetexceptflag.3.html)
+ * [fegetexceptflag(3)](https://man7.org/linux/man-pages/man3/fegetexceptflag.3.html)
  * copies the state of the given `exceptions` from hardware into `*flag_ptr`.
  * See fesetexceptflag().
  *
@@ -66,7 +66,7 @@ int feclearexcept(int __exceptions);
 int fegetexceptflag(fexcept_t* _Nonnull __flag_ptr, int __exceptions);
 
 /**
- * [feraiseexcept(3)](http://man7.org/linux/man-pages/man3/feraiseexcept.3.html)
+ * [feraiseexcept(3)](https://man7.org/linux/man-pages/man3/feraiseexcept.3.html)
  * raises the given `exceptions` in hardware.
  *
  * Returns 0 on success, and returns non-zero on failure.
@@ -74,7 +74,7 @@ int fegetexceptflag(fexcept_t* _Nonnull __flag_ptr, int __exceptions);
 int feraiseexcept(int __exceptions);
 
 /**
- * [fesetexceptflag(3)](http://man7.org/linux/man-pages/man3/fesetexceptflag.3.html)
+ * [fesetexceptflag(3)](https://man7.org/linux/man-pages/man3/fesetexceptflag.3.html)
  * copies the state of the given `exceptions` from `*flag_ptr` into hardware.
  * See fesetexceptflag().
  *
@@ -83,7 +83,7 @@ int feraiseexcept(int __exceptions);
 int fesetexceptflag(const fexcept_t* _Nonnull __flag_ptr, int __exceptions);
 
 /**
- * [fetestexcept(3)](http://man7.org/linux/man-pages/man3/fetestexcept.3.html)
+ * [fetestexcept(3)](https://man7.org/linux/man-pages/man3/fetestexcept.3.html)
  * tests whether the given `exceptions` are set in hardware.
  *
  * Returns the currently-set subset of `exceptions`.
@@ -91,7 +91,7 @@ int fesetexceptflag(const fexcept_t* _Nonnull __flag_ptr, int __exceptions);
 int fetestexcept(int __exceptions);
 
 /**
- * [fegetround(3)](http://man7.org/linux/man-pages/man3/fegetround.3.html)
+ * [fegetround(3)](https://man7.org/linux/man-pages/man3/fegetround.3.html)
  * returns the current rounding mode.
  *
  * Returns the rounding mode on success, and returns a negative value on failure.
@@ -99,7 +99,7 @@ int fetestexcept(int __exceptions);
 int fegetround(void);
 
 /**
- * [fesetround(3)](http://man7.org/linux/man-pages/man3/fesetround.3.html)
+ * [fesetround(3)](https://man7.org/linux/man-pages/man3/fesetround.3.html)
  * sets the current rounding mode.
  *
  * Returns 0 on success, and returns non-zero on failure.
@@ -107,7 +107,7 @@ int fegetround(void);
 int fesetround(int __rounding_mode);
 
 /**
- * [fegetenv(3)](http://man7.org/linux/man-pages/man3/fegetenv.3.html)
+ * [fegetenv(3)](https://man7.org/linux/man-pages/man3/fegetenv.3.html)
  * gets the current floating-point environment. See fesetenv().
  *
  * Returns 0 on success, and returns non-zero on failure.
@@ -115,7 +115,7 @@ int fesetround(int __rounding_mode);
 int fegetenv(fenv_t* _Nonnull __env);
 
 /**
- * [feholdexcept(3)](http://man7.org/linux/man-pages/man3/feholdexcept.3.html)
+ * [feholdexcept(3)](https://man7.org/linux/man-pages/man3/feholdexcept.3.html)
  * gets the current floating-point environment, clears the status flags, and
  * ignores floating point exceptions. See fesetenv()/feupdateenv().
  *
@@ -124,7 +124,7 @@ int fegetenv(fenv_t* _Nonnull __env);
 int feholdexcept(fenv_t* _Nonnull __env);
 
 /**
- * [fesetenv(3)](http://man7.org/linux/man-pages/man3/fesetenv.3.html)
+ * [fesetenv(3)](https://man7.org/linux/man-pages/man3/fesetenv.3.html)
  * sets the current floating-point environment. See fegetenv().
  *
  * Returns 0 on success, and returns non-zero on failure.
@@ -132,7 +132,7 @@ int feholdexcept(fenv_t* _Nonnull __env);
 int fesetenv(const fenv_t* _Nonnull __env);
 
 /**
- * [feupdateenv(3)](http://man7.org/linux/man-pages/man3/feupdateenv.3.html)
+ * [feupdateenv(3)](https://man7.org/linux/man-pages/man3/feupdateenv.3.html)
  * sets the current floating-point environment to `*env` but with currently-raised
  * exceptions still raised. See fesetenv().
  *
@@ -141,7 +141,7 @@ int fesetenv(const fenv_t* _Nonnull __env);
 int feupdateenv(const fenv_t* _Nonnull __env);
 
 /**
- * [feenableexcept(3)](http://man7.org/linux/man-pages/man3/feenableexcept.3.html)
+ * [feenableexcept(3)](https://man7.org/linux/man-pages/man3/feenableexcept.3.html)
  * sets the given `exceptions` to trap, if the hardware supports it. This is not
  * generally useful on Android, because only x86/x86-64 can trap.
  *
@@ -150,7 +150,7 @@ int feupdateenv(const fenv_t* _Nonnull __env);
 int feenableexcept(int __exceptions);
 
 /**
- * [fedisableexcept(3)](http://man7.org/linux/man-pages/man3/fedisableexcept.3.html)
+ * [fedisableexcept(3)](https://man7.org/linux/man-pages/man3/fedisableexcept.3.html)
  * sets the given `exceptions` to not trap, if the hardware supports it. This is not
  * generally useful on Android, because only x86/x86-64 can trap.
  *
@@ -159,7 +159,7 @@ int feenableexcept(int __exceptions);
 int fedisableexcept(int __exceptions);
 
 /**
- * [fegetexcept(3)](http://man7.org/linux/man-pages/man3/fegetexcept.3.html)
+ * [fegetexcept(3)](https://man7.org/linux/man-pages/man3/fegetexcept.3.html)
  * returns the exceptions that currently trap. This is not generally useful on
  * Android, because only x86/x86-64 can trap.
  *

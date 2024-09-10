@@ -28,59 +28,45 @@
 
 #pragma once
 
-// You can increase the verbosity of debug traces by defining the LD_DEBUG
-// environment variable to a numeric value from 0 to 2 (corresponding to
-// INFO, TRACE, and DEBUG calls in the source). This will only
-// affect new processes being launched.
-
-// By default, traces are sent to logcat, with the "linker" tag. You can
-// change this to go to stdout instead by setting the definition of
-// LINKER_DEBUG_TO_LOG to 0.
-#define LINKER_DEBUG_TO_LOG  1
-
-#define TRACE_DEBUG          1
-#define DO_TRACE_LOOKUP      1
-#define DO_TRACE_RELO        1
-#define DO_TRACE_IFUNC       1
-#define TIMING               0
-#define STATS                0
-
-/*********************************************************************
- * You shouldn't need to modify anything below unless you are adding
- * more debugging information.
- *
- * To enable/disable specific debug options, change the defines above
- *********************************************************************/
-
 #include <stdarg.h>
 #include <unistd.h>
+
+#include <string>
 
 #include <async_safe/log.h>
 #include <async_safe/CHECK.h>
 
-#define LINKER_VERBOSITY_PRINT (-1)
-#define LINKER_VERBOSITY_INFO   0
-#define LINKER_VERBOSITY_TRACE  1
-#define LINKER_VERBOSITY_DEBUG  2
+struct LinkerDebugConfig {
+  // Set automatically if any of the more specific options are set.
+  bool any;
 
-__LIBC_HIDDEN__ extern int g_ld_debug_verbosity;
+  // Messages relating to calling ctors/dtors/ifuncs.
+  bool calls;
+  // Messages relating to CFI.
+  bool cfi;
+  // Messages relating to the dynamic section.
+  bool dynamic;
+  // Messages relating to symbol lookup.
+  bool lookup;
+  // Messages relating to relocation processing.
+  bool reloc;
+  // Messages relating to ELF properties.
+  bool props;
+  // TODO: "config" and "zip" seem likely to want to be separate?
 
-__LIBC_HIDDEN__ void linker_log_va_list(int prio, const char* fmt, va_list ap);
-__LIBC_HIDDEN__ void linker_log(int prio, const char* fmt, ...) __printflike(2, 3);
+  bool timing;
+  bool statistics;
+};
 
-#define _PRINTVF(v, x...) \
-    do { \
-      if (g_ld_debug_verbosity > (v)) linker_log((v), x); \
-    } while (0)
+extern LinkerDebugConfig g_linker_debug_config;
 
-#define PRINT(x...)          _PRINTVF(LINKER_VERBOSITY_PRINT, x)
-#define INFO(x...)           _PRINTVF(LINKER_VERBOSITY_INFO, x)
-#define TRACE(x...)          _PRINTVF(LINKER_VERBOSITY_TRACE, x)
+__LIBC_HIDDEN__ void init_LD_DEBUG(const std::string& value);
+__LIBC_HIDDEN__ void __linker_log(int prio, const char* fmt, ...) __printflike(2, 3);
+__LIBC_HIDDEN__ void __linker_error(const char* fmt, ...) __printflike(1, 2);
 
-#if TRACE_DEBUG
-#define DEBUG(x...)          _PRINTVF(LINKER_VERBOSITY_DEBUG, "DEBUG: " x)
-#else /* !TRACE_DEBUG */
-#define DEBUG(x...)          do {} while (0)
-#endif /* TRACE_DEBUG */
-
-#define TRACE_TYPE(t, x...)   do { if (DO_TRACE_##t) { TRACE(x); } } while (0)
+#define LD_DEBUG(what, x...) \
+  do { \
+    if (g_linker_debug_config.what) { \
+      __linker_log(ANDROID_LOG_INFO, x); \
+    } \
+  } while (false)
