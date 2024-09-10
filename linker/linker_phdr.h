@@ -68,6 +68,11 @@ class ElfReader {
   [[nodiscard]] bool ReadDynamicSection();
   [[nodiscard]] bool ReadPadSegmentNote();
   [[nodiscard]] bool ReserveAddressSpace(address_space_params* address_space);
+  [[nodiscard]] bool MapSegment(size_t seg_idx, size_t len);
+  void ZeroFillSegment(const ElfW(Phdr)* phdr);
+  void DropPaddingPages(const ElfW(Phdr)* phdr, uint64_t seg_file_end);
+  [[nodiscard]] bool MapBssSection(const ElfW(Phdr)* phdr, ElfW(Addr) seg_page_end,
+                                   ElfW(Addr) seg_file_end);
   [[nodiscard]] bool LoadSegments();
   [[nodiscard]] bool FindPhdr();
   [[nodiscard]] bool FindGnuPropertySection();
