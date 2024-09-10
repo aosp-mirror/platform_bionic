@@ -35,6 +35,8 @@
 
 #include <gtest/gtest.h>
 
+#include <android-base/silent_death_test.h>
+
 #include "private/bionic_tls.h"
 
 using namespace std::string_literals;
@@ -138,7 +140,9 @@ static size_t operator""_words(unsigned long long i) {
   return i * sizeof(void*);
 }
 
-TEST(static_tls_layout, arm) {
+using static_tls_layout_DeathTest = SilentDeathTest;
+
+TEST_F(static_tls_layout_DeathTest, arm) {
 #if !defined(__arm__) && !defined(__aarch64__)
   GTEST_SKIP() << "test only applies to arm32/arm64 targets";
 #endif

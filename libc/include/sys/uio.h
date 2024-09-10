@@ -40,7 +40,7 @@
 __BEGIN_DECLS
 
 /**
- * [readv(2)](http://man7.org/linux/man-pages/man2/readv.2.html) reads
+ * [readv(2)](https://man7.org/linux/man-pages/man2/readv.2.html) reads
  * from an fd into the `__count` buffers described by `__iov`.
  *
  * Returns the number of bytes read on success,
@@ -49,7 +49,7 @@ __BEGIN_DECLS
 ssize_t readv(int __fd, const struct iovec* _Nonnull __iov, int __count);
 
 /**
- * [writev(2)](http://man7.org/linux/man-pages/man2/writev.2.html) writes
+ * [writev(2)](https://man7.org/linux/man-pages/man2/writev.2.html) writes
  * to an fd from the `__count` buffers described by `__iov`.
  *
  * Returns the number of bytes written on success,
@@ -60,7 +60,7 @@ ssize_t writev(int __fd, const struct iovec* _Nonnull __iov, int __count);
 #if defined(__USE_GNU)
 
 /**
- * [preadv(2)](http://man7.org/linux/man-pages/man2/preadv.2.html) reads
+ * [preadv(2)](https://man7.org/linux/man-pages/man2/preadv.2.html) reads
  * from an fd into the `__count` buffers described by `__iov`, starting at
  * offset `__offset` into the file.
  *
@@ -72,7 +72,7 @@ ssize_t writev(int __fd, const struct iovec* _Nonnull __iov, int __count);
 ssize_t preadv(int __fd, const struct iovec* _Nonnull __iov, int __count, off_t __offset) __RENAME_IF_FILE_OFFSET64(preadv64) __INTRODUCED_IN(24);
 
 /**
- * [pwritev(2)](http://man7.org/linux/man-pages/man2/pwritev.2.html) writes
+ * [pwritev(2)](https://man7.org/linux/man-pages/man2/pwritev.2.html) writes
  * to an fd from the `__count` buffers described by `__iov`, starting at offset
  * `__offset` into the file.
  *
@@ -98,7 +98,7 @@ ssize_t preadv64(int __fd, const struct iovec* _Nonnull __iov, int __count, off6
 ssize_t pwritev64(int __fd, const struct iovec* _Nonnull __iov, int __count, off64_t __offset) __INTRODUCED_IN(24);
 
 /**
- * [preadv2(2)](http://man7.org/linux/man-pages/man2/preadv2.2.html) reads
+ * [preadv2(2)](https://man7.org/linux/man-pages/man2/preadv2.2.html) reads
  * from an fd into the `__count` buffers described by `__iov`, starting at
  * offset `__offset` into the file, with the given flags.
  *
@@ -110,7 +110,7 @@ ssize_t pwritev64(int __fd, const struct iovec* _Nonnull __iov, int __count, off
 ssize_t preadv2(int __fd, const struct iovec* _Nonnull __iov, int __count, off_t __offset, int __flags) __RENAME_IF_FILE_OFFSET64(preadv64v2) __INTRODUCED_IN(33);
 
 /**
- * [pwritev2(2)](http://man7.org/linux/man-pages/man2/pwritev2.2.html) writes
+ * [pwritev2(2)](https://man7.org/linux/man-pages/man2/pwritev2.2.html) writes
  * to an fd from the `__count` buffers described by `__iov`, starting at offset
  * `__offset` into the file, with the given flags.
  *
@@ -136,7 +136,7 @@ ssize_t preadv64v2(int __fd, const struct iovec* _Nonnull __iov, int __count, of
 ssize_t pwritev64v2(int __fd, const struct iovec* _Nonnull __iov, int __count, off64_t __offset, int __flags) __INTRODUCED_IN(33);
 
 /**
- * [process_vm_readv(2)](http://man7.org/linux/man-pages/man2/process_vm_readv.2.html)
+ * [process_vm_readv(2)](https://man7.org/linux/man-pages/man2/process_vm_readv.2.html)
  * reads from the address space of another process.
  *
  * Returns the number of bytes read on success,
@@ -147,7 +147,7 @@ ssize_t pwritev64v2(int __fd, const struct iovec* _Nonnull __iov, int __count, o
 ssize_t process_vm_readv(pid_t __pid, const struct iovec* __BIONIC_COMPLICATED_NULLNESS __local_iov, unsigned long __local_iov_count, const struct iovec* __BIONIC_COMPLICATED_NULLNESS __remote_iov, unsigned long __remote_iov_count, unsigned long __flags) __INTRODUCED_IN(23);
 
 /**
- * [process_vm_writev(2)](http://man7.org/linux/man-pages/man2/process_vm_writev.2.html)
+ * [process_vm_writev(2)](https://man7.org/linux/man-pages/man2/process_vm_writev.2.html)
  * writes to the address space of another process.
  *
  * Returns the number of bytes read on success,

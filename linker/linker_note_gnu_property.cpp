@@ -62,7 +62,7 @@ const ElfW(NhdrGNUProperty)* GnuPropertySection::FindSegment(const ElfW(Phdr)* p
         continue;
       }
 
-      TRACE("\"%s\" PT_GNU_PROPERTY: found at segment index %zu", name, i);
+      LD_DEBUG(props, "\"%s\" PT_GNU_PROPERTY: found at segment index %zu", name, i);
 
       // Check segment size.
       if (phdr[i].p_memsz < sizeof(ElfW(NhdrGNUProperty))) {
@@ -90,7 +90,7 @@ const ElfW(NhdrGNUProperty)* GnuPropertySection::FindSegment(const ElfW(Phdr)* p
     }
   }
 
-  TRACE("\"%s\" PT_GNU_PROPERTY: not found", name);
+  LD_DEBUG(props, "\"%s\" PT_GNU_PROPERTY: not found", name);
   return nullptr;
 }
 
@@ -122,7 +122,7 @@ bool GnuPropertySection::Parse(const ElfW(NhdrGNUProperty)* note_nhdr, const cha
   // The total length of the program property array is in _bytes_.
   ElfW(Word) offset = 0;
   while (offset < note_nhdr->nhdr.n_descsz) {
-    DEBUG("\"%s\" .note.gnu.property: processing at offset 0x%x", name, offset);
+    LD_DEBUG(props, "\"%s\" .note.gnu.property: processing at offset 0x%x", name, offset);
 
     // At least the "header" part must fit.
     // The ABI doesn't say that pr_datasz can't be 0.
@@ -161,14 +161,14 @@ bool GnuPropertySection::Parse(const ElfW(NhdrGNUProperty)* note_nhdr, const cha
         const ElfW(Word) flags = *reinterpret_cast<const ElfW(Word)*>(&property->pr_data[0]);
         properties_.bti_compatible = (flags & GNU_PROPERTY_AARCH64_FEATURE_1_BTI) != 0;
         if (properties_.bti_compatible) {
-          INFO("[ BTI compatible: \"%s\" ]", name);
+          LD_DEBUG(props, "[ BTI compatible: \"%s\" ]", name);
         }
         break;
       }
 #endif
       default:
-        DEBUG("\"%s\" .note.gnu.property: found property pr_type %u pr_datasz 0x%x", name,
-              property->pr_type, property->pr_datasz);
+        LD_DEBUG(props, "\"%s\" .note.gnu.property: found property pr_type %u pr_datasz 0x%x",
+                 name, property->pr_type, property->pr_datasz);
         break;
     }
 

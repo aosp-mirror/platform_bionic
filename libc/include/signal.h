@@ -122,6 +122,34 @@ int sigtimedwait64(const sigset64_t* _Nonnull __set, siginfo_t* _Nullable __info
 int sigwaitinfo(const sigset_t* _Nonnull __set, siginfo_t* _Nullable __info) __INTRODUCED_IN(23);
 int sigwaitinfo64(const sigset64_t* _Nonnull __set, siginfo_t* _Nullable __info) __INTRODUCED_IN(28);
 
+/**
+ * Buffer size suitable for any call to sig2str().
+ */
+#define SIG2STR_MAX 32
+
+/**
+ * [sig2str(3)](https://man7.org/linux/man-pages/man3/sig2str.3.html)
+ * converts the integer corresponding to SIGSEGV (say) into a string
+ * like "SEGV" (not including the "SIG" used in the constants).
+ * SIG2STR_MAX is a safe size to use for the buffer.
+ *
+ * Returns 0 on success, and returns -1 _without_ setting errno otherwise.
+ *
+ * Available since API level 36.
+ */
+int sig2str(int __signal, char* _Nonnull __buf) __INTRODUCED_IN(36);
+
+/**
+ * [str2sig(3)](https://man7.org/linux/man-pages/man3/str2sig.3.html)
+ * converts a string like "SEGV" (not including the "SIG" used in the constants)
+ * into the integer corresponding to SIGSEGV.
+ *
+ * Returns 0 on success, and returns -1 _without_ setting errno otherwise.
+ *
+ * Available since API level 36.
+ */
+int str2sig(const char* _Nonnull __name, int* _Nonnull __signal) __INTRODUCED_IN(36);
+
 __END_DECLS
 
 #endif

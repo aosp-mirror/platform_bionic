@@ -43,7 +43,7 @@
 __BEGIN_DECLS
 
 /**
- * [getrandom(2)](http://man7.org/linux/man-pages/man2/getrandom.2.html) fills the given buffer
+ * [getrandom(2)](https://man7.org/linux/man-pages/man2/getrandom.2.html) fills the given buffer
  * with random bytes.
  *
  * Returns the number of bytes copied on success, and returns -1 and sets `errno` on failure.
@@ -52,6 +52,6 @@ __BEGIN_DECLS
  *
  * See also arc4random_buf() which is available in all API levels.
  */
-ssize_t getrandom(void* _Nonnull __buffer, size_t __buffer_size, unsigned int __flags) __wur __INTRODUCED_IN(28);
+__nodiscard ssize_t getrandom(void* _Nonnull __buffer, size_t __buffer_size, unsigned int __flags) __INTRODUCED_IN(28);
 
 __END_DECLS

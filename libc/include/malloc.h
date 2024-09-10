@@ -34,7 +34,7 @@ __BEGIN_DECLS
 #define __BIONIC_ALLOC_SIZE(...) __attribute__((__alloc_size__(__VA_ARGS__)))
 
 /**
- * [malloc(3)](http://man7.org/linux/man-pages/man3/malloc.3.html) allocates
+ * [malloc(3)](https://man7.org/linux/man-pages/man3/malloc.3.html) allocates
  * memory on the heap.
  *
  * Returns a pointer to the allocated memory on success and returns a null
@@ -55,29 +55,29 @@ __BEGIN_DECLS
  * other processes. Obviously this is not the case for apps, which will
  * be killed in preference to killing other processes.
  */
-void* _Nullable malloc(size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(1) __wur;
+__nodiscard void* _Nullable malloc(size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(1);
 
 /**
- * [calloc(3)](http://man7.org/linux/man-pages/man3/calloc.3.html) allocates
+ * [calloc(3)](https://man7.org/linux/man-pages/man3/calloc.3.html) allocates
  * and clears memory on the heap.
  *
  * Returns a pointer to the allocated memory on success and returns a null
  * pointer and sets `errno` on failure (but see the notes for malloc()).
  */
-void* _Nullable calloc(size_t __item_count, size_t __item_size) __mallocfunc __BIONIC_ALLOC_SIZE(1,2) __wur;
+__nodiscard void* _Nullable calloc(size_t __item_count, size_t __item_size) __mallocfunc __BIONIC_ALLOC_SIZE(1,2);
 
 /**
- * [realloc(3)](http://man7.org/linux/man-pages/man3/realloc.3.html) resizes
+ * [realloc(3)](https://man7.org/linux/man-pages/man3/realloc.3.html) resizes
  * allocated memory on the heap.
  *
  * Returns a pointer (which may be different from `__ptr`) to the resized
  * memory on success and returns a null pointer and sets `errno` on failure
  * (but see the notes for malloc()).
  */
-void* _Nullable realloc(void* _Nullable __ptr, size_t __byte_count) __BIONIC_ALLOC_SIZE(2) __wur;
+__nodiscard void* _Nullable realloc(void* _Nullable __ptr, size_t __byte_count) __BIONIC_ALLOC_SIZE(2);
 
 /**
- * [reallocarray(3)](http://man7.org/linux/man-pages/man3/realloc.3.html) resizes
+ * [reallocarray(3)](https://man7.org/linux/man-pages/man3/realloc.3.html) resizes
  * allocated memory on the heap.
  *
  * Equivalent to `realloc(__ptr, __item_count * __item_size)` but fails if the
@@ -87,16 +87,28 @@ void* _Nullable realloc(void* _Nullable __ptr, size_t __byte_count) __BIONIC_ALL
  * memory on success and returns a null pointer and sets `errno` on failure
  * (but see the notes for malloc()).
  */
-void* _Nullable reallocarray(void* _Nullable __ptr, size_t __item_count, size_t __item_size) __BIONIC_ALLOC_SIZE(2, 3) __wur __INTRODUCED_IN(29);
+#if __ANDROID_API__ >= 29
+__nodiscard void* _Nullable reallocarray(void* _Nullable __ptr, size_t __item_count, size_t __item_size) __BIONIC_ALLOC_SIZE(2, 3) __INTRODUCED_IN(29);
+#else
+#include <errno.h>
+static __inline __nodiscard void* _Nullable reallocarray(void* _Nullable __ptr, size_t __item_count, size_t __item_size) {
+  size_t __new_size;
+  if (__builtin_mul_overflow(__item_count, __item_size, &__new_size)) {
+    errno = ENOMEM;
+    return NULL;
+  }
+  return realloc(__ptr, __new_size);
+}
+#endif
 
 /**
- * [free(3)](http://man7.org/linux/man-pages/man3/free.3.html) deallocates
+ * [free(3)](https://man7.org/linux/man-pages/man3/free.3.html) deallocates
  * memory on the heap.
  */
 void free(void* _Nullable __ptr);
 
 /**
- * [memalign(3)](http://man7.org/linux/man-pages/man3/memalign.3.html) allocates
+ * [memalign(3)](https://man7.org/linux/man-pages/man3/memalign.3.html) allocates
  * memory on the heap with the required alignment.
  *
  * Returns a pointer to the allocated memory on success and returns a null
@@ -104,13 +116,13 @@ void free(void* _Nullable __ptr);
  *
  * See also posix_memalign().
  */
-void* _Nullable memalign(size_t __alignment, size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(2) __wur;
+__nodiscard void* _Nullable memalign(size_t __alignment, size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(2);
 
 /**
- * [malloc_usable_size(3)](http://man7.org/linux/man-pages/man3/malloc_usable_size.3.html)
+ * [malloc_usable_size(3)](https://man7.org/linux/man-pages/man3/malloc_usable_size.3.html)
  * returns the actual size of the given heap block.
  */
-size_t malloc_usable_size(const void* _Nullable __ptr) __wur;
+__nodiscard size_t malloc_usable_size(const void* _Nullable __ptr);
 
 #define __MALLINFO_BODY \
   /** Total number of non-mmapped bytes currently allocated from OS. */ \
@@ -140,7 +152,7 @@ struct mallinfo { __MALLINFO_BODY };
 #endif
 
 /**
- * [mallinfo(3)](http://man7.org/linux/man-pages/man3/mallinfo.3.html) returns
+ * [mallinfo(3)](https://man7.org/linux/man-pages/man3/mallinfo.3.html) returns
  * information about the current state of the heap. Note that mallinfo() is
  * inherently unreliable and consider using malloc_info() instead.
  */
@@ -152,14 +164,14 @@ struct mallinfo mallinfo(void);
 struct mallinfo2 { __MALLINFO_BODY };
 
 /**
- * [mallinfo2(3)](http://man7.org/linux/man-pages/man3/mallinfo2.3.html) returns
+ * [mallinfo2(3)](https://man7.org/linux/man-pages/man3/mallinfo2.3.html) returns
  * information about the current state of the heap. Note that mallinfo2() is
  * inherently unreliable and consider using malloc_info() instead.
  */
 struct mallinfo2 mallinfo2(void) __RENAME(mallinfo);
 
 /**
- * [malloc_info(3)](http://man7.org/linux/man-pages/man3/malloc_info.3.html)
+ * [malloc_info(3)](https://man7.org/linux/man-pages/man3/malloc_info.3.html)
  * writes information about the current state of the heap to the given stream.
  *
  * The XML structure for malloc_info() is as follows:
@@ -349,7 +361,7 @@ enum HeapTaggingLevel {
 #define M_LOG_STATS (-205)
 
 /**
- * [mallopt(3)](http://man7.org/linux/man-pages/man3/mallopt.3.html) modifies
+ * [mallopt(3)](https://man7.org/linux/man-pages/man3/mallopt.3.html) modifies
  * heap behavior. Values of `__option` are the `M_` constants from this header.
  *
  * Returns 1 on success, 0 on error.
@@ -359,7 +371,7 @@ enum HeapTaggingLevel {
 int mallopt(int __option, int __value) __INTRODUCED_IN(26);
 
 /**
- * [__malloc_hook(3)](http://man7.org/linux/man-pages/man3/__malloc_hook.3.html)
+ * [__malloc_hook(3)](https://man7.org/linux/man-pages/man3/__malloc_hook.3.html)
  * is called to implement malloc(). By default this points to the system's
  * implementation.
  *
@@ -370,7 +382,7 @@ int mallopt(int __option, int __value) __INTRODUCED_IN(26);
 extern void* _Nonnull (*volatile _Nonnull __malloc_hook)(size_t __byte_count, const void* _Nonnull __caller) __INTRODUCED_IN(28);
 
 /**
- * [__realloc_hook(3)](http://man7.org/linux/man-pages/man3/__realloc_hook.3.html)
+ * [__realloc_hook(3)](https://man7.org/linux/man-pages/man3/__realloc_hook.3.html)
  * is called to implement realloc(). By default this points to the system's
  * implementation.
  *
@@ -381,7 +393,7 @@ extern void* _Nonnull (*volatile _Nonnull __malloc_hook)(size_t __byte_count, co
 extern void* _Nonnull (*volatile _Nonnull __realloc_hook)(void* _Nullable __ptr, size_t __byte_count, const void* _Nonnull __caller) __INTRODUCED_IN(28);
 
 /**
- * [__free_hook(3)](http://man7.org/linux/man-pages/man3/__free_hook.3.html)
+ * [__free_hook(3)](https://man7.org/linux/man-pages/man3/__free_hook.3.html)
  * is called to implement free(). By default this points to the system's
  * implementation.
  *
@@ -392,7 +404,7 @@ extern void* _Nonnull (*volatile _Nonnull __realloc_hook)(void* _Nullable __ptr,
 extern void (*volatile _Nonnull __free_hook)(void* _Nullable __ptr, const void* _Nonnull __caller) __INTRODUCED_IN(28);
 
 /**
- * [__memalign_hook(3)](http://man7.org/linux/man-pages/man3/__memalign_hook.3.html)
+ * [__memalign_hook(3)](https://man7.org/linux/man-pages/man3/__memalign_hook.3.html)
  * is called to implement memalign(). By default this points to the system's
  * implementation.
  *

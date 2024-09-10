@@ -366,6 +366,10 @@ struct drm_color_lut {
   __u16 blue;
   __u16 reserved;
 };
+struct drm_plane_size_hint {
+  __u16 width;
+  __u16 height;
+};
 struct hdr_metadata_infoframe {
   __u8 eotf;
   __u8 metadata_type;

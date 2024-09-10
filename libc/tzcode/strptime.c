@@ -68,8 +68,8 @@
 #define FIELD_TM_YDAY	(1 << 3)
 #define FIELD_TM_YEAR	(1 << 4)
 
-static char gmt[] = { "GMT" };
-static char utc[] = { "UTC" };
+static const char gmt[] = { "GMT" };
+static const char utc[] = { "UTC" };
 /* RFC-822/RFC-2822 */
 static const char * const nast[5] = {
        "EST",    "CST",    "MST",    "PST",    "\0\0\0"
@@ -97,6 +97,7 @@ strptime(const char *buf, const char *fmt, struct tm *tm)
 	return(_strptime(buf, fmt, tm, 1));
 }
 DEF_WEAK(strptime);
+__strong_alias(strptime_l, strptime);
 
 static char *
 _strptime(const char *buf, const char *fmt, struct tm *tm, int initialize)
