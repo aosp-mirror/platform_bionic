@@ -851,6 +851,106 @@ static inline void _extend_load_segment_vma(const ElfW(Phdr)* phdr_table, size_t
   *p_filesz += extend;
 }
 
+bool ElfReader::MapSegment(size_t seg_idx, size_t len) {
+  const ElfW(Phdr)* phdr = &phdr_table_[seg_idx];
+
+  void* start = reinterpret_cast<void*>(page_start(phdr->p_vaddr + load_bias_));
+
+  // The ELF could be being loaded directly from a zipped APK,
+  // the zip offset must be added to find the segment offset.
+  const ElfW(Addr) offset = file_offset_ + page_start(phdr->p_offset);
+
+  int prot = PFLAGS_TO_PROT(phdr->p_flags);
+
+  void* seg_addr = mmap64(start, len, prot, MAP_FIXED | MAP_PRIVATE, fd_, offset);
+
+  if (seg_addr == MAP_FAILED) {
+    DL_ERR("couldn't map \"%s\" segment %zd: %m", name_.c_str(), seg_idx);
+    return false;
+  }
+
+  // Mark segments as huge page eligible if they meet the requirements
+  if ((phdr->p_flags & PF_X) && phdr->p_align == kPmdSize &&
+      get_transparent_hugepages_supported()) {
+    madvise(seg_addr, len, MADV_HUGEPAGE);
+  }
+
+  return true;
+}
+
+void ElfReader::ZeroFillSegment(const ElfW(Phdr)* phdr) {
+  ElfW(Addr) seg_start = phdr->p_vaddr + load_bias_;
+  uint64_t unextended_seg_file_end = seg_start + phdr->p_filesz;
+
+  // If the segment is writable, and does not end on a page boundary,
+  // zero-fill it until the page limit.
+  //
+  // Do not attempt to zero the extended region past the first partial page,
+  // since doing so may:
+  //   1) Result in a SIGBUS, as the region is not backed by the underlying
+  //      file.
+  //   2) Break the COW backing, faulting in new anon pages for a region
+  //      that will not be used.
+  if ((phdr->p_flags & PF_W) != 0 && page_offset(unextended_seg_file_end) > 0) {
+    memset(reinterpret_cast<void*>(unextended_seg_file_end), 0,
+           kPageSize - page_offset(unextended_seg_file_end));
+  }
+}
+
+void ElfReader::DropPaddingPages(const ElfW(Phdr)* phdr, uint64_t seg_file_end) {
+  ElfW(Addr) seg_start = phdr->p_vaddr + load_bias_;
+  uint64_t unextended_seg_file_end = seg_start + phdr->p_filesz;
+
+  uint64_t pad_start = page_end(unextended_seg_file_end);
+  uint64_t pad_end = page_end(seg_file_end);
+  CHECK(pad_start <= pad_end);
+
+  uint64_t pad_len = pad_end - pad_start;
+  if (pad_len == 0 || !page_size_migration_supported()) {
+    return;
+  }
+
+  // Pages may be brought in due to readahead.
+  // Drop the padding (zero) pages, to avoid reclaim work later.
+  //
+  // NOTE: The madvise() here is special, as it also serves to hint to the
+  // kernel the portion of the LOAD segment that is padding.
+  //
+  // See: [1] https://android-review.googlesource.com/c/kernel/common/+/3032411
+  //      [2] https://android-review.googlesource.com/c/kernel/common/+/3048835
+  if (madvise(reinterpret_cast<void*>(pad_start), pad_len, MADV_DONTNEED)) {
+    DL_WARN("\"%s\": madvise(0x%" PRIx64 ", 0x%" PRIx64 ", MADV_DONTNEED) failed: %m",
+            name_.c_str(), pad_start, pad_len);
+  }
+}
+
+bool ElfReader::MapBssSection(const ElfW(Phdr)* phdr, ElfW(Addr) seg_page_end,
+                              ElfW(Addr) seg_file_end) {
+  // seg_file_end is now the first page address after the file content.
+  seg_file_end = page_end(seg_file_end);
+
+  if (seg_page_end <= seg_file_end) {
+    return true;
+  }
+
+  // If seg_page_end is larger than seg_file_end, we need to zero
+  // anything between them. This is done by using a private anonymous
+  // map for all extra pages
+  size_t zeromap_size = seg_page_end - seg_file_end;
+  void* zeromap =
+      mmap(reinterpret_cast<void*>(seg_file_end), zeromap_size, PFLAGS_TO_PROT(phdr->p_flags),
+           MAP_FIXED | MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+  if (zeromap == MAP_FAILED) {
+    DL_ERR("couldn't map .bss section for \"%s\": %m", name_.c_str());
+    return false;
+  }
+
+  // Set the VMA name using prctl
+  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, zeromap, zeromap_size, ".bss");
+
+  return true;
+}
+
 bool ElfReader::LoadSegments() {
   size_t min_palign = phdr_table_get_minimum_alignment(phdr_table_, phdr_num_);
   // Only enforce this on 16 KB systems. Apps may rely on undefined behavior
@@ -917,79 +1017,18 @@ bool ElfReader::LoadSegments() {
         add_dlwarning(name_.c_str(), "W+E load segments");
       }
 
-      void* seg_addr = mmap64(reinterpret_cast<void*>(seg_page_start),
-                            file_length,
-                            prot,
-                            MAP_FIXED|MAP_PRIVATE,
-                            fd_,
-                            file_offset_ + file_page_start);
-      if (seg_addr == MAP_FAILED) {
-        DL_ERR("couldn't map \"%s\" segment %zd: %m", name_.c_str(), i);
+      // Pass the file_length, since it may have been extended by _extend_load_segment_vma().
+      if (!MapSegment(i, file_length)) {
         return false;
       }
-
-      // Mark segments as huge page eligible if they meet the requirements
-      // (executable and PMD aligned).
-      if ((phdr->p_flags & PF_X) && phdr->p_align == kPmdSize &&
-          get_transparent_hugepages_supported()) {
-        madvise(seg_addr, file_length, MADV_HUGEPAGE);
-      }
     }
 
-    // if the segment is writable, and does not end on a page boundary,
-    // zero-fill it until the page limit.
-    //
-    // Do not attempt to zero the extended region past the first partial page,
-    // since doing so may:
-    //   1) Result in a SIGBUS, as the region is not backed by the underlying
-    //      file.
-    //   2) Break the COW backing, faulting in new anon pages for a region
-    //      that will not be used.
+    ZeroFillSegment(phdr);
 
-    uint64_t unextended_seg_file_end = seg_start + phdr->p_filesz;
-    if ((phdr->p_flags & PF_W) != 0 && page_offset(unextended_seg_file_end) > 0) {
-      memset(reinterpret_cast<void*>(unextended_seg_file_end), 0,
-             kPageSize - page_offset(unextended_seg_file_end));
-    }
+    DropPaddingPages(phdr, seg_file_end);
 
-    // Pages may be brought in due to readahead.
-    // Drop the padding (zero) pages, to avoid reclaim work later.
-    //
-    // NOTE: The madvise() here is special, as it also serves to hint to the
-    // kernel the portion of the LOAD segment that is padding.
-    //
-    // See: [1] https://android-review.googlesource.com/c/kernel/common/+/3032411
-    //      [2] https://android-review.googlesource.com/c/kernel/common/+/3048835
-    uint64_t pad_start = page_end(unextended_seg_file_end);
-    uint64_t pad_end = page_end(seg_file_end);
-    CHECK(pad_start <= pad_end);
-    uint64_t pad_len = pad_end - pad_start;
-    if (page_size_migration_supported() && pad_len > 0 &&
-        madvise(reinterpret_cast<void*>(pad_start), pad_len, MADV_DONTNEED)) {
-      DL_WARN("\"%s\": madvise(0x%" PRIx64 ", 0x%" PRIx64 ", MADV_DONTNEED) failed: %m",
-              name_.c_str(), pad_start, pad_len);
-    }
-
-    seg_file_end = page_end(seg_file_end);
-
-    // seg_file_end is now the first page address after the file
-    // content. If seg_end is larger, we need to zero anything
-    // between them. This is done by using a private anonymous
-    // map for all extra pages.
-    if (seg_page_end > seg_file_end) {
-      size_t zeromap_size = seg_page_end - seg_file_end;
-      void* zeromap = mmap(reinterpret_cast<void*>(seg_file_end),
-                           zeromap_size,
-                           PFLAGS_TO_PROT(phdr->p_flags),
-                           MAP_FIXED|MAP_ANONYMOUS|MAP_PRIVATE,
-                           -1,
-                           0);
-      if (zeromap == MAP_FAILED) {
-        DL_ERR("couldn't zero fill \"%s\" gap: %m", name_.c_str());
-        return false;
-      }
-
-      prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, zeromap, zeromap_size, ".bss");
+    if (!MapBssSection(phdr, seg_page_end, seg_file_end)) {
+      return false;
     }
   }
   return true;
