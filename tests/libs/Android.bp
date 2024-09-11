@@ -1852,7 +1852,7 @@ cc_genrule {
         " cp $(in) $(genDir)/zipdir/libdir/ &&" +
         " touch $(genDir)/zipdir/empty_file.txt &&" +
         " $(location soong_zip) -o $(out).unaligned -L 0 -C $(genDir)/zipdir -D $(genDir)/zipdir &&" +
-        " $(location bionic_tests_zipalign) 4096 $(out).unaligned $(out)",
+        " $(location bionic_tests_zipalign) 16384 $(out).unaligned $(out)",
 
 }
 
@@ -1891,5 +1891,5 @@ cc_genrule {
         " cp $(location :libtest_dt_runpath_y) $(genDir)/zipdir/libdir/dt_runpath_y/$$PRIVATE_LIB_OR_LIB64 &&" +
         " touch $(genDir)/zipdir/empty_file.txt &&" +
         " $(location soong_zip) -o $(out).unaligned -L 0 -C $(genDir)/zipdir -D $(genDir)/zipdir &&" +
-        " $(location bionic_tests_zipalign) 4096 $(out).unaligned $(out)",
+        " $(location bionic_tests_zipalign) 16384 $(out).unaligned $(out)",
 }
