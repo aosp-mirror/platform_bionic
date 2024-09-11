@@ -1,5 +1,0 @@
-LIBC {
-  global:
-    foo;  # arm x86
-    bar;  # x86
-};
