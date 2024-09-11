@@ -61,10 +61,14 @@ static const char* auxv_name(int at) {
   case AT_HWCAP2: return "AT_HWCAP2";
   case AT_RSEQ_FEATURE_SIZE: return "AT_RSEQ_FEATURE_SIZE";
   case AT_RSEQ_ALIGN: return "AT_RSEQ_ALIGN";
+  case AT_HWCAP3: return "AT_HWCAP3";
+  case AT_HWCAP4: return "AT_HWCAP4";
   case AT_EXECFN: return "AT_EXECFN";
   case AT_SYSINFO_EHDR: return "AT_SYSINFO_EHDR";
-#if defined(AT_MINSIGSTKSZ)
   case AT_MINSIGSTKSZ: return "AT_MINSIGSTKSZ";
+#if defined(AT_VECTOR_SIZE_ARCH)
+  // AT_VECTOR_SIZE_ARCH isn't a value: it's the number of architecture-specific
+  // values that exist for the current architecture, so not relevant here.
 #endif
 #if defined(AT_SYSINFO)
   case AT_SYSINFO: return "AT_SYSINFO";
@@ -114,6 +118,8 @@ void ld_show_auxv(ElfW(auxv_t)* auxv) {
     case AT_FLAGS:
     case AT_HWCAP:
     case AT_HWCAP2:
+    case AT_HWCAP3:
+    case AT_HWCAP4:
       async_safe_format_fd(STDOUT_FILENO, "%-20s %#lb\n", name, value);
       break;
     case AT_EXECFN:
