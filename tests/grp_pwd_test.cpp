@@ -444,10 +444,9 @@ static void expect_ids(T ids, bool is_group) {
     return result;
   };
 
-  // AID_UPROBESTATS (1093) was added in V, but "trunk stable" means
-  // that the 2024Q builds don't have branches like the QPR builds used
-  // to, and are tested with the _previous_ release's CTS.
-  if (android::base::GetIntProperty("ro.build.version.sdk", 0) == __ANDROID_API_U__) {
+  // AID_UPROBESTATS (1093) was added in API level 35, but "trunk stable" means
+  // that the 2024Q* builds are tested with the _previous_ release's CTS.
+  if (android::base::GetIntProperty("ro.build.version.sdk", 0) == 34) {
 #if !defined(AID_UPROBESTATS)
 #define AID_UPROBESTATS 1093
 #endif
@@ -457,10 +456,9 @@ static void expect_ids(T ids, bool is_group) {
       EXPECT_STREQ(getpwuid(AID_UPROBESTATS)->pw_name, "uprobestats");
     }
   }
-  // AID_VIRTUALMACHINE (3013) was added in V, but "trunk stable" means
-  // that the 2024Q builds don't have branches like the QPR builds used
-  // to, and are tested with the _previous_ release's CTS.
-  if (android::base::GetIntProperty("ro.build.version.sdk", 0) == __ANDROID_API_U__) {
+  // AID_VIRTUALMACHINE (3013) was added in API level 35, but "trunk stable" means
+  // that the 2024Q* builds are tested with the _previous_ release's CTS.
+  if (android::base::GetIntProperty("ro.build.version.sdk", 0) == 34) {
 #if !defined(AID_VIRTUALMACHINE)
 #define AID_VIRTUALMACHINE 3013
 #endif
@@ -468,6 +466,18 @@ static void expect_ids(T ids, bool is_group) {
     expected_ids.erase(AID_VIRTUALMACHINE);
     if (getpwuid(AID_VIRTUALMACHINE)) {
       EXPECT_STREQ(getpwuid(AID_VIRTUALMACHINE)->pw_name, "virtualmachine");
+    }
+  }
+  // AID_CROS_EC (1094) was added in API level 36, but "trunk stable" means
+  // that the 2024Q* builds are tested with the _previous_ release's CTS.
+  if (android::base::GetIntProperty("ro.build.version.sdk", 0) == 35) {
+#if !defined(AID_CROS_EC)
+#define AID_CROS_EC 1094
+#endif
+    ids.erase(AID_CROS_EC);
+    expected_ids.erase(AID_CROS_EC);
+    if (getpwuid(AID_CROS_EC)) {
+      EXPECT_STREQ(getpwuid(AID_CROS_EC)->pw_name, "cros_ec");
     }
   }
 
