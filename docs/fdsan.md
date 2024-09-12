@@ -62,7 +62,9 @@ fdsan has four severity levels:
  - fatal (`ANDROID_FDSAN_ERROR_LEVEL_FATAL`)
    - Abort upon detecting an error.
 
-In Android Q, fdsan has a global default of warn-once. fdsan can be made more or less strict at runtime via the `android_fdsan_set_error_level` function in [`<android/fdsan.h>`](https://android.googlesource.com/platform/bionic/+/main/libc/include/android/fdsan.h).
+In API level 29, fdsan had a global default of warn-once.
+In API level 30 and higher, fdsan has a global default of fatal.
+fdsan can be made more or less strict at runtime via the `android_fdsan_set_error_level` function in [`<android/fdsan.h>`](https://android.googlesource.com/platform/bionic/+/main/libc/include/android/fdsan.h).
 
 The likelihood of fdsan catching a file descriptor error is proportional to the percentage of file descriptors in your process that are tagged with an owner.
 
@@ -344,7 +346,8 @@ struct unique_fd {
 
     // These functions are marked with __attribute__((weak)), so that their
     // availability can be determined at runtime. These wrappers will use them
-    // if available, and fall back to no-ops or regular close on pre-Q devices.
+    // if available, and fall back to no-ops or regular close on devices older
+    // than API level 29.
     static void exchange_tag(int fd, uint64_t old_tag, uint64_t new_tag) {
         if (android_fdsan_exchange_owner_tag) {
             android_fdsan_exchange_owner_tag(fd, old_tag, new_tag);

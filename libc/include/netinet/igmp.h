@@ -28,22 +28,29 @@
 
 #pragma once
 
-#if defined(__BIONIC__) && defined(__aarch64__)
+/**
+ * @file netinet/igmp.h
+ * @brief Internet Group Management Protocol (IGMP).
+ */
 
-__attribute__((target("mte"))) static bool is_stack_mte_on() {
-  alignas(16) int x = 0;
-  void* p = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(&x) + (1UL << 57));
-  void* p_cpy = p;
-  __builtin_arm_stg(p);
-  p = __builtin_arm_ldg(p);
-  __builtin_arm_stg(&x);
-  return p == p_cpy;
-}
+#include <sys/cdefs.h>
+#include <netinet/in.h>
 
-static void* mte_tls() {
-  void** dst;
-  __asm__("mrs %0, TPIDR_EL0" : "=r"(dst) :);
-  return dst[-3];
-}
+#include <linux/igmp.h>
 
-#endif
+/**
+ * The uapi type is called `igmphdr`,
+ * doesn't have the `igmp_` prefix on each field,
+ * and uses a `__be32` for the group address.
+ *
+ * This is the type that BSDs and musl/glibc expose to userspace.
+ */
+struct igmp {
+  uint8_t igmp_type;
+  uint8_t igmp_code;
+  uint16_t igmp_cksum;
+  struct in_addr igmp_group;
+};
+
+/** Commonly-used BSD synonym for the Linux constant. */
+#define IGMP_MEMBERSHIP_QUERY IGMP_HOST_MEMBERSHIP_QUERY

@@ -26,24 +26,23 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <gtest/gtest.h>
 
-#if defined(__BIONIC__) && defined(__aarch64__)
-
-__attribute__((target("mte"))) static bool is_stack_mte_on() {
-  alignas(16) int x = 0;
-  void* p = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(&x) + (1UL << 57));
-  void* p_cpy = p;
-  __builtin_arm_stg(p);
-  p = __builtin_arm_ldg(p);
-  __builtin_arm_stg(&x);
-  return p == p_cpy;
-}
-
-static void* mte_tls() {
-  void** dst;
-  __asm__("mrs %0, TPIDR_EL0" : "=r"(dst) :);
-  return dst[-3];
-}
-
+#if !defined(__GLIBC__)
+#include <fts.h>
 #endif
+
+TEST(fts, smoke) {
+#if !defined(__GLIBC__)
+  char* const paths[] = { const_cast<char*>("."), NULL };
+  FTS* fts = fts_open(paths, FTS_PHYSICAL, NULL);
+  ASSERT_TRUE(fts != NULL);
+  FTSENT* e;
+  while ((e = fts_read(fts)) != NULL) {
+    ASSERT_EQ(0, fts_set(fts, e, FTS_SKIP));
+  }
+  ASSERT_EQ(0, fts_close(fts));
+#else
+  GTEST_SKIP() << "no _FILE_OFFSET_BITS=64 <fts.h> in our old glibc";
+#endif
+}
