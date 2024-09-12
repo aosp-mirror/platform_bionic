@@ -1,9 +1,10 @@
-# Android ELF TLS (Draft)
+# Android ELF TLS
 
-Internal links:
- * [go/android-elf-tls](http://go/android-elf-tls)
- * [One-pager](https://docs.google.com/document/d/1leyPTnwSs24P2LGiqnU6HetnN5YnDlZkihigi6qdf_M)
- * Tracking bugs: http://b/110100012, http://b/78026329
+App developers probably just want to read the
+[quick ELS TLS status summary](../android-changes-for-ndk-developers.md#elf-tls-available-for-api-level-29)
+instead.
+
+This document covers the detailed design and implementation choices.
 
 [TOC]
 
@@ -215,7 +216,7 @@ use it, which can break `dlopen` if the surplus area is exhausted. See:
  * https://bugzilla.redhat.com/show_bug.cgi?id=1124987
  * web search: [`"dlopen: cannot load any more object with static TLS"`][glibc-static-tls-error]
 
-Neither musl nor the Bionic TLS prototype currently allocate any surplus TLS memory.
+Neither bionic nor musl currently allocate any surplus TLS memory.
 
 In general, supporting surplus TLS memory probably requires maintaining a thread list so that
 `dlopen` can initialize the new static TLS memory in all existing threads. A thread list could be
@@ -489,19 +490,6 @@ reference to a symbol only a new libc.so has...)
 [quietly ignored]: https://android.googlesource.com/platform/bionic/+/android-8.1.0_r48/linker/linker.cpp#2784
 [added compatibility checks]: https://android-review.googlesource.com/c/platform/bionic/+/648760
 
-# Bionic Prototype Notes
-
-There is an [ELF TLS prototype] uploaded on Gerrit. It implements:
- * Static TLS Block allocation for static and dynamic executables
- * TLS for dynamically loaded and unloaded modules (`__tls_get_addr`)
- * TLSDESC for arm64 only
-
-Missing:
- * `dlsym` of a TLS variable
- * debugger support
-
-[ELF TLS prototype]: https://android-review.googlesource.com/q/topic:%22elf-tls-prototype%22+(status:open%20OR%20status:merged)
-
 ## Loader/libc Communication
 
 The loader exposes a list of TLS modules ([`struct TlsModules`][TlsModules]) to `libc.so` using the
@@ -515,13 +503,14 @@ iterates its module list to lazily allocate and free TLS blocks.
 
 ## TLS Allocator
 
-The prototype currently allocates a `pthread_internal_t` object and static TLS in a single mmap'ed
+bionic currently allocates a `pthread_internal_t` object and static TLS in a single mmap'ed
 region, along with a thread's stack if it needs one allocated. It doesn't place TLS memory on a
 preallocated stack (either the main thread's stack or one provided with `pthread_attr_setstack`).
 
 The DTV and blocks for dlopen'ed modules are instead allocated using the Bionic loader's
-`LinkerMemoryAllocator`, adapted to avoid the STL and to provide `memalign`. The prototype tries to
-achieve async-signal safety by blocking signals and acquiring a lock.
+`LinkerMemoryAllocator`, adapted to avoid the STL and to provide `memalign`.
+The implementation tries to achieve async-signal safety by blocking signals and
+acquiring a lock.
 
 There are three "entry points" to dynamically locate a TLS variable's address:
  * libc.so: `__tls_get_addr`
@@ -529,10 +518,10 @@ There are three "entry points" to dynamically locate a TLS variable's address:
  * loader: dlsym
 
 The loader's entry points need to call `__tls_get_addr`, which needs to allocate memory. Currently,
-the prototype uses a [special function pointer] to call libc.so's `__tls_get_addr` from the loader.
+the implementation uses a [special function pointer] to call libc.so's `__tls_get_addr` from the loader.
 (This should probably be removed.)
 
-The prototype currently allows for arbitrarily-large TLS variable alignment. IIRC, different
+The implementation currently allows for arbitrarily-large TLS variable alignment. IIRC, different
 implementations (glibc, musl, FreeBSD) vary in their level of respect for TLS alignment. It looks
 like the Bionic loader ignores segments' alignment and aligns loaded libraries to 256 KiB. See
 `ReserveAligned`.
@@ -541,7 +530,7 @@ like the Bionic loader ignores segments' alignment and aligns loaded libraries t
 
 ## Async-Signal Safety
 
-The prototype's `__tls_get_addr` might be async-signal safe. Making it AS-safe is a good idea if
+The implementation's `__tls_get_addr` might be async-signal safe. Making it AS-safe is a good idea if
 it's feasible. musl's function is AS-safe, but glibc's isn't (or wasn't). Google had a patch to make
 glibc AS-safe back in 2012-2013. See:
  * https://sourceware.org/glibc/wiki/TLSandSignals
@@ -550,7 +539,7 @@ glibc AS-safe back in 2012-2013. See:
 
 ## Out-of-Memory Handling (abort)
 
-The prototype lazily allocates TLS memory for dlopen'ed modules (see `__tls_get_addr`), and an
+The implementation lazily allocates TLS memory for dlopen'ed modules (see `__tls_get_addr`), and an
 out-of-memory error on a TLS access aborts the process. musl, on the other hand, preallocates TLS
 memory on `pthread_create` and `dlopen`, so either function can return out-of-memory. Both functions
 probably need to acquire the same lock.
@@ -572,7 +561,7 @@ solib's TLS variables. Drepper makes this argument in his TLS document:
 
 FWIW: emutls also aborts on out-of-memory.
 
-## ELF TLS Not Usable in libc
+## ELF TLS Not Usable in libc Itself
 
 The dynamic loader currently can't use ELF TLS, so any part of libc linked into the loader (i.e.
 most of it) also can't use ELF TLS. It might be possible to lift this restriction, perhaps with
@@ -649,7 +638,7 @@ There are issues with rearranging this memory:
 It seems easy to fix the incompatibility for variant 2 (x86 and x86_64) by splitting out the Bionic
 slots into a new data structure. Variant 1 is a harder problem.
 
-The TLS prototype currently uses a patched LLD that uses a variant 1 TLS layout with a 16-word TCB
+The TLS prototype used a patched LLD that uses a variant 1 TLS layout with a 16-word TCB
 on all architectures.
 
 Aside: gcc's arm64ilp32 target uses a 32-bit unsigned offset for a TLS IE access
@@ -821,8 +810,8 @@ recycled.
 
 ### Workaround for Go: place pthread keys after the executable's TLS
 
-Most Android executables do not use any `thread_local` variables. In the current prototype, with the
-AOSP hikey960 build, only `/system/bin/netd` has a TLS segment, and it's only 32 bytes. As long as
+Most Android executables do not use any `thread_local` variables. In the prototype, with the
+AOSP hikey960 build, only `/system/bin/netd` had a TLS segment, and it was only 32 bytes. As long as
 `/system/bin/app_process{32,64}` limits its use of TLS memory, then the pthread keys could be
 allocated after `app_process`' TLS segment, and Go will still find them.
 
@@ -846,6 +835,12 @@ XXX: Maybe a sanitizer would want to intercept allocations of TLS memory, and th
 the loader is allocating it.
  * It looks like glibc's ld.so re-relocates itself after loading a program, so a program's symbols
    can interpose call in the loader: https://sourceware.org/ml/libc-alpha/2014-01/msg00501.html
+
+## TODO: Other
+
+Missing:
+ * `dlsym` of a TLS variable
+ * debugger support
 
 # References
 
