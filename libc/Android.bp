@@ -1182,16 +1182,6 @@ cc_library_static {
                 "arch-x86/bionic/__x86.get_pc_thunk.S",
 
                 "arch-x86/generic/string/memcmp.S",
-                "arch-x86/generic/string/strcmp.S",
-                "arch-x86/generic/string/strncmp.S",
-                "arch-x86/generic/string/strcat.S",
-
-                "arch-x86/generic/string/strlcat.c",
-                "arch-x86/generic/string/strlcpy.c",
-                "arch-x86/generic/string/strncat.c",
-                "arch-x86/generic/string/wcscat.c",
-                "arch-x86/generic/string/wcscpy.c",
-                "arch-x86/generic/string/wmemcmp.c",
 
                 "arch-x86/string/sse2-memchr-atom.S",
                 "arch-x86/string/sse2-memmove-slm.S",
@@ -2976,13 +2966,6 @@ cc_genrule {
             },
         },
     },
-}
-
-// headers that will be placed on the include path when running versioner in bazel
-// this module should be a no-op in soong
-filegroup {
-    name: "versioner-dependencies",
-    srcs: ["versioner-dependencies/**/*"],
 }
 
 filegroup {
