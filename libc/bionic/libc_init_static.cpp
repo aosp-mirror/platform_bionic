@@ -473,7 +473,12 @@ extern "C" void __hwasan_init_static();
 __attribute__((no_sanitize("hwaddress", "memtag"))) __noreturn void __libc_init(
     void* raw_args, void (*onexit)(void) __unused, int (*slingshot)(int, char**, char**),
     structors_array_t const* const structors) {
-  bionic_tcb temp_tcb = {};
+  // We _really_ don't want the compiler to call memset() here,
+  // but it's done so before for riscv64 (http://b/365618934),
+  // so we have to force it to behave.
+  bionic_tcb temp_tcb __attribute__((uninitialized));
+  __builtin_memset_inline(&temp_tcb, 0, sizeof(temp_tcb));
+
 #if __has_feature(hwaddress_sanitizer)
   // Install main thread TLS early. It will be initialized later in __libc_init_main_thread. For now
   // all we need is access to TLS_SLOT_SANITIZER.
@@ -483,6 +488,7 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) __noreturn void __libc_init(
   __hwasan_init_static();
   // We are ready to run HWASan-instrumented code, proceed with libc initialization...
 #endif
+
   __real_libc_init(raw_args, onexit, slingshot, structors, &temp_tcb);
 }
 

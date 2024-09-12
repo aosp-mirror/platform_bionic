@@ -142,7 +142,7 @@ int pthread_cond_timedwait_monotonic_np(pthread_cond_t* _Nonnull __cond, pthread
                                         const struct timespec* _Nullable __timeout) __INTRODUCED_IN_64(28);
 int pthread_cond_wait(pthread_cond_t* _Nonnull __cond, pthread_mutex_t* _Nonnull __mutex);
 
-int pthread_create(pthread_t* _Nonnull __pthread_ptr, pthread_attr_t const* _Nullable __attr, void* _Nonnull (* _Nonnull __start_routine)(void* _Nonnull), void* _Nullable);
+int pthread_create(pthread_t* _Nonnull __pthread_ptr, pthread_attr_t const* _Nullable __attr, void* _Nullable (* _Nonnull __start_routine)(void* _Nullable), void* _Nullable);
 
 int pthread_detach(pthread_t __pthread);
 void pthread_exit(void* _Nullable __return_value) __noreturn;
