@@ -84,89 +84,11 @@ DEFINE_IFUNC_FOR(strlen) {
 }
 STRLEN_SHIM()
 
-DEFINE_IFUNC_FOR(strcmp) {
-  __builtin_cpu_init();
-  // TODO: ssse3 is required by our x86 abi!
-  if (__builtin_cpu_supports("ssse3")) RETURN_FUNC(strcmp_func_t, strcmp_ssse3);
-  RETURN_FUNC(strcmp_func_t, strcmp_generic);
-}
-STRCMP_SHIM()
-
-DEFINE_IFUNC_FOR(strncmp) {
-  __builtin_cpu_init();
-  // TODO: ssse3 is required by our x86 abi!
-  if (__builtin_cpu_supports("ssse3"))
-    RETURN_FUNC(strncmp_func_t, strncmp_ssse3);
-  RETURN_FUNC(strncmp_func_t, strncmp_generic);
-}
-STRNCMP_SHIM()
-
-DEFINE_IFUNC_FOR(strcat) {
-  __builtin_cpu_init();
-  // TODO: ssse3 is required by our x86 abi!
-  if (__builtin_cpu_supports("ssse3")) RETURN_FUNC(strcat_func_t, strcat_ssse3);
-  RETURN_FUNC(strcat_func_t, strcat_generic);
-}
-STRCAT_SHIM()
-
-DEFINE_IFUNC_FOR(strncat) {
-  __builtin_cpu_init();
-  // TODO: ssse3 is required by our x86 abi!
-  if (__builtin_cpu_supports("ssse3")) RETURN_FUNC(strncat_func_t, strncat_ssse3);
-  RETURN_FUNC(strncat_func_t, strncat_openbsd);
-}
-STRNCAT_SHIM()
-
-typedef size_t strlcat_func_t(char*, const char*, size_t);
-DEFINE_IFUNC_FOR(strlcat) {
-  __builtin_cpu_init();
-  // TODO: ssse3 is required by our x86 abi!
-  if (__builtin_cpu_supports("ssse3")) RETURN_FUNC(strlcat_func_t, strlcat_ssse3);
-  RETURN_FUNC(strlcat_func_t, strlcat_openbsd);
-}
-DEFINE_STATIC_SHIM(size_t strlcat(char* dst, const char* src, size_t n) {
-  FORWARD(strlcat)(dst, src, n);
-})
-
-typedef size_t strlcpy_func_t(char*, const char*, size_t);
-DEFINE_IFUNC_FOR(strlcpy) {
-  __builtin_cpu_init();
-  // TODO: ssse3 is required by our x86 abi!
-  if (__builtin_cpu_supports("ssse3")) RETURN_FUNC(strlcpy_func_t, strlcpy_ssse3);
-  RETURN_FUNC(strlcpy_func_t, strlcpy_openbsd);
-}
-DEFINE_STATIC_SHIM(size_t strlcpy(char* dst, const char* src, size_t n) {
-  FORWARD(strlcpy)(dst, src, n);
-})
-
-typedef wchar_t* wcscat_func_t(wchar_t*, const wchar_t*);
-DEFINE_IFUNC_FOR(wcscat) {
-  __builtin_cpu_init();
-  // TODO: ssse3 is required by our x86 abi!
-  if (__builtin_cpu_supports("ssse3")) RETURN_FUNC(wcscat_func_t, wcscat_ssse3);
-  RETURN_FUNC(wcscat_func_t, wcscat_freebsd);
-}
-DEFINE_STATIC_SHIM(wchar_t* wcscat(wchar_t* dst, const wchar_t* src) {
-  FORWARD(wcscat)(dst, src);
-})
-
-typedef wchar_t* wcscpy_func_t(wchar_t*, const wchar_t*);
-DEFINE_IFUNC_FOR(wcscpy) {
-  __builtin_cpu_init();
-  // TODO: ssse3 is required by our x86 abi!
-  if (__builtin_cpu_supports("ssse3")) RETURN_FUNC(wcscpy_func_t, wcscpy_ssse3);
-  RETURN_FUNC(wcscpy_func_t, wcscpy_freebsd);
-}
-DEFINE_STATIC_SHIM(wchar_t* wcscpy(wchar_t* dst, const wchar_t* src) {
-  FORWARD(wcscpy)(dst, src);
-})
-
 typedef int wmemcmp_func_t(const wchar_t*, const wchar_t*, size_t);
 DEFINE_IFUNC_FOR(wmemcmp) {
   __builtin_cpu_init();
   if (__builtin_cpu_supports("sse4.1")) RETURN_FUNC(wmemcmp_func_t, wmemcmp_sse4);
-  if (__builtin_cpu_is("atom")) RETURN_FUNC(wmemcmp_func_t, wmemcmp_atom);
-  RETURN_FUNC(wmemcmp_func_t, wmemcmp_freebsd);
+  RETURN_FUNC(wmemcmp_func_t, wmemcmp_atom);
 }
 DEFINE_STATIC_SHIM(int wmemcmp(const wchar_t* lhs, const wchar_t* rhs, size_t n) {
   FORWARD(wmemcmp)(lhs, rhs, n);
