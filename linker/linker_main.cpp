@@ -73,6 +73,10 @@ static void set_bss_vma_name(soinfo* si);
 void __libc_init_mte(const memtag_dynamic_entries_t* memtag_dynamic_entries, const void* phdr_start,
                      size_t phdr_count, uintptr_t load_bias, void* stack_top);
 
+static void __linker_cannot_link(const char* argv0) {
+  __linker_error("CANNOT LINK EXECUTABLE \"%s\": %s", argv0, linker_get_error_buffer());
+}
+
 // These should be preserved static to avoid emitting
 // RELATIVE relocations for the part of the code running
 // before linker links itself.
@@ -100,7 +104,7 @@ bool solist_remove_soinfo(soinfo* si) {
 
   if (trav == nullptr) {
     // si was not in solist
-    PRINT("name \"%s\"@%p is not in solist!", si->get_realpath(), si);
+    DL_WARN("name \"%s\"@%p is not in solist!", si->get_realpath(), si);
     return false;
   }
 
@@ -128,7 +132,6 @@ soinfo* solist_get_vdso() {
 }
 
 bool g_is_ldd;
-int g_ld_debug_verbosity;
 
 static std::vector<std::string> g_ld_preload_names;
 
@@ -167,22 +170,21 @@ static void add_vdso() {
     return;
   }
 
-  soinfo* si = soinfo_alloc(&g_default_namespace, "[vdso]", nullptr, 0, 0);
+  vdso = soinfo_alloc(&g_default_namespace, "[vdso]", nullptr, 0, 0);
 
-  si->phdr = reinterpret_cast<ElfW(Phdr)*>(reinterpret_cast<char*>(ehdr_vdso) + ehdr_vdso->e_phoff);
-  si->phnum = ehdr_vdso->e_phnum;
-  si->base = reinterpret_cast<ElfW(Addr)>(ehdr_vdso);
-  si->size = phdr_table_get_load_size(si->phdr, si->phnum);
-  si->load_bias = get_elf_exec_load_bias(ehdr_vdso);
+  vdso->phdr = reinterpret_cast<ElfW(Phdr)*>(reinterpret_cast<char*>(ehdr_vdso) + ehdr_vdso->e_phoff);
+  vdso->phnum = ehdr_vdso->e_phnum;
+  vdso->base = reinterpret_cast<ElfW(Addr)>(ehdr_vdso);
+  vdso->size = phdr_table_get_load_size(vdso->phdr, vdso->phnum);
+  vdso->load_bias = get_elf_exec_load_bias(ehdr_vdso);
 
-  si->prelink_image();
-  si->link_image(SymbolLookupList(si), si, nullptr, nullptr);
-  // prevents accidental unloads...
-  si->set_dt_flags_1(si->get_dt_flags_1() | DF_1_NODELETE);
-  si->set_linked();
-  si->call_constructors();
+  if (!vdso->prelink_image() || !vdso->link_image(SymbolLookupList(vdso), vdso, nullptr, nullptr)) {
+    __linker_cannot_link(g_argv[0]);
+  }
 
-  vdso = si;
+  // Prevent accidental unloads...
+  vdso->set_dt_flags_1(vdso->get_dt_flags_1() | DF_1_NODELETE);
+  vdso->set_linked();
 }
 
 // Initializes an soinfo's link_map_head field using other fields from the
@@ -216,8 +218,7 @@ static ExecutableInfo get_executable_info(const char* arg_path) {
   if (TEMP_FAILURE_RETRY(stat(exe_path, &result.file_stat) == -1)) {
     // Fallback to argv[0] for the case where /proc isn't available
     if (TEMP_FAILURE_RETRY(stat(arg_path, &result.file_stat) == -1)) {
-      async_safe_fatal("unable to stat either \"/proc/self/exe\" or \"%s\": %s",
-          arg_path, strerror(errno));
+      async_safe_fatal("unable to stat either \"/proc/self/exe\" or \"%s\": %m", arg_path);
     }
     exe_path = arg_path;
   }
@@ -233,33 +234,6 @@ static ExecutableInfo get_executable_info(const char* arg_path) {
   return result;
 }
 
-#if defined(__LP64__)
-static char kFallbackLinkerPath[] = "/system/bin/linker64";
-#else
-static char kFallbackLinkerPath[] = "/system/bin/linker";
-#endif
-
-__printflike(1, 2)
-static void __linker_error(const char* fmt, ...) {
-  va_list ap;
-
-  va_start(ap, fmt);
-  async_safe_format_fd_va_list(STDERR_FILENO, fmt, ap);
-  va_end(ap);
-
-  va_start(ap, fmt);
-  async_safe_format_log_va_list(ANDROID_LOG_FATAL, "linker", fmt, ap);
-  va_end(ap);
-
-  _exit(EXIT_FAILURE);
-}
-
-static void __linker_cannot_link(const char* argv0) {
-  __linker_error("CANNOT LINK EXECUTABLE \"%s\": %s\n",
-                 argv0,
-                 linker_get_error_buffer());
-}
-
 // Load an executable. Normally the kernel has already loaded the executable when the linker
 // starts. The linker can be invoked directly on an executable, though, and then the linker must
 // load it. This function doesn't load dependencies or resolve relocations.
@@ -267,26 +241,26 @@ static ExecutableInfo load_executable(const char* orig_path) {
   ExecutableInfo result = {};
 
   if (orig_path[0] != '/') {
-    __linker_error("error: expected absolute path: \"%s\"\n", orig_path);
+    __linker_error("error: expected absolute path: \"%s\"", orig_path);
   }
 
   off64_t file_offset;
   android::base::unique_fd fd(open_executable(orig_path, &file_offset, &result.path));
   if (fd.get() == -1) {
-    __linker_error("error: unable to open file \"%s\"\n", orig_path);
+    __linker_error("error: unable to open file \"%s\"", orig_path);
   }
 
   if (TEMP_FAILURE_RETRY(fstat(fd.get(), &result.file_stat)) == -1) {
-    __linker_error("error: unable to stat \"%s\": %s\n", result.path.c_str(), strerror(errno));
+    __linker_error("error: unable to stat \"%s\": %m", result.path.c_str());
   }
 
   ElfReader elf_reader;
   if (!elf_reader.Read(result.path.c_str(), fd.get(), file_offset, result.file_stat.st_size)) {
-    __linker_error("error: %s\n", linker_get_error_buffer());
+    __linker_error("error: %s", linker_get_error_buffer());
   }
   address_space_params address_space;
   if (!elf_reader.Load(&address_space)) {
-    __linker_error("error: %s\n", linker_get_error_buffer());
+    __linker_error("error: %s", linker_get_error_buffer());
   }
 
   result.phdr = elf_reader.loaded_phdr();
@@ -306,10 +280,8 @@ static void platform_properties_init() {
 static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load) {
   ProtectedDataGuard guard;
 
-#if TIMING
-  struct timeval t0, t1;
-  gettimeofday(&t0, 0);
-#endif
+  timeval t0, t1;
+  gettimeofday(&t0, nullptr);
 
   // Sanitize the environment.
   __libc_init_AT_SECURE(args.envp);
@@ -327,17 +299,11 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
 
   // Enable debugging logs?
   const char* LD_DEBUG = getenv("LD_DEBUG");
-  if (LD_DEBUG != nullptr) {
-    g_ld_debug_verbosity = atoi(LD_DEBUG);
-  }
+  if (LD_DEBUG != nullptr) init_LD_DEBUG(LD_DEBUG);
 
   if (getenv("LD_SHOW_AUXV") != nullptr) ld_show_auxv(args.auxv);
 
-#if defined(__LP64__)
-  INFO("[ Android dynamic linker (64-bit) ]");
-#else
-  INFO("[ Android dynamic linker (32-bit) ]");
-#endif
+  LD_DEBUG(any, "[ Android dynamic linker (" ABI_STRING ") ]");
 
   // These should have been sanitized by __libc_init_AT_SECURE, but the test
   // doesn't cost us anything.
@@ -346,18 +312,18 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   if (!getauxval(AT_SECURE)) {
     ldpath_env = getenv("LD_LIBRARY_PATH");
     if (ldpath_env != nullptr) {
-      INFO("[ LD_LIBRARY_PATH set to \"%s\" ]", ldpath_env);
+      LD_DEBUG(any, "[ LD_LIBRARY_PATH set to \"%s\" ]", ldpath_env);
     }
     ldpreload_env = getenv("LD_PRELOAD");
     if (ldpreload_env != nullptr) {
-      INFO("[ LD_PRELOAD set to \"%s\" ]", ldpreload_env);
+      LD_DEBUG(any, "[ LD_PRELOAD set to \"%s\" ]", ldpreload_env);
     }
   }
 
   const ExecutableInfo exe_info = exe_to_load ? load_executable(exe_to_load) :
                                                 get_executable_info(args.argv[0]);
 
-  INFO("[ Linking executable \"%s\" ]", exe_info.path.c_str());
+  LD_DEBUG(any, "[ Linking executable \"%s\" ]", exe_info.path.c_str());
 
   // Initialize the main exe's soinfo.
   soinfo* si = soinfo_alloc(&g_default_namespace,
@@ -388,7 +354,12 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   if (interp == nullptr) {
     // This case can happen if the linker attempts to execute itself
     // (e.g. "linker64 /system/bin/linker64").
-    interp = kFallbackLinkerPath;
+#if defined(__LP64__)
+#define DEFAULT_INTERP "/system/bin/linker64"
+#else
+#define DEFAULT_INTERP "/system/bin/linker"
+#endif
+    interp = DEFAULT_INTERP;
   }
   solinker->set_realpath(interp);
   init_link_map_head(*solinker);
@@ -401,8 +372,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
     if (note_gnu_property.IsBTICompatible() &&
         (phdr_table_protect_segments(somain->phdr, somain->phnum, somain->load_bias,
                                      somain->should_pad_segments(), &note_gnu_property) < 0)) {
-      __linker_error("error: can't protect segments for \"%s\": %s", exe_info.path.c_str(),
-                     strerror(errno));
+      __linker_error("error: can't protect segments for \"%s\": %m", exe_info.path.c_str());
     }
   }
 #endif
@@ -427,7 +397,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   // and the NDK no longer supports earlier API levels.
   if (elf_hdr->e_type != ET_DYN) {
     __linker_error("error: %s: Android only supports position-independent "
-                   "executables (-fPIE)\n", exe_info.path.c_str());
+                   "executables (-fPIE)", exe_info.path.c_str());
   }
 
   // Use LD_LIBRARY_PATH and LD_PRELOAD (but only if we aren't setuid/setgid).
@@ -506,27 +476,22 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   si->call_pre_init_constructors();
   si->call_constructors();
 
-#if TIMING
-  gettimeofday(&t1, nullptr);
-  PRINT("LINKER TIME: %s: %d microseconds", g_argv[0],
-        static_cast<int>(((static_cast<long long>(t1.tv_sec) * 1000000LL) +
-                          static_cast<long long>(t1.tv_usec)) -
-                         ((static_cast<long long>(t0.tv_sec) * 1000000LL) +
-                          static_cast<long long>(t0.tv_usec))));
-#endif
-#if STATS
-  print_linker_stats();
-#endif
-#if TIMING || STATS
-  fflush(stdout);
-#endif
+  if (g_linker_debug_config.timing) {
+    gettimeofday(&t1, nullptr);
+    long long t0_us = (t0.tv_sec * 1000000LL) + t0.tv_usec;
+    long long t1_us = (t1.tv_sec * 1000000LL) + t1.tv_usec;
+    LD_DEBUG(timing, "LINKER TIME: %s: %lld microseconds", g_argv[0], t1_us - t0_us);
+  }
+  if (g_linker_debug_config.statistics) {
+    print_linker_stats();
+  }
 
   // We are about to hand control over to the executable loaded.  We don't want
   // to leave dirty pages behind unnecessarily.
   purge_unused_memory();
 
   ElfW(Addr) entry = exe_info.entry_point;
-  TRACE("[ Ready to execute \"%s\" @ %p ]", si->get_realpath(), reinterpret_cast<void*>(entry));
+  LD_DEBUG(any, "[ Ready to execute \"%s\" @ %p ]", si->get_realpath(), reinterpret_cast<void*>(entry));
   return entry;
 }
 
@@ -695,7 +660,7 @@ __attribute__((constructor(1))) static void detect_self_exec() {
   // fallback.
   __libc_sysinfo = reinterpret_cast<void*>(__libc_int0x80);
 #endif
-  __linker_error("error: linker cannot load itself\n");
+  __linker_error("error: linker cannot load itself");
 }
 
 static ElfW(Addr) __attribute__((noinline))
@@ -843,7 +808,7 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) 
 
   ElfW(Addr) start_address = linker_main(args, exe_to_load);
 
-  INFO("[ Jumping to _start (%p)... ]", reinterpret_cast<void*>(start_address));
+  LD_DEBUG(any, "[ Jumping to _start (%p)... ]", reinterpret_cast<void*>(start_address));
 
   // Return the address that the calling assembly stub should jump to.
   return start_address;

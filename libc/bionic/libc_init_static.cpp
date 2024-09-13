@@ -30,6 +30,7 @@
 #include <elf.h>
 #include <errno.h>
 #include <malloc.h>
+#include <signal.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -293,6 +294,28 @@ static HeapTaggingLevel __get_tagging_level(const memtag_dynamic_entries_t* memt
   return level;
 }
 
+static void __enable_mte_signal_handler(int, siginfo_t* info, void*) {
+  if (info->si_code != SI_TIMER) {
+    async_safe_format_log(ANDROID_LOG_ERROR, "libc", "Got BIONIC_ENABLE_MTE not from SI_TIMER");
+    return;
+  }
+  int tagged_addr_ctrl = prctl(PR_GET_TAGGED_ADDR_CTRL, 0, 0, 0, 0);
+  if (tagged_addr_ctrl < 0) {
+    async_safe_fatal("failed to PR_GET_TAGGED_ADDR_CTRL: %m");
+  }
+  if ((tagged_addr_ctrl & PR_MTE_TCF_MASK) != PR_MTE_TCF_NONE) {
+    return;
+  }
+  async_safe_format_log(ANDROID_LOG_INFO, "libc",
+                        "Re-enabling MTE, value: %x (tagged_addr_ctrl %lu)",
+                        info->si_value.sival_int, info->si_value.sival_int & PR_MTE_TCF_MASK);
+  tagged_addr_ctrl =
+      (tagged_addr_ctrl & ~PR_MTE_TCF_MASK) | (info->si_value.sival_int & PR_MTE_TCF_MASK);
+  if (prctl(PR_SET_TAGGED_ADDR_CTRL, tagged_addr_ctrl, 0, 0, 0) < 0) {
+    async_safe_fatal("failed to PR_SET_TAGGED_ADDR_CTRL %d: %m", tagged_addr_ctrl);
+  }
+}
+
 static int64_t __get_memtag_upgrade_secs() {
   char* env = getenv("BIONIC_MEMTAG_UPGRADE_SECS");
   if (!env) return 0;
@@ -366,7 +389,10 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(
           async_safe_fatal("error: failed to set PROT_MTE on main thread stack: %m");
         }
       }
-
+      struct sigaction action = {};
+      action.sa_flags = SA_SIGINFO | SA_RESTART;
+      action.sa_sigaction = __enable_mte_signal_handler;
+      sigaction(BIONIC_ENABLE_MTE, &action, nullptr);
       return;
     }
   }
@@ -447,7 +473,12 @@ extern "C" void __hwasan_init_static();
 __attribute__((no_sanitize("hwaddress", "memtag"))) __noreturn void __libc_init(
     void* raw_args, void (*onexit)(void) __unused, int (*slingshot)(int, char**, char**),
     structors_array_t const* const structors) {
-  bionic_tcb temp_tcb = {};
+  // We _really_ don't want the compiler to call memset() here,
+  // but it's done so before for riscv64 (http://b/365618934),
+  // so we have to force it to behave.
+  bionic_tcb temp_tcb __attribute__((uninitialized));
+  __builtin_memset_inline(&temp_tcb, 0, sizeof(temp_tcb));
+
 #if __has_feature(hwaddress_sanitizer)
   // Install main thread TLS early. It will be initialized later in __libc_init_main_thread. For now
   // all we need is access to TLS_SLOT_SANITIZER.
@@ -457,6 +488,7 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) __noreturn void __libc_init(
   __hwasan_init_static();
   // We are ready to run HWASan-instrumented code, proceed with libc initialization...
 #endif
+
   __real_libc_init(raw_args, onexit, slingshot, structors, &temp_tcb);
 }
 

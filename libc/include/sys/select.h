@@ -44,7 +44,7 @@ __BEGIN_DECLS
 typedef unsigned long fd_mask;
 
 /**
- * The limit on the largest fd that can be used with this API.
+ * The limit on the largest fd that can be used with fd_set.
  * Use <poll.h> instead.
  */
 #define FD_SETSIZE 1024
@@ -52,6 +52,9 @@ typedef unsigned long fd_mask;
 
 /**
  * The type of a file descriptor set. Limited to 1024 fds.
+ * The underlying system calls do not have this limit,
+ * and callers can allocate their own sets with calloc().
+ *
  * Use <poll.h> instead.
  */
 typedef struct {
@@ -60,34 +63,31 @@ typedef struct {
 
 #define __FDELT(fd) ((fd) / NFDBITS)
 #define __FDMASK(fd) (1UL << ((fd) % NFDBITS))
-#define __FDS_BITS(type,set) (__BIONIC_CAST(static_cast, type, set)->fds_bits)
-
-/* Inline loop so we don't have to declare memset. */
-#define FD_ZERO(set) \
-  do { \
-    size_t __i; \
-    for (__i = 0; __i < sizeof(fd_set)/sizeof(fd_mask); ++__i) { \
-      (set)->fds_bits[__i] = 0; \
-    } \
-  } while (0)
+#define __FDS_BITS(type, set) (__BIONIC_CAST(static_cast, type, set)->fds_bits)
 
 void __FD_CLR_chk(int, fd_set* _Nonnull , size_t);
 void __FD_SET_chk(int, fd_set* _Nonnull, size_t);
 int __FD_ISSET_chk(int, const fd_set* _Nonnull, size_t);
 
-#define __FD_CLR(fd, set) (__FDS_BITS(fd_set*,set)[__FDELT(fd)] &= ~__FDMASK(fd))
-#define __FD_SET(fd, set) (__FDS_BITS(fd_set*,set)[__FDELT(fd)] |= __FDMASK(fd))
-#define __FD_ISSET(fd, set) ((__FDS_BITS(const fd_set*,set)[__FDELT(fd)] & __FDMASK(fd)) != 0)
+/** FD_CLR() with no bounds checking for users that allocated their own set. */
+#define __FD_CLR(fd, set) (__FDS_BITS(fd_set*, set)[__FDELT(fd)] &= ~__FDMASK(fd))
+/** FD_SET() with no bounds checking for users that allocated their own set. */
+#define __FD_SET(fd, set) (__FDS_BITS(fd_set*, set)[__FDELT(fd)] |= __FDMASK(fd))
+/** FD_ISSET() with no bounds checking for users that allocated their own set. */
+#define __FD_ISSET(fd, set) ((__FDS_BITS(const fd_set*, set)[__FDELT(fd)] & __FDMASK(fd)) != 0)
 
-/** Removes `fd` from the given set. Use <poll.h> instead. */
+/** Removes all 1024 fds from the given set. Use <poll.h> instead. */
+#define FD_ZERO(set) __builtin_memset(set, 0, sizeof(*__BIONIC_CAST(static_cast, const fd_set*, set)))
+
+/** Removes `fd` from the given set. Limited to fds under 1024. Use <poll.h> instead. */
 #define FD_CLR(fd, set) __FD_CLR_chk(fd, set, __bos(set))
-/** Adds `fd` to the given set. Use <poll.h> instead. */
+/** Adds `fd` to the given set. Limited to fds under 1024. Use <poll.h> instead. */
 #define FD_SET(fd, set) __FD_SET_chk(fd, set, __bos(set))
-/** Tests whether `fd` is in the given set. Use <poll.h> instead. */
+/** Tests whether `fd` is in the given set. Limited to fds under 1024. Use <poll.h> instead. */
 #define FD_ISSET(fd, set) __FD_ISSET_chk(fd, set, __bos(set))
 
 /**
- * [select(2)](http://man7.org/linux/man-pages/man2/select.2.html) waits on a
+ * [select(2)](https://man7.org/linux/man-pages/man2/select.2.html) waits on a
  * set of file descriptors.
  *
  * Use poll() instead.
@@ -98,7 +98,7 @@ int __FD_ISSET_chk(int, const fd_set* _Nonnull, size_t);
 int select(int __max_fd_plus_one, fd_set* _Nullable __read_fds, fd_set* _Nullable __write_fds, fd_set* _Nullable __exception_fds, struct timeval* _Nullable __timeout);
 
 /**
- * [pselect(2)](http://man7.org/linux/man-pages/man2/select.2.html) waits on a
+ * [pselect(2)](https://man7.org/linux/man-pages/man2/select.2.html) waits on a
  * set of file descriptors.
  *
  * Use ppoll() instead.
@@ -109,7 +109,7 @@ int select(int __max_fd_plus_one, fd_set* _Nullable __read_fds, fd_set* _Nullabl
 int pselect(int __max_fd_plus_one, fd_set* _Nullable __read_fds, fd_set* _Nullable __write_fds, fd_set* _Nullable __exception_fds, const struct timespec* _Nullable __timeout, const sigset_t* _Nullable __mask);
 
 /**
- * [pselect64(2)](http://man7.org/linux/man-pages/man2/select.2.html) waits on a
+ * [pselect64(2)](https://man7.org/linux/man-pages/man2/select.2.html) waits on a
  * set of file descriptors.
  *
  * Use ppoll64() instead.

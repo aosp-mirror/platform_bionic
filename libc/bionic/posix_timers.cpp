@@ -117,7 +117,7 @@ static void __timer_thread_stop(PosixTimer* timer) {
   pthread_kill(timer->callback_thread, TIMER_SIGNAL);
 }
 
-// http://pubs.opengroup.org/onlinepubs/9699919799/functions/timer_create.html
+// https://pubs.opengroup.org/onlinepubs/9799919799.2024edition/functions/timer_create.html
 int timer_create(clockid_t clock_id, sigevent* evp, timer_t* timer_id) {
   PosixTimer* timer = reinterpret_cast<PosixTimer*>(malloc(sizeof(PosixTimer)));
   if (timer == nullptr) {
@@ -201,7 +201,7 @@ int timer_create(clockid_t clock_id, sigevent* evp, timer_t* timer_id) {
   return 0;
 }
 
-// http://pubs.opengroup.org/onlinepubs/9699919799/functions/timer_delete.html
+// https://pubs.opengroup.org/onlinepubs/9799919799.2024edition/functions/timer_delete.html
 int timer_delete(timer_t id) {
   int rc = __timer_delete(to_kernel_timer_id(id));
   if (rc == -1) {
@@ -220,12 +220,12 @@ int timer_delete(timer_t id) {
   return 0;
 }
 
-// http://pubs.opengroup.org/onlinepubs/9699919799/functions/timer_gettime.html
+// https://pubs.opengroup.org/onlinepubs/9799919799.2024edition/functions/timer_gettime.html
 int timer_gettime(timer_t id, itimerspec* ts) {
   return __timer_gettime(to_kernel_timer_id(id), ts);
 }
 
-// http://pubs.opengroup.org/onlinepubs/9699919799/functions/timer_settime.html
+// https://pubs.opengroup.org/onlinepubs/9799919799.2024edition/functions/timer_settime.html
 // When using timer_settime to disarm a repeatable SIGEV_THREAD timer with a very small
 // period (like below 1ms), the kernel may continue to send events to the callback thread
 // for a few extra times. This behavior is fine because in POSIX standard: The effect of
@@ -235,7 +235,7 @@ int timer_settime(timer_t id, int flags, const itimerspec* ts, itimerspec* ots) 
   return __timer_settime(timer->kernel_timer_id, flags, ts, ots);
 }
 
-// http://pubs.opengroup.org/onlinepubs/9699919799/functions/timer_getoverrun.html
+// https://pubs.opengroup.org/onlinepubs/9799919799.2024edition/functions/timer_getoverrun.html
 int timer_getoverrun(timer_t id) {
   return __timer_getoverrun(to_kernel_timer_id(id));
 }

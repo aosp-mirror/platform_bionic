@@ -42,7 +42,7 @@
 __BEGIN_DECLS
 
 /**
- * [iopl(2)](http://man7.org/linux/man-pages/man2/iopl.2.html) changes the I/O
+ * [iopl(2)](https://man7.org/linux/man-pages/man2/iopl.2.html) changes the I/O
  * privilege level for all x86/x8-64 I/O ports, for the calling thread.
  *
  * New callers should use ioperm() instead.
@@ -58,7 +58,7 @@ __attribute__((__deprecated__("use ioperm() instead"))) static __inline int iopl
 #endif
 
 /**
- * [ioperm(2)](http://man7.org/linux/man-pages/man2/ioperm.2.html) sets the I/O
+ * [ioperm(2)](https://man7.org/linux/man-pages/man2/ioperm.2.html) sets the I/O
  * permissions for the given number of x86/x86-64 I/O ports, starting at the
  * given port.
  *

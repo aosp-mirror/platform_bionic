@@ -16,9 +16,12 @@
 
 #pragma once
 
+// Since we're implementing all the extensions,
+// we need to make sure we get all their declarations when we include <math.h>.
+#define _BSD_SOURCE
+
 // Some FreeBSD source includes <complex.h> and assumes <math.h> from that.
 #include <math.h>
-#include <float.h>
 
 #define __weak_reference(sym,alias)     \
     __asm__(".weak " #alias);           \
