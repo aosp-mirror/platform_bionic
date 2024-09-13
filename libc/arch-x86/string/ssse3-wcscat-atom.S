@@ -85,7 +85,7 @@ name:	\
 #define USE_AS_WCSCAT
 
 .text
-ENTRY (wcscat_ssse3)
+ENTRY (wcscat)
 	PUSH    (%edi)
 	mov	STR1(%esp), %edi
 	mov	%edi, %edx
@@ -111,4 +111,4 @@ L(WcscpyAtom):
 #define RETURN  POP(%edi);	ret;	CFI_PUSH(%edi)
 #include "ssse3-wcscpy-atom.S"
 
-END (wcscat_ssse3)
+END (wcscat)
