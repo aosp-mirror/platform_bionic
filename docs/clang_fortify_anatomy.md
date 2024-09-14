@@ -147,8 +147,7 @@ The declaration in Bionic's headers for `__builtin_mempcpy` is:
 void* mempcpy(void* __dst, const void* __src, size_t __n) __INTRODUCED_IN(23);
 ```
 
-Which is annotated with nothing special, except for Bionic's versioner, which
-is Android-specific (and orthogonal to FORTIFY anyway), so it will be ignored.
+Which is annotated with nothing special, so it will be ignored.
 
 The [source for `mempcpy`] in Bionic's headers for is:
 ```c
