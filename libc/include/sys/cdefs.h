@@ -265,7 +265,7 @@
  * having stack protectors detracts from that (b/182948263).
  */
 #  define __BIONIC_FORTIFY_INLINE static __inline __attribute__((__no_stack_protector__)) \
-      __always_inline __VERSIONER_FORTIFY_INLINE
+      __always_inline
 /*
  * We should use __BIONIC_FORTIFY_VARIADIC instead of __BIONIC_FORTIFY_INLINE
  * for variadic functions because compilers cannot inline them.
