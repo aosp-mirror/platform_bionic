@@ -54,7 +54,7 @@ void DL_WARN_documented_change(int api_level, const char* doc_link, const char* 
 #define DL_ERR_AND_LOG(fmt, x...) \
   do { \
     DL_ERR(fmt, ##x); \
-    PRINT(fmt, ##x); \
+    __linker_log(ANDROID_LOG_ERROR, fmt, ##x); \
   } while (false)
 
 #define DL_OPEN_ERR(fmt, x...) \
