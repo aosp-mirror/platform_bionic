@@ -421,12 +421,11 @@ void __libc_init_profiling_handlers() {
 }
 
 __attribute__((no_sanitize("memtag"))) __noreturn static void __real_libc_init(
-    void* raw_args, void (*onexit)(void) __unused, int (*slingshot)(int, char**, char**),
-    structors_array_t const* const structors, bionic_tcb* temp_tcb) {
+    KernelArgumentBlock& args, void* raw_args, void (*onexit)(void) __unused,
+    int (*slingshot)(int, char**, char**), structors_array_t const* const structors,
+    bionic_tcb* temp_tcb) {
   BIONIC_STOP_UNWIND;
 
-  // Initialize TLS early so system calls and errno work.
-  KernelArgumentBlock args(raw_args);
   __libc_init_main_thread_early(args, temp_tcb);
   __libc_init_main_thread_late();
   __libc_init_globals();
@@ -479,17 +478,19 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) __noreturn void __libc_init(
   bionic_tcb temp_tcb __attribute__((uninitialized));
   __builtin_memset_inline(&temp_tcb, 0, sizeof(temp_tcb));
 
+  KernelArgumentBlock args(raw_args);
 #if __has_feature(hwaddress_sanitizer)
   // Install main thread TLS early. It will be initialized later in __libc_init_main_thread. For now
-  // all we need is access to TLS_SLOT_SANITIZER.
+  // all we need is access to TLS_SLOT_SANITIZER and read auxval for the page size.
   __set_tls(&temp_tcb.tls_slot(0));
+  __libc_shared_globals()->auxv = args.auxv;
   // Initialize HWASan enough to run instrumented code. This sets up TLS_SLOT_SANITIZER, among other
   // things.
   __hwasan_init_static();
   // We are ready to run HWASan-instrumented code, proceed with libc initialization...
 #endif
 
-  __real_libc_init(raw_args, onexit, slingshot, structors, &temp_tcb);
+  __real_libc_init(args, raw_args, onexit, slingshot, structors, &temp_tcb);
 }
 
 static int g_target_sdk_version{__ANDROID_API__};
