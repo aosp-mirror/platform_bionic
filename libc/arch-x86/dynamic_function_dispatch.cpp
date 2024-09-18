@@ -33,9 +33,8 @@ extern "C" {
 
 DEFINE_IFUNC_FOR(memcmp) {
   __builtin_cpu_init();
-  if (__builtin_cpu_is("atom")) RETURN_FUNC(memcmp_func_t, memcmp_atom);
   if (__builtin_cpu_supports("sse4.1")) RETURN_FUNC(memcmp_func_t, memcmp_sse4);
-  RETURN_FUNC(memcmp_func_t, memcmp_generic);
+  RETURN_FUNC(memcmp_func_t, memcmp_atom);
 }
 MEMCMP_SHIM()
 
