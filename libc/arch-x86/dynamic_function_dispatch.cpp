@@ -39,51 +39,6 @@ DEFINE_IFUNC_FOR(memcmp) {
 }
 MEMCMP_SHIM()
 
-DEFINE_IFUNC_FOR(memset) {
-  __builtin_cpu_init();
-  if (__builtin_cpu_is("atom")) RETURN_FUNC(memset_func_t, memset_atom);
-  RETURN_FUNC(memset_func_t, memset_generic);
-}
-MEMSET_SHIM()
-
-DEFINE_IFUNC_FOR(__memset_chk) {
-  __builtin_cpu_init();
-  if (__builtin_cpu_is("atom")) RETURN_FUNC(__memset_chk_func_t, __memset_chk_atom);
-  RETURN_FUNC(__memset_chk_func_t, __memset_chk_generic);
-}
-__MEMSET_CHK_SHIM()
-
-DEFINE_IFUNC_FOR(memmove) {
-  __builtin_cpu_init();
-  if (__builtin_cpu_is("atom")) RETURN_FUNC(memmove_func_t, memmove_atom);
-  RETURN_FUNC(memmove_func_t, memmove_generic);
-}
-MEMMOVE_SHIM()
-
-DEFINE_IFUNC_FOR(memcpy) { return memmove_resolver(); }
-MEMCPY_SHIM()
-
-DEFINE_IFUNC_FOR(strcpy) {
-  __builtin_cpu_init();
-  if (__builtin_cpu_is("atom")) RETURN_FUNC(strcpy_func_t, strcpy_atom);
-  RETURN_FUNC(strcpy_func_t, strcpy_generic);
-}
-STRCPY_SHIM()
-
-DEFINE_IFUNC_FOR(strncpy) {
-  __builtin_cpu_init();
-  if (__builtin_cpu_is("atom")) RETURN_FUNC(strncpy_func_t, strncpy_atom);
-  RETURN_FUNC(strncpy_func_t, strncpy_generic);
-}
-STRNCPY_SHIM()
-
-DEFINE_IFUNC_FOR(strlen) {
-  __builtin_cpu_init();
-  if (__builtin_cpu_is("atom")) RETURN_FUNC(strlen_func_t, strlen_atom);
-  RETURN_FUNC(strlen_func_t, strlen_generic);
-}
-STRLEN_SHIM()
-
 typedef int wmemcmp_func_t(const wchar_t*, const wchar_t*, size_t);
 DEFINE_IFUNC_FOR(wmemcmp) {
   __builtin_cpu_init();
