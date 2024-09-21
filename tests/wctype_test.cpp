@@ -226,34 +226,64 @@ TEST(wctype, iswctype_l) {
   EXPECT_EQ(0, iswctype_l(WEOF, wctype_l("alnum", l.l), l.l));
 }
 
-TEST(wctype, towctrans) {
+TEST(wctype, wctrans) {
   EXPECT_TRUE(wctrans("tolower") != nullptr);
   EXPECT_TRUE(wctrans("toupper") != nullptr);
 
+  errno = 0;
   EXPECT_TRUE(wctrans("monkeys") == nullptr);
-}
-
-TEST(wctype, towctrans_l) {
-  UtfLocale l;
-  EXPECT_TRUE(wctrans_l("tolower", l.l) != nullptr);
-  EXPECT_TRUE(wctrans_l("toupper", l.l) != nullptr);
-
-  EXPECT_TRUE(wctrans_l("monkeys", l.l) == nullptr);
-}
-
-TEST(wctype, wctrans) {
-  EXPECT_EQ(wint_t('a'), towctrans(L'A', wctrans("tolower")));
-  EXPECT_EQ(WEOF, towctrans(WEOF, wctrans("tolower")));
-
-  EXPECT_EQ(wint_t('A'), towctrans(L'a', wctrans("toupper")));
-  EXPECT_EQ(WEOF, towctrans(WEOF, wctrans("toupper")));
+  #if defined(__BIONIC__)
+  // Android/FreeBSD/iOS set errno, but musl/glibc don't.
+  EXPECT_ERRNO(EINVAL);
+  #endif
 }
 
 TEST(wctype, wctrans_l) {
   UtfLocale l;
-  EXPECT_EQ(wint_t('a'), towctrans_l(L'A', wctrans_l("tolower", l.l), l.l));
-  EXPECT_EQ(WEOF, towctrans_l(WEOF, wctrans_l("tolower", l.l), l.l));
+  EXPECT_TRUE(wctrans_l("tolower", l.l) != nullptr);
+  EXPECT_TRUE(wctrans_l("toupper", l.l) != nullptr);
 
-  EXPECT_EQ(wint_t('A'), towctrans_l(L'a', wctrans_l("toupper", l.l), l.l));
-  EXPECT_EQ(WEOF, towctrans_l(WEOF, wctrans_l("toupper", l.l), l.l));
+  errno = 0;
+  EXPECT_TRUE(wctrans_l("monkeys", l.l) == nullptr);
+  #if defined(__BIONIC__)
+  // Android/FreeBSD/iOS set errno, but musl/glibc don't.
+  EXPECT_ERRNO(EINVAL);
+  #endif
+}
+
+TEST(wctype, towctrans) {
+  wctrans_t lower = wctrans("tolower");
+  EXPECT_EQ(wint_t('a'), towctrans(L'A', lower));
+  EXPECT_EQ(WEOF, towctrans(WEOF, lower));
+
+  wctrans_t upper = wctrans("toupper");
+  EXPECT_EQ(wint_t('A'), towctrans(L'a', upper));
+  EXPECT_EQ(WEOF, towctrans(WEOF, upper));
+
+  wctrans_t invalid = wctrans("monkeys");
+  errno = 0;
+  EXPECT_EQ(wint_t('a'), towctrans(L'a', invalid));
+  #if defined(__BIONIC__)
+  // Android/FreeBSD/iOS set errno, but musl/glibc don't.
+  EXPECT_ERRNO(EINVAL);
+  #endif
+}
+
+TEST(wctype, towctrans_l) {
+  UtfLocale l;
+  wctrans_t lower = wctrans_l("tolower", l.l);
+  EXPECT_EQ(wint_t('a'), towctrans_l(L'A', lower, l.l));
+  EXPECT_EQ(WEOF, towctrans_l(WEOF, lower, l.l));
+
+  wctrans_t upper = wctrans_l("toupper", l.l);
+  EXPECT_EQ(wint_t('A'), towctrans_l(L'a', upper, l.l));
+  EXPECT_EQ(WEOF, towctrans_l(WEOF, upper, l.l));
+
+  wctrans_t invalid = wctrans_l("monkeys", l.l);
+  errno = 0;
+  EXPECT_EQ(wint_t('a'), towctrans_l(L'a', invalid, l.l));
+  #if defined(__BIONIC__)
+  // Android/FreeBSD/iOS set errno, but musl/glibc don't.
+  EXPECT_ERRNO(EINVAL);
+  #endif
 }
