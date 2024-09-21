@@ -389,6 +389,7 @@ cc_test_library {
         "bug_26110743_test.cpp",
         "byteswap_test.cpp",
         "complex_test.cpp",
+        "cpu_target_features_test.cpp",
         "ctype_test.cpp",
         "dirent_test.cpp",
         "elf_test.cpp",
