@@ -159,6 +159,7 @@ static wctrans_t wctrans_toupper = wctrans_t(2);
 wctrans_t wctrans(const char* name) {
   if (strcmp(name, "tolower") == 0) return wctrans_tolower;
   if (strcmp(name, "toupper") == 0) return wctrans_toupper;
+  errno = EINVAL;
   return nullptr;
 }
 __strong_alias(wctrans_l, wctrans);
@@ -167,6 +168,6 @@ wint_t towctrans(wint_t c, wctrans_t t) {
   if (t == wctrans_tolower) return towlower(c);
   if (t == wctrans_toupper) return towupper(c);
   errno = EINVAL;
-  return 0;
+  return c;
 }
 __strong_alias(towctrans_l, towctrans);
