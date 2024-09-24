@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,26 +26,13 @@
  * SUCH DAMAGE.
  */
 
-#include <private/bionic_ifuncs.h>
-#include <stddef.h>
+#include <string.h>
 
-extern "C" {
+// This is a test specifically of bionic's FORTIFY machinery. Other stdlibs need not apply.
+#ifdef __BIONIC__
 
-DEFINE_IFUNC_FOR(memcmp) {
-  __builtin_cpu_init();
-  if (__builtin_cpu_supports("sse4.1")) RETURN_FUNC(memcmp_func_t, memcmp_sse4);
-  RETURN_FUNC(memcmp_func_t, memcmp_atom);
-}
-MEMCMP_SHIM()
+// Ensure that strlen can be evaluated at compile-time. Clang doesn't support
+// this in C++, but does in C.
+_Static_assert(strlen("foo") == 3, "");
 
-typedef int wmemcmp_func_t(const wchar_t*, const wchar_t*, size_t);
-DEFINE_IFUNC_FOR(wmemcmp) {
-  __builtin_cpu_init();
-  if (__builtin_cpu_supports("sse4.1")) RETURN_FUNC(wmemcmp_func_t, wmemcmp_sse4);
-  RETURN_FUNC(wmemcmp_func_t, wmemcmp_atom);
-}
-DEFINE_STATIC_SHIM(int wmemcmp(const wchar_t* lhs, const wchar_t* rhs, size_t n) {
-  FORWARD(wmemcmp)(lhs, rhs, n);
-})
-
-}  // extern "C"
+#endif  // __BIONIC__

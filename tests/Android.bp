@@ -389,6 +389,7 @@ cc_test_library {
         "bug_26110743_test.cpp",
         "byteswap_test.cpp",
         "complex_test.cpp",
+        "cpu_target_features_test.cpp",
         "ctype_test.cpp",
         "dirent_test.cpp",
         "elf_test.cpp",
@@ -745,6 +746,40 @@ cc_test_library {
     },
 }
 
+cc_defaults {
+    name: "bionic_fortify_c_tests_defaults",
+    defaults: [
+        "bionic_clang_fortify_tests_w_flags",
+        "bionic_tests_defaults",
+    ],
+    cflags: [
+        "-U_FORTIFY_SOURCE",
+        // -fbuiltin is required here to counteract -fno-builtin from
+        // `bionic_tests_defaults`. With `-fno-builtin`, Clang won't
+        // const-evaluate calls to `strlen`, which is tested for here.
+        "-fbuiltin",
+    ],
+    srcs: [
+        "clang_fortify_c_only_tests.c",
+    ],
+    tidy: false,
+    shared: {
+        enabled: false,
+    },
+}
+
+cc_test_library {
+    name: "libfortify1-c-tests-clang",
+    defaults: ["bionic_fortify_c_tests_defaults"],
+    cflags: ["-D_FORTIFY_SOURCE=1"],
+}
+
+cc_test_library {
+    name: "libfortify2-c-tests-clang",
+    defaults: ["bionic_fortify_c_tests_defaults"],
+    cflags: ["-D_FORTIFY_SOURCE=2"],
+}
+
 // -----------------------------------------------------------------------------
 // Library of all tests (excluding the dynamic linker tests).
 // -----------------------------------------------------------------------------
@@ -756,8 +791,10 @@ cc_test_library {
         "libBionicStandardTests",
         "libBionicElfTlsTests",
         "libBionicFramePointerTests",
+        "libfortify1-c-tests-clang",
         "libfortify1-tests-clang",
         "libfortify1-new-tests-clang",
+        "libfortify2-c-tests-clang",
         "libfortify2-tests-clang",
         "libfortify2-new-tests-clang",
     ],
