@@ -367,6 +367,7 @@ enum {
 #define BPF_F_QUERY_EFFECTIVE (1U << 0)
 #define BPF_F_TEST_RUN_ON_CPU (1U << 0)
 #define BPF_F_TEST_XDP_LIVE_FRAMES (1U << 1)
+#define BPF_F_TEST_SKB_CHECKSUM_COMPLETE (1U << 2)
 enum bpf_stats_type {
   BPF_STATS_RUN_TIME = 0,
 };
@@ -773,8 +774,11 @@ enum {
 #define __bpf_md_ptr(type,name) union { type name; __u64 : 64; \
 } __attribute__((aligned(8)))
 enum {
-  BPF_SKB_TSTAMP_UNSPEC,
-  BPF_SKB_TSTAMP_DELIVERY_MONO,
+  BPF_SKB_TSTAMP_UNSPEC = 0,
+  BPF_SKB_TSTAMP_DELIVERY_MONO = 1,
+  BPF_SKB_CLOCK_REALTIME = 0,
+  BPF_SKB_CLOCK_MONOTONIC = 1,
+  BPF_SKB_CLOCK_TAI = 2,
 };
 struct __sk_buff {
   __u32 len;
