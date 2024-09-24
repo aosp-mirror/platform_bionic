@@ -21,6 +21,7 @@ extern "C" {
 #define DRM_XE_EXEC_QUEUE_GET_PROPERTY 0x08
 #define DRM_XE_EXEC 0x09
 #define DRM_XE_WAIT_USER_FENCE 0x0a
+#define DRM_XE_OBSERVATION 0x0b
 #define DRM_IOCTL_XE_DEVICE_QUERY DRM_IOWR(DRM_COMMAND_BASE + DRM_XE_DEVICE_QUERY, struct drm_xe_device_query)
 #define DRM_IOCTL_XE_GEM_CREATE DRM_IOWR(DRM_COMMAND_BASE + DRM_XE_GEM_CREATE, struct drm_xe_gem_create)
 #define DRM_IOCTL_XE_GEM_MMAP_OFFSET DRM_IOWR(DRM_COMMAND_BASE + DRM_XE_GEM_MMAP_OFFSET, struct drm_xe_gem_mmap_offset)
@@ -32,6 +33,7 @@ extern "C" {
 #define DRM_IOCTL_XE_EXEC_QUEUE_GET_PROPERTY DRM_IOWR(DRM_COMMAND_BASE + DRM_XE_EXEC_QUEUE_GET_PROPERTY, struct drm_xe_exec_queue_get_property)
 #define DRM_IOCTL_XE_EXEC DRM_IOW(DRM_COMMAND_BASE + DRM_XE_EXEC, struct drm_xe_exec)
 #define DRM_IOCTL_XE_WAIT_USER_FENCE DRM_IOWR(DRM_COMMAND_BASE + DRM_XE_WAIT_USER_FENCE, struct drm_xe_wait_user_fence)
+#define DRM_IOCTL_XE_OBSERVATION DRM_IOW(DRM_COMMAND_BASE + DRM_XE_OBSERVATION, struct drm_xe_observation_param)
 struct drm_xe_user_extension {
   __u64 next_extension;
   __u32 name;
@@ -120,6 +122,7 @@ struct drm_xe_query_topology_mask {
   __u16 gt_id;
 #define DRM_XE_TOPO_DSS_GEOMETRY 1
 #define DRM_XE_TOPO_DSS_COMPUTE 2
+#define DRM_XE_TOPO_L3_BANK 3
 #define DRM_XE_TOPO_EU_PER_DSS 4
   __u16 type;
   __u32 num_bytes;
@@ -155,6 +158,7 @@ struct drm_xe_device_query {
 #define DRM_XE_DEVICE_QUERY_GT_TOPOLOGY 5
 #define DRM_XE_DEVICE_QUERY_ENGINE_CYCLES 6
 #define DRM_XE_DEVICE_QUERY_UC_FW_VERSION 7
+#define DRM_XE_DEVICE_QUERY_OA_UNITS 8
   __u32 query;
   __u32 size;
   __u64 data;
@@ -308,6 +312,92 @@ struct drm_xe_wait_user_fence {
   __u32 exec_queue_id;
   __u32 pad2;
   __u64 reserved[2];
+};
+enum drm_xe_observation_type {
+  DRM_XE_OBSERVATION_TYPE_OA,
+};
+enum drm_xe_observation_op {
+  DRM_XE_OBSERVATION_OP_STREAM_OPEN,
+  DRM_XE_OBSERVATION_OP_ADD_CONFIG,
+  DRM_XE_OBSERVATION_OP_REMOVE_CONFIG,
+};
+struct drm_xe_observation_param {
+  __u64 extensions;
+  __u64 observation_type;
+  __u64 observation_op;
+  __u64 param;
+};
+enum drm_xe_observation_ioctls {
+  DRM_XE_OBSERVATION_IOCTL_ENABLE = _IO('i', 0x0),
+  DRM_XE_OBSERVATION_IOCTL_DISABLE = _IO('i', 0x1),
+  DRM_XE_OBSERVATION_IOCTL_CONFIG = _IO('i', 0x2),
+  DRM_XE_OBSERVATION_IOCTL_STATUS = _IO('i', 0x3),
+  DRM_XE_OBSERVATION_IOCTL_INFO = _IO('i', 0x4),
+};
+enum drm_xe_oa_unit_type {
+  DRM_XE_OA_UNIT_TYPE_OAG,
+  DRM_XE_OA_UNIT_TYPE_OAM,
+};
+struct drm_xe_oa_unit {
+  __u64 extensions;
+  __u32 oa_unit_id;
+  __u32 oa_unit_type;
+  __u64 capabilities;
+#define DRM_XE_OA_CAPS_BASE (1 << 0)
+  __u64 oa_timestamp_freq;
+  __u64 reserved[4];
+  __u64 num_engines;
+  struct drm_xe_engine_class_instance eci[];
+};
+struct drm_xe_query_oa_units {
+  __u64 extensions;
+  __u32 num_oa_units;
+  __u32 pad;
+  __u64 oa_units[];
+};
+enum drm_xe_oa_format_type {
+  DRM_XE_OA_FMT_TYPE_OAG,
+  DRM_XE_OA_FMT_TYPE_OAR,
+  DRM_XE_OA_FMT_TYPE_OAM,
+  DRM_XE_OA_FMT_TYPE_OAC,
+  DRM_XE_OA_FMT_TYPE_OAM_MPEC,
+  DRM_XE_OA_FMT_TYPE_PEC,
+};
+enum drm_xe_oa_property_id {
+#define DRM_XE_OA_EXTENSION_SET_PROPERTY 0
+  DRM_XE_OA_PROPERTY_OA_UNIT_ID = 1,
+  DRM_XE_OA_PROPERTY_SAMPLE_OA,
+  DRM_XE_OA_PROPERTY_OA_METRIC_SET,
+  DRM_XE_OA_PROPERTY_OA_FORMAT,
+#define DRM_XE_OA_FORMAT_MASK_FMT_TYPE (0xffu << 0)
+#define DRM_XE_OA_FORMAT_MASK_COUNTER_SEL (0xffu << 8)
+#define DRM_XE_OA_FORMAT_MASK_COUNTER_SIZE (0xffu << 16)
+#define DRM_XE_OA_FORMAT_MASK_BC_REPORT (0xffu << 24)
+  DRM_XE_OA_PROPERTY_OA_PERIOD_EXPONENT,
+  DRM_XE_OA_PROPERTY_OA_DISABLED,
+  DRM_XE_OA_PROPERTY_EXEC_QUEUE_ID,
+  DRM_XE_OA_PROPERTY_OA_ENGINE_INSTANCE,
+  DRM_XE_OA_PROPERTY_NO_PREEMPT,
+};
+struct drm_xe_oa_config {
+  __u64 extensions;
+  char uuid[36];
+  __u32 n_regs;
+  __u64 regs_ptr;
+};
+struct drm_xe_oa_stream_status {
+  __u64 extensions;
+  __u64 oa_status;
+#define DRM_XE_OASTATUS_MMIO_TRG_Q_FULL (1 << 3)
+#define DRM_XE_OASTATUS_COUNTER_OVERFLOW (1 << 2)
+#define DRM_XE_OASTATUS_BUFFER_OVERFLOW (1 << 1)
+#define DRM_XE_OASTATUS_REPORT_LOST (1 << 0)
+  __u64 reserved[3];
+};
+struct drm_xe_oa_stream_info {
+  __u64 extensions;
+  __u64 oa_buf_size;
+  __u64 reserved[3];
 };
 #ifdef __cplusplus
 }

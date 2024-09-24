@@ -14,6 +14,7 @@
 #define XDP_USE_SG (1 << 4)
 #define XDP_UMEM_UNALIGNED_CHUNK_FLAG (1 << 0)
 #define XDP_UMEM_TX_SW_CSUM (1 << 1)
+#define XDP_UMEM_TX_METADATA_LEN (1 << 2)
 struct sockaddr_xdp {
   __u16 sxdp_family;
   __u16 sxdp_flags;
