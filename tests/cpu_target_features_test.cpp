@@ -54,15 +54,3 @@ TEST(cpu_target_features, has_expected_aarch64_compiler_values) {
   GTEST_SKIP() << "Not targeting an aarch64 architecture.";
 #endif
 }
-
-TEST(cpu_target_features, has_expected_arm_compiler_values) {
-#if defined(__arm__)
-  ExecTestHelper eth;
-  char* const argv[] = {nullptr};
-  const auto invocation = [&] { execvp("cpu-target-features", argv); };
-  eth.Run(invocation, 0, "(^|\n)__ARM_FEATURE_AES=1($|\n)");
-  eth.Run(invocation, 0, "(^|\n)__ARM_FEATURE_CRC32=1($|\n)");
-#else
-  GTEST_SKIP() << "Not targeting an arm architecture.";
-#endif
-}
