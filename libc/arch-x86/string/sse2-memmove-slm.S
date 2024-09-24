@@ -31,7 +31,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define FOR_SILVERMONT
 
 #ifndef MEMMOVE
-# define MEMMOVE	memmove_generic
+# define MEMMOVE	memmove
 #endif
 
 #ifndef L
@@ -551,3 +551,9 @@ L(mm_large_page_loop_backward):
 	jmp	L(mm_recalc_len)
 
 END (MEMMOVE)
+
+// N.B., `private/bionic_asm.h` provides ALIAS_SYMBOL, but that file provides
+// conflicting definitions for some macros in this file. Since ALIAS_SYMBOL is
+// small, inline it here.
+.globl memcpy;
+.equ memcpy, MEMMOVE
