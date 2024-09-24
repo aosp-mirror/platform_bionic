@@ -939,6 +939,12 @@
 #if defined(__NR_restart_syscall)
   #define SYS_restart_syscall __NR_restart_syscall
 #endif
+#if defined(__NR_riscv_flush_icache)
+  #define SYS_riscv_flush_icache __NR_riscv_flush_icache
+#endif
+#if defined(__NR_riscv_hwprobe)
+  #define SYS_riscv_hwprobe __NR_riscv_hwprobe
+#endif
 #if defined(__NR_rmdir)
   #define SYS_rmdir __NR_rmdir
 #endif
