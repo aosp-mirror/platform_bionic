@@ -976,7 +976,6 @@ bool ElfReader::LoadSegments() {
     ElfW(Addr) seg_start = phdr->p_vaddr + load_bias_;
     ElfW(Addr) seg_end = seg_start + p_memsz;
 
-    ElfW(Addr) seg_page_start = page_start(seg_start);
     ElfW(Addr) seg_page_end = page_end(seg_end);
 
     ElfW(Addr) seg_file_end = seg_start + p_filesz;
