@@ -194,10 +194,8 @@ typedef int __bitwise __kernel_rwf_t;
 #define RWF_NOWAIT (( __kernel_rwf_t) 0x00000008)
 #define RWF_APPEND (( __kernel_rwf_t) 0x00000010)
 #define RWF_NOAPPEND (( __kernel_rwf_t) 0x00000020)
-#define RWF_ATOMIC (( __kernel_rwf_t) 0x00000040)
-#define RWF_SUPPORTED (RWF_HIPRI | RWF_DSYNC | RWF_SYNC | RWF_NOWAIT | RWF_APPEND | RWF_NOAPPEND | RWF_ATOMIC)
-#define PROCFS_IOCTL_MAGIC 'f'
-#define PAGEMAP_SCAN _IOWR(PROCFS_IOCTL_MAGIC, 16, struct pm_scan_arg)
+#define RWF_SUPPORTED (RWF_HIPRI | RWF_DSYNC | RWF_SYNC | RWF_NOWAIT | RWF_APPEND | RWF_NOAPPEND)
+#define PAGEMAP_SCAN _IOWR('f', 16, struct pm_scan_arg)
 #define PAGE_IS_WPALLOWED (1 << 0)
 #define PAGE_IS_WRITTEN (1 << 1)
 #define PAGE_IS_FILE (1 << 2)
@@ -226,31 +224,5 @@ struct pm_scan_arg {
   __u64 category_mask;
   __u64 category_anyof_mask;
   __u64 return_mask;
-};
-#define PROCMAP_QUERY _IOWR(PROCFS_IOCTL_MAGIC, 17, struct procmap_query)
-enum procmap_query_flags {
-  PROCMAP_QUERY_VMA_READABLE = 0x01,
-  PROCMAP_QUERY_VMA_WRITABLE = 0x02,
-  PROCMAP_QUERY_VMA_EXECUTABLE = 0x04,
-  PROCMAP_QUERY_VMA_SHARED = 0x08,
-  PROCMAP_QUERY_COVERING_OR_NEXT_VMA = 0x10,
-  PROCMAP_QUERY_FILE_BACKED_VMA = 0x20,
-};
-struct procmap_query {
-  __u64 size;
-  __u64 query_flags;
-  __u64 query_addr;
-  __u64 vma_start;
-  __u64 vma_end;
-  __u64 vma_flags;
-  __u64 vma_page_size;
-  __u64 vma_offset;
-  __u64 inode;
-  __u32 dev_major;
-  __u32 dev_minor;
-  __u32 vma_name_size;
-  __u32 build_id_size;
-  __u64 vma_name_addr;
-  __u64 build_id_addr;
 };
 #endif
