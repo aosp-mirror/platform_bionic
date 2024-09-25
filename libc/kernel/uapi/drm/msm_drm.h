@@ -37,7 +37,6 @@ struct drm_msm_timespec {
 #define MSM_PARAM_VA_START 0x0e
 #define MSM_PARAM_VA_SIZE 0x0f
 #define MSM_PARAM_HIGHEST_BANK_BIT 0x10
-#define MSM_PARAM_RAYTRACING 0x11
 #define MSM_PARAM_NR_RINGS MSM_PARAM_PRIORITIES
 struct drm_msm_param {
   __u32 pipe;
