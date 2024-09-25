@@ -90,7 +90,7 @@ struct mount_attr {
 #define MOUNT_ATTR_SIZE_VER0 32
 struct statmount {
   __u32 size;
-  __u32 mnt_opts;
+  __u32 __spare1;
   __u64 mask;
   __u32 sb_dev_major;
   __u32 sb_dev_minor;
@@ -108,8 +108,7 @@ struct statmount {
   __u64 propagate_from;
   __u32 mnt_root;
   __u32 mnt_point;
-  __u64 mnt_ns_id;
-  __u64 __spare2[49];
+  __u64 __spare2[50];
   char str[];
 };
 struct mnt_id_req {
@@ -117,18 +116,13 @@ struct mnt_id_req {
   __u32 spare;
   __u64 mnt_id;
   __u64 param;
-  __u64 mnt_ns_id;
 };
 #define MNT_ID_REQ_SIZE_VER0 24
-#define MNT_ID_REQ_SIZE_VER1 32
 #define STATMOUNT_SB_BASIC 0x00000001U
 #define STATMOUNT_MNT_BASIC 0x00000002U
 #define STATMOUNT_PROPAGATE_FROM 0x00000004U
 #define STATMOUNT_MNT_ROOT 0x00000008U
 #define STATMOUNT_MNT_POINT 0x00000010U
 #define STATMOUNT_FS_TYPE 0x00000020U
-#define STATMOUNT_MNT_NS_ID 0x00000040U
-#define STATMOUNT_MNT_OPTS 0x00000080U
 #define LSMT_ROOT 0xffffffffffffffff
-#define LISTMOUNT_REVERSE (1 << 0)
 #endif
