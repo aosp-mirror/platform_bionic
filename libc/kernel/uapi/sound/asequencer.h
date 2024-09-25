@@ -7,7 +7,7 @@
 #ifndef _UAPI__SOUND_ASEQUENCER_H
 #define _UAPI__SOUND_ASEQUENCER_H
 #include <sound/asound.h>
-#define SNDRV_SEQ_VERSION SNDRV_PROTOCOL_VERSION(1, 0, 4)
+#define SNDRV_SEQ_VERSION SNDRV_PROTOCOL_VERSION(1, 0, 3)
 #define SNDRV_SEQ_EVENT_SYSTEM 0
 #define SNDRV_SEQ_EVENT_RESULT 1
 #define SNDRV_SEQ_EVENT_NOTE 5
@@ -343,8 +343,7 @@ struct snd_seq_queue_tempo {
   int ppq;
   unsigned int skew_value;
   unsigned int skew_base;
-  unsigned short tempo_base;
-  char reserved[22];
+  char reserved[24];
 };
 #define SNDRV_SEQ_TIMER_ALSA 0
 #define SNDRV_SEQ_TIMER_MIDI_CLOCK 1

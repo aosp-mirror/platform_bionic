@@ -4,8 +4,8 @@
  * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
  * for more information.
  */
-#ifndef _UAPI_LINUX_TCP_METRICS_H
-#define _UAPI_LINUX_TCP_METRICS_H
+#ifndef _LINUX_TCP_METRICS_H
+#define _LINUX_TCP_METRICS_H
 #include <linux/types.h>
 #define TCP_METRICS_GENL_NAME "tcp_metrics"
 #define TCP_METRICS_GENL_VERSION 0x1
@@ -20,17 +20,6 @@ enum tcp_metric_index {
   __TCP_METRIC_MAX,
 };
 #define TCP_METRIC_MAX (__TCP_METRIC_MAX - 1)
-enum {
-  TCP_METRICS_A_METRICS_RTT = 1,
-  TCP_METRICS_A_METRICS_RTTVAR,
-  TCP_METRICS_A_METRICS_SSTHRESH,
-  TCP_METRICS_A_METRICS_CWND,
-  TCP_METRICS_A_METRICS_REODERING,
-  TCP_METRICS_A_METRICS_RTT_US,
-  TCP_METRICS_A_METRICS_RTTVAR_US,
-  __TCP_METRICS_A_METRICS_MAX
-};
-#define TCP_METRICS_A_METRICS_MAX (__TCP_METRICS_A_METRICS_MAX - 1)
 enum {
   TCP_METRICS_ATTR_UNSPEC,
   TCP_METRICS_ATTR_ADDR_IPV4,
