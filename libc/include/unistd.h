@@ -257,8 +257,29 @@ int link(const char* _Nonnull __old_path, const char* _Nonnull __new_path);
 int linkat(int __old_dir_fd, const char* _Nonnull __old_path, int __new_dir_fd, const char* _Nonnull __new_path, int __flags);
 int unlink(const char* _Nonnull __path);
 int unlinkat(int __dirfd, const char* _Nonnull __path, int __flags);
+
+/**
+ * [chdir(2)](https://man7.org/linux/man-pages/man2/chdir.2.html) changes
+ * the current working directory to the given path.
+ *
+ * This function affects all threads in the process, so is generally a bad idea
+ * on Android where most code will be running in a multi-threaded context.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
 int chdir(const char* _Nonnull __path);
+
+/**
+ * [fchdir(2)](https://man7.org/linux/man-pages/man2/chdir.2.html) changes
+ * the current working directory to the given fd.
+ *
+ * This function affects all threads in the process, so is generally a bad idea
+ * on Android where most code will be running in a multi-threaded context.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
 int fchdir(int __fd);
+
 int rmdir(const char* _Nonnull __path);
 int pipe(int __fds[_Nonnull 2]);
 #if defined(__USE_GNU)
