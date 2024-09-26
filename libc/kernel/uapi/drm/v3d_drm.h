@@ -22,7 +22,6 @@ extern "C" {
 #define DRM_V3D_PERFMON_DESTROY 0x09
 #define DRM_V3D_PERFMON_GET_VALUES 0x0a
 #define DRM_V3D_SUBMIT_CPU 0x0b
-#define DRM_V3D_PERFMON_GET_COUNTER 0x0c
 #define DRM_IOCTL_V3D_SUBMIT_CL DRM_IOWR(DRM_COMMAND_BASE + DRM_V3D_SUBMIT_CL, struct drm_v3d_submit_cl)
 #define DRM_IOCTL_V3D_WAIT_BO DRM_IOWR(DRM_COMMAND_BASE + DRM_V3D_WAIT_BO, struct drm_v3d_wait_bo)
 #define DRM_IOCTL_V3D_CREATE_BO DRM_IOWR(DRM_COMMAND_BASE + DRM_V3D_CREATE_BO, struct drm_v3d_create_bo)
@@ -35,7 +34,6 @@ extern "C" {
 #define DRM_IOCTL_V3D_PERFMON_DESTROY DRM_IOWR(DRM_COMMAND_BASE + DRM_V3D_PERFMON_DESTROY, struct drm_v3d_perfmon_destroy)
 #define DRM_IOCTL_V3D_PERFMON_GET_VALUES DRM_IOWR(DRM_COMMAND_BASE + DRM_V3D_PERFMON_GET_VALUES, struct drm_v3d_perfmon_get_values)
 #define DRM_IOCTL_V3D_SUBMIT_CPU DRM_IOW(DRM_COMMAND_BASE + DRM_V3D_SUBMIT_CPU, struct drm_v3d_submit_cpu)
-#define DRM_IOCTL_V3D_PERFMON_GET_COUNTER DRM_IOWR(DRM_COMMAND_BASE + DRM_V3D_PERFMON_GET_COUNTER, struct drm_v3d_perfmon_get_counter)
 #define DRM_V3D_SUBMIT_CL_FLUSH_CACHE 0x01
 #define DRM_V3D_SUBMIT_EXTENSION 0x02
 struct drm_v3d_extension {
@@ -121,7 +119,6 @@ enum drm_v3d_param {
   DRM_V3D_PARAM_SUPPORTS_PERFMON,
   DRM_V3D_PARAM_SUPPORTS_MULTISYNC_EXT,
   DRM_V3D_PARAM_SUPPORTS_CPU_QUEUE,
-  DRM_V3D_PARAM_MAX_PERF_COUNTERS,
 };
 struct drm_v3d_get_param {
   __u32 param;
@@ -326,16 +323,6 @@ struct drm_v3d_perfmon_get_values {
   __u32 id;
   __u32 pad;
   __u64 values_ptr;
-};
-#define DRM_V3D_PERFCNT_MAX_NAME 64
-#define DRM_V3D_PERFCNT_MAX_CATEGORY 32
-#define DRM_V3D_PERFCNT_MAX_DESCRIPTION 256
-struct drm_v3d_perfmon_get_counter {
-  __u8 counter;
-  __u8 name[DRM_V3D_PERFCNT_MAX_NAME];
-  __u8 category[DRM_V3D_PERFCNT_MAX_CATEGORY];
-  __u8 description[DRM_V3D_PERFCNT_MAX_DESCRIPTION];
-  __u8 reserved[7];
 };
 #ifdef __cplusplus
 }

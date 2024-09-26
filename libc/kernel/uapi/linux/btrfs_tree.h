@@ -279,8 +279,18 @@ struct btrfs_raid_stride {
   __le64 devid;
   __le64 physical;
 } __attribute__((__packed__));
+#define BTRFS_STRIPE_RAID0 1
+#define BTRFS_STRIPE_RAID1 2
+#define BTRFS_STRIPE_DUP 3
+#define BTRFS_STRIPE_RAID10 4
+#define BTRFS_STRIPE_RAID5 5
+#define BTRFS_STRIPE_RAID6 6
+#define BTRFS_STRIPE_RAID1C3 7
+#define BTRFS_STRIPE_RAID1C4 8
 struct btrfs_stripe_extent {
-  __DECLARE_FLEX_ARRAY(struct btrfs_raid_stride, strides);
+  __u8 encoding;
+  __u8 reserved[7];
+  struct btrfs_raid_stride strides[];
 } __attribute__((__packed__));
 #define BTRFS_HEADER_FLAG_WRITTEN (1ULL << 0)
 #define BTRFS_HEADER_FLAG_RELOC (1ULL << 1)
@@ -290,9 +300,6 @@ struct btrfs_stripe_extent {
 #define BTRFS_SUPER_FLAG_METADUMP_V2 (1ULL << 34)
 #define BTRFS_SUPER_FLAG_CHANGING_FSID (1ULL << 35)
 #define BTRFS_SUPER_FLAG_CHANGING_FSID_V2 (1ULL << 36)
-#define BTRFS_SUPER_FLAG_CHANGING_BG_TREE (1ULL << 38)
-#define BTRFS_SUPER_FLAG_CHANGING_DATA_CSUM (1ULL << 39)
-#define BTRFS_SUPER_FLAG_CHANGING_META_CSUM (1ULL << 40)
 struct btrfs_extent_item {
   __le64 refs;
   __le64 generation;

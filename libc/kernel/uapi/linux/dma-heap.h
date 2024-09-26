@@ -9,7 +9,7 @@
 #include <linux/ioctl.h>
 #include <linux/types.h>
 #define DMA_HEAP_VALID_FD_FLAGS (O_CLOEXEC | O_ACCMODE)
-#define DMA_HEAP_VALID_HEAP_FLAGS (0ULL)
+#define DMA_HEAP_VALID_HEAP_FLAGS (0)
 struct dma_heap_allocation_data {
   __u64 len;
   __u32 fd;
