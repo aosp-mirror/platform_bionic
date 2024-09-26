@@ -20,7 +20,6 @@ enum {
   SNP_PLATFORM_STATUS,
   SNP_COMMIT,
   SNP_SET_CONFIG,
-  SNP_VLEK_LOAD,
   SEV_MAX,
 };
 typedef enum {
@@ -29,7 +28,6 @@ typedef enum {
   SEV_RET_INVALID_PLATFORM_STATE,
   SEV_RET_INVALID_GUEST_STATE,
   SEV_RET_INAVLID_CONFIG,
-  SEV_RET_INVALID_CONFIG = SEV_RET_INAVLID_CONFIG,
   SEV_RET_INVALID_LEN,
   SEV_RET_ALREADY_OWNED,
   SEV_RET_INVALID_CERTIFICATE,
@@ -114,15 +112,6 @@ struct sev_user_data_snp_config {
   __u32 mask_chip_key : 1;
   __u32 rsvd : 30;
   __u8 rsvd1[52];
-} __attribute__((__packed__));
-struct sev_user_data_snp_vlek_load {
-  __u32 len;
-  __u8 vlek_wrapped_version;
-  __u8 rsvd[3];
-  __u64 vlek_wrapped_address;
-} __attribute__((__packed__));
-struct sev_user_data_snp_wrapped_vlek_hashstick {
-  __u8 data[432];
 } __attribute__((__packed__));
 struct sev_issue_cmd {
   __u32 cmd;

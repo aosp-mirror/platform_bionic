@@ -1371,9 +1371,6 @@
 #if defined(__NR_unshare)
   #define SYS_unshare __NR_unshare
 #endif
-#if defined(__NR_uretprobe)
-  #define SYS_uretprobe __NR_uretprobe
-#endif
 #if defined(__NR_uselib)
   #define SYS_uselib __NR_uselib
 #endif
