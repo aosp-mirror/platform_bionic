@@ -69,11 +69,7 @@ struct statx {
   __u32 stx_dio_mem_align;
   __u32 stx_dio_offset_align;
   __u64 stx_subvol;
-  __u32 stx_atomic_write_unit_min;
-  __u32 stx_atomic_write_unit_max;
-  __u32 stx_atomic_write_segments_max;
-  __u32 __spare1[1];
-  __u64 __spare3[9];
+  __u64 __spare3[11];
 };
 #define STATX_TYPE 0x00000001U
 #define STATX_MODE 0x00000002U
@@ -92,7 +88,6 @@ struct statx {
 #define STATX_DIOALIGN 0x00002000U
 #define STATX_MNT_ID_UNIQUE 0x00004000U
 #define STATX_SUBVOL 0x00008000U
-#define STATX_WRITE_ATOMIC 0x00010000U
 #define STATX__RESERVED 0x80000000U
 #define STATX_ALL 0x00000fffU
 #define STATX_ATTR_COMPRESSED 0x00000004
@@ -104,5 +99,4 @@ struct statx {
 #define STATX_ATTR_MOUNT_ROOT 0x00002000
 #define STATX_ATTR_VERITY 0x00100000
 #define STATX_ATTR_DAX 0x00200000
-#define STATX_ATTR_WRITE_ATOMIC 0x00400000
 #endif
