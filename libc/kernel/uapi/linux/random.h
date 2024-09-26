@@ -24,10 +24,4 @@ struct rand_pool_info {
 #define GRND_NONBLOCK 0x0001
 #define GRND_RANDOM 0x0002
 #define GRND_INSECURE 0x0004
-struct vgetrandom_opaque_params {
-  __u32 size_of_opaque_state;
-  __u32 mmap_prot;
-  __u32 mmap_flags;
-  __u32 reserved[13];
-};
 #endif
