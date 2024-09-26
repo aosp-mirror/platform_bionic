@@ -745,7 +745,6 @@ struct drm_i915_gem_context_param {
 #define I915_CONTEXT_PARAM_RINGSIZE 0xc
 #define I915_CONTEXT_PARAM_PROTECTED_CONTENT 0xd
 #define I915_CONTEXT_PARAM_LOW_LATENCY 0xe
-#define I915_CONTEXT_PARAM_CONTEXT_IMAGE 0xf
   __u64 value;
 };
 struct drm_i915_gem_context_param_sseu {
@@ -800,14 +799,6 @@ struct i915_context_param_engines {
 } __attribute__((packed));
 #define I915_DEFINE_CONTEXT_PARAM_ENGINES(name__,N__) struct { __u64 extensions; struct i915_engine_class_instance engines[N__]; \
 } __attribute__((packed)) name__
-struct i915_gem_context_param_context_image {
-  struct i915_engine_class_instance engine;
-  __u32 flags;
-#define I915_CONTEXT_IMAGE_FLAG_ENGINE_INDEX (1u << 0)
-  __u32 size;
-  __u32 mbz;
-  __u64 image;
-} __attribute__((packed));
 struct drm_i915_gem_context_create_ext_setparam {
   struct i915_user_extension base;
   struct drm_i915_gem_context_param param;

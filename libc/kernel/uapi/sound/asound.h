@@ -92,7 +92,7 @@ struct snd_hwdep_dsp_image {
 #define SNDRV_HWDEP_IOCTL_INFO _IOR('H', 0x01, struct snd_hwdep_info)
 #define SNDRV_HWDEP_IOCTL_DSP_STATUS _IOR('H', 0x02, struct snd_hwdep_dsp_status)
 #define SNDRV_HWDEP_IOCTL_DSP_LOAD _IOW('H', 0x03, struct snd_hwdep_dsp_image)
-#define SNDRV_PCM_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 18)
+#define SNDRV_PCM_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 17)
 typedef unsigned long snd_pcm_uframes_t;
 typedef signed long snd_pcm_sframes_t;
 enum {
@@ -263,7 +263,7 @@ union snd_pcm_sync_id {
   unsigned char id[16];
   unsigned short id16[8];
   unsigned int id32[4];
-} __attribute__((deprecated));
+};
 struct snd_pcm_info {
   unsigned int device;
   unsigned int subdevice;
@@ -276,7 +276,7 @@ struct snd_pcm_info {
   int dev_subclass;
   unsigned int subdevices_count;
   unsigned int subdevices_avail;
-  unsigned char pad1[16];
+  union snd_pcm_sync_id sync;
   unsigned char reserved[64];
 };
 typedef int snd_pcm_hw_param_t;
@@ -324,8 +324,7 @@ struct snd_pcm_hw_params {
   unsigned int rate_num;
   unsigned int rate_den;
   snd_pcm_uframes_t fifo_size;
-  unsigned char sync[16];
-  unsigned char reserved[48];
+  unsigned char reserved[64];
 };
 enum {
   SNDRV_PCM_TSTAMP_NONE = 0,
