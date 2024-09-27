@@ -95,6 +95,8 @@
 #include <android-base/silent_death_test.h>
 #include <gtest/gtest.h>
 
+#include "DoNotOptimize.h"
+
 #define CONCAT2(x, y) x##y
 #define CONCAT(x, y) CONCAT2(x, y)
 #define FORTIFY_TEST_NAME CONCAT(CONCAT(clang_fortify_test_, _FORTIFY_SOURCE), _DeathTest)
@@ -146,8 +148,7 @@ FORTIFY_TEST(strlen) {
     for (char& c : contents) {
       c ^= always_zero;
     }
-    // Store in a volatile, so the strlen itself cannot be optimized out.
-    volatile size_t _strlen_result = strlen(&contents.front());
+    DoNotOptimize(strlen(&contents.front()));
   };
 
   EXPECT_NO_DEATH(run_strlen_with_contents({'f', 'o', '\0'}));
