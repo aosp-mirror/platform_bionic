@@ -47,7 +47,6 @@
 #include <android-base/file.h>
 #include <android-base/test_utils.h>
 
-#include "DoNotOptimize.h"
 #include "utils.h"
 
 #if defined(__BIONIC__)
