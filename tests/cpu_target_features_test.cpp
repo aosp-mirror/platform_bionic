@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,26 +26,31 @@
  * SUCH DAMAGE.
  */
 
-#include <private/bionic_ifuncs.h>
-#include <stddef.h>
+#include <gtest/gtest.h>
+#include <stdlib.h>
 
-extern "C" {
+#include "utils.h"
 
-DEFINE_IFUNC_FOR(memcmp) {
-  __builtin_cpu_init();
-  if (__builtin_cpu_supports("sse4.1")) RETURN_FUNC(memcmp_func_t, memcmp_sse4);
-  RETURN_FUNC(memcmp_func_t, memcmp_atom);
+TEST(cpu_target_features, has_expected_x86_compiler_values) {
+#if defined(__x86_64__) || defined(__i386__)
+  ExecTestHelper eth;
+  char* const argv[] = {nullptr};
+  const auto invocation = [&] { execvp("cpu-target-features", argv); };
+  eth.Run(invocation, 0, "(^|\n)__AES__=1($|\n)");
+  eth.Run(invocation, 0, "(^|\n)__CRC32__=1($|\n)");
+#else
+  GTEST_SKIP() << "Not targeting an x86 architecture.";
+#endif
 }
-MEMCMP_SHIM()
 
-typedef int wmemcmp_func_t(const wchar_t*, const wchar_t*, size_t);
-DEFINE_IFUNC_FOR(wmemcmp) {
-  __builtin_cpu_init();
-  if (__builtin_cpu_supports("sse4.1")) RETURN_FUNC(wmemcmp_func_t, wmemcmp_sse4);
-  RETURN_FUNC(wmemcmp_func_t, wmemcmp_atom);
+TEST(cpu_target_features, has_expected_aarch64_compiler_values) {
+#if defined(__aarch64__)
+  ExecTestHelper eth;
+  char* const argv[] = {nullptr};
+  const auto invocation = [&] { execvp("cpu-target-features", argv); };
+  eth.Run(invocation, 0, "(^|\n)__ARM_FEATURE_AES=1($|\n)");
+  eth.Run(invocation, 0, "(^|\n)__ARM_FEATURE_CRC32=1($|\n)");
+#else
+  GTEST_SKIP() << "Not targeting an aarch64 architecture.";
+#endif
 }
-DEFINE_STATIC_SHIM(int wmemcmp(const wchar_t* lhs, const wchar_t* rhs, size_t n) {
-  FORWARD(wmemcmp)(lhs, rhs, n);
-})
-
-}  // extern "C"
