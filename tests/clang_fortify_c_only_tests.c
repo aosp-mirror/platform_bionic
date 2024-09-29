@@ -26,31 +26,13 @@
  * SUCH DAMAGE.
  */
 
-#include <gtest/gtest.h>
-#include <stdlib.h>
+#include <string.h>
 
-#include "utils.h"
+// This is a test specifically of bionic's FORTIFY machinery. Other stdlibs need not apply.
+#ifdef __BIONIC__
 
-TEST(cpu_target_features, has_expected_x86_compiler_values) {
-#if defined(__x86_64__) || defined(__i386__)
-  ExecTestHelper eth;
-  char* const argv[] = {nullptr};
-  const auto invocation = [&] { execvp("cpu-target-features", argv); };
-  eth.Run(invocation, 0, "(^|\n)__AES__=1($|\n)");
-  eth.Run(invocation, 0, "(^|\n)__CRC32__=1($|\n)");
-#else
-  GTEST_SKIP() << "Not targeting an x86 architecture.";
-#endif
-}
+// Ensure that strlen can be evaluated at compile-time. Clang doesn't support
+// this in C++, but does in C.
+_Static_assert(strlen("foo") == 3, "");
 
-TEST(cpu_target_features, has_expected_aarch64_compiler_values) {
-#if defined(__aarch64__)
-  ExecTestHelper eth;
-  char* const argv[] = {nullptr};
-  const auto invocation = [&] { execvp("cpu-target-features", argv); };
-  eth.Run(invocation, 0, "(^|\n)__ARM_FEATURE_AES=1($|\n)");
-  eth.Run(invocation, 0, "(^|\n)__ARM_FEATURE_CRC32=1($|\n)");
-#else
-  GTEST_SKIP() << "Not targeting an aarch64 architecture.";
-#endif
-}
+#endif  // __BIONIC__
