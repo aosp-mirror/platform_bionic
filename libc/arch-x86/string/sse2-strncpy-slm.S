@@ -29,5 +29,5 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #define USE_AS_STRNCPY
-#define STRCPY strncpy_generic
+#define STRCPY strncpy
 #include "sse2-strcpy-slm.S"
