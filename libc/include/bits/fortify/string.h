@@ -220,8 +220,13 @@ size_t strlcat(char* _Nonnull const dst __pass_object_size, const char* _Nonnull
 }
 
 #if __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
-__BIONIC_FORTIFY_INLINE
-size_t strlen(const char* _Nonnull const s __pass_object_size0) __overloadable {
+/*
+ * Clang, when parsing C, can fold strlen to a constant without LLVM's help.
+ * This doesn't apply to overloads of strlen, so write this differently. We
+ * can't use `__pass_object_size0` here, but that's fine: it doesn't help much
+ * on __always_inline functions.
+ */
+extern __always_inline __inline__ __attribute__((gnu_inline)) size_t strlen(const char* _Nonnull s) {
     return __strlen_chk(s, __bos0(s));
 }
 #endif
