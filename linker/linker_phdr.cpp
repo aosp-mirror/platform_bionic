@@ -140,11 +140,6 @@ static int GetTargetElfMachine() {
 
  **/
 
-#define MAYBE_MAP_FLAG(x, from, to)  (((x) & (from)) ? (to) : 0)
-#define PFLAGS_TO_PROT(x)            (MAYBE_MAP_FLAG((x), PF_X, PROT_EXEC) | \
-                                      MAYBE_MAP_FLAG((x), PF_R, PROT_READ) | \
-                                      MAYBE_MAP_FLAG((x), PF_W, PROT_WRITE))
-
 static const size_t kPageSize = page_size();
 
 /*
@@ -700,6 +695,13 @@ bool ElfReader::ReserveAddressSpace(address_space_params* address_space) {
     return false;
   }
 
+  if (should_use_16kib_app_compat_) {
+    // Reserve additional space for aligning the permission boundary in compat loading
+    // Up to kPageSize-kCompatPageSize additional space is needed, but reservation
+    // is done with mmap which gives kPageSize multiple-sized reservations.
+    load_size_ += kPageSize;
+  }
+
   uint8_t* addr = reinterpret_cast<uint8_t*>(min_vaddr);
   void* start;
 
@@ -735,6 +737,13 @@ bool ElfReader::ReserveAddressSpace(address_space_params* address_space) {
 
   load_start_ = start;
   load_bias_ = reinterpret_cast<uint8_t*>(start) - addr;
+
+  if (should_use_16kib_app_compat_) {
+    // In compat mode make the initial mapping RW since the ELF contents will be read
+    // into it; instead of mapped over it.
+    mprotect(reinterpret_cast<void*>(start), load_size_, PROT_READ | PROT_WRITE);
+  }
+
   return true;
 }
 
@@ -988,7 +997,11 @@ bool ElfReader::MapBssSection(const ElfW(Phdr)* phdr, ElfW(Addr) seg_page_end,
 }
 
 bool ElfReader::LoadSegments() {
-  size_t seg_align = kPageSize;
+  // NOTE: The compat(legacy) page size (4096) must be used when aligning
+  // the 4KiB segments for loading in compat mode. The larger 16KiB page size
+  // will lead to overwriting adjacent segments since the ELF's segment(s)
+  // are not 16KiB aligned.
+  size_t seg_align = should_use_16kib_app_compat_ ? kCompatPageSize : kPageSize;
 
   size_t min_palign = phdr_table_get_minimum_alignment(phdr_table_, phdr_num_);
   // Only enforce this on 16 KB systems with app compat disabled.
@@ -997,6 +1010,11 @@ bool ElfReader::LoadSegments() {
   if (kPageSize >= 16384 && min_palign < kPageSize && !should_use_16kib_app_compat_) {
     DL_ERR("\"%s\" program alignment (%zu) cannot be smaller than system page size (%zu)",
            name_.c_str(), min_palign, kPageSize);
+    return false;
+  }
+
+  if (!Setup16KiBAppCompat()) {
+    DL_ERR("\"%s\" failed to setup 16KiB App Compat", name_.c_str());
     return false;
   }
 
@@ -1057,8 +1075,14 @@ bool ElfReader::LoadSegments() {
       }
 
       // Pass the file_length, since it may have been extended by _extend_load_segment_vma().
-      if (!MapSegment(i, file_length)) {
-        return false;
+      if (should_use_16kib_app_compat_) {
+        if (!CompatMapSegment(i, file_length)) {
+          return false;
+        }
+      } else {
+        if (!MapSegment(i, file_length)) {
+          return false;
+        }
       }
     }
 
@@ -1302,6 +1326,20 @@ int phdr_table_protect_gnu_relro(const ElfW(Phdr)* phdr_table, size_t phdr_count
                                  bool should_use_16kib_app_compat) {
   return _phdr_table_set_gnu_relro_prot(phdr_table, phdr_count, load_bias, PROT_READ,
                                         should_pad_segments, should_use_16kib_app_compat);
+}
+
+/*
+ * Apply RX protection to the compat relro region of the ELF being loaded in
+ * 16KiB compat mode.
+ *
+ * Input:
+ *   start  -> start address of the compat relro region.
+ *   size   -> size of the compat relro region in bytes.
+ * Return:
+ *   0 on success, -1 on failure (error code in errno).
+ */
+int phdr_table_protect_gnu_relro_16kib_compat(ElfW(Addr) start, ElfW(Addr) size) {
+  return mprotect(reinterpret_cast<void*>(start), size, PROT_READ | PROT_EXEC);
 }
 
 /* Serialize the GNU relro segments to the given file descriptor. This can be
