@@ -16,7 +16,6 @@
 
 #include <gtest/gtest.h>
 
-#include "DoNotOptimize.h"
 #include "SignalUtils.h"
 #include "utils.h"
 
