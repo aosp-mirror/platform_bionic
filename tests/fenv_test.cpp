@@ -16,7 +16,6 @@
 
 #include <gtest/gtest.h>
 
-#include "DoNotOptimize.h"
 #include "utils.h"
 
 #include <fenv.h>
