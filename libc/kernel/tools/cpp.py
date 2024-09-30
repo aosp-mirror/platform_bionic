@@ -1430,7 +1430,7 @@ class BlockList(object):
                         state = VAR_DECL
                     elif state == NORMAL and token_id in ['struct', 'typedef',
                                                           'enum', 'union',
-                                                          '__extension__']:
+                                                          '__extension__', '=']:
                         state = OTHER_DECL
                         state_token = token_id
                     elif block.tokens[i].kind == TokenKind.IDENTIFIER:
@@ -2579,6 +2579,70 @@ struct fields {
 struct fields {
   struct timeval timeval;
   struct itimerval itimerval;
+};
+"""
+        self.assertEqual(self.parse(text), expected)
+
+    def test_var_definition(self):
+        # If we're definining the whole thing, it's probably worth keeping.
+        text = """\
+static const char *kString = "hello world";
+static const int kInteger = 42;
+"""
+        expected = """\
+static const char * kString = "hello world";
+static const int kInteger = 42;
+"""
+        self.assertEqual(self.parse(text), expected)
+
+    def test_struct_array_definition(self):
+        text = """\
+struct descriptor {
+  int args;
+  int size;
+};
+static const struct descriptor[] = {
+  {0, 0},
+  {1, 12},
+  {0, 42},
+};
+"""
+        expected = """\
+struct descriptor {
+  int args;
+  int size;
+};
+static const struct descriptor[] = {
+ {
+    0, 0
+  }
+ , {
+    1, 12
+  }
+ , {
+    0, 42
+  }
+ ,
+};
+"""
+        self.assertEqual(self.parse(text), expected)
+
+    def test_array_definition(self):
+        text = """\
+static const char *arr[] = {
+  "foo",
+  "bar",
+  "baz",
+};
+
+static int another_arr[5] = { 1, 2, 3, 4, 5};
+"""
+        expected = """\
+static const char * arr[] = {
+  "foo", "bar", "baz",
+};
+static int another_arr[5] = {
+  1, 2, 3, 4, 5
 };
 """
         self.assertEqual(self.parse(text), expected)
