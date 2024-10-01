@@ -91,11 +91,11 @@
 
 #include <array>
 
+#include "DoNotOptimize.h"
+
 #ifndef COMPILATION_TESTS
 #include <android-base/silent_death_test.h>
 #include <gtest/gtest.h>
-
-#include "DoNotOptimize.h"
 
 #define CONCAT2(x, y) x##y
 #define CONCAT(x, y) CONCAT2(x, y)
