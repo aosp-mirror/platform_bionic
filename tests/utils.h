@@ -295,16 +295,6 @@ class FdLeakChecker {
   size_t start_count_ = CountOpenFds();
 };
 
-// From <benchmark/benchmark.h>.
-template <class Tp>
-static inline void DoNotOptimize(Tp const& value) {
-  asm volatile("" : : "r,m"(value) : "memory");
-}
-template <class Tp>
-static inline void DoNotOptimize(Tp& value) {
-  asm volatile("" : "+r,m"(value) : : "memory");
-}
-
 static inline bool running_with_mte() {
 #ifdef __aarch64__
   int level = prctl(PR_GET_TAGGED_ADDR_CTRL, 0, 0, 0, 0);
