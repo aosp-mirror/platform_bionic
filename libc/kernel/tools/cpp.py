@@ -2057,7 +2057,7 @@ struct something {
   struct timeval val2;
 };
 """
-        self.assertEqual(self.parse(text, {"remove": True}), expected)
+        self.assertEqual(self.parse(text, {"remove": None}), expected)
 
     def test_remove_struct_from_end(self):
         text = """\
@@ -2076,7 +2076,7 @@ struct something {
   struct timeval val2;
 };
 """
-        self.assertEqual(self.parse(text, {"remove": True}), expected)
+        self.assertEqual(self.parse(text, {"remove": None}), expected)
 
     def test_remove_minimal_struct(self):
         text = """\
@@ -2084,7 +2084,7 @@ struct remove {
 };
 """
         expected = "";
-        self.assertEqual(self.parse(text, {"remove": True}), expected)
+        self.assertEqual(self.parse(text, {"remove": None}), expected)
 
     def test_remove_struct_with_struct_fields(self):
         text = """\
@@ -2104,7 +2104,7 @@ struct something {
   struct remove val2;
 };
 """
-        self.assertEqual(self.parse(text, {"remove": True}), expected)
+        self.assertEqual(self.parse(text, {"remove": None}), expected)
 
     def test_remove_consecutive_structs(self):
         text = """\
@@ -2136,7 +2136,7 @@ struct keep2 {
   struct timeval val2;
 };
 """
-        self.assertEqual(self.parse(text, {"remove1": True, "remove2": True}), expected)
+        self.assertEqual(self.parse(text, {"remove1": None, "remove2": None}), expected)
 
     def test_remove_multiple_structs(self):
         text = """\
@@ -2169,7 +2169,7 @@ struct keep3 {
   int val;
 };
 """
-        self.assertEqual(self.parse(text, {"remove1": True, "remove2": True}), expected)
+        self.assertEqual(self.parse(text, {"remove1": None, "remove2": None}), expected)
 
     def test_remove_struct_with_inline_structs(self):
         text = """\
@@ -2194,7 +2194,7 @@ struct something {
   struct timeval val2;
 };
 """
-        self.assertEqual(self.parse(text, {"remove": True}), expected)
+        self.assertEqual(self.parse(text, {"remove": None}), expected)
 
     def test_remove_struct_across_blocks(self):
         text = """\
@@ -2219,7 +2219,7 @@ struct something {
   struct timeval val2;
 };
 """
-        self.assertEqual(self.parse(text, {"remove": True}), expected)
+        self.assertEqual(self.parse(text, {"remove": None}), expected)
 
     def test_remove_struct_across_blocks_multiple_structs(self):
         text = """\
@@ -2246,7 +2246,7 @@ struct something {
   struct timeval val2;
 };
 """
-        self.assertEqual(self.parse(text, {"remove1": True, "remove2": True}), expected)
+        self.assertEqual(self.parse(text, {"remove1": None, "remove2": None}), expected)
 
     def test_remove_multiple_struct_and_add_includes(self):
         text = """\
@@ -2263,7 +2263,7 @@ struct remove2 {
 #include <bits/remove1.h>
 #include <bits/remove2.h>
 """
-        self.assertEqual(self.parse(text, {"remove1": False, "remove2": False}), expected)
+        self.assertEqual(self.parse(text, {"remove1": "bits/remove1.h", "remove2": "bits/remove2.h"}), expected)
 
 
 class FullPathTest(unittest.TestCase):
@@ -2580,6 +2580,7 @@ struct fields {
   struct timeval timeval;
   struct itimerval itimerval;
 };
+#include <linux/time.h>
 """
         self.assertEqual(self.parse(text), expected)
 
