@@ -60,8 +60,8 @@
 #define __INTRODUCED_IN_64(api_level) __BIONIC_AVAILABILITY(introduced=api_level)
 #endif
 
-// Vendor modules do not follow SDK versioning. Ignore NDK guards for vendor modules.
-#if defined(__ANDROID_VENDOR__)
+// Vendor and product modules do not follow SDK versioning. Ignore NDK guards for these modules.
+#if defined(__ANDROID_VNDK__)
 #undef __BIONIC_AVAILABILITY
 #define __BIONIC_AVAILABILITY(api_level, ...)
-#endif // defined(__ANDROID_VENDOR__)
+#endif // defined(__ANDROID_VNDK__)
