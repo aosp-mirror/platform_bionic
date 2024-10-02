@@ -18,12 +18,20 @@ extern "C" {
 #define DRM_IVPU_BO_INFO 0x03
 #define DRM_IVPU_SUBMIT 0x05
 #define DRM_IVPU_BO_WAIT 0x06
+#define DRM_IVPU_METRIC_STREAMER_START 0x07
+#define DRM_IVPU_METRIC_STREAMER_STOP 0x08
+#define DRM_IVPU_METRIC_STREAMER_GET_DATA 0x09
+#define DRM_IVPU_METRIC_STREAMER_GET_INFO 0x0a
 #define DRM_IOCTL_IVPU_GET_PARAM DRM_IOWR(DRM_COMMAND_BASE + DRM_IVPU_GET_PARAM, struct drm_ivpu_param)
 #define DRM_IOCTL_IVPU_SET_PARAM DRM_IOW(DRM_COMMAND_BASE + DRM_IVPU_SET_PARAM, struct drm_ivpu_param)
 #define DRM_IOCTL_IVPU_BO_CREATE DRM_IOWR(DRM_COMMAND_BASE + DRM_IVPU_BO_CREATE, struct drm_ivpu_bo_create)
 #define DRM_IOCTL_IVPU_BO_INFO DRM_IOWR(DRM_COMMAND_BASE + DRM_IVPU_BO_INFO, struct drm_ivpu_bo_info)
 #define DRM_IOCTL_IVPU_SUBMIT DRM_IOW(DRM_COMMAND_BASE + DRM_IVPU_SUBMIT, struct drm_ivpu_submit)
 #define DRM_IOCTL_IVPU_BO_WAIT DRM_IOWR(DRM_COMMAND_BASE + DRM_IVPU_BO_WAIT, struct drm_ivpu_bo_wait)
+#define DRM_IOCTL_IVPU_METRIC_STREAMER_START DRM_IOWR(DRM_COMMAND_BASE + DRM_IVPU_METRIC_STREAMER_START, struct drm_ivpu_metric_streamer_start)
+#define DRM_IOCTL_IVPU_METRIC_STREAMER_STOP DRM_IOW(DRM_COMMAND_BASE + DRM_IVPU_METRIC_STREAMER_STOP, struct drm_ivpu_metric_streamer_stop)
+#define DRM_IOCTL_IVPU_METRIC_STREAMER_GET_DATA DRM_IOWR(DRM_COMMAND_BASE + DRM_IVPU_METRIC_STREAMER_GET_DATA, struct drm_ivpu_metric_streamer_get_data)
+#define DRM_IOCTL_IVPU_METRIC_STREAMER_GET_INFO DRM_IOWR(DRM_COMMAND_BASE + DRM_IVPU_METRIC_STREAMER_GET_INFO, struct drm_ivpu_metric_streamer_get_data)
 #define DRM_IVPU_PARAM_DEVICE_ID 0
 #define DRM_IVPU_PARAM_DEVICE_REVISION 1
 #define DRM_IVPU_PARAM_PLATFORM_TYPE 2
@@ -95,6 +103,22 @@ struct drm_ivpu_bo_wait {
   __s64 timeout_ns;
   __u32 job_status;
   __u32 pad;
+};
+struct drm_ivpu_metric_streamer_start {
+  __u64 metric_group_mask;
+  __u64 sampling_period_ns;
+  __u32 read_period_samples;
+  __u32 sample_size;
+  __u32 max_data_size;
+};
+struct drm_ivpu_metric_streamer_get_data {
+  __u64 metric_group_mask;
+  __u64 buffer_ptr;
+  __u64 buffer_size;
+  __u64 data_size;
+};
+struct drm_ivpu_metric_streamer_stop {
+  __u64 metric_group_mask;
 };
 #ifdef __cplusplus
 }
