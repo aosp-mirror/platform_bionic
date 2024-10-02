@@ -20,4 +20,5 @@ struct dlm_lksb {
 };
 #define DLM_LSFL_TIMEWARN 0x00000002
 #define DLM_LSFL_NEWEXCL 0x00000008
+#define __DLM_LSFL_RESERVED0 0x00000010
 #endif
