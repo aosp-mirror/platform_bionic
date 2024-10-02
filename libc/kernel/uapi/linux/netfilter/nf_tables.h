@@ -695,7 +695,7 @@ enum nft_secmark_attributes {
   __NFTA_SECMARK_MAX,
 };
 #define NFTA_SECMARK_MAX (__NFTA_SECMARK_MAX - 1)
-#define NFT_SECMARK_CTX_MAXLEN 256
+#define NFT_SECMARK_CTX_MAXLEN 4096
 enum nft_reject_types {
   NFT_REJECT_ICMP_UNREACH,
   NFT_REJECT_TCP_RST,
