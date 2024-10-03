@@ -748,7 +748,7 @@ TEST(STRING_TEST, strncpy) {
       expected_end = copy_len;
     }
 
-    ASSERT_EQ(state.ptr2 + expected_end, stpncpy(state.ptr2, state.ptr1, copy_len));
+    ASSERT_EQ(state.ptr2, strncpy(state.ptr2, state.ptr1, copy_len));
 
     // Verify ptr1 was not modified.
     ASSERT_EQ(0, memcmp(state.ptr1, state.ptr, state.MAX_LEN));
