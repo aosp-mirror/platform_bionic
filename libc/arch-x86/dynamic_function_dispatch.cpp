@@ -38,14 +38,4 @@ DEFINE_IFUNC_FOR(memcmp) {
 }
 MEMCMP_SHIM()
 
-typedef int wmemcmp_func_t(const wchar_t*, const wchar_t*, size_t);
-DEFINE_IFUNC_FOR(wmemcmp) {
-  __builtin_cpu_init();
-  if (__builtin_cpu_supports("sse4.1")) RETURN_FUNC(wmemcmp_func_t, wmemcmp_sse4);
-  RETURN_FUNC(wmemcmp_func_t, wmemcmp_atom);
-}
-DEFINE_STATIC_SHIM(int wmemcmp(const wchar_t* lhs, const wchar_t* rhs, size_t n) {
-  FORWARD(wmemcmp)(lhs, rhs, n);
-})
-
 }  // extern "C"
