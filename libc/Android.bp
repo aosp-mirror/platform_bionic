@@ -2018,15 +2018,6 @@ cc_defaults {
 cc_defaults {
     name: "crt_so_defaults",
     defaults: ["crt_defaults"],
-
-    arch: {
-        x86: {
-            cflags: ["-fPIC"],
-        },
-        x86_64: {
-            cflags: ["-fPIC"],
-        },
-    },
     stl: "none",
 }
 
