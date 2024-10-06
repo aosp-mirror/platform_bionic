@@ -149,9 +149,10 @@ struct kvm_xen_exit {
 #define KVM_INTERNAL_ERROR_DELIVERY_EV 3
 #define KVM_INTERNAL_ERROR_UNEXPECTED_EXIT_REASON 4
 #define KVM_INTERNAL_ERROR_EMULATION_FLAG_INSTRUCTION_BYTES (1ULL << 0)
+#define HINT_UNSAFE_IN_KVM(_symbol) _symbol
 struct kvm_run {
   __u8 request_interrupt_window;
-  __u8 immediate_exit;
+  __u8 HINT_UNSAFE_IN_KVM(immediate_exit);
   __u8 padding1[6];
   __u32 exit_reason;
   __u8 ready_for_interrupt_injection;
@@ -719,6 +720,9 @@ struct kvm_enable_cap {
 #define KVM_CAP_MEMORY_ATTRIBUTES 233
 #define KVM_CAP_GUEST_MEMFD 234
 #define KVM_CAP_VM_TYPES 235
+#define KVM_CAP_PRE_FAULT_MEMORY 236
+#define KVM_CAP_X86_APIC_BUS_CYCLES_NS 237
+#define KVM_CAP_X86_GUEST_MODE 238
 struct kvm_irq_routing_irqchip {
   __u32 irqchip;
   __u32 pin;
@@ -1108,5 +1112,12 @@ struct kvm_create_guest_memfd {
   __u64 size;
   __u64 flags;
   __u64 reserved[6];
+};
+#define KVM_PRE_FAULT_MEMORY _IOWR(KVMIO, 0xd5, struct kvm_pre_fault_memory)
+struct kvm_pre_fault_memory {
+  __u64 gpa;
+  __u64 size;
+  __u64 flags;
+  __u64 padding[5];
 };
 #endif
