@@ -1790,6 +1790,7 @@ cc_library_headers {
     name: "libc_uapi_headers",
     visibility: [
         "//external/musl",
+        "//external/rust/crates/v4l2r/android",
     ],
     llndk: {
         llndk_headers: true,
