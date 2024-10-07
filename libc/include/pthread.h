@@ -70,9 +70,7 @@ enum {
 
 #define PTHREAD_ONCE_INIT 0
 
-#if __ANDROID_API__ >= 24
 #define PTHREAD_BARRIER_SERIAL_THREAD (-1)
-#endif
 
 #if defined(__LP64__)
 #define PTHREAD_STACK_MIN 16384
@@ -144,7 +142,7 @@ int pthread_cond_timedwait_monotonic_np(pthread_cond_t* _Nonnull __cond, pthread
                                         const struct timespec* _Nullable __timeout) __INTRODUCED_IN_64(28);
 int pthread_cond_wait(pthread_cond_t* _Nonnull __cond, pthread_mutex_t* _Nonnull __mutex);
 
-int pthread_create(pthread_t* _Nonnull __pthread_ptr, pthread_attr_t const* _Nullable __attr, void* _Nonnull (* _Nonnull __start_routine)(void* _Nonnull), void* _Nullable);
+int pthread_create(pthread_t* _Nonnull __pthread_ptr, pthread_attr_t const* _Nullable __attr, void* _Nullable (* _Nonnull __start_routine)(void* _Nullable), void* _Nullable);
 
 int pthread_detach(pthread_t __pthread);
 void pthread_exit(void* _Nullable __return_value) __noreturn;
@@ -246,26 +244,20 @@ int pthread_rwlock_trywrlock(pthread_rwlock_t* _Nonnull __rwlock);
 int pthread_rwlock_unlock(pthread_rwlock_t* _Nonnull __rwlock);
 int pthread_rwlock_wrlock(pthread_rwlock_t* _Nonnull __rwlock);
 
-#if __ANDROID_API__ >= 24
 int pthread_barrierattr_init(pthread_barrierattr_t* _Nonnull __attr) __INTRODUCED_IN(24);
 int pthread_barrierattr_destroy(pthread_barrierattr_t* _Nonnull __attr) __INTRODUCED_IN(24);
 int pthread_barrierattr_getpshared(const pthread_barrierattr_t* _Nonnull __attr, int* _Nonnull __shared) __INTRODUCED_IN(24);
 int pthread_barrierattr_setpshared(pthread_barrierattr_t* _Nonnull __attr, int __shared) __INTRODUCED_IN(24);
-#endif
 
-#if __ANDROID_API__ >= 24
 int pthread_barrier_init(pthread_barrier_t* _Nonnull __barrier, const pthread_barrierattr_t* _Nullable __attr, unsigned __count) __INTRODUCED_IN(24);
 int pthread_barrier_destroy(pthread_barrier_t* _Nonnull __barrier) __INTRODUCED_IN(24);
 int pthread_barrier_wait(pthread_barrier_t* _Nonnull __barrier) __INTRODUCED_IN(24);
-#endif
 
-#if __ANDROID_API__ >= 24
 int pthread_spin_destroy(pthread_spinlock_t* _Nonnull __spinlock) __INTRODUCED_IN(24);
 int pthread_spin_init(pthread_spinlock_t* _Nonnull __spinlock, int __shared) __INTRODUCED_IN(24);
 int pthread_spin_lock(pthread_spinlock_t* _Nonnull __spinlock) __INTRODUCED_IN(24);
 int pthread_spin_trylock(pthread_spinlock_t* _Nonnull __spinlock) __INTRODUCED_IN(24);
 int pthread_spin_unlock(pthread_spinlock_t* _Nonnull __spinlock) __INTRODUCED_IN(24);
-#endif
 
 pthread_t pthread_self(void) __attribute_const__;
 

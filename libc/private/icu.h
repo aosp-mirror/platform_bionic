@@ -80,7 +80,8 @@ enum UHangulSyllableType {
 
 int8_t __icu_charType(wint_t wc);
 int32_t __icu_getIntPropertyValue(wint_t wc, UProperty property);
-bool __icu_hasBinaryProperty(wint_t wc, UProperty property, int (*fallback)(int));
+
+typedef UBool (*u_hasBinaryProperty_t)(UChar32, UProperty);
 
 void* __find_icu_symbol(const char* symbol_name);
 
