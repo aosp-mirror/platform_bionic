@@ -36,9 +36,6 @@
 #if defined(__NR_arch_prctl)
   #define SYS_arch_prctl __NR_arch_prctl
 #endif
-#if defined(__NR_arch_specific_syscall)
-  #define SYS_arch_specific_syscall __NR_arch_specific_syscall
-#endif
 #if defined(__NR_arm_fadvise64_64)
   #define SYS_arm_fadvise64_64 __NR_arm_fadvise64_64
 #endif
@@ -1271,9 +1268,6 @@
 #endif
 #if defined(__NR_syscall)
   #define SYS_syscall __NR_syscall
-#endif
-#if defined(__NR_syscalls)
-  #define SYS_syscalls __NR_syscalls
 #endif
 #if defined(__NR_sysfs)
   #define SYS_sysfs __NR_sysfs

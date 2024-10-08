@@ -418,20 +418,6 @@ cc_library_static {
         "upstream-freebsd/lib/libc/string/wmemmove.c",
         "upstream-freebsd/lib/libc/string/wmemset.c",
     ],
-    arch: {
-        x86: {
-            exclude_srcs: [
-                "upstream-freebsd/lib/libc/string/wcschr.c",
-                "upstream-freebsd/lib/libc/string/wcscmp.c",
-                "upstream-freebsd/lib/libc/string/wcslen.c",
-                "upstream-freebsd/lib/libc/string/wcsrchr.c",
-                "upstream-freebsd/lib/libc/string/wmemcmp.c",
-                "upstream-freebsd/lib/libc/string/wcscat.c",
-                "upstream-freebsd/lib/libc/string/wcscpy.c",
-                "upstream-freebsd/lib/libc/string/wmemcmp.c",
-            ],
-        },
-    },
 
     cflags: [
         "-Wno-sign-compare",
@@ -1193,10 +1179,6 @@ cc_library_static {
                 "arch-x86/string/sse2-strncpy-slm.S",
                 "arch-x86/string/sse2-strnlen-atom.S",
                 "arch-x86/string/sse2-strrchr-atom.S",
-                "arch-x86/string/sse2-wcschr-atom.S",
-                "arch-x86/string/sse2-wcsrchr-atom.S",
-                "arch-x86/string/sse2-wcslen-atom.S",
-                "arch-x86/string/sse2-wcscmp-atom.S",
 
                 "arch-x86/string/ssse3-memcmp-atom.S",
                 "arch-x86/string/ssse3-strcat-atom.S",
@@ -1205,12 +1187,8 @@ cc_library_static {
                 "arch-x86/string/ssse3-strlcpy-atom.S",
                 "arch-x86/string/ssse3-strncat-atom.S",
                 "arch-x86/string/ssse3-strncmp-atom.S",
-                "arch-x86/string/ssse3-wcscat-atom.S",
-                "arch-x86/string/ssse3-wcscpy-atom.S",
-                "arch-x86/string/ssse3-wmemcmp-atom.S",
 
                 "arch-x86/string/sse4-memcmp-slm.S",
-                "arch-x86/string/sse4-wmemcmp-slm.S",
 
                 "bionic/strchrnul.cpp",
             ],
@@ -1783,6 +1761,7 @@ cc_library_headers {
     name: "libc_uapi_headers",
     visibility: [
         "//external/musl",
+        "//external/rust/crates/v4l2r/android",
     ],
     llndk: {
         llndk_headers: true,
@@ -2018,15 +1997,6 @@ cc_defaults {
 cc_defaults {
     name: "crt_so_defaults",
     defaults: ["crt_defaults"],
-
-    arch: {
-        x86: {
-            cflags: ["-fPIC"],
-        },
-        x86_64: {
-            cflags: ["-fPIC"],
-        },
-    },
     stl: "none",
 }
 
