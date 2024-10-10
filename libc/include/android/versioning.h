@@ -42,7 +42,12 @@
 #define __BIONIC_AVAILABILITY(__what, ...) __attribute__((__availability__(android,strict,__what __VA_OPT__(,) __VA_ARGS__)))
 #endif
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc23-extensions"
+// Passing no argument for the '...' parameter of a variadic macro is a C23 extension
 #define __INTRODUCED_IN(api_level) __BIONIC_AVAILABILITY(introduced=api_level)
+#pragma clang diagnostic pop
+
 #define __DEPRECATED_IN(api_level, msg) __BIONIC_AVAILABILITY(deprecated=api_level, message=msg)
 #define __REMOVED_IN(api_level, msg) __BIONIC_AVAILABILITY(obsoleted=api_level, message=msg)
 
