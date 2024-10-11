@@ -640,6 +640,11 @@ class LoadTask {
     si_->set_gap_start(elf_reader.gap_start());
     si_->set_gap_size(elf_reader.gap_size());
     si_->set_should_pad_segments(elf_reader.should_pad_segments());
+    si_->set_should_use_16kib_app_compat(elf_reader.should_use_16kib_app_compat());
+    if (si_->should_use_16kib_app_compat()) {
+      si_->set_compat_relro_start(elf_reader.compat_relro_start());
+      si_->set_compat_relro_size(elf_reader.compat_relro_size());
+    }
 
     return true;
   }
@@ -3361,7 +3366,8 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
                               "\"%s\" has text relocations",
                               get_realpath());
     add_dlwarning(get_realpath(), "text relocations");
-    if (phdr_table_unprotect_segments(phdr, phnum, load_bias, should_pad_segments_) < 0) {
+    if (phdr_table_unprotect_segments(phdr, phnum, load_bias, should_pad_segments_,
+                                      should_use_16kib_app_compat_) < 0) {
       DL_ERR("can't unprotect loadable segments for \"%s\": %m", get_realpath());
       return false;
     }
@@ -3377,7 +3383,8 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
 #if !defined(__LP64__)
   if (has_text_relocations) {
     // All relocations are done, we can protect our segments back to read-only.
-    if (phdr_table_protect_segments(phdr, phnum, load_bias, should_pad_segments_) < 0) {
+    if (phdr_table_protect_segments(phdr, phnum, load_bias, should_pad_segments_,
+                                    should_use_16kib_app_compat_) < 0) {
       DL_ERR("can't protect segments for \"%s\": %m", get_realpath());
       return false;
     }
@@ -3412,9 +3419,18 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
 }
 
 bool soinfo::protect_relro() {
-  if (phdr_table_protect_gnu_relro(phdr, phnum, load_bias, should_pad_segments_) < 0) {
-    DL_ERR("can't enable GNU RELRO protection for \"%s\": %m", get_realpath());
-    return false;
+  if (should_use_16kib_app_compat_) {
+    if (phdr_table_protect_gnu_relro_16kib_compat(compat_relro_start_, compat_relro_size_) < 0) {
+      DL_ERR("can't enable COMPAT GNU RELRO protection for \"%s\": %s", get_realpath(),
+             strerror(errno));
+      return false;
+    }
+  } else {
+    if (phdr_table_protect_gnu_relro(phdr, phnum, load_bias, should_pad_segments_,
+                                     should_use_16kib_app_compat_) < 0) {
+      DL_ERR("can't enable GNU RELRO protection for \"%s\": %m", get_realpath());
+      return false;
+    }
   }
   return true;
 }
