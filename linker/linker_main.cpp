@@ -370,8 +370,9 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
     // Apply appropriate protections here if it is needed.
     auto note_gnu_property = GnuPropertySection(somain);
     if (note_gnu_property.IsBTICompatible() &&
-        (phdr_table_protect_segments(somain->phdr, somain->phnum, somain->load_bias,
-                                     somain->should_pad_segments(), &note_gnu_property) < 0)) {
+        (phdr_table_protect_segments(
+             somain->phdr, somain->phnum, somain->load_bias, somain->should_pad_segments(),
+             somain->should_use_16kib_app_compat(), &note_gnu_property) < 0)) {
       __linker_error("error: can't protect segments for \"%s\": %m", exe_info.path.c_str());
     }
   }
