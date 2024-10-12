@@ -815,6 +815,7 @@ cc_test_library {
         "dlfcn_test.cpp",
         "execinfo_test.cpp",
         "link_test.cpp",
+        "page_size_16kib_compat_test.cpp",
         "pthread_dlfcn_test.cpp",
     ],
     static_libs: [
@@ -823,6 +824,7 @@ cc_test_library {
     ],
     include_dirs: [
         "bionic/libc",
+        "bionic/tests/libs",
     ],
     shared: {
         enabled: false,
@@ -970,6 +972,7 @@ cc_defaults {
         "libtest_dt_runpath_d",
         "libtest_dt_runpath_x",
         "libtest_dt_runpath_y",
+        "libtest_elf_max_page_size_4kib",
         "libtest_elftls_dynamic",
         "libtest_elftls_dynamic_filler_1",
         "libtest_elftls_dynamic_filler_2",
