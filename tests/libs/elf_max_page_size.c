@@ -26,28 +26,25 @@
  * SUCH DAMAGE.
  */
 
-#if defined(__aarch64__)
-#include <private/bionic_asm_arm64.h>
+#include "elf_max_page_size.h"
 
-__bionic_asm_custom_note_gnu_section()
-#endif
+const int ro0 = RO0;
+const int ro1 = RO1;
+int rw0 = RW0;
 
-#include <private/bionic_asm_note.h>
+/* Force some padding alignment */
+int rw1 __attribute__((aligned(0x10000))) = RW1;
 
-  .section ".note.android.pad_segment", "a", %note
-  .balign 4
-  .long 1f - 0f                       // int32_t namesz
-  .long 3f - 2f                       // int32_t descsz
-  .long NT_ANDROID_TYPE_PAD_SEGMENT   // int32_t type
-0:
-  .asciz "Android"                    // char name[]
-1:
-  .balign 2
-2:
-  .long 1    // 1 indicates to pad p_filesz/p_memsz,
-             // such that the current segment ends
-             // where the next segment begins.
-             // If/when padding becomes the default,
-             // 0 can be used to disable this behavior.
-3:
-  .balign 2
+int bss0, bss1;
+
+int* const prw0 = &rw0;
+
+int loader_test_func(void) {
+  rw0 += RW0_INCREMENT;
+  rw1 += RW1_INCREMENT;
+
+  bss0 += BSS0_INCREMENT;
+  bss1 += BSS1_INCREMENT;
+
+  return ro0 + ro1 + rw0 + rw1 + bss0 + bss1 + *prw0;
+}
