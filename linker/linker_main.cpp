@@ -722,6 +722,8 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   tmp_linker_so.set_linker_flag();
 
   if (!tmp_linker_so.prelink_image()) __linker_cannot_link(args.argv[0]);
+  // There is special logic in soinfo::relocate to avoid duplicating the
+  // relocations we did in relocate_linker().
   if (!tmp_linker_so.link_image(SymbolLookupList(&tmp_linker_so), &tmp_linker_so, nullptr, nullptr)) __linker_cannot_link(args.argv[0]);
 
   return __linker_init_post_relocation(args, tmp_linker_so);
