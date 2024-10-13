@@ -26,28 +26,20 @@
  * SUCH DAMAGE.
  */
 
-#if defined(__aarch64__)
-#include <private/bionic_asm_arm64.h>
+#define RO0 23
+#define RO1 234
+#define RW0 2345
+#define RW1 23456
+#define BSS0 0
+#define BSS1 0
 
-__bionic_asm_custom_note_gnu_section()
-#endif
+#define RW0_INCREMENT 12
+#define RW1_INCREMENT 123
+#define BSS0_INCREMENT 1234
+#define BSS1_INCREMENT 12345
 
-#include <private/bionic_asm_note.h>
+#define TEST_RESULT_BASE (RO0 + RO1 + RW0 + RW1 + BSS0 + BSS1 + RW0)
+#define TEST_RESULT_INCREMENT \
+  (RW0_INCREMENT + RW1_INCREMENT + BSS0_INCREMENT + BSS1_INCREMENT + RW0_INCREMENT)
 
-  .section ".note.android.pad_segment", "a", %note
-  .balign 4
-  .long 1f - 0f                       // int32_t namesz
-  .long 3f - 2f                       // int32_t descsz
-  .long NT_ANDROID_TYPE_PAD_SEGMENT   // int32_t type
-0:
-  .asciz "Android"                    // char name[]
-1:
-  .balign 2
-2:
-  .long 1    // 1 indicates to pad p_filesz/p_memsz,
-             // such that the current segment ends
-             // where the next segment begins.
-             // If/when padding becomes the default,
-             // 0 can be used to disable this behavior.
-3:
-  .balign 2
+typedef int (*loader_test_func_t)(void);

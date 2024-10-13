@@ -188,8 +188,8 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
   auto protect_segments = [&]() {
     // Make .text executable.
     if (phdr_table_protect_segments(relocator.si->phdr, relocator.si->phnum,
-                                    relocator.si->load_bias,
-                                    relocator.si->should_pad_segments()) < 0) {
+                                    relocator.si->load_bias, relocator.si->should_pad_segments(),
+                                    relocator.si->should_use_16kib_app_compat()) < 0) {
       DL_ERR("can't protect segments for \"%s\": %m", relocator.si->get_realpath());
       return false;
     }
@@ -198,8 +198,8 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
   auto unprotect_segments = [&]() {
     // Make .text writable.
     if (phdr_table_unprotect_segments(relocator.si->phdr, relocator.si->phnum,
-                                      relocator.si->load_bias,
-                                      relocator.si->should_pad_segments()) < 0) {
+                                      relocator.si->load_bias, relocator.si->should_pad_segments(),
+                                      relocator.si->should_use_16kib_app_compat()) < 0) {
       DL_ERR("can't unprotect loadable segments for \"%s\": %m",
              relocator.si->get_realpath());
       return false;
