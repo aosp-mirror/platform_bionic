@@ -51,6 +51,7 @@
 #include <android-base/scopeguard.h>
 #include <async_safe/log.h>
 #include <bionic/pthread_internal.h>
+#include <platform/bionic/mte.h>
 
 // Private C library headers.
 
@@ -1697,11 +1698,19 @@ bool find_libraries(android_namespace_t* ns,
     }
   }
 
+  // The WebView loader uses RELRO sharing in order to promote page sharing of the large RELRO
+  // segment, as it's full of C++ vtables. Because MTE globals, by default, applies random tags to
+  // each global variable, the RELRO segment is polluted and unique for each process. In order to
+  // allow sharing, but still provide some protection, we use deterministic global tagging schemes
+  // for DSOs that are loaded through android_dlopen_ext, such as those loaded by WebView.
+  bool deterministic_memtag_globals =
+      extinfo && extinfo->flags & (ANDROID_DLEXT_WRITE_RELRO | ANDROID_DLEXT_USE_RELRO);
+
   // Step 3: pre-link all DT_NEEDED libraries in breadth first order.
   bool any_memtag_stack = false;
   for (auto&& task : load_tasks) {
     soinfo* si = task->get_soinfo();
-    if (!si->is_linked() && !si->prelink_image()) {
+    if (!si->is_linked() && !si->prelink_image(deterministic_memtag_globals)) {
       return false;
     }
     // si->memtag_stack() needs to be called after si->prelink_image() which populates
@@ -2361,7 +2370,7 @@ bool do_dlsym(void* handle,
         void* tls_block = get_tls_block_for_this_thread(tls_module, /*should_alloc=*/true);
         *symbol = static_cast<char*>(tls_block) + sym->st_value;
       } else {
-        *symbol = reinterpret_cast<void*>(found->resolve_symbol_address(sym));
+        *symbol = get_tagged_address(reinterpret_cast<void*>(found->resolve_symbol_address(sym)));
       }
       failure_guard.Disable();
       LD_LOG(kLogDlsym,
@@ -2791,15 +2800,25 @@ bool soinfo::lookup_version_info(const VersionTracker& version_tracker, ElfW(Wor
   return true;
 }
 
-static void apply_relr_reloc(ElfW(Addr) offset, ElfW(Addr) load_bias) {
-  ElfW(Addr) address = offset + load_bias;
-  *reinterpret_cast<ElfW(Addr)*>(address) += load_bias;
+static void apply_relr_reloc(ElfW(Addr) offset, ElfW(Addr) load_bias, bool has_memtag_globals) {
+  ElfW(Addr) destination = offset + load_bias;
+  if (!has_memtag_globals) {
+    *reinterpret_cast<ElfW(Addr)*>(destination) += load_bias;
+    return;
+  }
+
+  ElfW(Addr)* tagged_destination =
+      reinterpret_cast<ElfW(Addr)*>(get_tagged_address(reinterpret_cast<void*>(destination)));
+  ElfW(Addr) tagged_value = reinterpret_cast<ElfW(Addr)>(
+      get_tagged_address(reinterpret_cast<void*>(*tagged_destination + load_bias)));
+  *tagged_destination = tagged_value;
 }
 
 // Process relocations in SHT_RELR section (experimental).
 // Details of the encoding are described in this post:
 //   https://groups.google.com/d/msg/generic-abi/bX460iggiKg/Pi9aSwwABgAJ
-bool relocate_relr(const ElfW(Relr)* begin, const ElfW(Relr)* end, ElfW(Addr) load_bias) {
+bool relocate_relr(const ElfW(Relr) * begin, const ElfW(Relr) * end, ElfW(Addr) load_bias,
+                   bool has_memtag_globals) {
   constexpr size_t wordsize = sizeof(ElfW(Addr));
 
   ElfW(Addr) base = 0;
@@ -2810,7 +2829,7 @@ bool relocate_relr(const ElfW(Relr)* begin, const ElfW(Relr)* end, ElfW(Addr) lo
     if ((entry&1) == 0) {
       // Even entry: encodes the offset for next relocation.
       offset = static_cast<ElfW(Addr)>(entry);
-      apply_relr_reloc(offset, load_bias);
+      apply_relr_reloc(offset, load_bias, has_memtag_globals);
       // Set base offset for subsequent bitmap entries.
       base = offset + wordsize;
       continue;
@@ -2821,7 +2840,7 @@ bool relocate_relr(const ElfW(Relr)* begin, const ElfW(Relr)* end, ElfW(Addr) lo
     while (entry != 0) {
       entry >>= 1;
       if ((entry&1) != 0) {
-        apply_relr_reloc(offset, load_bias);
+        apply_relr_reloc(offset, load_bias, has_memtag_globals);
       }
       offset += wordsize;
     }
@@ -2836,7 +2855,7 @@ bool relocate_relr(const ElfW(Relr)* begin, const ElfW(Relr)* end, ElfW(Addr) lo
 // An empty list of soinfos
 static soinfo_list_t g_empty_list;
 
-bool soinfo::prelink_image() {
+bool soinfo::prelink_image(bool deterministic_memtag_globals) {
   if (flags_ & FLAG_PRELINKED) return true;
   /* Extract dynamic section */
   ElfW(Word) dynamic_flags = 0;
@@ -3325,6 +3344,18 @@ bool soinfo::prelink_image() {
   // it each time we look up a symbol with a version.
   if (!validate_verdef_section(this)) return false;
 
+  // MTE globals requires remapping data segments with PROT_MTE as anonymous mappings, because file
+  // based mappings may not be backed by tag-capable memory (see "MAP_ANONYMOUS" on
+  // https://www.kernel.org/doc/html/latest/arch/arm64/memory-tagging-extension.html). This is only
+  // done if the binary has MTE globals (evidenced by the dynamic table entries), as it destroys
+  // page sharing. It's also only done on devices that support MTE, because the act of remapping
+  // pages is unnecessary on non-MTE devices (where we might still run MTE-globals enabled code).
+  if (should_tag_memtag_globals() &&
+      remap_memtag_globals_segments(phdr, phnum, base) == 0) {
+    tag_globals(deterministic_memtag_globals);
+    protect_memtag_globals_ro_segments(phdr, phnum, base);
+  }
+
   flags_ |= FLAG_PRELINKED;
   return true;
 }
@@ -3397,6 +3428,10 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
     return false;
   }
 
+  if (should_tag_memtag_globals()) {
+    name_memtag_globals_segments(phdr, phnum, base, get_realpath(), vma_names_);
+  }
+
   /* Handle serializing/sharing the RELRO segment */
   if (extinfo && (extinfo->flags & ANDROID_DLEXT_WRITE_RELRO)) {
     if (phdr_table_serialize_gnu_relro(phdr, phnum, load_bias,
@@ -3433,6 +3468,54 @@ bool soinfo::protect_relro() {
     }
   }
   return true;
+}
+
+// https://github.com/ARM-software/abi-aa/blob/main/memtagabielf64/memtagabielf64.rst#global-variable-tagging
+void soinfo::tag_globals(bool deterministic_memtag_globals) {
+  if (is_linked()) return;
+  if (flags_ & FLAG_GLOBALS_TAGGED) return;
+  flags_ |= FLAG_GLOBALS_TAGGED;
+
+  constexpr size_t kTagGranuleSize = 16;
+  const uint8_t* descriptor_stream = reinterpret_cast<const uint8_t*>(memtag_globals());
+
+  if (memtag_globalssz() == 0) {
+    DL_ERR("Invalid memtag descriptor pool size: %zu", memtag_globalssz());
+  }
+
+  uint64_t addr = load_bias;
+  uleb128_decoder decoder(descriptor_stream, memtag_globalssz());
+  // Don't ever generate tag zero, to easily distinguish between tagged and
+  // untagged globals in register/tag dumps.
+  uint64_t last_tag_mask = 1;
+  uint64_t last_tag = 1;
+  constexpr uint64_t kDistanceReservedBits = 3;
+
+  while (decoder.has_bytes()) {
+    uint64_t value = decoder.pop_front();
+    uint64_t distance = (value >> kDistanceReservedBits) * kTagGranuleSize;
+    uint64_t ngranules = value & ((1 << kDistanceReservedBits) - 1);
+    if (ngranules == 0) {
+      ngranules = decoder.pop_front() + 1;
+    }
+
+    addr += distance;
+    void* tagged_addr;
+    if (deterministic_memtag_globals) {
+      tagged_addr = reinterpret_cast<void*>(addr | (last_tag++ << 56));
+      if (last_tag > (1 << kTagGranuleSize)) last_tag = 1;
+    } else {
+      tagged_addr = insert_random_tag(reinterpret_cast<void*>(addr), last_tag_mask);
+      uint64_t tag = (reinterpret_cast<uint64_t>(tagged_addr) >> 56) & 0x0f;
+      last_tag_mask = 1 | (1 << tag);
+    }
+
+    for (size_t k = 0; k < ngranules; k++) {
+      auto* granule = static_cast<uint8_t*>(tagged_addr) + k * kTagGranuleSize;
+      set_memory_tag(static_cast<void*>(granule));
+    }
+    addr += ngranules * kTagGranuleSize;
+  }
 }
 
 static std::vector<android_namespace_t*> init_default_namespace_no_config(bool is_asan, bool is_hwasan) {
