@@ -26,28 +26,18 @@
  * SUCH DAMAGE.
  */
 
-#if defined(__aarch64__)
-#include <private/bionic_asm_arm64.h>
+#include <utility>
+#include <vector>
 
-__bionic_asm_custom_note_gnu_section()
-#endif
+void check_tagged(const void* a);
+void check_untagged(const void* a);
+void check_matching_tags(const void* a, const void* b);
+void check_eq(const void* a, const void* b);
 
-#include <private/bionic_asm_note.h>
+void dso_check_assertions(bool enforce_tagged);
+void dso_print_variables();
 
-  .section ".note.android.pad_segment", "a", %note
-  .balign 4
-  .long 1f - 0f                       // int32_t namesz
-  .long 3f - 2f                       // int32_t descsz
-  .long NT_ANDROID_TYPE_PAD_SEGMENT   // int32_t type
-0:
-  .asciz "Android"                    // char name[]
-1:
-  .balign 2
-2:
-  .long 1    // 1 indicates to pad p_filesz/p_memsz,
-             // such that the current segment ends
-             // where the next segment begins.
-             // If/when padding becomes the default,
-             // 0 can be used to disable this behavior.
-3:
-  .balign 2
+void print_variable_address(const char* name, const void* ptr);
+void print_variables(const char* header,
+                     const std::vector<std::pair<const char*, const void*>>& tagged_variables,
+                     const std::vector<std::pair<const char*, const void*>>& untagged_variables);

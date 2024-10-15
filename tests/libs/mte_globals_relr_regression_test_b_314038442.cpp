@@ -26,28 +26,30 @@
  * SUCH DAMAGE.
  */
 
+#include <stdint.h>
+#include <stdio.h>
+
+static volatile char array[0x10000];
+volatile char* volatile oob_ptr = &array[0x111111111];
+
+unsigned char get_tag(__attribute__((unused)) volatile void* ptr) {
 #if defined(__aarch64__)
-#include <private/bionic_asm_arm64.h>
+  return static_cast<unsigned char>(reinterpret_cast<uintptr_t>(ptr) >> 56) & 0xf;
+#else   // !defined(__aarch64__)
+  return 0;
+#endif  // defined(__aarch64__)
+}
 
-__bionic_asm_custom_note_gnu_section()
-#endif
-
-#include <private/bionic_asm_note.h>
-
-  .section ".note.android.pad_segment", "a", %note
-  .balign 4
-  .long 1f - 0f                       // int32_t namesz
-  .long 3f - 2f                       // int32_t descsz
-  .long NT_ANDROID_TYPE_PAD_SEGMENT   // int32_t type
-0:
-  .asciz "Android"                    // char name[]
-1:
-  .balign 2
-2:
-  .long 1    // 1 indicates to pad p_filesz/p_memsz,
-             // such that the current segment ends
-             // where the next segment begins.
-             // If/when padding becomes the default,
-             // 0 can be used to disable this behavior.
-3:
-  .balign 2
+int main() {
+  printf("Program loaded successfully. %p %p. ", array, oob_ptr);
+  if (get_tag(array) != get_tag(oob_ptr)) {
+    printf("Tags are mismatched!\n");
+    return 1;
+  }
+  if (get_tag(array) == 0) {
+    printf("Tags are zero!\n");
+  } else {
+    printf("Tags are non-zero\n");
+  }
+  return 0;
+}

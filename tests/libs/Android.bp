@@ -48,6 +48,16 @@ cc_defaults {
 }
 
 // -----------------------------------------------------------------------------
+// Test library ELFs for linker page size related tests
+// -----------------------------------------------------------------------------
+cc_test_library {
+    name: "libtest_elf_max_page_size_4kib",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["elf_max_page_size.c"],
+    ldflags: ["-z max-page-size=0x1000"],
+}
+
+// -----------------------------------------------------------------------------
 // Libraries and helper binaries for ELF TLS
 // -----------------------------------------------------------------------------
 cc_test_library {
@@ -1892,4 +1902,90 @@ cc_genrule {
         " touch $(genDir)/zipdir/empty_file.txt &&" +
         " $(location soong_zip) -o $(out).unaligned -L 0 -C $(genDir)/zipdir -D $(genDir)/zipdir &&" +
         " $(location bionic_tests_zipalign) 16384 $(out).unaligned $(out)",
+}
+
+cc_defaults {
+    name: "memtag_globals_defaults",
+    defaults: [
+        "bionic_testlib_defaults",
+        "bionic_targets_only"
+    ],
+    cflags: [
+        "-Wno-array-bounds",
+        "-Wno-unused-variable",
+    ],
+    header_libs: ["bionic_libc_platform_headers"],
+    sanitize: {
+        hwaddress: false,
+        memtag_heap: true,
+        memtag_globals: true,
+        diag: {
+            memtag_heap: true,
+        }
+    },
+}
+
+cc_test_library {
+    name: "memtag_globals_dso",
+    defaults: [ "memtag_globals_defaults" ],
+    srcs: ["memtag_globals_dso.cpp"],
+}
+
+cc_test {
+    name: "memtag_globals_binary",
+    defaults: [ "memtag_globals_defaults" ],
+    srcs: ["memtag_globals_binary.cpp"],
+    shared_libs: [ "memtag_globals_dso" ],
+    // This binary is used in the bionic-unit-tests as a data dependency, and is
+    // in the same folder as memtag_globals_dso. But, the default cc_test rules
+    // make this binary (when just explicitly built and shoved in
+    // /data/nativetest64/) end up in a subfolder called
+    // 'memtag_globals_binary'. When this happens, the explicit build fails to
+    // find the DSO because the default rpath is just ${ORIGIN}, and because we
+    // want this to be usable both from bionic-unit-tests and explicit builds,
+    // let's just not put it in a subdirectory.
+    no_named_install_directory: true,
+}
+
+cc_test {
+    name: "memtag_globals_binary_static",
+    defaults: [ "memtag_globals_defaults" ],
+    srcs: ["memtag_globals_binary.cpp"],
+    static_libs: [ "memtag_globals_dso" ],
+    no_named_install_directory: true,
+    static_executable: true,
+}
+
+// This is a regression test for b/314038442, where binaries built *without* MTE
+// globals would have out-of-bounds RELR relocations, which where then `ldg`'d,
+// which resulted in linker crashes.
+cc_test {
+  name: "mte_globals_relr_regression_test_b_314038442",
+  defaults: [
+        "bionic_testlib_defaults",
+        "bionic_targets_only"
+    ],
+    cflags: [ "-Wno-array-bounds" ],
+    ldflags: [ "-Wl,--pack-dyn-relocs=relr" ],
+    srcs: ["mte_globals_relr_regression_test_b_314038442.cpp"],
+    no_named_install_directory: true,
+    sanitize: {
+        memtag_globals: false,
+    },
+}
+
+// Same test as above, but also for MTE globals, just for the sake of it.
+cc_test {
+  name: "mte_globals_relr_regression_test_b_314038442_mte",
+  defaults: [
+        "bionic_testlib_defaults",
+        "bionic_targets_only"
+    ],
+    cflags: [ "-Wno-array-bounds" ],
+    ldflags: [ "-Wl,--pack-dyn-relocs=relr" ],
+    srcs: ["mte_globals_relr_regression_test_b_314038442.cpp"],
+    no_named_install_directory: true,
+    sanitize: {
+      memtag_globals: true,
+    },
 }

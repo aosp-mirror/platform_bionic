@@ -26,28 +26,21 @@
  * SUCH DAMAGE.
  */
 
-#if defined(__aarch64__)
-#include <private/bionic_asm_arm64.h>
+#include "page_size_compat_helpers.h"
 
-__bionic_asm_custom_note_gnu_section()
-#endif
+#include <android-base/properties.h>
 
-#include <private/bionic_asm_note.h>
+TEST(PageSize16KiBCompatTest, ElfAlignment4KiB_LoadElf) {
+  if (getpagesize() != 0x4000) {
+    GTEST_SKIP() << "This test is only applicable to 16kB page-size devices";
+  }
 
-  .section ".note.android.pad_segment", "a", %note
-  .balign 4
-  .long 1f - 0f                       // int32_t namesz
-  .long 3f - 2f                       // int32_t descsz
-  .long NT_ANDROID_TYPE_PAD_SEGMENT   // int32_t type
-0:
-  .asciz "Android"                    // char name[]
-1:
-  .balign 2
-2:
-  .long 1    // 1 indicates to pad p_filesz/p_memsz,
-             // such that the current segment ends
-             // where the next segment begins.
-             // If/when padding becomes the default,
-             // 0 can be used to disable this behavior.
-3:
-  .balign 2
+  bool app_compat_enabled =
+      android::base::GetBoolProperty("bionic.linker.16kb.app_compat.enabled", false);
+  std::string lib = GetTestLibRoot() + "/libtest_elf_max_page_size_4kib.so";
+  void* handle = nullptr;
+
+  OpenTestLibrary(lib, !app_compat_enabled, &handle);
+
+  if (app_compat_enabled) CallTestFunction(handle);
+}
