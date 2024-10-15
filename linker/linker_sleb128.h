@@ -69,3 +69,32 @@ class sleb128_decoder {
   const uint8_t* current_;
   const uint8_t* const end_;
 };
+
+class uleb128_decoder {
+ public:
+  uleb128_decoder(const uint8_t* buffer, size_t count) : current_(buffer), end_(buffer + count) {}
+
+  uint64_t pop_front() {
+    uint64_t value = 0;
+
+    size_t shift = 0;
+    uint8_t byte;
+
+    do {
+      if (current_ >= end_) {
+        async_safe_fatal("uleb128_decoder ran out of bounds");
+      }
+      byte = *current_++;
+      value |= (static_cast<size_t>(byte & 127) << shift);
+      shift += 7;
+    } while (byte & 128);
+
+    return value;
+  }
+
+  bool has_bytes() { return current_ < end_; }
+
+ private:
+  const uint8_t* current_;
+  const uint8_t* const end_;
+};
