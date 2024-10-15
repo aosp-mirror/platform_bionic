@@ -30,6 +30,7 @@
 
 #include <link.h>
 
+#include <list>
 #include <memory>
 #include <string>
 #include <vector>
@@ -66,9 +67,10 @@
                                          // soinfo is executed and this flag is
                                          // unset.
 #define FLAG_PRELINKED        0x00000400 // prelink_image has successfully processed this soinfo
+#define FLAG_GLOBALS_TAGGED   0x00000800 // globals have been tagged by MTE.
 #define FLAG_NEW_SOINFO       0x40000000 // new soinfo format
 
-#define SOINFO_VERSION 6
+#define SOINFO_VERSION 7
 
 ElfW(Addr) call_ifunc_resolver(ElfW(Addr) resolver_addr);
 
@@ -252,10 +254,13 @@ struct soinfo {
   void call_constructors();
   void call_destructors();
   void call_pre_init_constructors();
-  bool prelink_image();
+  bool prelink_image(bool deterministic_memtag_globals = false);
   bool link_image(const SymbolLookupList& lookup_list, soinfo* local_group_root,
                   const android_dlextinfo* extinfo, size_t* relro_fd_offset);
   bool protect_relro();
+
+  void tag_globals(bool deterministic_memtag_globals);
+  ElfW(Addr) apply_memtag_if_mte_globals(ElfW(Addr) sym_addr) const;
 
   void add_child(soinfo* child);
   void remove_all_links();
@@ -368,6 +373,21 @@ struct soinfo {
    should_pad_segments_ = should_pad_segments;
   }
   bool should_pad_segments() const { return should_pad_segments_; }
+  bool should_tag_memtag_globals() const {
+    return !is_linker() && memtag_globals() && memtag_globalssz() > 0 && __libc_mte_enabled();
+  }
+  std::list<std::string>& vma_names() { return vma_names_; };
+
+  void set_should_use_16kib_app_compat(bool should_use_16kib_app_compat) {
+    should_use_16kib_app_compat_ = should_use_16kib_app_compat;
+  }
+  bool should_use_16kib_app_compat() const { return should_use_16kib_app_compat_; }
+
+  void set_compat_relro_start(ElfW(Addr) start) { compat_relro_start_ = start; }
+  ElfW(Addr) compat_relro_start() const { return compat_relro_start_; }
+
+  void set_compat_relro_size(ElfW(Addr) size) { compat_relro_size_ = size; }
+  ElfW(Addr) compat_relro_size() const { return compat_relro_start_; }
 
  private:
   bool is_image_linked() const;
@@ -453,8 +473,17 @@ struct soinfo {
   // version >= 7
   memtag_dynamic_entries_t memtag_dynamic_entries_;
 
+  std::list<std::string> vma_names_;
+
   // Pad gaps between segments when memory mapping?
   bool should_pad_segments_ = false;
+
+  // Use app compat mode when loading 4KiB max-page-size ELFs on 16KiB page-size devices?
+  bool should_use_16kib_app_compat_ = false;
+
+  // RELRO region for 16KiB compat loading
+  ElfW(Addr) compat_relro_start_ = 0;
+  ElfW(Addr) compat_relro_size_ = 0;
 };
 
 // This function is used by dlvsym() to calculate hash of sym_ver
