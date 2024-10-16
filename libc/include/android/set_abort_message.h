@@ -33,10 +33,11 @@
  * @brief The android_set_abort_message() function.
  */
 
+#include <sys/cdefs.h>
+
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
-#include <sys/cdefs.h>
 
 __BEGIN_DECLS
 
