@@ -29,11 +29,12 @@
 #ifndef _STDLIB_H
 #define _STDLIB_H
 
+#include <sys/cdefs.h>
+
 #include <alloca.h>
 #include <bits/wait.h>
 #include <malloc.h>
 #include <stddef.h>
-#include <sys/cdefs.h>
 #include <xlocale.h>
 
 __BEGIN_DECLS
