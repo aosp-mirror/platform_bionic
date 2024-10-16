@@ -33,9 +33,10 @@
  * @brief File status.
  */
 
+#include <sys/cdefs.h>
+
 #include <bits/timespec.h>
 #include <linux/stat.h>
-#include <sys/cdefs.h>
 #include <sys/types.h>
 
 __BEGIN_DECLS
