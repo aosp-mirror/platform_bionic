@@ -494,6 +494,7 @@ cc_test {
         "linker_mapped_file_fragment.cpp",
         "linker_sdk_versions.cpp",
         "linker_dlwarning.cpp",
+        "linker_phdr_16kib_compat.cpp"
     ],
 
     static_libs: [
