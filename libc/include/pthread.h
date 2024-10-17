@@ -33,11 +33,12 @@
  * @brief POSIX threads.
  */
 
+#include <sys/cdefs.h>
+
 #include <limits.h>
 #include <bits/page_size.h>
 #include <bits/pthread_types.h>
 #include <sched.h>
-#include <sys/cdefs.h>
 #include <sys/types.h>
 #include <time.h>
 

@@ -33,8 +33,9 @@
  * @brief Extra dynamic linker functionality (see also <dlfcn.h>).
  */
 
-#include <stdint.h>
 #include <sys/cdefs.h>
+
+#include <stdint.h>
 #include <sys/types.h>
 
 #include <elf.h>
