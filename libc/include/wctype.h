@@ -29,8 +29,9 @@
 #ifndef _WCTYPE_H_
 #define _WCTYPE_H_
 
-#include <bits/wctype.h>
 #include <sys/cdefs.h>
+
+#include <bits/wctype.h>
 #include <xlocale.h>
 
 __BEGIN_DECLS

@@ -29,9 +29,10 @@
 #ifndef _SYS_TYPES_H_
 #define _SYS_TYPES_H_
 
+#include <sys/cdefs.h>
+
 #include <stddef.h>
 #include <stdint.h>
-#include <sys/cdefs.h>
 
 #include <linux/types.h>
 #include <linux/posix_types.h>

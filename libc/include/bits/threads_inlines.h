@@ -28,6 +28,8 @@
 
 #pragma once
 
+#include <sys/cdefs.h>
+
 #include <threads.h>
 
 #include <errno.h>
