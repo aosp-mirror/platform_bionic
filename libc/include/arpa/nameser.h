@@ -55,8 +55,9 @@
 
 #define BIND_4_COMPAT
 
-#include <sys/types.h>
 #include <sys/cdefs.h>
+
+#include <sys/types.h>
 
 /*
  * Revision information.  This is the release date in YYYYMMDD format.
