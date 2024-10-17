@@ -223,8 +223,6 @@ bool ElfReader::CompatMapSegment(size_t seg_idx, size_t len) {
   // the zip offset must be added to find the segment offset.
   const ElfW(Addr) offset = file_offset_ + align_down(phdr->p_offset, kCompatPageSize);
 
-  int prot = PFLAGS_TO_PROT(phdr->p_flags);
-
   CHECK(should_use_16kib_app_compat_);
 
   // Since the 4KiB max-page-size ELF is not properly aligned, loading it by
