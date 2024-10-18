@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,11 +26,23 @@
  * SUCH DAMAGE.
  */
 
-#define __BIONIC_STDLIB_INLINE /* Out of line. */
-#include <stdlib.h>
-#include <bits/stdlib_inlines.h>
+#pragma once
 
-// strtold_l was introduced in API level 21, so it isn't polyfilled any more.
-long double strtold_l(const char* s, char** end_ptr, locale_t) {
-  return strtold(s, end_ptr);
+#include <xlocale.h>
+#include <sys/cdefs.h>
+
+#if !defined(__BIONIC_STDLIB_INLINE)
+#define __BIONIC_STDLIB_INLINE static __inline
+#endif
+
+__BEGIN_DECLS
+
+__BIONIC_STDLIB_INLINE double strtod_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, locale_t _Nonnull __l) {
+  return strtod(__s, __end_ptr);
 }
+
+__BIONIC_STDLIB_INLINE float strtof_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, locale_t _Nonnull __l) {
+  return strtof(__s, __end_ptr);
+}
+
+__END_DECLS
