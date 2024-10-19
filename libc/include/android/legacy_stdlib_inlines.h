@@ -30,22 +30,9 @@
 
 #include <sys/cdefs.h>
 
-
 #if __ANDROID_API__ < 26
 
-#include <stdlib.h>
-#include <xlocale.h>
-
-__BEGIN_DECLS
-
-static __inline double strtod_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, locale_t _Nonnull __l) {
-  return strtod(__s, __end_ptr);
-}
-
-static __inline float strtof_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, locale_t _Nonnull __l) {
-  return strtof(__s, __end_ptr);
-}
-
-__END_DECLS
+#define __BIONIC_THREADS_INLINE static __inline
+#include <bits/stdlib_inlines.h>
 
 #endif
