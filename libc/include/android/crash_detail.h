@@ -33,8 +33,9 @@
  * @brief Attach extra information to android crashes.
  */
 
-#include <stddef.h>
 #include <sys/cdefs.h>
+
+#include <stddef.h>
 
 __BEGIN_DECLS
 

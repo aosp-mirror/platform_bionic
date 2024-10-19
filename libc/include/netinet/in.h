@@ -28,9 +28,10 @@
 
 #pragma once
 
+#include <sys/cdefs.h>
+
 #include <endian.h>
 #include <netinet/in6.h>
-#include <sys/cdefs.h>
 #include <sys/socket.h>
 
 #include <linux/in.h>
