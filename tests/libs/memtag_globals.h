@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,38 +26,18 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _WCTYPE_H_
-#define _WCTYPE_H_
+#include <utility>
+#include <vector>
 
-#include <sys/cdefs.h>
+void check_tagged(const void* a);
+void check_untagged(const void* a);
+void check_matching_tags(const void* a, const void* b);
+void check_eq(const void* a, const void* b);
 
-#include <bits/wctype.h>
-#include <xlocale.h>
+void dso_check_assertions(bool enforce_tagged);
+void dso_print_variables();
 
-__BEGIN_DECLS
-
-int iswalnum_l(wint_t __wc, locale_t _Nonnull __l);
-int iswalpha_l(wint_t __wc, locale_t _Nonnull __l);
-int iswblank_l(wint_t __wc, locale_t _Nonnull __l);
-int iswcntrl_l(wint_t __wc, locale_t _Nonnull __l);
-int iswdigit_l(wint_t __wc, locale_t _Nonnull __l);
-int iswgraph_l(wint_t __wc, locale_t _Nonnull __l);
-int iswlower_l(wint_t __wc, locale_t _Nonnull __l);
-int iswprint_l(wint_t __wc, locale_t _Nonnull __l);
-int iswpunct_l(wint_t __wc, locale_t _Nonnull __l);
-int iswspace_l(wint_t __wc, locale_t _Nonnull __l);
-int iswupper_l(wint_t __wc, locale_t _Nonnull __l);
-int iswxdigit_l(wint_t __wc, locale_t _Nonnull __l);
-
-wint_t towlower_l(wint_t __wc, locale_t _Nonnull __l);
-wint_t towupper_l(wint_t __wc, locale_t _Nonnull __l);
-
-wint_t towctrans_l(wint_t __wc, wctrans_t _Nonnull __transform, locale_t _Nonnull __l) __INTRODUCED_IN(26);
-wctrans_t _Nonnull wctrans_l(const char* _Nonnull __name, locale_t _Nonnull __l) __INTRODUCED_IN(26);
-
-wctype_t wctype_l(const char* _Nonnull __name, locale_t _Nonnull __l);
-int iswctype_l(wint_t __wc, wctype_t __transform, locale_t _Nonnull __l);
-
-__END_DECLS
-
-#endif
+void print_variable_address(const char* name, const void* ptr);
+void print_variables(const char* header,
+                     const std::vector<std::pair<const char*, const void*>>& tagged_variables,
+                     const std::vector<std::pair<const char*, const void*>>& untagged_variables);

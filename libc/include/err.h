@@ -36,8 +36,9 @@
  * @brief BSD error reporting functions. See `<error.h>` for the GNU equivalent.
  */
 
-#include <stdarg.h>
 #include <sys/cdefs.h>
+
+#include <stdarg.h>
 #include <sys/types.h>
 
 __BEGIN_DECLS
