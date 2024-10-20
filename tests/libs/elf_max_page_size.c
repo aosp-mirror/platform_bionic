@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,38 +26,25 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _WCTYPE_H_
-#define _WCTYPE_H_
+#include "elf_max_page_size.h"
 
-#include <sys/cdefs.h>
+const int ro0 = RO0;
+const int ro1 = RO1;
+int rw0 = RW0;
 
-#include <bits/wctype.h>
-#include <xlocale.h>
+/* Force some padding alignment */
+int rw1 __attribute__((aligned(0x10000))) = RW1;
 
-__BEGIN_DECLS
+int bss0, bss1;
 
-int iswalnum_l(wint_t __wc, locale_t _Nonnull __l);
-int iswalpha_l(wint_t __wc, locale_t _Nonnull __l);
-int iswblank_l(wint_t __wc, locale_t _Nonnull __l);
-int iswcntrl_l(wint_t __wc, locale_t _Nonnull __l);
-int iswdigit_l(wint_t __wc, locale_t _Nonnull __l);
-int iswgraph_l(wint_t __wc, locale_t _Nonnull __l);
-int iswlower_l(wint_t __wc, locale_t _Nonnull __l);
-int iswprint_l(wint_t __wc, locale_t _Nonnull __l);
-int iswpunct_l(wint_t __wc, locale_t _Nonnull __l);
-int iswspace_l(wint_t __wc, locale_t _Nonnull __l);
-int iswupper_l(wint_t __wc, locale_t _Nonnull __l);
-int iswxdigit_l(wint_t __wc, locale_t _Nonnull __l);
+int* const prw0 = &rw0;
 
-wint_t towlower_l(wint_t __wc, locale_t _Nonnull __l);
-wint_t towupper_l(wint_t __wc, locale_t _Nonnull __l);
+int loader_test_func(void) {
+  rw0 += RW0_INCREMENT;
+  rw1 += RW1_INCREMENT;
 
-wint_t towctrans_l(wint_t __wc, wctrans_t _Nonnull __transform, locale_t _Nonnull __l) __INTRODUCED_IN(26);
-wctrans_t _Nonnull wctrans_l(const char* _Nonnull __name, locale_t _Nonnull __l) __INTRODUCED_IN(26);
+  bss0 += BSS0_INCREMENT;
+  bss1 += BSS1_INCREMENT;
 
-wctype_t wctype_l(const char* _Nonnull __name, locale_t _Nonnull __l);
-int iswctype_l(wint_t __wc, wctype_t __transform, locale_t _Nonnull __l);
-
-__END_DECLS
-
-#endif
+  return ro0 + ro1 + rw0 + rw1 + bss0 + bss1 + *prw0;
+}

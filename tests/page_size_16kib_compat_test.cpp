@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,38 +26,21 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _WCTYPE_H_
-#define _WCTYPE_H_
+#include "page_size_compat_helpers.h"
 
-#include <sys/cdefs.h>
+#include <android-base/properties.h>
 
-#include <bits/wctype.h>
-#include <xlocale.h>
+TEST(PageSize16KiBCompatTest, ElfAlignment4KiB_LoadElf) {
+  if (getpagesize() != 0x4000) {
+    GTEST_SKIP() << "This test is only applicable to 16kB page-size devices";
+  }
 
-__BEGIN_DECLS
+  bool app_compat_enabled =
+      android::base::GetBoolProperty("bionic.linker.16kb.app_compat.enabled", false);
+  std::string lib = GetTestLibRoot() + "/libtest_elf_max_page_size_4kib.so";
+  void* handle = nullptr;
 
-int iswalnum_l(wint_t __wc, locale_t _Nonnull __l);
-int iswalpha_l(wint_t __wc, locale_t _Nonnull __l);
-int iswblank_l(wint_t __wc, locale_t _Nonnull __l);
-int iswcntrl_l(wint_t __wc, locale_t _Nonnull __l);
-int iswdigit_l(wint_t __wc, locale_t _Nonnull __l);
-int iswgraph_l(wint_t __wc, locale_t _Nonnull __l);
-int iswlower_l(wint_t __wc, locale_t _Nonnull __l);
-int iswprint_l(wint_t __wc, locale_t _Nonnull __l);
-int iswpunct_l(wint_t __wc, locale_t _Nonnull __l);
-int iswspace_l(wint_t __wc, locale_t _Nonnull __l);
-int iswupper_l(wint_t __wc, locale_t _Nonnull __l);
-int iswxdigit_l(wint_t __wc, locale_t _Nonnull __l);
+  OpenTestLibrary(lib, !app_compat_enabled, &handle);
 
-wint_t towlower_l(wint_t __wc, locale_t _Nonnull __l);
-wint_t towupper_l(wint_t __wc, locale_t _Nonnull __l);
-
-wint_t towctrans_l(wint_t __wc, wctrans_t _Nonnull __transform, locale_t _Nonnull __l) __INTRODUCED_IN(26);
-wctrans_t _Nonnull wctrans_l(const char* _Nonnull __name, locale_t _Nonnull __l) __INTRODUCED_IN(26);
-
-wctype_t wctype_l(const char* _Nonnull __name, locale_t _Nonnull __l);
-int iswctype_l(wint_t __wc, wctype_t __transform, locale_t _Nonnull __l);
-
-__END_DECLS
-
-#endif
+  if (app_compat_enabled) CallTestFunction(handle);
+}

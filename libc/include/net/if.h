@@ -29,9 +29,10 @@
 #ifndef _NET_IF_H_
 #define _NET_IF_H_
 
+#include <sys/cdefs.h>
+
 #include <sys/socket.h>
 #include <linux/if.h>
-#include <sys/cdefs.h>
 
 #ifndef IF_NAMESIZE
 #define IF_NAMESIZE IFNAMSIZ
