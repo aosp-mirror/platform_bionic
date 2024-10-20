@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,38 +26,30 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _WCTYPE_H_
-#define _WCTYPE_H_
+#include <stdint.h>
+#include <stdio.h>
 
-#include <sys/cdefs.h>
+static volatile char array[0x10000];
+volatile char* volatile oob_ptr = &array[0x111111111];
 
-#include <bits/wctype.h>
-#include <xlocale.h>
+unsigned char get_tag(__attribute__((unused)) volatile void* ptr) {
+#if defined(__aarch64__)
+  return static_cast<unsigned char>(reinterpret_cast<uintptr_t>(ptr) >> 56) & 0xf;
+#else   // !defined(__aarch64__)
+  return 0;
+#endif  // defined(__aarch64__)
+}
 
-__BEGIN_DECLS
-
-int iswalnum_l(wint_t __wc, locale_t _Nonnull __l);
-int iswalpha_l(wint_t __wc, locale_t _Nonnull __l);
-int iswblank_l(wint_t __wc, locale_t _Nonnull __l);
-int iswcntrl_l(wint_t __wc, locale_t _Nonnull __l);
-int iswdigit_l(wint_t __wc, locale_t _Nonnull __l);
-int iswgraph_l(wint_t __wc, locale_t _Nonnull __l);
-int iswlower_l(wint_t __wc, locale_t _Nonnull __l);
-int iswprint_l(wint_t __wc, locale_t _Nonnull __l);
-int iswpunct_l(wint_t __wc, locale_t _Nonnull __l);
-int iswspace_l(wint_t __wc, locale_t _Nonnull __l);
-int iswupper_l(wint_t __wc, locale_t _Nonnull __l);
-int iswxdigit_l(wint_t __wc, locale_t _Nonnull __l);
-
-wint_t towlower_l(wint_t __wc, locale_t _Nonnull __l);
-wint_t towupper_l(wint_t __wc, locale_t _Nonnull __l);
-
-wint_t towctrans_l(wint_t __wc, wctrans_t _Nonnull __transform, locale_t _Nonnull __l) __INTRODUCED_IN(26);
-wctrans_t _Nonnull wctrans_l(const char* _Nonnull __name, locale_t _Nonnull __l) __INTRODUCED_IN(26);
-
-wctype_t wctype_l(const char* _Nonnull __name, locale_t _Nonnull __l);
-int iswctype_l(wint_t __wc, wctype_t __transform, locale_t _Nonnull __l);
-
-__END_DECLS
-
-#endif
+int main() {
+  printf("Program loaded successfully. %p %p. ", array, oob_ptr);
+  if (get_tag(array) != get_tag(oob_ptr)) {
+    printf("Tags are mismatched!\n");
+    return 1;
+  }
+  if (get_tag(array) == 0) {
+    printf("Tags are zero!\n");
+  } else {
+    printf("Tags are non-zero\n");
+  }
+  return 0;
+}
