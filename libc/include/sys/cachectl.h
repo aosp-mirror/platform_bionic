@@ -48,7 +48,7 @@ __BEGIN_DECLS
 
 /**
  * __riscv_flush_icache(2) flushes the instruction cache for the given range of addresses.
- * The address range is currently (Linux 6.4) ignored, so both pointers may be null.
+ * The address range is currently (Linux 6.12) ignored, so both pointers may be null.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
