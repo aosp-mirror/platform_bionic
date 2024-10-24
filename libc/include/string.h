@@ -52,7 +52,11 @@ void* _Nullable memrchr(const void* _Nonnull __s, int __ch, size_t __n) __attrib
 int memcmp(const void* _Nonnull __lhs, const void* _Nonnull __rhs, size_t __n) __attribute_pure__;
 void* _Nonnull memcpy(void* _Nonnull, const void* _Nonnull, size_t);
 #if defined(__USE_GNU)
+// This conflicts with a polyfill in gettext-libintl
+// https://github.com/android/ndk/issues/2081
+#if __ANDROID_API__ >= 23
 void* _Nonnull mempcpy(void* _Nonnull __dst, const void* _Nonnull __src, size_t __n) __INTRODUCED_IN(23);
+#endif
 #endif
 void* _Nonnull memmove(void* _Nonnull __dst, const void* _Nonnull __src, size_t __n);
 

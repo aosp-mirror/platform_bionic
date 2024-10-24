@@ -46,6 +46,7 @@
 #include "linker_tls.h"
 #include "linker_utils.h"
 
+#include "platform/bionic/macros.h"
 #include "private/KernelArgumentBlock.h"
 #include "private/bionic_call_ifunc_resolver.h"
 #include "private/bionic_globals.h"
@@ -71,22 +72,9 @@ static void get_elf_base_from_phdr(const ElfW(Phdr)* phdr_table, size_t phdr_cou
 static void set_bss_vma_name(soinfo* si);
 
 void __libc_init_mte(const memtag_dynamic_entries_t* memtag_dynamic_entries, const void* phdr_start,
-                     size_t phdr_count, uintptr_t load_bias, void* stack_top);
+                     size_t phdr_count, uintptr_t load_bias);
 
-__printflike(1, 2) static void __linker_error(const char* fmt, ...) {
-  va_list ap;
-
-  va_start(ap, fmt);
-  async_safe_format_fd_va_list(STDERR_FILENO, fmt, ap);
-  write(STDERR_FILENO, "\n", 1);
-  va_end(ap);
-
-  va_start(ap, fmt);
-  async_safe_format_log_va_list(ANDROID_LOG_FATAL, "linker", fmt, ap);
-  va_end(ap);
-
-  _exit(EXIT_FAILURE);
-}
+void __libc_init_mte_stack(void* stack_top);
 
 static void __linker_cannot_link(const char* argv0) {
   __linker_error("CANNOT LINK EXECUTABLE \"%s\": %s", argv0, linker_get_error_buffer());
@@ -119,7 +107,7 @@ bool solist_remove_soinfo(soinfo* si) {
 
   if (trav == nullptr) {
     // si was not in solist
-    PRINT("name \"%s\"@%p is not in solist!", si->get_realpath(), si);
+    DL_WARN("name \"%s\"@%p is not in solist!", si->get_realpath(), si);
     return false;
   }
 
@@ -147,7 +135,6 @@ soinfo* solist_get_vdso() {
 }
 
 bool g_is_ldd;
-int g_ld_debug_verbosity;
 
 static std::vector<std::string> g_ld_preload_names;
 
@@ -296,10 +283,8 @@ static void platform_properties_init() {
 static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load) {
   ProtectedDataGuard guard;
 
-#if TIMING
-  struct timeval t0, t1;
-  gettimeofday(&t0, 0);
-#endif
+  timeval t0, t1;
+  gettimeofday(&t0, nullptr);
 
   // Sanitize the environment.
   __libc_init_AT_SECURE(args.envp);
@@ -317,13 +302,11 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
 
   // Enable debugging logs?
   const char* LD_DEBUG = getenv("LD_DEBUG");
-  if (LD_DEBUG != nullptr) {
-    g_ld_debug_verbosity = atoi(LD_DEBUG);
-  }
+  if (LD_DEBUG != nullptr) init_LD_DEBUG(LD_DEBUG);
 
   if (getenv("LD_SHOW_AUXV") != nullptr) ld_show_auxv(args.auxv);
 
-  INFO("[ Android dynamic linker (" ABI_STRING ") ]");
+  LD_DEBUG(any, "[ Android dynamic linker (" ABI_STRING ") ]");
 
   // These should have been sanitized by __libc_init_AT_SECURE, but the test
   // doesn't cost us anything.
@@ -332,18 +315,18 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   if (!getauxval(AT_SECURE)) {
     ldpath_env = getenv("LD_LIBRARY_PATH");
     if (ldpath_env != nullptr) {
-      INFO("[ LD_LIBRARY_PATH set to \"%s\" ]", ldpath_env);
+      LD_DEBUG(any, "[ LD_LIBRARY_PATH set to \"%s\" ]", ldpath_env);
     }
     ldpreload_env = getenv("LD_PRELOAD");
     if (ldpreload_env != nullptr) {
-      INFO("[ LD_PRELOAD set to \"%s\" ]", ldpreload_env);
+      LD_DEBUG(any, "[ LD_PRELOAD set to \"%s\" ]", ldpreload_env);
     }
   }
 
   const ExecutableInfo exe_info = exe_to_load ? load_executable(exe_to_load) :
                                                 get_executable_info(args.argv[0]);
 
-  INFO("[ Linking executable \"%s\" ]", exe_info.path.c_str());
+  LD_DEBUG(any, "[ Linking executable \"%s\" ]", exe_info.path.c_str());
 
   // Initialize the main exe's soinfo.
   soinfo* si = soinfo_alloc(&g_default_namespace,
@@ -385,13 +368,16 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   init_link_map_head(*solinker);
 
 #if defined(__aarch64__)
+  __libc_init_mte(somain->memtag_dynamic_entries(), somain->phdr, somain->phnum, somain->load_bias);
+
   if (exe_to_load == nullptr) {
     // Kernel does not add PROT_BTI to executable pages of the loaded ELF.
     // Apply appropriate protections here if it is needed.
     auto note_gnu_property = GnuPropertySection(somain);
     if (note_gnu_property.IsBTICompatible() &&
-        (phdr_table_protect_segments(somain->phdr, somain->phnum, somain->load_bias,
-                                     somain->should_pad_segments(), &note_gnu_property) < 0)) {
+        (phdr_table_protect_segments(
+             somain->phdr, somain->phnum, somain->load_bias, somain->should_pad_segments(),
+             somain->should_use_16kib_app_compat(), &note_gnu_property) < 0)) {
       __linker_error("error: can't protect segments for \"%s\": %m", exe_info.path.c_str());
     }
   }
@@ -484,8 +470,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
 #if defined(__aarch64__)
   // This has to happen after the find_libraries, which will have collected any possible
   // libraries that request memtag_stack in the dynamic section.
-  __libc_init_mte(somain->memtag_dynamic_entries(), somain->phdr, somain->phnum, somain->load_bias,
-                  args.argv);
+  __libc_init_mte_stack(args.argv);
 #endif
 
   linker_finalize_static_tls();
@@ -496,27 +481,22 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   si->call_pre_init_constructors();
   si->call_constructors();
 
-#if TIMING
-  gettimeofday(&t1, nullptr);
-  PRINT("LINKER TIME: %s: %d microseconds", g_argv[0],
-        static_cast<int>(((static_cast<long long>(t1.tv_sec) * 1000000LL) +
-                          static_cast<long long>(t1.tv_usec)) -
-                         ((static_cast<long long>(t0.tv_sec) * 1000000LL) +
-                          static_cast<long long>(t0.tv_usec))));
-#endif
-#if STATS
-  print_linker_stats();
-#endif
-#if TIMING || STATS
-  fflush(stdout);
-#endif
+  if (g_linker_debug_config.timing) {
+    gettimeofday(&t1, nullptr);
+    long long t0_us = (t0.tv_sec * 1000000LL) + t0.tv_usec;
+    long long t1_us = (t1.tv_sec * 1000000LL) + t1.tv_usec;
+    LD_DEBUG(timing, "LINKER TIME: %s: %lld microseconds", g_argv[0], t1_us - t0_us);
+  }
+  if (g_linker_debug_config.statistics) {
+    print_linker_stats();
+  }
 
   // We are about to hand control over to the executable loaded.  We don't want
   // to leave dirty pages behind unnecessarily.
   purge_unused_memory();
 
   ElfW(Addr) entry = exe_info.entry_point;
-  TRACE("[ Ready to execute \"%s\" @ %p ]", si->get_realpath(), reinterpret_cast<void*>(entry));
+  LD_DEBUG(any, "[ Ready to execute \"%s\" @ %p ]", si->get_realpath(), reinterpret_cast<void*>(entry));
   return entry;
 }
 
@@ -649,8 +629,13 @@ static void relocate_linker() {
     // Apply RELR relocations first so that the GOT is initialized for ifunc
     // resolvers.
     if (relr && relrsz) {
+      // Nothing has tagged the memtag globals here, so it is pointless either
+      // way to handle them, the tags will be zero anyway.
+      // That is moot though, because the linker does not use memtag_globals
+      // in the first place.
       relocate_relr(reinterpret_cast<ElfW(Relr*)>(ehdr + relr),
-                    reinterpret_cast<ElfW(Relr*)>(ehdr + relr + relrsz), ehdr);
+                    reinterpret_cast<ElfW(Relr*)>(ehdr + relr + relrsz), ehdr,
+                    /*has_memtag_globals=*/ false);
     }
     if (pltrel && pltrelsz) {
       call_ifunc_resolvers_for_section(reinterpret_cast<RelType*>(ehdr + pltrel),
@@ -667,6 +652,16 @@ static void relocate_linker() {
 static void linker_memclr(void* dst, size_t cnt) {
   for (size_t i = 0; i < cnt; ++i) {
     reinterpret_cast<char*>(dst)[i] = '\0';
+  }
+}
+
+// Remapping MTE globals segments happens before the linker relocates itself, and so can't use
+// memcpy() from string.h. This function is compiled with -ffreestanding.
+void linker_memcpy(void* dst, const void* src, size_t n) {
+  char* dst_bytes = reinterpret_cast<char*>(dst);
+  const char* src_bytes = reinterpret_cast<const char*>(src);
+  for (size_t i = 0; i < n; ++i) {
+    dst_bytes[i] = src_bytes[i];
   }
 }
 
@@ -747,6 +742,8 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   tmp_linker_so.set_linker_flag();
 
   if (!tmp_linker_so.prelink_image()) __linker_cannot_link(args.argv[0]);
+  // There is special logic in soinfo::relocate to avoid duplicating the
+  // relocations we did in relocate_linker().
   if (!tmp_linker_so.link_image(SymbolLookupList(&tmp_linker_so), &tmp_linker_so, nullptr, nullptr)) __linker_cannot_link(args.argv[0]);
 
   return __linker_init_post_relocation(args, tmp_linker_so);
@@ -833,7 +830,7 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) 
 
   ElfW(Addr) start_address = linker_main(args, exe_to_load);
 
-  INFO("[ Jumping to _start (%p)... ]", reinterpret_cast<void*>(start_address));
+  LD_DEBUG(any, "[ Jumping to _start (%p)... ]", reinterpret_cast<void*>(start_address));
 
   // Return the address that the calling assembly stub should jump to.
   return start_address;
