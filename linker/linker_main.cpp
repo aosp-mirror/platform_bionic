@@ -46,7 +46,6 @@
 #include "linker_tls.h"
 #include "linker_utils.h"
 
-#include "platform/bionic/macros.h"
 #include "private/KernelArgumentBlock.h"
 #include "private/bionic_call_ifunc_resolver.h"
 #include "private/bionic_globals.h"
@@ -72,9 +71,7 @@ static void get_elf_base_from_phdr(const ElfW(Phdr)* phdr_table, size_t phdr_cou
 static void set_bss_vma_name(soinfo* si);
 
 void __libc_init_mte(const memtag_dynamic_entries_t* memtag_dynamic_entries, const void* phdr_start,
-                     size_t phdr_count, uintptr_t load_bias);
-
-void __libc_init_mte_stack(void* stack_top);
+                     size_t phdr_count, uintptr_t load_bias, void* stack_top);
 
 static void __linker_cannot_link(const char* argv0) {
   __linker_error("CANNOT LINK EXECUTABLE \"%s\": %s", argv0, linker_get_error_buffer());
@@ -368,8 +365,6 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   init_link_map_head(*solinker);
 
 #if defined(__aarch64__)
-  __libc_init_mte(somain->memtag_dynamic_entries(), somain->phdr, somain->phnum, somain->load_bias);
-
   if (exe_to_load == nullptr) {
     // Kernel does not add PROT_BTI to executable pages of the loaded ELF.
     // Apply appropriate protections here if it is needed.
@@ -470,7 +465,8 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
 #if defined(__aarch64__)
   // This has to happen after the find_libraries, which will have collected any possible
   // libraries that request memtag_stack in the dynamic section.
-  __libc_init_mte_stack(args.argv);
+  __libc_init_mte(somain->memtag_dynamic_entries(), somain->phdr, somain->phnum, somain->load_bias,
+                  args.argv);
 #endif
 
   linker_finalize_static_tls();
@@ -629,13 +625,8 @@ static void relocate_linker() {
     // Apply RELR relocations first so that the GOT is initialized for ifunc
     // resolvers.
     if (relr && relrsz) {
-      // Nothing has tagged the memtag globals here, so it is pointless either
-      // way to handle them, the tags will be zero anyway.
-      // That is moot though, because the linker does not use memtag_globals
-      // in the first place.
       relocate_relr(reinterpret_cast<ElfW(Relr*)>(ehdr + relr),
-                    reinterpret_cast<ElfW(Relr*)>(ehdr + relr + relrsz), ehdr,
-                    /*has_memtag_globals=*/ false);
+                    reinterpret_cast<ElfW(Relr*)>(ehdr + relr + relrsz), ehdr);
     }
     if (pltrel && pltrelsz) {
       call_ifunc_resolvers_for_section(reinterpret_cast<RelType*>(ehdr + pltrel),
@@ -652,16 +643,6 @@ static void relocate_linker() {
 static void linker_memclr(void* dst, size_t cnt) {
   for (size_t i = 0; i < cnt; ++i) {
     reinterpret_cast<char*>(dst)[i] = '\0';
-  }
-}
-
-// Remapping MTE globals segments happens before the linker relocates itself, and so can't use
-// memcpy() from string.h. This function is compiled with -ffreestanding.
-void linker_memcpy(void* dst, const void* src, size_t n) {
-  char* dst_bytes = reinterpret_cast<char*>(dst);
-  const char* src_bytes = reinterpret_cast<const char*>(src);
-  for (size_t i = 0; i < n; ++i) {
-    dst_bytes[i] = src_bytes[i];
   }
 }
 
