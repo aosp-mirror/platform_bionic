@@ -254,12 +254,12 @@ struct soinfo {
   void call_constructors();
   void call_destructors();
   void call_pre_init_constructors();
-  bool prelink_image(bool deterministic_memtag_globals = false);
+  bool prelink_image();
   bool link_image(const SymbolLookupList& lookup_list, soinfo* local_group_root,
                   const android_dlextinfo* extinfo, size_t* relro_fd_offset);
   bool protect_relro();
 
-  void tag_globals(bool deterministic_memtag_globals);
+  void tag_globals();
   ElfW(Addr) apply_memtag_if_mte_globals(ElfW(Addr) sym_addr) const;
 
   void add_child(soinfo* child);
