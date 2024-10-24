@@ -44,8 +44,6 @@
 #include "linker_logger.h"
 #include "linker_relocate.h"
 #include "linker_utils.h"
-#include "platform/bionic/mte.h"
-#include "private/bionic_globals.h"
 
 SymbolLookupList::SymbolLookupList(soinfo* si)
     : sole_lib_(si->get_lookup_lib()), begin_(&sole_lib_), end_(&sole_lib_ + 1) {
@@ -304,12 +302,6 @@ SymbolLookupLib soinfo::get_lookup_lib() {
 const ElfW(Sym)* soinfo::find_symbol_by_name(SymbolName& symbol_name,
                                              const version_info* vi) const {
   return is_gnu_hash() ? gnu_lookup(symbol_name, vi) : elf_lookup(symbol_name, vi);
-}
-
-ElfW(Addr) soinfo::apply_memtag_if_mte_globals(ElfW(Addr) sym_addr) const {
-  if (!should_tag_memtag_globals()) return sym_addr;
-  if (sym_addr == 0) return sym_addr;  // Handle undefined weak symbols.
-  return reinterpret_cast<ElfW(Addr)>(get_tagged_address(reinterpret_cast<void*>(sym_addr)));
 }
 
 const ElfW(Sym)* soinfo::gnu_lookup(SymbolName& symbol_name, const version_info* vi) const {
