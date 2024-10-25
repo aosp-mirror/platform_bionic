@@ -46,6 +46,8 @@ typedef __kernel_ulong_t msgqnum_t;
 typedef __kernel_ulong_t msglen_t;
 
 /** Not useful on Android; disallowed by SELinux. */
+
+#if __BIONIC_AVAILABILITY_GUARD(26)
 int msgctl(int __msg_id, int __op, struct msqid_ds* _Nullable __buf) __INTRODUCED_IN(26);
 /** Not useful on Android; disallowed by SELinux. */
 int msgget(key_t __key, int __flags) __INTRODUCED_IN(26);
@@ -53,5 +55,7 @@ int msgget(key_t __key, int __flags) __INTRODUCED_IN(26);
 ssize_t msgrcv(int __msg_id, void* _Nonnull __msgbuf_ptr, size_t __size, long __type, int __flags) __INTRODUCED_IN(26);
 /** Not useful on Android; disallowed by SELinux. */
 int msgsnd(int __msg_id, const void* _Nonnull __msgbuf_ptr, size_t __size, int __flags) __INTRODUCED_IN(26);
+#endif /* __BIONIC_AVAILABILITY_GUARD(26) */
+
 
 __END_DECLS

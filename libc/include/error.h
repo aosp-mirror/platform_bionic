@@ -37,9 +37,6 @@
 
 __BEGIN_DECLS
 
-// These cause issues with gnulib's polyfill
-// https://github.com/android/ndk/issues/2081
-#if __ANDROID_API__ >= 23
 /**
  * [error_print_progname(3)](https://man7.org/linux/man-pages/man3/error_print_progname.3.html) is
  * a function pointer that, if non-null, is called by error() instead of prefixing errors with the
@@ -47,10 +44,10 @@ __BEGIN_DECLS
  *
  * Available since API level 23.
  */
-extern void (* _Nullable error_print_progname)(void) __INTRODUCED_IN(23);
-#endif
 
-#if __ANDROID_API__ >= 23
+#if __BIONIC_AVAILABILITY_GUARD(23)
+extern void (* _Nullable error_print_progname)(void) __INTRODUCED_IN(23);
+
 /**
  * [error_message_count(3)](https://man7.org/linux/man-pages/man3/error_message_count.3.html) is
  * a global count of the number of calls to error() and error_at_line().
@@ -58,7 +55,6 @@ extern void (* _Nullable error_print_progname)(void) __INTRODUCED_IN(23);
  * Available since API level 23.
  */
 extern unsigned int error_message_count __INTRODUCED_IN(23);
-#endif
 
 /**
  * [error_one_per_line(3)](https://man7.org/linux/man-pages/man3/error_one_per_line.3.html) is
@@ -87,5 +83,7 @@ void error(int __status, int __errno, const char* _Nonnull __fmt, ...) __printfl
  * Available since API level 23.
  */
 void error_at_line(int __status, int __errno, const char* _Nonnull __filename, unsigned int __line_number, const char* _Nonnull __fmt, ...) __printflike(5, 6) __INTRODUCED_IN(23);
+#endif /* __BIONIC_AVAILABILITY_GUARD(23) */
+
 
 __END_DECLS
