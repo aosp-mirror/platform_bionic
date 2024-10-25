@@ -44,7 +44,7 @@ extern "C" int __set_tid_address(int* tid_address);
 // Declared in "private/bionic_ssp.h".
 uintptr_t __stack_chk_guard = 0;
 
-BIONIC_USED_BEFORE_LINKER_RELOCATES static pthread_internal_t main_thread;
+static pthread_internal_t main_thread;
 
 // Setup for the main thread. For dynamic executables, this is called by the
 // linker _before_ libc is mapped in memory. This means that all writes to
