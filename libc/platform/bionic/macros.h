@@ -97,26 +97,3 @@ template <typename T>
 static inline T* _Nonnull untag_address(T* _Nonnull p) {
   return reinterpret_cast<T*>(untag_address(reinterpret_cast<uintptr_t>(p)));
 }
-
-// MTE globals protects internal and external global variables. One of the main
-// things that MTE globals does is force all global variable accesses to go
-// through the GOT. In the linker though, some global variables are accessed (or
-// address-taken) prior to relocations being processed. Because relocations
-// haven't run yet, the GOT entry hasn't been populated, and this leads to
-// crashes. Thus, any globals used by the linker prior to relocation should be
-// annotated with this attribute, which suppresses tagging of this global
-// variable, restoring the pc-relative address computation.
-//
-// A way to find global variables that need this attribute is to build the
-// linker/libc with `SANITIZE_TARGET=memtag_globals`, push them onto a device
-// (it doesn't have to be MTE capable), and then run an executable using
-// LD_LIBRARY_PATH and using the linker in interpreter mode (e.g.
-// `LD_LIBRARY_PATH=/data/tmp/ /data/tmp/linker64 /data/tmp/my_binary`). A
-// good heuristic is that the global variable is in a file that should be
-// compiled with `-ffreestanding` (but there are global variables there that
-// don't need thisattribute).
-#if __has_feature(memtag_globals)
-#define BIONIC_USED_BEFORE_LINKER_RELOCATES __attribute__((no_sanitize("memtag")))
-#else  // __has_feature(memtag_globals)
-#define BIONIC_USED_BEFORE_LINKER_RELOCATES
-#endif  // __has_feature(memtag_globals)
