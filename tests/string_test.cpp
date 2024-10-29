@@ -740,12 +740,8 @@ TEST(STRING_TEST, strncpy) {
     // Set the second half of ptr to the expected pattern in ptr2.
     memset(state.ptr + state.MAX_LEN, '\1', state.MAX_LEN);
     memcpy(state.ptr + state.MAX_LEN, state.ptr1, copy_len);
-    size_t expected_end;
     if (copy_len > ptr1_len) {
       memset(state.ptr + state.MAX_LEN + ptr1_len, '\0', copy_len - ptr1_len);
-      expected_end = ptr1_len;
-    } else {
-      expected_end = copy_len;
     }
 
     ASSERT_EQ(state.ptr2, strncpy(state.ptr2, state.ptr1, copy_len));

@@ -353,7 +353,6 @@ cc_library_static {
         "-Wno-unused-parameter",
         "-include netbsd-compat.h",
         "-Wframe-larger-than=66000",
-        "-include private/bsd_sys_param.h",
     ],
 
     local_include_dirs: [
@@ -1761,6 +1760,7 @@ cc_library_headers {
     name: "libc_uapi_headers",
     visibility: [
         "//external/musl",
+        "//external/rust/crates/v4l2r/android",
     ],
     llndk: {
         llndk_headers: true,
@@ -2135,6 +2135,7 @@ cc_library_static {
 //     async_safe_fatal_va_list
 cc_library_static {
     name: "librust_baremetal",
+    defaults: ["cc_baremetal_defaults"],
     header_libs: ["libc_headers"],
     include_dirs: [
         "bionic/libc/async_safe/include",
