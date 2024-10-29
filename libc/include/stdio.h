@@ -272,7 +272,12 @@ __nodiscard int getchar_unlocked(void);
 int putc_unlocked(int __ch, FILE* _Nonnull __fp);
 int putchar_unlocked(int __ch);
 
+// This causes issues with a polyfill in libconfuse
+// https://github.com/android/ndk/issues/2081
+#if __ANDROID_API__ >= 23
 __nodiscard FILE* _Nullable fmemopen(void* _Nullable __buf, size_t __size, const char* _Nonnull __mode) __INTRODUCED_IN(23);
+#endif
+
 __nodiscard FILE* _Nullable open_memstream(char* _Nonnull * _Nonnull __ptr, size_t* _Nonnull __size_ptr) __INTRODUCED_IN(23);
 
 #if defined(__USE_BSD) || defined(__BIONIC__) /* Historically bionic exposed these. */
