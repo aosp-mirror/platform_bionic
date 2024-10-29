@@ -48,6 +48,16 @@ cc_defaults {
 }
 
 // -----------------------------------------------------------------------------
+// Test library ELFs for linker page size related tests
+// -----------------------------------------------------------------------------
+cc_test_library {
+    name: "libtest_elf_max_page_size_4kib",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["elf_max_page_size.c"],
+    ldflags: ["-z max-page-size=0x1000"],
+}
+
+// -----------------------------------------------------------------------------
 // Libraries and helper binaries for ELF TLS
 // -----------------------------------------------------------------------------
 cc_test_library {

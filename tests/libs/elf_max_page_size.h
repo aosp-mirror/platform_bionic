@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,38 +26,20 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _WCTYPE_H_
-#define _WCTYPE_H_
+#define RO0 23
+#define RO1 234
+#define RW0 2345
+#define RW1 23456
+#define BSS0 0
+#define BSS1 0
 
-#include <sys/cdefs.h>
+#define RW0_INCREMENT 12
+#define RW1_INCREMENT 123
+#define BSS0_INCREMENT 1234
+#define BSS1_INCREMENT 12345
 
-#include <bits/wctype.h>
-#include <xlocale.h>
+#define TEST_RESULT_BASE (RO0 + RO1 + RW0 + RW1 + BSS0 + BSS1 + RW0)
+#define TEST_RESULT_INCREMENT \
+  (RW0_INCREMENT + RW1_INCREMENT + BSS0_INCREMENT + BSS1_INCREMENT + RW0_INCREMENT)
 
-__BEGIN_DECLS
-
-int iswalnum_l(wint_t __wc, locale_t _Nonnull __l);
-int iswalpha_l(wint_t __wc, locale_t _Nonnull __l);
-int iswblank_l(wint_t __wc, locale_t _Nonnull __l);
-int iswcntrl_l(wint_t __wc, locale_t _Nonnull __l);
-int iswdigit_l(wint_t __wc, locale_t _Nonnull __l);
-int iswgraph_l(wint_t __wc, locale_t _Nonnull __l);
-int iswlower_l(wint_t __wc, locale_t _Nonnull __l);
-int iswprint_l(wint_t __wc, locale_t _Nonnull __l);
-int iswpunct_l(wint_t __wc, locale_t _Nonnull __l);
-int iswspace_l(wint_t __wc, locale_t _Nonnull __l);
-int iswupper_l(wint_t __wc, locale_t _Nonnull __l);
-int iswxdigit_l(wint_t __wc, locale_t _Nonnull __l);
-
-wint_t towlower_l(wint_t __wc, locale_t _Nonnull __l);
-wint_t towupper_l(wint_t __wc, locale_t _Nonnull __l);
-
-wint_t towctrans_l(wint_t __wc, wctrans_t _Nonnull __transform, locale_t _Nonnull __l) __INTRODUCED_IN(26);
-wctrans_t _Nonnull wctrans_l(const char* _Nonnull __name, locale_t _Nonnull __l) __INTRODUCED_IN(26);
-
-wctype_t wctype_l(const char* _Nonnull __name, locale_t _Nonnull __l);
-int iswctype_l(wint_t __wc, wctype_t __transform, locale_t _Nonnull __l);
-
-__END_DECLS
-
-#endif
+typedef int (*loader_test_func_t)(void);

@@ -184,6 +184,7 @@ filegroup {
         "linker_mapped_file_fragment.cpp",
         "linker_note_gnu_property.cpp",
         "linker_phdr.cpp",
+        "linker_phdr_16kib_compat.cpp",
         "linker_relocate.cpp",
         "linker_sdk_versions.cpp",
         "linker_soinfo.cpp",
