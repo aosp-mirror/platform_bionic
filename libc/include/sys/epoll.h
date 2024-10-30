@@ -88,13 +88,19 @@ int epoll_pwait(int __epoll_fd, struct epoll_event* _Nonnull __events, int __eve
  *
  * Available since API level 28.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(28)
 int epoll_pwait64(int __epoll_fd, struct epoll_event* _Nonnull __events, int __event_count, int __timeout_ms, const sigset64_t* _Nullable __mask) __INTRODUCED_IN(28);
+#endif /* __BIONIC_AVAILABILITY_GUARD(28) */
+
 
 /**
  * Like epoll_pwait() but with a `struct timespec` timeout, for nanosecond resolution.
  *
  * Available since API level 35.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(35)
 int epoll_pwait2(int __epoll_fd, struct epoll_event* _Nonnull __events, int __event_count, const struct timespec* _Nullable __timeout, const sigset_t* _Nullable __mask) __INTRODUCED_IN(35);
 
 /**
@@ -103,5 +109,7 @@ int epoll_pwait2(int __epoll_fd, struct epoll_event* _Nonnull __events, int __ev
  * Available since API level 35.
  */
 int epoll_pwait2_64(int __epoll_fd, struct epoll_event* _Nonnull __events, int __event_count, const struct timespec* _Nullable __timeout, const sigset64_t* _Nullable __mask) __INTRODUCED_IN(35);
+#endif /* __BIONIC_AVAILABILITY_GUARD(35) */
+
 
 __END_DECLS

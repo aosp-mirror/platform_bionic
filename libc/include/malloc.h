@@ -195,7 +195,11 @@ struct mallinfo2 mallinfo2(void) __RENAME(mallinfo);
  *
  * Available since API level 23.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(23)
 int malloc_info(int __must_be_zero, FILE* _Nonnull __fp) __INTRODUCED_IN(23);
+#endif /* __BIONIC_AVAILABILITY_GUARD(23) */
+
 
 /**
  * mallopt() option to set the decay time. Valid values are -1, 0 and 1.
@@ -368,7 +372,11 @@ enum HeapTaggingLevel {
  *
  * Available since API level 26.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(26)
 int mallopt(int __option, int __value) __INTRODUCED_IN(26);
+#endif /* __BIONIC_AVAILABILITY_GUARD(26) */
+
 
 /**
  * [__malloc_hook(3)](https://man7.org/linux/man-pages/man3/__malloc_hook.3.html)
@@ -379,6 +387,8 @@ int mallopt(int __option, int __value) __INTRODUCED_IN(26);
  *
  * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/main/libc/malloc_hooks/README.md)
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(28)
 extern void* _Nonnull (*volatile _Nonnull __malloc_hook)(size_t __byte_count, const void* _Nonnull __caller) __INTRODUCED_IN(28);
 
 /**
@@ -413,5 +423,7 @@ extern void (*volatile _Nonnull __free_hook)(void* _Nullable __ptr, const void* 
  * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/main/libc/malloc_hooks/README.md)
  */
 extern void* _Nonnull (*volatile _Nonnull __memalign_hook)(size_t __alignment, size_t __byte_count, const void* _Nonnull __caller) __INTRODUCED_IN(28);
+#endif /* __BIONIC_AVAILABILITY_GUARD(28) */
+
 
 __END_DECLS
