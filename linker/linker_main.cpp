@@ -370,8 +370,9 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
     // Apply appropriate protections here if it is needed.
     auto note_gnu_property = GnuPropertySection(somain);
     if (note_gnu_property.IsBTICompatible() &&
-        (phdr_table_protect_segments(somain->phdr, somain->phnum, somain->load_bias,
-                                     somain->should_pad_segments(), &note_gnu_property) < 0)) {
+        (phdr_table_protect_segments(
+             somain->phdr, somain->phnum, somain->load_bias, somain->should_pad_segments(),
+             somain->should_use_16kib_app_compat(), &note_gnu_property) < 0)) {
       __linker_error("error: can't protect segments for \"%s\": %m", exe_info.path.c_str());
     }
   }
@@ -722,6 +723,8 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   tmp_linker_so.set_linker_flag();
 
   if (!tmp_linker_so.prelink_image()) __linker_cannot_link(args.argv[0]);
+  // There is special logic in soinfo::relocate to avoid duplicating the
+  // relocations we did in relocate_linker().
   if (!tmp_linker_so.link_image(SymbolLookupList(&tmp_linker_so), &tmp_linker_so, nullptr, nullptr)) __linker_cannot_link(args.argv[0]);
 
   return __linker_init_post_relocation(args, tmp_linker_so);
