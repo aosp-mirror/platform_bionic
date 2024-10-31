@@ -52,8 +52,12 @@ int iswxdigit_l(wint_t __wc, locale_t _Nonnull __l);
 wint_t towlower_l(wint_t __wc, locale_t _Nonnull __l);
 wint_t towupper_l(wint_t __wc, locale_t _Nonnull __l);
 
+
+#if __BIONIC_AVAILABILITY_GUARD(26)
 wint_t towctrans_l(wint_t __wc, wctrans_t _Nonnull __transform, locale_t _Nonnull __l) __INTRODUCED_IN(26);
 wctrans_t _Nonnull wctrans_l(const char* _Nonnull __name, locale_t _Nonnull __l) __INTRODUCED_IN(26);
+#endif /* __BIONIC_AVAILABILITY_GUARD(26) */
+
 
 wctype_t wctype_l(const char* _Nonnull __name, locale_t _Nonnull __l);
 int iswctype_l(wint_t __wc, wctype_t __transform, locale_t _Nonnull __l);
