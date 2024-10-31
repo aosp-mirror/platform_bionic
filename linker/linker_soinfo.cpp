@@ -45,20 +45,15 @@
 #include "linker_relocate.h"
 #include "linker_utils.h"
 
-// Enable the slow lookup path if symbol lookups should be logged.
-static bool is_lookup_tracing_enabled() {
-  return g_ld_debug_verbosity > LINKER_VERBOSITY_TRACE && DO_TRACE_LOOKUP;
-}
-
 SymbolLookupList::SymbolLookupList(soinfo* si)
     : sole_lib_(si->get_lookup_lib()), begin_(&sole_lib_), end_(&sole_lib_ + 1) {
   CHECK(si != nullptr);
-  slow_path_count_ += is_lookup_tracing_enabled();
+  slow_path_count_ += !!g_linker_debug_config.lookup;
   slow_path_count_ += sole_lib_.needs_sysv_lookup();
 }
 
 SymbolLookupList::SymbolLookupList(const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
-  slow_path_count_ += is_lookup_tracing_enabled();
+  slow_path_count_ += !!g_linker_debug_config.lookup;
   libs_.reserve(1 + global_group.size() + local_group.size());
 
   // Reserve a space in front for DT_SYMBOLIC lookup.
@@ -144,8 +139,8 @@ soinfo_do_lookup_impl(const char* name, const version_info* vi,
       }
 
       if (IsGeneral) {
-        TRACE_TYPE(LOOKUP, "SEARCH %s in %s@%p (gnu)",
-                   name, lib->si_->get_realpath(), reinterpret_cast<void*>(lib->si_->base));
+        LD_DEBUG(lookup, "SEARCH %s in %s@%p (gnu)",
+                 name, lib->si_->get_realpath(), reinterpret_cast<void*>(lib->si_->base));
       }
 
       const uint32_t word_num = (hash / kBloomMaskBits) & lib->gnu_maskwords_;
@@ -318,8 +313,8 @@ const ElfW(Sym)* soinfo::gnu_lookup(SymbolName& symbol_name, const version_info*
   const uint32_t h1 = hash % kBloomMaskBits;
   const uint32_t h2 = (hash >> gnu_shift2_) % kBloomMaskBits;
 
-  TRACE_TYPE(LOOKUP, "SEARCH %s in %s@%p (gnu)",
-      symbol_name.get_name(), get_realpath(), reinterpret_cast<void*>(base));
+  LD_DEBUG(lookup, "SEARCH %s in %s@%p (gnu)",
+           symbol_name.get_name(), get_realpath(), reinterpret_cast<void*>(base));
 
   // test against bloom filter
   if ((1 & (bloom_word >> h1) & (bloom_word >> h2)) == 0) {
@@ -352,9 +347,9 @@ const ElfW(Sym)* soinfo::gnu_lookup(SymbolName& symbol_name, const version_info*
 const ElfW(Sym)* soinfo::elf_lookup(SymbolName& symbol_name, const version_info* vi) const {
   uint32_t hash = symbol_name.elf_hash();
 
-  TRACE_TYPE(LOOKUP, "SEARCH %s in %s@%p h=%x(elf) %zd",
-             symbol_name.get_name(), get_realpath(),
-             reinterpret_cast<void*>(base), hash, hash % nbucket_);
+  LD_DEBUG(lookup, "SEARCH %s in %s@%p h=%x(elf) %zd",
+           symbol_name.get_name(), get_realpath(),
+           reinterpret_cast<void*>(base), hash, hash % nbucket_);
 
   const ElfW(Versym) verneed = find_verdef_version_index(this, vi);
   const ElfW(Versym)* versym = get_versym_table();
@@ -429,9 +424,9 @@ static void call_function(const char* function_name __unused,
     return;
   }
 
-  TRACE("[ Calling c-tor %s @ %p for '%s' ]", function_name, function, realpath);
+  LD_DEBUG(calls, "[ Calling c-tor %s @ %p for '%s' ]", function_name, function, realpath);
   function(g_argc, g_argv, g_envp);
-  TRACE("[ Done calling c-tor %s @ %p for '%s' ]", function_name, function, realpath);
+  LD_DEBUG(calls, "[ Done calling c-tor %s @ %p for '%s' ]", function_name, function, realpath);
 }
 
 static void call_function(const char* function_name __unused,
@@ -441,9 +436,9 @@ static void call_function(const char* function_name __unused,
     return;
   }
 
-  TRACE("[ Calling d-tor %s @ %p for '%s' ]", function_name, function, realpath);
+  LD_DEBUG(calls, "[ Calling d-tor %s @ %p for '%s' ]", function_name, function, realpath);
   function();
-  TRACE("[ Done calling d-tor %s @ %p for '%s' ]", function_name, function, realpath);
+  LD_DEBUG(calls, "[ Done calling d-tor %s @ %p for '%s' ]", function_name, function, realpath);
 }
 
 template <typename F>
@@ -453,18 +448,18 @@ static inline void call_array(const char* array_name __unused, F* functions, siz
     return;
   }
 
-  TRACE("[ Calling %s (size %zd) @ %p for '%s' ]", array_name, count, functions, realpath);
+  LD_DEBUG(calls, "[ Calling %s (size %zd) @ %p for '%s' ]", array_name, count, functions, realpath);
 
   int begin = reverse ? (count - 1) : 0;
   int end = reverse ? -1 : count;
   int step = reverse ? -1 : 1;
 
   for (int i = begin; i != end; i += step) {
-    TRACE("[ %s[%d] == %p ]", array_name, i, functions[i]);
+    LD_DEBUG(calls, "[ %s[%d] == %p ]", array_name, i, functions[i]);
     call_function("function", functions[i], realpath);
   }
 
-  TRACE("[ Done calling %s for '%s' ]", array_name, realpath);
+  LD_DEBUG(calls, "[ Done calling %s for '%s' ]", array_name, realpath);
 }
 
 void soinfo::call_pre_init_constructors() {
@@ -492,7 +487,7 @@ void soinfo::call_constructors() {
 
   if (!is_main_executable() && preinit_array_ != nullptr) {
     // The GNU dynamic linker silently ignores these, but we warn the developer.
-    PRINT("\"%s\": ignoring DT_PREINIT_ARRAY in shared library!", get_realpath());
+    DL_WARN("\"%s\": ignoring DT_PREINIT_ARRAY in shared library!", get_realpath());
   }
 
   get_children().for_each([] (soinfo* si) {

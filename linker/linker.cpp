@@ -316,7 +316,7 @@ soinfo* soinfo_alloc(android_namespace_t* ns, const char* name,
     async_safe_fatal("library name \"%s\" too long", name);
   }
 
-  TRACE("name %s: allocating soinfo for ns=%p", name, ns);
+  LD_DEBUG(any, "name %s: allocating soinfo for ns=%p", name, ns);
 
   soinfo* si = new (g_soinfo_allocator.alloc()) soinfo(ns, name, file_stat,
                                                        file_offset, rtld_flags);
@@ -326,7 +326,7 @@ soinfo* soinfo_alloc(android_namespace_t* ns, const char* name,
   si->generate_handle();
   ns->add_soinfo(si);
 
-  TRACE("name %s: allocated soinfo @ %p", name, si);
+  LD_DEBUG(any, "name %s: allocated soinfo @ %p", name, si);
   return si;
 }
 
@@ -349,7 +349,7 @@ static void soinfo_free(soinfo* si) {
     munmap(reinterpret_cast<void*>(si->get_gap_start()), si->get_gap_size());
   }
 
-  TRACE("name %s: freeing soinfo @ %p", si->get_realpath(), si);
+  LD_DEBUG(any, "name %s: freeing soinfo @ %p", si->get_realpath(), si);
 
   if (!solist_remove_soinfo(si)) {
     async_safe_fatal("soinfo=%p is not in soinfo_list (double unload?)", si);
@@ -387,7 +387,7 @@ static bool realpath_fd(int fd, std::string* realpath) {
   auto length = readlink(proc_self_fd, buf, sizeof(buf));
   if (length == -1) {
     if (!is_first_stage_init()) {
-      PRINT("readlink(\"%s\" [fd=%d]) failed: %m", proc_self_fd, fd);
+      DL_WARN("readlink(\"%s\" [fd=%d]) failed: %m", proc_self_fd, fd);
     }
     return false;
   }
@@ -640,6 +640,11 @@ class LoadTask {
     si_->set_gap_start(elf_reader.gap_start());
     si_->set_gap_size(elf_reader.gap_size());
     si_->set_should_pad_segments(elf_reader.should_pad_segments());
+    si_->set_should_use_16kib_app_compat(elf_reader.should_use_16kib_app_compat());
+    if (si_->should_use_16kib_app_compat()) {
+      si_->set_compat_relro_start(elf_reader.compat_relro_start());
+      si_->set_compat_relro_size(elf_reader.compat_relro_size());
+    }
 
     return true;
   }
@@ -818,8 +823,8 @@ static const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
   }
 
   if (s != nullptr) {
-    TRACE_TYPE(LOOKUP, "%s s->st_value = %p, found->base = %p",
-               name, reinterpret_cast<void*>(s->st_value), reinterpret_cast<void*>((*found)->base));
+    LD_DEBUG(lookup, "%s s->st_value = %p, found->base = %p",
+             name, reinterpret_cast<void*>(s->st_value), reinterpret_cast<void*>((*found)->base));
   }
 
   return s;
@@ -923,7 +928,7 @@ static int open_library_in_zipfile(ZipArchiveCache* zip_archive_cache,
   }
 
   const char* const path = normalized_path.c_str();
-  TRACE("Trying zip file open from path \"%s\" -> normalized \"%s\"", input_path, path);
+  LD_DEBUG(any, "Trying zip file open from path \"%s\" -> normalized \"%s\"", input_path, path);
 
   // Treat an '!/' separator inside a path as the separator between the name
   // of the zip file on disk and the subdirectory to search within it.
@@ -936,7 +941,7 @@ static int open_library_in_zipfile(ZipArchiveCache* zip_archive_cache,
 
   char buf[512];
   if (strlcpy(buf, path, sizeof(buf)) >= sizeof(buf)) {
-    PRINT("Warning: ignoring very long library path: %s", path);
+    DL_WARN("ignoring very long library path: %s", path);
     return -1;
   }
 
@@ -976,8 +981,8 @@ static int open_library_in_zipfile(ZipArchiveCache* zip_archive_cache,
     *realpath += separator;
   } else {
     if (!is_first_stage_init()) {
-      PRINT("warning: unable to get realpath for the library \"%s\". Will use given path.",
-            normalized_path.c_str());
+      DL_WARN("unable to get realpath for the library \"%s\". Will use given path.",
+              normalized_path.c_str());
     }
     *realpath = normalized_path;
   }
@@ -988,7 +993,7 @@ static int open_library_in_zipfile(ZipArchiveCache* zip_archive_cache,
 static bool format_path(char* buf, size_t buf_size, const char* path, const char* name) {
   int n = async_safe_format_buffer(buf, buf_size, "%s/%s", path, name);
   if (n < 0 || n >= static_cast<int>(buf_size)) {
-    PRINT("Warning: ignoring very long library path: %s/%s", path, name);
+    DL_WARN("ignoring very long library path: %s/%s", path, name);
     return false;
   }
 
@@ -1009,8 +1014,7 @@ static int open_library_at_path(ZipArchiveCache* zip_archive_cache,
       *file_offset = 0;
       if (!realpath_fd(fd, realpath)) {
         if (!is_first_stage_init()) {
-          PRINT("warning: unable to get realpath for the library \"%s\". Will use given path.",
-                path);
+          DL_WARN("unable to get realpath for the library \"%s\". Will use given path.", path);
         }
         *realpath = path;
       }
@@ -1043,7 +1047,7 @@ static int open_library(android_namespace_t* ns,
                         ZipArchiveCache* zip_archive_cache,
                         const char* name, soinfo *needed_by,
                         off64_t* file_offset, std::string* realpath) {
-  TRACE("[ opening %s from namespace %s ]", name, ns->get_name());
+  LD_DEBUG(any, "[ opening %s from namespace %s ]", name, ns->get_name());
 
   // If the name contains a slash, we should attempt to open it directly and not search the paths.
   if (strchr(name, '/') != nullptr) {
@@ -1249,15 +1253,15 @@ static bool load_library(android_namespace_t* ns,
 
       // do not print this if a library is in the list of shared libraries for linked namespaces
       if (!maybe_accessible_via_namespace_links(ns, name)) {
-        PRINT("library \"%s\" (\"%s\") needed or dlopened by \"%s\" is not accessible for the"
-              " namespace: [name=\"%s\", ld_library_paths=\"%s\", default_library_paths=\"%s\","
-              " permitted_paths=\"%s\"]",
-              name, realpath.c_str(),
-              needed_or_dlopened_by,
-              ns->get_name(),
-              android::base::Join(ns->get_ld_library_paths(), ':').c_str(),
-              android::base::Join(ns->get_default_library_paths(), ':').c_str(),
-              android::base::Join(ns->get_permitted_paths(), ':').c_str());
+        DL_WARN("library \"%s\" (\"%s\") needed or dlopened by \"%s\" is not accessible for the"
+                " namespace: [name=\"%s\", ld_library_paths=\"%s\", default_library_paths=\"%s\","
+                " permitted_paths=\"%s\"]",
+                name, realpath.c_str(),
+                needed_or_dlopened_by,
+                ns->get_name(),
+                android::base::Join(ns->get_ld_library_paths(), ':').c_str(),
+                android::base::Join(ns->get_default_library_paths(), ':').c_str(),
+                android::base::Join(ns->get_permitted_paths(), ':').c_str());
       }
       return false;
     }
@@ -1330,10 +1334,9 @@ static bool load_library(android_namespace_t* ns,
     std::string realpath;
     if (!realpath_fd(extinfo->library_fd, &realpath)) {
       if (!is_first_stage_init()) {
-        PRINT(
-            "warning: unable to get realpath for the library \"%s\" by extinfo->library_fd. "
-            "Will use given name.",
-            name);
+        DL_WARN("unable to get realpath for the library \"%s\" by extinfo->library_fd. "
+                "Will use given name.",
+                name);
       }
       realpath = name;
     }
@@ -1474,8 +1477,8 @@ static bool find_library_internal(android_namespace_t* ns,
 
   // Library might still be loaded, the accurate detection
   // of this fact is done by load_library.
-  TRACE("[ \"%s\" find_loaded_library_by_soname failed (*candidate=%s@%p). Trying harder... ]",
-        task->get_name(), candidate == nullptr ? "n/a" : candidate->get_realpath(), candidate);
+  LD_DEBUG(any, "[ \"%s\" find_loaded_library_by_soname failed (*candidate=%s@%p). Trying harder... ]",
+           task->get_name(), candidate == nullptr ? "n/a" : candidate->get_realpath(), candidate);
 
   if (load_library(ns, task, zip_archive_cache, load_tasks, rtld_flags,
                    true /* search_linked_namespaces */)) {
@@ -1906,8 +1909,8 @@ static void soinfo_unload_impl(soinfo* root) {
     if (si->has_min_version(0)) {
       soinfo* child = nullptr;
       while ((child = si->get_children().pop_front()) != nullptr) {
-        TRACE("%s@%p needs to unload %s@%p", si->get_realpath(), si,
-            child->get_realpath(), child);
+        LD_DEBUG(any, "%s@%p needs to unload %s@%p", si->get_realpath(), si,
+                 child->get_realpath(), child);
 
         child->get_parents().remove(si);
 
@@ -2197,10 +2200,10 @@ void* do_dlopen(const char* name, int flags,
       if (file_exists(translated_name_holder.c_str())) {
         soinfo* si = nullptr;
         if (find_loaded_library_by_realpath(ns, original_path, true, &si)) {
-          PRINT("linker_asan dlopen NOT translating \"%s\" -> \"%s\": library already loaded", name,
-                translated_name_holder.c_str());
+          DL_WARN("linker_asan dlopen NOT translating \"%s\" -> \"%s\": library already loaded", name,
+                  translated_name_holder.c_str());
         } else {
-          PRINT("linker_asan dlopen translating \"%s\" -> \"%s\"", name, translated_name);
+          DL_WARN("linker_asan dlopen translating \"%s\" -> \"%s\"", name, translated_name);
           translated_name = translated_name_holder.c_str();
         }
       }
@@ -2217,10 +2220,10 @@ void* do_dlopen(const char* name, int flags,
       if (!translated_name_holder.empty() && file_exists(translated_name_holder.c_str())) {
         soinfo* si = nullptr;
         if (find_loaded_library_by_realpath(ns, original_path, true, &si)) {
-          PRINT("linker_hwasan dlopen NOT translating \"%s\" -> \"%s\": library already loaded", name,
-                translated_name_holder.c_str());
+          DL_WARN("linker_hwasan dlopen NOT translating \"%s\" -> \"%s\": library already loaded",
+                  name, translated_name_holder.c_str());
         } else {
-          PRINT("linker_hwasan dlopen translating \"%s\" -> \"%s\"", name, translated_name);
+          DL_WARN("linker_hwasan dlopen translating \"%s\" -> \"%s\"", name, translated_name);
           translated_name = translated_name_holder.c_str();
         }
       }
@@ -2589,8 +2592,8 @@ ElfW(Addr) call_ifunc_resolver(ElfW(Addr) resolver_addr) {
   if (g_is_ldd) return 0;
 
   ElfW(Addr) ifunc_addr = __bionic_call_ifunc_resolver(resolver_addr);
-  TRACE_TYPE(RELO, "Called ifunc_resolver@%p. The result is %p",
-      reinterpret_cast<void *>(resolver_addr), reinterpret_cast<void*>(ifunc_addr));
+  LD_DEBUG(calls, "ifunc_resolver@%p returned %p",
+           reinterpret_cast<void *>(resolver_addr), reinterpret_cast<void*>(ifunc_addr));
 
   return ifunc_addr;
 }
@@ -2842,8 +2845,8 @@ bool soinfo::prelink_image() {
   /* We can't log anything until the linker is relocated */
   bool relocating_linker = (flags_ & FLAG_LINKER) != 0;
   if (!relocating_linker) {
-    INFO("[ Linking \"%s\" ]", get_realpath());
-    DEBUG("si->base = %p si->flags = 0x%08x", reinterpret_cast<void*>(base), flags_);
+    LD_DEBUG(any, "[ Linking \"%s\" ]", get_realpath());
+    LD_DEBUG(any, "si->base = %p si->flags = 0x%08x", reinterpret_cast<void*>(base), flags_);
   }
 
   if (dynamic == nullptr) {
@@ -2853,7 +2856,7 @@ bool soinfo::prelink_image() {
     return false;
   } else {
     if (!relocating_linker) {
-      DEBUG("dynamic = %p", dynamic);
+      LD_DEBUG(dynamic, "dynamic section @%p", dynamic);
     }
   }
 
@@ -2883,8 +2886,8 @@ bool soinfo::prelink_image() {
   // source: http://www.sco.com/developers/gabi/1998-04-29/ch5.dynamic.html
   uint32_t needed_count = 0;
   for (ElfW(Dyn)* d = dynamic; d->d_tag != DT_NULL; ++d) {
-    DEBUG("d = %p, d[0](tag) = %p d[1](val) = %p",
-          d, reinterpret_cast<void*>(d->d_tag), reinterpret_cast<void*>(d->d_un.d_val));
+    LD_DEBUG(dynamic, "dynamic entry @%p: d_tag=%p, d_val=%p",
+             d, reinterpret_cast<void*>(d->d_tag), reinterpret_cast<void*>(d->d_un.d_val));
     switch (d->d_tag) {
       case DT_SONAME:
         // this is parsed after we have strtab initialized (see below).
@@ -3098,17 +3101,17 @@ bool soinfo::prelink_image() {
 
       case DT_INIT:
         init_func_ = reinterpret_cast<linker_ctor_function_t>(load_bias + d->d_un.d_ptr);
-        DEBUG("%s constructors (DT_INIT) found at %p", get_realpath(), init_func_);
+        LD_DEBUG(dynamic, "%s constructors (DT_INIT) found at %p", get_realpath(), init_func_);
         break;
 
       case DT_FINI:
         fini_func_ = reinterpret_cast<linker_dtor_function_t>(load_bias + d->d_un.d_ptr);
-        DEBUG("%s destructors (DT_FINI) found at %p", get_realpath(), fini_func_);
+        LD_DEBUG(dynamic, "%s destructors (DT_FINI) found at %p", get_realpath(), fini_func_);
         break;
 
       case DT_INIT_ARRAY:
         init_array_ = reinterpret_cast<linker_ctor_function_t*>(load_bias + d->d_un.d_ptr);
-        DEBUG("%s constructors (DT_INIT_ARRAY) found at %p", get_realpath(), init_array_);
+        LD_DEBUG(dynamic, "%s constructors (DT_INIT_ARRAY) found at %p", get_realpath(), init_array_);
         break;
 
       case DT_INIT_ARRAYSZ:
@@ -3117,7 +3120,7 @@ bool soinfo::prelink_image() {
 
       case DT_FINI_ARRAY:
         fini_array_ = reinterpret_cast<linker_dtor_function_t*>(load_bias + d->d_un.d_ptr);
-        DEBUG("%s destructors (DT_FINI_ARRAY) found at %p", get_realpath(), fini_array_);
+        LD_DEBUG(dynamic, "%s destructors (DT_FINI_ARRAY) found at %p", get_realpath(), fini_array_);
         break;
 
       case DT_FINI_ARRAYSZ:
@@ -3126,7 +3129,7 @@ bool soinfo::prelink_image() {
 
       case DT_PREINIT_ARRAY:
         preinit_array_ = reinterpret_cast<linker_ctor_function_t*>(load_bias + d->d_un.d_ptr);
-        DEBUG("%s constructors (DT_PREINIT_ARRAY) found at %p", get_realpath(), preinit_array_);
+        LD_DEBUG(dynamic, "%s constructors (DT_PREINIT_ARRAY) found at %p", get_realpath(), preinit_array_);
         break;
 
       case DT_PREINIT_ARRAYSZ:
@@ -3266,8 +3269,8 @@ bool soinfo::prelink_image() {
     }
   }
 
-  DEBUG("si->base = %p, si->strtab = %p, si->symtab = %p",
-        reinterpret_cast<void*>(base), strtab_, symtab_);
+  LD_DEBUG(dynamic, "si->base = %p, si->strtab = %p, si->symtab = %p",
+           reinterpret_cast<void*>(base), strtab_, symtab_);
 
   // Validity checks.
   if (relocating_linker && needed_count != 0) {
@@ -3363,7 +3366,8 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
                               "\"%s\" has text relocations",
                               get_realpath());
     add_dlwarning(get_realpath(), "text relocations");
-    if (phdr_table_unprotect_segments(phdr, phnum, load_bias, should_pad_segments_) < 0) {
+    if (phdr_table_unprotect_segments(phdr, phnum, load_bias, should_pad_segments_,
+                                      should_use_16kib_app_compat_) < 0) {
       DL_ERR("can't unprotect loadable segments for \"%s\": %m", get_realpath());
       return false;
     }
@@ -3374,12 +3378,13 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
     return false;
   }
 
-  DEBUG("[ finished linking %s ]", get_realpath());
+  LD_DEBUG(any, "[ finished linking %s ]", get_realpath());
 
 #if !defined(__LP64__)
   if (has_text_relocations) {
     // All relocations are done, we can protect our segments back to read-only.
-    if (phdr_table_protect_segments(phdr, phnum, load_bias, should_pad_segments_) < 0) {
+    if (phdr_table_protect_segments(phdr, phnum, load_bias, should_pad_segments_,
+                                    should_use_16kib_app_compat_) < 0) {
       DL_ERR("can't protect segments for \"%s\": %m", get_realpath());
       return false;
     }
@@ -3414,9 +3419,18 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
 }
 
 bool soinfo::protect_relro() {
-  if (phdr_table_protect_gnu_relro(phdr, phnum, load_bias, should_pad_segments_) < 0) {
-    DL_ERR("can't enable GNU RELRO protection for \"%s\": %m", get_realpath());
-    return false;
+  if (should_use_16kib_app_compat_) {
+    if (phdr_table_protect_gnu_relro_16kib_compat(compat_relro_start_, compat_relro_size_) < 0) {
+      DL_ERR("can't enable COMPAT GNU RELRO protection for \"%s\": %s", get_realpath(),
+             strerror(errno));
+      return false;
+    }
+  } else {
+    if (phdr_table_protect_gnu_relro(phdr, phnum, load_bias, should_pad_segments_,
+                                     should_use_16kib_app_compat_) < 0) {
+      DL_ERR("can't enable GNU RELRO protection for \"%s\": %m", get_realpath());
+      return false;
+    }
   }
   return true;
 }
@@ -3556,7 +3570,7 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
 
   {
     std::string ld_config_file_path = get_ld_config_file_path(executable_path);
-    INFO("[ Reading linker config \"%s\" ]", ld_config_file_path.c_str());
+    LD_DEBUG(any, "[ Reading linker config \"%s\" ]", ld_config_file_path.c_str());
     ScopedTrace trace(("linker config " + ld_config_file_path).c_str());
     std::string error_msg;
     if (!Config::read_binary_config(ld_config_file_path.c_str(), executable_path, g_is_asan, g_is_hwasan,

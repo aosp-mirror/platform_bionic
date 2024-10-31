@@ -52,6 +52,10 @@ __BEGIN_DECLS
  *
  * See also arc4random_buf() which is available in all API levels.
  */
-ssize_t getrandom(void* _Nonnull __buffer, size_t __buffer_size, unsigned int __flags) __wur __INTRODUCED_IN(28);
+
+#if __BIONIC_AVAILABILITY_GUARD(28)
+__nodiscard ssize_t getrandom(void* _Nonnull __buffer, size_t __buffer_size, unsigned int __flags) __INTRODUCED_IN(28);
+#endif /* __BIONIC_AVAILABILITY_GUARD(28) */
+
 
 __END_DECLS

@@ -389,6 +389,7 @@ cc_test_library {
         "bug_26110743_test.cpp",
         "byteswap_test.cpp",
         "complex_test.cpp",
+        "cpu_target_features_test.cpp",
         "ctype_test.cpp",
         "dirent_test.cpp",
         "elf_test.cpp",
@@ -745,6 +746,40 @@ cc_test_library {
     },
 }
 
+cc_defaults {
+    name: "bionic_fortify_c_tests_defaults",
+    defaults: [
+        "bionic_clang_fortify_tests_w_flags",
+        "bionic_tests_defaults",
+    ],
+    cflags: [
+        "-U_FORTIFY_SOURCE",
+        // -fbuiltin is required here to counteract -fno-builtin from
+        // `bionic_tests_defaults`. With `-fno-builtin`, Clang won't
+        // const-evaluate calls to `strlen`, which is tested for here.
+        "-fbuiltin",
+    ],
+    srcs: [
+        "clang_fortify_c_only_tests.c",
+    ],
+    tidy: false,
+    shared: {
+        enabled: false,
+    },
+}
+
+cc_test_library {
+    name: "libfortify1-c-tests-clang",
+    defaults: ["bionic_fortify_c_tests_defaults"],
+    cflags: ["-D_FORTIFY_SOURCE=1"],
+}
+
+cc_test_library {
+    name: "libfortify2-c-tests-clang",
+    defaults: ["bionic_fortify_c_tests_defaults"],
+    cflags: ["-D_FORTIFY_SOURCE=2"],
+}
+
 // -----------------------------------------------------------------------------
 // Library of all tests (excluding the dynamic linker tests).
 // -----------------------------------------------------------------------------
@@ -756,8 +791,10 @@ cc_test_library {
         "libBionicStandardTests",
         "libBionicElfTlsTests",
         "libBionicFramePointerTests",
+        "libfortify1-c-tests-clang",
         "libfortify1-tests-clang",
         "libfortify1-new-tests-clang",
+        "libfortify2-c-tests-clang",
         "libfortify2-tests-clang",
         "libfortify2-new-tests-clang",
     ],
@@ -778,6 +815,7 @@ cc_test_library {
         "dlfcn_test.cpp",
         "execinfo_test.cpp",
         "link_test.cpp",
+        "page_size_16kib_compat_test.cpp",
         "pthread_dlfcn_test.cpp",
     ],
     static_libs: [
@@ -786,6 +824,7 @@ cc_test_library {
     ],
     include_dirs: [
         "bionic/libc",
+        "bionic/tests/libs",
     ],
     shared: {
         enabled: false,
@@ -933,6 +972,7 @@ cc_defaults {
         "libtest_dt_runpath_d",
         "libtest_dt_runpath_x",
         "libtest_dt_runpath_y",
+        "libtest_elf_max_page_size_4kib",
         "libtest_elftls_dynamic",
         "libtest_elftls_dynamic_filler_1",
         "libtest_elftls_dynamic_filler_2",
@@ -1083,8 +1123,8 @@ cc_test {
     ],
 }
 
-cc_test {
-    name: "hwasan_test",
+cc_defaults {
+    name: "hwasan_test_defaults",
     enabled: false,
     // This does not use bionic_tests_defaults because it is not supported on
     // host.
@@ -1099,15 +1139,30 @@ cc_test {
     srcs: [
         "hwasan_test.cpp",
     ],
-    shared_libs: [
-        "libbase",
-    ],
     data_libs: [
         "libtest_simple_hwasan",
         "libtest_simple_hwasan_nohwasan",
     ],
     header_libs: ["bionic_libc_platform_headers"],
     test_suites: ["device-tests"],
+}
+
+cc_test {
+    name: "hwasan_test",
+    defaults: ["hwasan_test_defaults"],
+    shared_libs: [
+        "libbase",
+    ],
+}
+
+cc_test {
+    name: "hwasan_test_static",
+    defaults: ["hwasan_test_defaults"],
+    static_libs: [
+        "libbase",
+    ],
+    static_executable: true,
+    cflags: ["-DHWASAN_TEST_STATIC"],
 }
 
 cc_test {
@@ -1162,6 +1217,7 @@ cc_test {
 
     shared_libs: [
         "libbase",
+        "liblog",
     ],
 
     target: {
