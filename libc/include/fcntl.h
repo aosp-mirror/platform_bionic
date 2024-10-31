@@ -227,7 +227,11 @@ ssize_t readahead(int __fd, off64_t __offset, size_t __length);
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(26)
 int sync_file_range(int __fd, off64_t __offset, off64_t __length, unsigned int __flags) __INTRODUCED_IN(26);
+#endif /* __BIONIC_AVAILABILITY_GUARD(26) */
+
 
 #endif
 

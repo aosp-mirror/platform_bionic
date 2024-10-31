@@ -51,7 +51,11 @@ int strcasecmp(const char* _Nonnull __s1, const char* _Nonnull __s2) __attribute
 /**
  * Like strcasecmp() but taking a `locale_t`.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(23)
 int strcasecmp_l(const char* _Nonnull __s1, const char* _Nonnull __s2, locale_t _Nonnull __l) __attribute_pure__ __INTRODUCED_IN(23);
+#endif /* __BIONIC_AVAILABILITY_GUARD(23) */
+
 
 /**
  * [strncasecmp(3)](https://man7.org/linux/man-pages/man3/strncasecmp.3.html) compares the first
@@ -66,6 +70,10 @@ int strncasecmp(const char* _Nonnull __s1, const char* _Nonnull __s2, size_t __n
 /**
  * Like strncasecmp() but taking a `locale_t`.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(23)
 int strncasecmp_l(const char* _Nonnull __s1, const char* _Nonnull __s2, size_t __n, locale_t _Nonnull __l) __attribute_pure__ __INTRODUCED_IN(23);
+#endif /* __BIONIC_AVAILABILITY_GUARD(23) */
+
 
 __END_DECLS
