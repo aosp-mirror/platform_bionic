@@ -29,8 +29,9 @@
 #ifndef _BITS_TERMIOS_INLINES_H_
 #define _BITS_TERMIOS_INLINES_H_
 
-#include <errno.h>
 #include <sys/cdefs.h>
+
+#include <errno.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
 

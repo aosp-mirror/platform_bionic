@@ -58,8 +58,6 @@
 #include "private/bionic_fortify.h"
 #include "private/thread_private.h"
 
-#include "private/bsd_sys_param.h" // For ALIGN/ALIGNBYTES.
-
 #define	NDYNAMIC 10		/* add ten more whenever necessary */
 
 #define PRINTF_IMPL(expr) \
@@ -135,12 +133,14 @@ class ScopedFileLock {
 };
 
 static glue* moreglue(int n) {
-  char* data = new char[sizeof(glue) + ALIGNBYTES + n * sizeof(FILE) + n * sizeof(__sfileext)];
+  char* data = new char[sizeof(glue) +
+                        alignof(FILE) + n * sizeof(FILE) +
+                        alignof(__sfileext) + n * sizeof(__sfileext)];
   if (data == nullptr) return nullptr;
 
   glue* g = reinterpret_cast<glue*>(data);
-  FILE* p = reinterpret_cast<FILE*>(ALIGN(data + sizeof(*g)));
-  __sfileext* pext = reinterpret_cast<__sfileext*>(ALIGN(data + sizeof(*g)) + n * sizeof(FILE));
+  FILE* p = reinterpret_cast<FILE*>(__builtin_align_up(g + 1, alignof(FILE)));
+  __sfileext* pext = reinterpret_cast<__sfileext*>(__builtin_align_up(p + n, alignof(__sfileext)));
   g->next = nullptr;
   g->niobs = n;
   g->iobs = p;
