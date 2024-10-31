@@ -29,24 +29,52 @@
 #error "Never include this file directly; instead, include <unistd.h>"
 #endif
 
-char* _Nullable __getcwd_chk(char* _Nullable, size_t, size_t) __INTRODUCED_IN(24);
 
+#if __BIONIC_AVAILABILITY_GUARD(24)
+char* _Nullable __getcwd_chk(char* _Nullable, size_t, size_t) __INTRODUCED_IN(24);
+#endif /* __BIONIC_AVAILABILITY_GUARD(24) */
+
+
+
+#if __BIONIC_AVAILABILITY_GUARD(23)
 ssize_t __pread_chk(int, void* _Nonnull, size_t, off_t, size_t) __INTRODUCED_IN(23);
+#endif /* __BIONIC_AVAILABILITY_GUARD(23) */
+
 ssize_t __pread_real(int, void* _Nonnull, size_t, off_t) __RENAME(pread);
 
+
+#if __BIONIC_AVAILABILITY_GUARD(23)
 ssize_t __pread64_chk(int, void* _Nonnull, size_t, off64_t, size_t) __INTRODUCED_IN(23);
+#endif /* __BIONIC_AVAILABILITY_GUARD(23) */
+
 ssize_t __pread64_real(int, void* _Nonnull, size_t, off64_t) __RENAME(pread64);
 
+
+#if __BIONIC_AVAILABILITY_GUARD(24)
 ssize_t __pwrite_chk(int, const void* _Nonnull, size_t, off_t, size_t) __INTRODUCED_IN(24);
+#endif /* __BIONIC_AVAILABILITY_GUARD(24) */
+
 ssize_t __pwrite_real(int, const void* _Nonnull, size_t, off_t) __RENAME(pwrite);
 
+
+#if __BIONIC_AVAILABILITY_GUARD(24)
 ssize_t __pwrite64_chk(int, const void* _Nonnull, size_t, off64_t, size_t) __INTRODUCED_IN(24);
+#endif /* __BIONIC_AVAILABILITY_GUARD(24) */
+
 ssize_t __pwrite64_real(int, const void* _Nonnull, size_t, off64_t) __RENAME(pwrite64);
 
 ssize_t __read_chk(int, void* __BIONIC_COMPLICATED_NULLNESS, size_t, size_t);
+
+#if __BIONIC_AVAILABILITY_GUARD(24)
 ssize_t __write_chk(int, const void* __BIONIC_COMPLICATED_NULLNESS, size_t, size_t) __INTRODUCED_IN(24);
+#endif /* __BIONIC_AVAILABILITY_GUARD(24) */
+
+
+#if __BIONIC_AVAILABILITY_GUARD(23)
 ssize_t __readlink_chk(const char* _Nonnull, char* _Nonnull, size_t, size_t) __INTRODUCED_IN(23);
 ssize_t __readlinkat_chk(int dirfd, const char* _Nonnull, char* _Nonnull, size_t, size_t) __INTRODUCED_IN(23);
+#endif /* __BIONIC_AVAILABILITY_GUARD(23) */
+
 
 #if defined(__BIONIC_FORTIFY)
 
