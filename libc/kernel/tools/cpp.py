@@ -1430,7 +1430,7 @@ class BlockList(object):
                         state = VAR_DECL
                     elif state == NORMAL and token_id in ['struct', 'typedef',
                                                           'enum', 'union',
-                                                          '__extension__']:
+                                                          '__extension__', '=']:
                         state = OTHER_DECL
                         state_token = token_id
                     elif block.tokens[i].kind == TokenKind.IDENTIFIER:
@@ -2057,7 +2057,7 @@ struct something {
   struct timeval val2;
 };
 """
-        self.assertEqual(self.parse(text, {"remove": True}), expected)
+        self.assertEqual(self.parse(text, {"remove": None}), expected)
 
     def test_remove_struct_from_end(self):
         text = """\
@@ -2076,7 +2076,7 @@ struct something {
   struct timeval val2;
 };
 """
-        self.assertEqual(self.parse(text, {"remove": True}), expected)
+        self.assertEqual(self.parse(text, {"remove": None}), expected)
 
     def test_remove_minimal_struct(self):
         text = """\
@@ -2084,7 +2084,7 @@ struct remove {
 };
 """
         expected = "";
-        self.assertEqual(self.parse(text, {"remove": True}), expected)
+        self.assertEqual(self.parse(text, {"remove": None}), expected)
 
     def test_remove_struct_with_struct_fields(self):
         text = """\
@@ -2104,7 +2104,7 @@ struct something {
   struct remove val2;
 };
 """
-        self.assertEqual(self.parse(text, {"remove": True}), expected)
+        self.assertEqual(self.parse(text, {"remove": None}), expected)
 
     def test_remove_consecutive_structs(self):
         text = """\
@@ -2136,7 +2136,7 @@ struct keep2 {
   struct timeval val2;
 };
 """
-        self.assertEqual(self.parse(text, {"remove1": True, "remove2": True}), expected)
+        self.assertEqual(self.parse(text, {"remove1": None, "remove2": None}), expected)
 
     def test_remove_multiple_structs(self):
         text = """\
@@ -2169,7 +2169,7 @@ struct keep3 {
   int val;
 };
 """
-        self.assertEqual(self.parse(text, {"remove1": True, "remove2": True}), expected)
+        self.assertEqual(self.parse(text, {"remove1": None, "remove2": None}), expected)
 
     def test_remove_struct_with_inline_structs(self):
         text = """\
@@ -2194,7 +2194,7 @@ struct something {
   struct timeval val2;
 };
 """
-        self.assertEqual(self.parse(text, {"remove": True}), expected)
+        self.assertEqual(self.parse(text, {"remove": None}), expected)
 
     def test_remove_struct_across_blocks(self):
         text = """\
@@ -2219,7 +2219,7 @@ struct something {
   struct timeval val2;
 };
 """
-        self.assertEqual(self.parse(text, {"remove": True}), expected)
+        self.assertEqual(self.parse(text, {"remove": None}), expected)
 
     def test_remove_struct_across_blocks_multiple_structs(self):
         text = """\
@@ -2246,7 +2246,7 @@ struct something {
   struct timeval val2;
 };
 """
-        self.assertEqual(self.parse(text, {"remove1": True, "remove2": True}), expected)
+        self.assertEqual(self.parse(text, {"remove1": None, "remove2": None}), expected)
 
     def test_remove_multiple_struct_and_add_includes(self):
         text = """\
@@ -2263,7 +2263,7 @@ struct remove2 {
 #include <bits/remove1.h>
 #include <bits/remove2.h>
 """
-        self.assertEqual(self.parse(text, {"remove1": False, "remove2": False}), expected)
+        self.assertEqual(self.parse(text, {"remove1": "bits/remove1.h", "remove2": "bits/remove2.h"}), expected)
 
 
 class FullPathTest(unittest.TestCase):
@@ -2579,6 +2579,71 @@ struct fields {
 struct fields {
   struct timeval timeval;
   struct itimerval itimerval;
+};
+#include <linux/time.h>
+"""
+        self.assertEqual(self.parse(text), expected)
+
+    def test_var_definition(self):
+        # If we're definining the whole thing, it's probably worth keeping.
+        text = """\
+static const char *kString = "hello world";
+static const int kInteger = 42;
+"""
+        expected = """\
+static const char * kString = "hello world";
+static const int kInteger = 42;
+"""
+        self.assertEqual(self.parse(text), expected)
+
+    def test_struct_array_definition(self):
+        text = """\
+struct descriptor {
+  int args;
+  int size;
+};
+static const struct descriptor[] = {
+  {0, 0},
+  {1, 12},
+  {0, 42},
+};
+"""
+        expected = """\
+struct descriptor {
+  int args;
+  int size;
+};
+static const struct descriptor[] = {
+ {
+    0, 0
+  }
+ , {
+    1, 12
+  }
+ , {
+    0, 42
+  }
+ ,
+};
+"""
+        self.assertEqual(self.parse(text), expected)
+
+    def test_array_definition(self):
+        text = """\
+static const char *arr[] = {
+  "foo",
+  "bar",
+  "baz",
+};
+
+static int another_arr[5] = { 1, 2, 3, 4, 5};
+"""
+        expected = """\
+static const char * arr[] = {
+  "foo", "bar", "baz",
+};
+static int another_arr[5] = {
+  1, 2, 3, 4, 5
 };
 """
         self.assertEqual(self.parse(text), expected)

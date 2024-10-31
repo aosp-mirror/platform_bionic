@@ -34,6 +34,8 @@
 #ifndef _ARPA_FTP_H_
 #define	_ARPA_FTP_H_
 
+#include <sys/cdefs.h>
+
 /* Definitions for FTP; see RFC-765. */
 
 /*

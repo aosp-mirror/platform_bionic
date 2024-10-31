@@ -65,6 +65,7 @@ extern "C" {
 #define AMDGPU_GEM_CREATE_COHERENT (1 << 13)
 #define AMDGPU_GEM_CREATE_UNCACHED (1 << 14)
 #define AMDGPU_GEM_CREATE_EXT_COHERENT (1 << 15)
+#define AMDGPU_GEM_CREATE_GFX12_DCC (1 << 16)
 struct drm_amdgpu_gem_create_in {
   __u64 bo_size;
   __u64 alignment;
@@ -216,6 +217,14 @@ struct drm_amdgpu_gem_userptr {
 #define AMDGPU_TILING_DCC_INDEPENDENT_128B_MASK 0x1
 #define AMDGPU_TILING_SCANOUT_SHIFT 63
 #define AMDGPU_TILING_SCANOUT_MASK 0x1
+#define AMDGPU_TILING_GFX12_SWIZZLE_MODE_SHIFT 0
+#define AMDGPU_TILING_GFX12_SWIZZLE_MODE_MASK 0x7
+#define AMDGPU_TILING_GFX12_DCC_MAX_COMPRESSED_BLOCK_SHIFT 3
+#define AMDGPU_TILING_GFX12_DCC_MAX_COMPRESSED_BLOCK_MASK 0x3
+#define AMDGPU_TILING_GFX12_DCC_NUMBER_TYPE_SHIFT 5
+#define AMDGPU_TILING_GFX12_DCC_NUMBER_TYPE_MASK 0x7
+#define AMDGPU_TILING_GFX12_DCC_DATA_FORMAT_SHIFT 8
+#define AMDGPU_TILING_GFX12_DCC_DATA_FORMAT_MASK 0x3f
 #define AMDGPU_TILING_SET(field,value) (((__u64) (value) & AMDGPU_TILING_ ##field ##_MASK) << AMDGPU_TILING_ ##field ##_SHIFT)
 #define AMDGPU_TILING_GET(value,field) (((__u64) (value) >> AMDGPU_TILING_ ##field ##_SHIFT) & AMDGPU_TILING_ ##field ##_MASK)
 #define AMDGPU_GEM_METADATA_OP_SET_METADATA 1
@@ -744,6 +753,10 @@ struct drm_amdgpu_info_gpuvm_fault {
 #define AMDGPU_FAMILY_GC_10_3_6 149
 #define AMDGPU_FAMILY_GC_10_3_7 151
 #define AMDGPU_FAMILY_GC_11_5_0 150
+#define AMDGPU_FAMILY_GC_12_0_0 152
+struct drm_color_ctm_3x4 {
+  __u64 matrix[12];
+};
 #ifdef __cplusplus
 }
 #endif
