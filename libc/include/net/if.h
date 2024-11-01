@@ -47,8 +47,12 @@ struct if_nameindex {
 
 char* _Nullable if_indextoname(unsigned __index, char* _Nonnull __buf);
 unsigned if_nametoindex(const char* _Nonnull __name);
+
+#if __BIONIC_AVAILABILITY_GUARD(24)
 struct if_nameindex* _Nullable if_nameindex(void) __INTRODUCED_IN(24);
 void if_freenameindex(struct if_nameindex* _Nullable __ptr) __INTRODUCED_IN(24);
+#endif /* __BIONIC_AVAILABILITY_GUARD(24) */
+
 
 __END_DECLS
 
