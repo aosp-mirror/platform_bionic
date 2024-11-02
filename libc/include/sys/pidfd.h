@@ -49,6 +49,8 @@ __BEGIN_DECLS
  *
  * Available since API level 31.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(31)
 int pidfd_open(pid_t __pid, unsigned int __flags) __INTRODUCED_IN(31);
 
 /**
@@ -72,5 +74,7 @@ int pidfd_getfd(int __pidfd, int __targetfd, unsigned int __flags) __INTRODUCED_
  * Available since API level 31.
  */
 int pidfd_send_signal(int __pidfd, int __sig, siginfo_t * _Nullable __info, unsigned int __flags) __INTRODUCED_IN(31);
+#endif /* __BIONIC_AVAILABILITY_GUARD(31) */
+
 
 __END_DECLS
