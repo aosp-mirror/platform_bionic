@@ -85,6 +85,8 @@ void remque(void* _Nonnull __element);
  *
  * Available since API level 28.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(28)
 int hcreate(size_t __n) __INTRODUCED_IN(28);
 
 /**
@@ -109,6 +111,8 @@ void hdestroy(void) __INTRODUCED_IN(28);
  * Available since API level 28.
  */
 ENTRY* _Nullable hsearch(ENTRY __entry, ACTION __action) __INTRODUCED_IN(28);
+#endif /* __BIONIC_AVAILABILITY_GUARD(28) */
+
 
 #if defined(__USE_BSD) || defined(__USE_GNU)
 
@@ -120,6 +124,8 @@ ENTRY* _Nullable hsearch(ENTRY __entry, ACTION __action) __INTRODUCED_IN(28);
  *
  * Available since API level 28.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(28)
 int hcreate_r(size_t __n, struct hsearch_data* _Nonnull __table) __INTRODUCED_IN(28);
 
 /**
@@ -140,6 +146,8 @@ void hdestroy_r(struct hsearch_data* _Nonnull __table) __INTRODUCED_IN(28);
  * Available since API level 28.
  */
 int hsearch_r(ENTRY __entry, ACTION __action, ENTRY* _Nullable * _Nonnull __result, struct hsearch_data* _Nonnull __table) __INTRODUCED_IN(28);
+#endif /* __BIONIC_AVAILABILITY_GUARD(28) */
+
 
 #endif
 
