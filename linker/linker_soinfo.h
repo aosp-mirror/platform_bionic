@@ -293,6 +293,9 @@ struct soinfo {
 #if defined(__work_around_b_24465209__)
     return (flags_ & FLAG_NEW_SOINFO) != 0 && version_ >= min_version;
 #else
+    // If you make this return non-true in the case where
+    // __work_around_b_24465209__ is not defined, you will have to change
+    // memtag_dynamic_entries.
     return true;
 #endif
   }
@@ -354,15 +357,38 @@ struct soinfo {
   size_t get_gap_size() const;
 
   const memtag_dynamic_entries_t* memtag_dynamic_entries() const {
-    CHECK(has_min_version(7));
+#ifdef __aarch64__
+#ifdef __work_around_b_24465209__
+#error "Assuming aarch64 does not use versioned soinfo."
+#endif
     return &memtag_dynamic_entries_;
+#endif
+    return nullptr;
   }
-  void* memtag_globals() const { return memtag_dynamic_entries()->memtag_globals; }
-  size_t memtag_globalssz() const { return memtag_dynamic_entries()->memtag_globalssz; }
-  bool has_memtag_mode() const { return memtag_dynamic_entries()->has_memtag_mode; }
-  unsigned memtag_mode() const { return memtag_dynamic_entries()->memtag_mode; }
-  bool memtag_heap() const { return memtag_dynamic_entries()->memtag_heap; }
-  bool memtag_stack() const { return memtag_dynamic_entries()->memtag_stack; }
+  void* memtag_globals() const {
+    const memtag_dynamic_entries_t* entries = memtag_dynamic_entries();
+    return entries ? entries->memtag_globals : nullptr;
+  }
+  size_t memtag_globalssz() const {
+    const memtag_dynamic_entries_t* entries = memtag_dynamic_entries();
+    return entries ? entries->memtag_globalssz : 0U;
+  }
+  bool has_memtag_mode() const {
+    const memtag_dynamic_entries_t* entries = memtag_dynamic_entries();
+    return entries ? entries->has_memtag_mode : false;
+  }
+  unsigned memtag_mode() const {
+    const memtag_dynamic_entries_t* entries = memtag_dynamic_entries();
+    return entries ? entries->memtag_mode : 0U;
+  }
+  bool memtag_heap() const {
+    const memtag_dynamic_entries_t* entries = memtag_dynamic_entries();
+    return entries ? entries->memtag_heap : false;
+  }
+  bool memtag_stack() const {
+    const memtag_dynamic_entries_t* entries = memtag_dynamic_entries();
+    return entries ? entries->memtag_stack : false;
+  }
 
   void set_should_pad_segments(bool should_pad_segments) {
    should_pad_segments_ = should_pad_segments;
@@ -461,7 +487,7 @@ struct soinfo {
   ElfW(Addr) gap_start_;
   size_t gap_size_;
 
-  // version >= 7
+  // __aarch64__ only, which does not use versioning.
   memtag_dynamic_entries_t memtag_dynamic_entries_;
 
   // Pad gaps between segments when memory mapping?
