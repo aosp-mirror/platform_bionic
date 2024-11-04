@@ -88,15 +88,8 @@ def GenerateGlibcSyscallsHeader(updater):
     # Collect the set of all syscalls for all architectures.
     syscalls = set()
     pattern = re.compile(r'^\s*#\s*define\s*__NR_([a-z_]\S+)')
-    for unistd_h in ['kernel/uapi/asm-generic/unistd.h',
-                     'kernel/uapi/asm-arm/asm/unistd.h',
-                     'kernel/uapi/asm-arm/asm/unistd-eabi.h',
-                     'kernel/uapi/asm-arm/asm/unistd-oabi.h',
-                     'kernel/uapi/asm-riscv/asm/unistd.h',
-                     'kernel/uapi/asm-x86/asm/unistd_32.h',
-                     'kernel/uapi/asm-x86/asm/unistd_64.h',
-                     'kernel/uapi/asm-x86/asm/unistd_x32.h']:
-        for line in open(os.path.join(libc_root, unistd_h)):
+    for unistd_h in glob.glob('%s/kernel/uapi/asm-*/asm/unistd*.h' % libc_root):
+        for line in open(unistd_h):
             m = re.search(pattern, line)
             if m:
                 nr_name = m.group(1)
