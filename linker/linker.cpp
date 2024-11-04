@@ -1706,7 +1706,7 @@ bool find_libraries(android_namespace_t* ns,
     }
     // si->memtag_stack() needs to be called after si->prelink_image() which populates
     // the dynamic section.
-    if (si->has_min_version(7) && si->memtag_stack()) {
+    if (si->memtag_stack()) {
       any_memtag_stack = true;
       LD_LOG(kLogDlopen,
              "... load_library requesting stack MTE for: realpath=\"%s\", soname=\"%s\"",
