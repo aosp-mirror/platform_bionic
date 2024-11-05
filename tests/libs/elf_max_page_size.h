@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,41 +26,20 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_RESOURCE_H_
-#define _SYS_RESOURCE_H_
+#define RO0 23
+#define RO1 234
+#define RW0 2345
+#define RW1 23456
+#define BSS0 0
+#define BSS1 0
 
-#include <sys/cdefs.h>
-#include <sys/types.h>
+#define RW0_INCREMENT 12
+#define RW1_INCREMENT 123
+#define BSS0_INCREMENT 1234
+#define BSS1_INCREMENT 12345
 
-#include <linux/resource.h>
+#define TEST_RESULT_BASE (RO0 + RO1 + RW0 + RW1 + BSS0 + BSS1 + RW0)
+#define TEST_RESULT_INCREMENT \
+  (RW0_INCREMENT + RW1_INCREMENT + BSS0_INCREMENT + BSS1_INCREMENT + RW0_INCREMENT)
 
-__BEGIN_DECLS
-
-/* The kernel header doesn't have these, but POSIX does. */
-#define RLIM_SAVED_CUR RLIM_INFINITY
-#define RLIM_SAVED_MAX RLIM_INFINITY
-
-typedef unsigned long rlim_t;
-typedef unsigned long long rlim64_t;
-
-int getrlimit(int __resource, struct rlimit* _Nonnull __limit);
-int setrlimit(int __resource, const struct rlimit* _Nonnull __limit);
-
-int getrlimit64(int __resource, struct rlimit64* _Nonnull __limit);
-int setrlimit64(int __resource, const struct rlimit64* _Nonnull __limit);
-
-int getpriority(int __which, id_t __who);
-int setpriority(int __which, id_t __who, int __priority);
-
-int getrusage(int __who, struct rusage* _Nonnull __usage);
-
-
-#if (!defined(__LP64__) && __ANDROID_API__ >= 24) || (defined(__LP64__))
-int prlimit(pid_t __pid, int __resource, const struct rlimit* _Nullable __new_limit, struct rlimit* _Nullable __old_limit) __INTRODUCED_IN_32(24) __INTRODUCED_IN_64(21);
-#endif /* (!defined(__LP64__) && __ANDROID_API__ >= 24) || (defined(__LP64__)) */
-
-int prlimit64(pid_t __pid, int __resource, const struct rlimit64* _Nullable __new_limit, struct rlimit64* _Nullable __old_limit);
-
-__END_DECLS
-
-#endif
+typedef int (*loader_test_func_t)(void);

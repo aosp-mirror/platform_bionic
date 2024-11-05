@@ -52,7 +52,11 @@ void* _Nullable memrchr(const void* _Nonnull __s, int __ch, size_t __n) __attrib
 int memcmp(const void* _Nonnull __lhs, const void* _Nonnull __rhs, size_t __n) __attribute_pure__;
 void* _Nonnull memcpy(void* _Nonnull, const void* _Nonnull, size_t);
 #if defined(__USE_GNU)
+
+#if __BIONIC_AVAILABILITY_GUARD(23)
 void* _Nonnull mempcpy(void* _Nonnull __dst, const void* _Nonnull __src, size_t __n) __INTRODUCED_IN(23);
+#endif /* __BIONIC_AVAILABILITY_GUARD(23) */
+
 #endif
 void* _Nonnull memmove(void* _Nonnull __dst, const void* _Nonnull __src, size_t __n);
 
@@ -71,7 +75,11 @@ void* _Nonnull memset(void* _Nonnull __dst, int __ch, size_t __n);
  *
  * Returns `dst`.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(34)
 void* _Nonnull memset_explicit(void* _Nonnull __dst, int __ch, size_t __n) __INTRODUCED_IN(34);
+#endif /* __BIONIC_AVAILABILITY_GUARD(34) */
+
 
 void* _Nullable memmem(const void* _Nonnull __haystack, size_t __haystack_size, const void* _Nonnull __needle, size_t __needle_size) __attribute_pure__;
 
@@ -79,10 +87,18 @@ char* _Nullable strchr(const char* _Nonnull __s, int __ch) __attribute_pure__;
 char* _Nullable __strchr_chk(const char* _Nonnull __s, int __ch, size_t __n);
 #if defined(__USE_GNU)
 #if defined(__cplusplus)
+
+#if __BIONIC_AVAILABILITY_GUARD(24)
 extern "C++" char* _Nonnull strchrnul(char* _Nonnull __s, int __ch) __RENAME(strchrnul) __attribute_pure__ __INTRODUCED_IN(24);
 extern "C++" const char* _Nonnull strchrnul(const char* _Nonnull __s, int __ch) __RENAME(strchrnul) __attribute_pure__ __INTRODUCED_IN(24);
+#endif /* __BIONIC_AVAILABILITY_GUARD(24) */
+
 #else
+
+#if __BIONIC_AVAILABILITY_GUARD(24)
 char* _Nonnull strchrnul(const char* _Nonnull __s, int __ch) __attribute_pure__ __INTRODUCED_IN(24);
+#endif /* __BIONIC_AVAILABILITY_GUARD(24) */
+
 #endif
 #endif
 
@@ -156,7 +172,11 @@ int strerror_r(int __errno_value, char* _Nonnull __buf, size_t __n);
  * Available since API level 35.
  */
 #if defined(__USE_GNU)
+
+#if __BIONIC_AVAILABILITY_GUARD(35)
 const char* _Nullable strerrorname_np(int __errno_value) __INTRODUCED_IN(35);
+#endif /* __BIONIC_AVAILABILITY_GUARD(35) */
+
 #endif
 
 /**
@@ -199,10 +219,18 @@ size_t strxfrm_l(char* __BIONIC_COMPLICATED_NULLNESS __dst, const char* _Nonnull
  * It doesn't modify its argument, and in C++ it's const-correct.
  */
 #if defined(__cplusplus)
+
+#if __BIONIC_AVAILABILITY_GUARD(23)
 extern "C++" char* _Nonnull basename(char* _Nullable __path) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
 extern "C++" const char* _Nonnull basename(const char* _Nonnull __path) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
+#endif /* __BIONIC_AVAILABILITY_GUARD(23) */
+
 #else
+
+#if __BIONIC_AVAILABILITY_GUARD(23)
 char* _Nonnull basename(const char* _Nonnull __path) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
+#endif /* __BIONIC_AVAILABILITY_GUARD(23) */
+
 #endif
 #endif
 

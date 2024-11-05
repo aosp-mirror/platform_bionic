@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,41 +26,21 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_RESOURCE_H_
-#define _SYS_RESOURCE_H_
+#include "page_size_compat_helpers.h"
 
-#include <sys/cdefs.h>
-#include <sys/types.h>
+#include <android-base/properties.h>
 
-#include <linux/resource.h>
+TEST(PageSize16KiBCompatTest, ElfAlignment4KiB_LoadElf) {
+  if (getpagesize() != 0x4000) {
+    GTEST_SKIP() << "This test is only applicable to 16kB page-size devices";
+  }
 
-__BEGIN_DECLS
+  bool app_compat_enabled =
+      android::base::GetBoolProperty("bionic.linker.16kb.app_compat.enabled", false);
+  std::string lib = GetTestLibRoot() + "/libtest_elf_max_page_size_4kib.so";
+  void* handle = nullptr;
 
-/* The kernel header doesn't have these, but POSIX does. */
-#define RLIM_SAVED_CUR RLIM_INFINITY
-#define RLIM_SAVED_MAX RLIM_INFINITY
+  OpenTestLibrary(lib, !app_compat_enabled, &handle);
 
-typedef unsigned long rlim_t;
-typedef unsigned long long rlim64_t;
-
-int getrlimit(int __resource, struct rlimit* _Nonnull __limit);
-int setrlimit(int __resource, const struct rlimit* _Nonnull __limit);
-
-int getrlimit64(int __resource, struct rlimit64* _Nonnull __limit);
-int setrlimit64(int __resource, const struct rlimit64* _Nonnull __limit);
-
-int getpriority(int __which, id_t __who);
-int setpriority(int __which, id_t __who, int __priority);
-
-int getrusage(int __who, struct rusage* _Nonnull __usage);
-
-
-#if (!defined(__LP64__) && __ANDROID_API__ >= 24) || (defined(__LP64__))
-int prlimit(pid_t __pid, int __resource, const struct rlimit* _Nullable __new_limit, struct rlimit* _Nullable __old_limit) __INTRODUCED_IN_32(24) __INTRODUCED_IN_64(21);
-#endif /* (!defined(__LP64__) && __ANDROID_API__ >= 24) || (defined(__LP64__)) */
-
-int prlimit64(pid_t __pid, int __resource, const struct rlimit64* _Nullable __new_limit, struct rlimit64* _Nullable __old_limit);
-
-__END_DECLS
-
-#endif
+  if (app_compat_enabled) CallTestFunction(handle);
+}

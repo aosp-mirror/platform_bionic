@@ -80,6 +80,8 @@ struct ifaddrs {
  *
  * Available since API level 24.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(24)
 int getifaddrs(struct ifaddrs* _Nullable * _Nonnull __list_ptr) __INTRODUCED_IN(24);
 
 /**
@@ -89,5 +91,7 @@ int getifaddrs(struct ifaddrs* _Nullable * _Nonnull __list_ptr) __INTRODUCED_IN(
  * Available since API level 24.
  */
 void freeifaddrs(struct ifaddrs* _Nullable __ptr) __INTRODUCED_IN(24);
+#endif /* __BIONIC_AVAILABILITY_GUARD(24) */
+
 
 __END_DECLS
