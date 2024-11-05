@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2012 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,12 @@
 
 #pragma once
 
-#include <inttypes.h>
-
-/* OpenBSD has these in <sys/param.h>, but "ALIGN" isn't something we want to reserve. */
-#define ALIGNBYTES (sizeof(uintptr_t) - 1)
-#define ALIGN(p) ((__BIONIC_CAST(reinterpret_cast, uintptr_t, p) + ALIGNBYTES) & ~ALIGNBYTES)
+// From <benchmark/benchmark.h>.
+template <class Tp>
+static inline void DoNotOptimize(Tp const& value) {
+  asm volatile("" : : "r,m"(value) : "memory");
+}
+template <class Tp>
+static inline void DoNotOptimize(Tp& value) {
+  asm volatile("" : "+r,m"(value) : : "memory");
+}

@@ -44,6 +44,8 @@ __BEGIN_DECLS
  *
  * Available since API level 23.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(23)
 size_t __fbufsize(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
 
 /**
@@ -53,6 +55,8 @@ size_t __fbufsize(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
  * Available since API level 23.
  */
 int __freadable(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
+#endif /* __BIONIC_AVAILABILITY_GUARD(23) */
+
 
 /**
  * [__freading(3)](https://man7.org/linux/man-pages/man3/__freading.3.html) returns non-zero if
@@ -60,7 +64,11 @@ int __freadable(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
  *
  * Available since API level 28.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(28)
 int __freading(FILE* _Nonnull __fp) __INTRODUCED_IN(28);
+#endif /* __BIONIC_AVAILABILITY_GUARD(28) */
+
 
 /**
  * [__fwritable(3)](https://man7.org/linux/man-pages/man3/__fwritable.3.html) returns non-zero if
@@ -68,7 +76,11 @@ int __freading(FILE* _Nonnull __fp) __INTRODUCED_IN(28);
  *
  * Available since API level 23.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(23)
 int __fwritable(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
+#endif /* __BIONIC_AVAILABILITY_GUARD(23) */
+
 
 /**
  * [__fwriting(3)](https://man7.org/linux/man-pages/man3/__fwriting.3.html) returns non-zero if
@@ -76,7 +88,11 @@ int __fwritable(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
  *
  * Available since API level 28.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(28)
 int __fwriting(FILE* _Nonnull __fp) __INTRODUCED_IN(28);
+#endif /* __BIONIC_AVAILABILITY_GUARD(28) */
+
 
 /**
  * [__flbf(3)](https://man7.org/linux/man-pages/man3/__flbf.3.html) returns non-zero if
@@ -84,7 +100,11 @@ int __fwriting(FILE* _Nonnull __fp) __INTRODUCED_IN(28);
  *
  * Available since API level 23.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(23)
 int __flbf(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
+#endif /* __BIONIC_AVAILABILITY_GUARD(23) */
+
 
 /**
  * [__fpurge(3)](https://man7.org/linux/man-pages/man3/__fpurge.3.html) discards the contents of
@@ -98,7 +118,11 @@ void __fpurge(FILE* _Nonnull __fp) __RENAME(fpurge);
  *
  * Available since API level 23.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(23)
 size_t __fpending(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
+#endif /* __BIONIC_AVAILABILITY_GUARD(23) */
+
 
 /**
  * __freadahead(3) returns the number of bytes in the input buffer.
@@ -106,7 +130,11 @@ size_t __fpending(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
  *
  * Available since API level 34.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(34)
 size_t __freadahead(FILE* _Nonnull __fp) __INTRODUCED_IN(34);
+#endif /* __BIONIC_AVAILABILITY_GUARD(34) */
+
 
 /**
  * [_flushlbf(3)](https://man7.org/linux/man-pages/man3/_flushlbf.3.html) flushes all
@@ -114,7 +142,11 @@ size_t __freadahead(FILE* _Nonnull __fp) __INTRODUCED_IN(34);
  *
  * Available since API level 23.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(23)
 void _flushlbf(void) __INTRODUCED_IN(23);
+#endif /* __BIONIC_AVAILABILITY_GUARD(23) */
+
 
 /**
  * `__fseterr` sets the
@@ -122,7 +154,11 @@ void _flushlbf(void) __INTRODUCED_IN(23);
  *
  * Available since API level 28.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(28)
 void __fseterr(FILE* _Nonnull __fp) __INTRODUCED_IN(28);
+#endif /* __BIONIC_AVAILABILITY_GUARD(28) */
+
 
 /** __fsetlocking() constant to query locking type. */
 #define FSETLOCKING_QUERY 0
@@ -139,6 +175,10 @@ void __fseterr(FILE* _Nonnull __fp) __INTRODUCED_IN(28);
  *
  * Available since API level 23.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(23)
 int __fsetlocking(FILE* _Nonnull __fp, int __type) __INTRODUCED_IN(23);
+#endif /* __BIONIC_AVAILABILITY_GUARD(23) */
+
 
 __END_DECLS
