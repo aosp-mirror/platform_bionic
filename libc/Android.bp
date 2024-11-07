@@ -264,6 +264,7 @@ cc_library_static {
     name: "libc_init_static",
     defaults: ["libc_defaults"],
     srcs: [
+        "bionic/libc_init_mte.cpp",
         "bionic/libc_init_static.cpp",
         ":elf_note_sources",
     ],
