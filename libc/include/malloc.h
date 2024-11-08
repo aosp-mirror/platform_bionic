@@ -96,7 +96,7 @@ __nodiscard void* _Nullable realloc(void* _Nullable __ptr, size_t __byte_count) 
 __nodiscard void* _Nullable reallocarray(void* _Nullable __ptr, size_t __item_count, size_t __item_size) __BIONIC_ALLOC_SIZE(2, 3) __INTRODUCED_IN(29);
 #elif defined(__ANDROID_UNAVAILABLE_SYMBOLS_ARE_WEAK__)
 #include <errno.h>
-static __inline __nodiscard void* _Nullable reallocarray(void* _Nullable __ptr, size_t __item_count, size_t __item_size) {
+static __inline __nodiscard void* _Nullable reallocarray(void* _Nullable __ptr, size_t __item_count, size_t __item_size) __BIONIC_ALLOC_SIZE(2, 3) {
   size_t __new_size;
   if (__builtin_mul_overflow(__item_count, __item_size, &__new_size)) {
     errno = ENOMEM;
