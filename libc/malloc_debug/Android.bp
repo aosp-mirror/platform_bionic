@@ -135,6 +135,7 @@ cc_test {
         "tests/log_fake.cpp",
         "tests/libc_fake.cpp",
         "tests/malloc_debug_config_tests.cpp",
+        "tests/malloc_debug_record_data_tests.cpp",
         "tests/malloc_debug_unit_tests.cpp",
     ],
 

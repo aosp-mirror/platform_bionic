@@ -38,7 +38,6 @@
 
 #include <mutex>
 
-#include <android-base/stringprintf.h>
 #include <memory_trace/MemoryTrace.h>
 
 #include "Config.h"
@@ -150,10 +149,20 @@ bool RecordData::Initialize(const Config& config) {
   cur_index_ = 0U;
   file_ = config.record_allocs_file();
 
+  pagemap_fd_ = TEMP_FAILURE_RETRY(open("/proc/self/pagemap", O_RDONLY | O_CLOEXEC));
+  if (pagemap_fd_ == -1) {
+    error_log("Unable to open /proc/self/pagemap: %s", strerror(errno));
+    return false;
+  }
+
   return true;
 }
 
 RecordData::~RecordData() {
+  if (pagemap_fd_ != -1) {
+    close(pagemap_fd_);
+  }
+
   pthread_key_delete(key_);
 }
 
@@ -179,4 +188,79 @@ memory_trace::Entry* RecordData::ReserveEntry() {
   }
 
   return InternalReserveEntry();
+}
+
+static inline bool IsPagePresent(uint64_t page_data) {
+  // Page Present is bit 63
+  return (page_data & (1ULL << 63)) != 0;
+}
+
+int64_t RecordData::GetPresentBytes(void* ptr, size_t alloc_size) {
+  uintptr_t addr = reinterpret_cast<uintptr_t>(ptr);
+  if (addr == 0 || alloc_size == 0) {
+    return -1;
+  }
+
+  uintptr_t page_size = getpagesize();
+  uintptr_t page_size_mask = page_size - 1;
+
+  size_t start_page = (addr & ~page_size_mask) / page_size;
+  size_t last_page = ((addr + alloc_size - 1) & ~page_size_mask) / page_size;
+
+  constexpr size_t kMaxReadPages = 1024;
+  uint64_t page_data[kMaxReadPages];
+
+  int64_t present_bytes = 0;
+  size_t cur_page = start_page;
+  while (cur_page <= last_page) {
+    size_t num_pages = last_page - cur_page + 1;
+    size_t last_page_index;
+    if (num_pages > kMaxReadPages) {
+      num_pages = kMaxReadPages;
+      last_page_index = num_pages;
+    } else {
+      // Handle the last page differently, so do not handle it in the loop.
+      last_page_index = num_pages - 1;
+    }
+    ssize_t bytes_read =
+        pread64(pagemap_fd_, page_data, num_pages * sizeof(uint64_t), cur_page * sizeof(uint64_t));
+    if (bytes_read <= 0) {
+      error_log("Failed to read page data: %s", strerror(errno));
+      return -1;
+    }
+
+    size_t page_index = 0;
+    // Handling the first page is special, handle it separately.
+    if (cur_page == start_page) {
+      if (IsPagePresent(page_data[0])) {
+        present_bytes = page_size - (addr & page_size_mask);
+        if (present_bytes >= alloc_size) {
+          // The allocation fits on a single page and that page is present.
+          return alloc_size;
+        }
+      } else if (start_page == last_page) {
+        // Only one page that isn't present.
+        return 0;
+      }
+      page_index = 1;
+    }
+
+    for (; page_index < last_page_index; page_index++) {
+      if (IsPagePresent(page_data[page_index])) {
+        present_bytes += page_size;
+      }
+    }
+
+    cur_page += last_page_index;
+
+    // Check the last page in the allocation.
+    if (cur_page == last_page) {
+      if (IsPagePresent(page_data[num_pages - 1])) {
+        present_bytes += ((addr + alloc_size - 1) & page_size_mask) + 1;
+      }
+      return present_bytes;
+    }
+  }
+
+  return present_bytes;
 }
