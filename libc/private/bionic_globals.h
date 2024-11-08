@@ -157,6 +157,10 @@ struct libc_shared_globals {
 };
 
 __LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals();
+__LIBC_HIDDEN__ bool __libc_mte_enabled();
+__LIBC_HIDDEN__ void __libc_init_mte(const memtag_dynamic_entries_t*, const void*, size_t,
+                                     uintptr_t);
+__LIBC_HIDDEN__ void __libc_init_mte_stack(void*);
 __LIBC_HIDDEN__ void __libc_init_fdsan();
 __LIBC_HIDDEN__ void __libc_init_fdtrack();
 __LIBC_HIDDEN__ void __libc_init_profiling_handlers();
