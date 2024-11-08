@@ -76,6 +76,11 @@ __nodiscard void* _Nullable calloc(size_t __item_count, size_t __item_size) __ma
  */
 __nodiscard void* _Nullable realloc(void* _Nullable __ptr, size_t __byte_count) __BIONIC_ALLOC_SIZE(2);
 
+// The reallocarray polyfill is only available when in weak API mode to avoid
+// collisions with existing polyfills. The only known conflict is in libconfuse,
+// so if that's ever fixed upstream the guard could probably be removed.
+// https://github.com/android/ndk/issues/2081
+
 /**
  * [reallocarray(3)](https://man7.org/linux/man-pages/man3/realloc.3.html) resizes
  * allocated memory on the heap.
@@ -89,7 +94,7 @@ __nodiscard void* _Nullable realloc(void* _Nullable __ptr, size_t __byte_count) 
  */
 #if __ANDROID_API__ >= 29
 __nodiscard void* _Nullable reallocarray(void* _Nullable __ptr, size_t __item_count, size_t __item_size) __BIONIC_ALLOC_SIZE(2, 3) __INTRODUCED_IN(29);
-#else
+#elif defined(__ANDROID_UNAVAILABLE_SYMBOLS_ARE_WEAK__)
 #include <errno.h>
 static __inline __nodiscard void* _Nullable reallocarray(void* _Nullable __ptr, size_t __item_count, size_t __item_size) {
   size_t __new_size;
