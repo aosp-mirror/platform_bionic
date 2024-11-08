@@ -86,6 +86,12 @@ inline uintptr_t stack_mte_ringbuffer_size_add_to_pointer(uintptr_t ptr, uintptr
   return ptr | ((1ULL << size_cls) << 56ULL);
 }
 
+inline void stack_mte_free_ringbuffer(uintptr_t stack_mte_tls) {
+  size_t size = stack_mte_ringbuffer_size_from_pointer(stack_mte_tls);
+  void* ptr = reinterpret_cast<void*>(stack_mte_tls & ((1ULL << 56ULL) - 1ULL));
+  munmap(ptr, size);
+}
+
 inline void* stack_mte_ringbuffer_allocate(size_t n, const char* name) {
   if (n > 7) return nullptr;
   // Allocation needs to be aligned to 2*size to make the fancy code-gen work.
