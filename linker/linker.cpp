@@ -1720,7 +1720,7 @@ bool find_libraries(android_namespace_t* ns,
     } else {
       // find_library is used by the initial linking step, so we communicate that we
       // want memtag_stack enabled to __libc_init_mte.
-      __libc_shared_globals()->initial_memtag_stack = true;
+      __libc_shared_globals()->initial_memtag_stack_abi = true;
     }
   }
 

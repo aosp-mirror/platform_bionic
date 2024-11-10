@@ -133,6 +133,9 @@ kernel_known_generic_statics = set(
           # These are required to support the above functions.
           "__fswahw32",
           "__fswahb32",
+          # As are these, for ILP32.
+          "__arch_swab32",
+          "__arch_swab64",
           # This is used by various macros in <linux/ioprio.h>.
           "ioprio_value",
 
