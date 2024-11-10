@@ -1706,7 +1706,7 @@ bool find_libraries(android_namespace_t* ns,
     }
     // si->memtag_stack() needs to be called after si->prelink_image() which populates
     // the dynamic section.
-    if (si->has_min_version(7) && si->memtag_stack()) {
+    if (si->memtag_stack()) {
       any_memtag_stack = true;
       LD_LOG(kLogDlopen,
              "... load_library requesting stack MTE for: realpath=\"%s\", soname=\"%s\"",
@@ -1720,7 +1720,7 @@ bool find_libraries(android_namespace_t* ns,
     } else {
       // find_library is used by the initial linking step, so we communicate that we
       // want memtag_stack enabled to __libc_init_mte.
-      __libc_shared_globals()->initial_memtag_stack = true;
+      __libc_shared_globals()->initial_memtag_stack_abi = true;
     }
   }
 
