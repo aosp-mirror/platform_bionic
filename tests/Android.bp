@@ -1199,6 +1199,35 @@ cc_test {
 }
 
 cc_test {
+    name: "memtag_stack_abi_test",
+    enabled: false,
+    // This does not use bionic_tests_defaults because it is not supported on
+    // host.
+    arch: {
+        arm64: {
+            enabled: true,
+        },
+    },
+    // We don't use `sanitize:` so we generate the appropriate ELF note, but
+    // still support non-MTE devices.
+    // TODO(fmayer): also add a test that enables stack MTE for MTE devices,
+    // which would test for more bugs.
+    ldflags: ["-fsanitize=memtag-stack"],
+    // Turn off all other sanitizers from SANITIZE_TARGET.
+    sanitize: {
+      never: true,
+    },
+    shared_libs: [
+        "libbase",
+    ],
+    srcs: [
+        "memtag_stack_abi_test.cpp",
+    ],
+    header_libs: ["bionic_libc_platform_headers"],
+    test_suites: ["device-tests"],
+}
+
+cc_test {
     name: "bionic-stress-tests",
     defaults: [
         "bionic_tests_defaults",
