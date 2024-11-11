@@ -351,15 +351,20 @@ void __set_stack_and_tls_vma_name(bool is_main_thread) {
 
 extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);
 
-__attribute__((no_sanitize("hwaddress")))
+__attribute__((no_sanitize("hwaddress", "memtag")))
 #if defined(__aarch64__)
 // This function doesn't return, but it does appear in stack traces. Avoid using return PAC in this
 // function because we may end up resetting IA, which may confuse unwinders due to mismatching keys.
 __attribute__((target("branch-protection=bti")))
 #endif
-static int __pthread_start(void* arg) {
+static int
+__pthread_start(void* arg) {
   pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(arg);
-
+#if defined(__aarch64__)
+  if (thread->should_allocate_stack_mte_ringbuffer) {
+    thread->bionic_tcb->tls_slot(TLS_SLOT_STACK_MTE) = __allocate_stack_mte_ringbuffer(0, thread);
+  }
+#endif
   __hwasan_thread_enter();
 
   // Wait for our creating thread to release us. This lets it have time to
@@ -450,9 +455,9 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
 // This has to be done under g_thread_creation_lock or g_thread_list_lock to avoid racing with
 // __pthread_internal_remap_stack_with_mte.
 #ifdef __aarch64__
-  if (__libc_memtag_stack_abi) {
-    tcb->tls_slot(TLS_SLOT_STACK_MTE) = __allocate_stack_mte_ringbuffer(0, thread);
-  }
+  thread->should_allocate_stack_mte_ringbuffer = __libc_memtag_stack_abi;
+#else
+  thread->should_allocate_stack_mte_ringbuffer = false;
 #endif
 
   sigset64_t block_all_mask;
