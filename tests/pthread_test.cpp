@@ -45,6 +45,7 @@
 #include <android-base/test_utils.h>
 
 #include "private/bionic_constants.h"
+#include "private/bionic_time_conversions.h"
 #include "SignalUtils.h"
 #include "utils.h"
 
@@ -2437,23 +2438,25 @@ static void pthread_mutex_timedlock_helper(clockid_t clock,
   ts.tv_sec = -1;
   ASSERT_EQ(ETIMEDOUT, lock_function(&m, &ts));
 
-  // check we wait long enough for the lock.
+  // Check we wait long enough for the lock before timing out...
+
+  // What time is it before we start?
   ASSERT_EQ(0, clock_gettime(clock, &ts));
-  const int64_t start_ns = ts.tv_sec * NS_PER_S + ts.tv_nsec;
-
-  // add a second to get deadline.
+  const int64_t start_ns = to_ns(ts);
+  // Add a second to get deadline, and wait until we time out.
   ts.tv_sec += 1;
-
   ASSERT_EQ(ETIMEDOUT, lock_function(&m, &ts));
 
+  // What time is it now we've timed out?
+  timespec ts2;
+  clock_gettime(clock, &ts2);
+  const int64_t end_ns = to_ns(ts2);
+
   // The timedlock must have waited at least 1 second before returning.
-  clock_gettime(clock, &ts);
-  const int64_t end_ns = ts.tv_sec * NS_PER_S + ts.tv_nsec;
-  ASSERT_GT(end_ns - start_ns, NS_PER_S);
+  ASSERT_GE(end_ns - start_ns, NS_PER_S);
 
   // If the mutex is unlocked, pthread_mutex_timedlock should succeed.
   ASSERT_EQ(0, pthread_mutex_unlock(&m));
-
   ASSERT_EQ(0, clock_gettime(clock, &ts));
   ts.tv_sec += 1;
   ASSERT_EQ(0, lock_function(&m, &ts));
@@ -2474,12 +2477,19 @@ TEST(pthread, pthread_mutex_timedlock_monotonic_np) {
 #endif  // __BIONIC__
 }
 
-TEST(pthread, pthread_mutex_clocklock) {
+TEST(pthread, pthread_mutex_clocklock_MONOTONIC) {
 #if defined(__BIONIC__)
   pthread_mutex_timedlock_helper(
       CLOCK_MONOTONIC, [](pthread_mutex_t* __mutex, const timespec* __timeout) {
         return pthread_mutex_clocklock(__mutex, CLOCK_MONOTONIC, __timeout);
       });
+#else   // __BIONIC__
+  GTEST_SKIP() << "pthread_mutex_clocklock not available";
+#endif  // __BIONIC__
+}
+
+TEST(pthread, pthread_mutex_clocklock_REALTIME) {
+#if defined(__BIONIC__)
   pthread_mutex_timedlock_helper(
       CLOCK_REALTIME, [](pthread_mutex_t* __mutex, const timespec* __timeout) {
         return pthread_mutex_clocklock(__mutex, CLOCK_REALTIME, __timeout);
