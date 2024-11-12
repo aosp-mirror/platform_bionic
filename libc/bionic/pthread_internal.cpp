@@ -34,6 +34,7 @@
 #include <string.h>
 #include <sys/mman.h>
 #include <sys/prctl.h>
+#include <sys/types.h>
 
 #include <async_safe/log.h>
 #include <bionic/mte.h>
@@ -78,11 +79,7 @@ void __pthread_internal_remove(pthread_internal_t* thread) {
 static void __pthread_internal_free(pthread_internal_t* thread) {
 #ifdef __aarch64__
   if (void* stack_mte_tls = thread->bionic_tcb->tls_slot(TLS_SLOT_STACK_MTE)) {
-    size_t size =
-        stack_mte_ringbuffer_size_from_pointer(reinterpret_cast<uintptr_t>(stack_mte_tls));
-    void* ptr = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(stack_mte_tls) &
-                                        ((1ULL << 56ULL) - 1ULL));
-    munmap(ptr, size);
+    stack_mte_free_ringbuffer(reinterpret_cast<uintptr_t>(stack_mte_tls));
   }
 #endif
   if (thread->mmap_size != 0) {
