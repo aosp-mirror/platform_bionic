@@ -77,11 +77,6 @@ void __pthread_internal_remove(pthread_internal_t* thread) {
 }
 
 static void __pthread_internal_free(pthread_internal_t* thread) {
-#ifdef __aarch64__
-  if (void* stack_mte_tls = thread->bionic_tcb->tls_slot(TLS_SLOT_STACK_MTE)) {
-    stack_mte_free_ringbuffer(reinterpret_cast<uintptr_t>(stack_mte_tls));
-  }
-#endif
   if (thread->mmap_size != 0) {
     // Free mapped space, including thread stack and pthread_internal_t.
     munmap(thread->mmap_base, thread->mmap_size);
