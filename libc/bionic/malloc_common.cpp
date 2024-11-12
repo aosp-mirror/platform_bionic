@@ -332,44 +332,6 @@ extern "C" int __sanitizer_malloc_info(int, FILE*) {
 #endif
 // =============================================================================
 
-// =============================================================================
-// Platform-internal mallopt variant.
-// =============================================================================
-#if defined(LIBC_STATIC)
-extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
-  if (opcode == M_SET_ALLOCATION_LIMIT_BYTES) {
-    return LimitEnable(arg, arg_size);
-  }
-  if (opcode == M_INITIALIZE_GWP_ASAN) {
-    if (arg == nullptr || arg_size != sizeof(android_mallopt_gwp_asan_options_t)) {
-      errno = EINVAL;
-      return false;
-    }
-
-    return EnableGwpAsan(*reinterpret_cast<android_mallopt_gwp_asan_options_t*>(arg));
-  }
-  if (opcode == M_MEMTAG_STACK_IS_ON) {
-    if (arg == nullptr || arg_size != sizeof(bool)) {
-      errno = EINVAL;
-      return false;
-    }
-    *reinterpret_cast<bool*>(arg) = atomic_load(&__libc_memtag_stack);
-    return true;
-  }
-  if (opcode == M_GET_DECAY_TIME_ENABLED) {
-    if (arg == nullptr || arg_size != sizeof(bool)) {
-      errno = EINVAL;
-      return false;
-    }
-    *reinterpret_cast<bool*>(arg) = atomic_load(&__libc_globals->decay_time_enabled);
-    return true;
-  }
-  errno = ENOTSUP;
-  return false;
-}
-#endif
-// =============================================================================
-
 static constexpr MallocDispatch __libc_malloc_default_dispatch __attribute__((unused)) = {
   Malloc(calloc),
   Malloc(free),

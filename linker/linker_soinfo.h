@@ -30,6 +30,7 @@
 
 #include <link.h>
 
+#include <list>
 #include <memory>
 #include <string>
 #include <vector>
@@ -66,6 +67,7 @@
                                          // soinfo is executed and this flag is
                                          // unset.
 #define FLAG_PRELINKED        0x00000400 // prelink_image has successfully processed this soinfo
+#define FLAG_GLOBALS_TAGGED   0x00000800 // globals have been tagged by MTE.
 #define FLAG_NEW_SOINFO       0x40000000 // new soinfo format
 
 #define SOINFO_VERSION 6
@@ -252,10 +254,13 @@ struct soinfo {
   void call_constructors();
   void call_destructors();
   void call_pre_init_constructors();
-  bool prelink_image();
+  bool prelink_image(bool deterministic_memtag_globals = false);
   bool link_image(const SymbolLookupList& lookup_list, soinfo* local_group_root,
                   const android_dlextinfo* extinfo, size_t* relro_fd_offset);
   bool protect_relro();
+
+  void tag_globals(bool deterministic_memtag_globals);
+  ElfW(Addr) apply_memtag_if_mte_globals(ElfW(Addr) sym_addr) const;
 
   void add_child(soinfo* child);
   void remove_all_links();
@@ -295,7 +300,7 @@ struct soinfo {
 #else
     // If you make this return non-true in the case where
     // __work_around_b_24465209__ is not defined, you will have to change
-    // memtag_dynamic_entries.
+    // memtag_dynamic_entries() and vma_names().
     return true;
 #endif
   }
@@ -394,6 +399,18 @@ struct soinfo {
    should_pad_segments_ = should_pad_segments;
   }
   bool should_pad_segments() const { return should_pad_segments_; }
+  bool should_tag_memtag_globals() const {
+    return !is_linker() && memtag_globals() && memtag_globalssz() > 0 && __libc_mte_enabled();
+  }
+  std::list<std::string>* vma_names() {
+#ifdef __aarch64__
+#ifdef __work_around_b_24465209__
+#error "Assuming aarch64 does not use versioned soinfo."
+#endif
+    return &vma_names_;
+#endif
+    return nullptr;
+};
 
   void set_should_use_16kib_app_compat(bool should_use_16kib_app_compat) {
     should_use_16kib_app_compat_ = should_use_16kib_app_compat;
@@ -489,6 +506,7 @@ struct soinfo {
 
   // __aarch64__ only, which does not use versioning.
   memtag_dynamic_entries_t memtag_dynamic_entries_;
+  std::list<std::string> vma_names_;
 
   // Pad gaps between segments when memory mapping?
   bool should_pad_segments_ = false;
