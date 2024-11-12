@@ -1215,7 +1215,7 @@ cc_test {
     ldflags: ["-fsanitize=memtag-stack"],
     // Turn off all other sanitizers from SANITIZE_TARGET.
     sanitize: {
-      never: true,
+        never: true,
     },
     shared_libs: [
         "libbase",
