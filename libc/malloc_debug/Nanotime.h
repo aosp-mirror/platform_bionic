@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Android Open Source Project
+ * Copyright (C) 2012 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,49 +28,11 @@
 
 #pragma once
 
-#include <pthread.h>
-#include <signal.h>
 #include <stdint.h>
-#include <unistd.h>
+#include <time.h>
 
-#include <atomic>
-#include <memory>
-#include <mutex>
-#include <string>
-#include <vector>
-
-#include <memory_trace/MemoryTrace.h>
-#include <platform/bionic/macros.h>
-
-class Config;
-
-class RecordData {
- public:
-  RecordData();
-  virtual ~RecordData();
-
-  bool Initialize(const Config& config);
-
-  void AddEntry(const memory_trace::Entry& entry);
-  void AddEntryOnly(const memory_trace::Entry& entry);
-
-  const std::string& file() { return file_; }
-  pthread_key_t key() { return key_; }
-
-  static void WriteEntriesOnExit();
-
- private:
-  static void WriteData(int, siginfo_t*, void*);
-  static RecordData* record_obj_;
-
-  void WriteEntries();
-  void WriteEntries(const std::string& file);
-
-  std::mutex entries_lock_;
-  pthread_key_t key_;
-  std::vector<memory_trace::Entry> entries_;
-  size_t cur_index_;
-  std::string file_;
-
-  BIONIC_DISALLOW_COPY_AND_ASSIGN(RecordData);
-};
+static inline __always_inline uint64_t Nanotime() {
+  struct timespec t = {};
+  clock_gettime(CLOCK_MONOTONIC, &t);
+  return static_cast<uint64_t>(t.tv_sec) * 1000000000LL + t.tv_nsec;
+}
