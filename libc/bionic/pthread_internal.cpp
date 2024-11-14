@@ -77,11 +77,6 @@ void __pthread_internal_remove(pthread_internal_t* thread) {
 }
 
 static void __pthread_internal_free(pthread_internal_t* thread) {
-#ifdef __aarch64__
-  if (void* stack_mte_tls = thread->bionic_tcb->tls_slot(TLS_SLOT_STACK_MTE)) {
-    stack_mte_free_ringbuffer(reinterpret_cast<uintptr_t>(stack_mte_tls));
-  }
-#endif
   if (thread->mmap_size != 0) {
     // Free mapped space, including thread stack and pthread_internal_t.
     munmap(thread->mmap_base, thread->mmap_size);
@@ -213,7 +208,10 @@ bool __pthread_internal_remap_stack_with_mte() {
   __libc_memtag_stack_abi = true;
 
   for (pthread_internal_t* t = g_thread_list; t != nullptr; t = t->next) {
-    if (t->terminating) continue;
+    // should_allocate_stack_mte_ringbuffer indicates the thread is already
+    // aware that this process requires stack MTE, and will allocate the
+    // ring buffer in __pthread_start.
+    if (t->terminating || t->should_allocate_stack_mte_ringbuffer) continue;
     t->bionic_tcb->tls_slot(TLS_SLOT_STACK_MTE) =
         __allocate_stack_mte_ringbuffer(0, t->is_main() ? nullptr : t);
   }
