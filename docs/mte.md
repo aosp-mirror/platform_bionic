@@ -214,7 +214,7 @@ and [in init] we set `BIONIC_MEMTAG_UPGRADE_SECS`, which gets handled by
 [NDK new cmake toolchain]: https://android.googlesource.com/platform/ndk/+/refs/heads/main/build/cmake/flags.cmake#56
 [Soong]: https://cs.android.com/android/platform/superproject/main/+/main:build/soong/cc/sanitize.go?q=sanitize.go&ss=android%2Fplatform%2Fsuperproject%2Fmain
 [decideTaggingLevel]: https://cs.android.com/android/platform/superproject/main/+/main:frameworks/base/core/java/com/android/internal/os/Zygote.java?q=symbol:decideTaggingLevel
-[picked up by libc init]: https://cs.android.com/android/platform/superproject/main/+/main:bionic/libc/bionic/libc_init_static.cpp?q=symbol:__get_tagging_level%20f:bionic
+[picked up by libc init]: https://cs.android.com/android/platform/superproject/main/+/main:bionic/libc/bionic/libc_init_mte.cpp?q=symbol:__get_tagging_level%20f:bionic
 [enables all three]: https://github.com/llvm/llvm-project/blob/e732d1ce86783b1d7fe30645fcb30434109505b9/clang/include/clang/Basic/Sanitizers.def#L62
 [passed in]: https://github.com/llvm/llvm-project/blob/ff2e619dfcd77328812a42d2ba2b11c3ff96f410/clang/lib/Driver/SanitizerArgs.cpp#L719
 [passed in by the clang driver]: https://github.com/llvm/llvm-project/blob/ff2e619dfcd77328812a42d2ba2b11c3ff96f410/clang/lib/Driver/ToolChains/CommonArgs.cpp#L1595
@@ -238,7 +238,7 @@ and [in init] we set `BIONIC_MEMTAG_UPGRADE_SECS`, which gets handled by
 [system/extras/mtectrl]: https://cs.android.com/android/platform/superproject/main/+/main:system/extras/mtectrl/
 [API in Device Policy Manager]: https://cs.android.com/android/platform/superproject/main/+/main:frameworks/base/core/java/android/app/admin/DevicePolicyManager.java?q=symbol:setMtePolicy%20f:DevicePolicyManager.java
 [debuggerd\_signal_handler]: https://cs.android.com/android/platform/superproject/main/+/main:system/core/debuggerd/handler/debuggerd_handler.cpp?q=f:debuggerd_handler.cpp%20symbol:debuggerd_signal_handler
-[enable_mte_signal_handler]: https://cs.android.com/android/platform/superproject/main/+/main:bionic/libc/bionic/libc_init_static.cpp?q=symbol:__enable_mte_signal_handler
+[enable_mte_signal_handler]: https://cs.android.com/android/platform/superproject/main/+/main:bionic/libc/bionic/libc_init_mte.cpp?q=symbol:__enable_mte_signal_handler
 [in init]: https://cs.android.com/android/platform/superproject/main/+/main:system/core/init/service.cpp?q=f:system%2Fcore%2Finit%2Fservice.cpp%20should_upgrade_mte
 [crashes in ASYNC mode]: https://cs.android.com/android/platform/superproject/main/+/main:system/core/debuggerd/handler/debuggerd_handler.cpp;l=799?q=BIONIC_SIGNAL_ART_PROFILER
-[libc startup]: https://cs.android.com/android/platform/superproject/main/+/main:bionic/libc/bionic/libc_init_static.cpp?q=BIONIC_MEMTAG_UPGRADE_SECS
+[libc startup]: https://cs.android.com/android/platform/superproject/main/+/main:bionic/libc/bionic/libc_init_mte.cpp?q=BIONIC_MEMTAG_UPGRADE_SECS
