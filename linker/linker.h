@@ -108,6 +108,9 @@ int get_application_target_sdk_version();
 
 bool get_transparent_hugepages_supported();
 
+void set_16kb_appcompat_mode(bool enable_app_compat);
+bool get_16kb_appcompat_mode();
+
 enum {
   /* A regular namespace is the namespace with a custom search path that does
    * not impose any restrictions on the location of native libraries.

@@ -30,6 +30,8 @@
 
 #include <android-base/properties.h>
 
+extern "C" void android_set_16kb_appcompat_mode(bool enable_app_compat);
+
 TEST(PageSize16KiBCompatTest, ElfAlignment4KiB_LoadElf) {
   if (getpagesize() != 0x4000) {
     GTEST_SKIP() << "This test is only applicable to 16kB page-size devices";
@@ -43,4 +45,18 @@ TEST(PageSize16KiBCompatTest, ElfAlignment4KiB_LoadElf) {
   OpenTestLibrary(lib, !app_compat_enabled, &handle);
 
   if (app_compat_enabled) CallTestFunction(handle);
+}
+
+TEST(PageSize16KiBCompatTest, ElfAlignment4KiB_LoadElf_perAppOption) {
+  if (getpagesize() != 0x4000) {
+    GTEST_SKIP() << "This test is only applicable to 16kB page-size devices";
+  }
+
+  android_set_16kb_appcompat_mode(true);
+  std::string lib = GetTestLibRoot() + "/libtest_elf_max_page_size_4kib.so";
+  void* handle = nullptr;
+
+  OpenTestLibrary(lib, false /*should_fail*/, &handle);
+  CallTestFunction(handle);
+  android_set_16kb_appcompat_mode(false);
 }
