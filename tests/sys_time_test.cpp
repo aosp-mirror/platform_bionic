@@ -23,6 +23,7 @@
 
 #include <android-base/file.h>
 
+#include "private/bionic_time_conversions.h"
 #include "utils.h"
 
 // http://b/11383777
@@ -147,14 +148,6 @@ TEST(sys_time, gettimeofday) {
   ASSERT_EQ(0, syscall(__NR_gettimeofday, &tv2, nullptr));
 
   // What's the difference between the two?
-  tv2.tv_sec -= tv1.tv_sec;
-  tv2.tv_usec -= tv1.tv_usec;
-  if (tv2.tv_usec < 0) {
-    --tv2.tv_sec;
-    tv2.tv_usec += 1000000;
-  }
-
   // To try to avoid flakiness we'll accept answers within 10,000us (0.01s).
-  ASSERT_EQ(0, tv2.tv_sec);
-  ASSERT_LT(tv2.tv_usec, 10'000);
+  ASSERT_LT(to_us(tv2) - to_us(tv1), 10'000);
 }

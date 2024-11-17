@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,51 +26,30 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
-
-#include <pthread.h>
-#include <signal.h>
 #include <stdint.h>
-#include <unistd.h>
+#include <stdio.h>
 
-#include <atomic>
-#include <memory>
-#include <mutex>
-#include <string>
-#include <vector>
+static volatile char array[0x10000];
+volatile char* volatile oob_ptr = &array[0x111111111];
 
-#include <memory_trace/MemoryTrace.h>
-#include <platform/bionic/macros.h>
+unsigned char get_tag(__attribute__((unused)) volatile void* ptr) {
+#if defined(__aarch64__)
+  return static_cast<unsigned char>(reinterpret_cast<uintptr_t>(ptr) >> 56) & 0xf;
+#else   // !defined(__aarch64__)
+  return 0;
+#endif  // defined(__aarch64__)
+}
 
-class Config;
-
-class RecordData {
- public:
-  RecordData();
-  virtual ~RecordData();
-
-  bool Initialize(const Config& config);
-
-  void AddEntry(const memory_trace::Entry& entry);
-  void AddEntryOnly(const memory_trace::Entry& entry);
-
-  const std::string& file() { return file_; }
-  pthread_key_t key() { return key_; }
-
-  static void WriteEntriesOnExit();
-
- private:
-  static void WriteData(int, siginfo_t*, void*);
-  static RecordData* record_obj_;
-
-  void WriteEntries();
-  void WriteEntries(const std::string& file);
-
-  std::mutex entries_lock_;
-  pthread_key_t key_;
-  std::vector<memory_trace::Entry> entries_;
-  size_t cur_index_;
-  std::string file_;
-
-  BIONIC_DISALLOW_COPY_AND_ASSIGN(RecordData);
-};
+int main() {
+  printf("Program loaded successfully. %p %p. ", array, oob_ptr);
+  if (get_tag(array) != get_tag(oob_ptr)) {
+    printf("Tags are mismatched!\n");
+    return 1;
+  }
+  if (get_tag(array) == 0) {
+    printf("Tags are zero!\n");
+  } else {
+    printf("Tags are non-zero\n");
+  }
+  return 0;
+}
