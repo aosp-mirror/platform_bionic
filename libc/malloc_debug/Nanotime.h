@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 The Android Open Source Project
+ * Copyright (C) 2012 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,37 +26,13 @@
  * SUCH DAMAGE.
  */
 
-#include "page_size_compat_helpers.h"
+#pragma once
 
-#include <android-base/properties.h>
+#include <stdint.h>
+#include <time.h>
 
-extern "C" void android_set_16kb_appcompat_mode(bool enable_app_compat);
-
-TEST(PageSize16KiBCompatTest, ElfAlignment4KiB_LoadElf) {
-  if (getpagesize() != 0x4000) {
-    GTEST_SKIP() << "This test is only applicable to 16kB page-size devices";
-  }
-
-  bool app_compat_enabled =
-      android::base::GetBoolProperty("bionic.linker.16kb.app_compat.enabled", false);
-  std::string lib = GetTestLibRoot() + "/libtest_elf_max_page_size_4kib.so";
-  void* handle = nullptr;
-
-  OpenTestLibrary(lib, !app_compat_enabled, &handle);
-
-  if (app_compat_enabled) CallTestFunction(handle);
-}
-
-TEST(PageSize16KiBCompatTest, ElfAlignment4KiB_LoadElf_perAppOption) {
-  if (getpagesize() != 0x4000) {
-    GTEST_SKIP() << "This test is only applicable to 16kB page-size devices";
-  }
-
-  android_set_16kb_appcompat_mode(true);
-  std::string lib = GetTestLibRoot() + "/libtest_elf_max_page_size_4kib.so";
-  void* handle = nullptr;
-
-  OpenTestLibrary(lib, false /*should_fail*/, &handle);
-  CallTestFunction(handle);
-  android_set_16kb_appcompat_mode(false);
+static inline __always_inline uint64_t Nanotime() {
+  struct timespec t = {};
+  clock_gettime(CLOCK_MONOTONIC, &t);
+  return static_cast<uint64_t>(t.tv_sec) * 1000000000LL + t.tv_nsec;
 }

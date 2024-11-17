@@ -26,37 +26,30 @@
  * SUCH DAMAGE.
  */
 
-#include "page_size_compat_helpers.h"
+#include <stdint.h>
+#include <stdio.h>
 
-#include <android-base/properties.h>
+static volatile char array[0x10000];
+volatile char* volatile oob_ptr = &array[0x111111111];
 
-extern "C" void android_set_16kb_appcompat_mode(bool enable_app_compat);
-
-TEST(PageSize16KiBCompatTest, ElfAlignment4KiB_LoadElf) {
-  if (getpagesize() != 0x4000) {
-    GTEST_SKIP() << "This test is only applicable to 16kB page-size devices";
-  }
-
-  bool app_compat_enabled =
-      android::base::GetBoolProperty("bionic.linker.16kb.app_compat.enabled", false);
-  std::string lib = GetTestLibRoot() + "/libtest_elf_max_page_size_4kib.so";
-  void* handle = nullptr;
-
-  OpenTestLibrary(lib, !app_compat_enabled, &handle);
-
-  if (app_compat_enabled) CallTestFunction(handle);
+unsigned char get_tag(__attribute__((unused)) volatile void* ptr) {
+#if defined(__aarch64__)
+  return static_cast<unsigned char>(reinterpret_cast<uintptr_t>(ptr) >> 56) & 0xf;
+#else   // !defined(__aarch64__)
+  return 0;
+#endif  // defined(__aarch64__)
 }
 
-TEST(PageSize16KiBCompatTest, ElfAlignment4KiB_LoadElf_perAppOption) {
-  if (getpagesize() != 0x4000) {
-    GTEST_SKIP() << "This test is only applicable to 16kB page-size devices";
+int main() {
+  printf("Program loaded successfully. %p %p. ", array, oob_ptr);
+  if (get_tag(array) != get_tag(oob_ptr)) {
+    printf("Tags are mismatched!\n");
+    return 1;
   }
-
-  android_set_16kb_appcompat_mode(true);
-  std::string lib = GetTestLibRoot() + "/libtest_elf_max_page_size_4kib.so";
-  void* handle = nullptr;
-
-  OpenTestLibrary(lib, false /*should_fail*/, &handle);
-  CallTestFunction(handle);
-  android_set_16kb_appcompat_mode(false);
+  if (get_tag(array) == 0) {
+    printf("Tags are zero!\n");
+  } else {
+    printf("Tags are non-zero\n");
+  }
+  return 0;
 }

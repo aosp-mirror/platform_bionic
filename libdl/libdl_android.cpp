@@ -59,6 +59,9 @@ void __loader_android_dlwarning(void* obj, void (*f)(void*, const char*));
 __attribute__((__weak__, visibility("default")))
 struct android_namespace_t* __loader_android_get_exported_namespace(const char* name);
 
+__attribute__((__weak__, visibility("default"))) void __loader_android_set_16kb_appcompat_mode(
+    bool enable_app_compat);
+
 // Proxy calls to bionic loader
 __attribute__((__weak__))
 void android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
@@ -113,6 +116,10 @@ void android_dlwarning(void* obj, void (*f)(void*, const char*)) {
 __attribute__((__weak__))
 struct android_namespace_t* android_get_exported_namespace(const char* name) {
   return __loader_android_get_exported_namespace(name);
+}
+
+__attribute__((__weak__)) void android_set_16kb_appcompat_mode(bool enable_app_compat) {
+  __loader_android_set_16kb_appcompat_mode(enable_app_compat);
 }
 
 } // extern "C"

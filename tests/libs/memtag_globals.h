@@ -26,37 +26,18 @@
  * SUCH DAMAGE.
  */
 
-#include "page_size_compat_helpers.h"
+#include <utility>
+#include <vector>
 
-#include <android-base/properties.h>
+void check_tagged(const void* a);
+void check_untagged(const void* a);
+void check_matching_tags(const void* a, const void* b);
+void check_eq(const void* a, const void* b);
 
-extern "C" void android_set_16kb_appcompat_mode(bool enable_app_compat);
+void dso_check_assertions(bool enforce_tagged);
+void dso_print_variables();
 
-TEST(PageSize16KiBCompatTest, ElfAlignment4KiB_LoadElf) {
-  if (getpagesize() != 0x4000) {
-    GTEST_SKIP() << "This test is only applicable to 16kB page-size devices";
-  }
-
-  bool app_compat_enabled =
-      android::base::GetBoolProperty("bionic.linker.16kb.app_compat.enabled", false);
-  std::string lib = GetTestLibRoot() + "/libtest_elf_max_page_size_4kib.so";
-  void* handle = nullptr;
-
-  OpenTestLibrary(lib, !app_compat_enabled, &handle);
-
-  if (app_compat_enabled) CallTestFunction(handle);
-}
-
-TEST(PageSize16KiBCompatTest, ElfAlignment4KiB_LoadElf_perAppOption) {
-  if (getpagesize() != 0x4000) {
-    GTEST_SKIP() << "This test is only applicable to 16kB page-size devices";
-  }
-
-  android_set_16kb_appcompat_mode(true);
-  std::string lib = GetTestLibRoot() + "/libtest_elf_max_page_size_4kib.so";
-  void* handle = nullptr;
-
-  OpenTestLibrary(lib, false /*should_fail*/, &handle);
-  CallTestFunction(handle);
-  android_set_16kb_appcompat_mode(false);
-}
+void print_variable_address(const char* name, const void* ptr);
+void print_variables(const char* header,
+                     const std::vector<std::pair<const char*, const void*>>& tagged_variables,
+                     const std::vector<std::pair<const char*, const void*>>& untagged_variables);
