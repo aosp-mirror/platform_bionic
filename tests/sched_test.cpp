@@ -313,6 +313,13 @@ TEST(sched, sched_getaffinity_failure) {
 #pragma clang diagnostic pop
 }
 
+TEST(pthread, sched_getaffinity) {
+  cpu_set_t set;
+  CPU_ZERO(&set);
+  ASSERT_EQ(0, sched_getaffinity(getpid(), sizeof(set), &set));
+  ASSERT_GT(CPU_COUNT(&set), 0);
+}
+
 TEST(sched, sched_setaffinity_failure) {
   // Trivial test of the errno-preserving/returning behavior.
 #pragma clang diagnostic push

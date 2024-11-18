@@ -3148,6 +3148,13 @@ TEST(pthread, pthread_getaffinity_np_failure) {
 #pragma clang diagnostic pop
 }
 
+TEST(pthread, pthread_getaffinity) {
+  cpu_set_t set;
+  CPU_ZERO(&set);
+  ASSERT_EQ(0, pthread_getaffinity_np(pthread_self(), sizeof(set), &set));
+  ASSERT_GT(CPU_COUNT(&set), 0);
+}
+
 TEST(pthread, pthread_setaffinity_np_failure) {
   // Trivial test of the errno-preserving/returning behavior.
 #pragma clang diagnostic push
