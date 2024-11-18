@@ -471,7 +471,6 @@ cc_library_static {
         "upstream-netbsd/lib/libc/regex/regerror.c",
         "upstream-netbsd/lib/libc/regex/regexec.c",
         "upstream-netbsd/lib/libc/regex/regfree.c",
-        "upstream-netbsd/lib/libc/stdlib/bsearch.c",
         "upstream-netbsd/lib/libc/stdlib/drand48.c",
         "upstream-netbsd/lib/libc/stdlib/erand48.c",
         "upstream-netbsd/lib/libc/stdlib/jrand48.c",
@@ -626,8 +625,6 @@ cc_library_static {
                 "upstream-openbsd/lib/libc/string/memchr.c",
                 "upstream-openbsd/lib/libc/string/memrchr.c",
                 "upstream-openbsd/lib/libc/string/stpncpy.c",
-                "upstream-openbsd/lib/libc/string/strlcat.c",
-                "upstream-openbsd/lib/libc/string/strlcpy.c",
                 "upstream-openbsd/lib/libc/string/strncat.c",
                 "upstream-openbsd/lib/libc/string/strncmp.c",
                 "upstream-openbsd/lib/libc/string/strncpy.c",
@@ -637,8 +634,6 @@ cc_library_static {
             srcs: [
                 "upstream-openbsd/lib/libc/string/strcat.c",
                 "upstream-openbsd/lib/libc/string/stpncpy.c",
-                "upstream-openbsd/lib/libc/string/strlcat.c",
-                "upstream-openbsd/lib/libc/string/strlcpy.c",
                 "upstream-openbsd/lib/libc/string/strncat.c",
                 "upstream-openbsd/lib/libc/string/strncpy.c",
             ],
@@ -647,8 +642,6 @@ cc_library_static {
             srcs: [
                 "upstream-openbsd/lib/libc/string/memrchr.c",
                 "upstream-openbsd/lib/libc/string/stpncpy.c",
-                "upstream-openbsd/lib/libc/string/strlcat.c",
-                "upstream-openbsd/lib/libc/string/strlcpy.c",
             ],
         },
         x86: {
@@ -658,10 +651,7 @@ cc_library_static {
         },
         x86_64: {
             srcs: [
-                "upstream-openbsd/lib/libc/string/memchr.c",
-                "upstream-openbsd/lib/libc/string/memrchr.c",
-                "upstream-openbsd/lib/libc/string/strlcat.c",
-                "upstream-openbsd/lib/libc/string/strlcpy.c",
+                // x86_64 has custom/llvm-libc implementations of all of these.
             ],
         },
     },
@@ -1183,8 +1173,6 @@ cc_library_static {
                 "arch-x86/string/ssse3-memcmp-atom.S",
                 "arch-x86/string/ssse3-strcat-atom.S",
                 "arch-x86/string/ssse3-strcmp-atom.S",
-                "arch-x86/string/ssse3-strlcat-atom.S",
-                "arch-x86/string/ssse3-strlcpy-atom.S",
                 "arch-x86/string/ssse3-strncat-atom.S",
                 "arch-x86/string/ssse3-strncmp-atom.S",
 
@@ -1215,11 +1203,6 @@ cc_library_static {
                 "arch-x86_64/string/sse4-memcmp-slm.S",
                 "arch-x86_64/string/ssse3-strcmp-slm.S",
                 "arch-x86_64/string/ssse3-strncmp-slm.S",
-
-                "bionic/strchr.cpp",
-                "bionic/strchrnul.cpp",
-                "bionic/strnlen.cpp",
-                "bionic/strrchr.cpp",
             ],
         },
     },
@@ -1238,6 +1221,7 @@ cc_library_static {
     generated_headers: ["generated_android_ids"],
 
     whole_static_libs: [
+        "//external/llvm-libc:llvmlibc",
         "libsystemproperties",
     ],
 
@@ -2165,6 +2149,7 @@ cc_library_static {
         },
     },
     whole_static_libs: [
+        "//external/llvm-libc:llvmlibc",
         "libarm-optimized-routines-mem",
         "libc_netbsd",
     ],
