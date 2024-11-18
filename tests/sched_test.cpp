@@ -328,3 +328,12 @@ TEST(sched, sched_setaffinity_failure) {
   ASSERT_ERRNO(EINVAL);
 #pragma clang diagnostic pop
 }
+
+TEST(pthread, sched_setaffinity) {
+  cpu_set_t set;
+  CPU_ZERO(&set);
+  ASSERT_EQ(0, sched_getaffinity(getpid(), sizeof(set), &set));
+  // It's hard to make any more general claim than this,
+  // but it ought to be safe to ask for the same affinity you already have.
+  ASSERT_EQ(0, sched_setaffinity(getpid(), sizeof(set), &set));
+}
