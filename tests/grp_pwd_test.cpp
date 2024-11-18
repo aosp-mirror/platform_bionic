@@ -480,6 +480,18 @@ static void expect_ids(T ids, bool is_group) {
       EXPECT_STREQ(getpwuid(AID_CROS_EC)->pw_name, "cros_ec");
     }
   }
+  // AID_MMD (1095) was added in API level 36, but "trunk stable" means
+  // that the 2024Q* builds are tested with the _previous_ release's CTS.
+  if (android::base::GetIntProperty("ro.build.version.sdk", 0) == 35) {
+#if !defined(AID_MMD)
+#define AID_MMD 1095
+#endif
+    ids.erase(AID_MMD);
+    expected_ids.erase(AID_MMD);
+    if (getpwuid(AID_MMD)) {
+      EXPECT_STREQ(getpwuid(AID_MMD)->pw_name, "mmd");
+    }
+  }
 
   EXPECT_EQ(expected_ids, ids) << return_differences();
 }
