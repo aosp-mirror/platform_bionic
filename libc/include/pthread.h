@@ -314,7 +314,7 @@ int pthread_spin_unlock(pthread_spinlock_t* _Nonnull __spinlock) __INTRODUCED_IN
 
 pthread_t pthread_self(void) __attribute_const__;
 
-#if __USE_GNU  && __BIONIC_AVAILABILITY_GUARD(26)
+#if defined(__USE_GNU) && __BIONIC_AVAILABILITY_GUARD(26)
 /**
  * [pthread_getname_np(3)](https://man7.org/linux/man-pages/man3/pthread_getname_np.3.html)
  * gets the name of the given thread.
@@ -350,7 +350,7 @@ int pthread_setname_np(pthread_t __pthread, const char* _Nonnull __name);
  * Available since API level 36.
  * See sched_getaffinity() and pthread_gettid_np() for greater portability.
  */
-#if __USE_GNU && __BIONIC_AVAILABILITY_GUARD(36)
+#if defined(__USE_GNU) && __BIONIC_AVAILABILITY_GUARD(36)
 int pthread_getaffinity_np(pthread_t __pthread, size_t __cpu_set_size, cpu_set_t* __cpu_set) __INTRODUCED_IN(36);
 #endif
 
@@ -363,7 +363,7 @@ int pthread_getaffinity_np(pthread_t __pthread, size_t __cpu_set_size, cpu_set_t
  * Available since API level 36.
  * See sched_getaffinity() and pthread_gettid_np() for greater portability.
  */
-#if __USE_GNU && __BIONIC_AVAILABILITY_GUARD(36)
+#if defined(__USE_GNU) && __BIONIC_AVAILABILITY_GUARD(36)
 int pthread_setaffinity_np(pthread_t __pthread, size_t __cpu_set_size, const cpu_set_t* __cpu_set) __INTRODUCED_IN(36);
 #endif
 
