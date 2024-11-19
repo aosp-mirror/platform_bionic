@@ -471,7 +471,6 @@ cc_library_static {
         "upstream-netbsd/lib/libc/regex/regerror.c",
         "upstream-netbsd/lib/libc/regex/regexec.c",
         "upstream-netbsd/lib/libc/regex/regfree.c",
-        "upstream-netbsd/lib/libc/stdlib/bsearch.c",
         "upstream-netbsd/lib/libc/stdlib/drand48.c",
         "upstream-netbsd/lib/libc/stdlib/erand48.c",
         "upstream-netbsd/lib/libc/stdlib/jrand48.c",
@@ -1240,6 +1239,7 @@ cc_library_static {
     generated_headers: ["generated_android_ids"],
 
     whole_static_libs: [
+        "//external/llvm-libc:llvmlibc",
         "libsystemproperties",
     ],
 
@@ -2167,6 +2167,7 @@ cc_library_static {
         },
     },
     whole_static_libs: [
+        "//external/llvm-libc:llvmlibc",
         "libarm-optimized-routines-mem",
         "libc_netbsd",
     ],
