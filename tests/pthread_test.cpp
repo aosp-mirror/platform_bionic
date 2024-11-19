@@ -3137,3 +3137,30 @@ TEST(pthread, run_on_all_threads) {
   GTEST_SKIP() << "bionic-only test";
 #endif
 }
+
+TEST(pthread, pthread_getaffinity_np_failure) {
+  // Trivial test of the errno-preserving/returning behavior.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
+  errno = 0;
+  ASSERT_EQ(EINVAL, pthread_getaffinity_np(pthread_self(), 0, nullptr));
+  ASSERT_ERRNO(0);
+#pragma clang diagnostic pop
+}
+
+TEST(pthread, pthread_getaffinity) {
+  cpu_set_t set;
+  CPU_ZERO(&set);
+  ASSERT_EQ(0, pthread_getaffinity_np(pthread_self(), sizeof(set), &set));
+  ASSERT_GT(CPU_COUNT(&set), 0);
+}
+
+TEST(pthread, pthread_setaffinity_np_failure) {
+  // Trivial test of the errno-preserving/returning behavior.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
+  errno = 0;
+  ASSERT_EQ(EINVAL, pthread_setaffinity_np(pthread_self(), 0, nullptr));
+  ASSERT_ERRNO(0);
+#pragma clang diagnostic pop
+}
