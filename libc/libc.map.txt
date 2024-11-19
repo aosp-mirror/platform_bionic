@@ -1612,6 +1612,8 @@ LIBC_36 { # introduced=36
   global:
     lchmod;
     mseal;
+    pthread_getaffinity_np;
+    pthread_setaffinity_np;
     qsort_r;
     sig2str;
     str2sig;
