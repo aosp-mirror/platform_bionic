@@ -305,8 +305,19 @@ TEST(sched, sched_getscheduler_sched_setscheduler) {
 }
 
 TEST(sched, sched_getaffinity_failure) {
+  // Trivial test of the errno-preserving/returning behavior.
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wnonnull"
   ASSERT_EQ(-1, sched_getaffinity(getpid(), 0, nullptr));
+  ASSERT_ERRNO(EINVAL);
+#pragma clang diagnostic pop
+}
+
+TEST(sched, sched_setaffinity_failure) {
+  // Trivial test of the errno-preserving/returning behavior.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
+  ASSERT_EQ(-1, sched_setaffinity(getpid(), 0, nullptr));
+  ASSERT_ERRNO(EINVAL);
 #pragma clang diagnostic pop
 }
