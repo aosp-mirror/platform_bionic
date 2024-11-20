@@ -124,6 +124,7 @@ struct drm_xe_query_topology_mask {
 #define DRM_XE_TOPO_DSS_COMPUTE 2
 #define DRM_XE_TOPO_L3_BANK 3
 #define DRM_XE_TOPO_EU_PER_DSS 4
+#define DRM_XE_TOPO_SIMD16_EU_PER_DSS 5
   __u16 type;
   __u32 num_bytes;
   __u8 mask[];
