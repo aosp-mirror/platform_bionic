@@ -1087,7 +1087,6 @@ cc_library_static {
                 "bionic/strchr.cpp",
                 "bionic/strchrnul.cpp",
                 "bionic/strnlen.cpp",
-                "bionic/strrchr.cpp",
             ],
         },
         arm64: {
@@ -1143,7 +1142,6 @@ cc_library_static {
                 "arch-riscv64/string/strnlen.c",
 
                 "bionic/strchrnul.cpp",
-                "bionic/strrchr.cpp",
             ],
         },
 
@@ -1167,7 +1165,6 @@ cc_library_static {
                 "arch-x86/string/sse2-strlen-slm.S",
                 "arch-x86/string/sse2-strncpy-slm.S",
                 "arch-x86/string/sse2-strnlen-atom.S",
-                "arch-x86/string/sse2-strrchr-atom.S",
 
                 "arch-x86/string/ssse3-memcmp-atom.S",
                 "arch-x86/string/ssse3-strcat-atom.S",
