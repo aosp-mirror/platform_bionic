@@ -26,37 +26,17 @@
  * SUCH DAMAGE.
  */
 
-#include "page_size_compat_helpers.h"
+#include <errno.h>
 
-#include <android-base/properties.h>
+#include "private/ErrnoRestorer.h"
+#include "pthread_internal.h"
 
-extern "C" void android_set_16kb_appcompat_mode(bool enable_app_compat);
+int pthread_getaffinity_np(pthread_t t, size_t cpu_set_size, cpu_set_t* cpu_set) {
+  ErrnoRestorer errno_restorer;
 
-TEST(PageSize16KiBCompatTest, ElfAlignment4KiB_LoadElf) {
-  if (getpagesize() != 0x4000) {
-    GTEST_SKIP() << "This test is only applicable to 16kB page-size devices";
-  }
+  pid_t tid = __pthread_internal_gettid(t, "pthread_getaffinity_np");
+  if (tid == -1) return ESRCH;
 
-  bool app_compat_enabled =
-      android::base::GetBoolProperty("bionic.linker.16kb.app_compat.enabled", false);
-  std::string lib = GetTestLibRoot() + "/libtest_elf_max_page_size_4kib.so";
-  void* handle = nullptr;
-
-  OpenTestLibrary(lib, !app_compat_enabled, &handle);
-
-  if (app_compat_enabled) CallTestFunction(handle);
-}
-
-TEST(PageSize16KiBCompatTest, ElfAlignment4KiB_LoadElf_perAppOption) {
-  if (getpagesize() != 0x4000) {
-    GTEST_SKIP() << "This test is only applicable to 16kB page-size devices";
-  }
-
-  android_set_16kb_appcompat_mode(true);
-  std::string lib = GetTestLibRoot() + "/libtest_elf_max_page_size_4kib.so";
-  void* handle = nullptr;
-
-  OpenTestLibrary(lib, false /*should_fail*/, &handle);
-  CallTestFunction(handle);
-  android_set_16kb_appcompat_mode(false);
+  if (sched_getaffinity(tid, cpu_set_size, cpu_set) == -1) return errno;
+  return 0;
 }
