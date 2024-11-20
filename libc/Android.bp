@@ -657,10 +657,7 @@ cc_library_static {
         },
         x86_64: {
             srcs: [
-                "upstream-openbsd/lib/libc/string/memchr.c",
-                "upstream-openbsd/lib/libc/string/memrchr.c",
-                "upstream-openbsd/lib/libc/string/strlcat.c",
-                "upstream-openbsd/lib/libc/string/strlcpy.c",
+                // x86_64 has custom/llvm-libc implementations of all of these.
             ],
         },
     },
@@ -1216,11 +1213,6 @@ cc_library_static {
                 "arch-x86_64/string/sse4-memcmp-slm.S",
                 "arch-x86_64/string/ssse3-strcmp-slm.S",
                 "arch-x86_64/string/ssse3-strncmp-slm.S",
-
-                "bionic/strchr.cpp",
-                "bionic/strchrnul.cpp",
-                "bionic/strnlen.cpp",
-                "bionic/strrchr.cpp",
             ],
         },
     },
