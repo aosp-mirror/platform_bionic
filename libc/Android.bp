@@ -623,9 +623,7 @@ cc_library_static {
         arm: {
             srcs: [
                 "upstream-openbsd/lib/libc/string/memchr.c",
-                "upstream-openbsd/lib/libc/string/memrchr.c",
                 "upstream-openbsd/lib/libc/string/stpncpy.c",
-                "upstream-openbsd/lib/libc/string/strlcat.c",
                 "upstream-openbsd/lib/libc/string/strncat.c",
                 "upstream-openbsd/lib/libc/string/strncmp.c",
                 "upstream-openbsd/lib/libc/string/strncpy.c",
@@ -635,16 +633,13 @@ cc_library_static {
             srcs: [
                 "upstream-openbsd/lib/libc/string/strcat.c",
                 "upstream-openbsd/lib/libc/string/stpncpy.c",
-                "upstream-openbsd/lib/libc/string/strlcat.c",
                 "upstream-openbsd/lib/libc/string/strncat.c",
                 "upstream-openbsd/lib/libc/string/strncpy.c",
             ],
         },
         riscv64: {
             srcs: [
-                "upstream-openbsd/lib/libc/string/memrchr.c",
                 "upstream-openbsd/lib/libc/string/stpncpy.c",
-                "upstream-openbsd/lib/libc/string/strlcat.c",
             ],
         },
         x86: {
@@ -1164,7 +1159,6 @@ cc_library_static {
 
                 "arch-x86/string/sse2-memchr-atom.S",
                 "arch-x86/string/sse2-memmove-slm.S",
-                "arch-x86/string/sse2-memrchr-atom.S",
                 "arch-x86/string/sse2-memset-slm.S",
                 "arch-x86/string/sse2-stpcpy-slm.S",
                 "arch-x86/string/sse2-stpncpy-slm.S",
@@ -1178,7 +1172,6 @@ cc_library_static {
                 "arch-x86/string/ssse3-memcmp-atom.S",
                 "arch-x86/string/ssse3-strcat-atom.S",
                 "arch-x86/string/ssse3-strcmp-atom.S",
-                "arch-x86/string/ssse3-strlcat-atom.S",
                 "arch-x86/string/ssse3-strncat-atom.S",
                 "arch-x86/string/ssse3-strncmp-atom.S",
 
