@@ -186,7 +186,8 @@ bool ElfReader::Read(const char* name, int fd, off64_t file_offset, off64_t file
     // It cannot be cached since the developer may toggle app compat on/off.
     // This check will be removed once app compat is made the default on 16KiB devices.
     should_use_16kib_app_compat_ =
-        ::android::base::GetBoolProperty("bionic.linker.16kb.app_compat.enabled", false);
+        ::android::base::GetBoolProperty("bionic.linker.16kb.app_compat.enabled", false) ||
+        get_16kb_appcompat_mode();
   }
 
   return did_read_;
