@@ -168,7 +168,7 @@ proto in [tombstone\_proto\_to\_text.cpp].
 The bootloader API allows userspace to enable MTE on devices that do not ship
 with MTE enabled by default.
 
-See [SAC bootloader support] for the API definition. In AOSP, this API is
+See [SAC MTE bootloader support] for the API definition. In AOSP, this API is
 implemented in [system/extras/mtectrl]. mtectrl.rc handles the property
 changes and invokes mtectrl to update the misc partition to communicate
 with the bootloader.

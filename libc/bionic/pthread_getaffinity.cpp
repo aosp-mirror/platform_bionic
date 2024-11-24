@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,13 +26,17 @@
  * SUCH DAMAGE.
  */
 
-#include <stdbool.h>
+#include <errno.h>
 
-#include "header_checks.h"
+#include "private/ErrnoRestorer.h"
+#include "pthread_internal.h"
 
-static void stdbool_h() {
-  TYPE(bool);
-  bool t = true;
-  bool f = false;
-  MACRO_VALUE(__bool_true_false_are_defined, 1);
+int pthread_getaffinity_np(pthread_t t, size_t cpu_set_size, cpu_set_t* cpu_set) {
+  ErrnoRestorer errno_restorer;
+
+  pid_t tid = __pthread_internal_gettid(t, "pthread_getaffinity_np");
+  if (tid == -1) return ESRCH;
+
+  if (sched_getaffinity(tid, cpu_set_size, cpu_set) == -1) return errno;
+  return 0;
 }
