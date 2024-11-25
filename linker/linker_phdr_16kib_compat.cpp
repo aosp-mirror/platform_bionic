@@ -42,8 +42,18 @@
 
 #include <string>
 
+static bool g_enable_16kb_app_compat;
+
 static inline bool segment_contains_prefix(const ElfW(Phdr)* segment, const ElfW(Phdr)* prefix) {
   return segment && prefix && segment->p_vaddr == prefix->p_vaddr;
+}
+
+void set_16kb_appcompat_mode(bool enable_app_compat) {
+  g_enable_16kb_app_compat = enable_app_compat;
+}
+
+bool get_16kb_appcompat_mode() {
+  return g_enable_16kb_app_compat;
 }
 
 /*

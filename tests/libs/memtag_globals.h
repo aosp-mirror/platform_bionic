@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,13 +26,18 @@
  * SUCH DAMAGE.
  */
 
-#include <stdbool.h>
+#include <utility>
+#include <vector>
 
-#include "header_checks.h"
+void check_tagged(const void* a);
+void check_untagged(const void* a);
+void check_matching_tags(const void* a, const void* b);
+void check_eq(const void* a, const void* b);
 
-static void stdbool_h() {
-  TYPE(bool);
-  bool t = true;
-  bool f = false;
-  MACRO_VALUE(__bool_true_false_are_defined, 1);
-}
+void dso_check_assertions(bool enforce_tagged);
+void dso_print_variables();
+
+void print_variable_address(const char* name, const void* ptr);
+void print_variables(const char* header,
+                     const std::vector<std::pair<const char*, const void*>>& tagged_variables,
+                     const std::vector<std::pair<const char*, const void*>>& untagged_variables);
