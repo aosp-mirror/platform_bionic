@@ -33,10 +33,11 @@
 #include <string.h>
 #include <sys/mman.h>
 
-#include "private/bionic_constants.h"
-#include "private/bionic_defs.h"
+#include "platform/bionic/mte.h"
 #include "private/ScopedRWLock.h"
 #include "private/ScopedSignalBlocker.h"
+#include "private/bionic_constants.h"
+#include "private/bionic_defs.h"
 #include "pthread_internal.h"
 
 extern "C" __noreturn void _exit_with_stack_teardown(void*, size_t);
@@ -67,7 +68,7 @@ void __pthread_cleanup_pop(__pthread_cleanup_t* c, int execute) {
 }
 
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
-void pthread_exit(void* return_value) {
+__attribute__((no_sanitize("memtag"))) void pthread_exit(void* return_value) {
   // Call dtors for thread_local objects first.
   __cxa_thread_finalize();
 
@@ -137,6 +138,13 @@ void pthread_exit(void* return_value) {
 
   __notify_thread_exit_callbacks();
   __hwasan_thread_exit();
+
+#if defined(__aarch64__)
+  if (void* stack_mte_tls = thread->bionic_tcb->tls_slot(TLS_SLOT_STACK_MTE)) {
+    stack_mte_free_ringbuffer(reinterpret_cast<uintptr_t>(stack_mte_tls));
+  }
+#endif
+  // Everything below this line needs to be no_sanitize("memtag").
 
   if (old_state == THREAD_DETACHED && thread->mmap_size != 0) {
     // We need to free mapped space for detached threads when they exit.

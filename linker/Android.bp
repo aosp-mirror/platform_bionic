@@ -108,6 +108,12 @@ cc_defaults {
 
     // We need to access Bionic private headers in the linker.
     include_dirs: ["bionic/libc"],
+
+    sanitize: {
+        // Supporting memtag_globals in the linker would be tricky,
+        // because it relocates itself very early.
+        memtag_globals: false,
+    },
 }
 
 // ========================================================
@@ -494,6 +500,7 @@ cc_test {
         "linker_mapped_file_fragment.cpp",
         "linker_sdk_versions.cpp",
         "linker_dlwarning.cpp",
+        "linker_phdr_16kib_compat.cpp"
     ],
 
     static_libs: [

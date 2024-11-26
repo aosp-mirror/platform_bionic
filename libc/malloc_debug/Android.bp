@@ -79,6 +79,10 @@ cc_library {
         "libmemunreachable",
     ],
 
+    whole_static_libs: [
+        "libmemory_trace",
+    ],
+
     shared_libs: [
         "libunwindstack",
     ],

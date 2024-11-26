@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2012 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,13 +26,13 @@
  * SUCH DAMAGE.
  */
 
-#include <stdbool.h>
+#pragma once
 
-#include "header_checks.h"
+#include <stdint.h>
+#include <time.h>
 
-static void stdbool_h() {
-  TYPE(bool);
-  bool t = true;
-  bool f = false;
-  MACRO_VALUE(__bool_true_false_are_defined, 1);
+static inline __always_inline uint64_t Nanotime() {
+  struct timespec t = {};
+  clock_gettime(CLOCK_MONOTONIC, &t);
+  return static_cast<uint64_t>(t.tv_sec) * 1000000000LL + t.tv_nsec;
 }
