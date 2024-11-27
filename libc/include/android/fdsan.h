@@ -135,6 +135,8 @@ enum android_fdsan_owner_type {
 /*
  * Create an owner tag with the specified type and least significant 56 bits of tag.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(29)
 uint64_t android_fdsan_create_owner_tag(enum android_fdsan_owner_type type, uint64_t tag) __INTRODUCED_IN(29) __attribute__((__weak__));
 
 /*
@@ -169,6 +171,8 @@ const char* _Nonnull android_fdsan_get_tag_type(uint64_t tag) __INTRODUCED_IN(29
  * Get an owner tag's value, with the type masked off.
  */
 uint64_t android_fdsan_get_tag_value(uint64_t tag) __INTRODUCED_IN(29);
+#endif /* __BIONIC_AVAILABILITY_GUARD(29) */
+
 
 enum android_fdsan_error_level {
   // No errors.
@@ -187,6 +191,8 @@ enum android_fdsan_error_level {
 /*
  * Get the error level.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(29)
 enum android_fdsan_error_level android_fdsan_get_error_level() __INTRODUCED_IN(29) __attribute__((__weak__));
 
 /*
@@ -204,9 +210,15 @@ enum android_fdsan_error_level android_fdsan_get_error_level() __INTRODUCED_IN(2
  * (e.g. postfork).
  */
 enum android_fdsan_error_level android_fdsan_set_error_level(enum android_fdsan_error_level new_level) __INTRODUCED_IN(29) __attribute__((__weak__));
+#endif /* __BIONIC_AVAILABILITY_GUARD(29) */
+
 
 /*
  * Set the error level to the global setting if available, or a default value.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(30)
 enum android_fdsan_error_level android_fdsan_set_error_level_from_property(enum android_fdsan_error_level default_level) __INTRODUCED_IN(30) __attribute__((__weak__));
+#endif /* __BIONIC_AVAILABILITY_GUARD(30) */
+
 __END_DECLS

@@ -61,7 +61,11 @@ int res_query(const char* _Nonnull __name, int __class, int __type, u_char* _Non
 int res_search(const char* _Nonnull __name, int __class, int __type, u_char* _Nonnull __answer, int __answer_size);
 
 #define res_randomid __res_randomid
+
+#if __BIONIC_AVAILABILITY_GUARD(29)
 u_int __res_randomid(void) __INTRODUCED_IN(29);
+#endif /* __BIONIC_AVAILABILITY_GUARD(29) */
+
 
 __END_DECLS
 

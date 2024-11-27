@@ -119,6 +119,10 @@ int pselect(int __max_fd_plus_one, fd_set* _Nullable __read_fds, fd_set* _Nullab
  *
  * Available since API level 28.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(28)
 int pselect64(int __max_fd_plus_one, fd_set* _Nullable __read_fds, fd_set* _Nullable __write_fds, fd_set* _Nullable __exception_fds, const struct timespec* _Nullable __timeout, const sigset64_t* _Nullable __mask) __INTRODUCED_IN(28);
+#endif /* __BIONIC_AVAILABILITY_GUARD(28) */
+
 
 __END_DECLS

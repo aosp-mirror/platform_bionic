@@ -60,6 +60,8 @@ typedef struct __iconv_t* iconv_t;
  *
  * Available since API level 28.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(28)
 iconv_t _Nonnull iconv_open(const char* _Nonnull __dst_encoding, const char* _Nonnull __src_encoding) __INTRODUCED_IN(28);
 
 /**
@@ -82,5 +84,7 @@ size_t iconv(iconv_t _Nonnull __converter, char* _Nullable * _Nullable __src_buf
  * Available since API level 28.
  */
 int iconv_close(iconv_t _Nonnull __converter) __INTRODUCED_IN(28);
+#endif /* __BIONIC_AVAILABILITY_GUARD(28) */
+
 
 __END_DECLS

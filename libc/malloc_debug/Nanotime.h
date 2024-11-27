@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2012 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,41 +26,13 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_RESOURCE_H_
-#define _SYS_RESOURCE_H_
+#pragma once
 
-#include <sys/cdefs.h>
-#include <sys/types.h>
+#include <stdint.h>
+#include <time.h>
 
-#include <linux/resource.h>
-
-__BEGIN_DECLS
-
-/* The kernel header doesn't have these, but POSIX does. */
-#define RLIM_SAVED_CUR RLIM_INFINITY
-#define RLIM_SAVED_MAX RLIM_INFINITY
-
-typedef unsigned long rlim_t;
-typedef unsigned long long rlim64_t;
-
-int getrlimit(int __resource, struct rlimit* _Nonnull __limit);
-int setrlimit(int __resource, const struct rlimit* _Nonnull __limit);
-
-int getrlimit64(int __resource, struct rlimit64* _Nonnull __limit);
-int setrlimit64(int __resource, const struct rlimit64* _Nonnull __limit);
-
-int getpriority(int __which, id_t __who);
-int setpriority(int __which, id_t __who, int __priority);
-
-int getrusage(int __who, struct rusage* _Nonnull __usage);
-
-
-#if (!defined(__LP64__) && __ANDROID_API__ >= 24) || (defined(__LP64__))
-int prlimit(pid_t __pid, int __resource, const struct rlimit* _Nullable __new_limit, struct rlimit* _Nullable __old_limit) __INTRODUCED_IN_32(24) __INTRODUCED_IN_64(21);
-#endif /* (!defined(__LP64__) && __ANDROID_API__ >= 24) || (defined(__LP64__)) */
-
-int prlimit64(pid_t __pid, int __resource, const struct rlimit64* _Nullable __new_limit, struct rlimit64* _Nullable __old_limit);
-
-__END_DECLS
-
-#endif
+static inline __always_inline uint64_t Nanotime() {
+  struct timespec t = {};
+  clock_gettime(CLOCK_MONOTONIC, &t);
+  return static_cast<uint64_t>(t.tv_sec) * 1000000000LL + t.tv_nsec;
+}

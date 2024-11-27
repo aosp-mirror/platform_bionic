@@ -199,4 +199,4 @@ void protect_memtag_globals_ro_segments(const ElfW(Phdr) * phdr_table, size_t ph
 
 void name_memtag_globals_segments(const ElfW(Phdr) * phdr_table, size_t phdr_count,
                                   ElfW(Addr) load_bias, const char* soname,
-                                  std::list<std::string>& vma_names);
+                                  std::list<std::string>* vma_names);

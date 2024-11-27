@@ -20,6 +20,9 @@
 #if !defined(__INTRODUCED_IN)
 #define __INTRODUCED_IN(x)
 #endif
+#if !defined(__BIONIC_AVAILABILITY_GUARD)
+#define __BIONIC_AVAILABILITY_GUARD(x) 1
+#endif
 
 // libc++ actively gets in the way of including <complex.h> from C++, so we
 // have to be naughty.

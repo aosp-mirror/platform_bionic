@@ -114,7 +114,7 @@ static inline T* _Nonnull untag_address(T* _Nonnull p) {
 // `LD_LIBRARY_PATH=/data/tmp/ /data/tmp/linker64 /data/tmp/my_binary`). A
 // good heuristic is that the global variable is in a file that should be
 // compiled with `-ffreestanding` (but there are global variables there that
-// don't need thisattribute).
+// don't need this attribute).
 #if __has_feature(memtag_globals)
 #define BIONIC_USED_BEFORE_LINKER_RELOCATES __attribute__((no_sanitize("memtag")))
 #else  // __has_feature(memtag_globals)

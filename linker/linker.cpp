@@ -1703,19 +1703,19 @@ bool find_libraries(android_namespace_t* ns,
   // each global variable, the RELRO segment is polluted and unique for each process. In order to
   // allow sharing, but still provide some protection, we use deterministic global tagging schemes
   // for DSOs that are loaded through android_dlopen_ext, such as those loaded by WebView.
-  bool deterministic_memtag_globals =
+  bool dlext_use_relro =
       extinfo && extinfo->flags & (ANDROID_DLEXT_WRITE_RELRO | ANDROID_DLEXT_USE_RELRO);
 
   // Step 3: pre-link all DT_NEEDED libraries in breadth first order.
   bool any_memtag_stack = false;
   for (auto&& task : load_tasks) {
     soinfo* si = task->get_soinfo();
-    if (!si->is_linked() && !si->prelink_image(deterministic_memtag_globals)) {
+    if (!si->is_linked() && !si->prelink_image(dlext_use_relro)) {
       return false;
     }
     // si->memtag_stack() needs to be called after si->prelink_image() which populates
     // the dynamic section.
-    if (si->has_min_version(7) && si->memtag_stack()) {
+    if (si->memtag_stack()) {
       any_memtag_stack = true;
       LD_LOG(kLogDlopen,
              "... load_library requesting stack MTE for: realpath=\"%s\", soname=\"%s\"",
@@ -1729,7 +1729,7 @@ bool find_libraries(android_namespace_t* ns,
     } else {
       // find_library is used by the initial linking step, so we communicate that we
       // want memtag_stack enabled to __libc_init_mte.
-      __libc_shared_globals()->initial_memtag_stack = true;
+      __libc_shared_globals()->initial_memtag_stack_abi = true;
     }
   }
 
@@ -2855,7 +2855,7 @@ bool relocate_relr(const ElfW(Relr) * begin, const ElfW(Relr) * end, ElfW(Addr) 
 // An empty list of soinfos
 static soinfo_list_t g_empty_list;
 
-bool soinfo::prelink_image(bool deterministic_memtag_globals) {
+bool soinfo::prelink_image(bool dlext_use_relro) {
   if (flags_ & FLAG_PRELINKED) return true;
   /* Extract dynamic section */
   ElfW(Word) dynamic_flags = 0;
@@ -3352,7 +3352,7 @@ bool soinfo::prelink_image(bool deterministic_memtag_globals) {
   // pages is unnecessary on non-MTE devices (where we might still run MTE-globals enabled code).
   if (should_tag_memtag_globals() &&
       remap_memtag_globals_segments(phdr, phnum, base) == 0) {
-    tag_globals(deterministic_memtag_globals);
+    tag_globals(dlext_use_relro);
     protect_memtag_globals_ro_segments(phdr, phnum, base);
   }
 
@@ -3429,7 +3429,10 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
   }
 
   if (should_tag_memtag_globals()) {
-    name_memtag_globals_segments(phdr, phnum, base, get_realpath(), vma_names_);
+    std::list<std::string>* vma_names_ptr = vma_names();
+    // should_tag_memtag_globals -> __aarch64__ -> vma_names() != nullptr
+    CHECK(vma_names_ptr);
+    name_memtag_globals_segments(phdr, phnum, base, get_realpath(), vma_names_ptr);
   }
 
   /* Handle serializing/sharing the RELRO segment */
@@ -3471,7 +3474,7 @@ bool soinfo::protect_relro() {
 }
 
 // https://github.com/ARM-software/abi-aa/blob/main/memtagabielf64/memtagabielf64.rst#global-variable-tagging
-void soinfo::tag_globals(bool deterministic_memtag_globals) {
+void soinfo::tag_globals(bool dlext_use_relro) {
   if (is_linked()) return;
   if (flags_ & FLAG_GLOBALS_TAGGED) return;
   flags_ |= FLAG_GLOBALS_TAGGED;
@@ -3501,7 +3504,7 @@ void soinfo::tag_globals(bool deterministic_memtag_globals) {
 
     addr += distance;
     void* tagged_addr;
-    if (deterministic_memtag_globals) {
+    if (dlext_use_relro) {
       tagged_addr = reinterpret_cast<void*>(addr | (last_tag++ << 56));
       if (last_tag > (1 << kTagGranuleSize)) last_tag = 1;
     } else {

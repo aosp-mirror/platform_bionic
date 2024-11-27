@@ -1,6 +1,3 @@
-/*	$OpenBSD: limits.h,v 1.13 2005/12/31 19:29:38 millert Exp $	*/
-/*	$NetBSD: limits.h,v 1.7 1994/10/26 00:56:00 cgd Exp $	*/
-
 /*
  * Copyright (c) 1988 The Regents of the University of California.
  * All rights reserved.
@@ -32,108 +29,101 @@
  *	@(#)limits.h	5.9 (Berkeley) 4/3/91
  */
 
-#ifndef _LIMITS_H_
-#define _LIMITS_H_
+#pragma once
+
+/**
+ * @file limits.h
+ * @brief Constants relating to implementation limits.
+ *
+ * This file is included via `#include_next` from the clang header of the same
+ * name that provides all the limits that the compiler is responsible for,
+ * primarily those relating to integer types defined by the C standard.
+ * This file defines the additional limits defined by POSIX.
+ */
+
+/*
+ * The Android build system has bionic _before_ the clang headers,
+ * so although the claim above that clang does an `#include_next`
+ * of this file is true for the NDK, it's not true for the OS,
+ * and we need to paper over that difference here until/unless
+ * the OS build changes.
+ */
+#if __has_include_next(<limits.h>)
+#include_next <limits.h>
+#endif
 
 #include <sys/cdefs.h>
 
 /* Historically bionic exposed the content of <float.h> from <limits.h> and <sys/limits.h> too. */
 #include <float.h>
 
+/* Many of the POSIX limits come from the kernel. */
 #include <linux/limits.h>
 
-#define PASS_MAX		128	/* _PASSWORD_LEN from <pwd.h> */
-
-#define NL_ARGMAX		9
-#define NL_LANGMAX		14
-#define NL_MSGMAX		32767
-#define NL_NMAX			1
-#define NL_SETMAX		255
-#define NL_TEXTMAX		255
-
-#define TMP_MAX                 308915776
-
-/* TODO: get all these from the compiler's <limits.h>? */
-
-#define CHAR_BIT 8
-#ifdef __LP64__
-# define LONG_BIT 64
-#else
-# define LONG_BIT 32
+/*
+ * bionic always exposed these alternative names,
+ * but clang's <limits.h> considers them GNU extensions,
+ * and may or may not have defined them.
+ */
+#ifndef LONG_LONG_MIN
+/** Non-portable synonym; use LLONG_MIN directly instead. */
+#define LONG_LONG_MIN LLONG_MIN
 #endif
+#ifndef LONG_LONG_MAX
+/** Non-portable synonym; use LLONG_MAX directly instead. */
+#define LONG_LONG_MAX LLONG_MAX
+#endif
+#ifndef ULONG_LONG_MAX
+/** Non-portable synonym; use ULLONG_MAX directly instead. */
+#define ULONG_LONG_MAX ULLONG_MAX
+#endif
+
+/** Maximum number of positional arguments in a printf()/scanf() format string. */
+#define NL_ARGMAX 9
+/** Maximum number of bytes in a $LANG name. */
+#define NL_LANGMAX 14
+/** Irrelevant with Android's <nl_types.h>. */
+#define NL_MSGMAX 32767
+/** Obsolete; removed from POSIX. */
+#define NL_NMAX 1
+/** Irrelevant with Android's <nl_types.h>. */
+#define NL_SETMAX 255
+/** Irrelevant with Android's <nl_types.h>. */
+#define NL_TEXTMAX 255
+
+/** Obsolete; removed from POSIX. */
+#define PASS_MAX 128
+/** Obsolete; removed from POSIX. */
+#define TMP_MAX 308915776
+
+/** Number of bits in a `long` (POSIX). */
+#if __LP64__
+#define LONG_BIT 64
+#else
+#define LONG_BIT 32
+#endif
+/** Number of bits in a "word" of `int` (POSIX). */
 #define WORD_BIT 32
 
-#define	SCHAR_MAX	0x7f		/* max value for a signed char */
-#define SCHAR_MIN	(-0x7f-1)	/* min value for a signed char */
-
-#define	UCHAR_MAX	0xffU		/* max value for an unsigned char */
-#ifdef __CHAR_UNSIGNED__
-# define CHAR_MIN	0		/* min value for a char */
-# define CHAR_MAX	0xff		/* max value for a char */
-#else
-# define CHAR_MAX	0x7f
-# define CHAR_MIN	(-0x7f-1)
-#endif
-
-#define	USHRT_MAX	0xffffU		/* max value for an unsigned short */
-#define	SHRT_MAX	0x7fff		/* max value for a short */
-#define SHRT_MIN        (-0x7fff-1)     /* min value for a short */
-
-#define	UINT_MAX	0xffffffffU	/* max value for an unsigned int */
-#define	INT_MAX		0x7fffffff	/* max value for an int */
-#define	INT_MIN		(-0x7fffffff-1)	/* min value for an int */
-
-#ifdef __LP64__
-# define ULONG_MAX	0xffffffffffffffffUL     /* max value for unsigned long */
-# define LONG_MAX	0x7fffffffffffffffL      /* max value for a signed long */
-# define LONG_MIN	(-0x7fffffffffffffffL-1) /* min value for a signed long */
-#else
-# define ULONG_MAX	0xffffffffUL	/* max value for an unsigned long */
-# define LONG_MAX	0x7fffffffL	/* max value for a long */
-# define LONG_MIN	(-0x7fffffffL-1)/* min value for a long */
-#endif
-
-# define ULLONG_MAX	0xffffffffffffffffULL     /* max value for unsigned long long */
-# define LLONG_MAX	0x7fffffffffffffffLL      /* max value for a signed long long */
-# define LLONG_MIN	(-0x7fffffffffffffffLL-1) /* min value for a signed long long */
-
-/* GLibc compatibility definitions.
-   Note that these are defined by GCC's <limits.h>
-   only when __GNU_LIBRARY__ is defined, i.e. when
-   targetting GLibc. */
-#ifndef LONG_LONG_MIN
-#define LONG_LONG_MIN  LLONG_MIN
-#endif
-
-#ifndef LONG_LONG_MAX
-#define LONG_LONG_MAX  LLONG_MAX
-#endif
-
-#ifndef ULONG_LONG_MAX
-#define ULONG_LONG_MAX  ULLONG_MAX
-#endif
-
-#if defined(__USE_BSD) || defined(__BIONIC__) /* Historically bionic exposed these. */
-# define UID_MAX	UINT_MAX	/* max value for a uid_t */
-# define GID_MAX	UINT_MAX	/* max value for a gid_t */
-#if defined(__LP64__)
+/** Maximum value of a uid_t. */
+#define UID_MAX UINT_MAX
+/** Maximum value of a gid_t. */
+#define GID_MAX UINT_MAX
+/** Maximum value of a size_t. */
 #define SIZE_T_MAX ULONG_MAX
-#else
-#define SIZE_T_MAX UINT_MAX
-#endif
-#endif
-
-#if defined(__LP64__)
+/** Maximum value of a ssize_t. */
 #define SSIZE_MAX LONG_MAX
-#else
-#define SSIZE_MAX INT_MAX
-#endif
 
+/** Maximum number of bytes in a multibyte character. */
 #define MB_LEN_MAX 4
 
+/** Default process priority. */
 #define NZERO 20
 
+/** Maximum number of struct iovec that can be passed in a single readv()/writev(). */
 #define IOV_MAX 1024
+
+/** Maximum value for a semaphore. */
 #define SEM_VALUE_MAX 0x3fffffff
 
 /** Do not use: prefer getline() or asprintf() rather than hard-coding an arbitrary size. */
@@ -142,12 +132,17 @@
 /* POSIX says these belong in <unistd.h> but BSD has some in <limits.h>. */
 #include <bits/posix_limits.h>
 
+/** Maximum length of a hostname returned by gethostname(). */
 #define HOST_NAME_MAX _POSIX_HOST_NAME_MAX
+
+/** Maximum length of a login name. */
 #define LOGIN_NAME_MAX 256
+
+/** Maximum length of terminal device name. */
 #define TTY_NAME_MAX 32
 
-/* >= _POSIX_THREAD_DESTRUCTOR_ITERATIONS */
-#define PTHREAD_DESTRUCTOR_ITERATIONS 4
+/** Maximum number of attempts to destroy thread-specific data when a thread exits. */
+#define PTHREAD_DESTRUCTOR_ITERATIONS _POSIX_THREAD_DESTRUCTOR_ITERATIONS
 
 /**
  * The number of calls to pthread_key_create() without intervening calls to
@@ -156,7 +151,5 @@
  */
 #define PTHREAD_KEYS_MAX 128
 
-/** bionic has no specific limit on the number of threads. */
+/** bionic has no fixed limit on the number of threads. */
 #undef PTHREAD_THREADS_MAX
-
-#endif /* !_LIMITS_H_ */

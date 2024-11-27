@@ -186,7 +186,8 @@ bool ElfReader::Read(const char* name, int fd, off64_t file_offset, off64_t file
     // It cannot be cached since the developer may toggle app compat on/off.
     // This check will be removed once app compat is made the default on 16KiB devices.
     should_use_16kib_app_compat_ =
-        ::android::base::GetBoolProperty("bionic.linker.16kb.app_compat.enabled", false);
+        ::android::base::GetBoolProperty("bionic.linker.16kb.app_compat.enabled", false) ||
+        get_16kb_appcompat_mode();
   }
 
   return did_read_;
@@ -1245,7 +1246,7 @@ void protect_memtag_globals_ro_segments(const ElfW(Phdr) * phdr_table __unused,
 
 void name_memtag_globals_segments(const ElfW(Phdr) * phdr_table, size_t phdr_count,
                                   ElfW(Addr) load_bias, const char* soname,
-                                  std::list<std::string>& vma_names) {
+                                  std::list<std::string>* vma_names) {
   for (const ElfW(Phdr)* phdr = phdr_table; phdr < phdr_table + phdr_count; phdr++) {
     if (!segment_needs_memtag_globals_remapping(phdr)) {
       continue;
@@ -1263,7 +1264,7 @@ void name_memtag_globals_segments(const ElfW(Phdr) * phdr_table, size_t phdr_cou
     // For now, that is not the case:
     // https://source.android.com/docs/core/architecture/kernel/android-common#compatibility-matrix
     constexpr int kVmaNameLimit = 80;
-    std::string& vma_name = vma_names.emplace_back('\0', kVmaNameLimit);
+    std::string& vma_name = vma_names->emplace_back(kVmaNameLimit, '\0');
     int full_vma_length =
         async_safe_format_buffer(vma_name.data(), kVmaNameLimit, "mt:%s+%" PRIxPTR, soname,
                                  page_start(phdr->p_vaddr)) +
@@ -1289,7 +1290,7 @@ void name_memtag_globals_segments(const ElfW(Phdr) * phdr_table, size_t phdr_cou
     }
     if (prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, reinterpret_cast<void*>(seg_page_start),
               seg_page_aligned_size, vma_name.data()) != 0) {
-      DL_WARN("Failed to re-name memtag global segment.");
+      DL_WARN("Failed to rename memtag global segment: %m");
     }
   }
 }

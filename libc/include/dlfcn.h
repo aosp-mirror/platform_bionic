@@ -32,6 +32,17 @@
 
 #include <stdint.h>
 
+/**
+ * @addtogroup libdl Dynamic Linker
+ * @{
+ */
+
+/**
+ * \file
+ * Standard dynamic library support.
+ * See also the Android-specific functionality in `<android/dlext.h>`.
+ */
+
 __BEGIN_DECLS
 
 /**
@@ -51,6 +62,8 @@ typedef struct {
 /**
  * [dlopen(3)](https://man7.org/linux/man-pages/man3/dlopen.3.html)
  * loads the given shared library.
+ *
+ * See also android_dlopen_ext().
  *
  * Returns a pointer to an opaque handle for use with other <dlfcn.h> functions
  * on success, and returns NULL on failure, in which case dlerror() can be used
@@ -117,7 +130,11 @@ void* _Nullable dlsym(void* __BIONIC_COMPLICATED_NULLNESS __handle, const char* 
  * Returns the address of the symbol on success, and returns NULL on failure,
  * in which case dlerror() can be used to retrieve the specific error.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(24)
 void* _Nullable dlvsym(void* __BIONIC_COMPLICATED_NULLNESS __handle, const char* _Nullable __symbol, const char* _Nullable __version) __INTRODUCED_IN(24);
+#endif /* __BIONIC_AVAILABILITY_GUARD(24) */
+
 
 /**
  * [dladdr(3)](https://man7.org/linux/man-pages/man3/dladdr.3.html)
@@ -187,3 +204,5 @@ int dladdr(const void* _Nonnull __addr, Dl_info* _Nonnull __info);
 #endif
 
 __END_DECLS
+
+/** @} */

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,41 +26,17 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_RESOURCE_H_
-#define _SYS_RESOURCE_H_
+#include <errno.h>
 
-#include <sys/cdefs.h>
-#include <sys/types.h>
+#include "private/ErrnoRestorer.h"
+#include "pthread_internal.h"
 
-#include <linux/resource.h>
+int pthread_getaffinity_np(pthread_t t, size_t cpu_set_size, cpu_set_t* cpu_set) {
+  ErrnoRestorer errno_restorer;
 
-__BEGIN_DECLS
+  pid_t tid = __pthread_internal_gettid(t, "pthread_getaffinity_np");
+  if (tid == -1) return ESRCH;
 
-/* The kernel header doesn't have these, but POSIX does. */
-#define RLIM_SAVED_CUR RLIM_INFINITY
-#define RLIM_SAVED_MAX RLIM_INFINITY
-
-typedef unsigned long rlim_t;
-typedef unsigned long long rlim64_t;
-
-int getrlimit(int __resource, struct rlimit* _Nonnull __limit);
-int setrlimit(int __resource, const struct rlimit* _Nonnull __limit);
-
-int getrlimit64(int __resource, struct rlimit64* _Nonnull __limit);
-int setrlimit64(int __resource, const struct rlimit64* _Nonnull __limit);
-
-int getpriority(int __which, id_t __who);
-int setpriority(int __which, id_t __who, int __priority);
-
-int getrusage(int __who, struct rusage* _Nonnull __usage);
-
-
-#if (!defined(__LP64__) && __ANDROID_API__ >= 24) || (defined(__LP64__))
-int prlimit(pid_t __pid, int __resource, const struct rlimit* _Nullable __new_limit, struct rlimit* _Nullable __old_limit) __INTRODUCED_IN_32(24) __INTRODUCED_IN_64(21);
-#endif /* (!defined(__LP64__) && __ANDROID_API__ >= 24) || (defined(__LP64__)) */
-
-int prlimit64(pid_t __pid, int __resource, const struct rlimit64* _Nullable __new_limit, struct rlimit64* _Nullable __old_limit);
-
-__END_DECLS
-
-#endif
+  if (sched_getaffinity(tid, cpu_set_size, cpu_set) == -1) return errno;
+  return 0;
+}
