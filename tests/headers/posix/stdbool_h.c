@@ -31,10 +31,8 @@
 #include "header_checks.h"
 
 static void stdbool_h() {
-#if !defined(bool)
-#error bool
-#endif
-  MACRO_VALUE(true, 1);
-  MACRO_VALUE(false, 0);
+  TYPE(bool);
+  bool t = true;
+  bool f = false;
   MACRO_VALUE(__bool_true_false_are_defined, 1);
 }
