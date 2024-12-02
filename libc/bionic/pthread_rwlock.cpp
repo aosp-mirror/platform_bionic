@@ -247,7 +247,7 @@ int pthread_rwlock_init(pthread_rwlock_t* rwlock_interface, const pthread_rwlock
     }
   }
 
-  atomic_init(&rwlock->state, 0);
+  atomic_store_explicit(&rwlock->state, 0, memory_order_relaxed);
   rwlock->pending_lock.init(rwlock->pshared);
   return 0;
 }
