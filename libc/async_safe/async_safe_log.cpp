@@ -359,7 +359,7 @@ static void out_vformat(Out& o, const char* format, va_list args) {
       buffer[1] = 'x';
       format_integer(buffer + 2, sizeof(buffer) - 2, value, 'x');
     } else if (c == 'm') {
-#if __ANDROID_API_LEVEL__ >= 35 // This library is used in mainline modules.
+#if __ANDROID_API__ >= 35 // This library is used in mainline modules.
       if (alternate) {
         const char* name = strerrorname_np(errno);
         if (name) {
