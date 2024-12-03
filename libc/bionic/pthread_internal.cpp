@@ -259,8 +259,7 @@ bool android_run_on_all_threads(bool (*func)(void*), void* arg) {
   g_func = func;
   g_arg = arg;
 
-  static _Atomic(bool) g_retval;
-  atomic_init(&g_retval, true);
+  static _Atomic(bool) g_retval(true);
 
   auto handler = [](int, siginfo_t*, void*) {
     ErrnoRestorer restorer;
