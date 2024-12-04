@@ -140,10 +140,10 @@ int pthread_cond_init(pthread_cond_t* cond_interface, const pthread_condattr_t* 
   if (attr != nullptr) {
     init_state = (*attr & COND_FLAGS_MASK);
   }
-  atomic_init(&cond->state, init_state);
+  atomic_store_explicit(&cond->state, init_state, memory_order_relaxed);
 
 #if defined(__LP64__)
-  atomic_init(&cond->waiters, 0);
+  atomic_store_explicit(&cond->waiters, 0, memory_order_relaxed);
 #endif
 
   return 0;
