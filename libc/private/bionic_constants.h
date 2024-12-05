@@ -16,6 +16,7 @@
 
 #pragma once
 
+#define US_PER_S 1'000'000LL
 #define NS_PER_S 1'000'000'000LL
 
 // Size of the shadow call stack. This can be small because these stacks only

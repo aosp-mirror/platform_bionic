@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,30 +26,18 @@
  * SUCH DAMAGE.
  */
 
-#include "system_properties/prop_info.h"
+#include <utility>
+#include <vector>
 
-#include <string.h>
+void check_tagged(const void* a);
+void check_untagged(const void* a);
+void check_matching_tags(const void* a, const void* b);
+void check_eq(const void* a, const void* b);
 
-static constexpr const char kLongLegacyError[] =
-    "Must use __system_property_read_callback() to read";
-static_assert(sizeof(kLongLegacyError) < prop_info::kLongLegacyErrorBufferSize,
-              "Error message for long properties read by legacy libc must fit within 56 chars");
+void dso_check_assertions(bool enforce_tagged);
+void dso_print_variables();
 
-prop_info::prop_info(const char* name, uint32_t namelen, const char* value, uint32_t valuelen) {
-  memcpy(this->name, name, namelen);
-  this->name[namelen] = '\0';
-  atomic_store_explicit(&this->serial, valuelen << 24, memory_order_relaxed);
-  memcpy(this->value, value, valuelen);
-  this->value[valuelen] = '\0';
-}
-
-prop_info::prop_info(const char* name, uint32_t namelen, uint32_t long_offset) {
-  memcpy(this->name, name, namelen);
-  this->name[namelen] = '\0';
-
-  auto error_value_len = sizeof(kLongLegacyError) - 1;
-  atomic_store_explicit(&this->serial, error_value_len << 24 | kLongFlag, memory_order_relaxed);
-  memcpy(this->long_property.error_message, kLongLegacyError, sizeof(kLongLegacyError));
-
-  this->long_property.offset = long_offset;
-}
+void print_variable_address(const char* name, const void* ptr);
+void print_variables(const char* header,
+                     const std::vector<std::pair<const char*, const void*>>& tagged_variables,
+                     const std::vector<std::pair<const char*, const void*>>& untagged_variables);
