@@ -1659,8 +1659,14 @@ cc_library {
     },
     native_bridge_supported: false,
     // It is never correct to depend on this directly. This is only
-    // needed for the runtime apex, and in base_system.mk.
-    visibility: ["//bionic/apex"],
+    // needed for the runtime apex, and in base_system.mk, and system_image_defaults
+    // which is default module for soong-defined system image.
+    visibility: [
+        "//bionic/apex",
+        "//build/make/target/product/generic",
+        //TODO(b/381985636) : Remove visibility to Soong-defined GSI once resolved
+        "//build/make/target/product/gsi",
+    ],
 }
 
 genrule {

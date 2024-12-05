@@ -752,9 +752,10 @@ bool ElfReader::ReserveAddressSpace(address_space_params* address_space) {
 }
 
 /*
- * Returns true if the kernel supports page size migration, else false.
+ * Returns true if the kernel supports page size migration for this process.
  */
 bool page_size_migration_supported() {
+#if defined(__LP64__)
   static bool pgsize_migration_enabled = []() {
     std::string enabled;
     if (!android::base::ReadFileToString("/sys/kernel/mm/pgsize_migration/enabled", &enabled)) {
@@ -763,6 +764,9 @@ bool page_size_migration_supported() {
     return enabled.find("1") != std::string::npos;
   }();
   return pgsize_migration_enabled;
+#else
+  return false;
+#endif
 }
 
 // Find the ELF note of type NT_ANDROID_TYPE_PAD_SEGMENT and check that the desc value is 1.
