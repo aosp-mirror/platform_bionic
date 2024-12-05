@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,30 +26,17 @@
  * SUCH DAMAGE.
  */
 
-#include "system_properties/prop_info.h"
+#include <errno.h>
 
-#include <string.h>
+#include "private/ErrnoRestorer.h"
+#include "pthread_internal.h"
 
-static constexpr const char kLongLegacyError[] =
-    "Must use __system_property_read_callback() to read";
-static_assert(sizeof(kLongLegacyError) < prop_info::kLongLegacyErrorBufferSize,
-              "Error message for long properties read by legacy libc must fit within 56 chars");
+int pthread_setaffinity_np(pthread_t t, size_t cpu_set_size, const cpu_set_t* cpu_set) {
+  ErrnoRestorer errno_restorer;
 
-prop_info::prop_info(const char* name, uint32_t namelen, const char* value, uint32_t valuelen) {
-  memcpy(this->name, name, namelen);
-  this->name[namelen] = '\0';
-  atomic_store_explicit(&this->serial, valuelen << 24, memory_order_relaxed);
-  memcpy(this->value, value, valuelen);
-  this->value[valuelen] = '\0';
-}
+  pid_t tid = __pthread_internal_gettid(t, "pthread_setaffinity_np");
+  if (tid == -1) return ESRCH;
 
-prop_info::prop_info(const char* name, uint32_t namelen, uint32_t long_offset) {
-  memcpy(this->name, name, namelen);
-  this->name[namelen] = '\0';
-
-  auto error_value_len = sizeof(kLongLegacyError) - 1;
-  atomic_store_explicit(&this->serial, error_value_len << 24 | kLongFlag, memory_order_relaxed);
-  memcpy(this->long_property.error_message, kLongLegacyError, sizeof(kLongLegacyError));
-
-  this->long_property.offset = long_offset;
+  if (sched_setaffinity(tid, cpu_set_size, cpu_set) == -1) return errno;
+  return 0;
 }

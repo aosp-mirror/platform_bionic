@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <inttypes.h>
+#include <link.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -40,11 +41,13 @@
 #include <procinfo/process_map.h>
 #include <ziparchive/zip_archive.h>
 
+#include "bionic/mte.h"
+#include "bionic/page.h"
 #include "core_shared_libs.h"
-#include "gtest_globals.h"
-#include "utils.h"
 #include "dlext_private.h"
 #include "dlfcn_symlink_support.h"
+#include "gtest_globals.h"
+#include "utils.h"
 
 #define ASSERT_DL_NOTNULL(ptr) \
     ASSERT_TRUE((ptr) != nullptr) << "dlerror: " << dlerror()
@@ -1958,6 +1961,14 @@ TEST(dlext, ns_allow_all_shared_libs) {
   dlclose(ns_a_handle3);
 }
 
+static inline int MapPflagsToProtFlags(uint32_t flags) {
+  int prot_flags = 0;
+  if (PF_X & flags) prot_flags |= PROT_EXEC;
+  if (PF_W & flags) prot_flags |= PROT_WRITE;
+  if (PF_R & flags) prot_flags |= PROT_READ;
+  return prot_flags;
+}
+
 TEST(dlext, ns_anonymous) {
   static const char* root_lib = "libnstest_root.so";
   std::string shared_libs = g_core_shared_libs + ":" + g_public_lib;
@@ -1999,30 +2010,45 @@ TEST(dlext, ns_anonymous) {
   typedef const char* (*fn_t)();
   fn_t ns_get_dlopened_string_private = reinterpret_cast<fn_t>(ns_get_dlopened_string_addr);
 
-  std::vector<map_record> maps;
-  Maps::parse_maps(&maps);
-
+  Dl_info private_library_info;
+  ASSERT_NE(dladdr(reinterpret_cast<void*>(ns_get_dlopened_string_addr), &private_library_info), 0)
+      << dlerror();
+  std::vector<map_record> maps_to_copy;
+  bool has_executable_segment = false;
   uintptr_t addr_start = 0;
   uintptr_t addr_end = 0;
-  bool has_executable_segment = false;
-  std::vector<map_record> maps_to_copy;
+  std::tuple dl_iterate_arg = {&private_library_info, &maps_to_copy, &has_executable_segment,
+                               &addr_start, &addr_end};
+  ASSERT_EQ(
+      1, dl_iterate_phdr(
+             [](dl_phdr_info* info, size_t /*size*/, void* data) -> int {
+               auto [private_library_info, maps_to_copy, has_executable_segment, addr_start,
+                     addr_end] = *reinterpret_cast<decltype(dl_iterate_arg)*>(data);
+               if (info->dlpi_addr != reinterpret_cast<ElfW(Addr)>(private_library_info->dli_fbase))
+                 return 0;
 
-  for (const auto& rec : maps) {
-    if (rec.pathname == private_library_absolute_path) {
-      if (addr_start == 0) {
-        addr_start = rec.addr_start;
-      }
-      addr_end = rec.addr_end;
-      has_executable_segment = has_executable_segment || (rec.perms & PROT_EXEC) != 0;
-
-      maps_to_copy.push_back(rec);
-    }
-  }
+               for (size_t i = 0; i < info->dlpi_phnum; ++i) {
+                 const ElfW(Phdr)* phdr = info->dlpi_phdr + i;
+                 if (phdr->p_type != PT_LOAD) continue;
+                 *has_executable_segment |= phdr->p_flags & PF_X;
+                 uintptr_t mapping_start = page_start(info->dlpi_addr + phdr->p_vaddr);
+                 uintptr_t mapping_end = page_end(info->dlpi_addr + phdr->p_vaddr + phdr->p_memsz);
+                 if (*addr_start == 0 || mapping_start < *addr_start) *addr_start = mapping_start;
+                 if (*addr_end == 0 || mapping_end > *addr_end) *addr_end = mapping_end;
+                 maps_to_copy->push_back({
+                     .addr_start = mapping_start,
+                     .addr_end = mapping_end,
+                     .perms = MapPflagsToProtFlags(phdr->p_flags),
+                 });
+               }
+               return 1;
+             },
+             &dl_iterate_arg));
 
   // Some validity checks.
+  ASSERT_NE(maps_to_copy.size(), 0u);
   ASSERT_TRUE(addr_start > 0);
   ASSERT_TRUE(addr_end > 0);
-  ASSERT_TRUE(maps_to_copy.size() > 0);
   ASSERT_TRUE(ns_get_dlopened_string_addr > addr_start);
   ASSERT_TRUE(ns_get_dlopened_string_addr < addr_end);
 
@@ -2052,19 +2078,26 @@ TEST(dlext, ns_anonymous) {
   ASSERT_EQ(ret, 0) << "Failed to stat library";
   size_t file_size = file_stat.st_size;
 
-  for (const auto& rec : maps_to_copy) {
-    uintptr_t offset = rec.addr_start - addr_start;
-    size_t size = rec.addr_end - rec.addr_start;
-    void* addr = reinterpret_cast<void*>(reserved_addr + offset);
-    void* map = mmap(addr, size, PROT_READ | PROT_WRITE,
-                     MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
-    ASSERT_TRUE(map != MAP_FAILED);
-    // Attempting the below memcpy from a portion of the map that is off the end of
-    // the backing file will cause the kernel to throw a SIGBUS
-    size_t _size = ::android::procinfo::MappedFileSize(rec.addr_start, rec.addr_end,
-                                                       rec.offset, file_size);
-    memcpy(map, reinterpret_cast<void*>(rec.addr_start), _size);
-    mprotect(map, size, rec.perms);
+  {
+    // Disable MTE while copying the PROT_MTE-protected global variables from
+    // the existing mappings. We don't really care about turning on PROT_MTE for
+    // the new copy of the mappings, as this isn't the behaviour under test and
+    // tags will be ignored. This only applies for MTE-enabled devices.
+    ScopedDisableMTE disable_mte_for_copying_global_variables;
+    for (const auto& rec : maps_to_copy) {
+      uintptr_t offset = rec.addr_start - addr_start;
+      size_t size = rec.addr_end - rec.addr_start;
+      void* addr = reinterpret_cast<void*>(reserved_addr + offset);
+      void* map =
+          mmap(addr, size, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0);
+      ASSERT_TRUE(map != MAP_FAILED);
+      // Attempting the below memcpy from a portion of the map that is off the end of
+      // the backing file will cause the kernel to throw a SIGBUS
+      size_t _size =
+          ::android::procinfo::MappedFileSize(rec.addr_start, rec.addr_end, rec.offset, file_size);
+      memcpy(map, reinterpret_cast<void*>(rec.addr_start), _size);
+      mprotect(map, size, rec.perms);
+    }
   }
 
   // call the function copy
