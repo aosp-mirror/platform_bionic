@@ -31,6 +31,7 @@
 #include <sys/hwprobe.h>
 #include <sys/ifunc.h>
 
+#include "bionic/macros.h"
 #include "private/bionic_auxv.h"
 
 // This code is called in the linker before it has been relocated, so minimize calls into other
@@ -40,8 +41,8 @@
 ElfW(Addr) __bionic_call_ifunc_resolver(ElfW(Addr) resolver_addr) {
 #if defined(__aarch64__)
   typedef ElfW(Addr) (*ifunc_resolver_t)(uint64_t, __ifunc_arg_t*);
-  static __ifunc_arg_t arg;
-  static bool initialized = false;
+  BIONIC_USED_BEFORE_LINKER_RELOCATES static __ifunc_arg_t arg;
+  BIONIC_USED_BEFORE_LINKER_RELOCATES static bool initialized = false;
   if (!initialized) {
     initialized = true;
     arg._size = sizeof(__ifunc_arg_t);

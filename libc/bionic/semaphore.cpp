@@ -113,7 +113,7 @@ int sem_init(sem_t* sem, int pshared, unsigned int value) {
   }
 
   atomic_uint* sem_count_ptr = SEM_TO_ATOMIC_POINTER(sem);
-  atomic_init(sem_count_ptr, count);
+  atomic_store_explicit(sem_count_ptr, count, memory_order_relaxed);
   return 0;
 }
 
