@@ -95,7 +95,7 @@ __BIONIC_CTYPE_INLINE int _toupper(int __ch) {
 
 /** Internal implementation detail. Do not use. */
 __attribute__((__no_sanitize__("unsigned-integer-overflow")))
-static inline int __bionic_ctype_in_range(unsigned __lo, int __ch, unsigned __hi) {
+__BIONIC_CTYPE_INLINE int __bionic_ctype_in_range(unsigned __lo, int __ch, unsigned __hi) {
   return (__BIONIC_CAST(static_cast, unsigned, __ch) - __lo) < (__hi - __lo + 1);
 }
 

@@ -40,7 +40,7 @@ TEST(stdatomic, init) {
   atomic_int v = 123;
   ASSERT_EQ(123, atomic_load(&v));
 
-  atomic_init(&v, 456);
+  atomic_store_explicit(&v, 456, memory_order_relaxed);
   ASSERT_EQ(456, atomic_load(&v));
 
   atomic_flag f = ATOMIC_FLAG_INIT;
@@ -258,9 +258,9 @@ TEST(stdatomic, ordering) {
   // Run a memory ordering smoke test.
   void* result;
   three_atomics a;
-  atomic_init(&a.x, 0ul);
-  atomic_init(&a.y, 0ul);
-  atomic_init(&a.z, 0ul);
+  atomic_store_explicit(&a.x, 0ul, memory_order_relaxed);
+  atomic_store_explicit(&a.y, 0ul, memory_order_relaxed);
+  atomic_store_explicit(&a.z, 0ul, memory_order_relaxed);
   pthread_t t1,t2;
   ASSERT_EQ(0, pthread_create(&t1, nullptr, reader, &a));
   ASSERT_EQ(0, pthread_create(&t2, nullptr, writer, &a));
