@@ -102,7 +102,7 @@ class prop_area {
   }
 
   prop_area(const uint32_t magic, const uint32_t version) : magic_(magic), version_(version) {
-    atomic_init(&serial_, 0u);
+    atomic_store_explicit(&serial_, 0u, memory_order_relaxed);
     memset(reserved_, 0, sizeof(reserved_));
     // Allocate enough space for the root node.
     bytes_used_ = sizeof(prop_trie_node);
