@@ -542,3 +542,31 @@ cc_benchmark {
         },
     },
 }
+
+cc_fuzz {
+    name: "ElfReader_fuzzer",
+    srcs: [
+        "ElfReader_fuzzer.cpp",
+        "linker.cpp",
+        "linker_block_allocator.cpp",
+        "linker_debug.cpp",
+        "linker_dlwarning.cpp",
+        "linker_globals.cpp",
+        "linker_mapped_file_fragment.cpp",
+        "linker_phdr.cpp",
+        "linker_sdk_versions.cpp",
+        "linker_utils.cpp",
+        ":elf_note_sources",
+    ],
+    static_libs: [
+        "libasync_safe",
+        "libbase",
+        "libziparchive",
+    ],
+    include_dirs: ["bionic/libc"],
+    // TODO: use all the architectures' files.
+    // We'll either need to give them unique names across architectures,
+    // or change soong to preserve subdirectories in `corpus:`,
+    // and maybe also the [deprecated] LLVM fuzzer infrastructure?
+    corpus: [":bionic_prebuilt_test_elf_files_arm64"],
+}
