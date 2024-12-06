@@ -26,11 +26,17 @@
  * SUCH DAMAGE.
  */
 
+#if __has_include (<android/dlext_private.h>)
+#define IS_ANDROID_DL
+#endif
+
 #include "page_size_compat_helpers.h"
 
 #include <android-base/properties.h>
 
-extern "C" void android_set_16kb_appcompat_mode(bool enable_app_compat);
+#if defined(IS_ANDROID_DL)
+#include <android/dlext_private.h>
+#endif
 
 TEST(PageSize16KiBCompatTest, ElfAlignment4KiB_LoadElf) {
   if (getpagesize() != 0x4000) {
@@ -52,11 +58,17 @@ TEST(PageSize16KiBCompatTest, ElfAlignment4KiB_LoadElf_perAppOption) {
     GTEST_SKIP() << "This test is only applicable to 16kB page-size devices";
   }
 
+#if defined(IS_ANDROID_DL)
   android_set_16kb_appcompat_mode(true);
+#endif
+
   std::string lib = GetTestLibRoot() + "/libtest_elf_max_page_size_4kib.so";
   void* handle = nullptr;
 
   OpenTestLibrary(lib, false /*should_fail*/, &handle);
   CallTestFunction(handle);
+
+#if defined(IS_ANDROID_DL)
   android_set_16kb_appcompat_mode(false);
+#endif
 }

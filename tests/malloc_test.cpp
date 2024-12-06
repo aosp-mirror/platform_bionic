@@ -53,7 +53,7 @@
 #if defined(__BIONIC__)
 
 #include "SignalUtils.h"
-#include "dlext_private.h"
+#include "dlext_private_tests.h"
 
 #include "platform/bionic/malloc.h"
 #include "platform/bionic/mte.h"
