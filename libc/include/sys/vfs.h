@@ -29,8 +29,9 @@
 #ifndef _SYS_VFS_H_
 #define _SYS_VFS_H_
 
-#include <stdint.h>
 #include <sys/cdefs.h>
+
+#include <stdint.h>
 #include <sys/types.h>
 
 __BEGIN_DECLS

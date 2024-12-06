@@ -33,10 +33,11 @@
  * @brief Timer file descriptors.
  */
 
+#include <sys/cdefs.h>
+
 #include <fcntl.h>
 #include <linux/timerfd.h>
 #include <time.h>
-#include <sys/cdefs.h>
 #include <sys/types.h>
 
 __BEGIN_DECLS

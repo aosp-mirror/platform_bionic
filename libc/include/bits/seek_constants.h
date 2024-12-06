@@ -33,6 +33,8 @@
  * @brief The `SEEK_` constants.
  */
 
+#include <sys/cdefs.h>
+
 /** Seek to an absolute offset. */
 #define SEEK_SET 0
 /** Seek relative to the current offset. */

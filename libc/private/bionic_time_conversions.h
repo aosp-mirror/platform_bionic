@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _BIONIC_TIME_CONVERSIONS_H
-#define _BIONIC_TIME_CONVERSIONS_H
+#pragma once
 
 #include <errno.h>
 #include <time.h>
@@ -35,20 +34,21 @@
 
 #include "private/bionic_constants.h"
 
-__BEGIN_DECLS
+bool timespec_from_timeval(timespec& ts, const timeval& tv);
+void timespec_from_ms(timespec& ts, const int ms);
 
-__LIBC_HIDDEN__ bool timespec_from_timeval(timespec& ts, const timeval& tv);
-__LIBC_HIDDEN__ void timespec_from_ms(timespec& ts, const int ms);
+void timeval_from_timespec(timeval& tv, const timespec& ts);
 
-__LIBC_HIDDEN__ void timeval_from_timespec(timeval& tv, const timespec& ts);
+void monotonic_time_from_realtime_time(timespec& monotonic_time, const timespec& realtime_time);
+void realtime_time_from_monotonic_time(timespec& realtime_time, const timespec& monotonic_time);
 
-__LIBC_HIDDEN__ void monotonic_time_from_realtime_time(timespec& monotonic_time,
-                                                       const timespec& realtime_time);
+static inline int64_t to_ns(const timespec& ts) {
+  return ts.tv_sec * NS_PER_S + ts.tv_nsec;
+}
 
-__LIBC_HIDDEN__ void realtime_time_from_monotonic_time(timespec& realtime_time,
-                                                       const timespec& monotonic_time);
-
-__END_DECLS
+static inline int64_t to_us(const timeval& tv) {
+  return tv.tv_sec * US_PER_S + tv.tv_usec;
+}
 
 static inline int check_timespec(const timespec* ts, bool null_allowed) {
   if (null_allowed && ts == nullptr) {
@@ -75,6 +75,4 @@ static inline void absolute_timespec_from_timespec(timespec& abs_ts, const times
     abs_ts.tv_sec++;
   }
 }
-#endif
-
 #endif

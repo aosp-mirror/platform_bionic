@@ -34,8 +34,9 @@
  * conversion APIs defined by C.
  */
 
-#include <stddef.h>
 #include <sys/cdefs.h>
+
+#include <stddef.h>
 
 __BEGIN_DECLS
 

@@ -44,6 +44,8 @@ __BEGIN_DECLS
  *
  * Available since API level 23.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(23)
 extern void (* _Nullable error_print_progname)(void) __INTRODUCED_IN(23);
 
 /**
@@ -81,5 +83,7 @@ void error(int __status, int __errno, const char* _Nonnull __fmt, ...) __printfl
  * Available since API level 23.
  */
 void error_at_line(int __status, int __errno, const char* _Nonnull __filename, unsigned int __line_number, const char* _Nonnull __fmt, ...) __printflike(5, 6) __INTRODUCED_IN(23);
+#endif /* __BIONIC_AVAILABILITY_GUARD(23) */
+
 
 __END_DECLS

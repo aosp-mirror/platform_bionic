@@ -108,7 +108,7 @@ name:					\
 #endif
 
 #ifndef STRCMP
-# define STRCMP strcmp_ssse3
+# define STRCMP strcmp
 #endif
 
 	.section .text.ssse3,"ax",@progbits

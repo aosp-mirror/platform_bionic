@@ -53,6 +53,8 @@ int sysinfo(struct sysinfo* _Nonnull __info);
  *
  * See also sysconf().
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(23)
 int get_nprocs_conf(void) __INTRODUCED_IN(23);
 
 /**
@@ -84,5 +86,7 @@ long get_phys_pages(void) __INTRODUCED_IN(23);
  * See also sysconf().
  */
 long get_avphys_pages(void) __INTRODUCED_IN(23);
+#endif /* __BIONIC_AVAILABILITY_GUARD(23) */
+
 
 __END_DECLS

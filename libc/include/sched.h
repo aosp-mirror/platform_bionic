@@ -33,9 +33,10 @@
  * @brief Thread execution scheduling.
  */
 
+#include <sys/cdefs.h>
+
 #include <bits/timespec.h>
 #include <linux/sched.h>
-#include <sys/cdefs.h>
 
 __BEGIN_DECLS
 

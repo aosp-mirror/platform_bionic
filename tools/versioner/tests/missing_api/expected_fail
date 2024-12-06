@@ -1,4 +1,0 @@
-  foo: introduced = 9
-    extern declaration @ headers/foo.h:5:1
-      introduced = 9
-versioner: version check failed

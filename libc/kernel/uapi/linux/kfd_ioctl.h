@@ -9,7 +9,7 @@
 #include <drm/drm.h>
 #include <linux/ioctl.h>
 #define KFD_IOCTL_MAJOR_VERSION 1
-#define KFD_IOCTL_MINOR_VERSION 15
+#define KFD_IOCTL_MINOR_VERSION 16
 struct kfd_ioctl_get_version_args {
   __u32 major_version;
   __u32 minor_version;
@@ -269,6 +269,7 @@ struct kfd_ioctl_acquire_vm_args {
 #define KFD_IOC_ALLOC_MEM_FLAGS_COHERENT (1 << 26)
 #define KFD_IOC_ALLOC_MEM_FLAGS_UNCACHED (1 << 25)
 #define KFD_IOC_ALLOC_MEM_FLAGS_EXT_COHERENT (1 << 24)
+#define KFD_IOC_ALLOC_MEM_FLAGS_CONTIGUOUS (1 << 23)
 struct kfd_ioctl_alloc_memory_of_gpu_args {
   __u64 va_addr;
   __u64 size;
@@ -465,6 +466,7 @@ enum kfd_dbg_trap_address_watch_mode {
 };
 enum kfd_dbg_trap_flags {
   KFD_DBG_TRAP_FLAG_SINGLE_MEM_OP = 1,
+  KFD_DBG_TRAP_FLAG_SINGLE_ALU_OP = 2,
 };
 enum kfd_dbg_trap_exception_code {
   EC_NONE = 0,

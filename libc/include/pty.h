@@ -49,6 +49,8 @@ __BEGIN_DECLS
  *
  * Available since API level 23.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(23)
 int openpty(int* _Nonnull __pty_fd, int* _Nonnull __tty_fd, char* _Nullable __tty_name, const struct termios* _Nullable __termios_ptr, const struct winsize* _Nullable __winsize_ptr) __INTRODUCED_IN(23);
 
 /**
@@ -61,5 +63,7 @@ int openpty(int* _Nonnull __pty_fd, int* _Nonnull __tty_fd, char* _Nullable __tt
  * Available since API level 23.
  */
 int forkpty(int* _Nonnull __parent_pty_fd, char* _Nullable __child_tty_name, const struct termios* _Nullable __termios_ptr, const struct winsize* _Nullable __winsize_ptr) __INTRODUCED_IN(23);
+#endif /* __BIONIC_AVAILABILITY_GUARD(23) */
+
 
 __END_DECLS

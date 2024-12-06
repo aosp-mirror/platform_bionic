@@ -33,8 +33,9 @@
  * @brief Extended attribute functions.
  */
 
-#include <linux/xattr.h>
 #include <sys/cdefs.h>
+
+#include <linux/xattr.h>
 #include <sys/types.h>
 
 __BEGIN_DECLS

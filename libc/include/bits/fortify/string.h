@@ -30,8 +30,12 @@
 #error "Never include this file directly; instead, include <string.h>"
 #endif
 
+
+#if __BIONIC_AVAILABILITY_GUARD(23)
 void* _Nullable __memchr_chk(const void* _Nonnull, int, size_t, size_t) __INTRODUCED_IN(23);
 void* _Nullable __memrchr_chk(const void* _Nonnull, int, size_t, size_t) __INTRODUCED_IN(23);
+#endif /* __BIONIC_AVAILABILITY_GUARD(23) */
+
 char* _Nonnull __stpncpy_chk2(char* _Nonnull, const char* _Nonnull, size_t, size_t, size_t);
 char* _Nonnull __strncpy_chk2(char* _Nonnull, const char* _Nonnull, size_t, size_t, size_t);
 size_t __strlcpy_chk(char* _Nonnull, const char* _Nonnull, size_t, size_t);
@@ -220,8 +224,13 @@ size_t strlcat(char* _Nonnull const dst __pass_object_size, const char* _Nonnull
 }
 
 #if __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
-__BIONIC_FORTIFY_INLINE
-size_t strlen(const char* _Nonnull const s __pass_object_size0) __overloadable {
+/*
+ * Clang, when parsing C, can fold strlen to a constant without LLVM's help.
+ * This doesn't apply to overloads of strlen, so write this differently. We
+ * can't use `__pass_object_size0` here, but that's fine: it doesn't help much
+ * on __always_inline functions.
+ */
+extern __always_inline __inline__ __attribute__((gnu_inline)) size_t strlen(const char* _Nonnull s) {
     return __strlen_chk(s, __bos0(s));
 }
 #endif
