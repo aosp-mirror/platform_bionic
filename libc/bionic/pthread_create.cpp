@@ -159,11 +159,11 @@ void __init_additional_stacks(pthread_internal_t* thread) {
 int __init_thread(pthread_internal_t* thread) {
   thread->cleanup_stack = nullptr;
 
-  if (__predict_true((thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) == 0)) {
-    atomic_init(&thread->join_state, THREAD_NOT_JOINED);
-  } else {
-    atomic_init(&thread->join_state, THREAD_DETACHED);
+  ThreadJoinState state = THREAD_NOT_JOINED;
+  if (__predict_false((thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) != 0)) {
+    state = THREAD_DETACHED;
   }
+  atomic_store_explicit(&thread->join_state, state, memory_order_relaxed);
 
   // Set the scheduling policy/priority of the thread if necessary.
   bool need_set = true;

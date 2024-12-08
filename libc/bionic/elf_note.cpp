@@ -38,31 +38,34 @@ bool __get_elf_note(unsigned note_type, const char* note_name, const ElfW(Addr) 
     return false;
   }
 
+  size_t note_name_len = strlen(note_name) + 1;
+
   ElfW(Addr) p = note_addr;
   ElfW(Addr) note_end = p + phdr_note->p_memsz;
-
   while (p + sizeof(ElfW(Nhdr)) <= note_end) {
+    // Parse the note and check it's structurally valid.
     const ElfW(Nhdr)* note = reinterpret_cast<const ElfW(Nhdr)*>(p);
     p += sizeof(ElfW(Nhdr));
     const char* name = reinterpret_cast<const char*>(p);
-    p += align_up(note->n_namesz, 4);
+    if (__builtin_add_overflow(p, align_up(note->n_namesz, 4), &p)) {
+      return false;
+    }
     const char* desc = reinterpret_cast<const char*>(p);
-    p += align_up(note->n_descsz, 4);
+    if (__builtin_add_overflow(p, align_up(note->n_descsz, 4), &p)) {
+      return false;
+    }
     if (p > note_end) {
-      break;
-    }
-    if (note->n_type != note_type) {
-      continue;
-    }
-    size_t note_name_len = strlen(note_name) + 1;
-    if (note->n_namesz != note_name_len || strncmp(note_name, name, note_name_len) != 0) {
-      break;
+      return false;
     }
 
-    *note_hdr = note;
-    *note_desc = desc;
-
-    return true;
+    // Is this the note we're looking for?
+    if (note->n_type == note_type &&
+        note->n_namesz == note_name_len &&
+        strncmp(note_name, name, note_name_len) == 0) {
+      *note_hdr = note;
+      *note_desc = desc;
+      return true;
+    }
   }
   return false;
 }
