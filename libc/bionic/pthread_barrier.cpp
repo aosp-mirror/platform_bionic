@@ -95,8 +95,8 @@ int pthread_barrier_init(pthread_barrier_t* barrier_interface, const pthread_bar
     return EINVAL;
   }
   barrier->init_count = count;
-  atomic_init(&barrier->state, WAIT);
-  atomic_init(&barrier->wait_count, 0);
+  atomic_store_explicit(&barrier->state, WAIT, memory_order_relaxed);
+  atomic_store_explicit(&barrier->wait_count, 0, memory_order_relaxed);
   barrier->pshared = false;
   if (attr != nullptr && (*attr & 1)) {
     barrier->pshared = true;

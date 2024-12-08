@@ -141,7 +141,7 @@ int timer_create(clockid_t clock_id, sigevent* evp, timer_t* timer_id) {
   // Otherwise, this must be SIGEV_THREAD timer...
   timer->callback = evp->sigev_notify_function;
   timer->callback_argument = evp->sigev_value;
-  atomic_init(&timer->deleted, false);
+  atomic_store_explicit(&timer->deleted, false, memory_order_relaxed);
 
   // Check arguments that the kernel doesn't care about but we do.
   if (timer->callback == nullptr) {
