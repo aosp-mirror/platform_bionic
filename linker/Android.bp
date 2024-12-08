@@ -350,8 +350,8 @@ cc_defaults {
 // linker[_asan][64] binary
 // ========================================================
 
-cc_binary {
-    name: "linker",
+cc_defaults {
+    name: "linker_binary_defaults",
     defaults: [
         "linker_bin_template",
         "linux_bionic_supported",
@@ -376,8 +376,6 @@ cc_binary {
 
     compile_multilib: "both",
 
-    recovery_available: true,
-    vendor_ramdisk_available: true,
     apex_available: [
         "//apex_available:platform",
         "com.android.runtime",
@@ -401,6 +399,25 @@ cc_binary {
     },
 
     afdo: true,
+}
+
+cc_binary {
+    name: "linker",
+    defaults: [
+        "linker_binary_defaults",
+    ],
+
+    vendor_ramdisk_available: true,
+}
+
+cc_binary {
+    name: "linker.recovery",
+    defaults: [
+        "linker_binary_defaults",
+    ],
+
+    recovery: true,
+    stem: "linker",
 }
 
 // ========================================================
