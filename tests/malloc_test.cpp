@@ -466,6 +466,7 @@ TEST(malloc, malloc_info) {
     // Do not verify output for debug malloc.
     ASSERT_TRUE(version == "debug-malloc-1") << "Unknown version: " << version;
   }
+  printf("Allocator version: %s\n", version.c_str());
 #endif
 }
 
