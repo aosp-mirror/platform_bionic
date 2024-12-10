@@ -628,7 +628,7 @@ static void* ReserveWithAlignmentPadding(size_t size, size_t mapping_align, size
   // Minimum alignment of shared library gap. For efficiency, this should match the second level
   // page size of the platform.
 #if defined(__LP64__)
-  constexpr size_t kGapAlignment = 1ul << 21;  // 2MB
+  constexpr size_t kGapAlignment = 2 * 1024 * 1024;
 #else
   constexpr size_t kGapAlignment = 0;
 #endif
