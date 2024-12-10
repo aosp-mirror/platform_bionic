@@ -33,7 +33,7 @@
 #include <string>
 
 #include "../core_shared_libs.h"
-#include "../dlext_private.h"
+#include "../dlext_private_tests.h"
 
 extern "C" void global_function();
 extern "C" void internal_function();
