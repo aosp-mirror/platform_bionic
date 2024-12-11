@@ -1085,7 +1085,6 @@ cc_library_static {
                 "arch-arm/kryo/bionic/memcpy.S",
 
                 "bionic/strchr.cpp",
-                "bionic/strchrnul.cpp",
                 "bionic/strnlen.cpp",
             ],
         },
@@ -1140,8 +1139,6 @@ cc_library_static {
                 "arch-riscv64/string/strncmp.c",
                 "arch-riscv64/string/strncpy.c",
                 "arch-riscv64/string/strnlen.c",
-
-                "bionic/strchrnul.cpp",
             ],
         },
 
@@ -1173,8 +1170,6 @@ cc_library_static {
                 "arch-x86/string/ssse3-strncmp-atom.S",
 
                 "arch-x86/string/sse4-memcmp-slm.S",
-
-                "bionic/strchrnul.cpp",
             ],
         },
         x86_64: {
