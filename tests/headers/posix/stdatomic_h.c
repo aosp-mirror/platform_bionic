@@ -93,10 +93,7 @@ static void stdatomic_h() {
   atomic_flag f = ATOMIC_FLAG_INIT;
   atomic_int i = ATOMIC_VAR_INIT(123);
 
-  // TODO: remove this #if after the next toolchain update (http://b/374104004).
-#if !defined(__GLIBC__)
   i = kill_dependency(i);
-#endif
 
 #if !defined(atomic_compare_exchange_strong)
 #error atomic_compare_exchange_strong
