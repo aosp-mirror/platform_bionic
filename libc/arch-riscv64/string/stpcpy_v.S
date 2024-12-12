@@ -68,7 +68,7 @@
 #define vStr1 v8
 #define vStr2 v16
 
-ENTRY(stpcpy_v)
+ENTRY(stpcpy)
 L(stpcpy_loop):
     vsetvli iVL, zero, e8, ELEM_LMUL_SETTING, ta, ma
     vle8ff.v vStr1, (pSrc)
@@ -85,4 +85,4 @@ L(stpcpy_loop):
     sub pDstPtr, pDstPtr, iCurrentVL
     add pDstPtr, pDstPtr, iActiveElemPos
     ret
-END(stpcpy_v)
+END(stpcpy)
