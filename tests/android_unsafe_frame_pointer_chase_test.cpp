@@ -124,6 +124,7 @@ static void* SignalBacktraceThread(void* sp) {
   sigaction(SIGRTMIN, &s, nullptr);
 
   raise(SIGRTMIN);
+  sigaltstack(nullptr, nullptr);
   return nullptr;
 }
 
@@ -153,6 +154,27 @@ TEST(android_unsafe_frame_pointer_chase, sigaltstack) {
   }
 
   munmap(stacks, kStackSize * 2);
+}
+
+static void* SigaltstackOnCallerStack(void*) {
+  char altstack[kStackSize];
+  SignalBacktraceThread(altstack);
+  EXPECT_TRUE(g_handler_called);
+  EXPECT_EQ(nullptr, g_handler_tester_result);
+  g_handler_called = false;
+  return nullptr;
+}
+
+TEST(android_unsafe_frame_pointer_chase, sigaltstack_on_main_thread) {
+  SigaltstackOnCallerStack(nullptr);
+}
+
+TEST(android_unsafe_frame_pointer_chase, sigaltstack_on_pthread) {
+  pthread_t t;
+  ASSERT_EQ(0, pthread_create(&t, nullptr, SigaltstackOnCallerStack, nullptr));
+  void* retval;
+  ASSERT_EQ(0, pthread_join(t, &retval));
+  EXPECT_EQ(nullptr, retval);
 }
 
 #endif // __BIONIC__
