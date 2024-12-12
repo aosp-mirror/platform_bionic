@@ -676,7 +676,7 @@ struct snd_ump_block_info {
 #define SNDRV_RAWMIDI_IOCTL_DRAIN _IOW('W', 0x31, int)
 #define SNDRV_UMP_IOCTL_ENDPOINT_INFO _IOR('W', 0x40, struct snd_ump_endpoint_info)
 #define SNDRV_UMP_IOCTL_BLOCK_INFO _IOR('W', 0x41, struct snd_ump_block_info)
-#define SNDRV_TIMER_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 7)
+#define SNDRV_TIMER_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 8)
 enum {
   SNDRV_TIMER_CLASS_NONE = - 1,
   SNDRV_TIMER_CLASS_SLAVE = 0,
@@ -696,6 +696,7 @@ enum {
 #define SNDRV_TIMER_GLOBAL_RTC 1
 #define SNDRV_TIMER_GLOBAL_HPET 2
 #define SNDRV_TIMER_GLOBAL_HRTIMER 3
+#define SNDRV_TIMER_GLOBAL_UDRIVEN 4
 #define SNDRV_TIMER_FLG_SLAVE (1 << 0)
 struct snd_timer_id {
   int dev_class;
@@ -762,6 +763,12 @@ struct snd_timer_status {
   unsigned int queue;
   unsigned char reserved[64];
 };
+struct snd_timer_uinfo {
+  __u64 resolution;
+  int fd;
+  unsigned int id;
+  unsigned char reserved[16];
+};
 #define SNDRV_TIMER_IOCTL_PVERSION _IOR('T', 0x00, int)
 #define SNDRV_TIMER_IOCTL_NEXT_DEVICE _IOWR('T', 0x01, struct snd_timer_id)
 #define SNDRV_TIMER_IOCTL_TREAD_OLD _IOW('T', 0x02, int)
@@ -777,6 +784,8 @@ struct snd_timer_status {
 #define SNDRV_TIMER_IOCTL_CONTINUE _IO('T', 0xa2)
 #define SNDRV_TIMER_IOCTL_PAUSE _IO('T', 0xa3)
 #define SNDRV_TIMER_IOCTL_TREAD64 _IOW('T', 0xa4, int)
+#define SNDRV_TIMER_IOCTL_CREATE _IOWR('T', 0xa5, struct snd_timer_uinfo)
+#define SNDRV_TIMER_IOCTL_TRIGGER _IO('T', 0xa6)
 #if __BITS_PER_LONG == 64
 #define SNDRV_TIMER_IOCTL_TREAD SNDRV_TIMER_IOCTL_TREAD_OLD
 #else
