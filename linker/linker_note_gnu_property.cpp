@@ -137,7 +137,7 @@ bool GnuPropertySection::Parse(const ElfW(NhdrGNUProperty)* note_nhdr, const cha
     // Loop on program property array.
     const ElfW(Prop)* property = reinterpret_cast<const ElfW(Prop)*>(&note_nhdr->n_desc[offset]);
     const ElfW(Word) property_size =
-        align_up(sizeof(ElfW(Prop)) + property->pr_datasz, sizeof(ElfW(Addr)));
+        __builtin_align_up(sizeof(ElfW(Prop)) + property->pr_datasz, sizeof(ElfW(Addr)));
     if ((note_nhdr->nhdr.n_descsz - offset) < property_size) {
       DL_ERR_AND_LOG(
           "\"%s\" .note.gnu.property: property descriptor size is "
