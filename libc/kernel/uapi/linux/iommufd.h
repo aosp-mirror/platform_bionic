@@ -6,8 +6,8 @@
  */
 #ifndef _UAPI_IOMMUFD_H
 #define _UAPI_IOMMUFD_H
-#include <linux/types.h>
 #include <linux/ioctl.h>
+#include <linux/types.h>
 #define IOMMUFD_TYPE (';')
 enum {
   IOMMUFD_CMD_BASE = 0x80,
