@@ -47,11 +47,11 @@ bool __get_elf_note(unsigned note_type, const char* note_name, const ElfW(Addr) 
     const ElfW(Nhdr)* note = reinterpret_cast<const ElfW(Nhdr)*>(p);
     p += sizeof(ElfW(Nhdr));
     const char* name = reinterpret_cast<const char*>(p);
-    if (__builtin_add_overflow(p, align_up(note->n_namesz, 4), &p)) {
+    if (__builtin_add_overflow(p, __builtin_align_up(note->n_namesz, 4), &p)) {
       return false;
     }
     const char* desc = reinterpret_cast<const char*>(p);
-    if (__builtin_add_overflow(p, align_up(note->n_descsz, 4), &p)) {
+    if (__builtin_add_overflow(p, __builtin_align_up(note->n_descsz, 4), &p)) {
       return false;
     }
     if (p > note_end) {
