@@ -1123,22 +1123,6 @@ cc_library_static {
                 "arch-riscv64/string/strncmp_v.S",
                 "arch-riscv64/string/strncpy_v.S",
                 "arch-riscv64/string/strnlen_v.S",
-
-                "arch-riscv64/string/memchr.c",
-                "arch-riscv64/string/memcmp.c",
-                "arch-riscv64/string/memcpy.c",
-                "arch-riscv64/string/memmove.c",
-                "arch-riscv64/string/memset.c",
-                "arch-riscv64/string/stpcpy.c",
-                "arch-riscv64/string/strcat.c",
-                "arch-riscv64/string/strchr.c",
-                "arch-riscv64/string/strcmp.c",
-                "arch-riscv64/string/strcpy.c",
-                "arch-riscv64/string/strlen.c",
-                "arch-riscv64/string/strncat.c",
-                "arch-riscv64/string/strncmp.c",
-                "arch-riscv64/string/strncpy.c",
-                "arch-riscv64/string/strnlen.c",
             ],
         },
 
@@ -1368,9 +1352,6 @@ cc_defaults {
         },
         arm64: {
             srcs: ["arch-arm64/dynamic_function_dispatch.cpp"],
-        },
-        riscv64: {
-            srcs: ["arch-riscv64/dynamic_function_dispatch.cpp"],
         },
     },
     // Prevent the compiler from inserting calls to libc/taking the address of
