@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,7 +26,21 @@
  * SUCH DAMAGE.
  */
 
-#include <upstream-openbsd/android/include/openbsd-compat.h>
+#include "linker_phdr.h"
 
-#define stpcpy stpcpy_gc
-#include <upstream-openbsd/lib/libc/string/stpcpy.c>
+#include <stddef.h>
+#include <stdint.h>
+
+#include <android-base/file.h>
+
+// See current fuzz coverage here:
+// https://android-coverage.googleplex.com/fuzz_targets/ElfReader_fuzzer/index.html
+
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
+  TemporaryFile tf;
+  android::base::WriteFully(tf.fd, data, size);
+
+  ElfReader er;
+  er.Read(tf.path, tf.fd, 0, size);
+  return 0;
+}
