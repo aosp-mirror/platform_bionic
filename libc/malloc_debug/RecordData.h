@@ -51,8 +51,7 @@ class RecordData {
 
   bool Initialize(const Config& config);
 
-  void AddEntry(const memory_trace::Entry& entry);
-  void AddEntryOnly(const memory_trace::Entry& entry);
+  memory_trace::Entry* ReserveEntry();
 
   const std::string& file() { return file_; }
   pthread_key_t key() { return key_; }
@@ -63,8 +62,12 @@ class RecordData {
   static void WriteData(int, siginfo_t*, void*);
   static RecordData* record_obj_;
 
+  static void ThreadKeyDelete(void* data);
+
   void WriteEntries();
   void WriteEntries(const std::string& file);
+
+  memory_trace::Entry* InternalReserveEntry();
 
   std::mutex entries_lock_;
   pthread_key_t key_;

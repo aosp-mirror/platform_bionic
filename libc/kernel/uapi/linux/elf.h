@@ -329,6 +329,7 @@ typedef struct elf64_shdr {
 #define NT_386_IOPERM 0x201
 #define NT_X86_XSTATE 0x202
 #define NT_X86_SHSTK 0x204
+#define NT_X86_XSAVE_LAYOUT 0x205
 #define NT_S390_HIGH_GPRS 0x300
 #define NT_S390_TIMER 0x301
 #define NT_S390_TODCMP 0x302
@@ -359,6 +360,7 @@ typedef struct elf64_shdr {
 #define NT_ARM_ZA 0x40c
 #define NT_ARM_ZT 0x40d
 #define NT_ARM_FPMR 0x40e
+#define NT_ARM_POE 0x40f
 #define NT_ARC_V2 0x600
 #define NT_VMCOREDD 0x700
 #define NT_MIPS_DSP 0x800
