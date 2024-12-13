@@ -1085,7 +1085,6 @@ cc_library_static {
                 "arch-arm/kryo/bionic/memcpy.S",
 
                 "bionic/strchr.cpp",
-                "bionic/strnlen.cpp",
             ],
         },
         arm64: {
@@ -1145,7 +1144,6 @@ cc_library_static {
                 "arch-x86/string/sse2-strcpy-slm.S",
                 "arch-x86/string/sse2-strlen-slm.S",
                 "arch-x86/string/sse2-strncpy-slm.S",
-                "arch-x86/string/sse2-strnlen-atom.S",
 
                 "arch-x86/string/ssse3-memcmp-atom.S",
                 "arch-x86/string/ssse3-strcat-atom.S",
