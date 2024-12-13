@@ -230,6 +230,7 @@ struct io_uring_cqe {
 #define IORING_CQE_F_MORE (1U << 1)
 #define IORING_CQE_F_SOCK_NONEMPTY (1U << 2)
 #define IORING_CQE_F_NOTIF (1U << 3)
+#define IORING_CQE_F_BUF_MORE (1U << 4)
 #define IORING_CQE_BUFFER_SHIFT 16
 #define IORING_OFF_SQ_RING 0ULL
 #define IORING_OFF_CQ_RING 0x8000000ULL
@@ -268,6 +269,7 @@ struct io_cqring_offsets {
 #define IORING_ENTER_SQ_WAIT (1U << 2)
 #define IORING_ENTER_EXT_ARG (1U << 3)
 #define IORING_ENTER_REGISTERED_RING (1U << 4)
+#define IORING_ENTER_ABS_TIMER (1U << 5)
 struct io_uring_params {
   __u32 sq_entries;
   __u32 cq_entries;
@@ -295,6 +297,7 @@ struct io_uring_params {
 #define IORING_FEAT_LINKED_FILE (1U << 12)
 #define IORING_FEAT_REG_REG_RING (1U << 13)
 #define IORING_FEAT_RECVSEND_BUNDLE (1U << 14)
+#define IORING_FEAT_MIN_TIMEOUT (1U << 15)
 enum io_uring_register_op {
   IORING_REGISTER_BUFFERS = 0,
   IORING_UNREGISTER_BUFFERS = 1,
@@ -325,6 +328,8 @@ enum io_uring_register_op {
   IORING_REGISTER_PBUF_STATUS = 26,
   IORING_REGISTER_NAPI = 27,
   IORING_UNREGISTER_NAPI = 28,
+  IORING_REGISTER_CLOCK = 29,
+  IORING_REGISTER_CLONE_BUFFERS = 30,
   IORING_REGISTER_LAST,
   IORING_REGISTER_USE_REGISTERED_RING = 1U << 31
 };
@@ -383,6 +388,18 @@ struct io_uring_restriction {
   __u8 resv;
   __u32 resv2[3];
 };
+struct io_uring_clock_register {
+  __u32 clockid;
+  __u32 __resv[3];
+};
+enum {
+  IORING_REGISTER_SRC_REGISTERED = 1,
+};
+struct io_uring_clone_buffers {
+  __u32 src_fd;
+  __u32 flags;
+  __u32 pad[6];
+};
 struct io_uring_buf {
   __u64 addr;
   __u32 len;
@@ -402,6 +419,7 @@ struct io_uring_buf_ring {
 };
 enum io_uring_register_pbuf_ring_flags {
   IOU_PBUF_RING_MMAP = 1,
+  IOU_PBUF_RING_INC = 2,
 };
 struct io_uring_buf_reg {
   __u64 ring_addr;
@@ -431,7 +449,7 @@ enum io_uring_register_restriction_op {
 struct io_uring_getevents_arg {
   __u64 sigmask;
   __u32 sigmask_sz;
-  __u32 pad;
+  __u32 min_wait_usec;
   __u64 ts;
 };
 struct io_uring_sync_cancel_reg {
