@@ -17,7 +17,7 @@ struct nhmsg {
 struct nexthop_grp {
   __u32 id;
   __u8 weight;
-  __u8 resvd1;
+  __u8 weight_high;
   __u16 resvd2;
 };
 enum {
@@ -28,6 +28,7 @@ enum {
 #define NEXTHOP_GRP_TYPE_MAX (__NEXTHOP_GRP_TYPE_MAX - 1)
 #define NHA_OP_FLAG_DUMP_STATS BIT(0)
 #define NHA_OP_FLAG_DUMP_HW_STATS BIT(1)
+#define NHA_OP_FLAG_RESP_GRP_RESVD_0 BIT(31)
 enum {
   NHA_UNSPEC,
   NHA_ID,

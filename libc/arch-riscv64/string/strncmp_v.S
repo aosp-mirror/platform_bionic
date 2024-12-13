@@ -71,7 +71,7 @@
 #define vMask1 v8
 #define vMask2 v9
 
-ENTRY(strncmp_v)
+ENTRY(strncmp)
 
     beqz iLength, L(zero_length)
 
@@ -116,4 +116,4 @@ L(zero_length):
     li iResult, 0
     ret
 
-END(strncmp_v)
+END(strncmp)

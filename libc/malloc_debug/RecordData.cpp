@@ -55,7 +55,7 @@ struct ThreadData {
   size_t count = 0;
 };
 
-static void ThreadKeyDelete(void* data) {
+void RecordData::ThreadKeyDelete(void* data) {
   ThreadData* thread_data = reinterpret_cast<ThreadData*>(data);
 
   thread_data->count++;
@@ -64,8 +64,11 @@ static void ThreadKeyDelete(void* data) {
   if (thread_data->count == 4) {
     ScopedDisableDebugCalls disable;
 
-    thread_data->record_data->AddEntryOnly(memory_trace::Entry{
-        .tid = gettid(), .type = memory_trace::THREAD_DONE, .end_ns = Nanotime()});
+    memory_trace::Entry* entry = thread_data->record_data->InternalReserveEntry();
+    if (entry != nullptr) {
+      *entry = memory_trace::Entry{
+          .tid = gettid(), .type = memory_trace::THREAD_DONE, .end_ns = Nanotime()};
+    }
     delete thread_data;
   } else {
     pthread_setspecific(thread_data->record_data->key(), data);
@@ -107,6 +110,11 @@ void RecordData::WriteEntries(const std::string& file) {
   }
 
   for (size_t i = 0; i < cur_index_; i++) {
+    if (entries_[i].type == memory_trace::UNKNOWN) {
+      // This can happen if an entry was reserved but not filled in due to some
+      // type of error during the operation.
+      continue;
+    }
     if (!memory_trace::WriteEntryToFd(dump_fd, entries_[i])) {
       error_log("Failed to write record alloc information: %s", strerror(errno));
       break;
@@ -149,25 +157,26 @@ RecordData::~RecordData() {
   pthread_key_delete(key_);
 }
 
-void RecordData::AddEntryOnly(const memory_trace::Entry& entry) {
+memory_trace::Entry* RecordData::InternalReserveEntry() {
   std::lock_guard<std::mutex> entries_lock(entries_lock_);
   if (cur_index_ == entries_.size()) {
-    // Maxed out, throw the entry away.
-    return;
+    return nullptr;
   }
 
-  entries_[cur_index_++] = entry;
-  if (cur_index_ == entries_.size()) {
+  memory_trace::Entry* entry = &entries_[cur_index_];
+  entry->type = memory_trace::UNKNOWN;
+  if (++cur_index_ == entries_.size()) {
     info_log("Maximum number of records added, all new operations will be dropped.");
   }
+  return entry;
 }
 
-void RecordData::AddEntry(const memory_trace::Entry& entry) {
+memory_trace::Entry* RecordData::ReserveEntry() {
   void* data = pthread_getspecific(key_);
   if (data == nullptr) {
     ThreadData* thread_data = new ThreadData(this);
     pthread_setspecific(key_, thread_data);
   }
 
-  AddEntryOnly(entry);
+  return InternalReserveEntry();
 }

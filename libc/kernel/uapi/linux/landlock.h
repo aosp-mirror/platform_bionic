@@ -10,6 +10,7 @@
 struct landlock_ruleset_attr {
   __u64 handled_access_fs;
   __u64 handled_access_net;
+  __u64 scoped;
 };
 #define LANDLOCK_CREATE_RULESET_VERSION (1U << 0)
 enum landlock_rule_type {
@@ -42,4 +43,6 @@ struct landlock_net_port_attr {
 #define LANDLOCK_ACCESS_FS_IOCTL_DEV (1ULL << 15)
 #define LANDLOCK_ACCESS_NET_BIND_TCP (1ULL << 0)
 #define LANDLOCK_ACCESS_NET_CONNECT_TCP (1ULL << 1)
+#define LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET (1ULL << 0)
+#define LANDLOCK_SCOPE_SIGNAL (1ULL << 1)
 #endif

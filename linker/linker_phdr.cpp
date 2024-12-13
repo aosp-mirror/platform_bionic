@@ -159,8 +159,8 @@ static const size_t kPmdSize = (kPageSize / sizeof(uint64_t)) * kPageSize;
 ElfReader::ElfReader()
     : did_read_(false), did_load_(false), fd_(-1), file_offset_(0), file_size_(0), phdr_num_(0),
       phdr_table_(nullptr), shdr_table_(nullptr), shdr_num_(0), dynamic_(nullptr), strtab_(nullptr),
-      strtab_size_(0), load_start_(nullptr), load_size_(0), load_bias_(0), loaded_phdr_(nullptr),
-      mapped_by_caller_(false) {
+      strtab_size_(0), load_start_(nullptr), load_size_(0), load_bias_(0), max_align_(0), min_align_(0),
+      loaded_phdr_(nullptr), mapped_by_caller_(false) {
 }
 
 bool ElfReader::Read(const char* name, int fd, off64_t file_offset, off64_t file_size) {
@@ -175,13 +175,14 @@ bool ElfReader::Read(const char* name, int fd, off64_t file_offset, off64_t file
   if (ReadElfHeader() &&
       VerifyElfHeader() &&
       ReadProgramHeaders() &&
+      CheckProgramHeaderAlignment() &&
       ReadSectionHeaders() &&
       ReadDynamicSection() &&
       ReadPadSegmentNote()) {
     did_read_ = true;
   }
 
-  if (kPageSize == 0x4000 && phdr_table_get_minimum_alignment(phdr_table_, phdr_num_) == 0x1000) {
+  if (kPageSize == 16*1024 && min_align_ == 4096) {
     // This prop needs to be read on 16KiB devices for each ELF where min_palign is 4KiB.
     // It cannot be cached since the developer may toggle app compat on/off.
     // This check will be removed once app compat is made the default on 16KiB devices.
@@ -562,52 +563,28 @@ size_t phdr_table_get_load_size(const ElfW(Phdr)* phdr_table, size_t phdr_count,
   return max_vaddr - min_vaddr;
 }
 
-// Returns the maximum p_align associated with a loadable segment in the ELF
-// program header table. Used to determine whether the file should be loaded at
-// a specific virtual address alignment for use with huge pages.
-size_t phdr_table_get_maximum_alignment(const ElfW(Phdr)* phdr_table, size_t phdr_count) {
-  size_t maximum_alignment = page_size();
+bool ElfReader::CheckProgramHeaderAlignment() {
+  max_align_ = min_align_ = page_size();
 
-  for (size_t i = 0; i < phdr_count; ++i) {
-    const ElfW(Phdr)* phdr = &phdr_table[i];
+  for (size_t i = 0; i < phdr_num_; ++i) {
+    const ElfW(Phdr)* phdr = &phdr_table_[i];
 
     // p_align must be 0, 1, or a positive, integral power of two.
     if (phdr->p_type != PT_LOAD || ((phdr->p_align & (phdr->p_align - 1)) != 0)) {
+      // TODO: reject ELF files with bad p_align values.
       continue;
     }
 
-    maximum_alignment = std::max(maximum_alignment, static_cast<size_t>(phdr->p_align));
-  }
-
-#if defined(__LP64__)
-  return maximum_alignment;
-#else
-  return page_size();
+#if defined(__LP64__) // TODO: remove this historical accident #if
+    max_align_ = std::max(max_align_, static_cast<size_t>(phdr->p_align));
 #endif
-}
 
-// Returns the minimum p_align associated with a loadable segment in the ELF
-// program header table. Used to determine if the program alignment is compatible
-// with the page size of this system.
-size_t phdr_table_get_minimum_alignment(const ElfW(Phdr)* phdr_table, size_t phdr_count) {
-  size_t minimum_alignment = page_size();
-
-  for (size_t i = 0; i < phdr_count; ++i) {
-    const ElfW(Phdr)* phdr = &phdr_table[i];
-
-    // p_align must be 0, 1, or a positive, integral power of two.
-    if (phdr->p_type != PT_LOAD || ((phdr->p_align & (phdr->p_align - 1)) != 0)) {
-      continue;
+    if (phdr->p_align > 1) {
+      min_align_ = std::min(min_align_, static_cast<size_t>(phdr->p_align));
     }
-
-    if (phdr->p_align <= 1) {
-      continue;
-    }
-
-    minimum_alignment = std::min(minimum_alignment, static_cast<size_t>(phdr->p_align));
   }
 
-  return minimum_alignment;
+  return true;
 }
 
 // Reserve a virtual address range such that if it's limits were extended to the next 2**align
@@ -629,23 +606,22 @@ static void* ReserveWithAlignmentPadding(size_t size, size_t mapping_align, size
   // page size of the platform.
 #if defined(__LP64__)
   constexpr size_t kGapAlignment = 2 * 1024 * 1024;
-#else
-  constexpr size_t kGapAlignment = 0;
 #endif
   // Maximum gap size, in the units of kGapAlignment.
   constexpr size_t kMaxGapUnits = 32;
   // Allocate enough space so that the end of the desired region aligned up is still inside the
   // mapping.
-  size_t mmap_size = align_up(size, mapping_align) + mapping_align - page_size();
+  size_t mmap_size = __builtin_align_up(size, mapping_align) + mapping_align - page_size();
   uint8_t* mmap_ptr =
       reinterpret_cast<uint8_t*>(mmap(nullptr, mmap_size, PROT_NONE, mmap_flags, -1, 0));
   if (mmap_ptr == MAP_FAILED) {
     return nullptr;
   }
   size_t gap_size = 0;
-  size_t first_byte = reinterpret_cast<size_t>(align_up(mmap_ptr, mapping_align));
-  size_t last_byte = reinterpret_cast<size_t>(align_down(mmap_ptr + mmap_size, mapping_align) - 1);
-  if (kGapAlignment && first_byte / kGapAlignment != last_byte / kGapAlignment) {
+  size_t first_byte = reinterpret_cast<size_t>(__builtin_align_up(mmap_ptr, mapping_align));
+  size_t last_byte = reinterpret_cast<size_t>(__builtin_align_down(mmap_ptr + mmap_size, mapping_align) - 1);
+#if defined(__LP64__)
+  if (first_byte / kGapAlignment != last_byte / kGapAlignment) {
     // This library crosses a 2MB boundary and will fragment a new huge page.
     // Lets take advantage of that and insert a random number of inaccessible huge pages before that
     // to improve address randomization and make it harder to locate this library code by probing.
@@ -653,23 +629,24 @@ static void* ReserveWithAlignmentPadding(size_t size, size_t mapping_align, size
     mapping_align = std::max(mapping_align, kGapAlignment);
     gap_size =
         kGapAlignment * (is_first_stage_init() ? 1 : arc4random_uniform(kMaxGapUnits - 1) + 1);
-    mmap_size = align_up(size + gap_size, mapping_align) + mapping_align - page_size();
+    mmap_size = __builtin_align_up(size + gap_size, mapping_align) + mapping_align - page_size();
     mmap_ptr = reinterpret_cast<uint8_t*>(mmap(nullptr, mmap_size, PROT_NONE, mmap_flags, -1, 0));
     if (mmap_ptr == MAP_FAILED) {
       return nullptr;
     }
   }
+#endif
 
-  uint8_t *gap_end, *gap_start;
+  uint8_t* gap_end = mmap_ptr + mmap_size;
+#if defined(__LP64__)
   if (gap_size) {
-    gap_end = align_down(mmap_ptr + mmap_size, kGapAlignment);
-    gap_start = gap_end - gap_size;
-  } else {
-    gap_start = gap_end = mmap_ptr + mmap_size;
+    gap_end = __builtin_align_down(gap_end, kGapAlignment);
   }
+#endif
+  uint8_t* gap_start = gap_end - gap_size;
 
-  uint8_t* first = align_up(mmap_ptr, mapping_align);
-  uint8_t* last = align_down(gap_start, mapping_align) - size;
+  uint8_t* first = __builtin_align_up(mmap_ptr, mapping_align);
+  uint8_t* last = __builtin_align_down(gap_start, mapping_align) - size;
 
   // arc4random* is not available in first stage init because /dev/urandom hasn't yet been
   // created. Don't randomize then.
@@ -717,10 +694,9 @@ bool ElfReader::ReserveAddressSpace(address_space_params* address_space) {
     }
     size_t start_alignment = page_size();
     if (get_transparent_hugepages_supported() && get_application_target_sdk_version() >= 31) {
-      size_t maximum_alignment = phdr_table_get_maximum_alignment(phdr_table_, phdr_num_);
       // Limit alignment to PMD size as other alignments reduce the number of
       // bits available for ASLR for no benefit.
-      start_alignment = maximum_alignment == kPmdSize ? kPmdSize : page_size();
+      start_alignment = max_align_ == kPmdSize ? kPmdSize : page_size();
     }
     start = ReserveWithAlignmentPadding(load_size_, kLibraryAlignment, start_alignment, &gap_start_,
                                         &gap_size_);
@@ -1011,13 +987,12 @@ bool ElfReader::LoadSegments() {
   // are not 16KiB aligned.
   size_t seg_align = should_use_16kib_app_compat_ ? kCompatPageSize : kPageSize;
 
-  size_t min_palign = phdr_table_get_minimum_alignment(phdr_table_, phdr_num_);
   // Only enforce this on 16 KB systems with app compat disabled.
   // Apps may rely on undefined behavior here on 4 KB systems,
   // which is the norm before this change is introduced
-  if (kPageSize >= 16384 && min_palign < kPageSize && !should_use_16kib_app_compat_) {
+  if (kPageSize >= 16384 && min_align_ < kPageSize && !should_use_16kib_app_compat_) {
     DL_ERR("\"%s\" program alignment (%zu) cannot be smaller than system page size (%zu)",
-           name_.c_str(), min_palign, kPageSize);
+           name_.c_str(), min_align_, kPageSize);
     return false;
   }
 
@@ -1042,7 +1017,7 @@ bool ElfReader::LoadSegments() {
     ElfW(Addr) seg_start = phdr->p_vaddr + load_bias_;
     ElfW(Addr) seg_end = seg_start + p_memsz;
 
-    ElfW(Addr) seg_page_end = align_up(seg_end, seg_align);
+    ElfW(Addr) seg_page_end = __builtin_align_up(seg_end, seg_align);
 
     ElfW(Addr) seg_file_end = seg_start + p_filesz;
 
@@ -1050,7 +1025,7 @@ bool ElfReader::LoadSegments() {
     ElfW(Addr) file_start = phdr->p_offset;
     ElfW(Addr) file_end = file_start + p_filesz;
 
-    ElfW(Addr) file_page_start = align_down(file_start, seg_align);
+    ElfW(Addr) file_page_start = __builtin_align_down(file_start, seg_align);
     ElfW(Addr) file_length = file_end - file_page_start;
 
     if (file_size_ <= 0) {

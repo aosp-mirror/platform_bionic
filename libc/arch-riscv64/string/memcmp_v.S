@@ -71,7 +71,7 @@
 #define vData2 v8
 #define vMask v16
 
-ENTRY(memcmp_v)
+ENTRY(memcmp)
 
 L(loop):
     vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
@@ -103,4 +103,4 @@ L(found):
     sub iResult, iTemp1, iTemp2
     ret
 
-END(memcmp_v)
+END(memcmp)
