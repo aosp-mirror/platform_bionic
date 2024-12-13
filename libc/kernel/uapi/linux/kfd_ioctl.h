@@ -9,7 +9,7 @@
 #include <drm/drm.h>
 #include <linux/ioctl.h>
 #define KFD_IOCTL_MAJOR_VERSION 1
-#define KFD_IOCTL_MINOR_VERSION 16
+#define KFD_IOCTL_MINOR_VERSION 17
 struct kfd_ioctl_get_version_args {
   __u32 major_version;
   __u32 minor_version;
@@ -18,6 +18,7 @@ struct kfd_ioctl_get_version_args {
 #define KFD_IOC_QUEUE_TYPE_SDMA 0x1
 #define KFD_IOC_QUEUE_TYPE_COMPUTE_AQL 0x2
 #define KFD_IOC_QUEUE_TYPE_SDMA_XGMI 0x3
+#define KFD_IOC_QUEUE_TYPE_SDMA_BY_ENG_ID 0x4
 #define KFD_MAX_QUEUE_PERCENTAGE 100
 #define KFD_MAX_QUEUE_PRIORITY 15
 struct kfd_ioctl_create_queue_args {
@@ -36,6 +37,8 @@ struct kfd_ioctl_create_queue_args {
   __u64 ctx_save_restore_address;
   __u32 ctx_save_restore_size;
   __u32 ctl_stack_size;
+  __u32 sdma_engine_id;
+  __u32 pad;
 };
 struct kfd_ioctl_destroy_queue_args {
   __u32 queue_id;
@@ -358,6 +361,16 @@ struct kfd_ioctl_smi_events_args {
   __u32 gpuid;
   __u32 anon_fd;
 };
+#define KFD_EVENT_FMT_UPDATE_GPU_RESET(reset_seq_num,reset_cause) "%x %s\n", (reset_seq_num), (reset_cause)
+#define KFD_EVENT_FMT_THERMAL_THROTTLING(bitmask,counter) "%llx:%llx\n", (bitmask), (counter)
+#define KFD_EVENT_FMT_VMFAULT(pid,task_name) "%x:%s\n", (pid), (task_name)
+#define KFD_EVENT_FMT_PAGEFAULT_START(ns,pid,addr,node,rw) "%lld -%d @%lx(%x) %c\n", (ns), (pid), (addr), (node), (rw)
+#define KFD_EVENT_FMT_PAGEFAULT_END(ns,pid,addr,node,migrate_update) "%lld -%d @%lx(%x) %c\n", (ns), (pid), (addr), (node), (migrate_update)
+#define KFD_EVENT_FMT_MIGRATE_START(ns,pid,start,size,from,to,prefetch_loc,preferred_loc,migrate_trigger) "%lld -%d @%lx(%lx) %x->%x %x:%x %d\n", (ns), (pid), (start), (size), (from), (to), (prefetch_loc), (preferred_loc), (migrate_trigger)
+#define KFD_EVENT_FMT_MIGRATE_END(ns,pid,start,size,from,to,migrate_trigger) "%lld -%d @%lx(%lx) %x->%x %d\n", (ns), (pid), (start), (size), (from), (to), (migrate_trigger)
+#define KFD_EVENT_FMT_QUEUE_EVICTION(ns,pid,node,evict_trigger) "%lld -%d %x %d\n", (ns), (pid), (node), (evict_trigger)
+#define KFD_EVENT_FMT_QUEUE_RESTORE(ns,pid,node,rescheduled) "%lld -%d %x %c\n", (ns), (pid), (node), (rescheduled)
+#define KFD_EVENT_FMT_UNMAP_FROM_GPU(ns,pid,addr,size,node,unmap_trigger) "%lld -%d @%lx(%lx) %x %d\n", (ns), (pid), (addr), (size), (node), (unmap_trigger)
 enum kfd_criu_op {
   KFD_CRIU_OP_PROCESS_INFO,
   KFD_CRIU_OP_CHECKPOINT,

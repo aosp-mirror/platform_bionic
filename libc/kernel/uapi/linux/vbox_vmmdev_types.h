@@ -177,6 +177,9 @@ struct vmmdev_hgcm_pagelist {
   __u32 flags;
   __u16 offset_first_page;
   __u16 page_count;
-  __u64 pages[1];
+  union {
+    __u64 unused;
+    __DECLARE_FLEX_ARRAY(__u64, pages);
+  };
 };
 #endif

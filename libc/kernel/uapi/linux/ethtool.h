@@ -1026,4 +1026,8 @@ struct ethtool_link_settings {
   __u32 reserved[7];
   __u32 link_mode_masks[];
 };
+enum phy_upstream {
+  PHY_UPSTREAM_MAC,
+  PHY_UPSTREAM_PHY,
+};
 #endif
