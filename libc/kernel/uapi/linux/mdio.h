@@ -15,6 +15,7 @@
 #define MDIO_MMD_DTEXS 5
 #define MDIO_MMD_TC 6
 #define MDIO_MMD_AN 7
+#define MDIO_MMD_POWER_UNIT 13
 #define MDIO_MMD_C22EXT 29
 #define MDIO_MMD_VEND1 30
 #define MDIO_MMD_VEND2 31
