@@ -66,7 +66,7 @@
 #define ELEM_LMUL_SETTING m8
 #define vData v0
 
-ENTRY(memset_v)
+ENTRY(memset)
 
     mv pDstPtr, pDst
 
@@ -82,4 +82,4 @@ L(loop):
 
     ret
 
-END(memset_v)
+END(memset)

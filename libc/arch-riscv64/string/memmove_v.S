@@ -67,7 +67,7 @@
 #define ELEM_LMUL_SETTING m8
 #define vData v0
 
-ENTRY(memmove_v)
+ENTRY(memmove)
 
     mv pDstPtr, pDst
 
@@ -99,4 +99,4 @@ L(backward_copy_loop):
     bnez iNum, L(backward_copy_loop)
     ret
 
-END(memmove_v)
+END(memmove)

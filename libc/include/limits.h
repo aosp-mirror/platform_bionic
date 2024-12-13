@@ -60,24 +60,6 @@
 /* Many of the POSIX limits come from the kernel. */
 #include <linux/limits.h>
 
-/*
- * bionic always exposed these alternative names,
- * but clang's <limits.h> considers them GNU extensions,
- * and may or may not have defined them.
- */
-#ifndef LONG_LONG_MIN
-/** Non-portable synonym; use LLONG_MIN directly instead. */
-#define LONG_LONG_MIN LLONG_MIN
-#endif
-#ifndef LONG_LONG_MAX
-/** Non-portable synonym; use LLONG_MAX directly instead. */
-#define LONG_LONG_MAX LLONG_MAX
-#endif
-#ifndef ULONG_LONG_MAX
-/** Non-portable synonym; use ULLONG_MAX directly instead. */
-#define ULONG_LONG_MAX ULLONG_MAX
-#endif
-
 /** Maximum number of positional arguments in a printf()/scanf() format string. */
 #define NL_ARGMAX 9
 /** Maximum number of bytes in a $LANG name. */
