@@ -17,6 +17,7 @@ enum vdpa_command {
   VDPA_CMD_DEV_GET,
   VDPA_CMD_DEV_CONFIG_GET,
   VDPA_CMD_DEV_VSTATS_GET,
+  VDPA_CMD_DEV_ATTR_SET,
 };
 enum vdpa_attr {
   VDPA_ATTR_UNSPEC,
