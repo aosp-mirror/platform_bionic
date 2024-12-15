@@ -76,6 +76,7 @@ class ElfReader {
   [[nodiscard]] bool ReadElfHeader();
   [[nodiscard]] bool VerifyElfHeader();
   [[nodiscard]] bool ReadProgramHeaders();
+  [[nodiscard]] bool CheckProgramHeaderAlignment();
   [[nodiscard]] bool ReadSectionHeaders();
   [[nodiscard]] bool ReadDynamicSection();
   [[nodiscard]] bool ReadPadSegmentNote();
@@ -130,6 +131,10 @@ class ElfReader {
   // Load bias.
   ElfW(Addr) load_bias_;
 
+  // Maximum and minimum alignment requirements across all phdrs.
+  size_t max_align_;
+  size_t min_align_;
+
   // Loaded phdr.
   const ElfW(Phdr)* loaded_phdr_;
 
@@ -152,9 +157,6 @@ class ElfReader {
 
 size_t phdr_table_get_load_size(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                 ElfW(Addr)* min_vaddr = nullptr, ElfW(Addr)* max_vaddr = nullptr);
-
-size_t phdr_table_get_maximum_alignment(const ElfW(Phdr)* phdr_table, size_t phdr_count);
-size_t phdr_table_get_minimum_alignment(const ElfW(Phdr)* phdr_table, size_t phdr_count);
 
 int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                 ElfW(Addr) load_bias, bool should_pad_segments,

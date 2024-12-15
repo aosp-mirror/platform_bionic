@@ -1091,18 +1091,20 @@ int debug_malloc_iterate(uintptr_t base, size_t size, void (*callback)(uintptr_t
 
 void debug_malloc_disable() {
   ScopedConcurrentLock lock;
-  g_dispatch->malloc_disable();
   if (g_debug->pointer) {
+    // Acquire the pointer locks first, otherwise, the code can be holding
+    // the allocation lock and deadlock trying to acquire a pointer lock.
     g_debug->pointer->PrepareFork();
   }
+  g_dispatch->malloc_disable();
 }
 
 void debug_malloc_enable() {
   ScopedConcurrentLock lock;
+  g_dispatch->malloc_enable();
   if (g_debug->pointer) {
     g_debug->pointer->PostForkParent();
   }
-  g_dispatch->malloc_enable();
 }
 
 ssize_t debug_malloc_backtrace(void* pointer, uintptr_t* frames, size_t max_frames) {
