@@ -53,7 +53,7 @@
 #if defined(__BIONIC__)
 
 #include "SignalUtils.h"
-#include "dlext_private.h"
+#include "dlext_private_tests.h"
 
 #include "platform/bionic/malloc.h"
 #include "platform/bionic/mte.h"
@@ -466,6 +466,7 @@ TEST(malloc, malloc_info) {
     // Do not verify output for debug malloc.
     ASSERT_TRUE(version == "debug-malloc-1") << "Unknown version: " << version;
   }
+  printf("Allocator version: %s\n", version.c_str());
 #endif
 }
 

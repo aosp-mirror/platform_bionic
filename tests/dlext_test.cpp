@@ -44,7 +44,7 @@
 #include "bionic/mte.h"
 #include "bionic/page.h"
 #include "core_shared_libs.h"
-#include "dlext_private.h"
+#include "dlext_private_tests.h"
 #include "dlfcn_symlink_support.h"
 #include "gtest_globals.h"
 #include "utils.h"
