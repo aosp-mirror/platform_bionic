@@ -575,9 +575,7 @@ bool ElfReader::CheckProgramHeaderAlignment() {
       continue;
     }
 
-#if defined(__LP64__) // TODO: remove this historical accident #if
     max_align_ = std::max(max_align_, static_cast<size_t>(phdr->p_align));
-#endif
 
     if (phdr->p_align > 1) {
       min_align_ = std::min(min_align_, static_cast<size_t>(phdr->p_align));
