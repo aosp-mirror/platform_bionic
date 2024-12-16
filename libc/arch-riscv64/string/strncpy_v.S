@@ -71,7 +71,7 @@
 #define vStr1 v8
 #define vStr2 v16
 
-ENTRY(strncpy_v)
+ENTRY(strncpy)
 
     mv pDstPtr, pDst
 
@@ -111,4 +111,4 @@ L(fill_zero_loop):
 
     ret
 
-END(strncpy_v)
+END(strncpy)

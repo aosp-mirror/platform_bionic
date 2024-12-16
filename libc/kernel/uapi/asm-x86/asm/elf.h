@@ -4,13 +4,13 @@
  * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
  * for more information.
  */
-#ifndef _ASM_X86_SWAB_H
-#define _ASM_X86_SWAB_H
+#ifndef _UAPI_ASM_X86_ELF_H
+#define _UAPI_ASM_X86_ELF_H
 #include <linux/types.h>
-#include <linux/compiler.h>
-#define __arch_swab32 __arch_swab32
-#ifdef __i386__
-#else
-#endif
-#define __arch_swab64 __arch_swab64
+struct x86_xfeat_component {
+  __u32 type;
+  __u32 size;
+  __u32 offset;
+  __u32 flags;
+} __attribute__((__packed__));
 #endif

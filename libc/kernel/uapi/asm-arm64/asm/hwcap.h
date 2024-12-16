@@ -101,4 +101,5 @@
 #define HWCAP2_SME_SF8FMA (1UL << 60)
 #define HWCAP2_SME_SF8DP4 (1UL << 61)
 #define HWCAP2_SME_SF8DP2 (1UL << 62)
+#define HWCAP2_POE (1UL << 63)
 #endif
