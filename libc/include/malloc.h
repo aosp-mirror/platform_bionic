@@ -55,7 +55,7 @@ __BEGIN_DECLS
  * other processes. Obviously this is not the case for apps, which will
  * be killed in preference to killing other processes.
  */
-__wur void* _Nullable malloc(size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(1);
+__nodiscard void* _Nullable malloc(size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(1);
 
 /**
  * [calloc(3)](https://man7.org/linux/man-pages/man3/calloc.3.html) allocates
@@ -64,7 +64,7 @@ __wur void* _Nullable malloc(size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SI
  * Returns a pointer to the allocated memory on success and returns a null
  * pointer and sets `errno` on failure (but see the notes for malloc()).
  */
-__wur void* _Nullable calloc(size_t __item_count, size_t __item_size) __mallocfunc __BIONIC_ALLOC_SIZE(1,2);
+__nodiscard void* _Nullable calloc(size_t __item_count, size_t __item_size) __mallocfunc __BIONIC_ALLOC_SIZE(1,2);
 
 /**
  * [realloc(3)](https://man7.org/linux/man-pages/man3/realloc.3.html) resizes
@@ -74,7 +74,7 @@ __wur void* _Nullable calloc(size_t __item_count, size_t __item_size) __mallocfu
  * memory on success and returns a null pointer and sets `errno` on failure
  * (but see the notes for malloc()).
  */
-__wur void* _Nullable realloc(void* _Nullable __ptr, size_t __byte_count) __BIONIC_ALLOC_SIZE(2);
+__nodiscard void* _Nullable realloc(void* _Nullable __ptr, size_t __byte_count) __BIONIC_ALLOC_SIZE(2);
 
 /**
  * [reallocarray(3)](https://man7.org/linux/man-pages/man3/realloc.3.html) resizes
@@ -88,10 +88,10 @@ __wur void* _Nullable realloc(void* _Nullable __ptr, size_t __byte_count) __BION
  * (but see the notes for malloc()).
  */
 #if __ANDROID_API__ >= 29
-__wur void* _Nullable reallocarray(void* _Nullable __ptr, size_t __item_count, size_t __item_size) __BIONIC_ALLOC_SIZE(2, 3) __INTRODUCED_IN(29);
-#else
+__nodiscard void* _Nullable reallocarray(void* _Nullable __ptr, size_t __item_count, size_t __item_size) __BIONIC_ALLOC_SIZE(2, 3) __INTRODUCED_IN(29);
+#elif defined(__ANDROID_UNAVAILABLE_SYMBOLS_ARE_WEAK__)
 #include <errno.h>
-static __inline __wur void* _Nullable reallocarray(void* _Nullable __ptr, size_t __item_count, size_t __item_size) {
+static __inline __nodiscard void* _Nullable reallocarray(void* _Nullable __ptr, size_t __item_count, size_t __item_size) __BIONIC_ALLOC_SIZE(2, 3) {
   size_t __new_size;
   if (__builtin_mul_overflow(__item_count, __item_size, &__new_size)) {
     errno = ENOMEM;
@@ -116,13 +116,13 @@ void free(void* _Nullable __ptr);
  *
  * See also posix_memalign().
  */
-__wur void* _Nullable memalign(size_t __alignment, size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(2);
+__nodiscard void* _Nullable memalign(size_t __alignment, size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(2);
 
 /**
  * [malloc_usable_size(3)](https://man7.org/linux/man-pages/man3/malloc_usable_size.3.html)
  * returns the actual size of the given heap block.
  */
-__wur size_t malloc_usable_size(const void* _Nullable __ptr);
+__nodiscard size_t malloc_usable_size(const void* _Nullable __ptr);
 
 #define __MALLINFO_BODY \
   /** Total number of non-mmapped bytes currently allocated from OS. */ \
@@ -195,7 +195,11 @@ struct mallinfo2 mallinfo2(void) __RENAME(mallinfo);
  *
  * Available since API level 23.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(23)
 int malloc_info(int __must_be_zero, FILE* _Nonnull __fp) __INTRODUCED_IN(23);
+#endif /* __BIONIC_AVAILABILITY_GUARD(23) */
+
 
 /**
  * mallopt() option to set the decay time. Valid values are -1, 0 and 1.
@@ -368,7 +372,11 @@ enum HeapTaggingLevel {
  *
  * Available since API level 26.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(26)
 int mallopt(int __option, int __value) __INTRODUCED_IN(26);
+#endif /* __BIONIC_AVAILABILITY_GUARD(26) */
+
 
 /**
  * [__malloc_hook(3)](https://man7.org/linux/man-pages/man3/__malloc_hook.3.html)
@@ -379,6 +387,8 @@ int mallopt(int __option, int __value) __INTRODUCED_IN(26);
  *
  * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/main/libc/malloc_hooks/README.md)
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(28)
 extern void* _Nonnull (*volatile _Nonnull __malloc_hook)(size_t __byte_count, const void* _Nonnull __caller) __INTRODUCED_IN(28);
 
 /**
@@ -413,5 +423,7 @@ extern void (*volatile _Nonnull __free_hook)(void* _Nullable __ptr, const void* 
  * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/main/libc/malloc_hooks/README.md)
  */
 extern void* _Nonnull (*volatile _Nonnull __memalign_hook)(size_t __alignment, size_t __byte_count, const void* _Nonnull __caller) __INTRODUCED_IN(28);
+#endif /* __BIONIC_AVAILABILITY_GUARD(28) */
+
 
 __END_DECLS

@@ -29,9 +29,10 @@
 #ifndef _ARPA_INET_H_
 #define _ARPA_INET_H_
 
+#include <sys/cdefs.h>
+
 #include <netinet/in.h>
 #include <stdint.h>
-#include <sys/cdefs.h>
 #include <sys/types.h>
 
 __BEGIN_DECLS

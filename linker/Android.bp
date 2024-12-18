@@ -108,6 +108,12 @@ cc_defaults {
 
     // We need to access Bionic private headers in the linker.
     include_dirs: ["bionic/libc"],
+
+    sanitize: {
+        // Supporting memtag_globals in the linker would be tricky,
+        // because it relocates itself very early.
+        memtag_globals: false,
+    },
 }
 
 // ========================================================
@@ -184,6 +190,7 @@ filegroup {
         "linker_mapped_file_fragment.cpp",
         "linker_note_gnu_property.cpp",
         "linker_phdr.cpp",
+        "linker_phdr_16kib_compat.cpp",
         "linker_relocate.cpp",
         "linker_sdk_versions.cpp",
         "linker_soinfo.cpp",
@@ -343,11 +350,10 @@ cc_defaults {
 // linker[_asan][64] binary
 // ========================================================
 
-cc_binary {
-    name: "linker",
+cc_defaults {
+    name: "linker_binary_defaults",
     defaults: [
         "linker_bin_template",
-        "linux_bionic_supported",
         "linker_version_script_overlay",
     ],
 
@@ -369,8 +375,6 @@ cc_binary {
 
     compile_multilib: "both",
 
-    recovery_available: true,
-    vendor_ramdisk_available: true,
     apex_available: [
         "//apex_available:platform",
         "com.android.runtime",
@@ -394,6 +398,26 @@ cc_binary {
     },
 
     afdo: true,
+}
+
+cc_binary {
+    name: "linker",
+    defaults: [
+        "linux_bionic_supported",
+        "linker_binary_defaults",
+    ],
+
+    vendor_ramdisk_available: true,
+}
+
+cc_binary {
+    name: "linker.recovery",
+    defaults: [
+        "linker_binary_defaults",
+    ],
+
+    recovery: true,
+    stem: "linker",
 }
 
 // ========================================================
@@ -493,6 +517,7 @@ cc_test {
         "linker_mapped_file_fragment.cpp",
         "linker_sdk_versions.cpp",
         "linker_dlwarning.cpp",
+        "linker_phdr_16kib_compat.cpp"
     ],
 
     static_libs: [
@@ -533,4 +558,33 @@ cc_benchmark {
             srcs: ["arch/arm_neon/linker_gnu_hash_neon.cpp"],
         },
     },
+}
+
+cc_fuzz {
+    name: "ElfReader_fuzzer",
+    srcs: [
+        "ElfReader_fuzzer.cpp",
+        "linker.cpp",
+        "linker_block_allocator.cpp",
+        "linker_debug.cpp",
+        "linker_dlwarning.cpp",
+        "linker_globals.cpp",
+        "linker_mapped_file_fragment.cpp",
+        "linker_phdr.cpp",
+        "linker_phdr_16kib_compat.cpp",
+        "linker_sdk_versions.cpp",
+        "linker_utils.cpp",
+        ":elf_note_sources",
+    ],
+    static_libs: [
+        "libasync_safe",
+        "libbase",
+        "libziparchive",
+    ],
+    include_dirs: ["bionic/libc"],
+    // TODO: use all the architectures' files.
+    // We'll either need to give them unique names across architectures,
+    // or change soong to preserve subdirectories in `corpus:`,
+    // and maybe also the [deprecated] LLVM fuzzer infrastructure?
+    corpus: [":bionic_prebuilt_test_elf_files_arm64"],
 }

@@ -33,6 +33,8 @@
 #ifndef _ARPA_TELNET_H_
 #define	_ARPA_TELNET_H_
 
+#include <sys/cdefs.h>
+
 /*
  * Definitions for the TELNET protocol.
  */

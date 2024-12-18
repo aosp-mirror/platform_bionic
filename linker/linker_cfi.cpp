@@ -166,13 +166,13 @@ bool CFIShadowWriter::AddLibrary(soinfo* si) {
   }
   uintptr_t cfi_check = soinfo_find_cfi_check(si);
   if (cfi_check == 0) {
-    INFO("[ CFI add 0x%zx + 0x%zx %s ]", static_cast<uintptr_t>(si->base),
+    LD_DEBUG(cfi, "[ CFI add 0x%zx + 0x%zx %s ]", static_cast<uintptr_t>(si->base),
          static_cast<uintptr_t>(si->size), si->get_soname());
     AddUnchecked(si->base, si->base + si->size);
     return true;
   }
 
-  INFO("[ CFI add 0x%zx + 0x%zx %s: 0x%zx ]", static_cast<uintptr_t>(si->base),
+  LD_DEBUG(cfi, "[ CFI add 0x%zx + 0x%zx %s: 0x%zx ]", static_cast<uintptr_t>(si->base),
        static_cast<uintptr_t>(si->size), si->get_soname(), cfi_check);
 #ifdef __arm__
   // Require Thumb encoding.
@@ -263,8 +263,8 @@ bool CFIShadowWriter::AfterLoad(soinfo* si, soinfo* solist) {
 void CFIShadowWriter::BeforeUnload(soinfo* si) {
   if (shadow_start == nullptr) return;
   if (si->base == 0 || si->size == 0) return;
-  INFO("[ CFI remove 0x%zx + 0x%zx: %s ]", static_cast<uintptr_t>(si->base),
-       static_cast<uintptr_t>(si->size), si->get_soname());
+  LD_DEBUG(cfi, "[ CFI remove 0x%zx + 0x%zx: %s ]", static_cast<uintptr_t>(si->base),
+           static_cast<uintptr_t>(si->size), si->get_soname());
   AddInvalid(si->base, si->base + si->size);
   FixupVmaName();
 }

@@ -79,7 +79,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     /* We loaded the jump table and adjusted EDX. Go.  */	\
     jmp		*%ebx
 
-ENTRY(__memset_chk_generic)
+ENTRY(__memset_chk)
   ENTRANCE
 
   movl LEN(%esp), %ecx
@@ -88,11 +88,11 @@ ENTRY(__memset_chk_generic)
 
   POP(%ebx) // Undo ENTRANCE without returning.
   jmp __memset_chk_fail
-END(__memset_chk_generic)
+END(__memset_chk)
 
 	.section .text.sse2,"ax",@progbits
 	ALIGN(4)
-ENTRY(memset_generic)
+ENTRY(memset)
 	ENTRANCE
 
 	movl	LEN(%esp), %ecx
@@ -755,4 +755,4 @@ L(aligned_16_15bytes):
 	SETRTNVAL
 	RETURN_END
 
-END(memset_generic)
+END(memset)

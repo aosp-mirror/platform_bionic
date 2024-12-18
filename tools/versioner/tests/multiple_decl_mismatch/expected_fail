@@ -1,8 +1,0 @@
-versioner: inconsistent availability for symbol 'foo'
-versioner: failed to calculate symbol availability
-  foo: invalid
-    extern declaration @ headers/bar.h:5:1
-      obsoleted = 12
-    extern declaration @ headers/foo.h:5:1
-      obsoleted = 9
-versioner: validity check failed

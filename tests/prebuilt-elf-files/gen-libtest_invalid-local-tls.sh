@@ -19,12 +19,18 @@ EOF
 build() {
   arch=$1
   target=$2
+
+  if [[ "$arch" == "arm64" || "$arch" == "x86_64" ]]; then
+    alignment="-Wl,-z,max-page-size=16384"
+  fi
+
   $NDK21E/toolchains/llvm/prebuilt/linux-x86_64/bin/clang -O2 --target=$target \
       -fpic -shared -o $arch/libtest_invalid-local-tls.so -fno-emulated-tls \
-      -fuse-ld=gold test.c test2.c
+      $alignment -fuse-ld=gold test.c test2.c
 }
 
 build arm armv7a-linux-androideabi29
 build arm64 aarch64-linux-android29
 build x86 i686-linux-android29
 build x86_64 x86_64-linux-android29
+

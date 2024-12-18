@@ -27,10 +27,58 @@
 #include <thread>
 #include <vector>
 
-#include <android-base/strings.h>
 #if defined(__BIONIC__)
 #include <meminfo/procmeminfo.h>
 #include <procinfo/process_map.h>
+
+#include <log/log.h>
+#include <log/log_read.h>
+#endif
+
+#if defined(__BIONIC__)
+static void PrintLogStats(uint64_t& last_time) {
+  logger_list* logger =
+      android_logger_list_open(android_name_to_log_id("main"), ANDROID_LOG_NONBLOCK, 0, getpid());
+  if (logger == nullptr) {
+    printf("Failed to open log for main\n");
+    return;
+  }
+
+  uint64_t last_message_time = last_time;
+  while (true) {
+    log_msg entry;
+    ssize_t retval = android_logger_list_read(logger, &entry);
+    if (retval == 0) {
+      break;
+    }
+    if (retval < 0) {
+      if (retval == -EINTR) {
+        continue;
+      }
+      // EAGAIN means there is nothing left to read when ANDROID_LOG_NONBLOCK is set.
+      if (retval != -EAGAIN) {
+        printf("Failed to read log entry: %s\n", strerrordesc_np(retval));
+      }
+      break;
+    }
+    if (entry.msg() == nullptr) {
+      continue;
+    }
+    // Only print allocator tagged log entries.
+    std::string_view tag(entry.msg() + 1);
+    if (tag != "scudo" && tag != "jemalloc") {
+      continue;
+    }
+    if (entry.nsec() > last_time) {
+      printf("  %s\n", &tag.back() + 2);
+      // Only update the last time outside this loop just in case two or more
+      // messages have the same timestamp.
+      last_message_time = entry.nsec();
+    }
+  }
+  android_logger_list_close(logger);
+  last_time = last_message_time;
+}
 #endif
 
 TEST(malloc_stress, multiple_threads_forever) {
@@ -45,6 +93,8 @@ TEST(malloc_stress, multiple_threads_forever) {
 #endif
   uint64_t mallinfo_min = UINT64_MAX;
   uint64_t mallinfo_max = 0;
+
+  uint64_t last_message_time = 0;
   for (size_t i = 0; ; i++) {
     printf("Pass %zu\n", i);
 
@@ -74,8 +124,8 @@ TEST(malloc_stress, multiple_threads_forever) {
     uint64_t rss_bytes = 0;
     uint64_t vss_bytes = 0;
     for (auto& vma : maps) {
-      if (vma.name == "[anon:libc_malloc]" || android::base::StartsWith(vma.name, "[anon:scudo:") ||
-          android::base::StartsWith(vma.name, "[anon:GWP-ASan")) {
+      if (vma.name == "[anon:libc_malloc]" || vma.name.starts_with("[anon:scudo:") ||
+          vma.name.starts_with("[anon:GWP-ASan")) {
         android::meminfo::Vma update_vma(vma);
         ASSERT_TRUE(proc_mem.FillInVmaStats(update_vma));
         rss_bytes += update_vma.usage.rss;
@@ -112,5 +162,15 @@ TEST(malloc_stress, multiple_threads_forever) {
     printf("Allocated memory %zu %0.2fMB\n", mallinfo_bytes, mallinfo_bytes / (1024.0 * 1024.0));
     printf("  Min %" PRIu64 " %0.2fMB\n", mallinfo_min, mallinfo_min / (1024.0 * 1024.0));
     printf("  Max %" PRIu64 " %0.2fMB\n", mallinfo_max, mallinfo_max / (1024.0 * 1024.0));
+
+#if defined(__BIONIC__)
+    if (((i + 1) % 100) == 0) {
+      // Send native allocator stats to the log
+      mallopt(M_LOG_STATS, 0);
+
+      printf("Log stats:\n");
+      PrintLogStats(last_message_time);
+    }
+#endif
   }
 }

@@ -28,8 +28,9 @@
 
 #pragma once
 
-#include <bits/wait.h>
 #include <sys/cdefs.h>
+
+#include <bits/wait.h>
 #include <sys/types.h>
 #include <sys/resource.h>
 #include <linux/wait.h>

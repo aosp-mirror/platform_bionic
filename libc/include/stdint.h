@@ -29,9 +29,10 @@
 #ifndef _STDINT_H
 #define _STDINT_H
 
+#include <sys/cdefs.h>
+
 #include <bits/wchar_limits.h>
 #include <stddef.h>
-#include <sys/cdefs.h>
 
 typedef signed char __int8_t;
 typedef unsigned char __uint8_t;

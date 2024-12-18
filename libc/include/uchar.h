@@ -33,8 +33,9 @@
  * @brief Unicode functions.
  */
 
-#include <stddef.h>
 #include <sys/cdefs.h>
+
+#include <stddef.h>
 
 #include <bits/bionic_multibyte_result.h>
 #include <bits/mbstate_t.h>

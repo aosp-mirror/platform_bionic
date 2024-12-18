@@ -37,10 +37,10 @@ TEST(stdatomic, LOCK_FREE) {
 }
 
 TEST(stdatomic, init) {
-  atomic_int v = ATOMIC_VAR_INIT(123);
+  atomic_int v = 123;
   ASSERT_EQ(123, atomic_load(&v));
 
-  atomic_init(&v, 456);
+  atomic_store_explicit(&v, 456, memory_order_relaxed);
   ASSERT_EQ(456, atomic_load(&v));
 
   atomic_flag f = ATOMIC_FLAG_INIT;
@@ -145,35 +145,35 @@ TEST(stdatomic, atomic_compare_exchange) {
 }
 
 TEST(stdatomic, atomic_fetch_add) {
-  atomic_int i = ATOMIC_VAR_INIT(123);
+  atomic_int i = 123;
   ASSERT_EQ(123, atomic_fetch_add(&i, 1));
   ASSERT_EQ(124, atomic_fetch_add_explicit(&i, 1, memory_order_relaxed));
   ASSERT_EQ(125, atomic_load(&i));
 }
 
 TEST(stdatomic, atomic_fetch_sub) {
-  atomic_int i = ATOMIC_VAR_INIT(123);
+  atomic_int i = 123;
   ASSERT_EQ(123, atomic_fetch_sub(&i, 1));
   ASSERT_EQ(122, atomic_fetch_sub_explicit(&i, 1, memory_order_relaxed));
   ASSERT_EQ(121, atomic_load(&i));
 }
 
 TEST(stdatomic, atomic_fetch_or) {
-  atomic_int i = ATOMIC_VAR_INIT(0x100);
+  atomic_int i = 0x100;
   ASSERT_EQ(0x100, atomic_fetch_or(&i, 0x020));
   ASSERT_EQ(0x120, atomic_fetch_or_explicit(&i, 0x003, memory_order_relaxed));
   ASSERT_EQ(0x123, atomic_load(&i));
 }
 
 TEST(stdatomic, atomic_fetch_xor) {
-  atomic_int i = ATOMIC_VAR_INIT(0x100);
+  atomic_int i = 0x100;
   ASSERT_EQ(0x100, atomic_fetch_xor(&i, 0x120));
   ASSERT_EQ(0x020, atomic_fetch_xor_explicit(&i, 0x103, memory_order_relaxed));
   ASSERT_EQ(0x123, atomic_load(&i));
 }
 
 TEST(stdatomic, atomic_fetch_and) {
-  atomic_int i = ATOMIC_VAR_INIT(0x123);
+  atomic_int i = 0x123;
   ASSERT_EQ(0x123, atomic_fetch_and(&i, 0x00f));
   ASSERT_EQ(0x003, atomic_fetch_and_explicit(&i, 0x2, memory_order_relaxed));
   ASSERT_EQ(0x002, atomic_load(&i));
@@ -258,9 +258,9 @@ TEST(stdatomic, ordering) {
   // Run a memory ordering smoke test.
   void* result;
   three_atomics a;
-  atomic_init(&a.x, 0ul);
-  atomic_init(&a.y, 0ul);
-  atomic_init(&a.z, 0ul);
+  atomic_store_explicit(&a.x, 0ul, memory_order_relaxed);
+  atomic_store_explicit(&a.y, 0ul, memory_order_relaxed);
+  atomic_store_explicit(&a.z, 0ul, memory_order_relaxed);
   pthread_t t1,t2;
   ASSERT_EQ(0, pthread_create(&t1, nullptr, reader, &a));
   ASSERT_EQ(0, pthread_create(&t2, nullptr, writer, &a));

@@ -31,8 +31,12 @@
 #endif
 
 char* _Nullable __fgets_chk(char* _Nonnull, int, FILE* _Nonnull, size_t);
+
+#if __BIONIC_AVAILABILITY_GUARD(24)
 size_t __fread_chk(void* _Nonnull, size_t, size_t, FILE* _Nonnull, size_t) __INTRODUCED_IN(24);
 size_t __fwrite_chk(const void* _Nonnull, size_t, size_t, FILE* _Nonnull, size_t) __INTRODUCED_IN(24);
+#endif /* __BIONIC_AVAILABILITY_GUARD(24) */
+
 
 #if defined(__BIONIC_FORTIFY) && !defined(__BIONIC_NO_STDIO_FORTIFY)
 

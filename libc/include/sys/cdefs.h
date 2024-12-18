@@ -140,7 +140,8 @@
 #define	__predict_true(exp)	__builtin_expect((exp) != 0, 1)
 #define	__predict_false(exp)	__builtin_expect((exp) != 0, 0)
 
-#define __wur __attribute__((__warn_unused_result__))
+#define __nodiscard __attribute__((__warn_unused_result__))
+#define __wur __nodiscard
 
 #define __errorattr(msg) __attribute__((__unavailable__(msg)))
 #define __warnattr(msg) __attribute__((__deprecated__(msg)))
@@ -264,7 +265,7 @@
  * having stack protectors detracts from that (b/182948263).
  */
 #  define __BIONIC_FORTIFY_INLINE static __inline __attribute__((__no_stack_protector__)) \
-      __always_inline __VERSIONER_FORTIFY_INLINE
+      __always_inline
 /*
  * We should use __BIONIC_FORTIFY_VARIADIC instead of __BIONIC_FORTIFY_INLINE
  * for variadic functions because compilers cannot inline them.

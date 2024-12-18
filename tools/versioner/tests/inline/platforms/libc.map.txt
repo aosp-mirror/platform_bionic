@@ -1,4 +1,0 @@
-LIBC {
-  global:
-    foo;  # introduced=12
-};

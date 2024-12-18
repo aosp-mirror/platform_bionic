@@ -57,6 +57,12 @@
 #include <bionic/malloc.h>
 #include <tests/utils.h>
 
+// exported from bionic
+__BEGIN_DECLS
+extern void malloc_disable();
+extern void malloc_enable();
+__END_DECLS
+
 // All DISABLED_ tests are designed to be executed after malloc debug
 // is enabled. These tests don't run be default, and are executed
 // by wrappers that will enable various malloc debug features.
@@ -787,4 +793,35 @@ TEST_F(MallocDebugSystemTest, malloc_and_backtrace_deadlock) {
   // unwinds.
   unexpected_log_strings_.push_back("Timed out waiting for ");
   Exec("MallocTests.DISABLED_malloc_and_backtrace_deadlock", "verbose verify_pointers", 0);
+}
+
+// Creates two threads: one that calls malloc_disable() and malloc_enable() in a loop and
+// the other that performs a bunch of allocations.
+TEST(MallocTests, DISABLED_malloc_disable_deadlock) {
+  std::atomic_bool running(true);
+
+  std::thread t1([&] {
+    while (running) {
+      malloc_disable();
+      malloc_enable();
+    }
+  });
+
+  std::thread t2([&] {
+    while (running) {
+      void* p = malloc(100);
+      free(p);
+    }
+  });
+
+  // let the threads run for a while, then tell them to stop and wait for shutdown
+  std::this_thread::sleep_for(std::chrono::seconds(5));
+
+  running = false;
+  t1.join();
+  t2.join();
+}
+
+TEST_F(MallocDebugSystemTest, malloc_disable_deadlock) {
+  Exec("MallocTests.DISABLED_malloc_disable_deadlock", "verbose backtrace");
 }

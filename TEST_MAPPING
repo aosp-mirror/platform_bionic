@@ -88,6 +88,12 @@
     },
     {
       "name": "toybox-tests"
+    },
+    {
+      "name": "hwasan_test"
+    },
+    {
+      "name": "hwasan_test_static"
     }
   ],
   "kernel-presubmit": [
