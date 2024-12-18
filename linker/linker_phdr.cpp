@@ -575,9 +575,7 @@ bool ElfReader::CheckProgramHeaderAlignment() {
       continue;
     }
 
-#if defined(__LP64__) // TODO: remove this historical accident #if
     max_align_ = std::max(max_align_, static_cast<size_t>(phdr->p_align));
-#endif
 
     if (phdr->p_align > 1) {
       min_align_ = std::min(min_align_, static_cast<size_t>(phdr->p_align));
@@ -606,23 +604,22 @@ static void* ReserveWithAlignmentPadding(size_t size, size_t mapping_align, size
   // page size of the platform.
 #if defined(__LP64__)
   constexpr size_t kGapAlignment = 2 * 1024 * 1024;
-#else
-  constexpr size_t kGapAlignment = 0;
 #endif
   // Maximum gap size, in the units of kGapAlignment.
   constexpr size_t kMaxGapUnits = 32;
   // Allocate enough space so that the end of the desired region aligned up is still inside the
   // mapping.
-  size_t mmap_size = align_up(size, mapping_align) + mapping_align - page_size();
+  size_t mmap_size = __builtin_align_up(size, mapping_align) + mapping_align - page_size();
   uint8_t* mmap_ptr =
       reinterpret_cast<uint8_t*>(mmap(nullptr, mmap_size, PROT_NONE, mmap_flags, -1, 0));
   if (mmap_ptr == MAP_FAILED) {
     return nullptr;
   }
   size_t gap_size = 0;
-  size_t first_byte = reinterpret_cast<size_t>(align_up(mmap_ptr, mapping_align));
-  size_t last_byte = reinterpret_cast<size_t>(align_down(mmap_ptr + mmap_size, mapping_align) - 1);
-  if (kGapAlignment && first_byte / kGapAlignment != last_byte / kGapAlignment) {
+  size_t first_byte = reinterpret_cast<size_t>(__builtin_align_up(mmap_ptr, mapping_align));
+  size_t last_byte = reinterpret_cast<size_t>(__builtin_align_down(mmap_ptr + mmap_size, mapping_align) - 1);
+#if defined(__LP64__)
+  if (first_byte / kGapAlignment != last_byte / kGapAlignment) {
     // This library crosses a 2MB boundary and will fragment a new huge page.
     // Lets take advantage of that and insert a random number of inaccessible huge pages before that
     // to improve address randomization and make it harder to locate this library code by probing.
@@ -630,23 +627,24 @@ static void* ReserveWithAlignmentPadding(size_t size, size_t mapping_align, size
     mapping_align = std::max(mapping_align, kGapAlignment);
     gap_size =
         kGapAlignment * (is_first_stage_init() ? 1 : arc4random_uniform(kMaxGapUnits - 1) + 1);
-    mmap_size = align_up(size + gap_size, mapping_align) + mapping_align - page_size();
+    mmap_size = __builtin_align_up(size + gap_size, mapping_align) + mapping_align - page_size();
     mmap_ptr = reinterpret_cast<uint8_t*>(mmap(nullptr, mmap_size, PROT_NONE, mmap_flags, -1, 0));
     if (mmap_ptr == MAP_FAILED) {
       return nullptr;
     }
   }
+#endif
 
-  uint8_t *gap_end, *gap_start;
+  uint8_t* gap_end = mmap_ptr + mmap_size;
+#if defined(__LP64__)
   if (gap_size) {
-    gap_end = align_down(mmap_ptr + mmap_size, kGapAlignment);
-    gap_start = gap_end - gap_size;
-  } else {
-    gap_start = gap_end = mmap_ptr + mmap_size;
+    gap_end = __builtin_align_down(gap_end, kGapAlignment);
   }
+#endif
+  uint8_t* gap_start = gap_end - gap_size;
 
-  uint8_t* first = align_up(mmap_ptr, mapping_align);
-  uint8_t* last = align_down(gap_start, mapping_align) - size;
+  uint8_t* first = __builtin_align_up(mmap_ptr, mapping_align);
+  uint8_t* last = __builtin_align_down(gap_start, mapping_align) - size;
 
   // arc4random* is not available in first stage init because /dev/urandom hasn't yet been
   // created. Don't randomize then.
@@ -1017,7 +1015,7 @@ bool ElfReader::LoadSegments() {
     ElfW(Addr) seg_start = phdr->p_vaddr + load_bias_;
     ElfW(Addr) seg_end = seg_start + p_memsz;
 
-    ElfW(Addr) seg_page_end = align_up(seg_end, seg_align);
+    ElfW(Addr) seg_page_end = __builtin_align_up(seg_end, seg_align);
 
     ElfW(Addr) seg_file_end = seg_start + p_filesz;
 
@@ -1025,7 +1023,7 @@ bool ElfReader::LoadSegments() {
     ElfW(Addr) file_start = phdr->p_offset;
     ElfW(Addr) file_end = file_start + p_filesz;
 
-    ElfW(Addr) file_page_start = align_down(file_start, seg_align);
+    ElfW(Addr) file_page_start = __builtin_align_down(file_start, seg_align);
     ElfW(Addr) file_length = file_end - file_page_start;
 
     if (file_size_ <= 0) {

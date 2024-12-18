@@ -74,7 +74,7 @@
 #define vMask1 v16
 #define vMask2 v17
 
-ENTRY(strcmp_v)
+ENTRY(strcmp)
 
     # increase the lmul using the following sequences:
     # 1/2, 1/2, 1, 2, 4, 4, 4, ...
@@ -166,4 +166,4 @@ L(check2):
     sub iResult, iTemp1, iTemp2
     ret
 
-END(strcmp_v)
+END(strcmp)

@@ -65,7 +65,8 @@ struct ptp_sys_offset {
 };
 struct ptp_sys_offset_extended {
   unsigned int n_samples;
-  unsigned int rsv[3];
+  __kernel_clockid_t clockid;
+  unsigned int rsv[2];
   struct ptp_clock_time ts[PTP_MAX_SAMPLES][3];
 };
 struct ptp_sys_offset_precise {

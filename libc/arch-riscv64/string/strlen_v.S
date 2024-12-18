@@ -66,7 +66,7 @@
 #define vStr v0
 #define vMaskEnd v2
 
-ENTRY(strlen_v)
+ENTRY(strlen)
 
     mv pCopyStr, pStr
 L(loop):
@@ -84,4 +84,4 @@ L(loop):
 
     ret
 
-END(strlen_v)
+END(strlen)
