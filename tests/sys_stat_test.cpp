@@ -151,12 +151,12 @@ TEST(sys_stat, fchmodat_bad_flags_ALL) {
   ASSERT_ERRNO(EINVAL);
 }
 
-TEST(sys_stat, fchmodat_nonexistant_file) {
+TEST(sys_stat, fchmodat_nonexistent_file) {
   ASSERT_EQ(-1, fchmodat(AT_FDCWD, "/blah", 0751, 0));
   ASSERT_ERRNO(ENOENT);
 }
 
-TEST(sys_stat, fchmodat_AT_SYMLINK_NOFOLLOW_nonexistant_file) {
+TEST(sys_stat, fchmodat_AT_SYMLINK_NOFOLLOW_nonexistent_file) {
   ASSERT_EQ(-1, fchmodat(AT_FDCWD, "/blah", 0751, AT_SYMLINK_NOFOLLOW));
 #if defined(__BIONIC__)
   ASSERT_ERRNO(ENOENT);
@@ -305,7 +305,7 @@ TEST(sys_stat, faccessat_dev_null) {
   ASSERT_EQ(0, faccessat(AT_FDCWD, "/dev/null", R_OK|W_OK, 0));
 }
 
-TEST(sys_stat, faccessat_nonexistant) {
+TEST(sys_stat, faccessat_nonexistent) {
   ASSERT_EQ(-1, faccessat(AT_FDCWD, "/blah", F_OK, AT_SYMLINK_NOFOLLOW));
 #if defined(__BIONIC__)
   // Android doesn't support AT_SYMLINK_NOFOLLOW
@@ -313,4 +313,27 @@ TEST(sys_stat, faccessat_nonexistant) {
 #else
   ASSERT_ERRNO(ENOENT);
 #endif
+}
+
+TEST(sys_stat, lchmod) {
+  TemporaryFile tf;
+  struct stat tf_sb;
+  ASSERT_EQ(0, stat(tf.path, &tf_sb));
+
+  char linkname[255];
+  snprintf(linkname, sizeof(linkname), "%s.link", tf.path);
+
+  ASSERT_EQ(0, symlink(tf.path, linkname));
+  int result = lchmod(linkname, 0751);
+  // Whether or not chmod is allowed on a symlink depends on the kernel.
+  if (result == 0) {
+    AssertSymlinkModeEquals(0751, linkname);
+  } else {
+    ASSERT_EQ(-1, result);
+    ASSERT_ERRNO(ENOTSUP);
+  }
+
+  // The target file mode shouldn't be modified.
+  AssertFileModeEquals(tf_sb.st_mode, tf.path);
+  unlink(linkname);
 }

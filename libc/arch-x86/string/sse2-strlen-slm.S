@@ -29,7 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #ifndef STRLEN
-# define STRLEN strlen_generic
+# define STRLEN strlen
 #endif
 
 #ifndef L

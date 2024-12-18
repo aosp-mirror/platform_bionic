@@ -24,6 +24,7 @@ LIBDL_ANDROID {
     android_init_anonymous_namespace; # apex
     android_link_namespaces; # apex
     android_set_application_target_sdk_version; # apex
+    android_set_16kb_appcompat_mode; #apex
   local:
     *;
 };

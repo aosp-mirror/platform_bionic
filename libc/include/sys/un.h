@@ -33,9 +33,10 @@
  * @brief Unix domain sockets.
  */
 
+#include <sys/cdefs.h>
+
 #include <bits/sa_family_t.h>
 #include <linux/un.h>
-#include <sys/cdefs.h>
 
 #if defined(__USE_BSD) || defined(__USE_GNU)
 #include <string.h>

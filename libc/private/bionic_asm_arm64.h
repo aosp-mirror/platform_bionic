@@ -37,7 +37,7 @@
 
 #pragma once
 
-#define __bionic_asm_align 16
+#define __bionic_asm_align 64
 
 #undef __bionic_asm_function_type
 #define __bionic_asm_function_type %function

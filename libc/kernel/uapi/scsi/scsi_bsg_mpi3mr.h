@@ -144,7 +144,7 @@ struct mpi3mr_hdb_entry {
 };
 struct mpi3mr_bsg_in_hdb_status {
   __u8 num_hdb_types;
-  __u8 rsvd1;
+  __u8 element_trigger_format;
   __u16 rsvd2;
   __u32 rsvd3;
   struct mpi3mr_hdb_entry entry[1];

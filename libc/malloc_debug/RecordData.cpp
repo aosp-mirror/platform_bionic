@@ -39,76 +39,23 @@
 #include <mutex>
 
 #include <android-base/stringprintf.h>
+#include <memory_trace/MemoryTrace.h>
 
 #include "Config.h"
 #include "DebugData.h"
+#include "Nanotime.h"
 #include "RecordData.h"
 #include "debug_disable.h"
 #include "debug_log.h"
 
-RecordEntry::RecordEntry() : tid_(gettid()) {
-}
-
-bool ThreadCompleteEntry::Write(int fd) const {
-  return dprintf(fd, "%d: thread_done 0x0\n", tid_) > 0;
-}
-
-AllocEntry::AllocEntry(void* pointer, uint64_t start_ns, uint64_t end_ns)
-    : pointer_(pointer), start_ns_(start_ns), end_ns_(end_ns) {}
-
-MallocEntry::MallocEntry(void* pointer, size_t size, uint64_t start_ns, uint64_t end_ns)
-    : AllocEntry(pointer, start_ns, end_ns), size_(size) {}
-
-bool MallocEntry::Write(int fd) const {
-  return dprintf(fd, "%d: malloc %p %zu %" PRIu64 " %" PRIu64 "\n", tid_, pointer_, size_,
-                 start_ns_, end_ns_) > 0;
-}
-
-FreeEntry::FreeEntry(void* pointer, uint64_t start_ns, uint64_t end_ns)
-    : AllocEntry(pointer, start_ns, end_ns) {}
-
-bool FreeEntry::Write(int fd) const {
-  return dprintf(fd, "%d: free %p %" PRIu64 " %" PRIu64 "\n", tid_, pointer_, start_ns_, end_ns_) >
-         0;
-}
-
-CallocEntry::CallocEntry(void* pointer, size_t nmemb, size_t size, uint64_t start_ns,
-                         uint64_t end_ns)
-    : MallocEntry(pointer, size, start_ns, end_ns), nmemb_(nmemb) {}
-
-bool CallocEntry::Write(int fd) const {
-  return dprintf(fd, "%d: calloc %p %zu %zu %" PRIu64 " %" PRIu64 "\n", tid_, pointer_, nmemb_,
-                 size_, start_ns_, end_ns_) > 0;
-}
-
-ReallocEntry::ReallocEntry(void* pointer, size_t size, void* old_pointer, uint64_t start_ns,
-                           uint64_t end_ns)
-    : MallocEntry(pointer, size, start_ns, end_ns), old_pointer_(old_pointer) {}
-
-bool ReallocEntry::Write(int fd) const {
-  return dprintf(fd, "%d: realloc %p %p %zu %" PRIu64 " %" PRIu64 "\n", tid_, pointer_,
-                 old_pointer_, size_, start_ns_, end_ns_) > 0;
-}
-
-// aligned_alloc, posix_memalign, memalign, pvalloc, valloc all recorded with this class.
-MemalignEntry::MemalignEntry(void* pointer, size_t size, size_t alignment, uint64_t start_ns,
-                             uint64_t end_ns)
-    : MallocEntry(pointer, size, start_ns, end_ns), alignment_(alignment) {}
-
-bool MemalignEntry::Write(int fd) const {
-  return dprintf(fd, "%d: memalign %p %zu %zu %" PRIu64 " %" PRIu64 "\n", tid_, pointer_,
-                 alignment_, size_, start_ns_, end_ns_) > 0;
-}
-
 struct ThreadData {
-  ThreadData(RecordData* record_data, ThreadCompleteEntry* entry)
-      : record_data(record_data), entry(entry) {}
-  RecordData* record_data;
-  ThreadCompleteEntry* entry;
+  ThreadData(RecordData* record_data) : record_data(record_data) {}
+
+  RecordData* record_data = nullptr;
   size_t count = 0;
 };
 
-static void ThreadKeyDelete(void* data) {
+void RecordData::ThreadKeyDelete(void* data) {
   ThreadData* thread_data = reinterpret_cast<ThreadData*>(data);
 
   thread_data->count++;
@@ -117,7 +64,11 @@ static void ThreadKeyDelete(void* data) {
   if (thread_data->count == 4) {
     ScopedDisableDebugCalls disable;
 
-    thread_data->record_data->AddEntryOnly(thread_data->entry);
+    memory_trace::Entry* entry = thread_data->record_data->InternalReserveEntry();
+    if (entry != nullptr) {
+      *entry = memory_trace::Entry{
+          .tid = gettid(), .type = memory_trace::THREAD_DONE, .end_ns = Nanotime()};
+    }
     delete thread_data;
   } else {
     pthread_setspecific(thread_data->record_data->key(), data);
@@ -159,7 +110,12 @@ void RecordData::WriteEntries(const std::string& file) {
   }
 
   for (size_t i = 0; i < cur_index_; i++) {
-    if (!entries_[i]->Write(dump_fd)) {
+    if (entries_[i].type == memory_trace::UNKNOWN) {
+      // This can happen if an entry was reserved but not filled in due to some
+      // type of error during the operation.
+      continue;
+    }
+    if (!memory_trace::WriteEntryToFd(dump_fd, entries_[i])) {
       error_log("Failed to write record alloc information: %s", strerror(errno));
       break;
     }
@@ -201,25 +157,26 @@ RecordData::~RecordData() {
   pthread_key_delete(key_);
 }
 
-void RecordData::AddEntryOnly(const RecordEntry* entry) {
+memory_trace::Entry* RecordData::InternalReserveEntry() {
   std::lock_guard<std::mutex> entries_lock(entries_lock_);
   if (cur_index_ == entries_.size()) {
-    // Maxed out, throw the entry away.
-    return;
+    return nullptr;
   }
 
-  entries_[cur_index_++].reset(entry);
-  if (cur_index_ == entries_.size()) {
+  memory_trace::Entry* entry = &entries_[cur_index_];
+  entry->type = memory_trace::UNKNOWN;
+  if (++cur_index_ == entries_.size()) {
     info_log("Maximum number of records added, all new operations will be dropped.");
   }
+  return entry;
 }
 
-void RecordData::AddEntry(const RecordEntry* entry) {
+memory_trace::Entry* RecordData::ReserveEntry() {
   void* data = pthread_getspecific(key_);
   if (data == nullptr) {
-    ThreadData* thread_data = new ThreadData(this, new ThreadCompleteEntry());
+    ThreadData* thread_data = new ThreadData(this);
     pthread_setspecific(key_, thread_data);
   }
 
-  AddEntryOnly(entry);
+  return InternalReserveEntry();
 }

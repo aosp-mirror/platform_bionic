@@ -15,6 +15,7 @@
  */
 
 #include <errno.h>
+#include <inttypes.h>
 #include <malloc.h>
 #include <sys/param.h>
 #include <unistd.h>
@@ -30,6 +31,7 @@ size_t je_mallinfo_narenas();
 size_t je_mallinfo_nbins();
 struct mallinfo je_mallinfo_arena_info(size_t);
 struct mallinfo je_mallinfo_bin_info(size_t, size_t);
+void je_stats_arena(size_t arena_index, void (*callback)(size_t, size_t, size_t));
 
 __END_DECLS
 
@@ -136,29 +138,24 @@ int je_mallopt(int param, int value) {
     }
     return 1;
   } else if (param == M_LOG_STATS) {
+    size_t total_bytes = 0;
     for (size_t i = 0; i < je_mallinfo_narenas(); i++) {
       struct mallinfo mi = je_mallinfo_arena_info(i);
-      if (mi.hblkhd != 0) {
-        async_safe_format_log(ANDROID_LOG_INFO, "jemalloc",
-                              "Arena %zu: large bytes %zu huge bytes %zu bin bytes %zu", i,
-                              mi.ordblks, mi.uordblks, mi.fsmblks);
+      size_t arena_bytes = mi.fsmblks + mi.ordblks + mi.uordblks;
+      async_safe_format_log(ANDROID_LOG_INFO, "jemalloc",
+                            "Arena %zu: bin bytes=%zu large bytes=%zu total bytes=%zu", i,
+                            mi.fsmblks, mi.ordblks, arena_bytes);
 
-        for (size_t j = 0; j < je_mallinfo_nbins(); j++) {
-          struct mallinfo mi = je_mallinfo_bin_info(i, j);
-          if (mi.ordblks != 0) {
-            size_t total_allocs = 1;
-            if (mi.uordblks > mi.fordblks) {
-              total_allocs = mi.uordblks - mi.fordblks;
-            }
-            size_t bin_size = mi.ordblks / total_allocs;
-            async_safe_format_log(
-                ANDROID_LOG_INFO, "jemalloc",
-                "  Bin %zu (%zu bytes): allocated bytes %zu nmalloc %zu ndalloc %zu", j, bin_size,
-                mi.ordblks, mi.uordblks, mi.fordblks);
-          }
+      je_stats_arena(i, [](size_t index, size_t size, size_t allocs) {
+        if (allocs != 0) {
+          async_safe_format_log(ANDROID_LOG_INFO, "jemalloc",
+                                "  Size Class %zu(%zu bytes): allocs=%zu total bytes=%zu", index,
+                                size, allocs, allocs * size);
         }
-      }
+      });
+      total_bytes += arena_bytes;
     }
+    async_safe_format_log(ANDROID_LOG_INFO, "jemalloc", "Total Bytes=%zu", total_bytes);
     return 1;
   }
 

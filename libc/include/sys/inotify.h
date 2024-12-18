@@ -33,12 +33,8 @@
 #include <sys/types.h>
 #include <stdint.h>
 #include <linux/inotify.h>
-#include <asm/fcntl.h> /* For O_CLOEXEC and O_NONBLOCK. */
 
 __BEGIN_DECLS
-
-#define IN_CLOEXEC O_CLOEXEC
-#define IN_NONBLOCK O_NONBLOCK
 
 int inotify_init(void);
 int inotify_init1(int __flags);

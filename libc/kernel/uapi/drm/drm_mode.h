@@ -357,9 +357,6 @@ struct drm_mode_crtc_lut {
 struct drm_color_ctm {
   __u64 matrix[9];
 };
-struct drm_color_ctm_3x4 {
-  __u64 matrix[12];
-};
 struct drm_color_lut {
   __u16 red;
   __u16 green;

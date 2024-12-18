@@ -42,13 +42,13 @@
 // Workaround for dlopen(/system/lib(64)/<soname>) when .so is in /apex. http://b/121248172
 /**
  * Translate /system path to /apex path if needed
- * The workaround should work only when targetSdkVersion < Q.
+ * The workaround should work only when targetSdkVersion < 29.
  *
  * param out_name_to_apex pointing to /apex path
  * return true if translation is needed
  */
 bool translateSystemPathToApexPath(const char* name, std::string* out_name_to_apex) {
-  static constexpr const char* kPathTranslationQ[][2] = {
+  static constexpr const char* kPathTranslation[][2] = {
       APEX_LIB("com.android.i18n", "libicui18n.so"),
       APEX_LIB("com.android.i18n", "libicuuc.so")
   };
@@ -59,10 +59,10 @@ bool translateSystemPathToApexPath(const char* name, std::string* out_name_to_ap
 
   auto comparator = [name](auto p) { return strcmp(name, p[0]) == 0; };
 
-  if (get_application_target_sdk_version() < __ANDROID_API_Q__) {
+  if (get_application_target_sdk_version() < 29) {
     if (auto it =
-            std::find_if(std::begin(kPathTranslationQ), std::end(kPathTranslationQ), comparator);
-        it != std::end(kPathTranslationQ)) {
+            std::find_if(std::begin(kPathTranslation), std::end(kPathTranslation), comparator);
+        it != std::end(kPathTranslation)) {
       *out_name_to_apex = (*it)[1];
       return true;
     }

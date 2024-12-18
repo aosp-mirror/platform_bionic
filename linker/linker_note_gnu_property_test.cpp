@@ -107,7 +107,7 @@ class GnuPropertySectionBuilder {
   template <typename T>
   bool push(ElfW(Word) pr_type, ElfW(Word) pr_datasz, const T* pr_data) {
     // Must be aligned.
-    const uintptr_t addition = align_up(pr_datasz, sizeof(ElfW(Addr)));
+    const uintptr_t addition = __builtin_align_up(pr_datasz, sizeof(ElfW(Addr)));
     if ((offset() + addition) > kMaxSectionSize) {
       return false;
     }

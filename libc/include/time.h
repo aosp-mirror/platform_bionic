@@ -166,7 +166,11 @@ time_t mktime(struct tm* _Nonnull __tm);
  *
  * Available since API level 35.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(35)
 time_t mktime_z(timezone_t _Nonnull __tz, struct tm* _Nonnull __tm) __INTRODUCED_IN(35);
+#endif /* __BIONIC_AVAILABILITY_GUARD(35) */
+
 
 /**
  * [localtime(3)](https://man7.org/linux/man-pages/man3/localtime.3p.html) converts
@@ -200,7 +204,11 @@ struct tm* _Nullable localtime_r(const time_t* _Nonnull __t, struct tm* _Nonnull
  *
  * Available since API level 35.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(35)
 struct tm* _Nullable localtime_rz(timezone_t _Nonnull __tz, const time_t* _Nonnull __t, struct tm* _Nonnull __tm) __INTRODUCED_IN(35);
+#endif /* __BIONIC_AVAILABILITY_GUARD(35) */
+
 
 /**
  * Inverse of localtime().
@@ -314,6 +322,8 @@ void tzset(void);
  *
  * Available since API level 35.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(35)
 timezone_t _Nullable tzalloc(const char* _Nullable __id) __INTRODUCED_IN(35);
 
 /**
@@ -326,6 +336,8 @@ timezone_t _Nullable tzalloc(const char* _Nullable __id) __INTRODUCED_IN(35);
  * Available since API level 35.
  */
 void tzfree(timezone_t _Nullable __tz) __INTRODUCED_IN(35);
+#endif /* __BIONIC_AVAILABILITY_GUARD(35) */
+
 
 /**
  * [clock(3)](https://man7.org/linux/man-pages/man3/clock.3.html)
@@ -345,7 +357,11 @@ clock_t clock(void);
  *
  * Returns 0 on success, and returns -1 and returns an error number on failure.
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(23)
 int clock_getcpuclockid(pid_t __pid, clockid_t* _Nonnull __clock) __INTRODUCED_IN(23);
+#endif /* __BIONIC_AVAILABILITY_GUARD(23) */
+
 
 /**
  * [clock_getres(2)](https://man7.org/linux/man-pages/man2/clock_getres.2.html)
@@ -459,7 +475,11 @@ int timer_getoverrun(timer_t _Nonnull __timer);
  * Available since API level 29 for TIME_UTC; other bases arrived later.
  * Code for Android should prefer clock_gettime().
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(29)
 int timespec_get(struct timespec* _Nonnull __ts, int __base) __INTRODUCED_IN(29);
+#endif /* __BIONIC_AVAILABILITY_GUARD(29) */
+
 
 /**
  * timespec_getres(3) is equivalent to clock_getres() for the clock corresponding to the given base.
@@ -469,6 +489,10 @@ int timespec_get(struct timespec* _Nonnull __ts, int __base) __INTRODUCED_IN(29)
  * Available since API level 35.
  * Code for Android should prefer clock_gettime().
  */
+
+#if __BIONIC_AVAILABILITY_GUARD(35)
 int timespec_getres(struct timespec* _Nonnull __ts, int __base) __INTRODUCED_IN(35);
+#endif /* __BIONIC_AVAILABILITY_GUARD(35) */
+
 
 __END_DECLS
