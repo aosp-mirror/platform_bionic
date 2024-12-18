@@ -47,10 +47,12 @@ dependencies before loading their main library. Worse, until it was
 dynamic linker's caching code cached failures too, so it was necessary
 to topologically sort your libraries and load them in reverse order.
 
-If you need to support Android devices running OS versions older than
+This issue is no longer relevant to most developers,
+but if you need to support Android devices running OS versions older than
 API level 23, you might want to consider
-[ReLinker](https://github.com/KeepSafe/ReLinker) which claims to solve
-these and other problems automatically.
+[ReLinker](https://github.com/KeepSafe/ReLinker) or
+[SoLoader](https://github.com/facebook/SoLoader),
+which claim to solve these problems automatically.
 
 Alternatively, if you don't have too many dependencies, it can be easiest to
 simply link all of your code into one big library and sidestep the details of
@@ -75,6 +77,17 @@ the breadth-first transitive closure of the library and its DT_NEEDED
 libraries. The API level 23 dynamic linker searches the global group followed by
 the local group. This allows ASAN, for example, to ensure that it can
 intercept any symbol.
+
+This issue is no longer relevant to most developers,
+but if you need to support Android devices running OS versions older than
+API level 23, you might want to consider
+[ReLinker](https://github.com/KeepSafe/ReLinker) or
+[SoLoader](https://github.com/facebook/SoLoader),
+which claim to solve these problems automatically.
+
+Alternatively, if you don't have too many dependencies, it can be easiest to
+simply link all of your code into one big library and sidestep the details of
+library and symbol lookup changes on all past (and future) Android versions.
 
 
 ## LD_PRELOAD and 32/64 bit
