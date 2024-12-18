@@ -77,6 +77,10 @@ struct privcmd_ioeventfd {
   domid_t dom;
   __u8 pad[2];
 };
+struct privcmd_pcidev_get_gsi {
+  __u32 sbdf;
+  __u32 gsi;
+};
 #define IOCTL_PRIVCMD_HYPERCALL _IOC(_IOC_NONE, 'P', 0, sizeof(struct privcmd_hypercall))
 #define IOCTL_PRIVCMD_MMAP _IOC(_IOC_NONE, 'P', 2, sizeof(struct privcmd_mmap))
 #define IOCTL_PRIVCMD_MMAPBATCH _IOC(_IOC_NONE, 'P', 3, sizeof(struct privcmd_mmapbatch))
@@ -86,4 +90,5 @@ struct privcmd_ioeventfd {
 #define IOCTL_PRIVCMD_MMAP_RESOURCE _IOC(_IOC_NONE, 'P', 7, sizeof(struct privcmd_mmap_resource))
 #define IOCTL_PRIVCMD_IRQFD _IOW('P', 8, struct privcmd_irqfd)
 #define IOCTL_PRIVCMD_IOEVENTFD _IOW('P', 9, struct privcmd_ioeventfd)
+#define IOCTL_PRIVCMD_PCIDEV_GET_GSI _IOC(_IOC_NONE, 'P', 10, sizeof(struct privcmd_pcidev_get_gsi))
 #endif
