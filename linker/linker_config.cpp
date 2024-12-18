@@ -251,10 +251,8 @@ static bool parse_config_file(const char* ld_config_file_path,
         // the failure with INFO rather than DL_WARN. e.g. A binary in
         // /data/local/tmp may attempt to stat /postinstall. See
         // http://b/120996057.
-        INFO("%s:%zd: warning: path \"%s\" couldn't be resolved: %m",
-             ld_config_file_path,
-             cp.lineno(),
-             value.c_str());
+        LD_DEBUG(any, "%s:%zd: warning: path \"%s\" couldn't be resolved: %m",
+                 ld_config_file_path, cp.lineno(), value.c_str());
         resolved_path = value;
       }
 
@@ -265,7 +263,7 @@ static bool parse_config_file(const char* ld_config_file_path,
     }
   }
 
-  INFO("[ Using config section \"%s\" ]", section_name.c_str());
+  LD_DEBUG(any, "[ Using config section \"%s\" ]", section_name.c_str());
 
   // skip everything until we meet a correct section
   while (true) {

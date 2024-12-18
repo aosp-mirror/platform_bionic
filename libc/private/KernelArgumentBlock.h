@@ -29,7 +29,7 @@
 // constituents for easy access.
 class KernelArgumentBlock {
  public:
-  explicit KernelArgumentBlock(void* raw_args) {
+  __attribute__((no_sanitize("hwaddress"))) explicit KernelArgumentBlock(void* raw_args) {
     uintptr_t* args = reinterpret_cast<uintptr_t*>(raw_args);
     argc = static_cast<int>(*args);
     argv = reinterpret_cast<char**>(args + 1);
@@ -48,7 +48,7 @@ class KernelArgumentBlock {
 
   // Similar to ::getauxval but doesn't require the libc global variables to be set up,
   // so it's safe to call this really early on.
-  unsigned long getauxval(unsigned long type) {
+  __attribute__((no_sanitize("hwaddress"))) unsigned long getauxval(unsigned long type) {
     for (ElfW(auxv_t)* v = auxv; v->a_type != AT_NULL; ++v) {
       if (v->a_type == type) {
         return v->a_un.a_val;

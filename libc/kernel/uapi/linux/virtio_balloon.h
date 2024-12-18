@@ -38,8 +38,14 @@ struct virtio_balloon_config {
 #define VIRTIO_BALLOON_S_CACHES 7
 #define VIRTIO_BALLOON_S_HTLB_PGALLOC 8
 #define VIRTIO_BALLOON_S_HTLB_PGFAIL 9
-#define VIRTIO_BALLOON_S_NR 10
-#define VIRTIO_BALLOON_S_NAMES_WITH_PREFIX(VIRTIO_BALLOON_S_NAMES_prefix) { VIRTIO_BALLOON_S_NAMES_prefix "swap-in", VIRTIO_BALLOON_S_NAMES_prefix "swap-out", VIRTIO_BALLOON_S_NAMES_prefix "major-faults", VIRTIO_BALLOON_S_NAMES_prefix "minor-faults", VIRTIO_BALLOON_S_NAMES_prefix "free-memory", VIRTIO_BALLOON_S_NAMES_prefix "total-memory", VIRTIO_BALLOON_S_NAMES_prefix "available-memory", VIRTIO_BALLOON_S_NAMES_prefix "disk-caches", VIRTIO_BALLOON_S_NAMES_prefix "hugetlb-allocations", VIRTIO_BALLOON_S_NAMES_prefix "hugetlb-failures" \
+#define VIRTIO_BALLOON_S_OOM_KILL 10
+#define VIRTIO_BALLOON_S_ALLOC_STALL 11
+#define VIRTIO_BALLOON_S_ASYNC_SCAN 12
+#define VIRTIO_BALLOON_S_DIRECT_SCAN 13
+#define VIRTIO_BALLOON_S_ASYNC_RECLAIM 14
+#define VIRTIO_BALLOON_S_DIRECT_RECLAIM 15
+#define VIRTIO_BALLOON_S_NR 16
+#define VIRTIO_BALLOON_S_NAMES_WITH_PREFIX(VIRTIO_BALLOON_S_NAMES_prefix) { VIRTIO_BALLOON_S_NAMES_prefix "swap-in", VIRTIO_BALLOON_S_NAMES_prefix "swap-out", VIRTIO_BALLOON_S_NAMES_prefix "major-faults", VIRTIO_BALLOON_S_NAMES_prefix "minor-faults", VIRTIO_BALLOON_S_NAMES_prefix "free-memory", VIRTIO_BALLOON_S_NAMES_prefix "total-memory", VIRTIO_BALLOON_S_NAMES_prefix "available-memory", VIRTIO_BALLOON_S_NAMES_prefix "disk-caches", VIRTIO_BALLOON_S_NAMES_prefix "hugetlb-allocations", VIRTIO_BALLOON_S_NAMES_prefix "hugetlb-failures", VIRTIO_BALLOON_S_NAMES_prefix "oom-kills", VIRTIO_BALLOON_S_NAMES_prefix "alloc-stalls", VIRTIO_BALLOON_S_NAMES_prefix "async-scans", VIRTIO_BALLOON_S_NAMES_prefix "direct-scans", VIRTIO_BALLOON_S_NAMES_prefix "async-reclaims", VIRTIO_BALLOON_S_NAMES_prefix "direct-reclaims" \
 }
 #define VIRTIO_BALLOON_S_NAMES VIRTIO_BALLOON_S_NAMES_WITH_PREFIX("")
 struct virtio_balloon_stat {

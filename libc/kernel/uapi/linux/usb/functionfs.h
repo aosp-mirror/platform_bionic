@@ -6,6 +6,7 @@
  */
 #ifndef _UAPI__LINUX_FUNCTIONFS_H__
 #define _UAPI__LINUX_FUNCTIONFS_H__
+#include <linux/const.h>
 #include <linux/types.h>
 #include <linux/ioctl.h>
 #include <linux/usb/ch9.h>
@@ -32,6 +33,18 @@ struct usb_endpoint_descriptor_no_audio {
   __le16 wMaxPacketSize;
   __u8 bInterval;
 } __attribute__((packed));
+struct usb_dfu_functional_descriptor {
+  __u8 bLength;
+  __u8 bDescriptorType;
+  __u8 bmAttributes;
+  __le16 wDetachTimeOut;
+  __le16 wTransferSize;
+  __le16 bcdDFUVersion;
+} __attribute__((packed));
+#define DFU_FUNC_ATT_CAN_DOWNLOAD _BITUL(0)
+#define DFU_FUNC_ATT_CAN_UPLOAD _BITUL(1)
+#define DFU_FUNC_ATT_MANIFEST_TOLERANT _BITUL(2)
+#define DFU_FUNC_ATT_WILL_DETACH _BITUL(3)
 struct usb_functionfs_descs_head_v2 {
   __le32 magic;
   __le32 length;

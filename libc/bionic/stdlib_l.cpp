@@ -26,17 +26,11 @@
  * SUCH DAMAGE.
  */
 
+#define __BIONIC_STDLIB_INLINE /* Out of line. */
 #include <stdlib.h>
-#include <xlocale.h>
+#include <bits/stdlib_inlines.h>
 
-double strtod_l(const char* s, char** end_ptr, locale_t) {
-  return strtod(s, end_ptr);
-}
-
-float strtof_l(const char* s, char** end_ptr, locale_t) {
-  return strtof(s, end_ptr);
-}
-
+// strtold_l was introduced in API level 21, so it isn't polyfilled any more.
 long double strtold_l(const char* s, char** end_ptr, locale_t) {
   return strtold(s, end_ptr);
 }

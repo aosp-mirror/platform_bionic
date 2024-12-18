@@ -89,6 +89,10 @@
 #include <unistd.h>
 #include <wchar.h>
 
+#include <array>
+
+#include "DoNotOptimize.h"
+
 #ifndef COMPILATION_TESTS
 #include <android-base/silent_death_test.h>
 #include <gtest/gtest.h>
@@ -132,6 +136,24 @@ __attribute__((noreturn)) static void ExitAfter(Fn&& f) {
 #endif
 
 const static int kBogusFD = -1;
+
+FORTIFY_TEST(strlen) {
+  auto run_strlen_with_contents = [&](std::array<char, 3> contents) {
+    // A lot of cruft is necessary to make this test DTRT. LLVM and Clang love to fold/optimize
+    // strlen calls, and that's the opposite of what we want to happen.
+
+    // Loop to convince LLVM that `contents` can never be known (since `xor volatile_value` can flip
+    // any bit in each elem of `contents`).
+    volatile char always_zero = 0;
+    for (char& c : contents) {
+      c ^= always_zero;
+    }
+    DoNotOptimize(strlen(&contents.front()));
+  };
+
+  EXPECT_NO_DEATH(run_strlen_with_contents({'f', 'o', '\0'}));
+  EXPECT_FORTIFY_DEATH(run_strlen_with_contents({'f', 'o', 'o'}));
+}
 
 FORTIFY_TEST(string) {
   char small_buffer[8] = {};

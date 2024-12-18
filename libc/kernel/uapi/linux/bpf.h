@@ -367,6 +367,7 @@ enum {
 #define BPF_F_QUERY_EFFECTIVE (1U << 0)
 #define BPF_F_TEST_RUN_ON_CPU (1U << 0)
 #define BPF_F_TEST_XDP_LIVE_FRAMES (1U << 1)
+#define BPF_F_TEST_SKB_CHECKSUM_COMPLETE (1U << 2)
 enum bpf_stats_type {
   BPF_STATS_RUN_TIME = 0,
 };
@@ -670,9 +671,6 @@ enum {
   BPF_F_MARK_ENFORCE = (1ULL << 6),
 };
 enum {
-  BPF_F_INGRESS = (1ULL << 0),
-};
-enum {
   BPF_F_TUNINFO_IPV6 = (1ULL << 0),
 };
 enum {
@@ -767,14 +765,19 @@ enum {
   BPF_F_BPRM_SECUREEXEC = (1ULL << 0),
 };
 enum {
+  BPF_F_INGRESS = (1ULL << 0),
   BPF_F_BROADCAST = (1ULL << 3),
   BPF_F_EXCLUDE_INGRESS = (1ULL << 4),
+#define BPF_F_REDIRECT_FLAGS (BPF_F_INGRESS | BPF_F_BROADCAST | BPF_F_EXCLUDE_INGRESS)
 };
 #define __bpf_md_ptr(type,name) union { type name; __u64 : 64; \
 } __attribute__((aligned(8)))
 enum {
-  BPF_SKB_TSTAMP_UNSPEC,
-  BPF_SKB_TSTAMP_DELIVERY_MONO,
+  BPF_SKB_TSTAMP_UNSPEC = 0,
+  BPF_SKB_TSTAMP_DELIVERY_MONO = 1,
+  BPF_SKB_CLOCK_REALTIME = 0,
+  BPF_SKB_CLOCK_MONOTONIC = 1,
+  BPF_SKB_CLOCK_TAI = 2,
 };
 struct __sk_buff {
   __u32 len;
@@ -1271,6 +1274,7 @@ enum {
   TCP_BPF_SYN = 1005,
   TCP_BPF_SYN_IP = 1006,
   TCP_BPF_SYN_MAC = 1007,
+  TCP_BPF_SOCK_OPS_CB_FLAGS = 1008,
 };
 enum {
   BPF_LOAD_HDR_OPT_TCP_SYN = (1ULL << 0),
@@ -1524,4 +1528,7 @@ enum {
 struct bpf_iter_num {
   __u64 __opaque[1];
 } __attribute__((aligned(8)));
+enum bpf_kfunc_flags {
+  BPF_F_PAD_ZEROS = (1ULL << 0),
+};
 #endif

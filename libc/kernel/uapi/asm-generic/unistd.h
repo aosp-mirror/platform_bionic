@@ -381,9 +381,7 @@
 #define __NR_fsmount 432
 #define __NR_fspick 433
 #define __NR_pidfd_open 434
-#ifdef __ARCH_WANT_SYS_CLONE3
 #define __NR_clone3 435
-#endif
 #define __NR_close_range 436
 #define __NR_openat2 437
 #define __NR_pidfd_getfd 438

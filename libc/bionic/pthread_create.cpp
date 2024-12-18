@@ -129,7 +129,7 @@ static void __init_shadow_call_stack(pthread_internal_t* thread __unused) {
   // Align the address to SCS_SIZE so that we only need to store the lower log2(SCS_SIZE) bits
   // in jmp_buf. See the SCS commentary in pthread_internal.h for more detail.
   char* scs_aligned_guard_region =
-      reinterpret_cast<char*>(align_up(reinterpret_cast<uintptr_t>(scs_guard_region), SCS_SIZE));
+      reinterpret_cast<char*>(__builtin_align_up(reinterpret_cast<uintptr_t>(scs_guard_region), SCS_SIZE));
 
   // We need to ensure that [scs_offset,scs_offset+SCS_SIZE) is in the guard region and that there
   // is at least one unmapped page after the shadow call stack (to catch stack overflows). We can't
@@ -159,11 +159,11 @@ void __init_additional_stacks(pthread_internal_t* thread) {
 int __init_thread(pthread_internal_t* thread) {
   thread->cleanup_stack = nullptr;
 
-  if (__predict_true((thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) == 0)) {
-    atomic_init(&thread->join_state, THREAD_NOT_JOINED);
-  } else {
-    atomic_init(&thread->join_state, THREAD_DETACHED);
+  ThreadJoinState state = THREAD_NOT_JOINED;
+  if (__predict_false((thread->attr.flags & PTHREAD_ATTR_FLAG_DETACHED) != 0)) {
+    state = THREAD_DETACHED;
   }
+  atomic_store_explicit(&thread->join_state, state, memory_order_relaxed);
 
   // Set the scheduling policy/priority of the thread if necessary.
   bool need_set = true;
@@ -296,7 +296,7 @@ static int __allocate_thread(pthread_attr_t* attr, bionic_tcb** tcbp, void** chi
   // memory isn't counted in pthread_attr_getstacksize.
 
   // To safely access the pthread_internal_t and thread stack, we need to find a 16-byte aligned boundary.
-  stack_top = align_down(stack_top - sizeof(pthread_internal_t), 16);
+  stack_top = __builtin_align_down(stack_top - sizeof(pthread_internal_t), 16);
 
   pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(stack_top);
   if (!stack_clean) {
@@ -351,15 +351,20 @@ void __set_stack_and_tls_vma_name(bool is_main_thread) {
 
 extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);
 
-__attribute__((no_sanitize("hwaddress")))
+__attribute__((no_sanitize("hwaddress", "memtag")))
 #if defined(__aarch64__)
 // This function doesn't return, but it does appear in stack traces. Avoid using return PAC in this
 // function because we may end up resetting IA, which may confuse unwinders due to mismatching keys.
 __attribute__((target("branch-protection=bti")))
 #endif
-static int __pthread_start(void* arg) {
+static int
+__pthread_start(void* arg) {
   pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(arg);
-
+#if defined(__aarch64__)
+  if (thread->should_allocate_stack_mte_ringbuffer) {
+    thread->bionic_tcb->tls_slot(TLS_SLOT_STACK_MTE) = __allocate_stack_mte_ringbuffer(0, thread);
+  }
+#endif
   __hwasan_thread_enter();
 
   // Wait for our creating thread to release us. This lets it have time to
@@ -450,9 +455,9 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
 // This has to be done under g_thread_creation_lock or g_thread_list_lock to avoid racing with
 // __pthread_internal_remap_stack_with_mte.
 #ifdef __aarch64__
-  if (__libc_memtag_stack_abi) {
-    tcb->tls_slot(TLS_SLOT_STACK_MTE) = __allocate_stack_mte_ringbuffer(0, thread);
-  }
+  thread->should_allocate_stack_mte_ringbuffer = __libc_memtag_stack_abi;
+#else
+  thread->should_allocate_stack_mte_ringbuffer = false;
 #endif
 
   sigset64_t block_all_mask;

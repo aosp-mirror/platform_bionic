@@ -182,7 +182,12 @@ static int  __attribute__((noinline)) PIMutexTimedLock(PIMutex& mutex,
         return 0;
     }
     if (ret == EBUSY) {
-        ScopedTrace trace("Contending for pthread mutex");
+        char trace_msg[64];
+        const pid_t owner = atomic_load_explicit(&mutex.owner_tid, memory_order_relaxed)
+                & FUTEX_TID_MASK;
+        snprintf(trace_msg, sizeof(trace_msg),
+                 "Contending for pthread mutex owned by tid: %d", owner);
+        ScopedTrace trace(trace_msg);
         ret = -__futex_pi_lock_ex(&mutex.owner_tid, mutex.shared, use_realtime_clock, abs_timeout);
     }
     return ret;
@@ -504,8 +509,8 @@ int pthread_mutex_init(pthread_mutex_t* mutex_interface, const pthread_mutexattr
     memset(mutex, 0, sizeof(pthread_mutex_internal_t));
 
     if (__predict_true(attr == nullptr)) {
-        atomic_init(&mutex->state, MUTEX_TYPE_BITS_NORMAL);
-        return 0;
+      atomic_store_explicit(&mutex->state, MUTEX_TYPE_BITS_NORMAL, memory_order_relaxed);
+      return 0;
     }
 
     uint16_t state = 0;
@@ -538,13 +543,13 @@ int pthread_mutex_init(pthread_mutex_t* mutex_interface, const pthread_mutexattr
         }
         mutex->pi_mutex_id = id;
 #endif
-        atomic_init(&mutex->state, PI_MUTEX_STATE);
+        atomic_store_explicit(&mutex->state, PI_MUTEX_STATE, memory_order_relaxed);
         PIMutex& pi_mutex = mutex->ToPIMutex();
         pi_mutex.type = *attr & MUTEXATTR_TYPE_MASK;
         pi_mutex.shared = (*attr & MUTEXATTR_SHARED_MASK) != 0;
     } else {
-        atomic_init(&mutex->state, state);
-        atomic_init(&mutex->owner_tid, 0);
+      atomic_store_explicit(&mutex->state, state, memory_order_relaxed);
+      atomic_store_explicit(&mutex->owner_tid, 0, memory_order_relaxed);
     }
     return 0;
 }

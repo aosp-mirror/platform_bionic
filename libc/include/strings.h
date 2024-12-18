@@ -43,8 +43,9 @@
  * @brief Extra string functions.
  */
 
-#include <sys/types.h>
 #include <sys/cdefs.h>
+
+#include <sys/types.h>
 #include <xlocale.h>
 
 #include <bits/strcasecmp.h>

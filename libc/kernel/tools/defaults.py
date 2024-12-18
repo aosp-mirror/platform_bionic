@@ -25,6 +25,23 @@ kernel_known_macros = {
     # Otherwise, there will be two struct timeval definitions when
     # __kernel_old_timeval is renamed to timeval.
     "__kernel_old_timeval": "1",
+    # Drop the custom byte swap functions and just use the clang builtins.
+    # https://github.com/android/ndk/issues/2107
+    "__arch_swab16": kCppUndefinedMacro,
+    "__arch_swab16p": kCppUndefinedMacro,
+    "__arch_swab16s": kCppUndefinedMacro,
+    "__arch_swab32": kCppUndefinedMacro,
+    "__arch_swab32p": kCppUndefinedMacro,
+    "__arch_swab32s": kCppUndefinedMacro,
+    "__arch_swab64": kCppUndefinedMacro,
+    "__arch_swab64p": kCppUndefinedMacro,
+    "__arch_swab64s": kCppUndefinedMacro,
+    "__arch_swahb32": kCppUndefinedMacro,
+    "__arch_swahb32p": kCppUndefinedMacro,
+    "__arch_swahb32s": kCppUndefinedMacro,
+    "__arch_swahw32": kCppUndefinedMacro,
+    "__arch_swahw32p": kCppUndefinedMacro,
+    "__arch_swahw32s": kCppUndefinedMacro,
     }
 
 # This is the set of known kernel data structures we want to remove from

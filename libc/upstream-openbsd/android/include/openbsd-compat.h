@@ -25,8 +25,6 @@
 
 #include <sys/random.h> // For getentropy.
 
-#include "private/bsd_sys_param.h"
-
 #define __BEGIN_HIDDEN_DECLS _Pragma("GCC visibility push(hidden)")
 #define __END_HIDDEN_DECLS _Pragma("GCC visibility pop")
 

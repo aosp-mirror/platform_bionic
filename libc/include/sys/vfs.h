@@ -29,8 +29,9 @@
 #ifndef _SYS_VFS_H_
 #define _SYS_VFS_H_
 
-#include <stdint.h>
 #include <sys/cdefs.h>
+
+#include <stdint.h>
 #include <sys/types.h>
 
 __BEGIN_DECLS
@@ -40,6 +41,8 @@ typedef struct { int __val[2]; } __fsid_t;
 typedef __fsid_t fsid_t;
 
 #if defined(__LP64__)
+/* We can't just use the kernel struct statfs directly here because
+ * it's reused for both struct statfs *and* struct statfs64. */
 #define __STATFS64_BODY \
   uint64_t f_type; \
   uint64_t f_bsize; \

@@ -17,6 +17,7 @@ enum {
 enum {
   RDMA_NL_GROUP_IWPM = 2,
   RDMA_NL_GROUP_LS,
+  RDMA_NL_GROUP_NOTIFY,
   RDMA_NL_NUM_GROUPS
 };
 #define RDMA_NL_GET_CLIENT(type) ((type & (((1 << 6) - 1) << 10)) >> 10)
@@ -199,6 +200,9 @@ enum rdma_nldev_command {
   RDMA_NLDEV_CMD_RES_SRQ_GET,
   RDMA_NLDEV_CMD_STAT_GET_STATUS,
   RDMA_NLDEV_CMD_RES_SRQ_GET_RAW,
+  RDMA_NLDEV_CMD_NEWDEV,
+  RDMA_NLDEV_CMD_DELDEV,
+  RDMA_NLDEV_CMD_MONITOR,
   RDMA_NLDEV_NUM_OPS
 };
 enum rdma_nldev_print_type {
@@ -306,6 +310,11 @@ enum rdma_nldev_attr {
   RDMA_NLDEV_SYS_ATTR_PRIVILEGED_QKEY_MODE,
   RDMA_NLDEV_ATTR_DRIVER_DETAILS,
   RDMA_NLDEV_ATTR_RES_SUBTYPE,
+  RDMA_NLDEV_ATTR_DEV_TYPE,
+  RDMA_NLDEV_ATTR_PARENT_NAME,
+  RDMA_NLDEV_ATTR_NAME_ASSIGN_TYPE,
+  RDMA_NLDEV_ATTR_EVENT_TYPE,
+  RDMA_NLDEV_SYS_ATTR_MONITOR_MODE,
   RDMA_NLDEV_ATTR_MAX
 };
 enum rdma_nl_counter_mode {
@@ -317,5 +326,18 @@ enum rdma_nl_counter_mode {
 enum rdma_nl_counter_mask {
   RDMA_COUNTER_MASK_QP_TYPE = 1,
   RDMA_COUNTER_MASK_PID = 1 << 1,
+};
+enum rdma_nl_dev_type {
+  RDMA_DEVICE_TYPE_SMI = 1,
+};
+enum rdma_nl_name_assign_type {
+  RDMA_NAME_ASSIGN_TYPE_UNKNOWN = 0,
+  RDMA_NAME_ASSIGN_TYPE_USER = 1,
+};
+enum rdma_nl_notify_event_type {
+  RDMA_REGISTER_EVENT,
+  RDMA_UNREGISTER_EVENT,
+  RDMA_NETDEV_ATTACH_EVENT,
+  RDMA_NETDEV_DETACH_EVENT,
 };
 #endif

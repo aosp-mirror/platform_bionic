@@ -1,4 +1,0 @@
-LIBC {
-  global:
-    open;
-};

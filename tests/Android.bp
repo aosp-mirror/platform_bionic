@@ -94,6 +94,13 @@ cc_defaults {
 // Prebuilt shared libraries for use in tests.
 // -----------------------------------------------------------------------------
 
+filegroup {
+    name: "bionic_prebuilt_test_elf_files_arm64",
+    srcs: [
+        "prebuilt-elf-files/arm64/*.so",
+    ],
+}
+
 cc_prebuilt_test_library_shared {
     name: "libtest_invalid-rw_load_segment",
     strip: {
@@ -389,6 +396,9 @@ cc_test_library {
         "bug_26110743_test.cpp",
         "byteswap_test.cpp",
         "complex_test.cpp",
+        // Disabled while investigating
+        // b/378304366, b/375525252
+        // "cpu_target_features_test.cpp",
         "ctype_test.cpp",
         "dirent_test.cpp",
         "elf_test.cpp",
@@ -427,6 +437,7 @@ cc_test_library {
         "malloc_test.cpp",
         "math_test.cpp",
         "membarrier_test.cpp",
+        "memtag_globals_test.cpp",
         "memtag_stack_test.cpp",
         "mntent_test.cpp",
         "mte_test.cpp",
@@ -745,6 +756,40 @@ cc_test_library {
     },
 }
 
+cc_defaults {
+    name: "bionic_fortify_c_tests_defaults",
+    defaults: [
+        "bionic_clang_fortify_tests_w_flags",
+        "bionic_tests_defaults",
+    ],
+    cflags: [
+        "-U_FORTIFY_SOURCE",
+        // -fbuiltin is required here to counteract -fno-builtin from
+        // `bionic_tests_defaults`. With `-fno-builtin`, Clang won't
+        // const-evaluate calls to `strlen`, which is tested for here.
+        "-fbuiltin",
+    ],
+    srcs: [
+        "clang_fortify_c_only_tests.c",
+    ],
+    tidy: false,
+    shared: {
+        enabled: false,
+    },
+}
+
+cc_test_library {
+    name: "libfortify1-c-tests-clang",
+    defaults: ["bionic_fortify_c_tests_defaults"],
+    cflags: ["-D_FORTIFY_SOURCE=1"],
+}
+
+cc_test_library {
+    name: "libfortify2-c-tests-clang",
+    defaults: ["bionic_fortify_c_tests_defaults"],
+    cflags: ["-D_FORTIFY_SOURCE=2"],
+}
+
 // -----------------------------------------------------------------------------
 // Library of all tests (excluding the dynamic linker tests).
 // -----------------------------------------------------------------------------
@@ -756,8 +801,10 @@ cc_test_library {
         "libBionicStandardTests",
         "libBionicElfTlsTests",
         "libBionicFramePointerTests",
+        "libfortify1-c-tests-clang",
         "libfortify1-tests-clang",
         "libfortify1-new-tests-clang",
+        "libfortify2-c-tests-clang",
         "libfortify2-tests-clang",
         "libfortify2-new-tests-clang",
     ],
@@ -778,6 +825,7 @@ cc_test_library {
         "dlfcn_test.cpp",
         "execinfo_test.cpp",
         "link_test.cpp",
+        "page_size_16kib_compat_test.cpp",
         "pthread_dlfcn_test.cpp",
     ],
     static_libs: [
@@ -786,6 +834,7 @@ cc_test_library {
     ],
     include_dirs: [
         "bionic/libc",
+        "bionic/tests/libs",
     ],
     shared: {
         enabled: false,
@@ -852,6 +901,11 @@ cc_defaults {
         "ld_preload_test_helper",
         "ld_preload_test_helper_lib1",
         "ld_preload_test_helper_lib2",
+        "memtag_globals_binary",
+        "memtag_globals_binary_static",
+        "memtag_globals_dso",
+        "mte_globals_relr_regression_test_b_314038442",
+        "mte_globals_relr_regression_test_b_314038442_mte",
         "ns_hidden_child_helper",
         "preinit_getauxval_test_helper",
         "preinit_syscall_test_helper",
@@ -933,6 +987,7 @@ cc_defaults {
         "libtest_dt_runpath_d",
         "libtest_dt_runpath_x",
         "libtest_dt_runpath_y",
+        "libtest_elf_max_page_size_4kib",
         "libtest_elftls_dynamic",
         "libtest_elftls_dynamic_filler_1",
         "libtest_elftls_dynamic_filler_2",
@@ -1083,8 +1138,8 @@ cc_test {
     ],
 }
 
-cc_test {
-    name: "hwasan_test",
+cc_defaults {
+    name: "hwasan_test_defaults",
     enabled: false,
     // This does not use bionic_tests_defaults because it is not supported on
     // host.
@@ -1099,15 +1154,30 @@ cc_test {
     srcs: [
         "hwasan_test.cpp",
     ],
-    shared_libs: [
-        "libbase",
-    ],
     data_libs: [
         "libtest_simple_hwasan",
         "libtest_simple_hwasan_nohwasan",
     ],
     header_libs: ["bionic_libc_platform_headers"],
     test_suites: ["device-tests"],
+}
+
+cc_test {
+    name: "hwasan_test",
+    defaults: ["hwasan_test_defaults"],
+    shared_libs: [
+        "libbase",
+    ],
+}
+
+cc_test {
+    name: "hwasan_test_static",
+    defaults: ["hwasan_test_defaults"],
+    static_libs: [
+        "libbase",
+    ],
+    static_executable: true,
+    cflags: ["-DHWASAN_TEST_STATIC"],
 }
 
 cc_test {
@@ -1144,6 +1214,35 @@ cc_test {
 }
 
 cc_test {
+    name: "memtag_stack_abi_test",
+    enabled: false,
+    // This does not use bionic_tests_defaults because it is not supported on
+    // host.
+    arch: {
+        arm64: {
+            enabled: true,
+        },
+    },
+    // We don't use `sanitize:` so we generate the appropriate ELF note, but
+    // still support non-MTE devices.
+    // TODO(fmayer): also add a test that enables stack MTE for MTE devices,
+    // which would test for more bugs.
+    ldflags: ["-fsanitize=memtag-stack"],
+    // Turn off all other sanitizers from SANITIZE_TARGET.
+    sanitize: {
+        never: true,
+    },
+    shared_libs: [
+        "libbase",
+    ],
+    srcs: [
+        "memtag_stack_abi_test.cpp",
+    ],
+    header_libs: ["bionic_libc_platform_headers"],
+    test_suites: ["device-tests"],
+}
+
+cc_test {
     name: "bionic-stress-tests",
     defaults: [
         "bionic_tests_defaults",
@@ -1162,6 +1261,7 @@ cc_test {
 
     shared_libs: [
         "libbase",
+        "liblog",
     ],
 
     target: {
@@ -1231,6 +1331,11 @@ cc_test {
         "heap_tagging_static_disabled_helper",
         "heap_tagging_static_sync_helper",
         "heap_tagging_sync_helper",
+        "memtag_globals_binary",
+        "memtag_globals_binary_static",
+        "memtag_globals_dso",
+        "mte_globals_relr_regression_test_b_314038442",
+        "mte_globals_relr_regression_test_b_314038442_mte",
         "stack_tagging_helper",
         "stack_tagging_static_helper",
     ],

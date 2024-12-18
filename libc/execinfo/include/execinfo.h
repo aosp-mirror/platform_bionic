@@ -30,8 +30,10 @@
 
 /*
  * This file is exported as part of libexecinfo for use with musl, which doesn't
- * define __INTRODUCED_IN.  Stub it out.
+ * define __INTRODUCED_IN or __BIONIC_AVAILABILITY_GUARD.  Stub them out.
  */
 #define __INTRODUCED_IN(x)
+#define __BIONIC_AVAILABILITY_GUARD(x) 1
 #include <bionic/execinfo.h>
+#undef __BIONIC_AVAILABILITY_GUARD
 #undef __INTRODUCED_IN

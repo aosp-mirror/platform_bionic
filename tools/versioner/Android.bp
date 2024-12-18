@@ -1,7 +1,0 @@
-package {
-    default_applicable_licenses: ["bionic_tools_license"],
-}
-
-subdirs = [
-    "src",
-]

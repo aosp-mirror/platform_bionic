@@ -87,7 +87,7 @@ name:					\
 #define POP(REG)	popl REG; CFI_POP (REG)
 
 #ifndef STRCAT
-# define STRCAT	strcat_ssse3
+# define STRCAT	strcat
 #endif
 
 #define PARMS	4
