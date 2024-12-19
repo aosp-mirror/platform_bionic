@@ -17,6 +17,7 @@ C library, math library, and dynamic linker.
   which detects use-after-close() bugs.
 * [fdtrack](fdtrack.md) - bionic's file descriptor tracker,
   which helps debug file descriptor leaks.
+* [C23](c23.md) - dealing with C23's breaking changes.
 
 ## Maintainer documentation
 
