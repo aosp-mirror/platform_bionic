@@ -50,6 +50,13 @@
 #define BIONIC_SIGNAL_BACKTRACE (__SIGRTMIN + 1)
 #define BIONIC_SIGNAL_DEBUGGER (__SIGRTMIN + 3)
 #define BIONIC_SIGNAL_PROFILER (__SIGRTMIN + 4)
+// When used for the dumping a heap dump, BIONIC_SIGNAL_ART_PROFILER is always handled
+// gracefully without crashing.
+// In debuggerd, we crash the process with this signal to indicate to init that
+// a process has been terminated by an MTEAERR SEGV. This works because there is
+// no other reason a process could have terminated with this signal.
+// This is to work around the limitation of that it is not possible to get the
+// si_code that terminated a process.
 #define BIONIC_SIGNAL_ART_PROFILER (__SIGRTMIN + 6)
 #define BIONIC_SIGNAL_FDTRACK (__SIGRTMIN + 7)
 #define BIONIC_SIGNAL_RUN_ON_ALL_THREADS (__SIGRTMIN + 8)
