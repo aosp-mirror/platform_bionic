@@ -126,8 +126,7 @@ TEST(time, mktime_empty_TZ) {
   // tzcode used to have a bug where it didn't reinitialize some internal state.
 
   // Choose a time where DST is set.
-  struct tm t;
-  memset(&t, 0, sizeof(tm));
+  struct tm t = {};
   t.tm_year = 1980 - 1900;
   t.tm_mon = 6;
   t.tm_mday = 2;
@@ -136,7 +135,7 @@ TEST(time, mktime_empty_TZ) {
   tzset();
   ASSERT_EQ(static_cast<time_t>(331372800U), mktime(&t));
 
-  memset(&t, 0, sizeof(tm));
+  t = {};
   t.tm_year = 1980 - 1900;
   t.tm_mon = 6;
   t.tm_mday = 2;
@@ -173,8 +172,7 @@ TEST(time, mktime_10310929) {
 TEST(time, mktime_EOVERFLOW) {
   setenv("TZ", "UTC", 1);
 
-  struct tm t;
-  memset(&t, 0, sizeof(tm));
+  struct tm t = {};
 
   // LP32 year range is 1901-2038, so this year is guaranteed not to overflow.
   t.tm_year = 2016 - 1900;
@@ -212,8 +210,7 @@ TEST(time, mktime_EOVERFLOW) {
 TEST(time, mktime_invalid_tm_TZ_combination) {
   setenv("TZ", "UTC", 1);
 
-  struct tm t;
-  memset(&t, 0, sizeof(tm));
+  struct tm t = {};
   t.tm_year = 2022 - 1900;
   t.tm_mon = 11;
   t.tm_mday = 31;
@@ -248,8 +245,7 @@ TEST(time, mktime_after_2100) {
 TEST(time, strftime) {
   setenv("TZ", "UTC", 1);
 
-  struct tm t;
-  memset(&t, 0, sizeof(tm));
+  struct tm t = {};
   t.tm_year = 200;
   t.tm_mon = 2;
   t.tm_mday = 10;
@@ -270,8 +266,7 @@ TEST(time, strftime) {
 TEST(time, strftime_second_before_epoch) {
   setenv("TZ", "UTC", 1);
 
-  struct tm t;
-  memset(&t, 0, sizeof(tm));
+  struct tm t = {};
   t.tm_year = 1969 - 1900;
   t.tm_mon = 11;
   t.tm_mday = 31;
@@ -287,9 +282,7 @@ TEST(time, strftime_second_before_epoch) {
 
 TEST(time, strftime_Z_null_tm_zone) {
   // Netflix on Nexus Player wouldn't start (http://b/25170306).
-  struct tm t;
-  memset(&t, 0, sizeof(tm));
-
+  struct tm t = {};
   char buf[64];
 
   setenv("TZ", "America/Los_Angeles", 1);
@@ -409,8 +402,7 @@ TEST(time, strftime_l) {
 
   setenv("TZ", "UTC", 1);
 
-  struct tm t;
-  memset(&t, 0, sizeof(tm));
+  struct tm t = {};
   t.tm_year = 200;
   t.tm_mon = 2;
   t.tm_mday = 10;
@@ -427,15 +419,14 @@ TEST(time, strftime_l) {
 TEST(time, strptime) {
   setenv("TZ", "UTC", 1);
 
-  struct tm t;
+  struct tm t = {};
   char buf[64];
 
-  memset(&t, 0, sizeof(t));
   strptime("11:14", "%R", &t);
   strftime(buf, sizeof(buf), "%H:%M", &t);
   EXPECT_STREQ("11:14", buf);
 
-  memset(&t, 0, sizeof(t));
+  t = {};
   strptime("09:41:53", "%T", &t);
   strftime(buf, sizeof(buf), "%H:%M:%S", &t);
   EXPECT_STREQ("09:41:53", buf);
@@ -445,15 +436,14 @@ TEST(time, strptime_l) {
 #if !defined(ANDROID_HOST_MUSL)
   setenv("TZ", "UTC", 1);
 
-  struct tm t;
+  struct tm t = {};
   char buf[64];
 
-  memset(&t, 0, sizeof(t));
   strptime_l("11:14", "%R", &t, LC_GLOBAL_LOCALE);
   strftime_l(buf, sizeof(buf), "%H:%M", &t, LC_GLOBAL_LOCALE);
   EXPECT_STREQ("11:14", buf);
 
-  memset(&t, 0, sizeof(t));
+  t = {};
   strptime_l("09:41:53", "%T", &t, LC_GLOBAL_LOCALE);
   strftime_l(buf, sizeof(buf), "%H:%M:%S", &t, LC_GLOBAL_LOCALE);
   EXPECT_STREQ("09:41:53", buf);
@@ -637,8 +627,7 @@ static void NoOpNotifyFunction(sigval) {
 }
 
 TEST(time, timer_create) {
-  sigevent se;
-  memset(&se, 0, sizeof(se));
+  sigevent se = {};
   se.sigev_notify = SIGEV_THREAD;
   se.sigev_notify_function = NoOpNotifyFunction;
   timer_t timer_id;
@@ -666,8 +655,7 @@ static void timer_create_SIGEV_SIGNAL_signal_handler(int signal_number) {
 }
 
 TEST(time, timer_create_SIGEV_SIGNAL) {
-  sigevent se;
-  memset(&se, 0, sizeof(se));
+  sigevent se = {};
   se.sigev_notify = SIGEV_SIGNAL;
   se.sigev_signo = SIGUSR1;
 
@@ -705,10 +693,7 @@ struct Counter {
 
  public:
   explicit Counter(void (*fn)(sigval)) : value(0), timer_valid(false) {
-    memset(&se, 0, sizeof(se));
-    se.sigev_notify = SIGEV_THREAD;
-    se.sigev_notify_function = fn;
-    se.sigev_value.sival_ptr = this;
+    se = {.sigev_notify = SIGEV_THREAD, .sigev_notify_function = fn, .sigev_value.sival_ptr = this};
     Create();
   }
   void DeleteTimer() {
@@ -909,9 +894,7 @@ static void TimerDeleteCallback(sigval value) {
 
 TEST(time, timer_delete_from_timer_thread) {
   TimerDeleteData tdd;
-  sigevent se;
-
-  memset(&se, 0, sizeof(se));
+  sigevent se = {};
   se.sigev_notify = SIGEV_THREAD;
   se.sigev_notify_function = TimerDeleteCallback;
   se.sigev_value.sival_ptr = &tdd;
@@ -1252,11 +1235,9 @@ TEST(time, strftime_strptime_s) {
   strftime(buf, sizeof(buf), "<%s>", &tm0);
   EXPECT_STREQ("<378691200>", buf);
 
-  struct tm tm;
-
   setenv("TZ", "America/Los_Angeles", 1);
   tzset();
-  memset(&tm, 0xff, sizeof(tm));
+  struct tm tm = {};
   char* p = strptime("378720000x", "%s", &tm);
   ASSERT_EQ('x', *p);
   EXPECT_EQ(0, tm.tm_sec);
@@ -1271,7 +1252,7 @@ TEST(time, strftime_strptime_s) {
 
   setenv("TZ", "UTC", 1);
   tzset();
-  memset(&tm, 0xff, sizeof(tm));
+  tm = {};
   p = strptime("378691200x", "%s", &tm);
   ASSERT_EQ('x', *p);
   EXPECT_EQ(0, tm.tm_sec);
