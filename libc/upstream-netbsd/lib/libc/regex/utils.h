@@ -63,6 +63,7 @@ extern int __regex_iswctype(wint_t, wctype_t);
 
 /* utility definitions */
 #define	DUPMAX		_POSIX2_RE_DUP_MAX	/* xxx is this right? */
+#undef INFINITY // Android-added: avoid collision with C23 <float.h> INFINITY (via <limits.h>)
 #define	INFINITY	(DUPMAX + 1)
 
 #define	NC_MAX		(CHAR_MAX - CHAR_MIN + 1)
