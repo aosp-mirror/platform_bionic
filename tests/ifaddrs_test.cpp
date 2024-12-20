@@ -116,9 +116,7 @@ TEST(ifaddrs, getifaddrs_interfaces) {
 
 static void CheckAddressIsInSet(const std::string& if_name, bool unicast,
                                 const std::set<in_addr_t>& addrs) {
-  ifreq ifr;
-  memset(&ifr, 0, sizeof(ifr));
-  ifr.ifr_addr.sa_family = AF_INET;
+  ifreq ifr = {.ifr_addr.sa_family = AF_INET};
   if_name.copy(ifr.ifr_name, IFNAMSIZ - 1);
 
   int fd = socket(AF_INET, SOCK_DGRAM, 0);

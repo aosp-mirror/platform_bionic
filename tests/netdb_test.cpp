@@ -79,11 +79,7 @@ TEST(netdb, getaddrinfo_service_lookup) {
 }
 
 TEST(netdb, getaddrinfo_hints) {
-  addrinfo hints;
-  memset(&hints, 0, sizeof(hints));
-  hints.ai_family = AF_INET;
-  hints.ai_socktype = SOCK_STREAM;
-  hints.ai_protocol = IPPROTO_TCP;
+  addrinfo hints = {.ai_family = AF_INET, .ai_socktype = SOCK_STREAM, .ai_protocol = IPPROTO_TCP};
 
   addrinfo* ai = nullptr;
   ASSERT_EQ(0, getaddrinfo( "localhost", "9999", &hints, &ai));
@@ -113,8 +109,7 @@ TEST(netdb, getaddrinfo_ip6_localhost) {
 }
 
 TEST(netdb, getnameinfo_salen) {
-  sockaddr_storage ss;
-  memset(&ss, 0, sizeof(ss));
+  sockaddr_storage ss = {};
   sockaddr* sa = reinterpret_cast<sockaddr*>(&ss);
   char tmp[16];
 
@@ -142,11 +137,8 @@ TEST(netdb, getnameinfo_salen) {
 }
 
 TEST(netdb, getnameinfo_localhost) {
-  sockaddr_in addr;
   char host[NI_MAXHOST];
-  memset(&addr, 0, sizeof(sockaddr_in));
-  addr.sin_family = AF_INET;
-  addr.sin_addr.s_addr = htonl(0x7f000001);
+  sockaddr_in addr = {.sin_family = AF_INET, .sin_addr.s_addr = htonl(0x7f000001)};
   ASSERT_EQ(0, getnameinfo(reinterpret_cast<sockaddr*>(&addr), sizeof(addr),
                            host, sizeof(host), nullptr, 0, 0));
   ASSERT_STREQ(host, "localhost");
@@ -160,11 +152,8 @@ static void VerifyLocalhostName(const char* name) {
 }
 
 TEST(netdb, getnameinfo_ip6_localhost) {
-  sockaddr_in6 addr;
   char host[NI_MAXHOST];
-  memset(&addr, 0, sizeof(sockaddr_in6));
-  addr.sin6_family = AF_INET6;
-  addr.sin6_addr = in6addr_loopback;
+  sockaddr_in6 addr = {.sin6_family = AF_INET6, .sin6_addr = in6addr_loopback};
   ASSERT_EQ(0, getnameinfo(reinterpret_cast<sockaddr*>(&addr), sizeof(addr),
                            host, sizeof(host), nullptr, 0, 0));
   VerifyLocalhostName(host);
