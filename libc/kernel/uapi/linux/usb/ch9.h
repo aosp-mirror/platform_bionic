@@ -119,6 +119,7 @@ struct usb_ctrlrequest {
 #define USB_DT_DEVICE_CAPABILITY 0x10
 #define USB_DT_WIRELESS_ENDPOINT_COMP 0x11
 #define USB_DT_WIRE_ADAPTER 0x21
+#define USB_DT_DFU_FUNCTIONAL 0x21
 #define USB_DT_RPIPE 0x22
 #define USB_DT_CS_RADIO_CONTROL 0x23
 #define USB_DT_PIPE_USAGE 0x24
@@ -170,6 +171,7 @@ struct usb_device_descriptor {
 #define USB_CLASS_USB_TYPE_C_BRIDGE 0x12
 #define USB_CLASS_MISC 0xef
 #define USB_CLASS_APP_SPEC 0xfe
+#define USB_SUBCLASS_DFU 0x01
 #define USB_CLASS_VENDOR_SPEC 0xff
 #define USB_SUBCLASS_VENDOR_SPEC 0xff
 struct usb_config_descriptor {

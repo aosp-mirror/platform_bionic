@@ -671,9 +671,6 @@ enum {
   BPF_F_MARK_ENFORCE = (1ULL << 6),
 };
 enum {
-  BPF_F_INGRESS = (1ULL << 0),
-};
-enum {
   BPF_F_TUNINFO_IPV6 = (1ULL << 0),
 };
 enum {
@@ -768,8 +765,10 @@ enum {
   BPF_F_BPRM_SECUREEXEC = (1ULL << 0),
 };
 enum {
+  BPF_F_INGRESS = (1ULL << 0),
   BPF_F_BROADCAST = (1ULL << 3),
   BPF_F_EXCLUDE_INGRESS = (1ULL << 4),
+#define BPF_F_REDIRECT_FLAGS (BPF_F_INGRESS | BPF_F_BROADCAST | BPF_F_EXCLUDE_INGRESS)
 };
 #define __bpf_md_ptr(type,name) union { type name; __u64 : 64; \
 } __attribute__((aligned(8)))
@@ -1275,6 +1274,7 @@ enum {
   TCP_BPF_SYN = 1005,
   TCP_BPF_SYN_IP = 1006,
   TCP_BPF_SYN_MAC = 1007,
+  TCP_BPF_SOCK_OPS_CB_FLAGS = 1008,
 };
 enum {
   BPF_LOAD_HDR_OPT_TCP_SYN = (1ULL << 0),
@@ -1528,4 +1528,7 @@ enum {
 struct bpf_iter_num {
   __u64 __opaque[1];
 } __attribute__((aligned(8)));
+enum bpf_kfunc_flags {
+  BPF_F_PAD_ZEROS = (1ULL << 0),
+};
 #endif

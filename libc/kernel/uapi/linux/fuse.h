@@ -8,7 +8,7 @@
 #define _LINUX_FUSE_H
 #include <stdint.h>
 #define FUSE_KERNEL_VERSION 7
-#define FUSE_KERNEL_MINOR_VERSION 40
+#define FUSE_KERNEL_MINOR_VERSION 41
 #define FUSE_ROOT_ID 1
 struct fuse_attr {
   uint64_t ino;
@@ -135,6 +135,7 @@ struct fuse_file_lock {
 #define FUSE_NO_EXPORT_SUPPORT (1ULL << 38)
 #define FUSE_HAS_RESEND (1ULL << 39)
 #define FUSE_DIRECT_IO_RELAX FUSE_DIRECT_IO_ALLOW_MMAP
+#define FUSE_ALLOW_IDMAP (1ULL << 40)
 #define CUSE_UNRESTRICTED_IOCTL (1 << 0)
 #define FUSE_RELEASE_FLUSH (1 << 0)
 #define FUSE_RELEASE_FLOCK_UNLOCK (1 << 1)
@@ -214,6 +215,7 @@ enum fuse_opcode {
   FUSE_SYNCFS = 50,
   FUSE_TMPFILE = 51,
   FUSE_STATX = 52,
+  FUSE_CANONICAL_PATH = 2016,
   CUSE_INIT = 4096,
   CUSE_INIT_BSWAP_RESERVED = 1048576,
   FUSE_INIT_BSWAP_RESERVED = 436207616,
@@ -497,6 +499,7 @@ struct fuse_fallocate_in {
   uint32_t padding;
 };
 #define FUSE_UNIQUE_RESEND (1ULL << 63)
+#define FUSE_INVALID_UIDGID ((uint32_t) (- 1))
 struct fuse_in_header {
   uint32_t len;
   uint32_t opcode;

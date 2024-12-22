@@ -115,6 +115,11 @@ struct binder_frozen_status_info {
   __u32 sync_recv;
   __u32 async_recv;
 };
+struct binder_frozen_state_info {
+  binder_uintptr_t cookie;
+  __u32 is_frozen;
+  __u32 reserved;
+};
 struct binder_extended_error {
   __u32 id;
   __u32 command;
@@ -212,6 +217,8 @@ enum binder_driver_return_protocol {
   BR_FROZEN_REPLY = _IO('r', 18),
   BR_ONEWAY_SPAM_SUSPECT = _IO('r', 19),
   BR_TRANSACTION_PENDING_FROZEN = _IO('r', 20),
+  BR_FROZEN_BINDER = _IOR('r', 21, struct binder_frozen_state_info),
+  BR_CLEAR_FREEZE_NOTIFICATION_DONE = _IOR('r', 22, binder_uintptr_t),
 };
 enum binder_driver_command_protocol {
   BC_TRANSACTION = _IOW('c', 0, struct binder_transaction_data),
@@ -233,5 +240,8 @@ enum binder_driver_command_protocol {
   BC_DEAD_BINDER_DONE = _IOW('c', 16, binder_uintptr_t),
   BC_TRANSACTION_SG = _IOW('c', 17, struct binder_transaction_data_sg),
   BC_REPLY_SG = _IOW('c', 18, struct binder_transaction_data_sg),
+  BC_REQUEST_FREEZE_NOTIFICATION = _IOW('c', 19, struct binder_handle_cookie),
+  BC_CLEAR_FREEZE_NOTIFICATION = _IOW('c', 20, struct binder_handle_cookie),
+  BC_FREEZE_NOTIFICATION_DONE = _IOW('c', 21, binder_uintptr_t),
 };
 #endif

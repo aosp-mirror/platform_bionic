@@ -27,6 +27,7 @@ struct cec_msg {
 };
 #define CEC_MSG_FL_REPLY_TO_FOLLOWERS (1 << 0)
 #define CEC_MSG_FL_RAW (1 << 1)
+#define CEC_MSG_FL_REPLY_VENDOR_ID (1 << 2)
 #define CEC_TX_STATUS_OK (1 << 0)
 #define CEC_TX_STATUS_ARB_LOST (1 << 1)
 #define CEC_TX_STATUS_NACK (1 << 2)
@@ -96,6 +97,7 @@ struct cec_msg {
 #define CEC_CAP_NEEDS_HPD (1 << 6)
 #define CEC_CAP_MONITOR_PIN (1 << 7)
 #define CEC_CAP_CONNECTOR_INFO (1 << 8)
+#define CEC_CAP_REPLY_VENDOR_ID (1 << 9)
 struct cec_caps {
   char driver[32];
   char name[32];
