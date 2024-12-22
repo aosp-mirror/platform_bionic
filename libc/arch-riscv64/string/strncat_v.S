@@ -70,7 +70,7 @@
 #define vStr1 v8
 #define vStr2 v16
 
-ENTRY(strncat_v)
+ENTRY(strncat)
 
     mv pDstPtr, pDst
 
@@ -114,4 +114,4 @@ L(fill_zero):
 L(fill_zero_end):
     ret
 
-END(strncat_v)
+END(strncat)

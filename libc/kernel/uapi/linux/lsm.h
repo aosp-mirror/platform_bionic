@@ -30,6 +30,7 @@ struct lsm_ctx {
 #define LSM_ID_LANDLOCK 110
 #define LSM_ID_IMA 111
 #define LSM_ID_EVM 112
+#define LSM_ID_IPE 113
 #define LSM_ATTR_UNDEF 0
 #define LSM_ATTR_CURRENT 100
 #define LSM_ATTR_EXEC 101

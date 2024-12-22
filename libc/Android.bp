@@ -622,7 +622,6 @@ cc_library_static {
     arch: {
         arm: {
             srcs: [
-                "upstream-openbsd/lib/libc/string/memchr.c",
                 "upstream-openbsd/lib/libc/string/stpncpy.c",
                 "upstream-openbsd/lib/libc/string/strncat.c",
                 "upstream-openbsd/lib/libc/string/strncmp.c",
@@ -1083,9 +1082,6 @@ cc_library_static {
                 "arch-arm/krait/bionic/memset.S",
 
                 "arch-arm/kryo/bionic/memcpy.S",
-
-                "bionic/strchr.cpp",
-                "bionic/strnlen.cpp",
             ],
         },
         arm64: {
@@ -1123,22 +1119,6 @@ cc_library_static {
                 "arch-riscv64/string/strncmp_v.S",
                 "arch-riscv64/string/strncpy_v.S",
                 "arch-riscv64/string/strnlen_v.S",
-
-                "arch-riscv64/string/memchr.c",
-                "arch-riscv64/string/memcmp.c",
-                "arch-riscv64/string/memcpy.c",
-                "arch-riscv64/string/memmove.c",
-                "arch-riscv64/string/memset.c",
-                "arch-riscv64/string/stpcpy.c",
-                "arch-riscv64/string/strcat.c",
-                "arch-riscv64/string/strchr.c",
-                "arch-riscv64/string/strcmp.c",
-                "arch-riscv64/string/strcpy.c",
-                "arch-riscv64/string/strlen.c",
-                "arch-riscv64/string/strncat.c",
-                "arch-riscv64/string/strncmp.c",
-                "arch-riscv64/string/strncpy.c",
-                "arch-riscv64/string/strnlen.c",
             ],
         },
 
@@ -1152,16 +1132,13 @@ cc_library_static {
                 "arch-x86/bionic/vfork.S",
                 "arch-x86/bionic/__x86.get_pc_thunk.S",
 
-                "arch-x86/string/sse2-memchr-atom.S",
                 "arch-x86/string/sse2-memmove-slm.S",
                 "arch-x86/string/sse2-memset-slm.S",
                 "arch-x86/string/sse2-stpcpy-slm.S",
                 "arch-x86/string/sse2-stpncpy-slm.S",
-                "arch-x86/string/sse2-strchr-atom.S",
                 "arch-x86/string/sse2-strcpy-slm.S",
                 "arch-x86/string/sse2-strlen-slm.S",
                 "arch-x86/string/sse2-strncpy-slm.S",
-                "arch-x86/string/sse2-strnlen-atom.S",
 
                 "arch-x86/string/ssse3-memcmp-atom.S",
                 "arch-x86/string/ssse3-strcat-atom.S",
@@ -1368,9 +1345,6 @@ cc_defaults {
         },
         arm64: {
             srcs: ["arch-arm64/dynamic_function_dispatch.cpp"],
-        },
-        riscv64: {
-            srcs: ["arch-riscv64/dynamic_function_dispatch.cpp"],
         },
     },
     // Prevent the compiler from inserting calls to libc/taking the address of

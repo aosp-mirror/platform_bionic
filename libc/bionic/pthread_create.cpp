@@ -129,7 +129,7 @@ static void __init_shadow_call_stack(pthread_internal_t* thread __unused) {
   // Align the address to SCS_SIZE so that we only need to store the lower log2(SCS_SIZE) bits
   // in jmp_buf. See the SCS commentary in pthread_internal.h for more detail.
   char* scs_aligned_guard_region =
-      reinterpret_cast<char*>(align_up(reinterpret_cast<uintptr_t>(scs_guard_region), SCS_SIZE));
+      reinterpret_cast<char*>(__builtin_align_up(reinterpret_cast<uintptr_t>(scs_guard_region), SCS_SIZE));
 
   // We need to ensure that [scs_offset,scs_offset+SCS_SIZE) is in the guard region and that there
   // is at least one unmapped page after the shadow call stack (to catch stack overflows). We can't
@@ -296,7 +296,7 @@ static int __allocate_thread(pthread_attr_t* attr, bionic_tcb** tcbp, void** chi
   // memory isn't counted in pthread_attr_getstacksize.
 
   // To safely access the pthread_internal_t and thread stack, we need to find a 16-byte aligned boundary.
-  stack_top = align_down(stack_top - sizeof(pthread_internal_t), 16);
+  stack_top = __builtin_align_down(stack_top - sizeof(pthread_internal_t), 16);
 
   pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(stack_top);
   if (!stack_clean) {
