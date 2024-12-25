@@ -116,8 +116,7 @@ static void set_watchpoint(pid_t child, uintptr_t address, size_t size) {
   ASSERT_EQ(0, ptrace(PTRACE_SETHBPREGS, child, -1, &address)) << strerror(errno);
   ASSERT_EQ(0, ptrace(PTRACE_SETHBPREGS, child, -2, &control)) << strerror(errno);
 #else // aarch64
-  user_hwdebug_state dreg_state;
-  memset(&dreg_state, 0, sizeof dreg_state);
+  user_hwdebug_state dreg_state = {};
   dreg_state.dbg_regs[0].addr = address;
   dreg_state.dbg_regs[0].ctrl = control;
 
@@ -304,8 +303,7 @@ static void set_breakpoint(pid_t child) {
   ASSERT_EQ(0, ptrace(PTRACE_SETHBPREGS, child, 1, &address)) << strerror(errno);
   ASSERT_EQ(0, ptrace(PTRACE_SETHBPREGS, child, 2, &control)) << strerror(errno);
 #else  // aarch64
-  user_hwdebug_state dreg_state;
-  memset(&dreg_state, 0, sizeof dreg_state);
+  user_hwdebug_state dreg_state = {};
   dreg_state.dbg_regs[0].addr = reinterpret_cast<uintptr_t>(address);
   dreg_state.dbg_regs[0].ctrl = control;
 
