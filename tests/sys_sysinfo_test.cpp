@@ -39,8 +39,7 @@ TEST(sys_sysinfo, smoke) {
 }
 
 TEST(sys_sysinfo, sysinfo) {
-  struct sysinfo si;
-  memset(&si, 0, sizeof(si));
+  struct sysinfo si = {};
   ASSERT_EQ(0, sysinfo(&si));
 
   ASSERT_GT(static_cast<long>(si.uptime), 10);  // You're not running CTS within 10s of booting!

@@ -130,22 +130,21 @@ TEST(wchar, wcrtomb_start_state) {
   uselocale(LC_GLOBAL_LOCALE);
 
   char out[MB_LEN_MAX];
-  mbstate_t ps;
+  mbstate_t ps = {};
 
   // Any non-initial state is invalid when calling wcrtomb.
-  memset(&ps, 0, sizeof(ps));
   EXPECT_EQ(static_cast<size_t>(-2), mbrtowc(nullptr, "\xc2", 1, &ps));
   EXPECT_EQ(static_cast<size_t>(-1), wcrtomb(out, 0x00a2, &ps));
   EXPECT_ERRNO(EILSEQ);
 
   // If the first argument to wcrtomb is NULL or the second is L'\0' the shift
   // state should be reset.
-  memset(&ps, 0, sizeof(ps));
+  ps = {};
   EXPECT_EQ(static_cast<size_t>(-2), mbrtowc(nullptr, "\xc2", 1, &ps));
   EXPECT_EQ(1U, wcrtomb(nullptr, 0x00a2, &ps));
   EXPECT_TRUE(mbsinit(&ps));
 
-  memset(&ps, 0, sizeof(ps));
+  ps = {};
   EXPECT_EQ(static_cast<size_t>(-2), mbrtowc(nullptr, "\xf0\xa4", 1, &ps));
   EXPECT_EQ(1U, wcrtomb(out, L'\0', &ps));
   EXPECT_TRUE(mbsinit(&ps));
@@ -253,9 +252,8 @@ TEST(wchar, wcstombs_wcrtombs) {
   EXPECT_STREQ("hix", bytes);
 
   // Any non-initial state is invalid when calling wcsrtombs.
-  mbstate_t ps;
+  mbstate_t ps = {};
   src = chars;
-  memset(&ps, 0, sizeof(ps));
   ASSERT_EQ(static_cast<size_t>(-2), mbrtowc(nullptr, "\xc2", 1, &ps));
   EXPECT_EQ(static_cast<size_t>(-1), wcsrtombs(nullptr, &src, 0, &ps));
   EXPECT_ERRNO(EILSEQ);
@@ -449,8 +447,7 @@ static void test_mbrtowc_incomplete(mbstate_t* ps) {
 }
 
 TEST(wchar, mbrtowc_incomplete) {
-  mbstate_t ps;
-  memset(&ps, 0, sizeof(ps));
+  mbstate_t ps = {};
 
   test_mbrtowc_incomplete(&ps);
   test_mbrtowc_incomplete(nullptr);
@@ -508,8 +505,7 @@ TEST(wchar, mbsrtowcs) {
   ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
   uselocale(LC_GLOBAL_LOCALE);
 
-  mbstate_t ps;
-  memset(&ps, 0, sizeof(ps));
+  mbstate_t ps = {};
   test_mbsrtowcs(&ps);
   test_mbsrtowcs(nullptr);
 
@@ -659,12 +655,7 @@ TEST(wchar, mbsnrtowcs) {
 TEST(wchar, wcsftime__wcsftime_l) {
   setenv("TZ", "UTC", 1);
 
-  struct tm t;
-  memset(&t, 0, sizeof(tm));
-  t.tm_year = 200;
-  t.tm_mon = 2;
-  t.tm_mday = 10;
-
+  struct tm t = {.tm_year = 200, .tm_mon = 2, .tm_mday = 10};
   wchar_t buf[64];
 
   EXPECT_EQ(24U, wcsftime(buf, sizeof(buf), L"%c", &t));
