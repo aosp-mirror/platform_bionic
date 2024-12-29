@@ -43,8 +43,7 @@ _Unwind_Reason_Code FrameCounter(_Unwind_Context* ctx __unused, void* arg) {
   const char* symbol = "<unknown>";
   int offset = 0;
 
-  Dl_info info;
-  memset(&info, 0, sizeof(info));
+  Dl_info info = {};
   if (dladdr(ip, &info) != 0) {
     symbol = info.dli_sname;
     if (info.dli_saddr != nullptr) {
