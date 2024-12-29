@@ -2270,6 +2270,9 @@ cc_defaults {
         "-E",
         "-Wall",
         "-Werror",
+        // Soong implicitly adds a -c argument that we override with -E.
+        // Suppress Clang's error about the unused -c argument.
+        "-Wno-unused-command-line-argument",
         "-nostdinc",
     ],
 }
