@@ -87,7 +87,7 @@ struct dirent64 { __DIRENT64_BODY };
 
 #define d_fileno d_ino
 
-/** The structure returned by opendir()/fopendir(). */
+/** The structure returned by opendir()/fdopendir(). */
 typedef struct DIR DIR;
 
 /**
@@ -99,7 +99,7 @@ typedef struct DIR DIR;
 DIR* _Nullable opendir(const char* _Nonnull __path);
 
 /**
- * [fopendir(3)](https://man7.org/linux/man-pages/man3/opendir.3.html)
+ * [fdopendir(3)](https://man7.org/linux/man-pages/man3/fdopendir.3.html)
  * opens a directory stream for the directory at `__dir_fd`.
  *
  * Returns null and sets `errno` on failure.
