@@ -37,9 +37,12 @@
 #include <unistd.h>
 
 #include "linker.h"
+#include "linker_debug.h"
 #include "linker_dlwarning.h"
 #include "linker_globals.h"
-#include "linker_debug.h"
+#include "linker_logger.h"
+#include "linker_main.h"
+#include "linker_soinfo.h"
 #include "linker_utils.h"
 
 #include "private/bionic_asm_note.h"
@@ -156,8 +159,8 @@ static const size_t kPmdSize = (kPageSize / sizeof(uint64_t)) * kPageSize;
 ElfReader::ElfReader()
     : did_read_(false), did_load_(false), fd_(-1), file_offset_(0), file_size_(0), phdr_num_(0),
       phdr_table_(nullptr), shdr_table_(nullptr), shdr_num_(0), dynamic_(nullptr), strtab_(nullptr),
-      strtab_size_(0), load_start_(nullptr), load_size_(0), load_bias_(0), loaded_phdr_(nullptr),
-      mapped_by_caller_(false) {
+      strtab_size_(0), load_start_(nullptr), load_size_(0), load_bias_(0), max_align_(0), min_align_(0),
+      loaded_phdr_(nullptr), mapped_by_caller_(false) {
 }
 
 bool ElfReader::Read(const char* name, int fd, off64_t file_offset, off64_t file_size) {
@@ -172,18 +175,20 @@ bool ElfReader::Read(const char* name, int fd, off64_t file_offset, off64_t file
   if (ReadElfHeader() &&
       VerifyElfHeader() &&
       ReadProgramHeaders() &&
+      CheckProgramHeaderAlignment() &&
       ReadSectionHeaders() &&
       ReadDynamicSection() &&
       ReadPadSegmentNote()) {
     did_read_ = true;
   }
 
-  if (kPageSize == 0x4000 && phdr_table_get_minimum_alignment(phdr_table_, phdr_num_) == 0x1000) {
+  if (kPageSize == 16*1024 && min_align_ == 4096) {
     // This prop needs to be read on 16KiB devices for each ELF where min_palign is 4KiB.
     // It cannot be cached since the developer may toggle app compat on/off.
     // This check will be removed once app compat is made the default on 16KiB devices.
     should_use_16kib_app_compat_ =
-        ::android::base::GetBoolProperty("bionic.linker.16kb.app_compat.enabled", false);
+        ::android::base::GetBoolProperty("bionic.linker.16kb.app_compat.enabled", false) ||
+        get_16kb_appcompat_mode();
   }
 
   return did_read_;
@@ -558,52 +563,26 @@ size_t phdr_table_get_load_size(const ElfW(Phdr)* phdr_table, size_t phdr_count,
   return max_vaddr - min_vaddr;
 }
 
-// Returns the maximum p_align associated with a loadable segment in the ELF
-// program header table. Used to determine whether the file should be loaded at
-// a specific virtual address alignment for use with huge pages.
-size_t phdr_table_get_maximum_alignment(const ElfW(Phdr)* phdr_table, size_t phdr_count) {
-  size_t maximum_alignment = page_size();
+bool ElfReader::CheckProgramHeaderAlignment() {
+  max_align_ = min_align_ = page_size();
 
-  for (size_t i = 0; i < phdr_count; ++i) {
-    const ElfW(Phdr)* phdr = &phdr_table[i];
+  for (size_t i = 0; i < phdr_num_; ++i) {
+    const ElfW(Phdr)* phdr = &phdr_table_[i];
 
     // p_align must be 0, 1, or a positive, integral power of two.
     if (phdr->p_type != PT_LOAD || ((phdr->p_align & (phdr->p_align - 1)) != 0)) {
+      // TODO: reject ELF files with bad p_align values.
       continue;
     }
 
-    maximum_alignment = std::max(maximum_alignment, static_cast<size_t>(phdr->p_align));
+    max_align_ = std::max(max_align_, static_cast<size_t>(phdr->p_align));
+
+    if (phdr->p_align > 1) {
+      min_align_ = std::min(min_align_, static_cast<size_t>(phdr->p_align));
+    }
   }
 
-#if defined(__LP64__)
-  return maximum_alignment;
-#else
-  return page_size();
-#endif
-}
-
-// Returns the minimum p_align associated with a loadable segment in the ELF
-// program header table. Used to determine if the program alignment is compatible
-// with the page size of this system.
-size_t phdr_table_get_minimum_alignment(const ElfW(Phdr)* phdr_table, size_t phdr_count) {
-  size_t minimum_alignment = page_size();
-
-  for (size_t i = 0; i < phdr_count; ++i) {
-    const ElfW(Phdr)* phdr = &phdr_table[i];
-
-    // p_align must be 0, 1, or a positive, integral power of two.
-    if (phdr->p_type != PT_LOAD || ((phdr->p_align & (phdr->p_align - 1)) != 0)) {
-      continue;
-    }
-
-    if (phdr->p_align <= 1) {
-      continue;
-    }
-
-    minimum_alignment = std::min(minimum_alignment, static_cast<size_t>(phdr->p_align));
-  }
-
-  return minimum_alignment;
+  return true;
 }
 
 // Reserve a virtual address range such that if it's limits were extended to the next 2**align
@@ -624,24 +603,23 @@ static void* ReserveWithAlignmentPadding(size_t size, size_t mapping_align, size
   // Minimum alignment of shared library gap. For efficiency, this should match the second level
   // page size of the platform.
 #if defined(__LP64__)
-  constexpr size_t kGapAlignment = 1ul << 21;  // 2MB
-#else
-  constexpr size_t kGapAlignment = 0;
+  constexpr size_t kGapAlignment = 2 * 1024 * 1024;
 #endif
   // Maximum gap size, in the units of kGapAlignment.
   constexpr size_t kMaxGapUnits = 32;
   // Allocate enough space so that the end of the desired region aligned up is still inside the
   // mapping.
-  size_t mmap_size = align_up(size, mapping_align) + mapping_align - page_size();
+  size_t mmap_size = __builtin_align_up(size, mapping_align) + mapping_align - page_size();
   uint8_t* mmap_ptr =
       reinterpret_cast<uint8_t*>(mmap(nullptr, mmap_size, PROT_NONE, mmap_flags, -1, 0));
   if (mmap_ptr == MAP_FAILED) {
     return nullptr;
   }
   size_t gap_size = 0;
-  size_t first_byte = reinterpret_cast<size_t>(align_up(mmap_ptr, mapping_align));
-  size_t last_byte = reinterpret_cast<size_t>(align_down(mmap_ptr + mmap_size, mapping_align) - 1);
-  if (kGapAlignment && first_byte / kGapAlignment != last_byte / kGapAlignment) {
+  size_t first_byte = reinterpret_cast<size_t>(__builtin_align_up(mmap_ptr, mapping_align));
+  size_t last_byte = reinterpret_cast<size_t>(__builtin_align_down(mmap_ptr + mmap_size, mapping_align) - 1);
+#if defined(__LP64__)
+  if (first_byte / kGapAlignment != last_byte / kGapAlignment) {
     // This library crosses a 2MB boundary and will fragment a new huge page.
     // Lets take advantage of that and insert a random number of inaccessible huge pages before that
     // to improve address randomization and make it harder to locate this library code by probing.
@@ -649,23 +627,24 @@ static void* ReserveWithAlignmentPadding(size_t size, size_t mapping_align, size
     mapping_align = std::max(mapping_align, kGapAlignment);
     gap_size =
         kGapAlignment * (is_first_stage_init() ? 1 : arc4random_uniform(kMaxGapUnits - 1) + 1);
-    mmap_size = align_up(size + gap_size, mapping_align) + mapping_align - page_size();
+    mmap_size = __builtin_align_up(size + gap_size, mapping_align) + mapping_align - page_size();
     mmap_ptr = reinterpret_cast<uint8_t*>(mmap(nullptr, mmap_size, PROT_NONE, mmap_flags, -1, 0));
     if (mmap_ptr == MAP_FAILED) {
       return nullptr;
     }
   }
+#endif
 
-  uint8_t *gap_end, *gap_start;
+  uint8_t* gap_end = mmap_ptr + mmap_size;
+#if defined(__LP64__)
   if (gap_size) {
-    gap_end = align_down(mmap_ptr + mmap_size, kGapAlignment);
-    gap_start = gap_end - gap_size;
-  } else {
-    gap_start = gap_end = mmap_ptr + mmap_size;
+    gap_end = __builtin_align_down(gap_end, kGapAlignment);
   }
+#endif
+  uint8_t* gap_start = gap_end - gap_size;
 
-  uint8_t* first = align_up(mmap_ptr, mapping_align);
-  uint8_t* last = align_down(gap_start, mapping_align) - size;
+  uint8_t* first = __builtin_align_up(mmap_ptr, mapping_align);
+  uint8_t* last = __builtin_align_down(gap_start, mapping_align) - size;
 
   // arc4random* is not available in first stage init because /dev/urandom hasn't yet been
   // created. Don't randomize then.
@@ -713,10 +692,9 @@ bool ElfReader::ReserveAddressSpace(address_space_params* address_space) {
     }
     size_t start_alignment = page_size();
     if (get_transparent_hugepages_supported() && get_application_target_sdk_version() >= 31) {
-      size_t maximum_alignment = phdr_table_get_maximum_alignment(phdr_table_, phdr_num_);
       // Limit alignment to PMD size as other alignments reduce the number of
       // bits available for ASLR for no benefit.
-      start_alignment = maximum_alignment == kPmdSize ? kPmdSize : page_size();
+      start_alignment = max_align_ == kPmdSize ? kPmdSize : page_size();
     }
     start = ReserveWithAlignmentPadding(load_size_, kLibraryAlignment, start_alignment, &gap_start_,
                                         &gap_size_);
@@ -748,9 +726,10 @@ bool ElfReader::ReserveAddressSpace(address_space_params* address_space) {
 }
 
 /*
- * Returns true if the kernel supports page size migration, else false.
+ * Returns true if the kernel supports page size migration for this process.
  */
 bool page_size_migration_supported() {
+#if defined(__LP64__)
   static bool pgsize_migration_enabled = []() {
     std::string enabled;
     if (!android::base::ReadFileToString("/sys/kernel/mm/pgsize_migration/enabled", &enabled)) {
@@ -759,6 +738,9 @@ bool page_size_migration_supported() {
     return enabled.find("1") != std::string::npos;
   }();
   return pgsize_migration_enabled;
+#else
+  return false;
+#endif
 }
 
 // Find the ELF note of type NT_ANDROID_TYPE_PAD_SEGMENT and check that the desc value is 1.
@@ -1003,13 +985,12 @@ bool ElfReader::LoadSegments() {
   // are not 16KiB aligned.
   size_t seg_align = should_use_16kib_app_compat_ ? kCompatPageSize : kPageSize;
 
-  size_t min_palign = phdr_table_get_minimum_alignment(phdr_table_, phdr_num_);
   // Only enforce this on 16 KB systems with app compat disabled.
   // Apps may rely on undefined behavior here on 4 KB systems,
   // which is the norm before this change is introduced
-  if (kPageSize >= 16384 && min_palign < kPageSize && !should_use_16kib_app_compat_) {
+  if (kPageSize >= 16384 && min_align_ < kPageSize && !should_use_16kib_app_compat_) {
     DL_ERR("\"%s\" program alignment (%zu) cannot be smaller than system page size (%zu)",
-           name_.c_str(), min_palign, kPageSize);
+           name_.c_str(), min_align_, kPageSize);
     return false;
   }
 
@@ -1034,7 +1015,7 @@ bool ElfReader::LoadSegments() {
     ElfW(Addr) seg_start = phdr->p_vaddr + load_bias_;
     ElfW(Addr) seg_end = seg_start + p_memsz;
 
-    ElfW(Addr) seg_page_end = align_up(seg_end, seg_align);
+    ElfW(Addr) seg_page_end = __builtin_align_up(seg_end, seg_align);
 
     ElfW(Addr) seg_file_end = seg_start + p_filesz;
 
@@ -1042,7 +1023,7 @@ bool ElfReader::LoadSegments() {
     ElfW(Addr) file_start = phdr->p_offset;
     ElfW(Addr) file_end = file_start + p_filesz;
 
-    ElfW(Addr) file_page_start = align_down(file_start, seg_align);
+    ElfW(Addr) file_page_start = __builtin_align_down(file_start, seg_align);
     ElfW(Addr) file_length = file_end - file_page_start;
 
     if (file_size_ <= 0) {
@@ -1170,6 +1151,125 @@ int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table, size_t phdr_count,
 #endif
   return _phdr_table_set_load_prot(phdr_table, phdr_count, load_bias, prot, should_pad_segments,
                                    should_use_16kib_app_compat);
+}
+
+static bool segment_needs_memtag_globals_remapping(const ElfW(Phdr) * phdr) {
+  // For now, MTE globals is only supported on writeable data segments.
+  return phdr->p_type == PT_LOAD && !(phdr->p_flags & PF_X) && (phdr->p_flags & PF_W);
+}
+
+/* When MTE globals are requested by the binary, and when the hardware supports
+ * it, remap the executable's PT_LOAD data pages to have PROT_MTE.
+ *
+ * Returns 0 on success, -1 on failure (error code in errno).
+ */
+int remap_memtag_globals_segments(const ElfW(Phdr) * phdr_table __unused,
+                                  size_t phdr_count __unused, ElfW(Addr) load_bias __unused) {
+#if defined(__aarch64__)
+  for (const ElfW(Phdr)* phdr = phdr_table; phdr < phdr_table + phdr_count; phdr++) {
+    if (!segment_needs_memtag_globals_remapping(phdr)) {
+      continue;
+    }
+
+    uintptr_t seg_page_start = page_start(phdr->p_vaddr) + load_bias;
+    uintptr_t seg_page_end = page_end(phdr->p_vaddr + phdr->p_memsz) + load_bias;
+    size_t seg_page_aligned_size = seg_page_end - seg_page_start;
+
+    int prot = PFLAGS_TO_PROT(phdr->p_flags);
+    // For anonymous private mappings, it may be possible to simply mprotect()
+    // the PROT_MTE flag over the top. For file-based mappings, this will fail,
+    // and we'll need to fall back. We also allow PROT_WRITE here to allow
+    // writing memory tags (in `soinfo::tag_globals()`), and set these sections
+    // back to read-only after tags are applied (similar to RELRO).
+    prot |= PROT_MTE;
+    if (mprotect(reinterpret_cast<void*>(seg_page_start), seg_page_aligned_size,
+                 prot | PROT_WRITE) == 0) {
+      continue;
+    }
+
+    void* mapping_copy = mmap(nullptr, seg_page_aligned_size, PROT_READ | PROT_WRITE,
+                              MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    linker_memcpy(mapping_copy, reinterpret_cast<void*>(seg_page_start), seg_page_aligned_size);
+
+    void* seg_addr = mmap(reinterpret_cast<void*>(seg_page_start), seg_page_aligned_size,
+                          prot | PROT_WRITE, MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    if (seg_addr == MAP_FAILED) return -1;
+
+    linker_memcpy(seg_addr, mapping_copy, seg_page_aligned_size);
+    munmap(mapping_copy, seg_page_aligned_size);
+  }
+#endif  // defined(__aarch64__)
+  return 0;
+}
+
+void protect_memtag_globals_ro_segments(const ElfW(Phdr) * phdr_table __unused,
+                                        size_t phdr_count __unused, ElfW(Addr) load_bias __unused) {
+#if defined(__aarch64__)
+  for (const ElfW(Phdr)* phdr = phdr_table; phdr < phdr_table + phdr_count; phdr++) {
+    int prot = PFLAGS_TO_PROT(phdr->p_flags);
+    if (!segment_needs_memtag_globals_remapping(phdr) || (prot & PROT_WRITE)) {
+      continue;
+    }
+
+    prot |= PROT_MTE;
+
+    uintptr_t seg_page_start = page_start(phdr->p_vaddr) + load_bias;
+    uintptr_t seg_page_end = page_end(phdr->p_vaddr + phdr->p_memsz) + load_bias;
+    size_t seg_page_aligned_size = seg_page_end - seg_page_start;
+    mprotect(reinterpret_cast<void*>(seg_page_start), seg_page_aligned_size, prot);
+  }
+#endif  // defined(__aarch64__)
+}
+
+void name_memtag_globals_segments(const ElfW(Phdr) * phdr_table, size_t phdr_count,
+                                  ElfW(Addr) load_bias, const char* soname,
+                                  std::list<std::string>* vma_names) {
+  for (const ElfW(Phdr)* phdr = phdr_table; phdr < phdr_table + phdr_count; phdr++) {
+    if (!segment_needs_memtag_globals_remapping(phdr)) {
+      continue;
+    }
+
+    uintptr_t seg_page_start = page_start(phdr->p_vaddr) + load_bias;
+    uintptr_t seg_page_end = page_end(phdr->p_vaddr + phdr->p_memsz) + load_bias;
+    size_t seg_page_aligned_size = seg_page_end - seg_page_start;
+
+    // For file-based mappings that we're now forcing to be anonymous mappings, set the VMA name to
+    // make debugging easier.
+    // Once we are targeting only devices that run kernel 5.10 or newer (and thus include
+    // https://android-review.git.corp.google.com/c/kernel/common/+/1934723 which causes the
+    // VMA_ANON_NAME to be copied into the kernel), we can get rid of the storage here.
+    // For now, that is not the case:
+    // https://source.android.com/docs/core/architecture/kernel/android-common#compatibility-matrix
+    constexpr int kVmaNameLimit = 80;
+    std::string& vma_name = vma_names->emplace_back(kVmaNameLimit, '\0');
+    int full_vma_length =
+        async_safe_format_buffer(vma_name.data(), kVmaNameLimit, "mt:%s+%" PRIxPTR, soname,
+                                 page_start(phdr->p_vaddr)) +
+        /* include the null terminator */ 1;
+    // There's an upper limit of 80 characters, including the null terminator, in the anonymous VMA
+    // name. If we run over that limit, we end up truncating the segment offset and parts of the
+    // DSO's name, starting on the right hand side of the basename. Because the basename is the most
+    // important thing, chop off the soname from the left hand side first.
+    //
+    // Example (with '#' as the null terminator):
+    //   - "mt:/data/nativetest64/bionic-unit-tests/bionic-loader-test-libs/libdlext_test.so+e000#"
+    //     is a `full_vma_length` == 86.
+    //
+    // We need to left-truncate (86 - 80) 6 characters from the soname, plus the
+    // `vma_truncation_prefix`, so 9 characters total.
+    if (full_vma_length > kVmaNameLimit) {
+      const char vma_truncation_prefix[] = "...";
+      int soname_truncated_bytes =
+          full_vma_length - kVmaNameLimit + sizeof(vma_truncation_prefix) - 1;
+      async_safe_format_buffer(vma_name.data(), kVmaNameLimit, "mt:%s%s+%" PRIxPTR,
+                               vma_truncation_prefix, soname + soname_truncated_bytes,
+                               page_start(phdr->p_vaddr));
+    }
+    if (prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, reinterpret_cast<void*>(seg_page_start),
+              seg_page_aligned_size, vma_name.data()) != 0) {
+      DL_WARN("Failed to rename memtag global segment: %m");
+    }
+  }
 }
 
 /* Change the protection of all loaded segments in memory to writable.

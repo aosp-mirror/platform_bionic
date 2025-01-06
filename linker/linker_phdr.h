@@ -39,6 +39,8 @@
 #include "linker_mapped_file_fragment.h"
 #include "linker_note_gnu_property.h"
 
+#include <list>
+
 #define MAYBE_MAP_FLAG(x, from, to)  (((x) & (from)) ? (to) : 0)
 #define PFLAGS_TO_PROT(x)            (MAYBE_MAP_FLAG((x), PF_X, PROT_EXEC) | \
                                       MAYBE_MAP_FLAG((x), PF_R, PROT_READ) | \
@@ -74,6 +76,7 @@ class ElfReader {
   [[nodiscard]] bool ReadElfHeader();
   [[nodiscard]] bool VerifyElfHeader();
   [[nodiscard]] bool ReadProgramHeaders();
+  [[nodiscard]] bool CheckProgramHeaderAlignment();
   [[nodiscard]] bool ReadSectionHeaders();
   [[nodiscard]] bool ReadDynamicSection();
   [[nodiscard]] bool ReadPadSegmentNote();
@@ -128,6 +131,10 @@ class ElfReader {
   // Load bias.
   ElfW(Addr) load_bias_;
 
+  // Maximum and minimum alignment requirements across all phdrs.
+  size_t max_align_;
+  size_t min_align_;
+
   // Loaded phdr.
   const ElfW(Phdr)* loaded_phdr_;
 
@@ -150,9 +157,6 @@ class ElfReader {
 
 size_t phdr_table_get_load_size(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                 ElfW(Addr)* min_vaddr = nullptr, ElfW(Addr)* max_vaddr = nullptr);
-
-size_t phdr_table_get_maximum_alignment(const ElfW(Phdr)* phdr_table, size_t phdr_count);
-size_t phdr_table_get_minimum_alignment(const ElfW(Phdr)* phdr_table, size_t phdr_count);
 
 int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                 ElfW(Addr) load_bias, bool should_pad_segments,
@@ -188,3 +192,13 @@ const char* phdr_table_get_interpreter_name(const ElfW(Phdr)* phdr_table, size_t
                                             ElfW(Addr) load_bias);
 
 bool page_size_migration_supported();
+
+int remap_memtag_globals_segments(const ElfW(Phdr) * phdr_table, size_t phdr_count,
+                                  ElfW(Addr) load_bias);
+
+void protect_memtag_globals_ro_segments(const ElfW(Phdr) * phdr_table, size_t phdr_count,
+                                        ElfW(Addr) load_bias);
+
+void name_memtag_globals_segments(const ElfW(Phdr) * phdr_table, size_t phdr_count,
+                                  ElfW(Addr) load_bias, const char* soname,
+                                  std::list<std::string>* vma_names);

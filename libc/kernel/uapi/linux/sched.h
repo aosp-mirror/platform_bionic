@@ -59,6 +59,7 @@ struct clone_args {
 #define SCHED_BATCH 3
 #define SCHED_IDLE 5
 #define SCHED_DEADLINE 6
+#define SCHED_EXT 7
 #define SCHED_RESET_ON_FORK 0x40000000
 #define SCHED_FLAG_RESET_ON_FORK 0x01
 #define SCHED_FLAG_RECLAIM 0x02

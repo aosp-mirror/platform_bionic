@@ -68,7 +68,7 @@
 #define vData v0
 #define vMask v8
 
-ENTRY(memchr_v)
+ENTRY(memchr)
 
 L(loop):
     vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
@@ -93,4 +93,4 @@ L(found):
     add iResult, pSrc, iTemp
     ret
 
-END(memchr_v)
+END(memchr)

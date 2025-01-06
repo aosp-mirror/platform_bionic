@@ -42,8 +42,18 @@
 
 #include <string>
 
+static bool g_enable_16kb_app_compat;
+
 static inline bool segment_contains_prefix(const ElfW(Phdr)* segment, const ElfW(Phdr)* prefix) {
   return segment && prefix && segment->p_vaddr == prefix->p_vaddr;
+}
+
+void set_16kb_appcompat_mode(bool enable_app_compat) {
+  g_enable_16kb_app_compat = enable_app_compat;
+}
+
+bool get_16kb_appcompat_mode() {
+  return g_enable_16kb_app_compat;
 }
 
 /*
@@ -148,7 +158,7 @@ bool ElfReader::IsEligibleFor16KiBAppCompat(ElfW(Addr)* vaddr) {
   }
 
   if (!relro_phdr) {
-    *vaddr = align_down(first_rw->p_vaddr, kCompatPageSize);
+    *vaddr = __builtin_align_down(first_rw->p_vaddr, kCompatPageSize);
     return true;
   }
 
@@ -165,7 +175,7 @@ bool ElfReader::IsEligibleFor16KiBAppCompat(ElfW(Addr)* vaddr) {
     return false;
   }
 
-  *vaddr = align_up(end, kCompatPageSize);
+  *vaddr = __builtin_align_up(end, kCompatPageSize);
   return true;
 }
 
@@ -217,11 +227,11 @@ bool ElfReader::CompatMapSegment(size_t seg_idx, size_t len) {
   // will lead to overwriting adjacent segments since the ELF's segment(s)
   // are not 16KiB aligned.
 
-  void* start = reinterpret_cast<void*>(align_down(phdr->p_vaddr + load_bias_, kCompatPageSize));
+  void* start = reinterpret_cast<void*>(__builtin_align_down(phdr->p_vaddr + load_bias_, kCompatPageSize));
 
   // The ELF could be being loaded directly from a zipped APK,
   // the zip offset must be added to find the segment offset.
-  const ElfW(Addr) offset = file_offset_ + align_down(phdr->p_offset, kCompatPageSize);
+  const ElfW(Addr) offset = file_offset_ + __builtin_align_down(phdr->p_offset, kCompatPageSize);
 
   CHECK(should_use_16kib_app_compat_);
 

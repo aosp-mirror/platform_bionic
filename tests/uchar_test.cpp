@@ -73,9 +73,8 @@ TEST(uchar, start_state) {
   uselocale(LC_GLOBAL_LOCALE);
 
   char out[MB_LEN_MAX];
-  mbstate_t ps;
+  mbstate_t ps = {};
 
-  memset(&ps, 0, sizeof(ps));
   EXPECT_EQ(static_cast<size_t>(-2), mbrtoc32(nullptr, "\xc2", 1, &ps));
   errno = 0;
   EXPECT_EQ(static_cast<size_t>(-1), c32rtomb(out, 0x00a2, &ps));
@@ -86,12 +85,12 @@ TEST(uchar, start_state) {
 
   // If the first argument to c32rtomb is nullptr or the second is L'\0' the shift
   // state should be reset.
-  memset(&ps, 0, sizeof(ps));
+  ps = {};
   EXPECT_EQ(static_cast<size_t>(-2), mbrtoc32(nullptr, "\xc2", 1, &ps));
   EXPECT_EQ(1U, c32rtomb(nullptr, 0x00a2, &ps));
   EXPECT_TRUE(mbsinit(&ps));
 
-  memset(&ps, 0, sizeof(ps));
+  ps = {};
   EXPECT_EQ(static_cast<size_t>(-2), mbrtoc32(nullptr, "\xf0\xa4", 1, &ps));
   EXPECT_EQ(1U, c32rtomb(out, L'\0', &ps));
   EXPECT_TRUE(mbsinit(&ps));
@@ -299,8 +298,7 @@ TEST(uchar, mbrtoc16_incomplete) {
   ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
   uselocale(LC_GLOBAL_LOCALE);
 
-  mbstate_t ps;
-  memset(&ps, 0, sizeof(ps));
+  mbstate_t ps = {};
 
   test_mbrtoc16_incomplete(&ps);
   test_mbrtoc16_incomplete(nullptr);
@@ -475,8 +473,7 @@ TEST(uchar, mbrtoc32_incomplete) {
   ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
   uselocale(LC_GLOBAL_LOCALE);
 
-  mbstate_t ps;
-  memset(&ps, 0, sizeof(ps));
+  mbstate_t ps = {};
 
   test_mbrtoc32_incomplete(&ps);
   test_mbrtoc32_incomplete(nullptr);

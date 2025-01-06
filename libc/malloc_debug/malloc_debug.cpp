@@ -54,6 +54,7 @@
 #include "Config.h"
 #include "DebugData.h"
 #include "LogAllocatorStats.h"
+#include "Nanotime.h"
 #include "Unreachable.h"
 #include "UnwindBacktrace.h"
 #include "backtrace.h"
@@ -69,12 +70,6 @@ DebugData* g_debug;
 bool* g_zygote_child;
 
 const MallocDispatch* g_dispatch;
-
-static inline __always_inline uint64_t Nanotime() {
-  struct timespec t = {};
-  clock_gettime(CLOCK_MONOTONIC, &t);
-  return static_cast<uint64_t>(t.tv_sec) * 1000000000LL + t.tv_nsec;
-}
 
 namespace {
 // A TimedResult contains the result of from malloc end_ns al. functions and the
@@ -595,11 +590,22 @@ void* debug_malloc(size_t size) {
   ScopedDisableDebugCalls disable;
   ScopedBacktraceSignalBlocker blocked;
 
+  memory_trace::Entry* entry = nullptr;
+  if (g_debug->config().options() & RECORD_ALLOCS) {
+    // In order to preserve the order of operations, reserve the entry before
+    // performing the operation.
+    entry = g_debug->record->ReserveEntry();
+  }
+
   TimedResult result = InternalMalloc(size);
 
-  if (g_debug->config().options() & RECORD_ALLOCS) {
-    g_debug->record->AddEntry(new MallocEntry(result.getValue<void*>(), size,
-                                              result.GetStartTimeNS(), result.GetEndTimeNS()));
+  if (entry != nullptr) {
+    *entry = memory_trace::Entry{.tid = gettid(),
+                                 .type = memory_trace::MALLOC,
+                                 .ptr = reinterpret_cast<uint64_t>(result.getValue<void*>()),
+                                 .size = size,
+                                 .start_ns = result.GetStartTimeNS(),
+                                 .end_ns = result.GetEndTimeNS()};
   }
 
   return result.getValue<void*>();
@@ -684,11 +690,21 @@ void debug_free(void* pointer) {
     return;
   }
 
+  memory_trace::Entry* entry = nullptr;
+  if (g_debug->config().options() & RECORD_ALLOCS) {
+    // In order to preserve the order of operations, reserve the entry before
+    // performing the operation.
+    entry = g_debug->record->ReserveEntry();
+  }
+
   TimedResult result = InternalFree(pointer);
 
-  if (g_debug->config().options() & RECORD_ALLOCS) {
-    g_debug->record->AddEntry(
-        new FreeEntry(pointer, result.GetStartTimeNS(), result.GetEndTimeNS()));
+  if (entry != nullptr) {
+    *entry = memory_trace::Entry{.tid = gettid(),
+                                 .type = memory_trace::FREE,
+                                 .ptr = reinterpret_cast<uint64_t>(pointer),
+                                 .start_ns = result.GetStartTimeNS(),
+                                 .end_ns = result.GetEndTimeNS()};
   }
 }
 
@@ -709,6 +725,13 @@ void* debug_memalign(size_t alignment, size_t bytes) {
   if (bytes > PointerInfoType::MaxSize()) {
     errno = ENOMEM;
     return nullptr;
+  }
+
+  memory_trace::Entry* entry = nullptr;
+  if (g_debug->config().options() & RECORD_ALLOCS) {
+    // In order to preserve the order of operations, reserve the entry before
+    // performing the operation.
+    entry = g_debug->record->ReserveEntry();
   }
 
   TimedResult result;
@@ -758,22 +781,29 @@ void* debug_memalign(size_t alignment, size_t bytes) {
     pointer = result.getValue<void*>();
   }
 
-  if (pointer != nullptr) {
-    if (g_debug->TrackPointers()) {
-      PointerData::Add(pointer, bytes);
-    }
+  if (pointer == nullptr) {
+    return nullptr;
+  }
 
-    if (g_debug->config().options() & FILL_ON_ALLOC) {
-      size_t bytes = InternalMallocUsableSize(pointer);
-      size_t fill_bytes = g_debug->config().fill_on_alloc_bytes();
-      bytes = (bytes < fill_bytes) ? bytes : fill_bytes;
-      memset(pointer, g_debug->config().fill_alloc_value(), bytes);
-    }
+  if (g_debug->TrackPointers()) {
+    PointerData::Add(pointer, bytes);
+  }
 
-    if (g_debug->config().options() & RECORD_ALLOCS) {
-      g_debug->record->AddEntry(new MemalignEntry(pointer, bytes, alignment,
-                                                  result.GetStartTimeNS(), result.GetEndTimeNS()));
-    }
+  if (g_debug->config().options() & FILL_ON_ALLOC) {
+    size_t bytes = InternalMallocUsableSize(pointer);
+    size_t fill_bytes = g_debug->config().fill_on_alloc_bytes();
+    bytes = (bytes < fill_bytes) ? bytes : fill_bytes;
+    memset(pointer, g_debug->config().fill_alloc_value(), bytes);
+  }
+
+  if (entry != nullptr) {
+    *entry = memory_trace::Entry{.tid = gettid(),
+                                 .type = memory_trace::MEMALIGN,
+                                 .ptr = reinterpret_cast<uint64_t>(pointer),
+                                 .size = bytes,
+                                 .u.align = alignment,
+                                 .start_ns = result.GetStartTimeNS(),
+                                 .end_ns = result.GetEndTimeNS()};
   }
 
   return pointer;
@@ -789,13 +819,25 @@ void* debug_realloc(void* pointer, size_t bytes) {
   ScopedDisableDebugCalls disable;
   ScopedBacktraceSignalBlocker blocked;
 
+  memory_trace::Entry* entry = nullptr;
+  if (g_debug->config().options() & RECORD_ALLOCS) {
+    // In order to preserve the order of operations, reserve the entry before
+    // performing the operation.
+    entry = g_debug->record->ReserveEntry();
+  }
+
   if (pointer == nullptr) {
     TimedResult result = InternalMalloc(bytes);
-    if (g_debug->config().options() & RECORD_ALLOCS) {
-      g_debug->record->AddEntry(new ReallocEntry(result.getValue<void*>(), bytes, nullptr,
-                                                 result.GetStartTimeNS(), result.GetEndTimeNS()));
-    }
     pointer = result.getValue<void*>();
+    if (entry != nullptr) {
+      *entry = memory_trace::Entry{.tid = gettid(),
+                                   .type = memory_trace::REALLOC,
+                                   .ptr = reinterpret_cast<uint64_t>(pointer),
+                                   .size = bytes,
+                                   .u.old_ptr = 0,
+                                   .start_ns = result.GetStartTimeNS(),
+                                   .end_ns = result.GetEndTimeNS()};
+    }
     return pointer;
   }
 
@@ -806,9 +848,14 @@ void* debug_realloc(void* pointer, size_t bytes) {
   if (bytes == 0) {
     TimedResult result = InternalFree(pointer);
 
-    if (g_debug->config().options() & RECORD_ALLOCS) {
-      g_debug->record->AddEntry(new ReallocEntry(nullptr, bytes, pointer, result.GetStartTimeNS(),
-                                                 result.GetEndTimeNS()));
+    if (entry != nullptr) {
+      *entry = memory_trace::Entry{.tid = gettid(),
+                                   .type = memory_trace::REALLOC,
+                                   .ptr = 0,
+                                   .size = 0,
+                                   .u.old_ptr = reinterpret_cast<uint64_t>(pointer),
+                                   .start_ns = result.GetStartTimeNS(),
+                                   .end_ns = result.GetEndTimeNS()};
     }
 
     return nullptr;
@@ -904,9 +951,14 @@ void* debug_realloc(void* pointer, size_t bytes) {
     }
   }
 
-  if (g_debug->config().options() & RECORD_ALLOCS) {
-    g_debug->record->AddEntry(new ReallocEntry(new_pointer, bytes, pointer, result.GetStartTimeNS(),
-                                               result.GetEndTimeNS()));
+  if (entry != nullptr) {
+    *entry = memory_trace::Entry{.tid = gettid(),
+                                 .type = memory_trace::REALLOC,
+                                 .ptr = reinterpret_cast<uint64_t>(new_pointer),
+                                 .size = bytes,
+                                 .u.old_ptr = reinterpret_cast<uint64_t>(pointer),
+                                 .start_ns = result.GetStartTimeNS(),
+                                 .end_ns = result.GetEndTimeNS()};
   }
 
   return new_pointer;
@@ -945,6 +997,13 @@ void* debug_calloc(size_t nmemb, size_t bytes) {
     return nullptr;
   }
 
+  memory_trace::Entry* entry = nullptr;
+  if (g_debug->config().options() & RECORD_ALLOCS) {
+    // In order to preserve the order of operations, reserve the entry before
+    // performing the operation.
+    entry = g_debug->record->ReserveEntry();
+  }
+
   void* pointer;
   TimedResult result;
   if (g_debug->HeaderEnabled()) {
@@ -961,9 +1020,14 @@ void* debug_calloc(size_t nmemb, size_t bytes) {
     pointer = result.getValue<void*>();
   }
 
-  if (g_debug->config().options() & RECORD_ALLOCS) {
-    g_debug->record->AddEntry(
-        new CallocEntry(pointer, nmemb, bytes, result.GetStartTimeNS(), result.GetEndTimeNS()));
+  if (entry != nullptr) {
+    *entry = memory_trace::Entry{.tid = gettid(),
+                                 .type = memory_trace::CALLOC,
+                                 .ptr = reinterpret_cast<uint64_t>(pointer),
+                                 .size = bytes,
+                                 .u.n_elements = nmemb,
+                                 .start_ns = result.GetStartTimeNS(),
+                                 .end_ns = result.GetEndTimeNS()};
   }
 
   if (pointer != nullptr && g_debug->TrackPointers()) {
@@ -1062,18 +1126,20 @@ int debug_malloc_iterate(uintptr_t base, size_t size, void (*callback)(uintptr_t
 
 void debug_malloc_disable() {
   ScopedConcurrentLock lock;
-  g_dispatch->malloc_disable();
   if (g_debug->pointer) {
+    // Acquire the pointer locks first, otherwise, the code can be holding
+    // the allocation lock and deadlock trying to acquire a pointer lock.
     g_debug->pointer->PrepareFork();
   }
+  g_dispatch->malloc_disable();
 }
 
 void debug_malloc_enable() {
   ScopedConcurrentLock lock;
+  g_dispatch->malloc_enable();
   if (g_debug->pointer) {
     g_debug->pointer->PostForkParent();
   }
-  g_dispatch->malloc_enable();
 }
 
 ssize_t debug_malloc_backtrace(void* pointer, uintptr_t* frames, size_t max_frames) {

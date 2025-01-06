@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 The Android Open Source Project
+ * Copyright (C) 2024 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,7 +26,17 @@
  * SUCH DAMAGE.
  */
 
-#include <upstream-openbsd/android/include/openbsd-compat.h>
+#include <errno.h>
 
-#define memchr memchr_gc
-#include <upstream-openbsd/lib/libc/string/memchr.c>
+#include "private/ErrnoRestorer.h"
+#include "pthread_internal.h"
+
+int pthread_setaffinity_np(pthread_t t, size_t cpu_set_size, const cpu_set_t* cpu_set) {
+  ErrnoRestorer errno_restorer;
+
+  pid_t tid = __pthread_internal_gettid(t, "pthread_setaffinity_np");
+  if (tid == -1) return ESRCH;
+
+  if (sched_setaffinity(tid, cpu_set_size, cpu_set) == -1) return errno;
+  return 0;
+}

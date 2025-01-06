@@ -62,6 +62,7 @@ Current libc symbols: https://android.googlesource.com/platform/bionic/+/main/li
 New libc functions in API level 36:
   * `qsort_r`, `sig2str`/`str2sig` (POSIX Issue 8 additions).
   * GNU/BSD extension `lchmod`.
+  * GNU extensions `pthread_getaffinity_np`/`pthread_setaffinity_np`.
   * New system call wrapper: `mseal` (`<sys/mman.h>`).
 
 New libc functions in V (API level 35):

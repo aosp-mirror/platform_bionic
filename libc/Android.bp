@@ -264,6 +264,7 @@ cc_library_static {
     name: "libc_init_static",
     defaults: ["libc_defaults"],
     srcs: [
+        "bionic/libc_init_mte.cpp",
         "bionic/libc_init_static.cpp",
         ":elf_note_sources",
     ],
@@ -470,7 +471,6 @@ cc_library_static {
         "upstream-netbsd/lib/libc/regex/regerror.c",
         "upstream-netbsd/lib/libc/regex/regexec.c",
         "upstream-netbsd/lib/libc/regex/regfree.c",
-        "upstream-netbsd/lib/libc/stdlib/bsearch.c",
         "upstream-netbsd/lib/libc/stdlib/drand48.c",
         "upstream-netbsd/lib/libc/stdlib/erand48.c",
         "upstream-netbsd/lib/libc/stdlib/jrand48.c",
@@ -622,11 +622,7 @@ cc_library_static {
     arch: {
         arm: {
             srcs: [
-                "upstream-openbsd/lib/libc/string/memchr.c",
-                "upstream-openbsd/lib/libc/string/memrchr.c",
                 "upstream-openbsd/lib/libc/string/stpncpy.c",
-                "upstream-openbsd/lib/libc/string/strlcat.c",
-                "upstream-openbsd/lib/libc/string/strlcpy.c",
                 "upstream-openbsd/lib/libc/string/strncat.c",
                 "upstream-openbsd/lib/libc/string/strncmp.c",
                 "upstream-openbsd/lib/libc/string/strncpy.c",
@@ -636,18 +632,13 @@ cc_library_static {
             srcs: [
                 "upstream-openbsd/lib/libc/string/strcat.c",
                 "upstream-openbsd/lib/libc/string/stpncpy.c",
-                "upstream-openbsd/lib/libc/string/strlcat.c",
-                "upstream-openbsd/lib/libc/string/strlcpy.c",
                 "upstream-openbsd/lib/libc/string/strncat.c",
                 "upstream-openbsd/lib/libc/string/strncpy.c",
             ],
         },
         riscv64: {
             srcs: [
-                "upstream-openbsd/lib/libc/string/memrchr.c",
                 "upstream-openbsd/lib/libc/string/stpncpy.c",
-                "upstream-openbsd/lib/libc/string/strlcat.c",
-                "upstream-openbsd/lib/libc/string/strlcpy.c",
             ],
         },
         x86: {
@@ -657,10 +648,7 @@ cc_library_static {
         },
         x86_64: {
             srcs: [
-                "upstream-openbsd/lib/libc/string/memchr.c",
-                "upstream-openbsd/lib/libc/string/memrchr.c",
-                "upstream-openbsd/lib/libc/string/strlcat.c",
-                "upstream-openbsd/lib/libc/string/strlcpy.c",
+                // x86_64 has custom/llvm-libc implementations of all of these.
             ],
         },
     },
@@ -940,6 +928,7 @@ cc_library_static {
         "bionic/pthread_detach.cpp",
         "bionic/pthread_equal.cpp",
         "bionic/pthread_exit.cpp",
+        "bionic/pthread_getaffinity.cpp",
         "bionic/pthread_getcpuclockid.cpp",
         "bionic/pthread_getschedparam.cpp",
         "bionic/pthread_gettid_np.cpp",
@@ -953,6 +942,7 @@ cc_library_static {
         "bionic/pthread_sigqueue.cpp",
         "bionic/pthread_self.cpp",
         "bionic/pthread_setname_np.cpp",
+        "bionic/pthread_setaffinity.cpp",
         "bionic/pthread_setschedparam.cpp",
         "bionic/pthread_spinlock.cpp",
         "bionic/ptrace.cpp",
@@ -1092,11 +1082,6 @@ cc_library_static {
                 "arch-arm/krait/bionic/memset.S",
 
                 "arch-arm/kryo/bionic/memcpy.S",
-
-                "bionic/strchr.cpp",
-                "bionic/strchrnul.cpp",
-                "bionic/strnlen.cpp",
-                "bionic/strrchr.cpp",
             ],
         },
         arm64: {
@@ -1134,25 +1119,6 @@ cc_library_static {
                 "arch-riscv64/string/strncmp_v.S",
                 "arch-riscv64/string/strncpy_v.S",
                 "arch-riscv64/string/strnlen_v.S",
-
-                "arch-riscv64/string/memchr.c",
-                "arch-riscv64/string/memcmp.c",
-                "arch-riscv64/string/memcpy.c",
-                "arch-riscv64/string/memmove.c",
-                "arch-riscv64/string/memset.c",
-                "arch-riscv64/string/stpcpy.c",
-                "arch-riscv64/string/strcat.c",
-                "arch-riscv64/string/strchr.c",
-                "arch-riscv64/string/strcmp.c",
-                "arch-riscv64/string/strcpy.c",
-                "arch-riscv64/string/strlen.c",
-                "arch-riscv64/string/strncat.c",
-                "arch-riscv64/string/strncmp.c",
-                "arch-riscv64/string/strncpy.c",
-                "arch-riscv64/string/strnlen.c",
-
-                "bionic/strchrnul.cpp",
-                "bionic/strrchr.cpp",
             ],
         },
 
@@ -1166,30 +1132,21 @@ cc_library_static {
                 "arch-x86/bionic/vfork.S",
                 "arch-x86/bionic/__x86.get_pc_thunk.S",
 
-                "arch-x86/string/sse2-memchr-atom.S",
                 "arch-x86/string/sse2-memmove-slm.S",
-                "arch-x86/string/sse2-memrchr-atom.S",
                 "arch-x86/string/sse2-memset-slm.S",
                 "arch-x86/string/sse2-stpcpy-slm.S",
                 "arch-x86/string/sse2-stpncpy-slm.S",
-                "arch-x86/string/sse2-strchr-atom.S",
                 "arch-x86/string/sse2-strcpy-slm.S",
                 "arch-x86/string/sse2-strlen-slm.S",
                 "arch-x86/string/sse2-strncpy-slm.S",
-                "arch-x86/string/sse2-strnlen-atom.S",
-                "arch-x86/string/sse2-strrchr-atom.S",
 
                 "arch-x86/string/ssse3-memcmp-atom.S",
                 "arch-x86/string/ssse3-strcat-atom.S",
                 "arch-x86/string/ssse3-strcmp-atom.S",
-                "arch-x86/string/ssse3-strlcat-atom.S",
-                "arch-x86/string/ssse3-strlcpy-atom.S",
                 "arch-x86/string/ssse3-strncat-atom.S",
                 "arch-x86/string/ssse3-strncmp-atom.S",
 
                 "arch-x86/string/sse4-memcmp-slm.S",
-
-                "bionic/strchrnul.cpp",
             ],
         },
         x86_64: {
@@ -1214,11 +1171,6 @@ cc_library_static {
                 "arch-x86_64/string/sse4-memcmp-slm.S",
                 "arch-x86_64/string/ssse3-strcmp-slm.S",
                 "arch-x86_64/string/ssse3-strncmp-slm.S",
-
-                "bionic/strchr.cpp",
-                "bionic/strchrnul.cpp",
-                "bionic/strnlen.cpp",
-                "bionic/strrchr.cpp",
             ],
         },
     },
@@ -1237,6 +1189,7 @@ cc_library_static {
     generated_headers: ["generated_android_ids"],
 
     whole_static_libs: [
+        "//external/llvm-libc:llvmlibc",
         "libsystemproperties",
     ],
 
@@ -1393,9 +1346,6 @@ cc_defaults {
         arm64: {
             srcs: ["arch-arm64/dynamic_function_dispatch.cpp"],
         },
-        riscv64: {
-            srcs: ["arch-riscv64/dynamic_function_dispatch.cpp"],
-        },
     },
     // Prevent the compiler from inserting calls to libc/taking the address of
     // a jump table from within an ifunc (or, in the static case, code that
@@ -1489,6 +1439,7 @@ filegroup {
     srcs: [
         "arch-common/bionic/crtbegin_so.c",
         "arch-common/bionic/crtbrand.S",
+        "bionic/android_mallopt.cpp",
         "bionic/gwp_asan_wrappers.cpp",
         "bionic/heap_tagging.cpp",
         "bionic/icu.cpp",
@@ -1507,6 +1458,7 @@ filegroup {
 filegroup {
     name: "libc_sources_static",
     srcs: [
+        "bionic/android_mallopt.cpp",
         "bionic/gwp_asan_wrappers.cpp",
         "bionic/heap_tagging.cpp",
         "bionic/icu_static.cpp",
@@ -1673,8 +1625,14 @@ cc_library {
     },
     native_bridge_supported: false,
     // It is never correct to depend on this directly. This is only
-    // needed for the runtime apex, and in base_system.mk.
-    visibility: ["//bionic/apex"],
+    // needed for the runtime apex, and in base_system.mk, and system_image_defaults
+    // which is default module for soong-defined system image.
+    visibility: [
+        "//bionic/apex",
+        "//build/make/target/product/generic",
+        //TODO(b/381985636) : Remove visibility to Soong-defined GSI once resolved
+        "//build/make/target/product/gsi",
+    ],
 }
 
 genrule {
@@ -2162,6 +2120,7 @@ cc_library_static {
         },
     },
     whole_static_libs: [
+        "//external/llvm-libc:llvmlibc",
         "libarm-optimized-routines-mem",
         "libc_netbsd",
     ],
@@ -2311,6 +2270,9 @@ cc_defaults {
         "-E",
         "-Wall",
         "-Werror",
+        // Soong implicitly adds a -c argument that we override with -E.
+        // Suppress Clang's error about the unused -c argument.
+        "-Wno-unused-command-line-argument",
         "-nostdinc",
     ],
 }
