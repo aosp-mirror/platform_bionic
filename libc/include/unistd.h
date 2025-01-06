@@ -283,7 +283,7 @@ int unlinkat(int __dirfd, const char* _Nonnull __path, int __flags);
 int chdir(const char* _Nonnull __path);
 
 /**
- * [fchdir(2)](https://man7.org/linux/man-pages/man2/chdir.2.html) changes
+ * [fchdir(2)](https://man7.org/linux/man-pages/man2/fchdir.2.html) changes
  * the current working directory to the given fd.
  *
  * This function affects all threads in the process, so is generally a bad idea

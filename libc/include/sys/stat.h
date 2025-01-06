@@ -320,7 +320,7 @@ int mkfifoat(int __dir_fd, const char* _Nonnull __path, mode_t __mode) __INTRODU
 int utimensat(int __dir_fd, const char* __BIONIC_COMPLICATED_NULLNESS __path, const struct timespec __times[_Nullable 2], int __flags);
 
 /**
- * [futimens(2)](https://man7.org/linux/man-pages/man2/utimensat.2.html) sets
+ * [futimens(3)](https://man7.org/linux/man-pages/man3/futimens.3.html) sets
  * the given file descriptor's timestamp.
  *
  * `__times[0]` is the access time (atime), and `__times[1]` the last modification time (mtime).
