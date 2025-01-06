@@ -176,13 +176,13 @@ long telldir(DIR* _Nonnull __dir) __INTRODUCED_IN(23);
 int dirfd(DIR* _Nonnull __dir);
 
 /**
- * [alphasort](https://man7.org/linux/man-pages/man3/alphasort.3.html) is a
+ * [alphasort(3)](https://man7.org/linux/man-pages/man3/alphasort.3.html) is a
  * comparator for use with scandir() that uses strcoll().
  */
 int alphasort(const struct dirent* _Nonnull * _Nonnull __lhs, const struct dirent* _Nonnull * _Nonnull __rhs);
 
 /**
- * [alphasort64](https://man7.org/linux/man-pages/man3/alphasort.3.html) is a
+ * [alphasort64(3)](https://man7.org/linux/man-pages/man3/alphasort.3.html) is a
  * comparator for use with scandir64() that uses strcmp().
  */
 int alphasort64(const struct dirent64* _Nonnull * _Nonnull __lhs, const struct dirent64* _Nonnull * _Nonnull __rhs);
