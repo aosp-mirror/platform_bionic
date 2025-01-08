@@ -44,8 +44,7 @@ TEST(sys_shm, smoke) {
   ASSERT_NE(id, -1);
 
   // Check segment info.
-  shmid_ds ds;
-  memset(&ds, 0, sizeof(ds));
+  shmid_ds ds = {};
   ASSERT_EQ(0, shmctl(id, IPC_STAT, &ds));
   ASSERT_EQ(1234U, ds.shm_segsz);
 

@@ -45,8 +45,7 @@ TEST(sys_msg, smoke) {
   ASSERT_NE(id, -1);
 
   // Queue should be empty.
-  msqid_ds ds;
-  memset(&ds, 0, sizeof(ds));
+  msqid_ds ds = {};
   ASSERT_EQ(0, msgctl(id, IPC_STAT, &ds));
   ASSERT_EQ(0U, ds.msg_qnum);
   ASSERT_EQ(0U, ds.msg_cbytes);
@@ -64,7 +63,7 @@ TEST(sys_msg, smoke) {
   ASSERT_EQ(sizeof(msg.data), ds.msg_cbytes);
 
   // Read the message.
-  memset(&msg, 0, sizeof(msg));
+  msg = {};
   ASSERT_EQ(static_cast<ssize_t>(sizeof(msg.data)),
             msgrcv(id, &msg, sizeof(msg.data), 0, 0));
   ASSERT_EQ(1, msg.type);

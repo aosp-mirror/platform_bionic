@@ -18,6 +18,9 @@
 #define _ULL(x) (_AC(x, ULL))
 #define _BITUL(x) (_UL(1) << (x))
 #define _BITULL(x) (_ULL(1) << (x))
+#ifndef __ASSEMBLY__
+#define _BIT128(x) ((unsigned __int128) (1) << (x))
+#endif
 #define __ALIGN_KERNEL(x,a) __ALIGN_KERNEL_MASK(x, (__typeof__(x)) (a) - 1)
 #define __ALIGN_KERNEL_MASK(x,mask) (((x) + (mask)) & ~(mask))
 #define __KERNEL_DIV_ROUND_UP(n,d) (((n) + (d) - 1) / (d))

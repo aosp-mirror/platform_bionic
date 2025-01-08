@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <stddef.h>
 #include <stdint.h>
 
 #define BIONIC_DISALLOW_COPY_AND_ASSIGN(TypeName) \
@@ -30,24 +31,6 @@
   ((sizeof(value) == 8) \
     ? (1UL << (64 - __builtin_clzl(static_cast<unsigned long>(value)))) \
     : (1UL << (32 - __builtin_clz(static_cast<unsigned int>(value)))))
-
-static constexpr uintptr_t align_down(uintptr_t p, size_t align) {
-  return p & ~(align - 1);
-}
-
-static constexpr uintptr_t align_up(uintptr_t p, size_t align) {
-  return (p + align - 1) & ~(align - 1);
-}
-
-template <typename T>
-static inline T* _Nonnull align_down(T* _Nonnull p, size_t align) {
-  return reinterpret_cast<T*>(align_down(reinterpret_cast<uintptr_t>(p), align));
-}
-
-template <typename T>
-static inline T* _Nonnull align_up(T* _Nonnull p, size_t align) {
-  return reinterpret_cast<T*>(align_up(reinterpret_cast<uintptr_t>(p), align));
-}
 
 #if defined(__arm__)
 #define BIONIC_STOP_UNWIND asm volatile(".cfi_undefined r14")

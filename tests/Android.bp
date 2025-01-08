@@ -94,6 +94,13 @@ cc_defaults {
 // Prebuilt shared libraries for use in tests.
 // -----------------------------------------------------------------------------
 
+filegroup {
+    name: "bionic_prebuilt_test_elf_files_arm64",
+    srcs: [
+        "prebuilt-elf-files/arm64/*.so",
+    ],
+}
+
 cc_prebuilt_test_library_shared {
     name: "libtest_invalid-rw_load_segment",
     strip: {

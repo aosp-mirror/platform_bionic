@@ -66,7 +66,7 @@
 #define vStr v0
 #define vMaskEnd v8
 
-ENTRY(strnlen_v)
+ENTRY(strnlen)
 
     mv pCopyStr, pStr
     mv iRetValue, iMaxlen
@@ -86,4 +86,4 @@ L(strnlen_loop):
 L(end_strnlen_loop):
     ret
 
-END(strnlen_v)
+END(strnlen)
