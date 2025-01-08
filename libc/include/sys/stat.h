@@ -216,10 +216,10 @@ int fstat64(int __fd, struct stat64* _Nonnull __buf);
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
  */
-int fstatat(int __dir_fd, const char* _Nonnull __path, struct stat* _Nonnull __buf, int __flags);
+int fstatat(int __dir_fd, const char* _Nullable __path, struct stat* _Nonnull __buf, int __flags);
 
 /** An alias for fstatat(). */
-int fstatat64(int __dir_fd, const char* _Nonnull __path, struct stat64* _Nonnull __buf, int __flags);
+int fstatat64(int __dir_fd, const char* _Nullable __path, struct stat64* _Nonnull __buf, int __flags);
 
 /**
  * [lstat(2)](https://man7.org/linux/man-pages/man2/lstat.2.html)
