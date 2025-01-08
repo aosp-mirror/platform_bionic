@@ -160,7 +160,7 @@ int strerror_r(int __errno_value, char* _Nonnull __buf, size_t __n);
 #endif
 
 /**
- * [strerrorname_np(3)](https://man7.org/linux/man-pages/man3/strerrordesc_np.3.html)
+ * [strerrorname_np(3)](https://man7.org/linux/man-pages/man3/strerrorname_np.3.html)
  * returns the name of the errno constant corresponding to its argument.
  * `strerrorname_np(38)` would return "ENOSYS", because `ENOSYS` is errno 38. This
  * is mostly useful for error reporting in cases where a string like "ENOSYS" is

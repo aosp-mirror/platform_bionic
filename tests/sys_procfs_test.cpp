@@ -20,20 +20,11 @@
 #include <sys/procfs.h>
 
 TEST(sys_procfs, types) {
-  elf_greg_t reg;
-  memset(&reg, 0, sizeof(reg));
-
-  elf_gregset_t regs;
-  memset(&regs, 0, sizeof(regs));
-
-  elf_fpregset_t fp_regs;
-  memset(&fp_regs, 0, sizeof(fp_regs));
-
-  prgregset_t pr_g_regs;
-  memset(&pr_g_regs, 0, sizeof(pr_g_regs));
-
-  prfpregset_t pr_fp_regs;
-  memset(&pr_fp_regs, 0, sizeof(pr_fp_regs));
+  elf_greg_t reg = {};
+  elf_gregset_t regs = {};
+  elf_fpregset_t fp_regs = {};
+  prgregset_t pr_g_regs = {};
+  prfpregset_t pr_fp_regs = {};
 
   static_assert(sizeof(prgregset_t) == sizeof(elf_gregset_t), "");
   static_assert(sizeof(prfpregset_t) == sizeof(elf_fpregset_t), "");

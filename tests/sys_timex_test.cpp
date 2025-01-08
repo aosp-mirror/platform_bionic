@@ -21,15 +21,13 @@
 #include <gtest/gtest.h>
 
 TEST(sys_timex, adjtimex_smoke) {
-  timex t;
-  memset(&t, 0, sizeof(t));
+  timex t = {};
   // adjtimex/clock_adjtime return the clock state on success, -1 on failure.
   ASSERT_NE(-1, adjtimex(&t));
 }
 
 TEST(sys_timex, clock_adjtime_smoke) {
-  timex t;
-  memset(&t, 0, sizeof(t));
+  timex t = {};
   // adjtimex/clock_adjtime return the clock state on success, -1 on failure.
   ASSERT_NE(-1, clock_adjtime(CLOCK_REALTIME, &t));
 }

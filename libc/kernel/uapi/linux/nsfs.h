@@ -18,4 +18,13 @@
 #define NS_GET_TGID_FROM_PIDNS _IOR(NSIO, 0x7, int)
 #define NS_GET_PID_IN_PIDNS _IOR(NSIO, 0x8, int)
 #define NS_GET_TGID_IN_PIDNS _IOR(NSIO, 0x9, int)
+struct mnt_ns_info {
+  __u32 size;
+  __u32 nr_mounts;
+  __u64 mnt_ns_id;
+};
+#define MNT_NS_INFO_SIZE_VER0 16
+#define NS_MNT_GET_INFO _IOR(NSIO, 10, struct mnt_ns_info)
+#define NS_MNT_GET_NEXT _IOR(NSIO, 11, struct mnt_ns_info)
+#define NS_MNT_GET_PREV _IOR(NSIO, 12, struct mnt_ns_info)
 #endif

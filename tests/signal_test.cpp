@@ -804,10 +804,7 @@ TEST(signal, rt_tgsigqueueinfo) {
 
   ASSERT_EQ(0, sigaction(SIGUSR1, &handler, nullptr));
 
-  siginfo sent;
-  memset(&sent, 0, sizeof(sent));
-
-  sent.si_code = SI_TKILL;
+  siginfo sent = {.si_code = SI_TKILL};
   ASSERT_EQ(0, syscall(SYS_rt_tgsigqueueinfo, getpid(), gettid(), SIGUSR1, &sent))
     << "rt_tgsigqueueinfo failed: " << strerror(errno) << error_msg;
   ASSERT_EQ(sent.si_code, received.si_code) << "rt_tgsigqueueinfo modified si_code, expected "

@@ -44,9 +44,11 @@ typedef struct {
   size_t fini_array_count;
 } structors_array_t;
 
-__BEGIN_DECLS
-
+// The main function must not be declared with a linkage-specification
+// ('extern "C"' or 'extern "C++"'), so declare it before __BEGIN_DECLS.
 extern int main(int argc, char** argv, char** env);
+
+__BEGIN_DECLS
 
 __noreturn void __libc_init(void* raw_args,
                             void (*onexit)(void),

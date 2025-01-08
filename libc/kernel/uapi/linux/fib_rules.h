@@ -61,6 +61,7 @@ enum {
   FRA_IP_PROTO,
   FRA_SPORT_RANGE,
   FRA_DPORT_RANGE,
+  FRA_DSCP,
   __FRA_MAX
 };
 #define FRA_MAX (__FRA_MAX - 1)

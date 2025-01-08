@@ -32,8 +32,7 @@ TEST(netinet_ether, ether_aton__ether_ntoa) {
 }
 
 TEST(netinet_ether, ether_aton_r__ether_ntoa_r) {
-  ether_addr addr;
-  memset(&addr, 0, sizeof(addr));
+  ether_addr addr = {};
   ether_addr* a = ether_aton_r("12:34:56:78:9a:Bc", &addr);
   ASSERT_EQ(&addr, a);
   ASSERT_EQ(0x12, addr.ether_addr_octet[0]);
