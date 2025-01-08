@@ -40,7 +40,7 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wnullability-completeness"
 /**
- * [sockaddr_storage](https://man7.org/linux/man-pages/man3/sockaddr.3type.html)
+ * [sockaddr_storage](https://man7.org/linux/man-pages/man3/sockaddr_storage.3type.html)
  * is a structure large enough to contain any other `sockaddr_*` type, used to
  * pass socket addresses without needing to know what kind of socket address
  * you're passing.
