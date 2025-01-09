@@ -1629,9 +1629,7 @@ cc_library {
     // which is default module for soong-defined system image.
     visibility: [
         "//bionic/apex",
-        "//build/make/target/product/generic",
-        //TODO(b/381985636) : Remove visibility to Soong-defined GSI once resolved
-        "//build/make/target/product/gsi",
+        "//visibility:any_system_partition",
     ],
 }
 
