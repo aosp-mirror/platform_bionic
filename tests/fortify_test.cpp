@@ -58,8 +58,7 @@ TEST_F(DEATHTEST, stpncpy_fortified2) {
 }
 
 TEST_F(DEATHTEST, stpncpy2_fortified2) {
-  foo myfoo;
-  memset(&myfoo, 0, sizeof(myfoo));
+  foo myfoo = {};
   myfoo.one[0] = 'A'; // not null terminated string
   ASSERT_FORTIFY(stpncpy(myfoo.b, myfoo.one, sizeof(myfoo.b)));
 }
@@ -71,8 +70,7 @@ TEST_F(DEATHTEST, strncpy_fortified2) {
 }
 
 TEST_F(DEATHTEST, strncpy2_fortified2) {
-  foo myfoo;
-  memset(&myfoo, 0, sizeof(myfoo));
+  foo myfoo = {};
   myfoo.one[0] = 'A'; // not null terminated string
   ASSERT_FORTIFY(strncpy(myfoo.b, myfoo.one, sizeof(myfoo.b)));
 }
@@ -572,8 +570,7 @@ TEST_F(DEATHTEST, send_fortified) {
 
 TEST_F(DEATHTEST, FD_ISSET_fortified) {
 #if defined(__BIONIC__) // glibc catches this at compile-time.
-  fd_set set;
-  memset(&set, 0, sizeof(set));
+  fd_set set = {};
   ASSERT_FORTIFY(FD_ISSET(-1, &set));
 #endif
 }

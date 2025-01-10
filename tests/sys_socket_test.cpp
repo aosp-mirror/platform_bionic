@@ -42,10 +42,7 @@ static void* ConnectFn(void* data) {
     return reinterpret_cast<void*>(-1);
   }
 
-  struct sockaddr_un addr;
-  memset(&addr, 0, sizeof(addr));
-  addr.sun_family = AF_UNIX;
-  addr.sun_path[0] = '\0';
+  struct sockaddr_un addr = {.sun_family = AF_UNIX, .sun_path[0] = '\0'};
   strcpy(addr.sun_path + 1, pdata->sock_path);
 
   if (connect(fd, reinterpret_cast<struct sockaddr*>(&addr), sizeof(addr)) < 0) {
@@ -66,10 +63,7 @@ static void RunTest(void (*test_fn)(struct sockaddr_un*, int),
   int fd = socket(PF_UNIX, SOCK_SEQPACKET, 0);
   ASSERT_NE(fd, -1) << strerror(errno);
 
-  struct sockaddr_un addr;
-  memset(&addr, 0, sizeof(addr));
-  addr.sun_family = AF_UNIX;
-  addr.sun_path[0] = '\0';
+  struct sockaddr_un addr = {.sun_family = AF_UNIX, .sun_path[0] = '\0'};
   strcpy(addr.sun_path + 1, sock_path);
 
   ASSERT_NE(-1, bind(fd, reinterpret_cast<struct sockaddr*>(&addr), sizeof(addr))) << strerror(errno);
@@ -141,9 +135,7 @@ static void TestRecvMMsg(struct sockaddr_un *addr, int fd) {
   int fd_acc = accept(fd, reinterpret_cast<struct sockaddr*>(addr), &len);
   ASSERT_NE(fd_acc, -1) << strerror(errno);
 
-  struct mmsghdr msgs[NUM_RECV_MSGS];
-  memset(msgs, 0, sizeof(struct mmsghdr)*NUM_RECV_MSGS);
-
+  struct mmsghdr msgs[NUM_RECV_MSGS] = {};
   struct iovec io[NUM_RECV_MSGS];
   char bufs[NUM_RECV_MSGS][100];
   for (size_t i = 0; i < NUM_RECV_MSGS; i++) {
@@ -155,10 +147,7 @@ static void TestRecvMMsg(struct sockaddr_un *addr, int fd) {
     msgs[i].msg_len = sizeof(struct msghdr);
   }
 
-  struct timespec ts;
-  memset(&ts, 0, sizeof(ts));
-  ts.tv_sec = 5;
-  ts.tv_nsec = 0;
+  struct timespec ts = {.tv_sec = 5, .tv_nsec = 0};
   ASSERT_EQ(NUM_RECV_MSGS,
             static_cast<size_t>(recvmmsg(fd_acc, msgs, NUM_RECV_MSGS, 0, &ts)))
            << strerror(errno);
@@ -189,8 +178,7 @@ const char* g_SendMsgs[] = {
 #define NUM_SEND_MSGS (sizeof(g_SendMsgs)/sizeof(const char*))
 
 static bool SendMMsg(int fd) {
-  struct mmsghdr msgs[NUM_SEND_MSGS];
-  memset(msgs, 0, sizeof(struct mmsghdr)*NUM_SEND_MSGS);
+  struct mmsghdr msgs[NUM_SEND_MSGS] = {};
   struct iovec io[NUM_SEND_MSGS];
   for (size_t i = 0; i < NUM_SEND_MSGS; i++) {
     io[i].iov_base = reinterpret_cast<void*>(const_cast<char*>(g_SendMsgs[i]));

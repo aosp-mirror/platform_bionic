@@ -47,8 +47,7 @@ TEST(sys_sem, smoke) {
   ASSERT_NE(id, -1);
 
   // Check semaphore info.
-  semid_ds ds;
-  memset(&ds, 0, sizeof(ds));
+  semid_ds ds = {};
   ASSERT_EQ(0, semctl(id, 0, IPC_STAT, &ds));
   ASSERT_EQ(1U, ds.sem_nsems);
 

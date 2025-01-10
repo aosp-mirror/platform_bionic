@@ -74,7 +74,7 @@ __noreturn void verr(int __status, const char* _Nullable __fmt, va_list __args) 
 __noreturn void errx(int __status, const char* _Nullable __fmt, ...) __printflike(2, 3);
 
 /**
- * [verrx(3)](https://man7.org/linux/man-pages/man3/err.3.html) outputs the program name, and
+ * [verrx(3)](https://man7.org/linux/man-pages/man3/verrx.3.html) outputs the program name, and
  * the vprintf()-like formatted message.
  *
  * Calls exit() with `__status`.
@@ -108,7 +108,7 @@ void vwarn(const char* _Nullable __fmt, va_list __args) __printflike(1, 0);
 void warnx(const char* _Nullable __fmt, ...) __printflike(1, 2);
 
 /**
- * [vwarnx(3)](https://man7.org/linux/man-pages/man3/warn.3.html) outputs the program name, and
+ * [vwarnx(3)](https://man7.org/linux/man-pages/man3/vwarnx.3.html) outputs the program name, and
  * the vprintf()-like formatted message.
  *
  * New code should consider error() in `<error.h>`.
