@@ -84,7 +84,7 @@ unsigned int fault_new_stack_page(uintptr_t low, Fn f) {
   // Useless, but should defeat TCO.
   return new_low + fault_new_stack_page(low, f);
 }
-extern "C" int main(int argc, char** argv) {
+int main(int argc, char** argv) {
   if (argc < 2) {
     return 1;
   }
@@ -150,7 +150,7 @@ extern "C" int main(int argc, char** argv) {
 }
 
 #else
-extern "C" int main(int, char**) {
+int main(int, char**) {
   return 1;
 }
 #endif

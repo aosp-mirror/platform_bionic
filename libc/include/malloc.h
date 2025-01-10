@@ -77,8 +77,8 @@ __nodiscard void* _Nullable calloc(size_t __item_count, size_t __item_size) __ma
 __nodiscard void* _Nullable realloc(void* _Nullable __ptr, size_t __byte_count) __BIONIC_ALLOC_SIZE(2);
 
 /**
- * [reallocarray(3)](https://man7.org/linux/man-pages/man3/realloc.3.html) resizes
- * allocated memory on the heap.
+ * [reallocarray(3)](https://man7.org/linux/man-pages/man3/reallocarray.3.html)
+ * resizes allocated memory on the heap.
  *
  * Equivalent to `realloc(__ptr, __item_count * __item_size)` but fails if the
  * multiplication overflows.

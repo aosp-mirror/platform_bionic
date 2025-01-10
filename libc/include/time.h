@@ -281,7 +281,7 @@ size_t strftime_l(char* _Nonnull __buf, size_t __n, const char* _Nonnull __fmt, 
 char* _Nullable ctime(const time_t* _Nonnull __t);
 
 /**
- * [ctime_r(3)](https://man7.org/linux/man-pages/man3/ctime.3p.html) formats
+ * [ctime_r(3)](https://man7.org/linux/man-pages/man3/ctime_r.3p.html) formats
  * the time `tm` as a string in the given buffer `buf`.
  *
  * Returns a pointer to a string on success, and returns NULL on failure.

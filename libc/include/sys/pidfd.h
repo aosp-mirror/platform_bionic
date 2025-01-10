@@ -54,7 +54,7 @@ __BEGIN_DECLS
 int pidfd_open(pid_t __pid, unsigned int __flags) __INTRODUCED_IN(31);
 
 /**
- * [pidfd_getfd(2)](https://man7.org/linux/man-pages/man2/pidfd_open.2.html)
+ * [pidfd_getfd(2)](https://man7.org/linux/man-pages/man2/pidfd_getfd.2.html)
  * dups a file descriptor from another process. This file descriptor will have
  * the close-on-exec flag set by default.
  *

@@ -1629,9 +1629,7 @@ cc_library {
     // which is default module for soong-defined system image.
     visibility: [
         "//bionic/apex",
-        "//build/make/target/product/generic",
-        //TODO(b/381985636) : Remove visibility to Soong-defined GSI once resolved
-        "//build/make/target/product/gsi",
+        "//visibility:any_system_partition",
     ],
 }
 
@@ -2270,6 +2268,9 @@ cc_defaults {
         "-E",
         "-Wall",
         "-Werror",
+        // Soong implicitly adds a -c argument that we override with -E.
+        // Suppress Clang's error about the unused -c argument.
+        "-Wno-unused-command-line-argument",
         "-nostdinc",
     ],
 }
