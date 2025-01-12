@@ -126,7 +126,7 @@ int munlockall(void);
 int mlock(const void* _Nonnull __addr, size_t __size);
 
 /**
- * [mlock2(2)](https://man7.org/linux/man-pages/man2/mlock.2.html)
+ * [mlock2(2)](https://man7.org/linux/man-pages/man2/mlock2.2.html)
  * locks pages (preventing swapping), with optional flags.
  *
  * Available since API level 30.
