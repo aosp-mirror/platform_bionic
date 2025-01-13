@@ -104,8 +104,6 @@ cc_defaults {
     },
 
     apex_available: ["com.android.runtime"],
-
-    tidy_disabled_srcs: ["upstream-*/**/*.c"],
 }
 
 // Workaround for b/24465209.
