@@ -273,6 +273,7 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(
     if (prctl(PR_SET_TAGGED_ADDR_CTRL, prctl_arg | PR_MTE_TCF_SYNC, 0, 0, 0) == 0 ||
         prctl(PR_SET_TAGGED_ADDR_CTRL, prctl_arg, 0, 0, 0) == 0) {
       __libc_shared_globals()->initial_heap_tagging_level = level;
+      atomic_store(&__libc_shared_globals()->memtag_currently_on, true);
 
       struct sigaction action = {};
       action.sa_flags = SA_SIGINFO | SA_RESTART;
@@ -320,6 +321,5 @@ void __libc_init_mte_stack(void*) {}
 #endif  // __aarch64__
 
 bool __libc_mte_enabled() {
-  HeapTaggingLevel lvl = __libc_shared_globals()->initial_heap_tagging_level;
-  return lvl == M_HEAP_TAGGING_LEVEL_SYNC || lvl == M_HEAP_TAGGING_LEVEL_ASYNC;
+  return atomic_load(&__libc_shared_globals()->memtag_currently_on);
 }
