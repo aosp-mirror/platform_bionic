@@ -45,6 +45,7 @@
 #include <platform/bionic/macros.h>
 #include <private/bionic_malloc_dispatch.h>
 
+#include <memory_trace/MemoryTrace.h>
 #include <unwindstack/Unwinder.h>
 
 #include "Config.h"
@@ -200,6 +201,44 @@ static void VerifyRecords(std::vector<std::string>& expected, std::string& actua
     ASSERT_GT(et, st);
     offset = actual.find_first_of("\n", offset) + 1;
   }
+}
+
+static void VerifyRecordEntries(const std::vector<memory_trace::Entry>& expected,
+                                std::string& actual) {
+  ASSERT_TRUE(expected.size() != 0);
+  // Convert the text to entries.
+  std::vector<memory_trace::Entry> actual_entries;
+  for (const auto& line : android::base::Split(actual, "\n")) {
+    if (line.empty()) {
+      continue;
+    }
+    memory_trace::Entry entry;
+    std::string error;
+    ASSERT_TRUE(memory_trace::FillInEntryFromString(line, entry, error)) << error;
+    actual_entries.emplace_back(entry);
+  }
+  auto expected_iter = expected.begin();
+  for (const auto& actual_entry : actual_entries) {
+    if (actual_entry.type == memory_trace::THREAD_DONE) {
+      // Skip thread done entries.
+      continue;
+    }
+    ASSERT_NE(expected_iter, expected.end())
+        << "Found extra entry " << memory_trace::CreateStringFromEntry(*expected_iter);
+    SCOPED_TRACE(testing::Message()
+                 << "\nExpected entry:\n  " << memory_trace::CreateStringFromEntry(*expected_iter)
+                 << "\nActual entry:\n  " << memory_trace::CreateStringFromEntry(actual_entry));
+    EXPECT_EQ(actual_entry.type, expected_iter->type);
+    EXPECT_EQ(actual_entry.ptr, expected_iter->ptr);
+    EXPECT_EQ(actual_entry.size, expected_iter->size);
+    EXPECT_EQ(actual_entry.u.old_ptr, expected_iter->u.old_ptr);
+    EXPECT_EQ(actual_entry.present_bytes, expected_iter->present_bytes);
+    // Verify the timestamps are non-zero.
+    EXPECT_NE(actual_entry.start_ns, 0U);
+    EXPECT_NE(actual_entry.end_ns, 0U);
+    ++expected_iter;
+  }
+  EXPECT_TRUE(expected_iter == expected.end()) << "Not all expected entries found.";
 }
 
 void VerifyAllocCalls(bool all_options) {
@@ -2452,6 +2491,114 @@ TEST_F(MallocDebugTest, record_allocs_on_exit) {
   std::string actual;
   ASSERT_TRUE(android::base::ReadFileToString(record_filename, &actual));
   VerifyRecords(expected, actual);
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ("", getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugTest, record_allocs_present_bytes_check) {
+  InitRecordAllocs("record_allocs record_allocs_on_exit");
+
+  // The filename created on exit always appends the pid.
+  // Modify the variable so the file is deleted at the end of the test.
+  record_filename += '.' + std::to_string(getpid());
+
+  std::vector<memory_trace::Entry> expected;
+  void* ptr = debug_malloc(100);
+  expected.push_back(memory_trace::Entry{
+      .type = memory_trace::MALLOC, .ptr = reinterpret_cast<uint64_t>(ptr), .size = 100});
+
+  // Make the entire allocation present.
+  memset(ptr, 1, 100);
+
+  int64_t real_size = debug_malloc_usable_size(ptr);
+  debug_free(ptr);
+  expected.push_back(memory_trace::Entry{.type = memory_trace::FREE,
+                                         .ptr = reinterpret_cast<uint64_t>(ptr),
+                                         .present_bytes = real_size});
+
+  ptr = debug_malloc(4096);
+  expected.push_back(memory_trace::Entry{
+      .type = memory_trace::MALLOC, .ptr = reinterpret_cast<uint64_t>(ptr), .size = 4096});
+
+  memset(ptr, 1, 4096);
+  real_size = debug_malloc_usable_size(ptr);
+  void* new_ptr = debug_realloc(ptr, 8192);
+  expected.push_back(memory_trace::Entry{.type = memory_trace::REALLOC,
+                                         .ptr = reinterpret_cast<uint64_t>(new_ptr),
+                                         .size = 8192,
+                                         .u.old_ptr = reinterpret_cast<uint64_t>(ptr),
+                                         .present_bytes = real_size});
+
+  memset(new_ptr, 1, 8192);
+  real_size = debug_malloc_usable_size(new_ptr);
+  debug_free(new_ptr);
+  expected.push_back(memory_trace::Entry{.type = memory_trace::FREE,
+                                         .ptr = reinterpret_cast<uint64_t>(new_ptr),
+                                         .present_bytes = real_size});
+
+  ptr = debug_malloc(4096);
+  expected.push_back(memory_trace::Entry{
+      .type = memory_trace::MALLOC, .ptr = reinterpret_cast<uint64_t>(ptr), .size = 4096});
+  memset(ptr, 1, 4096);
+
+  // Verify a free realloc does update the present bytes.
+  real_size = debug_malloc_usable_size(ptr);
+  EXPECT_TRUE(debug_realloc(ptr, 0) == nullptr);
+  expected.push_back(memory_trace::Entry{.type = memory_trace::REALLOC,
+                                         .ptr = 0,
+                                         .u.old_ptr = reinterpret_cast<uint64_t>(ptr),
+                                         .present_bytes = real_size});
+
+  // Call the exit function manually.
+  debug_finalize();
+
+  // Read all of the contents.
+  std::string actual;
+  ASSERT_TRUE(android::base::ReadFileToString(record_filename, &actual));
+  VerifyRecordEntries(expected, actual);
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ("", getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugTest, record_allocs_not_all_bytes_present) {
+  InitRecordAllocs("record_allocs record_allocs_on_exit");
+
+  // The filename created on exit always appends the pid.
+  // Modify the variable so the file is deleted at the end of the test.
+  record_filename += '.' + std::to_string(getpid());
+
+  std::vector<memory_trace::Entry> expected;
+  size_t pagesize = getpagesize();
+  void* ptr = debug_memalign(pagesize, pagesize * 8);
+  ASSERT_TRUE(ptr != nullptr);
+  expected.push_back(memory_trace::Entry{.type = memory_trace::MEMALIGN,
+                                         .ptr = reinterpret_cast<uint64_t>(ptr),
+                                         .size = pagesize * 8,
+                                         .u.align = pagesize});
+
+  // Mark only some pages in use.
+  uint8_t* data = reinterpret_cast<uint8_t*>(ptr);
+  // Make sure the memory is not in use.
+  ASSERT_EQ(0, madvise(ptr, pagesize * 8, MADV_PAGEOUT));
+  // Dirty three non-consecutive pages.
+  data[0] = 1;
+  data[pagesize * 2] = 1;
+  data[pagesize * 4] = 1;
+
+  debug_free(ptr);
+  expected.push_back(memory_trace::Entry{.type = memory_trace::FREE,
+                                         .ptr = reinterpret_cast<uint64_t>(ptr),
+                                         .present_bytes = static_cast<int64_t>(pagesize) * 3});
+
+  // Call the exit function manually.
+  debug_finalize();
+
+  // Read all of the contents.
+  std::string actual;
+  ASSERT_TRUE(android::base::ReadFileToString(record_filename, &actual));
+  VerifyRecordEntries(expected, actual);
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   ASSERT_STREQ("", getFakeLogPrint().c_str());
