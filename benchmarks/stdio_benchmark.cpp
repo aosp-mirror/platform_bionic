@@ -38,6 +38,13 @@ template <typename Fn>
 void ReadWriteTest(benchmark::State& state, Fn f, bool buffered) {
   size_t chunk_size = state.range(0);
 
+  // /dev/zero copies zeroes if you read from it and discards writes.
+  //
+  // This is fine for the purpose of measuring stdio overhead
+  // rather than kernel/fs performance.
+  // (Old versions of stdio would copy reads/writes larger than
+  // the stdio buffer through the stdio buffer in chunks,
+  // rather than directly to the user's destination.)
   FILE* fp = fopen("/dev/zero", "r+e");
   __fsetlocking(fp, FSETLOCKING_BYCALLER);
   char* buf = new char[chunk_size];
