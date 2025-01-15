@@ -379,9 +379,6 @@ cc_test_library {
         "bionic_tests_defaults",
         "large_system_property_node_defaults",
     ],
-    tidy_disabled_srcs: [
-        "malloc_test.cpp", // timed out with clang-tidy, and too many warnings
-    ],
     srcs: [
         "__aeabi_read_tp_test.cpp",
         "__cxa_atexit_test.cpp",
@@ -657,7 +654,6 @@ cc_defaults {
     static_libs: [
         "libbase",
     ],
-    tidy: false,
     target: {
         musl: {
             // Musl doesn't have fortify
@@ -666,12 +662,12 @@ cc_defaults {
     },
 }
 
-// Ensure we don't use FORTIFY'ed functions with the static analyzer/clang-tidy:
+// Ensure we don't use FORTIFY'ed functions with the clang static analyzer:
 // it can confuse these tools pretty easily. If this builds successfully, then
 // __clang_analyzer__ overrode FORTIFY. Otherwise, FORTIFY was incorrectly
 // enabled. The library that results from building this is meant to be unused.
 cc_test_library {
-    name: "fortify_disabled_for_tidy",
+    name: "fortify_disabled_for_clang_analyzer",
     defaults: [
         "bionic_clang_fortify_tests_w_flags",
     ],
@@ -681,7 +677,6 @@ cc_test_library {
         "-D__clang_analyzer__",
     ],
     srcs: ["clang_fortify_tests.cpp"],
-    tidy: false,
 }
 
 cc_test_library {
@@ -723,7 +718,6 @@ cc_defaults {
         "-U_FORTIFY_SOURCE",
     ],
     srcs: ["clang_fortify_tests.cpp"],
-    tidy: false,
 }
 
 cc_test_library {
@@ -772,7 +766,6 @@ cc_defaults {
     srcs: [
         "clang_fortify_c_only_tests.c",
     ],
-    tidy: false,
     shared: {
         enabled: false,
     },
@@ -1428,7 +1421,6 @@ cc_defaults {
             enabled: true,
         },
     },
-    tidy: false,
     clang_verify: true,
     cflags: [
         "-Wall",

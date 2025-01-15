@@ -42,10 +42,12 @@ bool __get_elf_note(unsigned note_type, const char* note_name, const ElfW(Addr) 
 
   ElfW(Addr) p = note_addr;
   ElfW(Addr) note_end = p + phdr_note->p_memsz;
-  while (p + sizeof(ElfW(Nhdr)) <= note_end) {
+  while (p < note_end) {
     // Parse the note and check it's structurally valid.
     const ElfW(Nhdr)* note = reinterpret_cast<const ElfW(Nhdr)*>(p);
-    p += sizeof(ElfW(Nhdr));
+    if (__builtin_add_overflow(p, sizeof(ElfW(Nhdr)), &p) || p >= note_end) {
+      return false;
+    }
     const char* name = reinterpret_cast<const char*>(p);
     if (__builtin_add_overflow(p, __builtin_align_up(note->n_namesz, 4), &p)) {
       return false;

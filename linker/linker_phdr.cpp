@@ -766,22 +766,23 @@ bool ElfReader::ReadPadSegmentNote() {
       continue;
     }
 
-    // If the PT_NOTE extends beyond the file. The ELF is doing something
-    // strange -- obfuscation, embedding hidden loaders, ...
-    //
-    // It doesn't contain the pad_segment note. Skip it to avoid SIGBUS
-    // by accesses beyond the file.
-    off64_t note_end_off = file_offset_ + phdr->p_offset + phdr->p_filesz;
-    if (note_end_off > file_size_) {
-      continue;
+    // Reject notes that claim to extend past the end of the file.
+    off64_t note_end_off = file_offset_;
+    if (__builtin_add_overflow(note_end_off, phdr->p_offset, &note_end_off) ||
+        __builtin_add_overflow(note_end_off, phdr->p_filesz, &note_end_off) ||
+        phdr->p_filesz != phdr->p_memsz ||
+        note_end_off > file_size_) {
+      DL_ERR("\"%s\": NT_ANDROID_TYPE_PAD_SEGMENT note runs off end of file",
+             name_.c_str());
+      return false;
     }
 
-    // note_fragment is scoped to within the loop so that there is
-    // at most 1 PT_NOTE mapped at anytime during this search.
+    // We scope note_fragment to within the loop so that there is
+    // at most one PT_NOTE mapped at any time.
     MappedFileFragment note_fragment;
-    if (!note_fragment.Map(fd_, file_offset_, phdr->p_offset, phdr->p_memsz)) {
+    if (!note_fragment.Map(fd_, file_offset_, phdr->p_offset, phdr->p_filesz)) {
       DL_ERR("\"%s\": PT_NOTE mmap(nullptr, %p, PROT_READ, MAP_PRIVATE, %d, %p) failed: %m",
-             name_.c_str(), reinterpret_cast<void*>(phdr->p_memsz), fd_,
+             name_.c_str(), reinterpret_cast<void*>(phdr->p_filesz), fd_,
              reinterpret_cast<void*>(page_start(file_offset_ + phdr->p_offset)));
       return false;
     }
@@ -795,7 +796,7 @@ bool ElfReader::ReadPadSegmentNote() {
     }
 
     if (note_hdr->n_descsz != sizeof(ElfW(Word))) {
-      DL_ERR("\"%s\" NT_ANDROID_TYPE_PAD_SEGMENT note has unexpected n_descsz: %u",
+      DL_ERR("\"%s\": NT_ANDROID_TYPE_PAD_SEGMENT note has unexpected n_descsz: %u",
              name_.c_str(), reinterpret_cast<unsigned int>(note_hdr->n_descsz));
       return false;
     }
