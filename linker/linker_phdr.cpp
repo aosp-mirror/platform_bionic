@@ -772,8 +772,14 @@ bool ElfReader::ReadPadSegmentNote() {
         __builtin_add_overflow(note_end_off, phdr->p_filesz, &note_end_off) ||
         phdr->p_filesz != phdr->p_memsz ||
         note_end_off > file_size_) {
-      DL_ERR("\"%s\": NT_ANDROID_TYPE_PAD_SEGMENT note runs off end of file",
-             name_.c_str());
+
+      if (get_application_target_sdk_version() < 37) {
+        // Some in-market apps have invalid ELF notes (http://b/390328213),
+        // so ignore them until/unless they bump their target sdk version.
+        continue;
+      }
+
+      DL_ERR_AND_LOG("\"%s\": NT_ANDROID_TYPE_PAD_SEGMENT note runs off end of file", name_.c_str());
       return false;
     }
 
