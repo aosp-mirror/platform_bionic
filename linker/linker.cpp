@@ -2369,8 +2369,10 @@ bool do_dlsym(void* handle,
         }
         void* tls_block = get_tls_block_for_this_thread(tls_module, /*should_alloc=*/true);
         *symbol = static_cast<char*>(tls_block) + sym->st_value;
-      } else {
+      } else if (__libc_mte_enabled()) {
         *symbol = get_tagged_address(reinterpret_cast<void*>(found->resolve_symbol_address(sym)));
+      } else {
+        *symbol = reinterpret_cast<void*>(found->resolve_symbol_address(sym));
       }
       failure_guard.Disable();
       LD_LOG(kLogDlsym,
