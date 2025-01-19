@@ -9,9 +9,14 @@ at least the
 
 It is important to note that there are two modes for a native allocator
 to run in on Android. The first is the normal allocator, the second is
-called the svelte config, which is designed to run on memory constrained
-systems and be a bit slower, but take less RSS. To enable the svelte config,
-add this line to the `BoardConfig.mk` for the given target:
+called the low memory config, which is designed to run on memory constrained
+systems and be a bit slower, but take less RSS. To enable the low memory
+config, add this line to the `BoardConfig.mk` for the given target:
+
+    MALLOC_LOW_MEMORY := true
+
+This is valid starting with Android V (API level 35), before that the
+way to enable the low memory config is:
 
     MALLOC_SVELTE := true
 
