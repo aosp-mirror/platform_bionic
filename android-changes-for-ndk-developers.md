@@ -534,3 +534,13 @@ For dynamic executables, we kept sentinel support in `crtbegin_dynamic.o` and
 `libc.so`. This ensures that executables built with newer `crtbegin_dynamic.o`
 (in NDK >= r27) work with older `libc.so` (in Android <= API level 34), and
 vice versa.
+
+
+## Only files named `lib*.so` are copied by `extractNativeLibs` (Enforced for API level <= 35)
+
+Until API level 36, PackageManager would only install files whose names match
+the glob `lib*.so` when extracting native libraries _for non-debuggable apps_.
+This was especially confusing (and hard to debug) because the restriction did
+_not_ apply if your app was debuggable. To be compatible with all API levels,
+always give files that need to be extracted a "lib" prefix and ".so" suffix,
+or avoid using `extractNativeLibs`.
