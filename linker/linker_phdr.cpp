@@ -779,7 +779,7 @@ bool ElfReader::ReadPadSegmentNote() {
         continue;
       }
 
-      DL_ERR_AND_LOG("\"%s\": NT_ANDROID_TYPE_PAD_SEGMENT note runs off end of file", name_.c_str());
+      DL_ERR_AND_LOG("\"%s\": ELF note (phdr %zu) runs off end of file", name_.c_str(), i);
       return false;
     }
 
