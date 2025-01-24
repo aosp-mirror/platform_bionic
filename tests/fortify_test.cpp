@@ -956,6 +956,40 @@ TEST(TEST_NAME, strcpy_chk_max_int_size) {
 
 extern "C" void* __memcpy_chk(void*, const void*, size_t, size_t);
 
+TEST(TEST_NAME, memcpy_chk_smaller) {
+  char buf[10] = "XXXXXXXXX";
+  size_t n = atoi("5");
+  void* res = __memcpy_chk(buf, "012346578", n, sizeof(buf));
+  ASSERT_EQ((void*)buf, res);
+  ASSERT_EQ('0',  buf[0]);
+  ASSERT_EQ('1',  buf[1]);
+  ASSERT_EQ('2',  buf[2]);
+  ASSERT_EQ('3',  buf[3]);
+  ASSERT_EQ('4',  buf[4]);
+  ASSERT_EQ('X',  buf[5]);
+  ASSERT_EQ('X',  buf[6]);
+  ASSERT_EQ('X',  buf[7]);
+  ASSERT_EQ('X',  buf[8]);
+  ASSERT_EQ('\0', buf[9]);
+}
+
+TEST(TEST_NAME, memcpy_chk_exact_size) {
+  char buf[10] = "XXXXXXXXX";
+  size_t n = atoi("10");
+  void* res = __memcpy_chk(buf, "012345678", n, sizeof(buf));
+  ASSERT_EQ((void*)buf, res);
+  ASSERT_EQ('0',  buf[0]);
+  ASSERT_EQ('1',  buf[1]);
+  ASSERT_EQ('2',  buf[2]);
+  ASSERT_EQ('3',  buf[3]);
+  ASSERT_EQ('4',  buf[4]);
+  ASSERT_EQ('5',  buf[5]);
+  ASSERT_EQ('6',  buf[6]);
+  ASSERT_EQ('7',  buf[7]);
+  ASSERT_EQ('8',  buf[8]);
+  ASSERT_EQ('\0', buf[9]);
+}
+
 TEST(TEST_NAME, memcpy_chk_max_int_size) {
   char buf[10];
   size_t buf_size = atoi("-1");
