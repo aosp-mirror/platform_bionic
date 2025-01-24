@@ -958,7 +958,8 @@ extern "C" void* __memcpy_chk(void*, const void*, size_t, size_t);
 
 TEST(TEST_NAME, memcpy_chk_max_int_size) {
   char buf[10];
-  void* res = __memcpy_chk(buf, "012345678", sizeof(buf), (size_t)-1);
+  size_t buf_size = atoi("-1");
+  void* res = __memcpy_chk(buf, "012345678", sizeof(buf), buf_size);
   ASSERT_EQ((void*)buf, res);
   ASSERT_EQ('0',  buf[0]);
   ASSERT_EQ('1',  buf[1]);
