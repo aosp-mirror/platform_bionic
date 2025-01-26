@@ -2581,7 +2581,7 @@ TEST_F(MallocDebugTest, record_allocs_not_all_bytes_present) {
   // Mark only some pages in use.
   uint8_t* data = reinterpret_cast<uint8_t*>(ptr);
   // Make sure the memory is not in use.
-  ASSERT_EQ(0, madvise(ptr, pagesize * 8, MADV_PAGEOUT));
+  ASSERT_EQ(0, madvise(ptr, pagesize * 8, MADV_DONTNEED));
   // Dirty three non-consecutive pages.
   data[0] = 1;
   data[pagesize * 2] = 1;

@@ -146,6 +146,7 @@ struct libc_shared_globals {
   size_t scudo_stack_depot_size = 0;
 
   HeapTaggingLevel initial_heap_tagging_level = M_HEAP_TAGGING_LEVEL_NONE;
+  _Atomic(bool) memtag_currently_on = false;
   // See comments for __libc_memtag_stack / __libc_memtag_stack_abi above.
   bool initial_memtag_stack = false;
   bool initial_memtag_stack_abi = false;

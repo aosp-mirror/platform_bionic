@@ -1,4 +1,4 @@
-/*	$NetBSD: regcomp.c,v 1.47 2022/12/21 17:44:15 wiz Exp $	*/
+/*	$NetBSD: regcomp.c,v 1.49 2025/01/01 18:19:50 christos Exp $	*/
 
 /*-
  * SPDX-License-Identifier: BSD-3-Clause
@@ -51,7 +51,7 @@
 static char sccsid[] = "@(#)regcomp.c	8.5 (Berkeley) 3/20/94";
 __FBSDID("$FreeBSD: head/lib/libc/regex/regcomp.c 368359 2020-12-05 03:18:48Z kevans $");
 #endif
-__RCSID("$NetBSD: regcomp.c,v 1.47 2022/12/21 17:44:15 wiz Exp $");
+__RCSID("$NetBSD: regcomp.c,v 1.49 2025/01/01 18:19:50 christos Exp $");
 
 #ifndef LIBHACK
 #define REGEX_GNU_EXTENSIONS
@@ -898,10 +898,10 @@ p_simp_re(struct parse *p, struct branchc *bc)
 	handled = false;
 
 	assert(MORE());		/* caller should have ensured this */
-	c = GETNEXT();
+	c = (uch)GETNEXT();
 	if (c == '\\') {
 		(void)REQUIRE(MORE(), REG_EESCAPE);
-		cc = GETNEXT();
+		cc = (uch)GETNEXT();
 		c = BACKSL | cc;
 #ifdef REGEX_GNU_EXTENSIONS
 		if (p->gnuext) {
@@ -1083,7 +1083,7 @@ p_count(struct parse *p)
 	int ndigits = 0;
 
 	while (MORE() && isdigit((uch)PEEK()) && count <= DUPMAX) {
-		count = count*10 + (GETNEXT() - '0');
+		count = count*10 + ((uch)GETNEXT() - '0');
 		ndigits++;
 	}
 
@@ -1422,7 +1422,7 @@ may_escape(struct parse *p, const wint_t ch)
 
 	if ((p->pflags & PFLAG_LEGACY_ESC) != 0)
 		return (true);
-	if (isalpha(ch) || ch == '\'' || ch == '`')
+	if (iswalpha(ch) || ch == '\'' || ch == '`')
 		return (false);
 	return (true);
 #ifdef NOTYET
@@ -1764,8 +1764,7 @@ CHadd(struct parse *p, cset *cs, wint_t ch)
 	_DIAGASSERT(p != NULL);
 	_DIAGASSERT(cs != NULL);
 
-	assert(ch >= 0);
-	if (ch < NC)
+	if ((unsigned)ch < NC)
 		cs->bmp[(unsigned)ch >> 3] |= 1 << (ch & 7);
 	else {
 		newwides = reallocarray(cs->wides, cs->nwides + 1,
@@ -1778,9 +1777,9 @@ CHadd(struct parse *p, cset *cs, wint_t ch)
 		cs->wides[cs->nwides++] = ch;
 	}
 	if (cs->icase) {
-		if ((nch = towlower(ch)) < NC)
+		if ((unsigned)(nch = towlower(ch)) < NC)
 			cs->bmp[(unsigned)nch >> 3] |= 1 << (nch & 7);
-		if ((nch = towupper(ch)) < NC)
+		if ((unsigned)(nch = towupper(ch)) < NC)
 			cs->bmp[(unsigned)nch >> 3] |= 1 << (nch & 7);
 	}
 }
