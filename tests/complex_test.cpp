@@ -28,6 +28,10 @@
 // have to be naughty.
 #include "../libc/include/complex.h"
 
+// Ensure that libc++'s complex.h and __fwd/complex.h headers are no-ops.
+#define _LIBCPP_COMPLEX_H
+#define _LIBCPP___FWD_COMPLEX_H
+
 // (libc++ also seems to have really bad implementations of its own that ignore
 // the intricacies of floating point math.)
 // http://llvm.org/bugs/show_bug.cgi?id=21504
