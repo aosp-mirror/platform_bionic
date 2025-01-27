@@ -96,6 +96,13 @@ name:		\
 #define SETUP_PIC_REG(x)	call	__x86.get_pc_thunk.x
 
 	.section .text.sse2,"ax",@progbits
+ENTRY (__memcpy_chk)
+/* NOTE: We can't use LEN here because ebx has not been pushed yet. */
+	movl	12(%esp), %ecx
+	cmpl	16(%esp), %ecx
+	ja	__memcpy_chk_fail
+/* Fall through to memcpy/memmove. */
+END (__memcpy_chk)
 ENTRY (MEMMOVE)
 	ENTRANCE
 	movl	LEN(%esp), %ecx
