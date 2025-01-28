@@ -328,6 +328,8 @@
 #define _SC_LEVEL4_CACHE_ASSOC 0x009c
 /** sysconf() query for the L4 cache line size. Not available on all architectures. */
 #define _SC_LEVEL4_CACHE_LINESIZE 0x009d
+/** sysconf() query equivalent to NSIG. Available from API level 37. */
+#define _SC_NSIG 0x009e
 
 __BEGIN_DECLS
 

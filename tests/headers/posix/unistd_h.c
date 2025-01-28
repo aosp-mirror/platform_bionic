@@ -221,6 +221,9 @@ static void unistd_h() {
   MACRO(_SC_MQ_OPEN_MAX);
   MACRO(_SC_MQ_PRIO_MAX);
   MACRO(_SC_NGROUPS_MAX);
+#if defined(__BIONIC__) // New in POSIX 2024.
+  MACRO(_SC_NSIG);
+#endif
   MACRO(_SC_OPEN_MAX);
   MACRO(_SC_PAGE_SIZE);
   MACRO(_SC_PAGESIZE);
