@@ -1102,15 +1102,6 @@ const char* fix_dt_needed(const char* dt_needed, const char* sopath __unused) {
   return dt_needed;
 }
 
-template<typename F>
-static void for_each_dt_needed(const ElfReader& elf_reader, F action) {
-  for (const ElfW(Dyn)* d = elf_reader.dynamic(); d->d_tag != DT_NULL; ++d) {
-    if (d->d_tag == DT_NEEDED) {
-      action(fix_dt_needed(elf_reader.get_string(d->d_un.d_val), elf_reader.name()));
-    }
-  }
-}
-
 static bool find_loaded_library_by_inode(android_namespace_t* ns,
                                          const struct stat& file_stat,
                                          off64_t file_offset,
@@ -1307,11 +1298,14 @@ static bool load_library(android_namespace_t* ns,
   }
 #endif
 
-  for_each_dt_needed(task->get_elf_reader(), [&](const char* name) {
-    LD_LOG(kLogDlopen, "load_library(ns=%s, task=%s): Adding DT_NEEDED task: %s",
-           ns->get_name(), task->get_name(), name);
-    load_tasks->push_back(LoadTask::create(name, si, ns, task->get_readers_map()));
-  });
+  for (const ElfW(Dyn)* d = elf_reader.dynamic(); d->d_tag != DT_NULL; ++d) {
+    if (d->d_tag == DT_NEEDED) {
+      const char* name = fix_dt_needed(elf_reader.get_string(d->d_un.d_val), elf_reader.name());
+      LD_LOG(kLogDlopen, "load_library(ns=%s, task=%s): Adding DT_NEEDED task: %s",
+             ns->get_name(), task->get_name(), name);
+      load_tasks->push_back(LoadTask::create(name, si, ns, task->get_readers_map()));
+    }
+  }
 
   return true;
 }
