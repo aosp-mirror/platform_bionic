@@ -78,3 +78,11 @@ TEST(limits, macros) {
 #error ULLONG_MAX
 #endif
 }
+
+TEST(limits, highest_signal_plus_one) {
+#if defined(__BIONIC__)
+  ASSERT_EQ(65, NSIG_MAX);
+#endif
+  ASSERT_EQ(65, NSIG);
+  ASSERT_EQ(65, _NSIG);
+}
