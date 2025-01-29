@@ -342,6 +342,9 @@ static void unistd_h() {
   FUNCTION(ftruncate, int (*f)(int, off_t));
   FUNCTION(getcwd, char* (*f)(char*, size_t));
   FUNCTION(getegid, gid_t (*f)(void));
+#if !defined(__GLIBC__) // Our glibc is too old.
+  FUNCTION(getentropy, int (*f)(void*, size_t));
+#endif
   FUNCTION(geteuid, uid_t (*f)(void));
   FUNCTION(getgid, gid_t (*f)(void));
   FUNCTION(getgroups, int (*f)(int, gid_t[]));
