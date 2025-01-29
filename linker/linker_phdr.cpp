@@ -569,9 +569,17 @@ bool ElfReader::CheckProgramHeaderAlignment() {
   for (size_t i = 0; i < phdr_num_; ++i) {
     const ElfW(Phdr)* phdr = &phdr_table_[i];
 
-    // p_align must be 0, 1, or a positive, integral power of two.
-    if (phdr->p_type != PT_LOAD || ((phdr->p_align & (phdr->p_align - 1)) != 0)) {
-      // TODO: reject ELF files with bad p_align values.
+    if (phdr->p_type != PT_LOAD) {
+      continue;
+    }
+
+    // For loadable segments, p_align must be 0, 1,
+    // or a positive, integral power of two.
+    // The kernel ignores loadable segments with other values,
+    // so we just warn rather than reject them.
+    if ((phdr->p_align & (phdr->p_align - 1)) != 0) {
+      DL_WARN("\"%s\" has invalid p_align %zx in phdr %zu", name_.c_str(),
+                     static_cast<size_t>(phdr->p_align), i);
       continue;
     }
 
