@@ -116,6 +116,9 @@ static void pthread_h() {
   FUNCTION(pthread_cancel, int (*f)(pthread_t));
 #endif
   FUNCTION(pthread_cond_broadcast, int (*f)(pthread_cond_t*));
+#if !defined(__GLIBC__)  // Our glibc is too old.
+  FUNCTION(pthread_cond_clockwait, int (*f)(pthread_cond_t*, pthread_mutex_t*, clockid_t, const struct timespec*));
+#endif
   FUNCTION(pthread_cond_destroy, int (*f)(pthread_cond_t*));
   FUNCTION(pthread_cond_init, int (*f)(pthread_cond_t*, const pthread_condattr_t*));
   FUNCTION(pthread_cond_signal, int (*f)(pthread_cond_t*));
@@ -140,6 +143,9 @@ static void pthread_h() {
   FUNCTION(pthread_join, int (*f)(pthread_t, void**));
   FUNCTION(pthread_key_create, int (*f)(pthread_key_t*, void (*)(void*)));
   FUNCTION(pthread_key_delete, int (*f)(pthread_key_t));
+#if !defined(__GLIBC__)  // Our glibc is too old.
+  FUNCTION(pthread_mutex_clocklock, int (*f)(pthread_mutex_t*, clockid_t, const struct timespec*));
+#endif
 #if !defined(__BIONIC__) // No robust mutexes on Android.
   FUNCTION(pthread_mutex_consistent, int (*f)(pthread_mutex_t*));
 #endif
@@ -176,6 +182,10 @@ static void pthread_h() {
 #endif
   FUNCTION(pthread_mutexattr_settype, int (*f)(pthread_mutexattr_t*, int));
   FUNCTION(pthread_once, int (*f)(pthread_once_t*, void (*)(void)));
+#if !defined(__GLIBC__)  // Our glibc is too old.
+  FUNCTION(pthread_rwlock_clockrdlock, int (*f)(pthread_rwlock_t*, clockid_t, const struct timespec*));
+  FUNCTION(pthread_rwlock_clockwrlock, int (*f)(pthread_rwlock_t*, clockid_t, const struct timespec*));
+#endif
   FUNCTION(pthread_rwlock_destroy, int (*f)(pthread_rwlock_t*));
   FUNCTION(pthread_rwlock_init, int (*f)(pthread_rwlock_t*, const pthread_rwlockattr_t*));
   FUNCTION(pthread_rwlock_rdlock, int (*f)(pthread_rwlock_t*));

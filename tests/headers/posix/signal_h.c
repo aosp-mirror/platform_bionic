@@ -75,6 +75,10 @@ static void signal_h() {
   i = SIGRTMIN;
   i = SIGRTMAX;
 
+#if !defined(__GLIBC__)  // Our glibc is too old.
+  MACRO(SIG2STR_MAX);
+#endif
+
   MACRO(SIGABRT);
   MACRO(SIGALRM);
   MACRO(SIGBUS);
