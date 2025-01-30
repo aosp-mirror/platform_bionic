@@ -39,6 +39,9 @@ static void string_h() {
   FUNCTION(memchr, void* (*f)(const void*, int, size_t));
   FUNCTION(memcmp, int (*f)(const void*, const void*, size_t));
   FUNCTION(memcpy, void* (*f)(void*, const void*, size_t));
+#if !defined(__GLIBC__) // Our glibc is too old.
+  FUNCTION(memmem, void* (*f)(const void*, size_t, const void*, size_t));
+#endif
   FUNCTION(memmove, void* (*f)(void*, const void*, size_t));
   FUNCTION(memset, void* (*f)(void*, int, size_t));
   FUNCTION(stpcpy, char* (*f)(char*, const char*));
@@ -54,6 +57,10 @@ static void string_h() {
   FUNCTION(strerror, char* (*f)(int));
   FUNCTION(strerror_l, char* (*f)(int, locale_t));
   FUNCTION(strerror_r, int (*f)(int, char*, size_t));
+#if !defined(__GLIBC__) // Our glibc is too old.
+  FUNCTION(strlcat, size_t (*f)(char*, const char*, size_t));
+  FUNCTION(strlcpy, size_t (*f)(char*, const char*, size_t));
+#endif
   FUNCTION(strlen, size_t (*f)(const char*));
   FUNCTION(strncat, char* (*f)(char*, const char*, size_t));
   FUNCTION(strncmp, int (*f)(const char*, const char*, size_t));
