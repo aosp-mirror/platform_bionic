@@ -35,7 +35,7 @@
 #include <wchar.h>
 
 #include "bionic/macros.h"
-#include "private/icu.h"
+#include "private/icu4x.h"
 
 enum {
   WC_TYPE_INVALID = 0,
@@ -54,60 +54,65 @@ enum {
   WC_TYPE_MAX
 };
 
-static u_hasBinaryProperty_t __find_u_hasBinaryProperty() {
-  static auto u_hasBinaryProperty =
-      reinterpret_cast<u_hasBinaryProperty_t>(__find_icu_symbol("u_hasBinaryProperty"));
-  return u_hasBinaryProperty;
+#define DO_ISW(prop_name, narrow_fn) \
+  if (__predict_true(wc < 0x80)) {   \
+    return narrow_fn(wc);            \
+  }                                  \
+  return __icu4x_bionic_is_##prop_name(wc);
+
+int iswalnum(wint_t wc) {
+  DO_ISW(alnum, isalnum);
 }
-
-#define DO_ISW(icu_constant, narrow_fn) \
-  u_hasBinaryProperty_t u_hasBinaryProperty; \
-  if (__predict_true(wc < 0x80) || \
-      !(u_hasBinaryProperty = __find_u_hasBinaryProperty())) { \
-    return narrow_fn(wc); \
-  } \
-  return u_hasBinaryProperty(wc, icu_constant); \
-
-int iswalnum(wint_t wc) { DO_ISW(UCHAR_POSIX_ALNUM, isalnum); }
 __strong_alias(iswalnum_l, iswalnum);
-int iswalpha(wint_t wc) { DO_ISW(UCHAR_ALPHABETIC, isalpha); }
+int iswalpha(wint_t wc) {
+  DO_ISW(alphabetic, isalpha);
+}
 __strong_alias(iswalpha_l, iswalpha);
-int iswblank(wint_t wc) { DO_ISW(UCHAR_POSIX_BLANK, isblank); }
+int iswblank(wint_t wc) {
+  DO_ISW(blank, isblank);
+}
 __strong_alias(iswblank_l, iswblank);
-int iswgraph(wint_t wc) { DO_ISW(UCHAR_POSIX_GRAPH, isgraph); }
+int iswgraph(wint_t wc) {
+  DO_ISW(graph, isgraph);
+}
 __strong_alias(iswgraph_l, iswgraph);
-int iswlower(wint_t wc) { DO_ISW(UCHAR_LOWERCASE, islower); }
+int iswlower(wint_t wc) {
+  DO_ISW(lowercase, islower);
+}
 __strong_alias(iswlower_l, iswlower);
-int iswprint(wint_t wc) { DO_ISW(UCHAR_POSIX_PRINT, isprint); }
+int iswprint(wint_t wc) {
+  DO_ISW(print, isprint);
+}
 __strong_alias(iswprint_l, iswprint);
-int iswspace(wint_t wc) { DO_ISW(UCHAR_WHITE_SPACE, isspace); }
+int iswspace(wint_t wc) {
+  DO_ISW(white_space, isspace);
+}
 __strong_alias(iswspace_l, iswspace);
-int iswupper(wint_t wc) { DO_ISW(UCHAR_UPPERCASE, isupper); }
+int iswupper(wint_t wc) {
+  DO_ISW(uppercase, isupper);
+}
 __strong_alias(iswupper_l, iswupper);
-int iswxdigit(wint_t wc) { DO_ISW(UCHAR_POSIX_XDIGIT, isxdigit); }
+int iswxdigit(wint_t wc) {
+  DO_ISW(xdigit, isxdigit);
+}
 __strong_alias(iswxdigit_l, iswxdigit);
 
 int iswcntrl(wint_t wc) {
   if (wc < 0x80) return iscntrl(wc);
-  typedef int8_t (*FnT)(UChar32);
-  static auto u_charType = reinterpret_cast<FnT>(__find_icu_symbol("u_charType"));
-  return u_charType ? (u_charType(wc) == U_CONTROL_CHAR) : iscntrl(wc);
+  return __icu4x_bionic_general_category(wc) == U_CONTROL_CHAR;
 }
 __strong_alias(iswcntrl_l, iswcntrl);
 
 int iswdigit(wint_t wc) {
   if (wc < 0x80) return isdigit(wc);
-  typedef UBool (*FnT)(UChar32);
-  static auto u_isdigit = reinterpret_cast<FnT>(__find_icu_symbol("u_isdigit"));
-  return u_isdigit ? u_isdigit(wc) : isdigit(wc);
+  return __icu4x_bionic_general_category(wc) == U_DECIMAL_NUMBER;
 }
 __strong_alias(iswdigit_l, iswdigit);
 
 int iswpunct(wint_t wc) {
   if (wc < 0x80) return ispunct(wc);
-  typedef UBool (*FnT)(UChar32);
-  static auto u_ispunct = reinterpret_cast<FnT>(__find_icu_symbol("u_ispunct"));
-  return u_ispunct ? u_ispunct(wc) : ispunct(wc);
+  int8_t chartype = __icu4x_bionic_general_category(wc);
+  return chartype >= U_DASH_PUNCTUATION && chartype <= U_OTHER_PUNCTUATION;
 }
 __strong_alias(iswpunct_l, iswpunct);
 
@@ -124,18 +129,14 @@ __strong_alias(iswctype_l, iswctype);
 wint_t towlower(wint_t wc) {
   if (wc < 0x80) return tolower(wc);
 
-  typedef UChar32 (*FnT)(UChar32);
-  static auto u_tolower = reinterpret_cast<FnT>(__find_icu_symbol("u_tolower"));
-  return u_tolower ? u_tolower(wc) : tolower(wc);
+  return __icu4x_bionic_to_lower(wc);
 }
 __strong_alias(towlower_l, towlower);
 
 wint_t towupper(wint_t wc) {
   if (wc < 0x80) return toupper(wc);
 
-  typedef UChar32 (*FnT)(UChar32);
-  static auto u_toupper = reinterpret_cast<FnT>(__find_icu_symbol("u_toupper"));
-  return u_toupper ? u_toupper(wc) : toupper(wc);
+  return __icu4x_bionic_to_upper(wc);
 }
 __strong_alias(towupper_l, towupper);
 
