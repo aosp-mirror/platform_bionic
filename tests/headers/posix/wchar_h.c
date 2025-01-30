@@ -86,6 +86,10 @@ static void wchar_h() {
   FUNCTION(wcscspn, size_t (*f)(const wchar_t*, const wchar_t*));
   FUNCTION(wcsdup, wchar_t* (*f)(const wchar_t*));
   FUNCTION(wcsftime, size_t (*f)(wchar_t*, size_t, const wchar_t*, const struct tm*));
+#if !defined(__GLIBC__) // Our glibc is too old.
+  FUNCTION(wcslcat, size_t (*f)(wchar_t*, const wchar_t*, size_t));
+  FUNCTION(wcslcpy, size_t (*f)(wchar_t*, const wchar_t*, size_t));
+#endif
   FUNCTION(wcslen, size_t (*f)(const wchar_t*));
   FUNCTION(wcsncasecmp, int (*f)(const wchar_t*, const wchar_t*, size_t));
   FUNCTION(wcsncasecmp_l, int (*f)(const wchar_t*, const wchar_t*, size_t, locale_t));

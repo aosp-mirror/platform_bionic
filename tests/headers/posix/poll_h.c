@@ -36,6 +36,11 @@ static void poll_h() {
   STRUCT_MEMBER(struct pollfd, short, events);
   STRUCT_MEMBER(struct pollfd, short, revents);
 
+#if !defined(__GLIBC__)  // Our glibc is too old.
+  TYPE(sigset_t);
+  TYPE(struct timespec);
+#endif
+
   TYPE(nfds_t);
 
   MACRO(POLLIN);
@@ -50,4 +55,7 @@ static void poll_h() {
   MACRO(POLLNVAL);
 
   FUNCTION(poll, int (*f)(struct pollfd[], nfds_t, int));
+#if !defined(__GLIBC__)  // Our glibc is too old.
+  FUNCTION(ppoll, int (*f)(struct pollfd[], nfds_t, const struct timespec*, const sigset_t*));
+#endif
 }
