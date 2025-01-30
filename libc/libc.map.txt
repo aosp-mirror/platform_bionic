@@ -1619,6 +1619,12 @@ LIBC_36 { # introduced=36
     str2sig;
 } LIBC_V;
 
+LIBC_37 { # introduced=37
+  global:
+    sched_getattr;
+    sched_setattr;
+} LIBC_36;
+
 LIBC_PRIVATE {
   global:
     __accept4; # arm x86

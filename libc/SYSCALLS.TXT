@@ -293,19 +293,18 @@ int           __recvmmsg:socketcall:19(int, struct mmsghdr*, unsigned int, int, 
 int           __sendmmsg:socketcall:20(int, struct mmsghdr*, unsigned int, int)   x86
 
 # scheduler & real-time
-int sched_setscheduler(pid_t pid, int policy, const struct sched_param* param)  all
-int sched_getscheduler(pid_t pid)  all
-int sched_yield(void)  all
-int sched_setparam(pid_t pid, const struct sched_param* param)  all
-int sched_getparam(pid_t pid, struct sched_param* param)  all
-int sched_get_priority_max(int policy)  all
-int sched_get_priority_min(int policy)  all
-int sched_rr_get_interval(pid_t pid, struct timespec* interval)  all
-int sched_setaffinity(pid_t pid, size_t setsize, const cpu_set_t* set) all
-int setns(int, int) all
-int unshare(int) all
-int __sched_getaffinity:sched_getaffinity(pid_t pid, size_t setsize, cpu_set_t* set)  all
-int __getcpu:getcpu(unsigned*, unsigned*, void*) all
+int sched_get_priority_max(int policy) all
+int sched_get_priority_min(int policy) all
+int __sched_getaffinity:sched_getaffinity(pid_t, size_t, cpu_set_t*) all
+int sched_getattr(pid_t, sched_attr*, unsigned, unsigned) all
+int sched_getparam(pid_t, sched_param*) all
+int sched_getscheduler(pid_t) all
+int sched_rr_get_interval(pid_t, timespec*) all
+int sched_setaffinity(pid_t, size_t, const cpu_set_t*) all
+int sched_setattr(pid_t, sched_attr*, unsigned) all
+int sched_setparam(pid_t, const sched_param*) all
+int sched_setscheduler(pid_t, int, const sched_param*)  all
+int sched_yield(void) all
 
 # other
 int     uname(struct utsname*)  all
@@ -316,6 +315,11 @@ int     delete_module(const char*, unsigned int)   all
 int     klogctl:syslog(int, char*, int)   all
 int     sysinfo(struct sysinfo*)  all
 int     personality(unsigned long)  all
+
+int setns(int, int) all
+int unshare(int) all
+
+int __getcpu:getcpu(unsigned*, unsigned*, void*) all
 
 int     bpf(int, union bpf_attr *, unsigned int) all
 
