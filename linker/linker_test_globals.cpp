@@ -27,7 +27,7 @@
  */
 
 // Stub some symbols to avoid linking issues
-void DL_WARN_documented_change(int api_level [[maybe_unused]],
-                               const char* doc_link [[maybe_unused]],
-                               const char* fmt [[maybe_unused]], ...) {}
-
+bool DL_ERROR_AFTER(int target_sdk_version [[maybe_unused]],
+                    const char* fmt [[maybe_unused]], ...) {
+  return false;
+}

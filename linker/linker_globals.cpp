@@ -52,19 +52,24 @@ size_t linker_get_error_buffer_size() {
   return sizeof(__linker_dl_err_buf);
 }
 
-void DL_WARN_documented_change(int api_level, const char* doc_fragment, const char* fmt, ...) {
-  std::string result{"Warning: "};
-
+bool DL_ERROR_AFTER(int target_sdk_version, const char* fmt, ...) {
+  std::string result;
   va_list ap;
   va_start(ap, fmt);
   android::base::StringAppendV(&result, fmt, ap);
   va_end(ap);
 
-  android::base::StringAppendF(&result,
-                               " and will not work when the app moves to API level %d or later "
-                               "(%s#%s) (allowing for now because this app's target API level is "
-                               "still %d)",
-                               api_level, kBionicChangesUrl, doc_fragment,
-                               get_application_target_sdk_version());
-  DL_WARN("%s", result.c_str());
+  if (get_application_target_sdk_version() < target_sdk_version) {
+    android::base::StringAppendF(&result,
+                                 " and will not work when the app moves to API level %d or later "
+                                 "(see https://android.googlesource.com/platform/bionic/+/main/"
+                                 "android-changes-for-ndk-developers.md); "
+                                 "allowing for now because this app's target API level is still %d",
+                                 target_sdk_version,
+                                 get_application_target_sdk_version());
+    DL_WARN("Warning: %s", result.c_str());
+    return false;
+  }
+  DL_ERR_AND_LOG("%s", result.c_str());
+  return true;
 }
