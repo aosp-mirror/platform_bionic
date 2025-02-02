@@ -99,6 +99,11 @@ name:		\
 #define RETURN		RETURN_END;
 
 	.section .text.sse2,"ax",@progbits
+ENTRY (__memcpy_chk)
+	cmp	%rcx, %rdx
+	ja	__memcpy_chk_fail
+/* Fall through to memcpy/memmove. */
+END (__memcpy_chk)
 ENTRY (MEMMOVE)
 	ENTRANCE
 	mov	%rdi, %rax

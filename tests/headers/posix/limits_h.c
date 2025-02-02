@@ -58,6 +58,9 @@ static void limits_h() {
 #if !defined(__BIONIC__)
   MACRO(MQ_PRIO_MAX);
 #endif
+#if defined(__BIONIC__)
+  MACRO(NSIG_MAX);
+#endif
 #if !defined(__BIONIC__) && !defined(__GLIBC__) && !defined(ANDROID_HOST_MUSL)
   MACRO(OPEN_MAX);
 #endif
