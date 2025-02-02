@@ -221,6 +221,9 @@ static void unistd_h() {
   MACRO(_SC_MQ_OPEN_MAX);
   MACRO(_SC_MQ_PRIO_MAX);
   MACRO(_SC_NGROUPS_MAX);
+#if defined(__BIONIC__) // New in POSIX 2024.
+  MACRO(_SC_NSIG);
+#endif
   MACRO(_SC_OPEN_MAX);
   MACRO(_SC_PAGE_SIZE);
   MACRO(_SC_PAGESIZE);
@@ -339,6 +342,9 @@ static void unistd_h() {
   FUNCTION(ftruncate, int (*f)(int, off_t));
   FUNCTION(getcwd, char* (*f)(char*, size_t));
   FUNCTION(getegid, gid_t (*f)(void));
+#if !defined(__GLIBC__) // Our glibc is too old.
+  FUNCTION(getentropy, int (*f)(void*, size_t));
+#endif
   FUNCTION(geteuid, uid_t (*f)(void));
   FUNCTION(getgid, gid_t (*f)(void));
   FUNCTION(getgroups, int (*f)(int, gid_t[]));

@@ -35,6 +35,9 @@ static void semaphore_h() {
 
   MACRO(SEM_FAILED);
 
+#if !defined(__GLIBC__)  // Our glibc is too old.
+  FUNCTION(sem_clockwait, int (*f)(sem_t*, clockid_t, const struct timespec*));
+#endif
   FUNCTION(sem_close, int (*f)(sem_t*));
   FUNCTION(sem_destroy, int (*f)(sem_t*));
   FUNCTION(sem_getvalue, int (*f)(sem_t*, int*));
