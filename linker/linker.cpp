@@ -798,7 +798,7 @@ static const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
   for (auto it = start, end = soinfo_list.end(); it != end; ++it) {
     soinfo* si = *it;
     // Do not skip RTLD_LOCAL libraries in dlsym(RTLD_DEFAULT, ...)
-    // if the library is opened by application with target api level < M.
+    // if the library is opened by an application with target sdk version < 23.
     // See http://b/21565766
     if ((si->get_rtld_flags() & RTLD_GLOBAL) == 0 && si->get_target_sdk_version() >= 23) {
       continue;
@@ -1224,7 +1224,7 @@ static bool load_library(android_namespace_t* ns,
         const soinfo* needed_or_dlopened_by = task->get_needed_by();
         const char* sopath = needed_or_dlopened_by == nullptr ? "(unknown)" :
                                                       needed_or_dlopened_by->get_realpath();
-        // is_exempt_lib() always returns true for api levels < 24,
+        // is_exempt_lib() always returns true for targetSdkVersion < 24,
         // so no need to check the return value of DL_ERROR_AFTER().
         // We still call it rather than DL_WARN() to get the extra clarification.
         DL_ERROR_AFTER(24, "library \"%s\" (\"%s\") needed or dlopened by \"%s\" "
@@ -3327,7 +3327,7 @@ bool soinfo::prelink_image(bool dlext_use_relro) {
   if (soname_.empty() && this != solist_get_somain() && !relocating_linker &&
       get_application_target_sdk_version() < 23) {
     soname_ = basename(realpath_.c_str());
-    // The `if` above means we don't get here for api levels >= 23,
+    // The `if` above means we don't get here for targetSdkVersion >= 23,
     // so no need to check the return value of DL_ERROR_AFTER().
     // We still call it rather than DL_WARN() to get the extra clarification.
     DL_ERROR_AFTER(23, "\"%s\" has no DT_SONAME (will use %s instead)",
