@@ -61,10 +61,12 @@ bool DL_ERROR_AFTER(int target_sdk_version, const char* fmt, ...) {
 
   if (get_application_target_sdk_version() < target_sdk_version) {
     android::base::StringAppendF(&result,
-                                 " and will not work when the app moves to API level %d or later "
+                                 " and will not work when the app moves to "
+                                 "targetSdkVersion %d or later "
                                  "(see https://android.googlesource.com/platform/bionic/+/main/"
                                  "android-changes-for-ndk-developers.md); "
-                                 "allowing for now because this app's target API level is still %d",
+                                 "allowing for now because this app's "
+                                 "targetSdkVersion is still %d",
                                  target_sdk_version,
                                  get_application_target_sdk_version());
     DL_WARN("Warning: %s", result.c_str());
