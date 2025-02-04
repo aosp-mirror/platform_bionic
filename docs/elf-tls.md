@@ -478,7 +478,7 @@ XXX: Shared objects are less of a problem.
    this.)
  * On arm64, the primary TLS relocation (R_AARCH64_TLSDESC) is [confused with an obsolete
    R_AARCH64_TLS_DTPREL32 relocation][R_AARCH64_TLS_DTPREL32] and is [quietly ignored].
- * Android P [added compatibility checks] for TLS symbols and `DT_TLSDESC_{GOT|PLT}` entries.
+ * API level 28 [added compatibility checks] for TLS symbols and `DT_TLSDESC_{GOT|PLT}` entries.
 
 XXX: A dynamic executable using ELF TLS would have a PT_TLS segment and no other distinguishing
 marks, so running it on an older platform would result in memory corruption. Should we add something
@@ -572,7 +572,7 @@ specialized `__tls_get_addr` and TLSDESC resolver functions.
 ## Bionic Memory Layout Conflicts with Common TLS Layout
 
 Bionic already allocates thread-specific data in a way that conflicts with TLS variants 1 and 2:
-![Bionic TLS Layout in Android P](img/bionic-tls-layout-in-p.png)
+![Bionic TLS Layout in API level 28](img/bionic-tls-layout-in-p.png)
 
 TLS variant 1 allocates everything after the TP to ELF TLS (except the first two words), and variant
 2 allocates everything before the TP. Bionic currently allocates memory before and after the TP to
@@ -608,8 +608,8 @@ There are issues with rearranging this memory:
    searching for its TP-relative offset, which it assumes is nonnegative:
     * On arm32/arm64, it creates a pthread key, sets it to a magic value, then scans forward from
       the thread pointer looking for it. [The scan count was bumped to 384 to fix a reported
-      breakage happening with Android N.](https://go-review.googlesource.com/c/go/+/38636) (XXX: I
-      suspect the actual platform breakage happened with Android M's [lock-free pthread key
+      breakage happening with API level 24.](https://go-review.googlesource.com/c/go/+/38636) (XXX: I
+      suspect the actual platform breakage happened with API level 23's [lock-free pthread key
       work][bionic-lockfree-keys].)
     * On x86/x86-64, it uses a fixed offset from the thread pointer (TP+0xf8 or TP+0x1d0) and
       creates pthread keys until one of them hits the fixed offset.
@@ -803,7 +803,7 @@ slot with this magic value. This hack doesn't appear to work, however. The runti
 key, but apps segfault. Perhaps the Go runtime expects its "g" variable to be zero-initialized ([one
 example][go-tlsg-zero]). With this hack, it's never zero, but with its current allocation strategy,
 it is typically zero. After [Bionic's pthread key system was rewritten to be
-lock-free][bionic-lockfree-keys] for Android M, though, it's not guaranteed, because a key could be
+lock-free][bionic-lockfree-keys] for API level 23, though, it's not guaranteed, because a key could be
 recycled.
 
 [go-tlsg-zero]: https://go.googlesource.com/go/+/5bc1fd42f6d185b8ff0201db09fb82886978908b/src/runtime/asm_arm64.s#980

@@ -360,7 +360,8 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/s_lrintf.c",
             ],
             // The x86 ABI doesn't include this, which is needed for the
-            // roundss/roundsd instructions that we've used since Android M.
+            // roundss/roundsd instructions that we've used since API level 23,
+            // originally by hand-written assembler but later via intrinsics.
             cflags: ["-msse4.1"],
             version_script: ":libm.x86.map",
         },
