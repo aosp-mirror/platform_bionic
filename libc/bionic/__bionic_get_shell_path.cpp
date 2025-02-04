@@ -28,15 +28,15 @@
 
 #include "private/__bionic_get_shell_path.h"
 
+#include <unistd.h>
+
 const char* __bionic_get_shell_path() {
-  // For the host Bionic, we use the standard /bin/sh.
-  // Since P there's a /bin -> /system/bin symlink that means this will work
-  // for the device too, but as long as the NDK supports earlier API levels,
-  // we should probably make sure that this works in static binaries run on
-  // those OS versions too.
-#if !defined(__ANDROID__)
-  return "/bin/sh";
-#else
-  return "/system/bin/sh";
-#endif
+  // Since API level 28 there's a /bin -> /system/bin symlink that means
+  // /bin/sh will work for the device too, but as long as the NDK supports
+  // earlier API levels, falling back to /system/bin/sh ensures that static
+  // binaries run on those OS versions too.
+  // This whole function can be removed and replaced by hard-coded /bin/sh
+  // when we no longer support anything below API level 28.
+  static bool have_bin_sh = !access("/bin/sh", F_OK);
+  return have_bin_sh ? "/bin/sh" : "/system/bin/sh";
 }
