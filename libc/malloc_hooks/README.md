@@ -2,7 +2,7 @@ Malloc Hooks
 ============
 
 Malloc hooks allows a program to intercept all allocation/free calls that
-happen during execution. It is only available in Android P and newer versions
+happen during execution. It is only available in API level 28 and newer versions
 of the OS.
 
 There are two ways to enable these hooks, set a special system
