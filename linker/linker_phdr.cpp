@@ -979,8 +979,8 @@ bool ElfReader::LoadSegments() {
   // Apps may rely on undefined behavior here on 4 KB systems,
   // which is the norm before this change is introduced
   if (kPageSize >= 16384 && min_align_ < kPageSize && !should_use_16kib_app_compat_) {
-    DL_ERR("\"%s\" program alignment (%zu) cannot be smaller than system page size (%zu)",
-           name_.c_str(), min_align_, kPageSize);
+    DL_ERR_AND_LOG("\"%s\" program alignment (%zu) cannot be smaller than system page size (%zu)",
+                   name_.c_str(), min_align_, kPageSize);
     return false;
   }
 
