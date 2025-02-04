@@ -66,8 +66,8 @@
 //  - TLS_SLOT_BIONIC_TLS: Optimizes accesses to bionic_tls by one load versus
 //    finding it using __get_thread().
 //
-//  - TLS_SLOT_APP: Available for use by apps in Android Q and later. (This slot
-//    was used for errno in P and earlier.)
+//  - TLS_SLOT_APP: Available for use by apps in API level 29 and later.
+//    (This slot was used for errno in API level 28 and earlier.)
 //
 //  - TLS_SLOT_NATIVE_BRIDGE_GUEST_STATE: Pointer to the guest state for native
 //    bridge implementations. It is (to be) used by debuggerd to access this
