@@ -4,7 +4,7 @@ Malloc Debug
 Malloc debug is a method of debugging native memory problems. It can help
 detect memory corruption, memory leaks, and use after free issues.
 
-This documentation describes how to enable this feature on Android N or later
+This documentation describes how to enable this feature on API level 24 or later
 versions of the Android OS. (See the "Examples" section.)
 
 The documentation for malloc debug on older versions of Android is
@@ -215,7 +215,7 @@ As of U, add shorter aliases for backtrace related options to avoid property len
 | bt\_sz          | backtrace\_size               |
 
 ### check\_unreachable\_on\_signal
-As of Android U, this option will trigger a check for unreachable memory
+As of API level 34, this option will trigger a check for unreachable memory
 in a process. Specifically, if the signal SIGRTMAX - 16 (which is 48 on
 Android devices). The best way to see the exact signal being used is to
 enable the verbose option then look at the log for the message:
@@ -341,7 +341,7 @@ Example leak error found in the log:
     04-15 12:35:33.305  7412  7412 E malloc_debug:           #03  pc 000a28a8  /system/lib/libc++.so
 
 ### log\_allocator\_stats\_on\_signal
-As of Android V, this option will trigger a call to:
+As of API level 35, this option will trigger a call to:
 
     mallopt(M_LOG_STATS, 0);
 
@@ -497,13 +497,13 @@ log message.
 detected when the process is exiting.
 
 ### verbose
-As of Android Q, all info messages will be turned off by default. For example,
-in Android P and older, enabling malloc debug would result in this message
+As of API level 29, all info messages will be turned off by default. For example,
+in API level 28 and older, enabling malloc debug would result in this message
 in the log:
 
     08-16 15:54:16.060 26947 26947 I libc    : /system/bin/app_process64: malloc debug enabled
 
-In android Q, this message will not be displayed because these info messages
+In API level 29, this message will not be displayed because these info messages
 slow down process start up. However, if you want to re-enable these messages,
 add the verbose option. All of the "Run XXX" messages are also silenced unless
 the verbose option is specified. This is an example of the type
@@ -614,7 +614,7 @@ decode the frames in the backtraces.
 
 There are now multiple versions of the file:
 
-Android P produces version v1.1 of the heap dump.
+API level 28 produces version v1.1 of the heap dump.
 
     Android Native Heap Dump v1.1
 
@@ -624,7 +624,7 @@ NUM\_ALLOCATIONS to an incorrect value. For heap dump v1.0, the
 NUM\_ALLOCATIONS value should be treated as always 1 no matter what is
 actually present.
 
-Android Q introduces v1.2 of the heap dump. The new header looks like this:
+API level 29 introduces v1.2 of the heap dump. The new header looks like this:
 
     Android Native Heap Dump v1.2
 
@@ -711,7 +711,7 @@ Enable malloc debug using an environment variable (pre-O Android release):
     # export LIBC_DEBUG_MALLOC_ENABLE=1
     # ls
 
-Enable malloc debug using an environment variable (Android O or later):
+Enable malloc debug using an environment variable (API level 26 or later):
 
     adb shell
     # export LIBC_DEBUG_MALLOC_OPTIONS=backtrace
@@ -733,7 +733,7 @@ contain any data.
 
 App developers should check the NDK documentation about
 [wrap.sh](https://developer.android.com/ndk/guides/wrap-script.html)
-for the best way to use malloc debug in Android O or later on non-rooted
+for the best way to use malloc debug in API level 26 or later on non-rooted
 devices.
 
 **NOTE**: Android 12 introduced a bug that can cause the wrap.\<APP\> property to
@@ -744,7 +744,7 @@ no longer work. Use the commands below so that the wrap.\<APP\> instructions wil
     adb shell start
 
 If you do have a rooted device, you can enable malloc debug for a specific
-program/application (Android O or later):
+program/application (API level 26 or later):
 
     adb shell setprop wrap.<APP> '"LIBC_DEBUG_MALLOC_OPTIONS=backtrace logwrapper"'
 
@@ -753,7 +753,7 @@ them like so:
 
     adb shell setprop wrap.<APP> '"LIBC_DEBUG_MALLOC_OPTIONS=backtrace\ leak_track\ fill logwrapper"'
 
-For example, to enable malloc debug for the google search box (Android O or later):
+For example, to enable malloc debug for the google search box (API level 26 or later):
 
     adb shell setprop wrap.com.google.android.googlequicksearchbox '"LIBC_DEBUG_MALLOC_OPTIONS=backtrace logwrapper"'
     adb shell am force-stop com.google.android.googlequicksearchbox

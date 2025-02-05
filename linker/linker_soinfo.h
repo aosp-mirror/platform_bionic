@@ -524,14 +524,5 @@ uint32_t calculate_elf_hash(const char* name);
 
 const char* fix_dt_needed(const char* dt_needed, const char* sopath);
 
-template<typename F>
-void for_each_dt_needed(const soinfo* si, F action) {
-  for (const ElfW(Dyn)* d = si->dynamic; d->d_tag != DT_NULL; ++d) {
-    if (d->d_tag == DT_NEEDED) {
-      action(fix_dt_needed(si->get_string(d->d_un.d_val), si->get_realpath()));
-    }
-  }
-}
-
 const ElfW(Sym)* soinfo_do_lookup(const char* name, const version_info* vi,
                                   soinfo** si_found_in, const SymbolLookupList& lookup_list);
