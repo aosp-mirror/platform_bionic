@@ -49,9 +49,6 @@ int io_destroy(aio_context_t) all
 int io_submit(aio_context_t, long,  iocb**) all
 int io_getevents(aio_context_t, long, long, io_event*, timespec*) all
 int io_cancel(aio_context_t, iocb*, io_event*) all
-# Since Linux 3.14, not in glibc.
-int sched_getattr(pid_t, sched_attr*, unsigned) all
-int sched_setattr(pid_t, sched_attr*, unsigned, unsigned) all
 # Since Linux 3.19, not in glibc (and not really needed to implement fexecve).
 int execveat(int, const char*, char* const*, char* const*, int)  all
 # Since Linux 4.3, not in glibc. Probed for and conditionally used by ART.

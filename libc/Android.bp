@@ -787,12 +787,6 @@ cc_library_static {
                 "arch-arm64/string/__memset_chk.S",
             ],
         },
-        riscv64: {
-            srcs: [
-                "arch-riscv64/string/__memset_chk.S",
-                "arch-riscv64/string/__memcpy_chk.S",
-            ],
-        },
     },
 }
 
@@ -1102,21 +1096,21 @@ cc_library_static {
                 "arch-riscv64/bionic/syscall.S",
                 "arch-riscv64/bionic/vfork.S",
 
-                "arch-riscv64/string/memchr_v.S",
-                "arch-riscv64/string/memcmp_v.S",
-                "arch-riscv64/string/memcpy_v.S",
-                "arch-riscv64/string/memmove_v.S",
-                "arch-riscv64/string/memset_v.S",
-                "arch-riscv64/string/stpcpy_v.S",
-                "arch-riscv64/string/strcat_v.S",
-                "arch-riscv64/string/strchr_v.S",
-                "arch-riscv64/string/strcmp_v.S",
-                "arch-riscv64/string/strcpy_v.S",
-                "arch-riscv64/string/strlen_v.S",
-                "arch-riscv64/string/strncat_v.S",
-                "arch-riscv64/string/strncmp_v.S",
-                "arch-riscv64/string/strncpy_v.S",
-                "arch-riscv64/string/strnlen_v.S",
+                "arch-riscv64/string/memchr.S",
+                "arch-riscv64/string/memcmp.S",
+                "arch-riscv64/string/memcpy.S",
+                "arch-riscv64/string/memmove.S",
+                "arch-riscv64/string/memset.S",
+                "arch-riscv64/string/stpcpy.S",
+                "arch-riscv64/string/strcat.S",
+                "arch-riscv64/string/strchr.S",
+                "arch-riscv64/string/strcmp.S",
+                "arch-riscv64/string/strcpy.S",
+                "arch-riscv64/string/strlen.S",
+                "arch-riscv64/string/strncat.S",
+                "arch-riscv64/string/strncmp.S",
+                "arch-riscv64/string/strncpy.S",
+                "arch-riscv64/string/strnlen.S",
             ],
         },
 
@@ -2107,11 +2101,6 @@ cc_library_static {
         arm64: {
             srcs: [
                 "arch-arm64/string/__memcpy_chk.S",
-            ],
-        },
-        riscv64: {
-            srcs: [
-                "arch-riscv64/string/__memcpy_chk.S",
             ],
         },
     },
