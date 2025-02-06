@@ -30,7 +30,7 @@
 
 /**
  * @file sys/io.h
- * @brief The x86/x86-64 I/O port functions iopl() and ioperm().
+ * @brief The x86/x86-64 I/O port functions.
  */
 
 #include <sys/cdefs.h>
@@ -69,6 +69,84 @@ __attribute__((__deprecated__("use ioperm() instead"))) static __inline int iopl
 #if defined(__NR_iopl)
 static __inline int ioperm(unsigned long __from, unsigned long __n, int __enabled) {
   return syscall(__NR_ioperm, __from, __n, __enabled);
+}
+#endif
+
+/**
+ * [inb(2)](https://man7.org/linux/man-pages/man2/inb.2.html)
+ * reads a byte from the given x86/x86-64 I/O port.
+ *
+ * Only available for x86/x86-64.
+ */
+#if defined(__i386__) || defined(__x86_64__)
+static __inline unsigned char inb(unsigned short __port) {
+  unsigned char __value;
+  __asm__ __volatile__("inb %1, %0" : "=a"(__value) : "dN"(__port));
+  return __value;
+}
+#endif
+
+/**
+ * [inw(2)](https://man7.org/linux/man-pages/man2/inw.2.html)
+ * reads a 16-bit "word" from the given x86/x86-64 I/O port.
+ *
+ * Only available for x86/x86-64.
+ */
+#if defined(__i386__) || defined(__x86_64__)
+static __inline unsigned short inw(unsigned short __port) {
+  unsigned short __value;
+  __asm__ __volatile__("inw %1, %0" : "=a"(__value) : "dN"(__port));
+  return __value;
+}
+#endif
+
+/**
+ * [inl(2)](https://man7.org/linux/man-pages/man2/inl.2.html)
+ * reads a 32-bit "long word" from the given x86/x86-64 I/O port.
+ *
+ * Only available for x86/x86-64.
+ */
+#if defined(__i386__) || defined(__x86_64__)
+static __inline unsigned int inl(unsigned short __port) {
+  unsigned int __value;
+  __asm__ __volatile__("inl %1, %0" : "=a"(__value) : "dN"(__port));
+  return __value;
+}
+#endif
+
+/**
+ * [outb(2)](https://man7.org/linux/man-pages/man2/outb.2.html)
+ * writes the given byte to the given x86/x86-64 I/O port.
+ *
+ * Only available for x86/x86-64.
+ */
+#if defined(__i386__) || defined(__x86_64__)
+static __inline void outb(unsigned char __value, unsigned short __port) {
+  __asm__ __volatile__("outb %0, %1" : : "a"(__value), "dN"(__port));
+}
+#endif
+
+/**
+ * [outw(2)](https://man7.org/linux/man-pages/man2/outw.2.html)
+ * writes the given 16-bit "word" to the given x86/x86-64 I/O port.
+ *
+ * Only available for x86/x86-64.
+ */
+#if defined(__i386__) || defined(__x86_64__)
+static __inline void outw(unsigned short __value, unsigned short __port) {
+  __asm__ __volatile__("outw %0, %1" : : "a"(__value), "dN"(__port));
+}
+#endif
+
+/**
+ * [outl(2)](https://man7.org/linux/man-pages/man2/outl.2.html)
+ * writes the given 32-bit "long word" to the given x86/x86-64 I/O port.
+ *
+ * Only available for x86/x86-64.
+ */
+#if defined(__i386__) || defined(__x86_64__)
+static __inline void outl(unsigned int __value, unsigned short __port) {
+  __asm__ __volatile__("outl %0, %1" : : "a"(__value), "dN"(__port));
 }
 #endif
 
