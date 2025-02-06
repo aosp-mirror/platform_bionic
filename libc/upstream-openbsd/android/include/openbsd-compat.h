@@ -53,10 +53,6 @@ extern const char* __progname;
  */
 #define _PATH_TMP "/data/local/tmp/"
 
-/* Use appropriate shell depending on process's executable. */
-__LIBC_HIDDEN__ extern const char* __bionic_get_shell_path();
-#define _PATH_BSHELL __bionic_get_shell_path()
-
 __LIBC_HIDDEN__ extern char* __findenv(const char*, int, int*);
 __LIBC_HIDDEN__ extern char* _mktemp(char*);
 
