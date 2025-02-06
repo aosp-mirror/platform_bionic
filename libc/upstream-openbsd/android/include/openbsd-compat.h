@@ -49,7 +49,6 @@ extern const char* __progname;
 #endif
 
 __LIBC_HIDDEN__ extern char* __findenv(const char*, int, int*);
-__LIBC_HIDDEN__ extern char* _mktemp(char*);
 
 // Only OpenBSD has this at the moment, and we're more likely to just say
 // "malloc is always calloc", so we don't expose this as libc API.
