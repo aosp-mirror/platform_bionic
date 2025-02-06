@@ -358,7 +358,6 @@ class SysCallsTxtParser:
             return
 
         syscall_func = return_type[-1]
-        return_type  = ' '.join(return_type[:-1])
         socketcall_id = -1
 
         pos_colon = syscall_func.find(':')
@@ -396,17 +395,14 @@ class SysCallsTxtParser:
 
         if pos_rparen > pos_lparen+1:
             syscall_params = line[pos_lparen+1:pos_rparen].split(',')
-            params         = ','.join(syscall_params)
         else:
             syscall_params = []
-            params         = "void"
 
         t = {
               "name"    : syscall_name,
               "func"    : syscall_func,
               "aliases" : syscall_aliases,
               "params"  : syscall_params,
-              "decl"    : "%-15s  %s (%s);" % (return_type, syscall_func, params),
               "socketcall_id" : socketcall_id
         }
 
