@@ -811,7 +811,7 @@ bool soinfo::is_mapped_by_caller() const {
 
 // This function returns api-level at the time of
 // dlopen/load. Note that libraries opened by system
-// will always have 'current' api level.
+// will always have 'current' target sdk version.
 int soinfo::get_target_sdk_version() const {
   if (!has_min_version(2)) {
     return __ANDROID_API__;

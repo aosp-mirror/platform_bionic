@@ -137,7 +137,7 @@ int __FD_ISSET_chk(int, const fd_set* _Nonnull, size_t);
 int select(int __max_fd_plus_one, fd_set* _Nullable __read_fds, fd_set* _Nullable __write_fds, fd_set* _Nullable __exception_fds, struct timeval* _Nullable __timeout);
 
 /**
- * [pselect(2)](https://man7.org/linux/man-pages/man2/select.2.html) waits on a
+ * [pselect(2)](https://man7.org/linux/man-pages/man2/pselect.2.html) waits on a
  * set of file descriptors.
  *
  * New code should prefer ppoll() from <poll.h> instead,

@@ -123,6 +123,7 @@ bool SetHeapTaggingLevel(HeapTaggingLevel tag_level) {
         }
         atomic_store(&__libc_memtag_stack, false);
         atomic_store(&globals->memtag, false);
+        atomic_store(&__libc_shared_globals()->memtag_currently_on, false);
       });
 
       if (heap_tagging_level != M_HEAP_TAGGING_LEVEL_TBI) {

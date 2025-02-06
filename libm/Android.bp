@@ -32,7 +32,6 @@ cc_library {
 
     whole_static_libs: ["libarm-optimized-routines-math"],
 
-    tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: [
         "upstream-freebsd/lib/msun/bsdsrc/b_tgamma.c",
         "upstream-freebsd/lib/msun/src/catrig.c",
@@ -361,7 +360,8 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/s_lrintf.c",
             ],
             // The x86 ABI doesn't include this, which is needed for the
-            // roundss/roundsd instructions that we've used since Android M.
+            // roundss/roundsd instructions that we've used since API level 23,
+            // originally by hand-written assembler but later via intrinsics.
             cflags: ["-msse4.1"],
             version_script: ":libm.x86.map",
         },
@@ -403,9 +403,6 @@ cc_library {
     ldflags: [
         "-Wl,--Bsymbolic-functions",
     ],
-
-    // b/120614316, non-critical readibility check
-    tidy_checks: ["-cert-dcl16-c"],
 
     include_dirs: ["bionic/libc"],
     target: {

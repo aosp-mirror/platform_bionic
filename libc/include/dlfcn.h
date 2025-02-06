@@ -63,6 +63,22 @@ typedef struct {
  * [dlopen(3)](https://man7.org/linux/man-pages/man3/dlopen.3.html)
  * loads the given shared library.
  *
+ * See also
+ * [Android changes for NDK developers](https://android.googlesource.com/platform/bionic/+/main/android-changes-for-ndk-developers.md)
+ * which should cover all dynamic linker behavioral changes relevant to app development.
+ * It also explains how to debug issues with shared libraries on Android
+ * using the `debug.ld.app.*` system properties.
+ *
+ * One Android-specific extension is particularly noteworthy.
+ * The "my_zip_file.zip!/libs/libstuff.so" syntax to load a library
+ * directly from an arbitrary zip file, including but not limited to your apk
+ * (where this is how `extractNativeLibs=false` is implemented).
+ * Related to that, until API level 36 PackageManager is fussy about what
+ * files `extractNativeLibs` will actually extract.
+ * To be compatible with all API levels,
+ * always give files that need to be extracted a "lib" prefix and ".so" suffix,
+ * or avoid using `extractNativeLibs`.
+ *
  * See also android_dlopen_ext().
  *
  * Returns a pointer to an opaque handle for use with other <dlfcn.h> functions

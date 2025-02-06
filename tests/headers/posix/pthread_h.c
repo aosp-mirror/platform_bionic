@@ -1,30 +1,5 @@
-/*
- * Copyright (C) 2017 The Android Open Source Project
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *  * Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *  * Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- */
+// Copyright (C) 2017 The Android Open Source Project
+// SPDX-License-Identifier: BSD-2-Clause
 
 #include <pthread.h>
 
@@ -116,6 +91,9 @@ static void pthread_h() {
   FUNCTION(pthread_cancel, int (*f)(pthread_t));
 #endif
   FUNCTION(pthread_cond_broadcast, int (*f)(pthread_cond_t*));
+#if !defined(__GLIBC__)  // Our glibc is too old.
+  FUNCTION(pthread_cond_clockwait, int (*f)(pthread_cond_t*, pthread_mutex_t*, clockid_t, const struct timespec*));
+#endif
   FUNCTION(pthread_cond_destroy, int (*f)(pthread_cond_t*));
   FUNCTION(pthread_cond_init, int (*f)(pthread_cond_t*, const pthread_condattr_t*));
   FUNCTION(pthread_cond_signal, int (*f)(pthread_cond_t*));
@@ -140,6 +118,9 @@ static void pthread_h() {
   FUNCTION(pthread_join, int (*f)(pthread_t, void**));
   FUNCTION(pthread_key_create, int (*f)(pthread_key_t*, void (*)(void*)));
   FUNCTION(pthread_key_delete, int (*f)(pthread_key_t));
+#if !defined(__GLIBC__)  // Our glibc is too old.
+  FUNCTION(pthread_mutex_clocklock, int (*f)(pthread_mutex_t*, clockid_t, const struct timespec*));
+#endif
 #if !defined(__BIONIC__) // No robust mutexes on Android.
   FUNCTION(pthread_mutex_consistent, int (*f)(pthread_mutex_t*));
 #endif
@@ -176,6 +157,10 @@ static void pthread_h() {
 #endif
   FUNCTION(pthread_mutexattr_settype, int (*f)(pthread_mutexattr_t*, int));
   FUNCTION(pthread_once, int (*f)(pthread_once_t*, void (*)(void)));
+#if !defined(__GLIBC__)  // Our glibc is too old.
+  FUNCTION(pthread_rwlock_clockrdlock, int (*f)(pthread_rwlock_t*, clockid_t, const struct timespec*));
+  FUNCTION(pthread_rwlock_clockwrlock, int (*f)(pthread_rwlock_t*, clockid_t, const struct timespec*));
+#endif
   FUNCTION(pthread_rwlock_destroy, int (*f)(pthread_rwlock_t*));
   FUNCTION(pthread_rwlock_init, int (*f)(pthread_rwlock_t*, const pthread_rwlockattr_t*));
   FUNCTION(pthread_rwlock_rdlock, int (*f)(pthread_rwlock_t*));

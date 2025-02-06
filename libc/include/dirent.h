@@ -87,7 +87,7 @@ struct dirent64 { __DIRENT64_BODY };
 
 #define d_fileno d_ino
 
-/** The structure returned by opendir()/fopendir(). */
+/** The structure returned by opendir()/fdopendir(). */
 typedef struct DIR DIR;
 
 /**
@@ -99,7 +99,7 @@ typedef struct DIR DIR;
 DIR* _Nullable opendir(const char* _Nonnull __path);
 
 /**
- * [fopendir(3)](https://man7.org/linux/man-pages/man3/opendir.3.html)
+ * [fdopendir(3)](https://man7.org/linux/man-pages/man3/fdopendir.3.html)
  * opens a directory stream for the directory at `__dir_fd`.
  *
  * Returns null and sets `errno` on failure.
@@ -176,13 +176,13 @@ long telldir(DIR* _Nonnull __dir) __INTRODUCED_IN(23);
 int dirfd(DIR* _Nonnull __dir);
 
 /**
- * [alphasort](https://man7.org/linux/man-pages/man3/alphasort.3.html) is a
+ * [alphasort(3)](https://man7.org/linux/man-pages/man3/alphasort.3.html) is a
  * comparator for use with scandir() that uses strcoll().
  */
 int alphasort(const struct dirent* _Nonnull * _Nonnull __lhs, const struct dirent* _Nonnull * _Nonnull __rhs);
 
 /**
- * [alphasort64](https://man7.org/linux/man-pages/man3/alphasort.3.html) is a
+ * [alphasort64(3)](https://man7.org/linux/man-pages/man3/alphasort.3.html) is a
  * comparator for use with scandir64() that uses strcmp().
  */
 int alphasort64(const struct dirent64* _Nonnull * _Nonnull __lhs, const struct dirent64* _Nonnull * _Nonnull __rhs);

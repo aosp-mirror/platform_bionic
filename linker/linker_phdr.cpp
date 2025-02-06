@@ -308,26 +308,17 @@ bool ElfReader::VerifyElfHeader() {
   }
 
   if (header_.e_shentsize != sizeof(ElfW(Shdr))) {
-    if (get_application_target_sdk_version() >= 26) {
-      DL_ERR_AND_LOG("\"%s\" has unsupported e_shentsize: 0x%x (expected 0x%zx)",
-                     name_.c_str(), header_.e_shentsize, sizeof(ElfW(Shdr)));
+    if (DL_ERROR_AFTER(26, "\"%s\" has unsupported e_shentsize: 0x%x (expected 0x%zx)",
+                       name_.c_str(), header_.e_shentsize, sizeof(ElfW(Shdr)))) {
       return false;
     }
-    DL_WARN_documented_change(26,
-                              "invalid-elf-header_section-headers-enforced-for-api-level-26",
-                              "\"%s\" has unsupported e_shentsize 0x%x (expected 0x%zx)",
-                              name_.c_str(), header_.e_shentsize, sizeof(ElfW(Shdr)));
     add_dlwarning(name_.c_str(), "has invalid ELF header");
   }
 
   if (header_.e_shstrndx == 0) {
-    if (get_application_target_sdk_version() >= 26) {
-      DL_ERR_AND_LOG("\"%s\" has invalid e_shstrndx", name_.c_str());
+    if (DL_ERROR_AFTER(26, "\"%s\" has invalid e_shstrndx", name_.c_str())) {
       return false;
     }
-    DL_WARN_documented_change(26,
-                              "invalid-elf-header_section-headers-enforced-for-api-level-26",
-                              "\"%s\" has invalid e_shstrndx", name_.c_str());
     add_dlwarning(name_.c_str(), "has invalid ELF header");
   }
 
@@ -434,40 +425,24 @@ bool ElfReader::ReadDynamicSection() {
   }
 
   if (pt_dynamic_offset != dynamic_shdr->sh_offset) {
-    if (get_application_target_sdk_version() >= 26) {
-      DL_ERR_AND_LOG("\"%s\" .dynamic section has invalid offset: 0x%zx, "
-                     "expected to match PT_DYNAMIC offset: 0x%zx",
-                     name_.c_str(),
-                     static_cast<size_t>(dynamic_shdr->sh_offset),
-                     pt_dynamic_offset);
+    if (DL_ERROR_AFTER(26, "\"%s\" .dynamic section has invalid offset: 0x%zx, "
+                       "expected to match PT_DYNAMIC offset: 0x%zx",
+                       name_.c_str(),
+                       static_cast<size_t>(dynamic_shdr->sh_offset),
+                       pt_dynamic_offset)) {
       return false;
     }
-    DL_WARN_documented_change(26,
-                              "invalid-elf-header_section-headers-enforced-for-api-level-26",
-                              "\"%s\" .dynamic section has invalid offset: 0x%zx "
-                              "(expected to match PT_DYNAMIC offset 0x%zx)",
-                              name_.c_str(),
-                              static_cast<size_t>(dynamic_shdr->sh_offset),
-                              pt_dynamic_offset);
     add_dlwarning(name_.c_str(), "invalid .dynamic section");
   }
 
   if (pt_dynamic_filesz != dynamic_shdr->sh_size) {
-    if (get_application_target_sdk_version() >= 26) {
-      DL_ERR_AND_LOG("\"%s\" .dynamic section has invalid size: 0x%zx, "
-                     "expected to match PT_DYNAMIC filesz: 0x%zx",
-                     name_.c_str(),
-                     static_cast<size_t>(dynamic_shdr->sh_size),
-                     pt_dynamic_filesz);
+    if (DL_ERROR_AFTER(26, "\"%s\" .dynamic section has invalid size: 0x%zx "
+                       "(expected to match PT_DYNAMIC filesz 0x%zx)",
+                       name_.c_str(),
+                       static_cast<size_t>(dynamic_shdr->sh_size),
+                       pt_dynamic_filesz)) {
       return false;
     }
-    DL_WARN_documented_change(26,
-                              "invalid-elf-header_section-headers-enforced-for-api-level-26",
-                              "\"%s\" .dynamic section has invalid size: 0x%zx "
-                              "(expected to match PT_DYNAMIC filesz 0x%zx)",
-                              name_.c_str(),
-                              static_cast<size_t>(dynamic_shdr->sh_size),
-                              pt_dynamic_filesz);
     add_dlwarning(name_.c_str(), "invalid .dynamic section");
   }
 
@@ -569,9 +544,17 @@ bool ElfReader::CheckProgramHeaderAlignment() {
   for (size_t i = 0; i < phdr_num_; ++i) {
     const ElfW(Phdr)* phdr = &phdr_table_[i];
 
-    // p_align must be 0, 1, or a positive, integral power of two.
-    if (phdr->p_type != PT_LOAD || ((phdr->p_align & (phdr->p_align - 1)) != 0)) {
-      // TODO: reject ELF files with bad p_align values.
+    if (phdr->p_type != PT_LOAD) {
+      continue;
+    }
+
+    // For loadable segments, p_align must be 0, 1,
+    // or a positive, integral power of two.
+    // The kernel ignores loadable segments with other values,
+    // so we just warn rather than reject them.
+    if ((phdr->p_align & (phdr->p_align - 1)) != 0) {
+      DL_WARN("\"%s\" has invalid p_align %zx in phdr %zu", name_.c_str(),
+                     static_cast<size_t>(phdr->p_align), i);
       continue;
     }
 
@@ -766,22 +749,29 @@ bool ElfReader::ReadPadSegmentNote() {
       continue;
     }
 
-    // If the PT_NOTE extends beyond the file. The ELF is doing something
-    // strange -- obfuscation, embedding hidden loaders, ...
-    //
-    // It doesn't contain the pad_segment note. Skip it to avoid SIGBUS
-    // by accesses beyond the file.
-    off64_t note_end_off = file_offset_ + phdr->p_offset + phdr->p_filesz;
-    if (note_end_off > file_size_) {
-      continue;
+    // Reject notes that claim to extend past the end of the file.
+    off64_t note_end_off = file_offset_;
+    if (__builtin_add_overflow(note_end_off, phdr->p_offset, &note_end_off) ||
+        __builtin_add_overflow(note_end_off, phdr->p_filesz, &note_end_off) ||
+        phdr->p_filesz != phdr->p_memsz ||
+        note_end_off > file_size_) {
+
+      if (get_application_target_sdk_version() < 37) {
+        // Some in-market apps have invalid ELF notes (http://b/390328213),
+        // so ignore them until/unless they bump their target sdk version.
+        continue;
+      }
+
+      DL_ERR_AND_LOG("\"%s\": ELF note (phdr %zu) runs off end of file", name_.c_str(), i);
+      return false;
     }
 
-    // note_fragment is scoped to within the loop so that there is
-    // at most 1 PT_NOTE mapped at anytime during this search.
+    // We scope note_fragment to within the loop so that there is
+    // at most one PT_NOTE mapped at any time.
     MappedFileFragment note_fragment;
-    if (!note_fragment.Map(fd_, file_offset_, phdr->p_offset, phdr->p_memsz)) {
+    if (!note_fragment.Map(fd_, file_offset_, phdr->p_offset, phdr->p_filesz)) {
       DL_ERR("\"%s\": PT_NOTE mmap(nullptr, %p, PROT_READ, MAP_PRIVATE, %d, %p) failed: %m",
-             name_.c_str(), reinterpret_cast<void*>(phdr->p_memsz), fd_,
+             name_.c_str(), reinterpret_cast<void*>(phdr->p_filesz), fd_,
              reinterpret_cast<void*>(page_start(file_offset_ + phdr->p_offset)));
       return false;
     }
@@ -795,7 +785,7 @@ bool ElfReader::ReadPadSegmentNote() {
     }
 
     if (note_hdr->n_descsz != sizeof(ElfW(Word))) {
-      DL_ERR("\"%s\" NT_ANDROID_TYPE_PAD_SEGMENT note has unexpected n_descsz: %u",
+      DL_ERR("\"%s\": NT_ANDROID_TYPE_PAD_SEGMENT note has unexpected n_descsz: %u",
              name_.c_str(), reinterpret_cast<unsigned int>(note_hdr->n_descsz));
       return false;
     }
@@ -989,8 +979,8 @@ bool ElfReader::LoadSegments() {
   // Apps may rely on undefined behavior here on 4 KB systems,
   // which is the norm before this change is introduced
   if (kPageSize >= 16384 && min_align_ < kPageSize && !should_use_16kib_app_compat_) {
-    DL_ERR("\"%s\" program alignment (%zu) cannot be smaller than system page size (%zu)",
-           name_.c_str(), min_align_, kPageSize);
+    DL_ERR_AND_LOG("\"%s\" program alignment (%zu) cannot be smaller than system page size (%zu)",
+                   name_.c_str(), min_align_, kPageSize);
     return false;
   }
 
@@ -1043,15 +1033,10 @@ bool ElfReader::LoadSegments() {
     if (file_length != 0) {
       int prot = PFLAGS_TO_PROT(phdr->p_flags);
       if ((prot & (PROT_EXEC | PROT_WRITE)) == (PROT_EXEC | PROT_WRITE)) {
-        // W + E PT_LOAD segments are not allowed in O.
-        if (get_application_target_sdk_version() >= 26) {
-          DL_ERR_AND_LOG("\"%s\": W+E load segments are not allowed", name_.c_str());
+        if (DL_ERROR_AFTER(26, "\"%s\" has load segments that are both writable and executable",
+                           name_.c_str())) {
           return false;
         }
-        DL_WARN_documented_change(26,
-                                  "writable-and-executable-segments-enforced-for-api-level-26",
-                                  "\"%s\" has load segments that are both writable and executable",
-                                  name_.c_str());
         add_dlwarning(name_.c_str(), "W+E load segments");
       }
 
