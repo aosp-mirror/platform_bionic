@@ -39,8 +39,4 @@
 #define __readlockenv() 0
 #define __unlockenv() 0
 
-#include <sys/cdefs.h>
-#include <stddef.h>
-int reallocarr(void*, size_t, size_t);
-
 #define __arraycount(a) (sizeof(a) / sizeof(a[0]))
