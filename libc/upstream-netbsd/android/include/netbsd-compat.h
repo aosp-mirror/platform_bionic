@@ -35,8 +35,4 @@
  */
 #define __UNCONST(a)    ((void *)(unsigned long)(const void *)(a))
 
-// TODO: we don't yet have thread-safe environment variables.
-#define __readlockenv() 0
-#define __unlockenv() 0
-
 #define __arraycount(a) (sizeof(a) / sizeof(a[0]))
