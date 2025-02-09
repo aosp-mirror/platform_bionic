@@ -37,6 +37,7 @@
 
 #include <bits/timespec.h>
 #include <linux/sched.h>
+#include <linux/sched/types.h>
 
 __BEGIN_DECLS
 
@@ -234,6 +235,22 @@ int sched_setaffinity(pid_t __pid, size_t __set_size, const cpu_set_t* _Nonnull 
  * Returns 0 on success and returns -1 and sets `errno` on failure.
  */
 int sched_getaffinity(pid_t __pid, size_t __set_size, cpu_set_t* _Nonnull __set);
+
+/**
+ * [sched_setattr(2)](https://man7.org/linux/man-pages/man2/sched_setattr.2.html)
+ * sets the scheduling attributes for the given thread.
+ *
+ * Returns 0 on success and returns -1 and sets `errno` on failure.
+ */
+int sched_setattr(pid_t __pid, struct sched_attr* _Nonnull __attr, unsigned __flags) __INTRODUCED_IN(37);
+
+/**
+ * [sched_getattr(2)](https://man7.org/linux/man-pages/man2/sched_getattr.2.html)
+ * gets the scheduling attributes for the given thread.
+ *
+ * Returns 0 on success and returns -1 and sets `errno` on failure.
+ */
+int sched_getattr(pid_t __pid, struct sched_attr* _Nonnull __attr, unsigned __size, unsigned __flags) __INTRODUCED_IN(37);
 
 /**
  * [CPU_ZERO](https://man7.org/linux/man-pages/man3/CPU_ZERO.3.html) clears all

@@ -798,7 +798,7 @@ static const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
   for (auto it = start, end = soinfo_list.end(); it != end; ++it) {
     soinfo* si = *it;
     // Do not skip RTLD_LOCAL libraries in dlsym(RTLD_DEFAULT, ...)
-    // if the library is opened by application with target api level < M.
+    // if the library is opened by an application with target sdk version < 23.
     // See http://b/21565766
     if ((si->get_rtld_flags() & RTLD_GLOBAL) == 0 && si->get_target_sdk_version() >= 23) {
       continue;
@@ -1084,31 +1084,19 @@ int open_executable(const char* path, off64_t* file_offset, std::string* realpat
 
 const char* fix_dt_needed(const char* dt_needed, const char* sopath __unused) {
 #if !defined(__LP64__)
-  // Work around incorrect DT_NEEDED entries for old apps: http://b/21364029
-  int app_target_api_level = get_application_target_sdk_version();
-  if (app_target_api_level < 23) {
+  if (get_application_target_sdk_version() < 23) {
     const char* bname = basename(dt_needed);
     if (bname != dt_needed) {
-      DL_WARN_documented_change(23,
-                                "invalid-dt_needed-entries-enforced-for-api-level-23",
-                                "library \"%s\" has invalid DT_NEEDED entry \"%s\"",
-                                sopath, dt_needed, app_target_api_level);
-      add_dlwarning(sopath, "invalid DT_NEEDED entry",  dt_needed);
+      // Work around incorrect DT_NEEDED entries for old apps: http://b/21364029
+      if (!DL_ERROR_AFTER(23, "library \"%s\" has invalid DT_NEEDED entry \"%s\"",
+                          sopath, dt_needed)) {
+        add_dlwarning(sopath, "invalid DT_NEEDED entry",  dt_needed);
+        return bname;
+      }
     }
-
-    return bname;
   }
 #endif
   return dt_needed;
-}
-
-template<typename F>
-static void for_each_dt_needed(const ElfReader& elf_reader, F action) {
-  for (const ElfW(Dyn)* d = elf_reader.dynamic(); d->d_tag != DT_NULL; ++d) {
-    if (d->d_tag == DT_NEEDED) {
-      action(fix_dt_needed(elf_reader.get_string(d->d_un.d_val), elf_reader.name()));
-    }
-  }
 }
 
 static bool find_loaded_library_by_inode(android_namespace_t* ns,
@@ -1236,11 +1224,12 @@ static bool load_library(android_namespace_t* ns,
         const soinfo* needed_or_dlopened_by = task->get_needed_by();
         const char* sopath = needed_or_dlopened_by == nullptr ? "(unknown)" :
                                                       needed_or_dlopened_by->get_realpath();
-        DL_WARN_documented_change(24,
-                                  "private-api-enforced-for-api-level-24",
-                                  "library \"%s\" (\"%s\") needed or dlopened by \"%s\" "
-                                  "is not accessible by namespace \"%s\"",
-                                  name, realpath.c_str(), sopath, ns->get_name());
+        // is_exempt_lib() always returns true for targetSdkVersion < 24,
+        // so no need to check the return value of DL_ERROR_AFTER().
+        // We still call it rather than DL_WARN() to get the extra clarification.
+        DL_ERROR_AFTER(24, "library \"%s\" (\"%s\") needed or dlopened by \"%s\" "
+                       "is not accessible by namespace \"%s\"",
+                       name, realpath.c_str(), sopath, ns->get_name());
         add_dlwarning(sopath, "unauthorized access to",  name);
       }
     } else {
@@ -1307,11 +1296,14 @@ static bool load_library(android_namespace_t* ns,
   }
 #endif
 
-  for_each_dt_needed(task->get_elf_reader(), [&](const char* name) {
-    LD_LOG(kLogDlopen, "load_library(ns=%s, task=%s): Adding DT_NEEDED task: %s",
-           ns->get_name(), task->get_name(), name);
-    load_tasks->push_back(LoadTask::create(name, si, ns, task->get_readers_map()));
-  });
+  for (const ElfW(Dyn)* d = elf_reader.dynamic(); d->d_tag != DT_NULL; ++d) {
+    if (d->d_tag == DT_NEEDED) {
+      const char* name = fix_dt_needed(elf_reader.get_string(d->d_un.d_val), elf_reader.name());
+      LD_LOG(kLogDlopen, "load_library(ns=%s, task=%s): Adding DT_NEEDED task: %s",
+             ns->get_name(), task->get_name(), name);
+      load_tasks->push_back(LoadTask::create(name, si, ns, task->get_readers_map()));
+    }
+  }
 
   return true;
 }
@@ -3327,19 +3319,19 @@ bool soinfo::prelink_image(bool dlext_use_relro) {
     }
   }
 
-  // Before M release, linker was using basename in place of soname. In the case when DT_SONAME is
-  // absent some apps stop working because they can't find DT_NEEDED library by soname. This
-  // workaround should keep them working. (Applies only for apps targeting sdk version < M.) Make
-  // an exception for the main executable, which does not need to have DT_SONAME. The linker has an
-  // DT_SONAME but the soname_ field is initialized later on.
+  // Before API 23, the linker used the basename in place of DT_SONAME.
+  // After we switched, apps with libraries without a DT_SONAME stopped working:
+  // they could no longer be found by DT_NEEDED from another library.
+  // The main executable does not need to have a DT_SONAME.
+  // The linker has a DT_SONAME, but the soname_ field is initialized later on.
   if (soname_.empty() && this != solist_get_somain() && !relocating_linker &&
       get_application_target_sdk_version() < 23) {
     soname_ = basename(realpath_.c_str());
-    DL_WARN_documented_change(23, "missing-soname-enforced-for-api-level-23",
-                              "\"%s\" has no DT_SONAME (will use %s instead)", get_realpath(),
-                              soname_.c_str());
-
-    // Don't call add_dlwarning because a missing DT_SONAME isn't important enough to show in the UI
+    // The `if` above means we don't get here for targetSdkVersion >= 23,
+    // so no need to check the return value of DL_ERROR_AFTER().
+    // We still call it rather than DL_WARN() to get the extra clarification.
+    DL_ERROR_AFTER(23, "\"%s\" has no DT_SONAME (will use %s instead)",
+                   get_realpath(), soname_.c_str());
   }
 
   // Validate each library's verdef section once, so we don't have to validate
@@ -3385,20 +3377,12 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
 
 #if !defined(__LP64__)
   if (has_text_relocations) {
-    // Fail if app is targeting M or above.
-    int app_target_api_level = get_application_target_sdk_version();
-    if (app_target_api_level >= 23) {
-      DL_ERR_AND_LOG("\"%s\" has text relocations (%s#Text-Relocations-Enforced-for-API-level-23)",
-                     get_realpath(), kBionicChangesUrl);
+    if (DL_ERROR_AFTER(23, "\"%s\" has text relocations", get_realpath())) {
       return false;
     }
+    add_dlwarning(get_realpath(), "text relocations");
     // Make segments writable to allow text relocations to work properly. We will later call
     // phdr_table_protect_segments() after all of them are applied.
-    DL_WARN_documented_change(23,
-                              "Text-Relocations-Enforced-for-API-level-23",
-                              "\"%s\" has text relocations",
-                              get_realpath());
-    add_dlwarning(get_realpath(), "text relocations");
     if (phdr_table_unprotect_segments(phdr, phnum, load_bias, should_pad_segments_,
                                       should_use_16kib_app_compat_) < 0) {
       DL_ERR("can't unprotect loadable segments for \"%s\": %m", get_realpath());
