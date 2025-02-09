@@ -55,31 +55,34 @@
 
 #include <private/bionic_asm.h>
 
-#define pDst a0
-#define iValue a1
-#define iNum a2
+// Arguments.
+#define dst a0
+#define src a1
+#define n a2
+#define dst_len a3 // __memcpy_chk() only
 
+// Locals.
 #define iVL a3
-#define iTemp a4
-#define pDstPtr a5
+#define p a4
 
-#define ELEM_LMUL_SETTING m8
-#define vData v0
+ENTRY(__memcpy_chk)
+    bleu n, dst_len, 1f
+    call __memcpy_chk_fail
+1:  // Fall through to memcpy().
+END(__memcpy_chk)
 
-ENTRY(memset)
-
-    mv pDstPtr, pDst
-
-    vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
-    vmv.v.x vData, iValue
+ENTRY(memcpy)
+    mv p, dst
 
 L(loop):
-    vse8.v vData, (pDstPtr)
-    sub iNum, iNum, iVL
-    add pDstPtr, pDstPtr, iVL
-    vsetvli iVL, iNum, e8, ELEM_LMUL_SETTING, ta, ma
-    bnez iNum, L(loop)
+    vsetvli iVL, n, e8, m8, ta, ma
+
+    vle8.v v0, (src)
+    sub n, n, iVL
+    add src, src, iVL
+    vse8.v v0, (p)
+    add p, p, iVL
+    bnez n, L(loop)
 
     ret
-
-END(memset)
+END(memcpy)

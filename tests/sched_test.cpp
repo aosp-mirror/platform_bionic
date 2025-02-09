@@ -165,7 +165,6 @@ TEST(sched, cpu_op) {
   }
 }
 
-
 TEST(sched, cpu_alloc_small) {
   cpu_set_t* set = CPU_ALLOC(17);
   size_t size = CPU_ALLOC_SIZE(17);
@@ -313,7 +312,7 @@ TEST(sched, sched_getaffinity_failure) {
 #pragma clang diagnostic pop
 }
 
-TEST(pthread, sched_getaffinity) {
+TEST(sched, sched_getaffinity) {
   cpu_set_t set;
   CPU_ZERO(&set);
   ASSERT_EQ(0, sched_getaffinity(getpid(), sizeof(set), &set));
@@ -329,11 +328,33 @@ TEST(sched, sched_setaffinity_failure) {
 #pragma clang diagnostic pop
 }
 
-TEST(pthread, sched_setaffinity) {
+TEST(sched, sched_setaffinity) {
   cpu_set_t set;
   CPU_ZERO(&set);
   ASSERT_EQ(0, sched_getaffinity(getpid(), sizeof(set), &set));
   // It's hard to make any more general claim than this,
   // but it ought to be safe to ask for the same affinity you already have.
   ASSERT_EQ(0, sched_setaffinity(getpid(), sizeof(set), &set));
+}
+
+TEST(sched, sched_getattr) {
+#if defined(__BIONIC__)
+  struct sched_attr sa;
+  ASSERT_EQ(0, sched_getattr(getpid(), &sa, sizeof(sa), 0));
+#else
+  GTEST_SKIP() << "our glibc is too old";
+#endif
+}
+
+TEST(sched, sched_setattr_failure) {
+#if defined(__BIONIC__)
+  // Trivial test of the errno-preserving/returning behavior.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
+  ASSERT_EQ(-1, sched_setattr(getpid(), nullptr, 0));
+  ASSERT_ERRNO(EINVAL);
+#pragma clang diagnostic pop
+#else
+  GTEST_SKIP() << "our glibc is too old";
+#endif
 }

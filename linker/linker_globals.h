@@ -28,6 +28,8 @@
 
 #pragma once
 
+#include "linker_debug.h"
+
 #include <link.h>
 #include <stddef.h>
 
@@ -49,7 +51,7 @@
       async_safe_format_fd(2, "\n"); \
     } while (false)
 
-void DL_WARN_documented_change(int api_level, const char* doc_link, const char* fmt, ...);
+bool DL_ERROR_AFTER(int target_sdk_version, const char* fmt, ...) __printflike(2, 3);
 
 #define DL_ERR_AND_LOG(fmt, x...) \
   do { \
