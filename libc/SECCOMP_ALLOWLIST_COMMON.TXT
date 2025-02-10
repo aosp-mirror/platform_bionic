@@ -4,78 +4,78 @@
 # This file is processed by a python script named genseccomp.py.
 
 # Syscalls needed to boot android
-int	pivot_root(const char*, const char*)	lp64
-int	ioprio_get(int, int)	lp64
-int	ioprio_set(int, int, int)	lp64
+pivot_root(const char*, const char*)	lp64
+ioprio_get(int, int)	lp64
+ioprio_set(int, int, int)	lp64
 
 # Syscalls used internally by bionic, but not exposed directly.
-pid_t	gettid()	all
-int	futex(int*, int, int, const timespec*, int*, int)	all
-pid_t	clone(int (*)(void*), void*, int, void*, ...) all
-int	sigreturn(unsigned long)	lp32
-int	rt_sigreturn(unsigned long)	all
-int	rt_tgsigqueueinfo(pid_t, pid_t, int, siginfo_t*)	all
-int	restart_syscall()	all
+gettid()	all
+futex(int*, int, int, const timespec*, int*, int)	all
+clone(int (*)(void*), void*, int, void*, ...) all
+sigreturn(unsigned long)	lp32
+rt_sigreturn(unsigned long)	all
+rt_tgsigqueueinfo(pid_t, pid_t, int, siginfo_t*)	all
+restart_syscall()	all
 
 # The public API doesn't set errno, so we call this via inline assembler.
-int riscv_hwprobe(riscv_hwprobe*, size_t, size_t, unsigned long*, unsigned) riscv64
+riscv_hwprobe(riscv_hwprobe*, size_t, size_t, unsigned long*, unsigned) riscv64
 
 # vfork is used by bionic (and java.lang.ProcessBuilder) on some
 # architectures. (The others use clone(2) directly instead.)
-pid_t	vfork()	arm,x86,x86_64
+vfork()	arm,x86,x86_64
 
 # Needed for performance tools.
-int	perf_event_open(perf_event_attr*, pid_t, int, int, unsigned long)	all
+perf_event_open(perf_event_attr*, pid_t, int, int, unsigned long)	all
 
 # Needed for strace.
-int	tkill(int, int)	all
+tkill(int, int)	all
 
 # Needed for a CTS test of seccomp (b/34763393).
-int	seccomp(unsigned, unsigned, void*)	all
+seccomp(unsigned, unsigned, void*)	all
 
 # TODO: remove these now we've updated the toolchain (http://b/229989971).
-int open(const char*, int, ...)  arm,x86,x86_64
-int stat64(const char*, stat64*)  arm,x86
-ssize_t readlink(const char*, char*, size_t)  arm,x86,x86_64
-int stat(const char*, stat*)  arm,x86,x86_64
+open(const char*, int, ...)  arm,x86,x86_64
+stat64(const char*, stat64*)  arm,x86
+readlink(const char*, char*, size_t)  arm,x86,x86_64
+stat(const char*, stat*)  arm,x86,x86_64
 
 #
 # (Potentially) useful new syscalls which we don't yet use in bionic.
 #
 
 # Since Linux 2.5, not in glibc.
-int io_setup(unsigned, aio_context_t*) all
-int io_destroy(aio_context_t) all
-int io_submit(aio_context_t, long,  iocb**) all
-int io_getevents(aio_context_t, long, long, io_event*, timespec*) all
-int io_cancel(aio_context_t, iocb*, io_event*) all
+io_setup(unsigned, aio_context_t*) all
+io_destroy(aio_context_t) all
+io_submit(aio_context_t, long,  iocb**) all
+io_getevents(aio_context_t, long, long, io_event*, timespec*) all
+io_cancel(aio_context_t, iocb*, io_event*) all
 # Since Linux 3.19, not in glibc (and not really needed to implement fexecve).
-int execveat(int, const char*, char* const*, char* const*, int)  all
+execveat(int, const char*, char* const*, char* const*, int)  all
 # Since Linux 4.3, not in glibc. Probed for and conditionally used by ART.
-int membarrier(int, int) all
-int userfaultfd(int) all
+membarrier(int, int) all
+userfaultfd(int) all
 # Since Linux 5.1, not in glibc. Not used by bionic, and not likely ever
 # to be (because the last thing anyone needs is a new 32-bit ABI in the
 # 2020s!) but http://b/138781460 showed cuttlefish needed at least the
 # clock_gettime64 syscall.
-int clock_gettime64(clockid_t, timespec64*) lp32
-int clock_settime64(clockid_t, const timespec64*) lp32
-int clock_adjtime64(clockid_t, timex64*) lp32
-int clock_getres_time64(clockid_t, timespec64*) lp32
-int clock_nanosleep_time64(clockid_t, int, const timespec64*, timespec*) lp32
-int timer_gettime64(__kernel_timer_t, itimerspec64*) lp32
-int timer_settime64(__kernel_timer_t, int, const itimerspec64*, itimerspec64*) lp32
-int timerfd_gettime64(int, itimerspec64*) lp32
-int timerfd_settime64(int, int, const itimerspec64*, itimerspec64*) lp32
-int utimensat_time64(int, const char*, const timespec64[2], int) lp32
-int pselect6_time64(int, fd_set*, fd_set*, timespec64*, void*) lp32
-int ppoll_time64(pollfd*, unsigned int, timespec64*, const sigset64_t*, size_t) lp32
-int recvmmsg_time64(int, mmsghdr*, unsigned int, int, const timespec64*) lp32
-int rt_sigtimedwait_time64(const sigset64_t*, siginfo_t*, const timespec64*, size_t) lp32
-int futex_time64(int*, int, int, const timespec64*, int*, int) lp32
-int sched_rr_get_interval_time64(pid_t, timespec64*) lp32
+clock_gettime64(clockid_t, timespec64*) lp32
+clock_settime64(clockid_t, const timespec64*) lp32
+clock_adjtime64(clockid_t, timex64*) lp32
+clock_getres_time64(clockid_t, timespec64*) lp32
+clock_nanosleep_time64(clockid_t, int, const timespec64*, timespec*) lp32
+timer_gettime64(__kernel_timer_t, itimerspec64*) lp32
+timer_settime64(__kernel_timer_t, int, const itimerspec64*, itimerspec64*) lp32
+timerfd_gettime64(int, itimerspec64*) lp32
+timerfd_settime64(int, int, const itimerspec64*, itimerspec64*) lp32
+utimensat_time64(int, const char*, const timespec64[2], int) lp32
+pselect6_time64(int, fd_set*, fd_set*, timespec64*, void*) lp32
+ppoll_time64(pollfd*, unsigned int, timespec64*, const sigset64_t*, size_t) lp32
+recvmmsg_time64(int, mmsghdr*, unsigned int, int, const timespec64*) lp32
+rt_sigtimedwait_time64(const sigset64_t*, siginfo_t*, const timespec64*, size_t) lp32
+futex_time64(int*, int, int, const timespec64*, int*, int) lp32
+sched_rr_get_interval_time64(pid_t, timespec64*) lp32
 # Since Linux 5.3, not in glibc. Not used by bionic, but increasingly
 # likely to be useful as new features are added. In particular, cgroups
 # support seems potentially useful for Android (though the struct that
 # changes size over time is obviously problematic).
-pid_t clone3(clone_args*, size_t) all
+clone3(clone_args*, size_t) all
