@@ -1,32 +1,37 @@
 # This file is used to automatically generate bionic's system call stubs.
 #
+# It is processed by a python script named gensyscalls.py,
+# normally run via the genrules in libc/Android.bp.
+#
 # Each non-blank, non-comment line has the following format:
 #
-# func_name[|alias_list][:syscall_name[:socketcall_id]]([parameter_list]) arch_list
+#     func_name[|alias_list][:syscall_name[:socketcall_id]]([parameter_list]) arch_list
 #
 # where:
-#       arch_list ::= "all" | arches
-#       arches    ::= arch |  arch "," arches
-#       arch      ::= "arm" | "arm64" | "riscv64" | "x86" | "x86_64" | "lp32" | "lp64"
+#     arch_list ::= "all" | arches
+#     arches    ::= arch |  arch "," arches
+#     arch      ::= "arm" | "arm64" | "riscv64" | "x86" | "x86_64" | "lp32" | "lp64"
 #
-# Note:
-#      - syscall_name corresponds to the name of the syscall, which may differ from
-#        the exported function name (example: the exit syscall is implemented by the _exit()
-#        function, which is not the same as the standard C exit() function which calls it)
+# syscall_name corresponds to the name of the syscall, which may differ from
+# the exported function name func_name. For example: the exit_group syscall
+# is exported by libc as the _exit() function, not exit() (which does more
+# work before calling _exit()).
 #
-#      - alias_list is optional comma separated list of function aliases.
+# alias_list is optional comma-separated list of function aliases.
+# For example, the traditional _exit() function has a C99 alias _Exit().
 #
-#      - No return type is specified.
+# No return type is specified, because it's not needed.
 #
-#      - The call_id parameter, given that func_name and syscall_name have
-#        been provided, allows the user to specify dispatch style syscalls.
-#        For example, socket() syscall on i386 actually becomes:
-#          socketcall(__NR_socket, 1, *(rest of args on stack)).
+# The socketcall_id parameter supports x86's
+# https://man7.org/linux/man-pages/man2/socketcall.2.html
+# and can be ignored for all other syscalls and architectures.
 #
-#      - Each parameter type is assumed to be stored in 32 bits.
+# The number of registers required for the arguments is computed by the script,
+# based on the parameter list given here. It handles the need for register
+# pairs for 64-bit arguments on ILP32, and also arm32's requirement for such
+# pairs to start on an even register. This means that it's important to get
+# these types right!
 #
-# This file is processed by a python script named gensyscalls.py, run via
-# genrules in Android.bp.
 
 # Calls that have historical 16-bit variants camping on the best names (CONFIG_UID16).
 getuid:getuid32()   lp32

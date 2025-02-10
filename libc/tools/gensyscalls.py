@@ -27,6 +27,7 @@ ENTRY(%(func)s)
 # ARM assembler templates for each syscall stub
 #
 
+# ARM assembler template for a syscall stub needing 4 or fewer registers
 arm_call_default = syscall_stub_header + """\
     mov     ip, r7
     .cfi_register r7, ip
@@ -41,6 +42,7 @@ arm_call_default = syscall_stub_header + """\
 END(%(func)s)
 """
 
+# ARM assembler template for a syscall stub needing more than 4 registers
 arm_call_long = syscall_stub_header + """\
     mov     ip, sp
     stmfd   sp!, {r4, r5, r6, r7}
@@ -165,13 +167,13 @@ def param_uses_64bits(param):
 
     # Second, check that there is no pointer type here
     if param.find("*") >= 0:
-            return False
+        return False
 
     # Ok
     return True
 
 
-def count_arm_param_registers(params):
+def count_param_registers_arm32(params):
     """This function is used to count the number of register used
        to pass parameters when invoking an ARM system call.
        This is because the ARM EABI mandates that 64-bit quantities
@@ -196,20 +198,13 @@ def count_arm_param_registers(params):
     return count
 
 
-def count_generic_param_registers(params):
+def count_param_registers_x86(params):
     count = 0
     for param in params:
         if param_uses_64bits(param):
             count += 2
         else:
             count += 1
-    return count
-
-
-def count_generic_param_registers64(params):
-    count = 0
-    for param in params:
-        count += 1
     return count
 
 
@@ -231,7 +226,7 @@ def add_footer(pointer_length, stub, syscall):
 
 
 def arm_genstub(syscall):
-    num_regs = count_arm_param_registers(syscall["params"])
+    num_regs = count_param_registers_arm32(syscall["params"])
     if num_regs > 4:
         return arm_call_long % syscall
     return arm_call_default % syscall
@@ -248,7 +243,7 @@ def riscv64_genstub(syscall):
 def x86_genstub(syscall):
     result     = syscall_stub_header % syscall
 
-    numparams = count_generic_param_registers(syscall["params"])
+    numparams = count_param_registers_x86(syscall["params"])
     stack_bias = numparams*4 + 8
     offset = 0
     mov_result = ""
@@ -316,7 +311,7 @@ def x86_genstub_socketcall(syscall):
 
 def x86_64_genstub(syscall):
     result = syscall_stub_header % syscall
-    num_regs = count_generic_param_registers64(syscall["params"])
+    num_regs = len(syscall["params"])
     if (num_regs > 3):
         # rcx is used as 4th argument. Kernel wants it at r10.
         result += "    movq    %rcx, %r10\n"
