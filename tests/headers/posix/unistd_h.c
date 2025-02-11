@@ -1,30 +1,5 @@
-/*
- * Copyright (C) 2017 The Android Open Source Project
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *  * Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *  * Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- */
+// Copyright (C) 2017 The Android Open Source Project
+// SPDX-License-Identifier: BSD-2-Clause
 
 #include <unistd.h>
 
@@ -221,6 +196,9 @@ static void unistd_h() {
   MACRO(_SC_MQ_OPEN_MAX);
   MACRO(_SC_MQ_PRIO_MAX);
   MACRO(_SC_NGROUPS_MAX);
+#if defined(__BIONIC__) // New in POSIX 2024.
+  MACRO(_SC_NSIG);
+#endif
   MACRO(_SC_OPEN_MAX);
   MACRO(_SC_PAGE_SIZE);
   MACRO(_SC_PAGESIZE);
@@ -339,6 +317,9 @@ static void unistd_h() {
   FUNCTION(ftruncate, int (*f)(int, off_t));
   FUNCTION(getcwd, char* (*f)(char*, size_t));
   FUNCTION(getegid, gid_t (*f)(void));
+#if !defined(__GLIBC__) // Our glibc is too old.
+  FUNCTION(getentropy, int (*f)(void*, size_t));
+#endif
   FUNCTION(geteuid, uid_t (*f)(void));
   FUNCTION(getgid, gid_t (*f)(void));
   FUNCTION(getgroups, int (*f)(int, gid_t[]));

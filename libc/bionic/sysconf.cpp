@@ -210,6 +210,7 @@ long sysconf(int name) {
       // are vestigial anyway, so the "maximum maximum" of NGROUPS_MAX is a good
       // enough answer for _SC_NGROUPS_MAX...
       return NGROUPS_MAX;
+    case _SC_NSIG:              return NSIG;
     case _SC_PASS_MAX:          return PASS_MAX;
     case _SC_2_C_BIND:          return _POSIX2_C_BIND;
     case _SC_2_C_DEV:           return _POSIX2_C_DEV;

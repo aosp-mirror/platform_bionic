@@ -338,8 +338,11 @@ class SysCallsTxtParser:
     def parse_line(self, line):
         """ parse a syscall spec line.
 
-        line processing, format is
-           return type    func_name[|alias_list][:syscall_name[:socketcall_id]] ( [paramlist] ) architecture_list
+        format is one syscall per line:
+
+           func_name[|alias_list][:syscall_name[:socketcall_id]] ( [paramlist] ) architecture_list
+
+        with no line breaking/continuation allowed.
         """
         pos_lparen = line.find('(')
         E          = self.E
@@ -352,13 +355,7 @@ class SysCallsTxtParser:
             E("missing or misplaced right parenthesis in '%s'" % line)
             return
 
-        return_type = line[:pos_lparen].strip().split()
-        if len(return_type) < 2:
-            E("missing return type in '%s'" % line)
-            return
-
-        syscall_func = return_type[-1]
-        return_type  = ' '.join(return_type[:-1])
+        syscall_func = line[:pos_lparen]
         socketcall_id = -1
 
         pos_colon = syscall_func.find(':')
@@ -396,17 +393,14 @@ class SysCallsTxtParser:
 
         if pos_rparen > pos_lparen+1:
             syscall_params = line[pos_lparen+1:pos_rparen].split(',')
-            params         = ','.join(syscall_params)
         else:
             syscall_params = []
-            params         = "void"
 
         t = {
               "name"    : syscall_name,
               "func"    : syscall_func,
               "aliases" : syscall_aliases,
               "params"  : syscall_params,
-              "decl"    : "%-15s  %s (%s);" % (return_type, syscall_func, params),
               "socketcall_id" : socketcall_id
         }
 

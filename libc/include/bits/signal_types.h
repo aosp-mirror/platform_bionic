@@ -34,35 +34,71 @@
 #include <linux/signal.h>
 #include <sys/types.h>
 
-/* The arm and x86 kernel header files don't define _NSIG. */
+/**
+ * The highest kernel-supported signal number, plus one.
+ *
+ * In theory this is useful for declaring an array with an entry for each signal.
+ * In practice, that's less useful than it seems because of the real-time
+ * signals and the reserved signals,
+ * and the sig2str() and str2sig() functions cover the most common use case
+ * of translating between signal numbers and signal names.
+ *
+ * Note also that although sigset_t and sigset64_t are the same type on LP64,
+ * on ILP32 only sigset64_t is large enough to refer to the upper 32 signals.
+ * NSIG does _not_ tell you anything about what can be used with sigset_t.
+ *
+ * See the
+ * (32-bit ABI bugs)[https://android.googlesource.com/platform/bionic/+/main/docs/32-bit-abi.md#is-too-small-for-real_time-signals]
+ * documentation.
+ */
+#define NSIG 65
+/** A traditional alternative name for NSIG. */
+#define _NSIG 65
+
+/*
+ * We rewrite the kernel's _NSIG to _KERNEL__NSIG
+ * (because the kernel values are off by one from the userspace values),
+ * but the kernel <asm/signal.h> headers define SIGRTMAX in terms of
+ * _KERNEL__NSIG (or _NSIG, in the original kernel source),
+ * so we need to provide a definition here.
+ * (Ideally our uapi header rewriter would just hard-code _KERNEL__NSIG to 64.)
+ */
 #ifndef _KERNEL__NSIG
 #define _KERNEL__NSIG 64
 #endif
-
-/* Userspace's NSIG is the kernel's _NSIG + 1. */
-#define _NSIG (_KERNEL__NSIG + 1)
-#define NSIG _NSIG
 
 typedef int sig_atomic_t;
 
 typedef __sighandler_t sig_t; /* BSD compatibility. */
 typedef __sighandler_t sighandler_t; /* glibc compatibility. */
 
-/* sigset_t is already large enough on LP64, but LP32's sigset_t
- * is just `unsigned long`.
- */
 #if defined(__LP64__)
+/**
+ * The kernel LP64 sigset_t is large enough to support all signals;
+ * this typedef is just for source compatibility with code that uses
+ * real-time signals on ILP32.
+ *
+ * See the
+ * (32-bit ABI bugs)[https://android.googlesource.com/platform/bionic/+/main/docs/32-bit-abi.md#is-too-small-for-real_time-signals]
+ * documentation.
+ */
 typedef sigset_t sigset64_t;
 #else
-typedef struct { unsigned long __bits[_KERNEL__NSIG/(8*sizeof(long))]; } sigset64_t;
+/**
+ * The ILP32 sigset_t is only 32 bits, so we need a 64-bit sigset64_t
+ * and associated functions to be able to support the real-time signals.
+ *
+ * See the
+ * (32-bit ABI bugs)[https://android.googlesource.com/platform/bionic/+/main/docs/32-bit-abi.md#is-too-small-for-real_time-signals]
+ * documentation.
+ */
+typedef struct { unsigned long __bits[64/(8*sizeof(long))]; } sigset64_t;
 #endif
 
-/* The kernel's struct sigaction doesn't match the POSIX one. */
+/* The kernel's struct sigaction doesn't match the POSIX one,
+ * so we define struct sigaction ourselves. */
 
 #if defined(__LP64__)
-
-/* For 64-bit, that's the only problem, and we only need two structs
- * for source compatibility with 32-bit. */
 
 #define __SIGACTION_BODY \
   int sa_flags; \
@@ -73,22 +109,49 @@ typedef struct { unsigned long __bits[_KERNEL__NSIG/(8*sizeof(long))]; } sigset6
   sigset_t sa_mask; \
   void (*sa_restorer)(void); \
 
+/**
+ * Used with sigaction().
+ *
+ * On LP64, this supports all signals including real-time signals.
+ * On ILP32, this only supports the first 32 signals.
+ *
+ * See the
+ * (32-bit ABI bugs)[https://android.googlesource.com/platform/bionic/+/main/docs/32-bit-abi.md#is-too-small-for-real_time-signals]
+ * documentation.
+ */
 struct sigaction { __SIGACTION_BODY };
+/**
+ * Used with sigaction64().
+ *
+ * On LP64, a synonym for struct sigaction for source compatibility with ILP32.
+ * On ILP32, this is needed to support all signals including real-time signals
+ * because struct sigaction only supports the first 32 signals.
+ *
+ * See the
+ * (32-bit ABI bugs)[https://android.googlesource.com/platform/bionic/+/main/docs/32-bit-abi.md#is-too-small-for-real_time-signals]
+ * documentation.
+ */
 struct sigaction64 { __SIGACTION_BODY };
 
 #undef __SIGACTION_BODY
 
 #else
 
-/* For 32-bit, Android's ABIs used a too-small sigset_t that doesn't
- * support RT signals, so we need two different structs.
- */
-
-/* The arm32 kernel headers also pollute the namespace with these,
+/* The arm32 kernel headers pollute the namespace with these,
  * but our header scrubber doesn't know how to remove #defines. */
 #undef sa_handler
 #undef sa_sigaction
 
+/**
+ * Used with sigaction().
+ *
+ * On LP64, this supports all signals including real-time signals.
+ * On ILP32, this only supports the first 32 signals.
+ *
+ * See the
+ * (32-bit ABI bugs)[https://android.googlesource.com/platform/bionic/+/main/docs/32-bit-abi.md#is-too-small-for-real_time-signals]
+ * documentation.
+ */
 struct sigaction {
   union {
     sighandler_t sa_handler;
@@ -99,6 +162,17 @@ struct sigaction {
   void (*sa_restorer)(void);
 };
 
+/**
+ * Used with sigaction64().
+ *
+ * On LP64, a synonym for struct sigaction for source compatibility with ILP32.
+ * On ILP32, this is needed to support all signals including real-time signals
+ * because struct sigaction only supports the first 32 signals.
+ *
+ * See the
+ * (32-bit ABI bugs)[https://android.googlesource.com/platform/bionic/+/main/docs/32-bit-abi.md#is-too-small-for-real_time-signals]
+ * documentation.
+ */
 struct sigaction64 {
   union {
     sighandler_t sa_handler;
