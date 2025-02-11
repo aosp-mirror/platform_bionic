@@ -2110,6 +2110,12 @@ cc_library_static {
             enabled: false,
         },
         x86_64: {
+            asflags: [
+                // Statically choose the SSE2 memset_generic as memset for
+                // baremetal, where we do not have the dynamic function
+                // dispatch machinery.
+                "-Dmemset_generic=memset",
+            ],
             srcs: [
                 "arch-x86_64/string/sse2-memmove-slm.S",
                 "arch-x86_64/string/sse2-memset-slm.S",
