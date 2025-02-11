@@ -48,17 +48,7 @@ extern const char* __progname;
 #define __LIBC_HIDDEN__ __attribute__((visibility("hidden")))
 #endif
 
-/* OpenBSD has this in paths.h. But this directory doesn't normally exist.
- * Even when it does exist, only the 'shell' user has permissions.
- */
-#define _PATH_TMP "/data/local/tmp/"
-
-/* Use appropriate shell depending on process's executable. */
-__LIBC_HIDDEN__ extern const char* __bionic_get_shell_path();
-#define _PATH_BSHELL __bionic_get_shell_path()
-
 __LIBC_HIDDEN__ extern char* __findenv(const char*, int, int*);
-__LIBC_HIDDEN__ extern char* _mktemp(char*);
 
 // Only OpenBSD has this at the moment, and we're more likely to just say
 // "malloc is always calloc", so we don't expose this as libc API.

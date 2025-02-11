@@ -59,6 +59,9 @@ list of POSIX functions implemented by glibc but not by bionic.
 
 Current libc symbols: https://android.googlesource.com/platform/bionic/+/main/libc/libc.map.txt
 
+New libc functions in API level 37:
+  * New system call wrappers: `sched_getattr()`/`sched_setattr()` (`<sched.h>`).
+
 New libc functions in API level 36:
   * `qsort_r`, `sig2str`/`str2sig` (POSIX Issue 8 additions).
   * GNU/BSD extension `lchmod`.

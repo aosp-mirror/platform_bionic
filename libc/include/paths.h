@@ -38,10 +38,8 @@
 
 #include <sys/cdefs.h>
 
-#ifndef _PATH_BSHELL
 /** Path to the default system shell. Historically the 'B' was to specify the Bourne shell. */
 #define _PATH_BSHELL "/system/bin/sh"
-#endif
 
 /** Path to the system console. */
 #define _PATH_CONSOLE "/dev/console"

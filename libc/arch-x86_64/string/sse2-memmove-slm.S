@@ -79,21 +79,31 @@ name:		\
 #endif
 
 #define CFI_PUSH(REG)		\
-	cfi_adjust_cfa_offset (4);		\
+	cfi_adjust_cfa_offset (8);		\
 	cfi_rel_offset (REG, 0)
 
 #define CFI_POP(REG)		\
-	cfi_adjust_cfa_offset (-4);		\
+	cfi_adjust_cfa_offset (-8);		\
 	cfi_restore (REG)
 
 #define PUSH(REG)	push REG;
 #define POP(REG)	pop REG;
 
-#define ENTRANCE	PUSH (%rbx);
-#define RETURN_END	POP (%rbx); ret
+#define ENTRANCE	\
+    PUSH (%rbx);    \
+    CFI_PUSH (%rbx);
+#define RETURN_END	\
+    POP (%rbx);     \
+    CFI_POP (%rbx); \
+    ret
 #define RETURN		RETURN_END;
 
 	.section .text.sse2,"ax",@progbits
+ENTRY (__memcpy_chk)
+	cmp	%rcx, %rdx
+	ja	__memcpy_chk_fail
+/* Fall through to memcpy/memmove. */
+END (__memcpy_chk)
 ENTRY (MEMMOVE)
 	ENTRANCE
 	mov	%rdi, %rax

@@ -478,7 +478,6 @@ cc_library_static {
         "upstream-netbsd/lib/libc/stdlib/nrand48.c",
         "upstream-netbsd/lib/libc/stdlib/_rand48.c",
         "upstream-netbsd/lib/libc/stdlib/rand_r.c",
-        "upstream-netbsd/lib/libc/stdlib/reallocarr.c",
         "upstream-netbsd/lib/libc/stdlib/seed48.c",
         "upstream-netbsd/lib/libc/stdlib/srand48.c",
     ],
@@ -785,12 +784,6 @@ cc_library_static {
             srcs: [
                 "arch-arm64/string/__memcpy_chk.S",
                 "arch-arm64/string/__memset_chk.S",
-            ],
-        },
-        riscv64: {
-            srcs: [
-                "arch-riscv64/string/__memset_chk.S",
-                "arch-riscv64/string/__memcpy_chk.S",
             ],
         },
     },
@@ -1102,21 +1095,21 @@ cc_library_static {
                 "arch-riscv64/bionic/syscall.S",
                 "arch-riscv64/bionic/vfork.S",
 
-                "arch-riscv64/string/memchr_v.S",
-                "arch-riscv64/string/memcmp_v.S",
-                "arch-riscv64/string/memcpy_v.S",
-                "arch-riscv64/string/memmove_v.S",
-                "arch-riscv64/string/memset_v.S",
-                "arch-riscv64/string/stpcpy_v.S",
-                "arch-riscv64/string/strcat_v.S",
-                "arch-riscv64/string/strchr_v.S",
-                "arch-riscv64/string/strcmp_v.S",
-                "arch-riscv64/string/strcpy_v.S",
-                "arch-riscv64/string/strlen_v.S",
-                "arch-riscv64/string/strncat_v.S",
-                "arch-riscv64/string/strncmp_v.S",
-                "arch-riscv64/string/strncpy_v.S",
-                "arch-riscv64/string/strnlen_v.S",
+                "arch-riscv64/string/memchr.S",
+                "arch-riscv64/string/memcmp.S",
+                "arch-riscv64/string/memcpy.S",
+                "arch-riscv64/string/memmove.S",
+                "arch-riscv64/string/memset.S",
+                "arch-riscv64/string/stpcpy.S",
+                "arch-riscv64/string/strcat.S",
+                "arch-riscv64/string/strchr.S",
+                "arch-riscv64/string/strcmp.S",
+                "arch-riscv64/string/strcpy.S",
+                "arch-riscv64/string/strlen.S",
+                "arch-riscv64/string/strncat.S",
+                "arch-riscv64/string/strncmp.S",
+                "arch-riscv64/string/strncpy.S",
+                "arch-riscv64/string/strnlen.S",
             ],
         },
 
@@ -2085,6 +2078,7 @@ cc_library_static {
 
 // This library contains the following unresolved symbols:
 //     __errno
+//     __x86_shared_cache_size_half (x86_64 only)
 //     abort
 //     async_safe_fatal_va_list
 cc_library_static {
@@ -2104,14 +2098,31 @@ cc_library_static {
         "bionic/strtol.cpp",
     ],
     arch: {
+        arm: {
+            enabled: false,
+        },
         arm64: {
             srcs: [
                 "arch-arm64/string/__memcpy_chk.S",
             ],
         },
-        riscv64: {
+        x86: {
+            enabled: false,
+        },
+        x86_64: {
             srcs: [
-                "arch-riscv64/string/__memcpy_chk.S",
+                "arch-x86_64/string/sse2-memmove-slm.S",
+                "arch-x86_64/string/sse2-memset-slm.S",
+                "arch-x86_64/string/sse2-stpcpy-slm.S",
+                "arch-x86_64/string/sse2-stpncpy-slm.S",
+                "arch-x86_64/string/sse2-strcat-slm.S",
+                "arch-x86_64/string/sse2-strcpy-slm.S",
+                "arch-x86_64/string/sse2-strlen-slm.S",
+                "arch-x86_64/string/sse2-strncat-slm.S",
+                "arch-x86_64/string/sse2-strncpy-slm.S",
+                "arch-x86_64/string/sse4-memcmp-slm.S",
+                "arch-x86_64/string/ssse3-strcmp-slm.S",
+                "arch-x86_64/string/ssse3-strncmp-slm.S",
             ],
         },
     },

@@ -1584,7 +1584,7 @@ TEST(dlfcn, dlopen_invalid_rw_load_segment) {
   const std::string libpath = GetPrebuiltElfDir() + "/libtest_invalid-rw_load_segment.so";
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
-  std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\": W+E load segments are not allowed";
+  std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" has load segments that are both writable and executable";
   ASSERT_STREQ(expected_dlerror.c_str(), dlerror());
 }
 

@@ -96,6 +96,12 @@
 /** Maximum value of a ssize_t. */
 #define SSIZE_MAX LONG_MAX
 
+/**
+ * POSIX 2024's name for NSIG.
+ * See the NSIG documentation for an explanation and warnings.
+ */
+#define NSIG_MAX 65
+
 /** Maximum number of bytes in a multibyte character. */
 #define MB_LEN_MAX 4
 
