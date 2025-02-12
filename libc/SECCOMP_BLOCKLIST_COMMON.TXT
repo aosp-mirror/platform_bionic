@@ -6,5 +6,5 @@
 #
 # This file is processed by a python script named genseccomp.py.
 
-swapon(const char*, int) all
-swapoff(const char*) all
+int     swapon(const char*, int) all
+int     swapoff(const char*) all
