@@ -35,16 +35,4 @@
  */
 #define __UNCONST(a)    ((void *)(unsigned long)(const void *)(a))
 
-// TODO: we don't yet have thread-safe environment variables.
-#define __readlockenv() 0
-#define __unlockenv() 0
-
-#include <sys/cdefs.h>
-#include <stddef.h>
-int reallocarr(void*, size_t, size_t);
-
 #define __arraycount(a) (sizeof(a) / sizeof(a[0]))
-
-/* Use appropriate shell depending on process's executable. */
-__LIBC_HIDDEN__ extern const char* __bionic_get_shell_path();
-#define _PATH_BSHELL __bionic_get_shell_path()
