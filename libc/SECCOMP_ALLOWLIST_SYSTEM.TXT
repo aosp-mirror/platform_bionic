@@ -3,4 +3,4 @@
 #
 # This file is processed by a python script named genseccomp.py.
 
-int bpf(int cmd, union bpf_attr *attr, unsigned int size) all
+bpf(int cmd, union bpf_attr *attr, unsigned int size) all
