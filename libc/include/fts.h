@@ -38,32 +38,6 @@
 #include <sys/cdefs.h>
 #include <sys/types.h>
 
-typedef struct {
-	struct _ftsent * _Nullable fts_cur;	/* current node */
-	struct _ftsent * _Nullable fts_child;	/* linked list of children */
-	struct _ftsent * _Nullable * _Nullable fts_array;	/* sort array */
-	dev_t fts_dev;			/* starting device # */
-	char * _Nullable fts_path;			/* path for this descent */
-	int fts_rfd;			/* fd for root */
-	size_t fts_pathlen;		/* sizeof(path) */
-	int fts_nitems;			/* elements in the sort array */
-	int (* _Nullable fts_compar)();		/* compare function */
-
-#define	FTS_COMFOLLOW	0x0001		/* follow command line symlinks */
-#define	FTS_LOGICAL	0x0002		/* logical walk */
-#define	FTS_NOCHDIR	0x0004		/* don't change directories */
-#define	FTS_NOSTAT	0x0008		/* don't get stat info */
-#define	FTS_PHYSICAL	0x0010		/* physical walk */
-#define	FTS_SEEDOT	0x0020		/* return dot and dot-dot */
-#define	FTS_XDEV	0x0040		/* don't cross devices */
-#define	FTS_OPTIONMASK	0x00ff		/* valid user option mask */
-
-#define FTS_NAMEONLY 0x1000  /* (private) child names only */
-#define FTS_STOP 0x2000      /* (private) unrecoverable error */
-#define FTS_FOR_FTW 0x4000   /* (private) fts is being called by ftw/nftw */
-	int fts_options;		/* fts_open options, global flags */
-} FTS;
-
 typedef struct _ftsent {
 	struct _ftsent * _Nullable fts_cycle;	/* cycle node */
 	struct _ftsent * _Nullable fts_parent;	/* parent directory */
@@ -114,6 +88,32 @@ typedef struct _ftsent {
 	struct stat * _Nullable fts_statp;		/* stat(2) information */
 	char fts_name[1];		/* file name */
 } FTSENT;
+
+typedef struct {
+	struct _ftsent * _Nullable fts_cur;	/* current node */
+	struct _ftsent * _Nullable fts_child;	/* linked list of children */
+	struct _ftsent * _Nullable * _Nullable fts_array;	/* sort array */
+	dev_t fts_dev;			/* starting device # */
+	char * _Nullable fts_path;			/* path for this descent */
+	int fts_rfd;			/* fd for root */
+	size_t fts_pathlen;		/* sizeof(path) */
+	int fts_nitems;			/* elements in the sort array */
+	int (* _Nullable fts_compar)(const FTSENT **, const FTSENT **);		/* compare function */
+
+#define	FTS_COMFOLLOW	0x0001		/* follow command line symlinks */
+#define	FTS_LOGICAL	0x0002		/* logical walk */
+#define	FTS_NOCHDIR	0x0004		/* don't change directories */
+#define	FTS_NOSTAT	0x0008		/* don't get stat info */
+#define	FTS_PHYSICAL	0x0010		/* physical walk */
+#define	FTS_SEEDOT	0x0020		/* return dot and dot-dot */
+#define	FTS_XDEV	0x0040		/* don't cross devices */
+#define	FTS_OPTIONMASK	0x00ff		/* valid user option mask */
+
+#define FTS_NAMEONLY 0x1000  /* (private) child names only */
+#define FTS_STOP 0x2000      /* (private) unrecoverable error */
+#define FTS_FOR_FTW 0x4000   /* (private) fts is being called by ftw/nftw */
+	int fts_options;		/* fts_open options, global flags */
+} FTS;
 
 __BEGIN_DECLS
 
