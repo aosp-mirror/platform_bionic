@@ -98,7 +98,7 @@ typedef struct {
 	int fts_rfd;			/* fd for root */
 	size_t fts_pathlen;		/* sizeof(path) */
 	int fts_nitems;			/* elements in the sort array */
-	int (* _Nullable fts_compar)(const FTSENT **, const FTSENT **);		/* compare function */
+	int (* _Nullable fts_compar)(const FTSENT* _Nonnull * _Nonnull, const FTSENT* _Nonnull * _Nonnull);		/* compare function */
 
 #define	FTS_COMFOLLOW	0x0001		/* follow command line symlinks */
 #define	FTS_LOGICAL	0x0002		/* logical walk */
