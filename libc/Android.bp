@@ -478,7 +478,6 @@ cc_library_static {
         "upstream-netbsd/lib/libc/stdlib/nrand48.c",
         "upstream-netbsd/lib/libc/stdlib/_rand48.c",
         "upstream-netbsd/lib/libc/stdlib/rand_r.c",
-        "upstream-netbsd/lib/libc/stdlib/reallocarr.c",
         "upstream-netbsd/lib/libc/stdlib/seed48.c",
         "upstream-netbsd/lib/libc/stdlib/srand48.c",
     ],
@@ -2079,6 +2078,7 @@ cc_library_static {
 
 // This library contains the following unresolved symbols:
 //     __errno
+//     __x86_shared_cache_size_half (x86_64 only)
 //     abort
 //     async_safe_fatal_va_list
 cc_library_static {
@@ -2098,9 +2098,37 @@ cc_library_static {
         "bionic/strtol.cpp",
     ],
     arch: {
+        arm: {
+            enabled: false,
+        },
         arm64: {
             srcs: [
                 "arch-arm64/string/__memcpy_chk.S",
+            ],
+        },
+        x86: {
+            enabled: false,
+        },
+        x86_64: {
+            asflags: [
+                // Statically choose the SSE2 memset_generic as memset for
+                // baremetal, where we do not have the dynamic function
+                // dispatch machinery.
+                "-Dmemset_generic=memset",
+            ],
+            srcs: [
+                "arch-x86_64/string/sse2-memmove-slm.S",
+                "arch-x86_64/string/sse2-memset-slm.S",
+                "arch-x86_64/string/sse2-stpcpy-slm.S",
+                "arch-x86_64/string/sse2-stpncpy-slm.S",
+                "arch-x86_64/string/sse2-strcat-slm.S",
+                "arch-x86_64/string/sse2-strcpy-slm.S",
+                "arch-x86_64/string/sse2-strlen-slm.S",
+                "arch-x86_64/string/sse2-strncat-slm.S",
+                "arch-x86_64/string/sse2-strncpy-slm.S",
+                "arch-x86_64/string/sse4-memcmp-slm.S",
+                "arch-x86_64/string/ssse3-strcmp-slm.S",
+                "arch-x86_64/string/ssse3-strncmp-slm.S",
             ],
         },
     },
