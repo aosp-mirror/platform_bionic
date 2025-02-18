@@ -140,6 +140,20 @@ a limited amount of address space available in 32 bit apps, and there have
 been allocator bugs that cause memory failures when too much virtual
 address space is consumed. For 64 bit executables, this can be ignored.
 
+NOTE: The default native allocator operates differently in an application
+versus command-line tools running in the shell. In order to run the same
+as an application, follow these instructions:
+
+    > adb shell
+    # export MALLOC_USE_APP_DEFAULTS=1
+    # <Run command-line benchmarks>
+
+Running without setting this environment variable can result in different
+performance and even different RSS usage for the benchmarks mentioned below.
+The environment variable has only been available since API level 36.
+Applications using different native allocator defaults than command-line
+tools has been present since API level 26 (Android O).
+
 ### Bionic Benchmarks
 These are the microbenchmarks that are part of the bionic benchmarks suite of
 benchmarks. These benchmarks can be built using this command:
