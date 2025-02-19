@@ -346,7 +346,7 @@ static void soinfo_free(soinfo* si) {
     }
   }
 
-  if (si->has_min_version(6) && si->get_gap_size()) {
+  if (si->is_lp64_or_has_min_version(6) && si->get_gap_size()) {
     munmap(reinterpret_cast<void*>(si->get_gap_start()), si->get_gap_size());
   }
 
@@ -1907,7 +1907,7 @@ static void soinfo_unload_impl(soinfo* root) {
 
     local_unload_list.push_back(si);
 
-    if (si->has_min_version(0)) {
+    if (si->is_lp64_or_has_min_version(0)) {
       soinfo* child = nullptr;
       while ((child = si->get_children().pop_front()) != nullptr) {
         LD_DEBUG(any, "%s@%p needs to unload %s@%p", si->get_realpath(), si,
@@ -2671,7 +2671,7 @@ bool VersionTracker::init_verneed(const soinfo* si_from) {
 
 template <typename F>
 static bool for_each_verdef(const soinfo* si, F functor) {
-  if (!si->has_min_version(2)) {
+  if (!si->is_lp64_or_has_min_version(2)) {
     return true;
   }
 
@@ -2762,7 +2762,7 @@ bool VersionTracker::init_verdef(const soinfo* si_from) {
 }
 
 bool VersionTracker::init(const soinfo* si_from) {
-  if (!si_from->has_min_version(2)) {
+  if (!si_from->is_lp64_or_has_min_version(2)) {
     return true;
   }
 
