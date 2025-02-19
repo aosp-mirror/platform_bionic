@@ -41,6 +41,7 @@
 #include <platform/bionic/malloc.h>
 #include <private/ScopedPthreadMutexLocker.h>
 #include <private/bionic_config.h>
+#include <private/bionic_defs.h>
 
 #include "gwp_asan_wrappers.h"
 #include "heap_tagging.h"
@@ -357,4 +358,38 @@ static constexpr MallocDispatch __libc_malloc_default_dispatch __attribute__((un
 
 const MallocDispatch* NativeAllocatorDispatch() {
   return &__libc_malloc_default_dispatch;
+}
+
+#if !defined(LIBC_STATIC)
+void MallocInitImpl(libc_globals* globals);
+#endif
+
+// Initializes memory allocation framework.
+// This routine is called from __libc_init routines in libc_init_dynamic.cpp
+// and libc_init_static.cpp.
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
+__LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals) {
+#if !defined(LIBC_STATIC)
+  MallocInitImpl(globals);
+#endif
+  const char* value = getenv("MALLOC_USE_APP_DEFAULTS");
+  if (value == nullptr || value[0] == '\0') {
+    return;
+  }
+
+  // Normal apps currently turn off zero init for performance reasons.
+  SetHeapZeroInitialize(false);
+
+  // Do not call mallopt directly since that will try and lock the globals
+  // data structure.
+  int retval;
+  auto dispatch_table = GetDispatchTable();
+  if (__predict_false(dispatch_table != nullptr)) {
+    retval = dispatch_table->mallopt(M_DECAY_TIME, 1);
+  } else {
+    retval = Malloc(mallopt)(M_DECAY_TIME, 1);
+  }
+  if (retval == 1) {
+    globals->decay_time_enabled = true;
+  }
 }

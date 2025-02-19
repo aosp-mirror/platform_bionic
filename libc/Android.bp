@@ -2395,7 +2395,7 @@ genrule {
     name: "generate_app_zygote_blocklist",
     out: ["SECCOMP_BLOCKLIST_APP_ZYGOTE.TXT"],
     srcs: ["SECCOMP_BLOCKLIST_APP.TXT"],
-    cmd: "grep -v '^int[ \t]*setresgid' $(in) > $(out)",
+    cmd: "grep -v '^setresgid' $(in) > $(out)",
 }
 
 filegroup {
