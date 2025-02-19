@@ -154,14 +154,10 @@ struct soinfo_tls {
   size_t module_id = kTlsUninitializedModuleId;
 };
 
-#if !defined(__LP64__)
-#define SOINFO_NAME_LEN 128
-#endif
-
 struct soinfo {
 #if !defined(__LP64__)
  private:
-  char old_name_[SOINFO_NAME_LEN];
+  char old_name_[128];
 #endif
  public:
   const ElfW(Phdr)* phdr;
