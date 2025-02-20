@@ -76,14 +76,6 @@ cc_object {
 // Configuration for the linker binary and any of its static libraries.
 cc_defaults {
     name: "linker_defaults",
-    arch: {
-        arm: {
-            cflags: ["-D__work_around_b_24465209__"],
-        },
-        x86: {
-            cflags: ["-D__work_around_b_24465209__"],
-        },
-    },
 
     cflags: linker_common_flags,
     asflags: linker_common_flags,
