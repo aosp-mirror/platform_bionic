@@ -1124,7 +1124,7 @@ cc_test {
     defaults: [
         "bionic_unit_tests_defaults",
     ],
-    test_suites: ["device-tests"],
+    test_suites: ["general-tests"],
     data: [
         ":libdlext_test_runpath_zip_zipaligned",
         ":libdlext_test_zip_zipaligned",
@@ -1152,7 +1152,7 @@ cc_defaults {
         "libtest_simple_hwasan_nohwasan",
     ],
     header_libs: ["bionic_libc_platform_headers"],
-    test_suites: ["device-tests"],
+    test_suites: ["general-tests"],
 }
 
 cc_test {
@@ -1203,7 +1203,7 @@ cc_test {
         "testbinary_is_stack_mte_after_dlopen",
     ],
     header_libs: ["bionic_libc_platform_headers"],
-    test_suites: ["device-tests"],
+    test_suites: ["general-tests"],
 }
 
 cc_test {
@@ -1232,7 +1232,7 @@ cc_test {
         "memtag_stack_abi_test.cpp",
     ],
     header_libs: ["bionic_libc_platform_headers"],
-    test_suites: ["device-tests"],
+    test_suites: ["general-tests"],
 }
 
 cc_test {
@@ -1276,7 +1276,7 @@ cc_test {
     name: "bionic-unit-tests-static",
     gtest: false,
     defaults: ["bionic_tests_defaults"],
-    test_suites: ["device-tests"],
+    test_suites: ["general-tests"],
     host_supported: false,
 
     srcs: [

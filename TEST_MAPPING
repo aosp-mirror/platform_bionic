@@ -19,6 +19,9 @@
       "name": "CtsGwpAsanTestCases"
     },
     {
+      "name": "CtsSeccompHostTestCases"
+    },
+    {
       "name": "CtsTaggingHostTestCases"
     },
     {

@@ -185,6 +185,7 @@ __attribute__((no_sanitize("memtag"))) __noreturn static void __real_libc_init(
                   /*load_bias = */ 0);
   __libc_init_mte_stack(/*stack_top = */ raw_args);
   __libc_init_scudo();
+  __libc_globals.mutate(__libc_init_malloc);
   __libc_init_profiling_handlers();
   __libc_init_fork_handler();
 
