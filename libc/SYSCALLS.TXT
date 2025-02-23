@@ -1,385 +1,392 @@
 # This file is used to automatically generate bionic's system call stubs.
 #
+# It is processed by a python script named gensyscalls.py,
+# normally run via the genrules in libc/Android.bp.
+#
 # Each non-blank, non-comment line has the following format:
 #
-# return_type func_name[|alias_list][:syscall_name[:socketcall_id]]([parameter_list]) arch_list
+#     func_name[|alias_list][:syscall_name[:socketcall_id]]([parameter_list]) arch_list
 #
 # where:
-#       arch_list ::= "all" | arches
-#       arches    ::= arch |  arch "," arches
-#       arch      ::= "arm" | "arm64" | "riscv64" | "x86" | "x86_64" | "lp32" | "lp64"
+#     arch_list ::= "all" | arches
+#     arches    ::= arch |  arch "," arches
+#     arch      ::= "arm" | "arm64" | "riscv64" | "x86" | "x86_64" | "lp32" | "lp64"
 #
-# Note:
-#      - syscall_name corresponds to the name of the syscall, which may differ from
-#        the exported function name (example: the exit syscall is implemented by the _exit()
-#        function, which is not the same as the standard C exit() function which calls it)
+# syscall_name corresponds to the name of the syscall, which may differ from
+# the exported function name func_name. For example: the exit_group syscall
+# is exported by libc as the _exit() function, not exit() (which does more
+# work before calling _exit()).
 #
-#      - alias_list is optional comma separated list of function aliases.
+# alias_list is optional comma-separated list of function aliases.
+# For example, the traditional _exit() function has a C99 alias _Exit().
 #
-#      - The call_id parameter, given that func_name and syscall_name have
-#        been provided, allows the user to specify dispatch style syscalls.
-#        For example, socket() syscall on i386 actually becomes:
-#          socketcall(__NR_socket, 1, *(rest of args on stack)).
+# No return type is specified, because it's not needed.
 #
-#      - Each parameter type is assumed to be stored in 32 bits.
+# The socketcall_id parameter supports x86's
+# https://man7.org/linux/man-pages/man2/socketcall.2.html
+# and can be ignored for all other syscalls and architectures.
 #
-# This file is processed by a python script named gensyscalls.py, run via
-# genrules in Android.bp.
+# The number of registers required for the arguments is computed by the script,
+# based on the parameter list given here. It handles the need for register
+# pairs for 64-bit arguments on ILP32, and also arm32's requirement for such
+# pairs to start on an even register. This means that it's important to get
+# these types right!
+#
 
 # Calls that have historical 16-bit variants camping on the best names (CONFIG_UID16).
-uid_t getuid:getuid32()   lp32
-uid_t getuid:getuid()     lp64
-gid_t getgid:getgid32()   lp32
-gid_t getgid:getgid()     lp64
-uid_t geteuid:geteuid32() lp32
-uid_t geteuid:geteuid()   lp64
-gid_t getegid:getegid32() lp32
-gid_t getegid:getegid()   lp64
-uid_t getresuid:getresuid32(uid_t* ruid, uid_t* euid, uid_t* suid) lp32
-uid_t getresuid:getresuid(uid_t* ruid, uid_t* euid, uid_t* suid)   lp64
-gid_t getresgid:getresgid32(gid_t* rgid, gid_t* egid, gid_t* sgid) lp32
-gid_t getresgid:getresgid(gid_t* rgid, gid_t* egid, gid_t* sgid)   lp64
-int getgroups:getgroups32(int, gid_t*) lp32
-int getgroups:getgroups(int, gid_t*)   lp64
-int setgid:setgid32(gid_t) lp32
-int setgid:setgid(gid_t)   lp64
-int setuid:setuid32(uid_t) lp32
-int setuid:setuid(uid_t)   lp64
-int setreuid:setreuid32(uid_t, uid_t) lp32
-int setreuid:setreuid(uid_t, uid_t)   lp64
-int setresuid:setresuid32(uid_t, uid_t, uid_t) lp32
-int setresuid:setresuid(uid_t, uid_t, uid_t)   lp64
-int setresgid:setresgid32(gid_t, gid_t, gid_t) lp32
-int setresgid:setresgid(gid_t, gid_t, gid_t)   lp64
-int setfsgid:setfsgid32(gid_t) lp32
-int setfsgid:setfsgid(gid_t)   lp64
-int setfsuid:setfsuid32(uid_t) lp32
-int setfsuid:setfsuid(uid_t)   lp64
+getuid:getuid32()   lp32
+getuid:getuid()     lp64
+getgid:getgid32()   lp32
+getgid:getgid()     lp64
+geteuid:geteuid32() lp32
+geteuid:geteuid()   lp64
+getegid:getegid32() lp32
+getegid:getegid()   lp64
+getresuid:getresuid32(uid_t* ruid, uid_t* euid, uid_t* suid) lp32
+getresuid:getresuid(uid_t* ruid, uid_t* euid, uid_t* suid)   lp64
+getresgid:getresgid32(gid_t* rgid, gid_t* egid, gid_t* sgid) lp32
+getresgid:getresgid(gid_t* rgid, gid_t* egid, gid_t* sgid)   lp64
+getgroups:getgroups32(int, gid_t*) lp32
+getgroups:getgroups(int, gid_t*)   lp64
+setgid:setgid32(gid_t) lp32
+setgid:setgid(gid_t)   lp64
+setuid:setuid32(uid_t) lp32
+setuid:setuid(uid_t)   lp64
+setreuid:setreuid32(uid_t, uid_t) lp32
+setreuid:setreuid(uid_t, uid_t)   lp64
+setresuid:setresuid32(uid_t, uid_t, uid_t) lp32
+setresuid:setresuid(uid_t, uid_t, uid_t)   lp64
+setresgid:setresgid32(gid_t, gid_t, gid_t) lp32
+setresgid:setresgid(gid_t, gid_t, gid_t)   lp64
+setfsgid:setfsgid32(gid_t) lp32
+setfsgid:setfsgid(gid_t)   lp64
+setfsuid:setfsuid32(uid_t) lp32
+setfsuid:setfsuid(uid_t)   lp64
 
-ssize_t readahead(int, off64_t, size_t) all
-pid_t getpgid(pid_t) all
-pid_t getppid() all
-pid_t getsid(pid_t) all
-pid_t setsid() all
-int kill(pid_t, int) all
-int tgkill(pid_t tgid, pid_t tid, int sig) all
+readahead(int, off64_t, size_t) all
+getpgid(pid_t) all
+getppid() all
+getsid(pid_t) all
+setsid() all
+kill(pid_t, int) all
+tgkill(pid_t tgid, pid_t tid, int sig) all
 
-void* __brk:brk(void*) all
-int execve(const char*, char* const*, char* const*)  all
-int __ptrace:ptrace(int request, int pid, void* addr, void* data) all
+__brk:brk(void*) all
+execve(const char*, char* const*, char* const*)  all
+__ptrace:ptrace(int request, int pid, void* addr, void* data) all
 
 # <sys/resource.h>
-int getrusage(int, struct rusage*)  all
-int __getpriority:getpriority(int, id_t)  all
-int setpriority(int, id_t, int)   all
+getrusage(int, struct rusage*)  all
+__getpriority:getpriority(int, id_t)  all
+setpriority(int, id_t, int)   all
 # On LP64, rlimit and rlimit64 are the same.
 # On 32-bit systems we use prlimit64 to implement the rlimit64 functions.
-int getrlimit:ugetrlimit(int, struct rlimit*)  lp32
-int getrlimit|getrlimit64(int, struct rlimit*)  lp64
-int setrlimit(int, const struct rlimit*)  lp32
-int setrlimit|setrlimit64(int, const struct rlimit*)  lp64
-int prlimit64|prlimit(pid_t, int, struct rlimit64*, const struct rlimit64*)  lp64
-int prlimit64(pid_t, int, struct rlimit64*, const struct rlimit64*)  lp32
+getrlimit:ugetrlimit(int, struct rlimit*)  lp32
+getrlimit|getrlimit64(int, struct rlimit*)  lp64
+setrlimit(int, const struct rlimit*)  lp32
+setrlimit|setrlimit64(int, const struct rlimit*)  lp64
+prlimit64|prlimit(pid_t, int, struct rlimit64*, const struct rlimit64*)  lp64
+prlimit64(pid_t, int, struct rlimit64*, const struct rlimit64*)  lp32
 
-int     setgroups:setgroups32(int, const gid_t*)   lp32
-int     setgroups:setgroups(int, const gid_t*)     lp64
-int     setpgid(pid_t, pid_t)  all
-int     setregid:setregid32(gid_t, gid_t)  lp32
-int     setregid:setregid(gid_t, gid_t)    lp64
-int     chroot(const char*)  all
-int     prctl(int, unsigned long, unsigned long, unsigned long, unsigned long) all
-int     capget(cap_user_header_t header, cap_user_data_t data) all
-int     capset(cap_user_header_t header, const cap_user_data_t data) all
-int     sigaltstack(const stack_t*, stack_t*) all
-int     acct(const char*  filepath)  all
+setgroups:setgroups32(int, const gid_t*)   lp32
+setgroups:setgroups(int, const gid_t*)     lp64
+setpgid(pid_t, pid_t)  all
+setregid:setregid32(gid_t, gid_t)  lp32
+setregid:setregid(gid_t, gid_t)    lp64
+chroot(const char*)  all
+prctl(int, unsigned long, unsigned long, unsigned long, unsigned long) all
+capget(cap_user_header_t header, cap_user_data_t data) all
+capset(cap_user_header_t header, const cap_user_data_t data) all
+sigaltstack(const stack_t*, stack_t*) all
+acct(const char*  filepath)  all
 
 # file descriptors
-ssize_t     read(int, void*, size_t)        all
-ssize_t     write(int, const void*, size_t)       all
-ssize_t     pread64(int, void*, size_t, off64_t) lp32
-ssize_t     pread64|pread(int, void*, size_t, off_t) lp64
-ssize_t     pwrite64(int, void*, size_t, off64_t) lp32
-ssize_t     pwrite64|pwrite(int, void*, size_t, off_t) lp64
+read(int, void*, size_t)        all
+write(int, const void*, size_t)       all
+pread64(int, void*, size_t, off64_t) lp32
+pread64|pread(int, void*, size_t, off_t) lp64
+pwrite64(int, void*, size_t, off64_t) lp32
+pwrite64|pwrite(int, void*, size_t, off_t) lp64
 
 # On LP32, preadv/pwritev don't use off64_t --- they use pairs of 32-bit
 # arguments to avoid problems on architectures like arm32 where 64-bit arguments
 # must be in a register pair starting with an even-numbered register.
 # See linux/fs/read_write.c and https://lwn.net/Articles/311630/.
 # Note that there's an unused always-0 second long even on LP64!
-ssize_t     __preadv64:preadv(int, const struct iovec*, int, long, long) all
-ssize_t     __pwritev64:pwritev(int, const struct iovec*, int, long, long) all
-ssize_t     __preadv64v2:preadv2(int, const struct iovec*, int, long, long, int) all
-ssize_t     __pwritev64v2:pwritev2(int, const struct iovec*, int, long, long, int) all
+__preadv64:preadv(int, const struct iovec*, int, long, long) all
+__pwritev64:pwritev(int, const struct iovec*, int, long, long) all
+__preadv64v2:preadv2(int, const struct iovec*, int, long, long, int) all
+__pwritev64v2:pwritev2(int, const struct iovec*, int, long, long, int) all
 
-int         __close:close(int)  all
-int         close_range(unsigned int, unsigned int, int) all
-ssize_t     copy_file_range(int, off64_t*, int, off64_t*, size_t, unsigned int) all
-pid_t       __getpid:getpid()  all
-int memfd_create(const char*, unsigned) all
-int         munmap(void*, size_t)  all
-int         msync(const void*, size_t, int)    all
-int         mprotect(const void*, size_t, int)  all
-int         madvise(void*, size_t, int)  all
-ssize_t     process_madvise(int, const struct iovec*, size_t, int, unsigned int)     all
-int mlock(const void* addr, size_t len)    all
-int mlock2(const void* addr, size_t len, int flags)    all
-int         munlock(const void* addr, size_t len)   all
-int         mlockall(int flags)   all
-int mseal(void*, size_t, unsigned long) lp64
-int         munlockall()   all
-int         mincore(void*  start, size_t  length, unsigned char*  vec)   all
-int         __ioctl:ioctl(int, int, void*)  all
-ssize_t     readv(int, const struct iovec*, int)   all
-ssize_t     writev(int, const struct iovec*, int)  all
-int         __fcntl64:fcntl64(int, int, void*)  lp32
-int         __fcntl:fcntl(int, int, void*)  lp64
-int         flock(int, int)   all
-int         __fchmod:fchmod(int, mode_t)  all
-int         __pipe2:pipe2(int*, int) all
-int         __dup:dup(int)  all
-int         __dup3:dup3(int, int, int)   all
-int         fsync(int)  all
-int         fdatasync(int) all
-int         fchown:fchown32(int, uid_t, gid_t)  lp32
-int         fchown:fchown(int, uid_t, gid_t)    lp64
-void        sync(void)  all
-int         syncfs(int)  all
-int         __fsetxattr:fsetxattr(int, const char*, const void*, size_t, int) all
-ssize_t     __fgetxattr:fgetxattr(int, const char*, void*, size_t) all
-ssize_t     __flistxattr:flistxattr(int, char*, size_t) all
-int         fremovexattr(int, const char*) all
+__close:close(int)  all
+close_range(unsigned int, unsigned int, int) all
+copy_file_range(int, off64_t*, int, off64_t*, size_t, unsigned int) all
+__getpid:getpid()  all
+memfd_create(const char*, unsigned) all
+munmap(void*, size_t)  all
+msync(const void*, size_t, int)    all
+mprotect(const void*, size_t, int)  all
+madvise(void*, size_t, int)  all
+process_madvise(int, const struct iovec*, size_t, int, unsigned int)     all
+mlock(const void* addr, size_t len)    all
+mlock2(const void* addr, size_t len, int flags)    all
+munlock(const void* addr, size_t len)   all
+mlockall(int flags)   all
+mseal(void*, size_t, unsigned long) lp64
+munlockall()   all
+mincore(void*  start, size_t  length, unsigned char*  vec)   all
+__ioctl:ioctl(int, int, void*)  all
+readv(int, const struct iovec*, int)   all
+writev(int, const struct iovec*, int)  all
+__fcntl64:fcntl64(int, int, void*)  lp32
+__fcntl:fcntl(int, int, void*)  lp64
+flock(int, int)   all
+__fchmod:fchmod(int, mode_t)  all
+__pipe2:pipe2(int*, int) all
+__dup:dup(int)  all
+__dup3:dup3(int, int, int)   all
+fsync(int)  all
+fdatasync(int) all
+fchown:fchown32(int, uid_t, gid_t)  lp32
+fchown:fchown(int, uid_t, gid_t)    lp64
+sync(void)  all
+syncfs(int)  all
+__fsetxattr:fsetxattr(int, const char*, const void*, size_t, int) all
+__fgetxattr:fgetxattr(int, const char*, void*, size_t) all
+__flistxattr:flistxattr(int, char*, size_t) all
+fremovexattr(int, const char*) all
 
-int __getdents64:getdents64(unsigned int, struct dirent*, unsigned int)   all
+__getdents64:getdents64(unsigned int, struct dirent*, unsigned int)   all
 
-int __openat:openat(int, const char*, int, mode_t) all
-int __faccessat:faccessat(int, const char*, int)  all
-int __fchmodat:fchmodat(int, const char*, mode_t)  all
-int fchownat(int, const char*, uid_t, gid_t, int)  all
-int fstatat64|fstatat:fstatat64(int, const char*, struct stat*, int)   lp32
-int fstatat64|fstatat:newfstatat(int, const char*, struct stat*, int)  lp64
-int linkat(int, const char*, int, const char*, int)  all
-int mkdirat(int, const char*, mode_t)  all
-int mknodat(int, const char*, mode_t, dev_t)  all
-ssize_t readlinkat(int, const char*, char*, size_t)  all
-int renameat2(int, const char*, int, const char*, unsigned)  all
-int symlinkat(const char*, int, const char*)  all
-int unlinkat(int, const char*, int)   all
-int utimensat(int, const char*, const struct timespec times[2], int)  all
+__openat:openat(int, const char*, int, mode_t) all
+__faccessat:faccessat(int, const char*, int)  all
+__fchmodat:fchmodat(int, const char*, mode_t)  all
+fchownat(int, const char*, uid_t, gid_t, int)  all
+fstatat64|fstatat:fstatat64(int, const char*, struct stat*, int)   lp32
+fstatat64|fstatat:newfstatat(int, const char*, struct stat*, int)  lp64
+linkat(int, const char*, int, const char*, int)  all
+mkdirat(int, const char*, mode_t)  all
+mknodat(int, const char*, mode_t, dev_t)  all
+readlinkat(int, const char*, char*, size_t)  all
+renameat2(int, const char*, int, const char*, unsigned)  all
+symlinkat(const char*, int, const char*)  all
+unlinkat(int, const char*, int)   all
+utimensat(int, const char*, const struct timespec times[2], int)  all
 
 # Paired off_t/off64_t system calls. On 64-bit systems,
 # sizeof(off_t) == sizeof(off64_t), so there we emit two symbols that are
 # aliases. On 32-bit systems, we have two different system calls.
 # That means that every system call in this section should take three lines.
-off_t lseek(int, off_t, int) lp32
-int __llseek:_llseek(int, unsigned long, unsigned long, off64_t*, int) lp32
-off_t lseek|lseek64(int, off_t, int) lp64
-ssize_t sendfile(int out_fd, int in_fd, off_t* offset, size_t count) lp32
-ssize_t sendfile64(int out_fd, int in_fd, off64_t* offset, size_t count) lp32
-ssize_t sendfile|sendfile64(int out_fd, int in_fd, off_t* offset, size_t count) lp64
-int truncate(const char*, off_t) lp32
-int truncate64(const char*, off64_t) lp32
-int truncate|truncate64(const char*, off_t) lp64
+lseek(int, off_t, int) lp32
+__llseek:_llseek(int, unsigned long, unsigned long, off64_t*, int) lp32
+lseek|lseek64(int, off_t, int) lp64
+sendfile(int out_fd, int in_fd, off_t* offset, size_t count) lp32
+sendfile64(int out_fd, int in_fd, off64_t* offset, size_t count) lp32
+sendfile|sendfile64(int out_fd, int in_fd, off_t* offset, size_t count) lp64
+truncate(const char*, off_t) lp32
+truncate64(const char*, off64_t) lp32
+truncate|truncate64(const char*, off_t) lp64
 # (fallocate only gets two lines because there is no 32-bit variant.)
-int fallocate64:fallocate(int, int, off64_t, off64_t) lp32
-int fallocate|fallocate64(int, int, off_t, off_t) lp64
+fallocate64:fallocate(int, int, off64_t, off64_t) lp32
+fallocate|fallocate64(int, int, off_t, off_t) lp64
 # (ftruncate only gets two lines because 32-bit bionic only uses the 64-bit call.)
-int ftruncate64(int, off64_t) lp32
-int ftruncate|ftruncate64(int, off_t) lp64
+ftruncate64(int, off64_t) lp32
+ftruncate|ftruncate64(int, off_t) lp64
 # (mmap only gets two lines because 32-bit bionic only uses the 64-bit call.)
-void* __mmap2:mmap2(void*, size_t, int, int, int, long) lp32
-void* mmap|mmap64(void*, size_t, int, int, int, off_t) lp64
+__mmap2:mmap2(void*, size_t, int, int, int, long) lp32
+mmap|mmap64(void*, size_t, int, int, int, off_t) lp64
 
 # mremap is in C++ for 32-bit so we can add the PTRDIFF_MAX check.
-void* __mremap:mremap(void*, size_t, size_t, int, void*) lp32
-void* mremap(void*, size_t, size_t, int, void*) lp64
+__mremap:mremap(void*, size_t, size_t, int, void*) lp32
+mremap(void*, size_t, size_t, int, void*) lp64
 
 # posix_fadvise64 is awkward: arm has shuffled arguments,
 # the POSIX functions don't set errno, and no architecture has posix_fadvise.
-int __arm_fadvise64_64:arm_fadvise64_64(int, int, off64_t, off64_t) arm
-int __fadvise64:fadvise64_64(int, off64_t, off64_t, int) x86
-int __fadvise64:fadvise64(int, off64_t, off64_t, int) lp64
+__arm_fadvise64_64:arm_fadvise64_64(int, int, off64_t, off64_t) arm
+__fadvise64:fadvise64_64(int, off64_t, off64_t, int) x86
+__fadvise64:fadvise64(int, off64_t, off64_t, int) lp64
 
-int __fstatfs64:fstatfs64(int, size_t, struct statfs*)  lp32
-int __fstatfs:fstatfs(int, struct statfs*)  lp64
-int __statfs64:statfs64(const char*, size_t, struct statfs*)  lp32
-int __statfs:statfs(const char*, struct statfs*)  lp64
+__fstatfs64:fstatfs64(int, size_t, struct statfs*)  lp32
+__fstatfs:fstatfs(int, struct statfs*)  lp64
+__statfs64:statfs64(const char*, size_t, struct statfs*)  lp32
+__statfs:statfs(const char*, struct statfs*)  lp64
 
-int fstat64|fstat:fstat64(int, struct stat*) lp32
-int fstat64|fstat:fstat(int, struct stat*) lp64
+fstat64|fstat:fstat64(int, struct stat*) lp32
+fstat64|fstat:fstat(int, struct stat*) lp64
 
 # file system
-int     chdir(const char*)              all
-int     mount(const char*, const char*, const char*, unsigned long, const void*)  all
-int     umount2(const char*, int)  all
-int     __getcwd:getcwd(char* buf, size_t size)  all
-int     fchdir(int)    all
-int     setxattr(const char*, const char*, const void*, size_t, int) all
-int     lsetxattr(const char*, const char*, const void*, size_t, int) all
-ssize_t getxattr(const char*, const char*, void*, size_t) all
-ssize_t lgetxattr(const char*, const char*, void*, size_t) all
-ssize_t listxattr(const char*, char*, size_t) all
-ssize_t llistxattr(const char*, char*, size_t) all
-int     removexattr(const char*, const char*) all
-int     lremovexattr(const char*, const char*) all
-int statx(int, const char*, int, unsigned, struct statx*) all
-int     swapon(const char*, int) all
-int     swapoff(const char*) all
+chdir(const char*)              all
+mount(const char*, const char*, const char*, unsigned long, const void*)  all
+umount2(const char*, int)  all
+__getcwd:getcwd(char* buf, size_t size)  all
+fchdir(int)    all
+setxattr(const char*, const char*, const void*, size_t, int) all
+lsetxattr(const char*, const char*, const void*, size_t, int) all
+getxattr(const char*, const char*, void*, size_t) all
+lgetxattr(const char*, const char*, void*, size_t) all
+listxattr(const char*, char*, size_t) all
+llistxattr(const char*, char*, size_t) all
+removexattr(const char*, const char*) all
+lremovexattr(const char*, const char*) all
+statx(int, const char*, int, unsigned, struct statx*) all
+swapon(const char*, int) all
+swapoff(const char*) all
 
 # time
-int           settimeofday(const struct timeval*, const struct timezone*)   all
-clock_t       times(struct tms*)       all
-int           nanosleep(const struct timespec*, struct timespec*)   all
-int           clock_settime(clockid_t, const struct timespec*)  all
-int           __clock_nanosleep:clock_nanosleep(clockid_t, int, const struct timespec*, struct timespec*)  all
-int           getitimer(int, struct itimerval*)   all
-int           setitimer(int, const struct itimerval*, struct itimerval*)  all
-int           __timer_create:timer_create(clockid_t clockid, struct sigevent* evp, __kernel_timer_t* timerid)    all
-int           __timer_settime:timer_settime(__kernel_timer_t, int, const struct itimerspec*, struct itimerspec*) all
-int           __timer_gettime:timer_gettime(__kernel_timer_t, struct itimerspec*)                                all
-int           __timer_getoverrun:timer_getoverrun(__kernel_timer_t)                                              all
-int           __timer_delete:timer_delete(__kernel_timer_t)                                                      all
-int           timerfd_create(clockid_t, int)   all
-int           timerfd_settime(int, int, const struct itimerspec*, struct itimerspec*)   all
-int           timerfd_gettime(int, struct itimerspec*)   all
-int           adjtimex(struct timex*)   all
-int           clock_adjtime(clockid_t, struct timex*)   all
+settimeofday(const struct timeval*, const struct timezone*)   all
+times(struct tms*)       all
+nanosleep(const struct timespec*, struct timespec*)   all
+clock_settime(clockid_t, const struct timespec*)  all
+__clock_nanosleep:clock_nanosleep(clockid_t, int, const struct timespec*, struct timespec*)  all
+getitimer(int, struct itimerval*)   all
+setitimer(int, const struct itimerval*, struct itimerval*)  all
+__timer_create:timer_create(clockid_t clockid, struct sigevent* evp, __kernel_timer_t* timerid)    all
+__timer_settime:timer_settime(__kernel_timer_t, int, const struct itimerspec*, struct itimerspec*) all
+__timer_gettime:timer_gettime(__kernel_timer_t, struct itimerspec*)                                all
+__timer_getoverrun:timer_getoverrun(__kernel_timer_t)                                              all
+__timer_delete:timer_delete(__kernel_timer_t)                                                      all
+timerfd_create(clockid_t, int)   all
+timerfd_settime(int, int, const struct itimerspec*, struct itimerspec*)   all
+timerfd_gettime(int, struct itimerspec*)   all
+adjtimex(struct timex*)   all
+clock_adjtime(clockid_t, struct timex*)   all
 
 # signals
-int     __sigaction:sigaction(int, const struct sigaction*, struct sigaction*)  lp32
-int     __rt_sigaction:rt_sigaction(int, const struct sigaction*, struct sigaction*, size_t)  all
-int     __rt_sigpending:rt_sigpending(sigset64_t*, size_t)  all
-int     __rt_sigprocmask:rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t)  all
-int     __rt_sigsuspend:rt_sigsuspend(const sigset64_t*, size_t)  all
-int     __rt_sigtimedwait:rt_sigtimedwait(const sigset64_t*, siginfo_t*, const timespec*, size_t)  all
-int     __rt_sigqueueinfo:rt_sigqueueinfo(pid_t, int, siginfo_t*)  all
-int     __signalfd4:signalfd4(int, const sigset64_t*, size_t, int)  all
+__sigaction:sigaction(int, const struct sigaction*, struct sigaction*)  lp32
+__rt_sigaction:rt_sigaction(int, const struct sigaction*, struct sigaction*, size_t)  all
+__rt_sigpending:rt_sigpending(sigset64_t*, size_t)  all
+__rt_sigprocmask:rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t)  all
+__rt_sigsuspend:rt_sigsuspend(const sigset64_t*, size_t)  all
+__rt_sigtimedwait:rt_sigtimedwait(const sigset64_t*, siginfo_t*, const timespec*, size_t)  all
+__rt_sigqueueinfo:rt_sigqueueinfo(pid_t, int, siginfo_t*)  all
+__signalfd4:signalfd4(int, const sigset64_t*, size_t, int)  all
 
 # sockets
-int           __socket:socket(int, int, int)              arm,lp64
-int           __socketpair:socketpair(int, int, int, int*)    arm,lp64
-int           bind(int, struct sockaddr*, socklen_t)  arm,lp64
-int           __connect:connect(int, struct sockaddr*, socklen_t)   arm,lp64
-int           listen(int, int)                   arm,lp64
-int           __accept4:accept4(int, struct sockaddr*, socklen_t*, int)  arm,lp64
-int           getsockname(int, struct sockaddr*, socklen_t*)  arm,lp64
-int           getpeername(int, struct sockaddr*, socklen_t*)  arm,lp64
-ssize_t       __sendto:sendto(int, const void*, size_t, int, const struct sockaddr*, socklen_t)  arm,lp64
-ssize_t       recvfrom(int, void*, size_t, unsigned int, struct sockaddr*, socklen_t*)  arm,lp64
-int           shutdown(int, int)  arm,lp64
-int           setsockopt(int, int, int, const void*, socklen_t)  arm,lp64
-int           getsockopt(int, int, int, void*, socklen_t*)    arm,lp64
-ssize_t       __recvmsg:recvmsg(int, struct msghdr*, unsigned int)   arm,lp64
-ssize_t       __sendmsg:sendmsg(int, const struct msghdr*, unsigned int)  arm,lp64
-int           __recvmmsg:recvmmsg(int, struct mmsghdr*, unsigned int, int, const struct timespec*)   arm,lp64
-int           __sendmmsg:sendmmsg(int, struct mmsghdr*, unsigned int, int)   arm,lp64
+__socket:socket(int, int, int)              arm,lp64
+__socketpair:socketpair(int, int, int, int*)    arm,lp64
+bind(int, struct sockaddr*, socklen_t)  arm,lp64
+__connect:connect(int, struct sockaddr*, socklen_t)   arm,lp64
+listen(int, int)                   arm,lp64
+__accept4:accept4(int, struct sockaddr*, socklen_t*, int)  arm,lp64
+getsockname(int, struct sockaddr*, socklen_t*)  arm,lp64
+getpeername(int, struct sockaddr*, socklen_t*)  arm,lp64
+__sendto:sendto(int, const void*, size_t, int, const struct sockaddr*, socklen_t)  arm,lp64
+recvfrom(int, void*, size_t, unsigned int, struct sockaddr*, socklen_t*)  arm,lp64
+shutdown(int, int)  arm,lp64
+setsockopt(int, int, int, const void*, socklen_t)  arm,lp64
+getsockopt(int, int, int, void*, socklen_t*)    arm,lp64
+__recvmsg:recvmsg(int, struct msghdr*, unsigned int)   arm,lp64
+__sendmsg:sendmsg(int, const struct msghdr*, unsigned int)  arm,lp64
+__recvmmsg:recvmmsg(int, struct mmsghdr*, unsigned int, int, const struct timespec*)   arm,lp64
+__sendmmsg:sendmmsg(int, struct mmsghdr*, unsigned int, int)   arm,lp64
 
 # sockets for x86. These are done as an "indexed" call to socketcall syscall.
-int           __socket:socketcall:1(int, int, int) x86
-int           bind:socketcall:2(int, struct sockaddr*, int)  x86
-int           __connect:socketcall:3(int, struct sockaddr*, socklen_t)   x86
-int           listen:socketcall:4(int, int)                   x86
-int           getsockname:socketcall:6(int, struct sockaddr*, socklen_t*)  x86
-int           getpeername:socketcall:7(int, struct sockaddr*, socklen_t*)  x86
-int           __socketpair:socketcall:8(int, int, int, int*)    x86
-ssize_t       __sendto:socketcall:11(int, const void*, size_t, int, const struct sockaddr*, socklen_t)  x86
-ssize_t       recvfrom:socketcall:12(int, void*, size_t, unsigned int, struct sockaddr*, socklen_t*)  x86
-int           shutdown:socketcall:13(int, int)  x86
-int           setsockopt:socketcall:14(int, int, int, const void*, socklen_t)  x86
-int           getsockopt:socketcall:15(int, int, int, void*, socklen_t*)    x86
-int           __sendmsg:socketcall:16(int, const struct msghdr*, unsigned int)  x86
-int           __recvmsg:socketcall:17(int, struct msghdr*, unsigned int)   x86
-int           __accept4:socketcall:18(int, struct sockaddr*, socklen_t*, int)  x86
-int           __recvmmsg:socketcall:19(int, struct mmsghdr*, unsigned int, int, const struct timespec*)   x86
-int           __sendmmsg:socketcall:20(int, struct mmsghdr*, unsigned int, int)   x86
+__socket:socketcall:1(int, int, int) x86
+bind:socketcall:2(int, struct sockaddr*, int)  x86
+__connect:socketcall:3(int, struct sockaddr*, socklen_t)   x86
+listen:socketcall:4(int, int)                   x86
+getsockname:socketcall:6(int, struct sockaddr*, socklen_t*)  x86
+getpeername:socketcall:7(int, struct sockaddr*, socklen_t*)  x86
+__socketpair:socketcall:8(int, int, int, int*)    x86
+__sendto:socketcall:11(int, const void*, size_t, int, const struct sockaddr*, socklen_t)  x86
+recvfrom:socketcall:12(int, void*, size_t, unsigned int, struct sockaddr*, socklen_t*)  x86
+shutdown:socketcall:13(int, int)  x86
+setsockopt:socketcall:14(int, int, int, const void*, socklen_t)  x86
+getsockopt:socketcall:15(int, int, int, void*, socklen_t*)    x86
+__sendmsg:socketcall:16(int, const struct msghdr*, unsigned int)  x86
+__recvmsg:socketcall:17(int, struct msghdr*, unsigned int)   x86
+__accept4:socketcall:18(int, struct sockaddr*, socklen_t*, int)  x86
+__recvmmsg:socketcall:19(int, struct mmsghdr*, unsigned int, int, const struct timespec*)   x86
+__sendmmsg:socketcall:20(int, struct mmsghdr*, unsigned int, int)   x86
 
 # scheduler & real-time
-int sched_get_priority_max(int policy) all
-int sched_get_priority_min(int policy) all
-int __sched_getaffinity:sched_getaffinity(pid_t, size_t, cpu_set_t*) all
-int sched_getattr(pid_t, sched_attr*, unsigned, unsigned) all
-int sched_getparam(pid_t, sched_param*) all
-int sched_getscheduler(pid_t) all
-int sched_rr_get_interval(pid_t, timespec*) all
-int sched_setaffinity(pid_t, size_t, const cpu_set_t*) all
-int sched_setattr(pid_t, sched_attr*, unsigned) all
-int sched_setparam(pid_t, const sched_param*) all
-int sched_setscheduler(pid_t, int, const sched_param*)  all
-int sched_yield(void) all
+sched_get_priority_max(int policy) all
+sched_get_priority_min(int policy) all
+__sched_getaffinity:sched_getaffinity(pid_t, size_t, cpu_set_t*) all
+sched_getattr(pid_t, sched_attr*, unsigned, unsigned) all
+sched_getparam(pid_t, sched_param*) all
+sched_getscheduler(pid_t) all
+sched_rr_get_interval(pid_t, timespec*) all
+sched_setaffinity(pid_t, size_t, const cpu_set_t*) all
+sched_setattr(pid_t, sched_attr*, unsigned) all
+sched_setparam(pid_t, const sched_param*) all
+sched_setscheduler(pid_t, int, const sched_param*)  all
+sched_yield(void) all
 
 # other
-int     uname(struct utsname*)  all
-mode_t  umask(mode_t)  all
-int     __reboot:reboot(int, int, int, void*)  all
-int     init_module(void*, unsigned long, const char*)  all
-int     delete_module(const char*, unsigned int)   all
-int     klogctl:syslog(int, char*, int)   all
-int     sysinfo(struct sysinfo*)  all
-int     personality(unsigned long)  all
+uname(struct utsname*)  all
+umask(mode_t)  all
+__reboot:reboot(int, int, int, void*)  all
+init_module(void*, unsigned long, const char*)  all
+delete_module(const char*, unsigned int)   all
+klogctl:syslog(int, char*, int)   all
+sysinfo(struct sysinfo*)  all
+personality(unsigned long)  all
 
-int setns(int, int) all
-int unshare(int) all
+setns(int, int) all
+unshare(int) all
 
-int __getcpu:getcpu(unsigned*, unsigned*, void*) all
+__getcpu:getcpu(unsigned*, unsigned*, void*) all
 
-int     bpf(int, union bpf_attr *, unsigned int) all
+bpf(int, union bpf_attr *, unsigned int) all
 
-ssize_t tee(int, int, size_t, unsigned int)  all
-ssize_t splice(int, off64_t*, int, off64_t*, size_t, unsigned int)  all
-ssize_t vmsplice(int, const struct iovec*, size_t, unsigned int)  all
+tee(int, int, size_t, unsigned int)  all
+splice(int, off64_t*, int, off64_t*, size_t, unsigned int)  all
+vmsplice(int, const struct iovec*, size_t, unsigned int)  all
 
-int __epoll_create1:epoll_create1(int)  all
-int epoll_ctl(int, int op, int, struct epoll_event*)  all
-int __epoll_pwait:epoll_pwait(int, struct epoll_event*, int, int, const sigset64_t*, size_t)  all
-int __epoll_pwait2:epoll_pwait2(int, struct epoll_event*, int, const timespec64*, const sigset64_t*, size_t)  all
+__epoll_create1:epoll_create1(int)  all
+epoll_ctl(int, int op, int, struct epoll_event*)  all
+__epoll_pwait:epoll_pwait(int, struct epoll_event*, int, int, const sigset64_t*, size_t)  all
+__epoll_pwait2:epoll_pwait2(int, struct epoll_event*, int, const timespec64*, const sigset64_t*, size_t)  all
 
-int __eventfd:eventfd2(unsigned int, int)  all
+__eventfd:eventfd2(unsigned int, int)  all
 
-void _exit|_Exit:exit_group(int)  all
-void __exit:exit(int)  all
+_exit|_Exit:exit_group(int)  all
+__exit:exit(int)  all
 
-int inotify_init1(int)  all
-int inotify_add_watch(int, const char*, unsigned int)  all
-int inotify_rm_watch(int, unsigned int)  all
+inotify_init1(int)  all
+inotify_add_watch(int, const char*, unsigned int)  all
+inotify_rm_watch(int, unsigned int)  all
 
-int __pselect6:pselect6(int, fd_set*, fd_set*, fd_set*, timespec*, void*)  all
-int __ppoll:ppoll(pollfd*, unsigned int, timespec*, const sigset64_t*, size_t)  all
+__pselect6:pselect6(int, fd_set*, fd_set*, fd_set*, timespec*, void*)  all
+__ppoll:ppoll(pollfd*, unsigned int, timespec*, const sigset64_t*, size_t)  all
 
-ssize_t process_vm_readv(pid_t, const struct iovec*, unsigned long, const struct iovec*, unsigned long, unsigned long)  all
-ssize_t process_vm_writev(pid_t, const struct iovec*, unsigned long, const struct iovec*, unsigned long, unsigned long)  all
+process_vm_readv(pid_t, const struct iovec*, unsigned long, const struct iovec*, unsigned long, unsigned long)  all
+process_vm_writev(pid_t, const struct iovec*, unsigned long, const struct iovec*, unsigned long, unsigned long)  all
 
-int quotactl(int, const char*, int, char*)  all
+quotactl(int, const char*, int, char*)  all
 
-int __set_tid_address:set_tid_address(int*)  all
+__set_tid_address:set_tid_address(int*)  all
 
-int setdomainname(const char*, size_t)  all
-int sethostname(const char*, size_t)  all
+setdomainname(const char*, size_t)  all
+sethostname(const char*, size_t)  all
 
-int sync_file_range(int, off64_t, off64_t, unsigned int) x86,lp64
-int __sync_file_range2:sync_file_range2(int, unsigned int, off64_t, off64_t) arm
+sync_file_range(int, off64_t, off64_t, unsigned int) x86,lp64
+__sync_file_range2:sync_file_range2(int, unsigned int, off64_t, off64_t) arm
 
-pid_t wait4(pid_t, int*, int, struct rusage*)  all
-int __waitid:waitid(int, pid_t, siginfo_t*, int, void*)  all
+wait4(pid_t, int*, int, struct rusage*)  all
+__waitid:waitid(int, pid_t, siginfo_t*, int, void*)  all
 
 # ARM-specific
-int     __set_tls:__ARM_NR_set_tls(void*)                                 arm
-int     cacheflush:__ARM_NR_cacheflush(long start, long end, long flags)  arm
+__set_tls:__ARM_NR_set_tls(void*)                                 arm
+cacheflush:__ARM_NR_cacheflush(long start, long end, long flags)  arm
 
 # riscv64-specific
-int __riscv_flush_icache:riscv_flush_icache(void*, void*, unsigned long) riscv64
+__riscv_flush_icache:riscv_flush_icache(void*, void*, unsigned long) riscv64
 
 # x86-specific
-int     __set_thread_area:set_thread_area(void*) x86
-long arch_prctl(int, unsigned long) x86_64
+__set_thread_area:set_thread_area(void*) x86
+arch_prctl(int, unsigned long) x86_64
 
 # vdso stuff.
-int __clock_getres:clock_getres(clockid_t, struct timespec*) all
-int __clock_gettime:clock_gettime(clockid_t, struct timespec*) all
-int __gettimeofday:gettimeofday(struct timeval*, struct timezone*) all
+__clock_getres:clock_getres(clockid_t, struct timespec*) all
+__clock_gettime:clock_gettime(clockid_t, struct timespec*) all
+__gettimeofday:gettimeofday(struct timeval*, struct timezone*) all
 
 # <sys/random.h>
-ssize_t getrandom(void*, size_t, unsigned) all
+getrandom(void*, size_t, unsigned) all
 
 # <sys/pidfd.h>
-int __pidfd_open:pidfd_open(pid_t, unsigned int) all
-int __pidfd_getfd:pidfd_getfd(int, int, unsigned int) all
-int pidfd_send_signal(int, int, siginfo_t*, unsigned int) all
+__pidfd_open:pidfd_open(pid_t, unsigned int) all
+__pidfd_getfd:pidfd_getfd(int, int, unsigned int) all
+pidfd_send_signal(int, int, siginfo_t*, unsigned int) all

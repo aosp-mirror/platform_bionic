@@ -2395,7 +2395,7 @@ genrule {
     name: "generate_app_zygote_blocklist",
     out: ["SECCOMP_BLOCKLIST_APP_ZYGOTE.TXT"],
     srcs: ["SECCOMP_BLOCKLIST_APP.TXT"],
-    cmd: "grep -v '^int[ \t]*setresgid' $(in) > $(out)",
+    cmd: "grep -v '^setresgid' $(in) > $(out)",
 }
 
 filegroup {
@@ -2703,6 +2703,7 @@ cc_library {
     },
 }
 
+// TODO: add this directly to musl like libexecinfo and libb64?
 cc_library_host_static {
     name: "libfts",
     srcs: [
@@ -2715,6 +2716,7 @@ cc_library_host_static {
         "upstream-openbsd/android/include",
     ],
     cflags: [
+        "-std=gnu99",
         "-include openbsd-compat.h",
         "-Wno-unused-parameter",
     ],
@@ -2754,6 +2756,7 @@ cc_library_host_static {
         "upstream-openbsd/android/include",
     ],
     cflags: [
+        "-std=gnu99",
         "-include openbsd-compat.h",
     ],
     enabled: false,
