@@ -605,7 +605,7 @@ bool soinfo::relocate(const SymbolLookupList& lookup_list) {
   Relocator relocator(version_tracker, lookup_list);
   relocator.si = this;
   relocator.si_strtab = strtab_;
-  relocator.si_strtab_size = has_min_version(1) ? strtab_size_ : SIZE_MAX;
+  relocator.si_strtab_size = is_lp64_or_has_min_version(1) ? strtab_size_ : SIZE_MAX;
   relocator.si_symtab = symtab_;
   relocator.tlsdesc_args = &tlsdesc_args_;
   relocator.tls_tp_base = __libc_shared_globals()->static_tls_layout.offset_thread_pointer();
