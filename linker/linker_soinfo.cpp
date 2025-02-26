@@ -217,7 +217,7 @@ soinfo::~soinfo() {
 }
 
 void soinfo::set_dt_runpath(const char* path) {
-  if (!has_min_version(3)) {
+  if (!is_lp64_or_has_min_version(3)) {
     return;
   }
 
@@ -244,35 +244,19 @@ const ElfW(Versym)* soinfo::get_versym(size_t n) const {
 }
 
 ElfW(Addr) soinfo::get_verneed_ptr() const {
-  if (has_min_version(2)) {
-    return verneed_ptr_;
-  }
-
-  return 0;
+  return is_lp64_or_has_min_version(2)? verneed_ptr_ : 0;
 }
 
 size_t soinfo::get_verneed_cnt() const {
-  if (has_min_version(2)) {
-    return verneed_cnt_;
-  }
-
-  return 0;
+  return is_lp64_or_has_min_version(2) ? verneed_cnt_ : 0;
 }
 
 ElfW(Addr) soinfo::get_verdef_ptr() const {
-  if (has_min_version(2)) {
-    return verdef_ptr_;
-  }
-
-  return 0;
+  return is_lp64_or_has_min_version(2) ? verdef_ptr_ : 0;
 }
 
 size_t soinfo::get_verdef_cnt() const {
-  if (has_min_version(2)) {
-    return verdef_cnt_;
-  }
-
-  return 0;
+  return is_lp64_or_has_min_version(2) ? verdef_cnt_ : 0;
 }
 
 SymbolLookupLib soinfo::get_lookup_lib() {
@@ -530,14 +514,14 @@ void soinfo::call_destructors() {
 }
 
 void soinfo::add_child(soinfo* child) {
-  if (has_min_version(0)) {
+  if (is_lp64_or_has_min_version(0)) {
     child->parents_.push_back(this);
     this->children_.push_back(child);
   }
 }
 
 void soinfo::remove_all_links() {
-  if (!has_min_version(0)) {
+  if (!is_lp64_or_has_min_version(0)) {
     return;
   }
 
@@ -571,47 +555,27 @@ void soinfo::remove_all_links() {
 }
 
 dev_t soinfo::get_st_dev() const {
-  if (has_min_version(0)) {
-    return st_dev_;
-  }
-
-  return 0;
+  return is_lp64_or_has_min_version(0) ? st_dev_ : 0;
 };
 
 ino_t soinfo::get_st_ino() const {
-  if (has_min_version(0)) {
-    return st_ino_;
-  }
-
-  return 0;
+  return is_lp64_or_has_min_version(0) ? st_ino_ : 0;
 }
 
 off64_t soinfo::get_file_offset() const {
-  if (has_min_version(1)) {
-    return file_offset_;
-  }
-
-  return 0;
+  return is_lp64_or_has_min_version(1) ? file_offset_ : 0;
 }
 
 uint32_t soinfo::get_rtld_flags() const {
-  if (has_min_version(1)) {
-    return rtld_flags_;
-  }
-
-  return 0;
+  return is_lp64_or_has_min_version(1) ? rtld_flags_ : 0;
 }
 
 uint32_t soinfo::get_dt_flags_1() const {
-  if (has_min_version(1)) {
-    return dt_flags_1_;
-  }
-
-  return 0;
+  return is_lp64_or_has_min_version(1) ? dt_flags_1_ : 0;
 }
 
 void soinfo::set_dt_flags_1(uint32_t dt_flags_1) {
-  if (has_min_version(1)) {
+  if (is_lp64_or_has_min_version(1)) {
     if ((dt_flags_1 & DF_1_GLOBAL) != 0) {
       rtld_flags_ |= RTLD_GLOBAL;
     }
@@ -629,34 +593,24 @@ void soinfo::set_nodelete() {
 }
 
 void soinfo::set_realpath(const char* path) {
-#if defined(__LP64__)
-  realpath_ = path;
-#else
-  if (has_min_version(2)) {
+  if (is_lp64_or_has_min_version(2)) {
     realpath_ = path;
   }
-#endif
 }
 
 const char* soinfo::get_realpath() const {
 #if defined(__LP64__)
   return realpath_.c_str();
 #else
-  if (has_min_version(2)) {
-    return realpath_.c_str();
-  } else {
-    return old_name_;
-  }
+  return is_lp64_or_has_min_version(2) ? realpath_.c_str() : old_name_;
 #endif
 }
 
 void soinfo::set_soname(const char* soname) {
-#if defined(__LP64__)
-  soname_ = soname;
-#else
-  if (has_min_version(2)) {
+  if (is_lp64_or_has_min_version(2)) {
     soname_ = soname;
   }
+#if !defined(__LP64__)
   strlcpy(old_name_, soname_.c_str(), sizeof(old_name_));
 #endif
 }
@@ -665,11 +619,7 @@ const char* soinfo::get_soname() const {
 #if defined(__LP64__)
   return soname_.c_str();
 #else
-  if (has_min_version(2)) {
-    return soname_.c_str();
-  } else {
-    return old_name_;
-  }
+  return is_lp64_or_has_min_version(2) ? soname_.c_str() : old_name_;
 #endif
 }
 
@@ -678,59 +628,39 @@ const char* soinfo::get_soname() const {
 static soinfo_list_t g_empty_list;
 
 soinfo_list_t& soinfo::get_children() {
-  if (has_min_version(0)) {
-    return children_;
-  }
-
-  return g_empty_list;
+  return is_lp64_or_has_min_version(0) ? children_ : g_empty_list;
 }
 
 const soinfo_list_t& soinfo::get_children() const {
-  if (has_min_version(0)) {
-    return children_;
-  }
-
-  return g_empty_list;
+  return is_lp64_or_has_min_version(0) ? children_ : g_empty_list;
 }
 
 soinfo_list_t& soinfo::get_parents() {
-  if (has_min_version(0)) {
-    return parents_;
-  }
-
-  return g_empty_list;
+  return is_lp64_or_has_min_version(0) ? parents_ : g_empty_list;
 }
 
 static std::vector<std::string> g_empty_runpath;
 
 const std::vector<std::string>& soinfo::get_dt_runpath() const {
-  if (has_min_version(3)) {
-    return dt_runpath_;
-  }
-
-  return g_empty_runpath;
+  return is_lp64_or_has_min_version(3) ? dt_runpath_ : g_empty_runpath;
 }
 
 android_namespace_t* soinfo::get_primary_namespace() {
-  if (has_min_version(3)) {
-    return primary_namespace_;
-  }
-
-  return &g_default_namespace;
+  return is_lp64_or_has_min_version(3) ? primary_namespace_ : &g_default_namespace;
 }
 
 void soinfo::add_secondary_namespace(android_namespace_t* secondary_ns) {
-  CHECK(has_min_version(3));
+  CHECK(is_lp64_or_has_min_version(3));
   secondary_namespaces_.push_back(secondary_ns);
 }
 
 android_namespace_list_t& soinfo::get_secondary_namespaces() {
-  CHECK(has_min_version(3));
+  CHECK(is_lp64_or_has_min_version(3));
   return secondary_namespaces_;
 }
 
 const char* soinfo::get_string(ElfW(Word) index) const {
-  if (has_min_version(1) && (index >= strtab_size_)) {
+  if (is_lp64_or_has_min_version(1) && (index >= strtab_size_)) {
     async_safe_fatal("%s: strtab out of bounds error; STRSZ=%zd, name=%d",
         get_realpath(), strtab_size_, index);
   }
@@ -813,7 +743,7 @@ bool soinfo::is_mapped_by_caller() const {
 // dlopen/load. Note that libraries opened by system
 // will always have 'current' target sdk version.
 int soinfo::get_target_sdk_version() const {
-  if (!has_min_version(2)) {
+  if (!is_lp64_or_has_min_version(2)) {
     return __ANDROID_API__;
   }
 
@@ -821,13 +751,13 @@ int soinfo::get_target_sdk_version() const {
 }
 
 uintptr_t soinfo::get_handle() const {
-  CHECK(has_min_version(3));
+  CHECK(is_lp64_or_has_min_version(3));
   CHECK(handle_ != 0);
   return handle_;
 }
 
 void* soinfo::to_handle() {
-  if (get_application_target_sdk_version() < 24 || !has_min_version(3)) {
+  if (get_application_target_sdk_version() < 24 || !is_lp64_or_has_min_version(3)) {
     return this;
   }
 
@@ -835,7 +765,7 @@ void* soinfo::to_handle() {
 }
 
 void soinfo::generate_handle() {
-  CHECK(has_min_version(3));
+  CHECK(is_lp64_or_has_min_version(3));
   CHECK(handle_ == 0); // Make sure this is the first call
 
   // Make sure the handle is unique and does not collide
@@ -861,20 +791,20 @@ void soinfo::generate_handle() {
 }
 
 void soinfo::set_gap_start(ElfW(Addr) gap_start) {
-  CHECK(has_min_version(6));
+  CHECK(is_lp64_or_has_min_version(6));
   gap_start_ = gap_start;
 }
 ElfW(Addr) soinfo::get_gap_start() const {
-  CHECK(has_min_version(6));
+  CHECK(is_lp64_or_has_min_version(6));
   return gap_start_;
 }
 
 void soinfo::set_gap_size(size_t gap_size) {
-  CHECK(has_min_version(6));
+  CHECK(is_lp64_or_has_min_version(6));
   gap_size_ = gap_size;
 }
 size_t soinfo::get_gap_size() const {
-  CHECK(has_min_version(6));
+  CHECK(is_lp64_or_has_min_version(6));
   return gap_size_;
 }
 
