@@ -241,6 +241,8 @@ static void LockingByCallerHelper(std::atomic<pid_t>* pid) {
   funlockfile(stdout);
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wcast-function-type-mismatch"
 TEST(stdio_ext, __fsetlocking_BYCALLER) {
   // Check if users can use flockfile/funlockfile to protect stdio operations.
   int old_state = __fsetlocking(stdout, FSETLOCKING_BYCALLER);
@@ -255,3 +257,4 @@ TEST(stdio_ext, __fsetlocking_BYCALLER) {
   ASSERT_EQ(0, pthread_join(thread, nullptr));
   __fsetlocking(stdout, old_state);
 }
+#pragma clang diagnostic pop

@@ -103,6 +103,8 @@ static void PtyReader_28979140(PtyReader_28979140_Arg* arg) {
   arg->finished = true;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wcast-function-type-mismatch"
 TEST(pty, bug_28979140) {
   // This test is to test a kernel bug, which uses a lock free ring-buffer to
   // pass data through a raw pty, but missing necessary memory barriers.
@@ -164,3 +166,4 @@ TEST(pty, bug_28979140) {
   ASSERT_TRUE(arg.matched);
   close(pty);
 }
+#pragma clang diagnostic pop
