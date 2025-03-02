@@ -290,8 +290,7 @@ struct soinfo {
   bool can_unload() const;
   bool is_gnu_hash() const;
 
-  // TODO: rename this to make it clearer it's always true for LP64.
-  bool inline has_min_version(uint32_t min_version __unused) const {
+  inline bool is_lp64_or_has_min_version(uint32_t min_version __unused) const {
 #if defined(__LP64__)
     return true;
 #else
@@ -300,7 +299,7 @@ struct soinfo {
   }
 
   const ElfW(Versym)* get_versym_table() const {
-    return has_min_version(2) ? versym_ : nullptr;
+    return is_lp64_or_has_min_version(2) ? versym_ : nullptr;
   }
 
   bool is_linked() const;
@@ -337,7 +336,7 @@ struct soinfo {
   android_namespace_list_t& get_secondary_namespaces();
 
   soinfo_tls* get_tls() const {
-    return has_min_version(5) ? tls_.get() : nullptr;
+    return is_lp64_or_has_min_version(5) ? tls_.get() : nullptr;
   }
 
   void set_mapped_by_caller(bool reserved_map);

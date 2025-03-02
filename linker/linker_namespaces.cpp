@@ -73,7 +73,7 @@ bool android_namespace_t::is_accessible(soinfo* s) {
   auto is_accessible_ftor = [this] (soinfo* si, bool allow_secondary) {
     // This is workaround for apps hacking into soinfo list.
     // and inserting their own entries into it. (http://b/37191433)
-    if (!si->has_min_version(3)) {
+    if (!si->is_lp64_or_has_min_version(3)) {
       DL_WARN("Warning: invalid soinfo version for \"%s\" (assuming inaccessible)",
               si->get_soname());
       return false;
