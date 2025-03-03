@@ -57,9 +57,9 @@
 #undef __futex_wait
 
 #define __get_thread __real_get_thread
+#define __get_tls __real_get_tls
 #include "pthread_internal.h"
 #undef __get_thread
-static inline void** __real_get_tls() { return __get_tls(); }
 #undef __get_tls
 
 extern "C" {
