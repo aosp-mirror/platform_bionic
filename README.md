@@ -314,9 +314,12 @@ build your device drivers, you shouldn't modify bionic. Instead use
 
 ## Updating tzdata
 
-This is handled by the libcore team, because they own icu, and that needs to be
-updated in sync with bionic). See
-[system/timezone/README.android](https://android.googlesource.com/platform/system/timezone/+/main/README.android).
+Tzdata updates are now handled by the libcore team because it needs to be
+updated in sync with icu's copy of the data, and they own that.
+
+See
+[system/timezone/README.android](https://android.googlesource.com/platform/system/timezone/+/main/README.android)
+for more information.
 
 
 ## Verifying changes
