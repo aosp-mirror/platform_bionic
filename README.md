@@ -268,36 +268,14 @@ A general example of adding a system call:
 https://android-review.googlesource.com/c/platform/bionic/+/2073827
 
 ### Debugging tips
-1. Key error for a new codename in libc/libc.map.txt
 
-e.g. what you add in libc/libc.map.txt is:
+If a test fails to build with an undefined symbol error,
+this is most likely the _host_ reference test against glibc,
+and you need to add an `#if defined(__GLIBC__)` to the test.
+(Search for existing examples to copy & paste,
+in particular to make sure you include the `GTEST_SKIP()`.)
 
-```
-LIBC_V { # introduced=Vanilla
-  global:
-    xxx; // the new system call you add
-} LIBC_U;
-```
-
-The error output is:
-
-```
-Traceback (most recent call last):
-  File "/path/tp/out/soong/.temp/Soong.python_qucjwd7g/symbolfile/__init__.py", line 171,
-  in decode_api_level_tag
-    decoded = str(decode_api_level(value, api_map))
-  File "/path/to/out/soong/.temp/Soong.python_qucjwd7g/symbolfile/__init__.py", line 157,
-  in decode_api_level
-    return api_map[api]
-KeyError: 'Vanilla'
-```
-
-Solution: Ask in the team and wait for the update.
-
-2. Use of undeclared identifier of the new system call in the test
-
-Possible Solution: Check everything ready in the files mentioned above first.
-Maybe glibc matters. Follow the example and try #if defined(__GLIBC__).
+When we switch to musl for the host libc, this should be less of a problem.
 
 ## Updating kernel header files
 
