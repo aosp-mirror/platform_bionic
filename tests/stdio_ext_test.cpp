@@ -29,6 +29,8 @@
 #include <wchar.h>
 #include <locale.h>
 
+#include <thread>
+
 #include <android-base/file.h>
 
 #include "utils.h"
@@ -235,26 +237,20 @@ TEST(stdio_ext, __fsetlocking) {
   fclose(fp);
 }
 
-static void LockingByCallerHelper(std::atomic<pid_t>* pid) {
-  *pid = gettid();
-  flockfile(stdout);
-  funlockfile(stdout);
-}
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wcast-function-type-mismatch"
 TEST(stdio_ext, __fsetlocking_BYCALLER) {
   // Check if users can use flockfile/funlockfile to protect stdio operations.
   int old_state = __fsetlocking(stdout, FSETLOCKING_BYCALLER);
   flockfile(stdout);
-  pthread_t thread;
+
   std::atomic<pid_t> pid(0);
-  ASSERT_EQ(0, pthread_create(&thread, nullptr,
-                              reinterpret_cast<void* (*)(void*)>(LockingByCallerHelper), &pid));
+  std::thread thread([&]() {
+    pid = gettid();
+    flockfile(stdout);
+    funlockfile(stdout);
+  });
   WaitUntilThreadSleep(pid);
   funlockfile(stdout);
 
-  ASSERT_EQ(0, pthread_join(thread, nullptr));
+  thread.join();
   __fsetlocking(stdout, old_state);
 }
-#pragma clang diagnostic pop
