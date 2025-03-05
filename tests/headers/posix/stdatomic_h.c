@@ -66,6 +66,9 @@ static void stdatomic_h() {
   MACRO(ATOMIC_POINTER_LOCK_FREE);
 
   atomic_flag f = ATOMIC_FLAG_INIT;
+
+  // ATOMIC_VAR_INIT() has been removed from C23,
+  // but not from POSIX 2024.
   atomic_int i = ATOMIC_VAR_INIT(123);
 
   i = kill_dependency(i);
