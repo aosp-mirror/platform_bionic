@@ -26,38 +26,20 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _PRIVATE_ICU_H
-#define _PRIVATE_ICU_H
+#pragma once
 
+#include <ctype.h>
 #include <stdint.h>
 #include <wchar.h>
-
-typedef int8_t UBool;
-#define FALSE 0
-#define TRUE 1
-
-typedef int32_t UChar32;
-
-enum UProperty {
-  UCHAR_ALPHABETIC = 0,
-  UCHAR_DEFAULT_IGNORABLE_CODE_POINT = 5,
-  UCHAR_LOWERCASE = 22,
-  UCHAR_POSIX_ALNUM = 44,
-  UCHAR_POSIX_BLANK = 45,
-  UCHAR_POSIX_GRAPH = 46,
-  UCHAR_POSIX_PRINT = 47,
-  UCHAR_POSIX_XDIGIT = 48,
-  UCHAR_UPPERCASE = 30,
-  UCHAR_WHITE_SPACE = 31,
-  UCHAR_EAST_ASIAN_WIDTH = 0x1004,
-  UCHAR_HANGUL_SYLLABLE_TYPE = 0x100b,
-};
 
 enum UCharCategory {
   U_NON_SPACING_MARK = 6,
   U_ENCLOSING_MARK = 7,
+  U_DECIMAL_NUMBER = 9,
   U_CONTROL_CHAR = 15,
   U_FORMAT_CHAR = 16,
+  U_DASH_PUNCTUATION = 19,
+  U_OTHER_PUNCTUATION = 23,
 };
 
 enum UEastAsianWidth {
@@ -78,11 +60,24 @@ enum UHangulSyllableType {
   U_HST_LVT_SYLLABLE,
 };
 
-int8_t __icu_charType(wint_t wc);
-int32_t __icu_getIntPropertyValue(wint_t wc, UProperty property);
+__BEGIN_DECLS
 
-typedef UBool (*u_hasBinaryProperty_t)(UChar32, UProperty);
+uint8_t __icu4x_bionic_general_category(uint32_t cp);
+uint8_t __icu4x_bionic_east_asian_width(uint32_t cp);
+uint8_t __icu4x_bionic_hangul_syllable_type(uint32_t cp);
 
-void* __find_icu_symbol(const char* symbol_name);
+bool __icu4x_bionic_is_alphabetic(uint32_t cp);
+bool __icu4x_bionic_is_default_ignorable_code_point(uint32_t cp);
+bool __icu4x_bionic_is_lowercase(uint32_t cp);
+bool __icu4x_bionic_is_alnum(uint32_t cp);
+bool __icu4x_bionic_is_blank(uint32_t cp);
+bool __icu4x_bionic_is_graph(uint32_t cp);
+bool __icu4x_bionic_is_print(uint32_t cp);
+bool __icu4x_bionic_is_xdigit(uint32_t cp);
+bool __icu4x_bionic_is_white_space(uint32_t cp);
+bool __icu4x_bionic_is_uppercase(uint32_t cp);
 
-#endif  // _PRIVATE_ICU_H
+uint32_t __icu4x_bionic_to_upper(uint32_t ch);
+uint32_t __icu4x_bionic_to_lower(uint32_t ch);
+
+__END_DECLS
