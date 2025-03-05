@@ -139,9 +139,10 @@ TEST(pty, bug_28979140) {
   arg.fd = tty;
   arg.data_count = TEST_DATA_COUNT;
   arg.matched = true;
-  ASSERT_EQ(0, pthread_create(&thread, nullptr,
-                              reinterpret_cast<void*(*)(void*)>(PtyReader_28979140),
-                              &arg));
+  ASSERT_EQ(0, pthread_create(&thread, nullptr, [](void* arg)->void* {
+    PtyReader_28979140(static_cast<PtyReader_28979140_Arg*>(arg));
+    return nullptr;
+  }, &arg));
 
   CPU_ZERO(&cpus);
   CPU_SET(arg.main_cpu_id, &cpus);

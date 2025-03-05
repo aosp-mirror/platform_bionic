@@ -187,8 +187,7 @@ int pthread_join(pthread_t __pthread, void* _Nullable * _Nullable __return_value
  * different language, you should consider similar implementation choices and
  * avoid a direct one-to-one mapping from thread locals to pthread keys.
  *
- * On Android, the destructor function is called even for null values,
- * even though POSIX specifies that it is only called for non-null values.
+ * The destructor function is only called for non-null values.
  *
  * Returns 0 on success and returns an error number on failure.
  */

@@ -223,21 +223,12 @@ cc_library_static {
         "bionic/getauxval.cpp",
     ],
     arch: {
-        arm64: {
-            srcs: ["arch-arm64/bionic/__set_tls.c"],
-        },
-        riscv64: {
-            srcs: ["arch-riscv64/bionic/__set_tls.c"],
-        },
         x86: {
             srcs: [
                 "arch-x86/bionic/__libc_init_sysinfo.cpp",
                 "arch-x86/bionic/__libc_int0x80.S",
                 "arch-x86/bionic/__set_tls.cpp",
             ],
-        },
-        x86_64: {
-            srcs: ["arch-x86_64/bionic/__set_tls.c"],
         },
     },
 
@@ -790,6 +781,53 @@ cc_library_static {
 }
 
 // ========================================================
+// icu4x_bionic.a - Thin Rust wrapper around ICU4X
+// ========================================================
+
+rust_ffi_static {
+    name: "libicu4x_bionic",
+    crate_name: "icu4x_bionic",
+    crate_root: "bionic/icu4x.rs",
+    edition: "2021",
+    features: [],
+    rustlibs: [
+        "//external/rust/android-crates-io/crates/icu_casemap:libicu_casemap",
+        "//external/rust/android-crates-io/crates/icu_collections:libicu_collections",
+        "//external/rust/android-crates-io/crates/icu_properties:libicu_properties",
+    ],
+    apex_available: [
+        "//apex_available:platform",
+        "//apex_available:anyapex",
+    ],
+    vendor_available: true,
+    product_available: true,
+    ramdisk_available: true,
+    vendor_ramdisk_available: true,
+    recovery_available: true,
+    native_bridge_supported: true,
+    sdk_version: "minimum",
+    defaults: ["linux_bionic_supported"],
+}
+
+// current rust implementation detail; will be removed as part of a larger cleanup later
+// go/android-mto-staticlibs-in-make
+cc_rustlibs_for_make {
+    name: "libstatic_rustlibs_for_make",
+    whole_static_libs: ["libicu4x_bionic"],
+    apex_available: [
+        "//apex_available:platform",
+        "//apex_available:anyapex",
+    ],
+    vendor_available: true,
+    product_available: true,
+    ramdisk_available: true,
+    vendor_ramdisk_available: true,
+    recovery_available: true,
+    native_bridge_supported: true,
+    defaults: ["linux_bionic_supported"],
+}
+
+// ========================================================
 // libc_bionic.a - home-grown C library code
 // ========================================================
 
@@ -870,7 +908,6 @@ cc_library_static {
         "bionic/grp_pwd_file.cpp",
         "bionic/heap_zero_init.cpp",
         "bionic/iconv.cpp",
-        "bionic/icu_wrappers.cpp",
         "bionic/ifaddrs.cpp",
         "bionic/inotify_init.cpp",
         "bionic/ioctl.cpp",
@@ -1182,6 +1219,7 @@ cc_library_static {
     whole_static_libs: [
         "//external/llvm-libc:llvmlibc",
         "libsystemproperties",
+        "libicu4x_bionic",
     ],
 
     cppflags: ["-Wold-style-cast"],
@@ -1433,7 +1471,6 @@ filegroup {
         "bionic/android_mallopt.cpp",
         "bionic/gwp_asan_wrappers.cpp",
         "bionic/heap_tagging.cpp",
-        "bionic/icu.cpp",
         "bionic/malloc_common.cpp",
         "bionic/malloc_common_dynamic.cpp",
         "bionic/android_profiling_dynamic.cpp",
@@ -1452,7 +1489,6 @@ filegroup {
         "bionic/android_mallopt.cpp",
         "bionic/gwp_asan_wrappers.cpp",
         "bionic/heap_tagging.cpp",
-        "bionic/icu_static.cpp",
         "bionic/malloc_common.cpp",
         "bionic/malloc_limit.cpp",
     ],
