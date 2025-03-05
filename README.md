@@ -339,14 +339,68 @@ The tests are all built from the tests/ directory. There is a separate
 directory `benchmarks/` containing benchmarks, and that has its own
 documentation on [running the benchmarks](benchmarks/README.md).
 
+### Building
+
+We assume you've already checked out the Android source tree.
+
+To build, make sure you're in the right directory and you've set up your environment:
+
+    $ cd main  # Or whatever you called your Android source tree.
+    $ source build/envsetup.sh
+
+Then choose an appropriate "lunch". If you're not testing on a device,
+two choices are particularly useful.
+
+If you want to be able to run tests and benchmarks directly on your x86-64
+host machine, use:
+
+    $ lunch aosp_cf_x86_64_phone-trunk_staging-userdebug
+
+Alternatively, if you want to (say) check generated arm64 code without having
+a specific device in mind, use:
+
+    $ lunch aosp_cf_arm64_phone-trunk_staging-userdebug
+
+Note that in both cases,
+these targets will also build the corresponding 32-bit variant.
+See below for where the 64-bit and 32-bit files end up.
+
+See [Build Android](https://source.android.com/docs/setup/build/building)
+for more details.
+
 ### Device tests
 
-    $ mma # In $ANDROID_ROOT/bionic.
-    $ adb root && adb remount && adb sync
+Once you've completed that setup, you can build:
+
+    $ cd bionic
+    $ mm
+
+This will build everything: bionic, the benchmarks, and the tests
+(and all the dependencies).
+
+If you want to test on a device,
+the first time after flashing your device,
+you'll need to remount the filesystems to be writable:
+
+    $ adb root
+    $ adb remount
+    $ adb reboot
+    $ adb wait-for-device
+    $ adb root
+    $ adb remount
+
+Then you can sync your locally built files across:
+
+    $ adb sync
+
+And then you can run the 32-bit tests (dynamic or static):
+
     $ adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests
     $ adb shell \
         /data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static
-    # Only for 64-bit targets
+
+Or the 64-bit tests (dynamic or static):
+
     $ adb shell /data/nativetest64/bionic-unit-tests/bionic-unit-tests
     $ adb shell \
         /data/nativetest64/bionic-unit-tests-static/bionic-unit-tests-static
@@ -383,14 +437,51 @@ but in cases where you really have to run CTS:
 ### Host tests
 
 The host tests require that you have `lunch`ed either an x86 or x86_64 target.
+
+(Obviously, in theory you could build for arm64 and run on an arm64 host,
+but we currently only support x86-64 host builds.)
+
+For example:
+
+    $ lunch aosp_cf_x86_64_phone-trunk_staging-userdebug
+
+Then build as normal:
+
+    $ cd bionic
+    $ mm
+
 Note that due to ABI limitations (specifically, the size of pthread_mutex_t),
-32-bit bionic requires PIDs less than 65536. To enforce this, set /proc/sys/kernel/pid_max
-to 65536.
+32-bit bionic requires PIDs less than 65536.
+To enforce this, set /proc/sys/kernel/pid_max to 65536.
+(The tests will remind you if you forget.)
+
+The easiest way to run is to use our provided script.
+
+To run the 32-bit tests on the host:
 
     $ ./tests/run-on-host.sh 32
-    $ ./tests/run-on-host.sh 64   # For x86_64-bit *targets* only.
+
+To run the 64-bit tests on the host:
+
+    $ ./tests/run-on-host.sh 64
 
 You can supply gtest flags as extra arguments to this script.
+
+This script starts by running build/run-on-host.sh which -- despite the name --
+is actually a script to set up your host to look more like an Android device.
+In particular, it creates a /system directory with appropriate symlinks to your
+"out" directory.
+
+An alternative is to run the static binaries directly from your "out" directory.
+
+To run the static 32-bit tests:
+
+    $ ../out/target/product/vsoc_x86_64/data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static
+
+To run the static 64-bit tests:
+
+    $ ../out/target/product/vsoc_x86_64/data/nativetest64/bionic-unit-tests-static/bionic-unit-tests-static
+
 
 ### Against glibc
 
