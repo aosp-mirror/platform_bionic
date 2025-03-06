@@ -1062,16 +1062,12 @@ TEST(wchar, wcwidth_controls) {
 }
 
 TEST(wchar, wcwidth_non_spacing_and_enclosing_marks_and_format) {
-  if (!have_dl()) return;
-
   EXPECT_EQ(0, wcwidth(0x0300)); // Combining grave.
   EXPECT_EQ(0, wcwidth(0x20dd)); // Combining enclosing circle.
   EXPECT_EQ(0, wcwidth(0x200b)); // Zero width space.
 }
 
 TEST(wchar, wcwidth_non_spacing_special_cases) {
-  if (!have_dl()) return;
-
   // U+00AD is a soft hyphen, which normally shouldn't be rendered at all.
   // I think the assumption here is that you elide the soft hyphen character
   // completely in that case, and never call wcwidth() if you don't want to
@@ -1100,8 +1096,6 @@ TEST(wchar, wcwidth_non_spacing_special_cases) {
 }
 
 TEST(wchar, wcwidth_cjk) {
-  if (!have_dl()) return;
-
   EXPECT_EQ(2, wcwidth(0x4e00)); // Start of CJK unified block.
   EXPECT_EQ(2, wcwidth(0x9fff)); // End of CJK unified block.
   EXPECT_EQ(2, wcwidth(0x3400)); // Start of CJK extension A block.
@@ -1111,16 +1105,12 @@ TEST(wchar, wcwidth_cjk) {
 }
 
 TEST(wchar, wcwidth_korean_combining_jamo) {
-  if (!have_dl()) return;
-
   AssertWcwidthRange(0x1160, 0x1200, 0); // Original range.
   EXPECT_EQ(0, wcwidth(0xd7b0)); // Newer.
   EXPECT_EQ(0, wcwidth(0xd7cb));
 }
 
 TEST(wchar, wcwidth_korean_jeongeul_syllables) {
-  if (!have_dl()) return;
-
   EXPECT_EQ(2, wcwidth(0xac00)); // Start of block.
   EXPECT_EQ(2, wcwidth(0xd7a3)); // End of defined code points as of Unicode 15.
 
@@ -1129,8 +1119,6 @@ TEST(wchar, wcwidth_korean_jeongeul_syllables) {
 }
 
 TEST(wchar, wcwidth_kana) {
-  if (!have_dl()) return;
-
   // Hiragana (most, not undefined).
   AssertWcwidthRange(0x3041, 0x3097, 2);
   // Katakana.
@@ -1138,30 +1126,22 @@ TEST(wchar, wcwidth_kana) {
 }
 
 TEST(wchar, wcwidth_circled_two_digit_cjk) {
-  if (!have_dl()) return;
-
   // Circled two-digit CJK "speed sign" numbers are wide,
   // though EastAsianWidth is ambiguous.
   AssertWcwidthRange(0x3248, 0x3250, 2);
 }
 
 TEST(wchar, wcwidth_hexagrams) {
-  if (!have_dl()) return;
-
   // Hexagrams are wide, though EastAsianWidth is neutral.
   AssertWcwidthRange(0x4dc0, 0x4e00, 2);
 }
 
 TEST(wchar, wcwidth_default_ignorables) {
-  if (!have_dl()) return;
-
   AssertWcwidthRange(0xfff0, 0xfff8, 0); // Unassigned by default ignorable.
   EXPECT_EQ(0, wcwidth(0xe0000)); // ...through 0xe0fff.
 }
 
 TEST(wchar, wcwidth_hangeul_compatibility_jamo) {
-  if (!have_dl()) return;
-
   // These are actually the *compatibility* jamo code points, *not* the regular
   // jamo code points (U+1100-U+11FF) using a jungseong filler. If you use the
   // Android IME to type any of these, you get these code points.
