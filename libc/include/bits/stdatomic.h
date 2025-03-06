@@ -53,36 +53,16 @@
  * 7.17.1 Atomic lock-free macros.
  */
 
-#ifdef __GCC_ATOMIC_BOOL_LOCK_FREE
-#define	ATOMIC_BOOL_LOCK_FREE		__GCC_ATOMIC_BOOL_LOCK_FREE
-#endif
-#ifdef __GCC_ATOMIC_CHAR_LOCK_FREE
-#define	ATOMIC_CHAR_LOCK_FREE		__GCC_ATOMIC_CHAR_LOCK_FREE
-#endif
-#ifdef __GCC_ATOMIC_CHAR16_T_LOCK_FREE
-#define	ATOMIC_CHAR16_T_LOCK_FREE	__GCC_ATOMIC_CHAR16_T_LOCK_FREE
-#endif
-#ifdef __GCC_ATOMIC_CHAR32_T_LOCK_FREE
-#define	ATOMIC_CHAR32_T_LOCK_FREE	__GCC_ATOMIC_CHAR32_T_LOCK_FREE
-#endif
-#ifdef __GCC_ATOMIC_WCHAR_T_LOCK_FREE
-#define	ATOMIC_WCHAR_T_LOCK_FREE	__GCC_ATOMIC_WCHAR_T_LOCK_FREE
-#endif
-#ifdef __GCC_ATOMIC_SHORT_LOCK_FREE
-#define	ATOMIC_SHORT_LOCK_FREE		__GCC_ATOMIC_SHORT_LOCK_FREE
-#endif
-#ifdef __GCC_ATOMIC_INT_LOCK_FREE
-#define	ATOMIC_INT_LOCK_FREE		__GCC_ATOMIC_INT_LOCK_FREE
-#endif
-#ifdef __GCC_ATOMIC_LONG_LOCK_FREE
-#define	ATOMIC_LONG_LOCK_FREE		__GCC_ATOMIC_LONG_LOCK_FREE
-#endif
-#ifdef __GCC_ATOMIC_LLONG_LOCK_FREE
-#define	ATOMIC_LLONG_LOCK_FREE		__GCC_ATOMIC_LLONG_LOCK_FREE
-#endif
-#ifdef __GCC_ATOMIC_POINTER_LOCK_FREE
-#define	ATOMIC_POINTER_LOCK_FREE	__GCC_ATOMIC_POINTER_LOCK_FREE
-#endif
+#define	ATOMIC_BOOL_LOCK_FREE			__CLANG_ATOMIC_BOOL_LOCK_FREE
+#define	ATOMIC_CHAR_LOCK_FREE			__CLANG_ATOMIC_CHAR_LOCK_FREE
+#define	ATOMIC_CHAR16_T_LOCK_FREE	__CLANG_ATOMIC_CHAR16_T_LOCK_FREE
+#define	ATOMIC_CHAR32_T_LOCK_FREE	__CLANG_ATOMIC_CHAR32_T_LOCK_FREE
+#define	ATOMIC_WCHAR_T_LOCK_FREE	__CLANG_ATOMIC_WCHAR_T_LOCK_FREE
+#define	ATOMIC_SHORT_LOCK_FREE		__CLANG_ATOMIC_SHORT_LOCK_FREE
+#define	ATOMIC_INT_LOCK_FREE			__CLANG_ATOMIC_INT_LOCK_FREE
+#define	ATOMIC_LONG_LOCK_FREE			__CLANG_ATOMIC_LONG_LOCK_FREE
+#define	ATOMIC_LLONG_LOCK_FREE		__CLANG_ATOMIC_LLONG_LOCK_FREE
+#define	ATOMIC_POINTER_LOCK_FREE	__CLANG_ATOMIC_POINTER_LOCK_FREE
 
 /*
  * 7.17.2 Initialization.
@@ -90,31 +70,6 @@
 
 #define	ATOMIC_VAR_INIT(value)		(value)
 #define	atomic_init(obj, value)		__c11_atomic_init(obj, value)
-
-/*
- * Clang and recent GCC both provide predefined macros for the memory
- * orderings.  If we are using a compiler that doesn't define them, use the
- * clang values - these will be ignored in the fallback path.
- */
-
-#ifndef __ATOMIC_RELAXED
-#define __ATOMIC_RELAXED		0
-#endif
-#ifndef __ATOMIC_CONSUME
-#define __ATOMIC_CONSUME		1
-#endif
-#ifndef __ATOMIC_ACQUIRE
-#define __ATOMIC_ACQUIRE		2
-#endif
-#ifndef __ATOMIC_RELEASE
-#define __ATOMIC_RELEASE		3
-#endif
-#ifndef __ATOMIC_ACQ_REL
-#define __ATOMIC_ACQ_REL		4
-#endif
-#ifndef __ATOMIC_SEQ_CST
-#define __ATOMIC_SEQ_CST		5
-#endif
 
 /*
  * 7.17.3 Order and consistency.
@@ -269,7 +224,7 @@ typedef struct {
 	atomic_bool	__flag;
 } atomic_flag;
 
-#define	ATOMIC_FLAG_INIT		{ ATOMIC_VAR_INIT(false) }
+#define	ATOMIC_FLAG_INIT {false}
 
 static __inline bool atomic_flag_test_and_set_explicit(volatile atomic_flag * _Nonnull __object, memory_order __order) {
 	return (atomic_exchange_explicit(&__object->__flag, 1, __order));
