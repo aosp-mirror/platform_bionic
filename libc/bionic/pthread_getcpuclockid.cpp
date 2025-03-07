@@ -39,9 +39,9 @@ int pthread_getcpuclockid(pthread_t t, clockid_t* clockid) {
   // The tid is stored in the top bits, but negated.
   clockid_t result = ~static_cast<clockid_t>(tid) << 3;
   // Bits 0 and 1: clock type (0 = CPUCLOCK_PROF, 1 = CPUCLOCK_VIRT, 2 = CPUCLOCK_SCHED).
-  result |= 2;
+  result |= 2 /* CPUCLOCK_SCHED */;
   // Bit 2: thread (set) or process (clear)?
-  result |= (1 << 2);
+  result |= 4 /* CPUCLOCK_PERTHREAD_MASK */;
 
   *clockid = result;
   return 0;
