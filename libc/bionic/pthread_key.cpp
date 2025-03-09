@@ -83,11 +83,18 @@ __LIBC_HIDDEN__ void pthread_key_clean_all() {
     size_t called_destructor_count = 0;
     for (size_t i = 0; i < BIONIC_PTHREAD_KEY_COUNT; ++i) {
       uintptr_t seq = atomic_load_explicit(&key_map[i].seq, memory_order_relaxed);
-      if (SeqOfKeyInUse(seq) && seq == key_data[i].seq && key_data[i].data != nullptr) {
-        // Other threads may be calling pthread_key_delete/pthread_key_create while current thread
-        // is exiting. So we need to ensure we read the right key_destructor.
+      if (SeqOfKeyInUse(seq) && seq == key_data[i].seq) {
+        // POSIX explicitly says that the destructor is only called if the
+        // thread has a non-null value for the key.
+        if (key_data[i].data == nullptr) {
+          continue;
+        }
+
+        // Other threads can call pthread_key_delete()/pthread_key_create()
+        // while this thread is exiting, so we need to ensure we read the right
+        // key_destructor.
         // We can rely on a user-established happens-before relationship between the creation and
-        // use of pthread key to ensure that we're not getting an earlier key_destructor.
+        // use of a pthread key to ensure that we're not getting an earlier key_destructor.
         // To avoid using the key_destructor of the newly created key in the same slot, we need to
         // recheck the sequence number after reading key_destructor. As a result, we either see the
         // right key_destructor, or the sequence number must have changed when we reread it below.
@@ -107,7 +114,6 @@ __LIBC_HIDDEN__ void pthread_key_clean_all() {
         // function is responsible for manually releasing the corresponding data.
         void* data = key_data[i].data;
         key_data[i].data = nullptr;
-
         (*key_destructor)(data);
         ++called_destructor_count;
       }
@@ -163,13 +169,13 @@ void* pthread_getspecific(pthread_key_t key) {
   key &= ~KEY_VALID_FLAG;
   uintptr_t seq = atomic_load_explicit(&key_map[key].seq, memory_order_relaxed);
   pthread_key_data_t* data = &get_thread_key_data()[key];
-  // It is user's responsibility to synchornize between the creation and use of pthread keys,
+  // It is the user's responsibility to synchronize between the creation and use of pthread keys,
   // so we use memory_order_relaxed when checking the sequence number.
   if (__predict_true(SeqOfKeyInUse(seq) && data->seq == seq)) {
     return data->data;
   }
-  // We arrive here when current thread holds the seq of an deleted pthread key. So the
-  // data is for the deleted pthread key, and should be cleared.
+  // We arrive here when the current thread holds the seq of a deleted pthread key.
+  // The data is for the deleted pthread key, and should be cleared.
   data->data = nullptr;
   return nullptr;
 }

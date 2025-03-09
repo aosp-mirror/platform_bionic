@@ -65,12 +65,6 @@
 #define KNOWN_FAILURE_ON_BIONIC(x) x
 #endif
 
-// bionic's dlsym doesn't work in static binaries, so we can't access icu,
-// so any unicode test case will fail.
-static inline bool have_dl() {
-  return (dlopen("libc.so", 0) != nullptr);
-}
-
 static inline bool running_with_native_bridge() {
 #if defined(__BIONIC__)
   static const prop_info* pi = __system_property_find("ro.dalvik.vm.isa." ABI_STRING);

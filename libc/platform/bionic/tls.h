@@ -28,16 +28,78 @@
 
 #pragma once
 
+#include <sys/cdefs.h>
+
 #if defined(__aarch64__)
-# define __get_tls() ({ void** __val; __asm__("mrs %0, tpidr_el0" : "=r"(__val)); __val; })
+
+static inline void** __get_tls() {
+  void** result;
+  __asm__("mrs %0, tpidr_el0" : "=r"(result));
+  return result;
+}
+
+static inline void __set_tls(void* tls) {
+  __asm__("msr tpidr_el0, %0" : : "r" (tls));
+}
+
 #elif defined(__arm__)
-# define __get_tls() ({ void** __val; __asm__("mrc p15, 0, %0, c13, c0, 3" : "=r"(__val)); __val; })
+
+static inline void** __get_tls() {
+  void** result;
+  __asm__("mrc p15, 0, %0, c13, c0, 3" : "=r"(result));
+  return result;
+}
+
+// arm32 requires a syscall to set the thread pointer.
+// By historical accident it's public API, but not in any header except this one.
+__BEGIN_DECLS
+int __set_tls(void* tls);
+__END_DECLS
+
 #elif defined(__i386__)
-# define __get_tls() ({ void** __val; __asm__("movl %%gs:0, %0" : "=r"(__val)); __val; })
+
+static inline void** __get_tls() {
+  void** result;
+  __asm__("movl %%gs:0, %0" : "=r"(result));
+  return result;
+}
+
+// x86 is really hairy, so we keep that out of line.
+__BEGIN_DECLS
+int __set_tls(void* tls);
+__END_DECLS
+
 #elif defined(__riscv)
-# define __get_tls() ({ void** __val; __asm__("mv %0, tp" : "=r"(__val)); __val; })
+
+static inline void** __get_tls() {
+  void** result;
+  __asm__("mv %0, tp" : "=r"(result));
+  return result;
+}
+
+static inline void __set_tls(void* tls) {
+  __asm__("mv tp, %0" : : "r"(tls));
+}
+
 #elif defined(__x86_64__)
-# define __get_tls() ({ void** __val; __asm__("mov %%fs:0, %0" : "=r"(__val)); __val; })
+
+static inline void** __get_tls() {
+  void** result;
+  __asm__("mov %%fs:0, %0" : "=r"(result));
+  return result;
+}
+
+// ARCH_SET_FS is not exposed via <sys/prctl.h> or <linux/prctl.h>.
+#include <asm/prctl.h>
+// This syscall stub is generated but it's not declared in any header.
+__BEGIN_DECLS
+int arch_prctl(int, unsigned long);
+__END_DECLS
+
+static inline int __set_tls(void* tls) {
+  return arch_prctl(ARCH_SET_FS, reinterpret_cast<unsigned long>(tls));
+}
+
 #else
 #error unsupported architecture
 #endif
