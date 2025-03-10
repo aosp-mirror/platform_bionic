@@ -216,8 +216,10 @@ typedef _Atomic(uintmax_t)		atomic_uintmax_t;
 /*
  * 7.17.8 Atomic flag type and operations.
  *
- * XXX: Assume atomic_bool can be used as an atomic_flag. Is there some
- * kind of compiler built-in type we could use?
+ * atomic_bool can be used to provide a lock-free atomic flag type on every
+ * Android architecture, so this shouldn't be needed in new Android code,
+ * but is in ISO C, and available for portability to PA-RISC and
+ * microcontrollers.
  */
 
 typedef struct {
