@@ -61,6 +61,20 @@ void* _Nonnull memmove(void* _Nonnull const dst __pass_object_size0, const void*
 }
 #endif
 
+/* TODO: remove __clang_warning_if when https://issuetracker.google.com/400937647 is fixed. */
+__BIONIC_FORTIFY_INLINE
+void* _Nonnull memset(void* _Nonnull const s __pass_object_size0, int c, size_t n)
+        __diagnose_as_builtin(__builtin_memset, 1, 2, 3)
+        __overloadable
+        /* If you're a user who wants this warning to go away: use `(&memset)(foo, bar, baz)`. */
+        __clang_warning_if(c && !n, "'memset' will set 0 bytes; maybe the arguments got flipped?") {
+#if __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
+    return __builtin___memset_chk(s, c, n, __bos0(s));
+#else
+    return __builtin_memset(s, c, n);
+#endif
+}
+
 #if defined(__USE_GNU)
 #if __ANDROID_API__ >= 30
 __BIONIC_FORTIFY_INLINE
@@ -126,19 +140,6 @@ char* _Nonnull strncat(char* _Nonnull const dst __pass_object_size, const char* 
     return __builtin___strncat_chk(dst, src, n, __bos(dst));
 }
 #endif
-
-/* No diag -- clang diagnoses misuses of this on its own.  */
-__BIONIC_FORTIFY_INLINE
-void* _Nonnull memset(void* _Nonnull const s __pass_object_size0, int c, size_t n) __overloadable
-        __diagnose_as_builtin(__builtin_memset, 1, 2, 3)
-        /* If you're a user who wants this warning to go away: use `(&memset)(foo, bar, baz)`. */
-        __clang_warning_if(c && !n, "'memset' will set 0 bytes; maybe the arguments got flipped?") {
-#if __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
-    return __builtin___memset_chk(s, c, n, __bos0(s));
-#else
-    return __builtin_memset(s, c, n);
-#endif
-}
 
 #if __ANDROID_API__ >= 23 && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
 __BIONIC_FORTIFY_INLINE
