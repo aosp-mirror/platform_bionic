@@ -59,6 +59,39 @@ TEST(pthread, pthread_key_create) {
   ASSERT_EQ(EINVAL, pthread_key_delete(key));
 }
 
+static std::vector<void*> example_key_destructor_data;
+static pthread_key_t example_key;
+static void example_key_destructor(void *data) {
+  // By the time the destructor function is running,
+  // this thread's value for the key should have been zeroed.
+  ASSERT_EQ(NULL, pthread_getspecific(example_key));
+
+  // Store the value so we can check we got the expected result.
+  example_key_destructor_data.push_back(data);
+}
+
+TEST(pthread, pthread_key_destructors) {
+  ASSERT_EQ(0, pthread_key_create(&example_key, example_key_destructor));
+
+  // Check that the destructor isn't called for a default null value.
+  std::thread([]() {}).join();
+  ASSERT_TRUE(example_key_destructor_data.empty());
+
+  // Check that the destructor isn't called for an explicit null value.
+  std::thread([]() {
+    ASSERT_EQ(0, pthread_setspecific(example_key, (void*) 1234));
+    ASSERT_EQ(0, pthread_setspecific(example_key, nullptr));
+  }).join();
+  ASSERT_TRUE(example_key_destructor_data.empty());
+
+  // Check that the destructor is called for a non-null value.
+  std::thread([]() { ASSERT_EQ(0, pthread_setspecific(example_key, (void*) 1234)); }).join();
+  ASSERT_EQ(1u, example_key_destructor_data.size());
+  ASSERT_EQ((void*) 1234, example_key_destructor_data[0]);
+
+  ASSERT_EQ(0, pthread_key_delete(example_key));
+}
+
 TEST(pthread, pthread_keys_max) {
   // POSIX says PTHREAD_KEYS_MAX should be at least _POSIX_THREAD_KEYS_MAX.
   ASSERT_GE(PTHREAD_KEYS_MAX, _POSIX_THREAD_KEYS_MAX);

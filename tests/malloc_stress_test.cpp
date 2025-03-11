@@ -57,7 +57,7 @@ static void PrintLogStats(uint64_t& last_time) {
       }
       // EAGAIN means there is nothing left to read when ANDROID_LOG_NONBLOCK is set.
       if (retval != -EAGAIN) {
-        printf("Failed to read log entry: %s\n", strerrordesc_np(retval));
+        printf("Failed to read log entry: %m");
       }
       break;
     }

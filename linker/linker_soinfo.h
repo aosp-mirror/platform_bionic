@@ -154,31 +154,27 @@ struct soinfo_tls {
   size_t module_id = kTlsUninitializedModuleId;
 };
 
-#if defined(__work_around_b_24465209__)
-#define SOINFO_NAME_LEN 128
-#endif
-
 struct soinfo {
-#if defined(__work_around_b_24465209__)
+#if !defined(__LP64__)
  private:
-  char old_name_[SOINFO_NAME_LEN];
+  char old_name_[128];
 #endif
  public:
   const ElfW(Phdr)* phdr;
   size_t phnum;
-#if defined(__work_around_b_24465209__)
+#if !defined(__LP64__)
   ElfW(Addr) unused0; // DO NOT USE, maintained for compatibility.
 #endif
   ElfW(Addr) base;
   size_t size;
 
-#if defined(__work_around_b_24465209__)
+#if !defined(__LP64__)
   uint32_t unused1;  // DO NOT USE, maintained for compatibility.
 #endif
 
   ElfW(Dyn)* dynamic;
 
-#if defined(__work_around_b_24465209__)
+#if !defined(__LP64__)
   uint32_t unused2; // DO NOT USE, maintained for compatibility
   uint32_t unused3; // DO NOT USE, maintained for compatibility
 #endif
@@ -294,19 +290,16 @@ struct soinfo {
   bool can_unload() const;
   bool is_gnu_hash() const;
 
-  bool inline has_min_version(uint32_t min_version __unused) const {
-#if defined(__work_around_b_24465209__)
-    return (flags_ & FLAG_NEW_SOINFO) != 0 && version_ >= min_version;
-#else
-    // If you make this return non-true in the case where
-    // __work_around_b_24465209__ is not defined, you will have to change
-    // memtag_dynamic_entries() and vma_names().
+  inline bool is_lp64_or_has_min_version(uint32_t min_version __unused) const {
+#if defined(__LP64__)
     return true;
+#else
+    return (flags_ & FLAG_NEW_SOINFO) != 0 && version_ >= min_version;
 #endif
   }
 
   const ElfW(Versym)* get_versym_table() const {
-    return has_min_version(2) ? versym_ : nullptr;
+    return is_lp64_or_has_min_version(2) ? versym_ : nullptr;
   }
 
   bool is_linked() const;
@@ -343,7 +336,7 @@ struct soinfo {
   android_namespace_list_t& get_secondary_namespaces();
 
   soinfo_tls* get_tls() const {
-    return has_min_version(5) ? tls_.get() : nullptr;
+    return is_lp64_or_has_min_version(5) ? tls_.get() : nullptr;
   }
 
   void set_mapped_by_caller(bool reserved_map);
@@ -362,13 +355,11 @@ struct soinfo {
   size_t get_gap_size() const;
 
   const memtag_dynamic_entries_t* memtag_dynamic_entries() const {
-#ifdef __aarch64__
-#ifdef __work_around_b_24465209__
-#error "Assuming aarch64 does not use versioned soinfo."
-#endif
+#if defined(__aarch64__)
     return &memtag_dynamic_entries_;
-#endif
+#else
     return nullptr;
+#endif
   }
   void* memtag_globals() const {
     const memtag_dynamic_entries_t* entries = memtag_dynamic_entries();
@@ -403,13 +394,11 @@ struct soinfo {
     return !is_linker() && memtag_globals() && memtag_globalssz() > 0 && __libc_mte_enabled();
   }
   std::list<std::string>* vma_names() {
-#ifdef __aarch64__
-#ifdef __work_around_b_24465209__
-#error "Assuming aarch64 does not use versioned soinfo."
-#endif
+#if defined(__aarch64__)
     return &vma_names_;
-#endif
+#else
     return nullptr;
+#endif
 };
 
   void set_should_use_16kib_app_compat(bool should_use_16kib_app_compat) {

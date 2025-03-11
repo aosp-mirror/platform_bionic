@@ -42,7 +42,6 @@ size_t __strlcpy_chk(char* _Nonnull, const char* _Nonnull, size_t, size_t);
 size_t __strlcat_chk(char* _Nonnull, const char* _Nonnull, size_t, size_t);
 
 #if defined(__BIONIC_FORTIFY)
-void* _Nullable __memrchr_real(const void* _Nonnull, int, size_t) __RENAME(memrchr);
 
 #if __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
 /* No diag -- clang diagnoses misuses of this on its own.  */
@@ -61,6 +60,20 @@ void* _Nonnull memmove(void* _Nonnull const dst __pass_object_size0, const void*
     return __builtin___memmove_chk(dst, src, len, __bos0(dst));
 }
 #endif
+
+/* TODO: remove __clang_warning_if when https://issuetracker.google.com/400937647 is fixed. */
+__BIONIC_FORTIFY_INLINE
+void* _Nonnull memset(void* _Nonnull const s __pass_object_size0, int c, size_t n)
+        __diagnose_as_builtin(__builtin_memset, 1, 2, 3)
+        __overloadable
+        /* If you're a user who wants this warning to go away: use `(&memset)(foo, bar, baz)`. */
+        __clang_warning_if(c && !n, "'memset' will set 0 bytes; maybe the arguments got flipped?") {
+#if __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
+    return __builtin___memset_chk(s, c, n, __bos0(s));
+#else
+    return __builtin_memset(s, c, n);
+#endif
+}
 
 #if defined(__USE_GNU)
 #if __ANDROID_API__ >= 30
@@ -128,19 +141,6 @@ char* _Nonnull strncat(char* _Nonnull const dst __pass_object_size, const char* 
 }
 #endif
 
-/* No diag -- clang diagnoses misuses of this on its own.  */
-__BIONIC_FORTIFY_INLINE
-void* _Nonnull memset(void* _Nonnull const s __pass_object_size0, int c, size_t n) __overloadable
-        __diagnose_as_builtin(__builtin_memset, 1, 2, 3)
-        /* If you're a user who wants this warning to go away: use `(&memset)(foo, bar, baz)`. */
-        __clang_warning_if(c && !n, "'memset' will set 0 bytes; maybe the arguments got flipped?") {
-#if __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
-    return __builtin___memset_chk(s, c, n, __bos0(s));
-#else
-    return __builtin_memset(s, c, n);
-#endif
-}
-
 #if __ANDROID_API__ >= 23 && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
 __BIONIC_FORTIFY_INLINE
 void* _Nullable memchr(const void* _Nonnull const s __pass_object_size, int c, size_t n) __overloadable {
@@ -152,6 +152,8 @@ void* _Nullable memchr(const void* _Nonnull const s __pass_object_size, int c, s
 
     return __memchr_chk(s, c, n, bos);
 }
+
+void* _Nullable __memrchr_real(const void* _Nonnull, int, size_t) __RENAME(memrchr);
 
 __BIONIC_FORTIFY_INLINE
 void* _Nullable __memrchr_fortify(const void* _Nonnull const __pass_object_size s, int c, size_t n) __overloadable {

@@ -37,20 +37,14 @@ static void TestIsWideFn(int fn(wint_t),
   for (const wchar_t* p = trues; *p; ++p) {
     const wchar_t val_ch = *p;
     const int val_int = static_cast<int>(val_ch);
-    if (!have_dl() && val_ch > 0x7f) {
-      GTEST_LOG_(INFO) << "skipping unicode test " << val_int;
-      continue;
-    }
+
     EXPECT_TRUE(fn(val_ch)) << val_int;
     EXPECT_TRUE(fn_l(val_ch, l.l)) << val_int;
   }
   for (const wchar_t* p = falses; *p; ++p) {
     const wchar_t val_ch = *p;
     const int val_int = static_cast<int>(val_ch);
-    if (!have_dl() && val_ch > 0x7f) {
-      GTEST_LOG_(INFO) << "skipping unicode test " << val_int;
-      continue;
-    }
+
     EXPECT_FALSE(fn(val_ch)) << val_int;
     EXPECT_FALSE(fn_l(val_ch, l.l)) << val_int;
   }
@@ -111,14 +105,10 @@ TEST(wctype, towlower) {
   EXPECT_EQ(wint_t('a'), towlower(L'A'));
   EXPECT_EQ(wint_t('z'), towlower(L'z'));
   EXPECT_EQ(wint_t('z'), towlower(L'Z'));
-  if (have_dl()) {
-    EXPECT_EQ(wint_t(L'ç'), towlower(L'ç'));
-    EXPECT_EQ(wint_t(L'ç'), towlower(L'Ç'));
-    EXPECT_EQ(wint_t(L'δ'), towlower(L'δ'));
-    EXPECT_EQ(wint_t(L'δ'), towlower(L'Δ'));
-  } else {
-    GTEST_SKIP() << "icu not available";
-  }
+  EXPECT_EQ(wint_t(L'ç'), towlower(L'ç'));
+  EXPECT_EQ(wint_t(L'ç'), towlower(L'Ç'));
+  EXPECT_EQ(wint_t(L'δ'), towlower(L'δ'));
+  EXPECT_EQ(wint_t(L'δ'), towlower(L'Δ'));
 }
 
 TEST(wctype, towlower_l) {
@@ -129,14 +119,10 @@ TEST(wctype, towlower_l) {
   EXPECT_EQ(wint_t('a'), towlower_l(L'A', l.l));
   EXPECT_EQ(wint_t('z'), towlower_l(L'z', l.l));
   EXPECT_EQ(wint_t('z'), towlower_l(L'Z', l.l));
-  if (have_dl()) {
-    EXPECT_EQ(wint_t(L'ç'), towlower_l(L'ç', l.l));
-    EXPECT_EQ(wint_t(L'ç'), towlower_l(L'Ç', l.l));
-    EXPECT_EQ(wint_t(L'δ'), towlower_l(L'δ', l.l));
-    EXPECT_EQ(wint_t(L'δ'), towlower_l(L'Δ', l.l));
-  } else {
-    GTEST_SKIP() << "icu not available";
-  }
+  EXPECT_EQ(wint_t(L'ç'), towlower_l(L'ç', l.l));
+  EXPECT_EQ(wint_t(L'ç'), towlower_l(L'Ç', l.l));
+  EXPECT_EQ(wint_t(L'δ'), towlower_l(L'δ', l.l));
+  EXPECT_EQ(wint_t(L'δ'), towlower_l(L'Δ', l.l));
 }
 
 TEST(wctype, towupper) {
@@ -146,14 +132,10 @@ TEST(wctype, towupper) {
   EXPECT_EQ(wint_t('A'), towupper(L'A'));
   EXPECT_EQ(wint_t('Z'), towupper(L'z'));
   EXPECT_EQ(wint_t('Z'), towupper(L'Z'));
-  if (have_dl()) {
-    EXPECT_EQ(wint_t(L'Ç'), towupper(L'ç'));
-    EXPECT_EQ(wint_t(L'Ç'), towupper(L'Ç'));
-    EXPECT_EQ(wint_t(L'Δ'), towupper(L'δ'));
-    EXPECT_EQ(wint_t(L'Δ'), towupper(L'Δ'));
-  } else {
-    GTEST_SKIP() << "icu not available";
-  }
+  EXPECT_EQ(wint_t(L'Ç'), towupper(L'ç'));
+  EXPECT_EQ(wint_t(L'Ç'), towupper(L'Ç'));
+  EXPECT_EQ(wint_t(L'Δ'), towupper(L'δ'));
+  EXPECT_EQ(wint_t(L'Δ'), towupper(L'Δ'));
 }
 
 TEST(wctype, towupper_l) {
@@ -164,14 +146,10 @@ TEST(wctype, towupper_l) {
   EXPECT_EQ(wint_t('A'), towupper_l(L'A', l.l));
   EXPECT_EQ(wint_t('Z'), towupper_l(L'z', l.l));
   EXPECT_EQ(wint_t('Z'), towupper_l(L'Z', l.l));
-  if (have_dl()) {
-    EXPECT_EQ(wint_t(L'Ç'), towupper_l(L'ç', l.l));
-    EXPECT_EQ(wint_t(L'Ç'), towupper_l(L'Ç', l.l));
-    EXPECT_EQ(wint_t(L'Δ'), towupper_l(L'δ', l.l));
-    EXPECT_EQ(wint_t(L'Δ'), towupper_l(L'Δ', l.l));
-  } else {
-    GTEST_SKIP() << "icu not available";
-  }
+  EXPECT_EQ(wint_t(L'Ç'), towupper_l(L'ç', l.l));
+  EXPECT_EQ(wint_t(L'Ç'), towupper_l(L'Ç', l.l));
+  EXPECT_EQ(wint_t(L'Δ'), towupper_l(L'δ', l.l));
+  EXPECT_EQ(wint_t(L'Δ'), towupper_l(L'Δ', l.l));
 }
 
 TEST(wctype, wctype) {
