@@ -39,8 +39,13 @@
  * @file android/api-level.h
  * @brief Functions for dealing with multiple API levels.
  *
- * See
- * https://android.googlesource.com/platform/bionic/+/main/docs/defines.md.
+ * See also
+ * https://developer.android.com/ndk/guides/using-newer-apis
+ * for more tutorial information on dealing with multiple API levels.
+ *
+ * See also
+ * https://android.googlesource.com/platform/bionic/+/main/docs/defines.md
+ * for when to use which `#define` when writing portable code.
  */
 
 #include <sys/cdefs.h>
@@ -171,7 +176,6 @@ __BEGIN_DECLS
  *
  * Available since API level 24.
  */
-
 #if __BIONIC_AVAILABILITY_GUARD(24)
 int android_get_application_target_sdk_version() __INTRODUCED_IN(24);
 #endif /* __BIONIC_AVAILABILITY_GUARD(24) */
@@ -192,6 +196,8 @@ int android_get_application_target_sdk_version() __INTRODUCED_IN(24);
  * and is equivalent to the Java `Build.VERSION.SDK_INT` API.
  *
  * See also android_get_application_target_sdk_version().
+ *
+ * Available since API level 29.
  */
 int android_get_device_api_level() __INTRODUCED_IN(29);
 

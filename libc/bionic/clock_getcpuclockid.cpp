@@ -34,11 +34,12 @@
 int clock_getcpuclockid(pid_t pid, clockid_t* clockid) {
   ErrnoRestorer errno_restorer;
 
-  // The tid is stored in the top bits, but negated.
+  // The pid is stored in the top bits, but negated.
   clockid_t result = ~static_cast<clockid_t>(pid) << 3;
   // Bits 0 and 1: clock type (0 = CPUCLOCK_PROF, 1 = CPUCLOCK_VIRT, 2 = CPUCLOCK_SCHED).
-  result |= 2;
-  // Bit 2: thread (set) or process (clear). Bit 2 already 0.
+  result |= 2 /* CPUCLOCK_SCHED */;
+  // Bit 2: thread (set) or process (clear).
+  result &= ~4 /* CPUCLOCK_PERTHREAD_MASK */;
 
   if (clock_getres(result, nullptr) == -1) {
     return ESRCH;

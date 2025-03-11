@@ -19,6 +19,7 @@
 #include <gtest/gtest.h>
 
 #if defined(__BIONIC__)
+#include <android-base/test_utils.h>
 #include "gtest_globals.h"
 #include "platform/bionic/mte.h"
 #include "utils.h"
@@ -32,6 +33,9 @@ TEST_P(MemtagStackTest, test) {
     GTEST_SKIP() << "MTE unsupported";
   }
   bool is_static = std::get<1>(GetParam());
+  if (running_with_hwasan() && !is_static) {
+    GTEST_SKIP() << "Can't run with HWASanified libc.so";
+  }
   std::string helper =
       GetTestLibRoot() + (is_static ? "/stack_tagging_static_helper" : "/stack_tagging_helper");
   const char* arg = std::get<0>(GetParam());
