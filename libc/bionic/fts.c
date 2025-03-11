@@ -892,7 +892,9 @@ fts_sort(FTS *sp, FTSENT *head, int nitems)
 	}
 	for (ap = sp->fts_array, p = head; p; p = p->fts_link)
 		*ap++ = p;
-	qsort(sp->fts_array, nitems, sizeof(FTSENT *), sp->fts_compar);
+	// The cast here is to cast away the nullability.
+	// fts_compar is nullable, but we only enter this function if it's non-null.
+	qsort(sp->fts_array, nitems, sizeof(FTSENT *), (int (*)(const void*, const void*)) sp->fts_compar);
 	for (head = *(ap = sp->fts_array); --nitems; ++ap)
 		ap[0]->fts_link = ap[1];
 	ap[0]->fts_link = NULL;

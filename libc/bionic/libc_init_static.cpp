@@ -28,34 +28,25 @@
 
 #include <android/api-level.h>
 #include <elf.h>
-#include <errno.h>
 #include <malloc.h>
 #include <signal.h>
 #include <stddef.h>
-#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/auxv.h>
 #include <sys/mman.h>
 
 #include "async_safe/log.h"
-#include "heap_tagging.h"
 #include "libc_init_common.h"
 #include "platform/bionic/macros.h"
-#include "platform/bionic/mte.h"
 #include "platform/bionic/page.h"
 #include "platform/bionic/reserved_signals.h"
 #include "private/KernelArgumentBlock.h"
-#include "private/bionic_asm.h"
-#include "private/bionic_asm_note.h"
 #include "private/bionic_call_ifunc_resolver.h"
 #include "private/bionic_elf_tls.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_tls.h"
-#include "private/elf_note.h"
 #include "pthread_internal.h"
-#include "sys/system_properties.h"
-#include "sysprop_helpers.h"
 
 #if __has_feature(hwaddress_sanitizer)
 #include <sanitizer/hwasan_interface.h>
@@ -69,7 +60,6 @@ __LIBC_HIDDEN__ void* __libc_sysinfo;
 #endif
 
 extern "C" int __cxa_atexit(void (*)(void *), void *, void *);
-extern "C" const char* __gnu_basename(const char* path);
 
 static void call_array(init_func_t** list, size_t count, int argc, char* argv[], char* envp[]) {
   while (count-- > 0) {
@@ -157,6 +147,7 @@ static void layout_static_tls(KernelArgumentBlock& args) {
 
   layout.finish_layout();
 }
+
 void __libc_init_profiling_handlers() {
   // The dynamic variant of this function is more interesting, but this
   // at least ensures that static binaries aren't killed by the kernel's
@@ -167,7 +158,7 @@ void __libc_init_profiling_handlers() {
 }
 
 __attribute__((no_sanitize("memtag"))) __noreturn static void __real_libc_init(
-    KernelArgumentBlock& args, void* raw_args, void (*onexit)(void) __unused,
+    KernelArgumentBlock& args, void* raw_args __unused, void (*onexit)(void) __unused,
     int (*slingshot)(int, char**, char**), structors_array_t const* const structors,
     bionic_tcb* temp_tcb) {
   BIONIC_STOP_UNWIND;
@@ -180,11 +171,14 @@ __attribute__((no_sanitize("memtag"))) __noreturn static void __real_libc_init(
   layout_static_tls(args);
   __libc_init_main_thread_final();
   __libc_init_common();
+#if !__has_feature(hwaddress_sanitizer)
   __libc_init_mte(/*memtag_dynamic_entries=*/nullptr,
                   reinterpret_cast<ElfW(Phdr)*>(getauxval(AT_PHDR)), getauxval(AT_PHNUM),
                   /*load_bias = */ 0);
   __libc_init_mte_stack(/*stack_top = */ raw_args);
+#endif
   __libc_init_scudo();
+  __libc_globals.mutate(__libc_init_malloc);
   __libc_init_profiling_handlers();
   __libc_init_fork_handler();
 
@@ -204,8 +198,9 @@ __attribute__((no_sanitize("memtag"))) __noreturn static void __real_libc_init(
   if (structors->fini_array_count > 0) {
     __cxa_atexit(call_fini_array, const_cast<structors_array_t*>(structors), nullptr);
   }
-
+#if !__has_feature(hwaddress_sanitizer)
   __libc_init_mte_late();
+#endif
 
   exit(slingshot(args.argc, args.argv, args.envp));
 }

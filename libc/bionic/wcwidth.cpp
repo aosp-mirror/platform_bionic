@@ -28,7 +28,7 @@
 
 #include <wchar.h>
 
-#include "private/icu.h"
+#include "private/icu4x.h"
 
 int wcwidth(wchar_t wc) {
   // Fast-path ASCII.
@@ -44,38 +44,33 @@ int wcwidth(wchar_t wc) {
   // pretty arbitrary. See https://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c for more details.
 
   // Fancy unicode control characters?
-  switch (__icu_charType(wc)) {
-   case -1:
-    // No icu4c available; give up.
-    return -1;
-   case U_CONTROL_CHAR:
-    return -1;
-   case U_NON_SPACING_MARK:
-   case U_ENCLOSING_MARK:
-    return 0;
-   case U_FORMAT_CHAR:
-    // A special case for soft hyphen (U+00AD) to match historical practice.
-    // See the tests for more commentary.
-    return (wc == 0x00ad) ? 1 : 0;
+  switch (__icu4x_bionic_general_category(wc)) {
+    case U_CONTROL_CHAR:
+      return -1;
+    case U_NON_SPACING_MARK:
+    case U_ENCLOSING_MARK:
+      return 0;
+    case U_FORMAT_CHAR:
+      // A special case for soft hyphen (U+00AD) to match historical practice.
+      // See the tests for more commentary.
+      return (wc == 0x00ad) ? 1 : 0;
   }
 
   // Medial and final jamo render as zero width when used correctly,
   // so we handle them specially rather than relying on East Asian Width.
-  switch (__icu_getIntPropertyValue(wc, UCHAR_HANGUL_SYLLABLE_TYPE)) {
-   case U_HST_VOWEL_JAMO:
-   case U_HST_TRAILING_JAMO:
-    return 0;
-   case U_HST_LEADING_JAMO:
-   case U_HST_LV_SYLLABLE:
-   case U_HST_LVT_SYLLABLE:
-    return 2;
+  switch (__icu4x_bionic_hangul_syllable_type(wc)) {
+    case U_HST_VOWEL_JAMO:
+    case U_HST_TRAILING_JAMO:
+      return 0;
+    case U_HST_LEADING_JAMO:
+    case U_HST_LV_SYLLABLE:
+    case U_HST_LVT_SYLLABLE:
+      return 2;
   }
 
   // Hangeul choseong filler U+115F is default ignorable, so we check default
   // ignorability only after we've already handled Hangeul jamo above.
-  static auto u_hasBinaryProperty =
-      reinterpret_cast<u_hasBinaryProperty_t>(__find_icu_symbol("u_hasBinaryProperty"));
-  if (u_hasBinaryProperty && u_hasBinaryProperty(wc, UCHAR_DEFAULT_IGNORABLE_CODE_POINT)) return 0;
+  if (__icu4x_bionic_is_default_ignorable_code_point(wc)) return 0;
 
   // A few weird special cases where EastAsianWidth is not helpful for us.
   if (wc >= 0x3248 && wc <= 0x4dff) {
@@ -88,15 +83,15 @@ int wcwidth(wchar_t wc) {
 
   // The EastAsianWidth property is at least defined by the Unicode standard!
   // https://www.unicode.org/reports/tr11/
-  switch (__icu_getIntPropertyValue(wc, UCHAR_EAST_ASIAN_WIDTH)) {
-   case U_EA_AMBIGUOUS:
-   case U_EA_HALFWIDTH:
-   case U_EA_NARROW:
-   case U_EA_NEUTRAL:
-    return 1;
-   case U_EA_FULLWIDTH:
-   case U_EA_WIDE:
-    return 2;
+  switch (__icu4x_bionic_east_asian_width(wc)) {
+    case U_EA_AMBIGUOUS:
+    case U_EA_HALFWIDTH:
+    case U_EA_NARROW:
+    case U_EA_NEUTRAL:
+      return 1;
+    case U_EA_FULLWIDTH:
+    case U_EA_WIDE:
+      return 2;
   }
 
   return 0;

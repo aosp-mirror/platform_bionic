@@ -1779,3 +1779,32 @@ TEST(android_mallopt, get_decay_time_enabled) {
   GTEST_SKIP() << "bionic-only test";
 #endif
 }
+
+TEST(android_mallopt, DISABLED_verify_decay_time_on) {
+#if defined(__BIONIC__)
+  bool value;
+  EXPECT_TRUE(android_mallopt(M_GET_DECAY_TIME_ENABLED, &value, sizeof(value)));
+  EXPECT_TRUE(value) << "decay time did not get enabled properly.";
+#endif
+}
+
+TEST(android_mallopt, decay_time_set_using_env_variable) {
+#if defined(__BIONIC__)
+  SKIP_WITH_HWASAN << "hwasan does not implement mallopt";
+
+  bool value;
+  ASSERT_TRUE(android_mallopt(M_GET_DECAY_TIME_ENABLED, &value, sizeof(value)));
+  ASSERT_FALSE(value) << "decay time did not get disabled properly.";
+
+  // Verify that setting the environment variable here will be carried into
+  // fork'd and exec'd processes.
+  ASSERT_EQ(0, setenv("MALLOC_USE_APP_DEFAULTS", "1", 1));
+  ExecTestHelper eth;
+  eth.SetArgs({testing::internal::GetArgvs()[0].c_str(), "--gtest_also_run_disabled_tests",
+               "--gtest_filter=android_mallopt.DISABLED_verify_decay_time_on", nullptr});
+  eth.Run([&]() { execv(testing::internal::GetArgvs()[0].c_str(), eth.GetArgs()); }, 0,
+          R"(\[  PASSED  \] 1 test)");
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}

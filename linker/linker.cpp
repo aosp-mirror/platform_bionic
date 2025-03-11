@@ -346,7 +346,7 @@ static void soinfo_free(soinfo* si) {
     }
   }
 
-  if (si->has_min_version(6) && si->get_gap_size()) {
+  if (si->is_lp64_or_has_min_version(6) && si->get_gap_size()) {
     munmap(reinterpret_cast<void*>(si->get_gap_start()), si->get_gap_size());
   }
 
@@ -1907,7 +1907,7 @@ static void soinfo_unload_impl(soinfo* root) {
 
     local_unload_list.push_back(si);
 
-    if (si->has_min_version(0)) {
+    if (si->is_lp64_or_has_min_version(0)) {
       soinfo* child = nullptr;
       while ((child = si->get_children().pop_front()) != nullptr) {
         LD_DEBUG(any, "%s@%p needs to unload %s@%p", si->get_realpath(), si,
@@ -2671,7 +2671,7 @@ bool VersionTracker::init_verneed(const soinfo* si_from) {
 
 template <typename F>
 static bool for_each_verdef(const soinfo* si, F functor) {
-  if (!si->has_min_version(2)) {
+  if (!si->is_lp64_or_has_min_version(2)) {
     return true;
   }
 
@@ -2762,7 +2762,7 @@ bool VersionTracker::init_verdef(const soinfo* si_from) {
 }
 
 bool VersionTracker::init(const soinfo* si_from) {
-  if (!si_from->has_min_version(2)) {
+  if (!si_from->is_lp64_or_has_min_version(2)) {
     return true;
   }
 
@@ -3614,14 +3614,7 @@ static std::string get_ld_config_file_path(const char* executable_path) {
   return kLdConfigFilePath;
 }
 
-
-std::vector<android_namespace_t*> init_default_namespaces(const char* executable_path) {
-  g_default_namespace.set_name("(default)");
-
-  soinfo* somain = solist_get_somain();
-
-  const char *interp = phdr_table_get_interpreter_name(somain->phdr, somain->phnum,
-                                                       somain->load_bias);
+void init_sanitizer_mode(const char *interp ) {
   const char* bname = (interp != nullptr) ? basename(interp) : nullptr;
 
   g_is_asan = bname != nullptr &&
@@ -3637,7 +3630,13 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
   g_is_hwasan = (bname != nullptr &&
               strcmp(bname, "linker_hwasan64") == 0) ||
               (hwasan_env != nullptr && !getauxval(AT_SECURE) && strcmp(hwasan_env, "1") == 0);
+  __libc_shared_globals()->is_hwasan = g_is_hwasan;
 #endif
+}
+
+std::vector<android_namespace_t*> init_default_namespaces(const char* executable_path) {
+  g_default_namespace.set_name("(default)");
+
   const Config* config = nullptr;
 
   {

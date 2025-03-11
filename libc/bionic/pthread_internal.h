@@ -240,8 +240,6 @@ static inline void __set_tcb_dtv(bionic_tcb* tcb, TlsDtv* val) {
   tcb->tls_slot(TLS_SLOT_DTV) = &val->generation;
 }
 
-extern "C" __LIBC_HIDDEN__ int __set_tls(void* ptr);
-
 __LIBC_HIDDEN__ void pthread_key_clean_all(void);
 
 // Address space is precious on LP32, so use the minimum unit: one page.
