@@ -366,6 +366,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   }
   solinker->set_realpath(interp);
   init_link_map_head(*solinker);
+  init_sanitizer_mode(interp);
 
 #if defined(__aarch64__)
   __libc_init_mte(somain->memtag_dynamic_entries(), somain->phdr, somain->phnum, somain->load_bias);

@@ -152,6 +152,8 @@ struct libc_shared_globals {
   bool initial_memtag_stack_abi = false;
   int64_t heap_tagging_upgrade_timer_sec = 0;
 
+  bool is_hwasan = false;
+
   void (*memtag_stack_dlopen_callback)() = nullptr;
   pthread_mutex_t crash_detail_page_lock = PTHREAD_MUTEX_INITIALIZER;
   crash_detail_page_t* crash_detail_page = nullptr;
