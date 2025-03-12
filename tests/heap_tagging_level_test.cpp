@@ -105,7 +105,7 @@ class Or {
 
 TEST(heap_tagging_level, sync_async_bad_accesses_die) {
 #if defined(__BIONIC__) && defined(__aarch64__)
-  if (!mte_supported() || !running_with_mte()) {
+  if (!mte_supported() || !mte_enabled()) {
     GTEST_SKIP() << "requires MTE to be enabled";
   }
 
@@ -177,7 +177,7 @@ TEST(heap_tagging_level, tagging_level_transitions) {
     EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYNC));
     EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_SYNC));
     EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_NONE));
-  } else if (mte_supported() && running_with_mte()) {
+  } else if (mte_supported() && mte_enabled()) {
     // ASYNC -> ...
     EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_TBI));
     EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYNC));
@@ -211,7 +211,7 @@ TEST(heap_tagging_level, tagging_level_transition_sync_none) {
 #if defined(__BIONIC__) && defined(__aarch64__)
   // We can't test SYNC -> NONE in tagging_level_transitions because we can only make one transition
   // to NONE (which we use to test ASYNC -> NONE), so we test it here separately.
-  if (!mte_supported() || !running_with_mte()) {
+  if (!mte_supported() || !mte_enabled()) {
     GTEST_SKIP() << "requires MTE to be enabled";
   }
 
