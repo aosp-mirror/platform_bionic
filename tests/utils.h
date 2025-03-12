@@ -289,16 +289,6 @@ class FdLeakChecker {
   size_t start_count_ = CountOpenFds();
 };
 
-static inline bool running_with_mte() {
-#ifdef __aarch64__
-  int level = prctl(PR_GET_TAGGED_ADDR_CTRL, 0, 0, 0, 0);
-  return level >= 0 && (level & PR_TAGGED_ADDR_ENABLE) &&
-         (level & PR_MTE_TCF_MASK) != PR_MTE_TCF_NONE;
-#else
-  return false;
-#endif
-}
-
 bool IsLowRamDevice();
 
 int64_t NanoTime();
