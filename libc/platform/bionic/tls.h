@@ -32,7 +32,7 @@
 
 #if defined(__aarch64__)
 
-static inline void** __get_tls() {
+static inline void** __get_tls(void) {
   void** result;
   __asm__("mrs %0, tpidr_el0" : "=r"(result));
   return result;
@@ -44,7 +44,7 @@ static inline void __set_tls(void* tls) {
 
 #elif defined(__arm__)
 
-static inline void** __get_tls() {
+static inline void** __get_tls(void) {
   void** result;
   __asm__("mrc p15, 0, %0, c13, c0, 3" : "=r"(result));
   return result;
@@ -58,7 +58,7 @@ __END_DECLS
 
 #elif defined(__i386__)
 
-static inline void** __get_tls() {
+static inline void** __get_tls(void) {
   void** result;
   __asm__("movl %%gs:0, %0" : "=r"(result));
   return result;
@@ -71,7 +71,7 @@ __END_DECLS
 
 #elif defined(__riscv)
 
-static inline void** __get_tls() {
+static inline void** __get_tls(void) {
   void** result;
   __asm__("mv %0, tp" : "=r"(result));
   return result;
@@ -83,7 +83,7 @@ static inline void __set_tls(void* tls) {
 
 #elif defined(__x86_64__)
 
-static inline void** __get_tls() {
+static inline void** __get_tls(void) {
   void** result;
   __asm__("mov %%fs:0, %0" : "=r"(result));
   return result;
