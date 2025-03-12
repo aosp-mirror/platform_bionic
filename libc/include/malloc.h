@@ -122,7 +122,11 @@ __nodiscard void* _Nullable memalign(size_t __alignment, size_t __byte_count) __
  * [malloc_usable_size(3)](https://man7.org/linux/man-pages/man3/malloc_usable_size.3.html)
  * returns the actual size of the given heap block.
  */
-__nodiscard size_t malloc_usable_size(const void* _Nullable __ptr);
+__nodiscard size_t malloc_usable_size(const void* _Nullable __ptr)
+#if defined(_FORTIFY_SOURCE)
+    __clang_error_if(_FORTIFY_SOURCE == 3, "malloc_usable_size() and _FORTIFY_SOURCE=3 are incompatible")
+#endif
+;
 
 #define __MALLINFO_BODY \
   /** Total number of non-mmapped bytes currently allocated from OS. */ \
