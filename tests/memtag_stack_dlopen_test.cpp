@@ -38,9 +38,13 @@
 #include "mte_utils.h"
 #include "utils.h"
 
+#if defined(__BIONIC__)
+#include <bionic/mte.h>
+#endif
+
 TEST(MemtagStackDlopenTest, DependentBinaryGetsMemtagStack) {
 #if defined(__BIONIC__) && defined(__aarch64__)
-  if (!running_with_mte()) GTEST_SKIP() << "Test requires MTE.";
+  if (!mte_enabled()) GTEST_SKIP() << "Test requires MTE.";
   if (is_stack_mte_on())
     GTEST_SKIP() << "Stack MTE needs to be off for this test. Are you running fullmte?";
 
@@ -58,7 +62,7 @@ TEST(MemtagStackDlopenTest, DependentBinaryGetsMemtagStack) {
 
 TEST(MemtagStackDlopenTest, DependentBinaryGetsMemtagStack2) {
 #if defined(__BIONIC__) && defined(__aarch64__)
-  if (!running_with_mte()) GTEST_SKIP() << "Test requires MTE.";
+  if (!mte_enabled()) GTEST_SKIP() << "Test requires MTE.";
   if (is_stack_mte_on())
     GTEST_SKIP() << "Stack MTE needs to be off for this test. Are you running fullmte?";
 
@@ -77,7 +81,7 @@ TEST(MemtagStackDlopenTest, DependentBinaryGetsMemtagStack2) {
 TEST(MemtagStackDlopenTest, DlopenRemapsStack) {
 #if defined(__BIONIC__) && defined(__aarch64__)
   // If this test is failing, look at crash logcat for why the test binary died.
-  if (!running_with_mte()) GTEST_SKIP() << "Test requires MTE.";
+  if (!mte_enabled()) GTEST_SKIP() << "Test requires MTE.";
   if (is_stack_mte_on())
     GTEST_SKIP() << "Stack MTE needs to be off for this test. Are you running fullmte?";
 
@@ -98,7 +102,7 @@ TEST(MemtagStackDlopenTest, DlopenRemapsStack) {
 TEST(MemtagStackDlopenTest, DlopenRemapsStack2) {
 #if defined(__BIONIC__) && defined(__aarch64__)
   // If this test is failing, look at crash logcat for why the test binary died.
-  if (!running_with_mte()) GTEST_SKIP() << "Test requires MTE.";
+  if (!mte_enabled()) GTEST_SKIP() << "Test requires MTE.";
   if (is_stack_mte_on())
     GTEST_SKIP() << "Stack MTE needs to be off for this test. Are you running fullmte?";
 
