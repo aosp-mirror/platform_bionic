@@ -288,16 +288,14 @@ int sigwait(const sigset_t* bionic_set, int* sig) {
 }
 
 int sigwait64(const sigset64_t* set, int* sig) {
-  while (true) {
-    // __rt_sigtimedwait can return EAGAIN or EINTR, we need to loop
-    // around them since sigwait is only allowed to return EINVAL.
-    int result = sigtimedwait64(set, nullptr, nullptr);
-    if (result >= 0) {
-      *sig = result;
-      return 0;
-    }
-    if (errno != EAGAIN && errno != EINTR) return errno;
-  }
+  // sigtimedwait64() doesn't fail with EINVAL on Linux,
+  // and EAGAIN can only happen with a timeout,
+  // so the error reporting here is effectively dead code.
+  ErrnoRestorer errno_restorer;
+  int result = TEMP_FAILURE_RETRY(sigtimedwait64(set, nullptr, nullptr));
+  if (result == -1) return errno;
+  *sig = result;
+  return 0;
 }
 
 int sigwaitinfo(const sigset_t* set, siginfo_t* info) {
