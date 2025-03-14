@@ -1445,3 +1445,13 @@ cc_library_static {
         "-D_FORTIFY_SOURCE=2",
     ],
 }
+
+cc_library_static {
+    name: "bionic-compile-time-tests3-clang++",
+    defaults: [
+        "bionic_compile_time_tests_defaults",
+    ],
+    cppflags: [
+        "-D_FORTIFY_SOURCE=3",
+    ],
+}
