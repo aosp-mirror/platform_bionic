@@ -1412,15 +1412,7 @@ cc_test_host {
 
 cc_defaults {
     name: "bionic_compile_time_tests_defaults",
-    enabled: false,
-    target: {
-        linux_x86: {
-            enabled: true,
-        },
-        linux_x86_64: {
-            enabled: true,
-        },
-    },
+    enabled: true,
     clang_verify: true,
     cflags: [
         "-Wall",
