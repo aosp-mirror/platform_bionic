@@ -50,6 +50,16 @@ inline bool mte_supported() {
   return supported;
 }
 
+static inline bool mte_enabled() {
+#ifdef __aarch64__
+  int level = prctl(PR_GET_TAGGED_ADDR_CTRL, 0, 0, 0, 0);
+  return level >= 0 && (level & PR_TAGGED_ADDR_ENABLE) &&
+         (level & PR_MTE_TCF_MASK) != PR_MTE_TCF_NONE;
+#else
+  return false;
+#endif
+}
+
 inline void* get_tagged_address(const void* ptr) {
 #if defined(__aarch64__)
   if (mte_supported()) {

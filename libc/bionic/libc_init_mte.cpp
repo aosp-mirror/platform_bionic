@@ -246,6 +246,7 @@ static int64_t __get_memtag_upgrade_secs() {
 __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(
     const memtag_dynamic_entries_t* memtag_dynamic_entries, const void* phdr_start, size_t phdr_ct,
     uintptr_t load_bias) {
+  if (__libc_shared_globals()->is_hwasan) return;
   bool memtag_stack = false;
   HeapTaggingLevel level =
       __get_tagging_level(memtag_dynamic_entries, phdr_start, phdr_ct, load_bias, &memtag_stack);

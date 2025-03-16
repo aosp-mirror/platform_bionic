@@ -16,8 +16,13 @@
 
 #include <gtest/gtest.h>
 
-// The real <stdatomic.h> checks for the availability of C++'s atomics and uses them if present. Since
-// we want to test the libc versions, we instead include <bits/stdatomic.h> where they're actually defined.
+// The real <stdatomic.h> checks for the availability of C++'s <atomic> and
+// uses that instead if present.
+// We want to test the C interfaces, so we instead include
+// <bits/stdatomic.h> directly.
+// This doesn't entirely work because gtest also (transitively) pulls in <atomic>.
+// It's not clear there's a good fix for this,
+// other than switching to a non-C++ unit test framework for bionic.
 #include <bits/stdatomic.h>
 
 #include <pthread.h>
@@ -37,8 +42,18 @@ TEST(stdatomic, LOCK_FREE) {
 }
 
 TEST(stdatomic, init) {
-  atomic_int v = 123;
+  // ATOMIC_VAR_INIT has been removed from C23,
+  // but is still in POSIX 2024.
+  // Even if it is removed from there,
+  // we should probably keep it indefinitely for source compatibility.
+  // libc++'s <atomic> (which we can't entirely avoid: see above)
+  // marks the macro deprecated,
+  // so we need to silence that.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-pragma"
+  atomic_int v = ATOMIC_VAR_INIT(123);
   ASSERT_EQ(123, atomic_load(&v));
+#pragma clang diagnostic pop
 
   atomic_store_explicit(&v, 456, memory_order_relaxed);
   ASSERT_EQ(456, atomic_load(&v));

@@ -3614,14 +3614,7 @@ static std::string get_ld_config_file_path(const char* executable_path) {
   return kLdConfigFilePath;
 }
 
-
-std::vector<android_namespace_t*> init_default_namespaces(const char* executable_path) {
-  g_default_namespace.set_name("(default)");
-
-  soinfo* somain = solist_get_somain();
-
-  const char *interp = phdr_table_get_interpreter_name(somain->phdr, somain->phnum,
-                                                       somain->load_bias);
+void init_sanitizer_mode(const char *interp ) {
   const char* bname = (interp != nullptr) ? basename(interp) : nullptr;
 
   g_is_asan = bname != nullptr &&
@@ -3637,7 +3630,13 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
   g_is_hwasan = (bname != nullptr &&
               strcmp(bname, "linker_hwasan64") == 0) ||
               (hwasan_env != nullptr && !getauxval(AT_SECURE) && strcmp(hwasan_env, "1") == 0);
+  __libc_shared_globals()->is_hwasan = g_is_hwasan;
 #endif
+}
+
+std::vector<android_namespace_t*> init_default_namespaces(const char* executable_path) {
+  g_default_namespace.set_name("(default)");
+
   const Config* config = nullptr;
 
   {

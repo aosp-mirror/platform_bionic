@@ -48,6 +48,7 @@ class ProtectedDataGuard {
 
 class ElfReader;
 
+void init_sanitizer_mode(const char *interp);
 std::vector<android_namespace_t*> init_default_namespaces(const char* executable_path);
 soinfo* soinfo_alloc(android_namespace_t* ns, const char* name,
                      const struct stat* file_stat, off64_t file_offset,
