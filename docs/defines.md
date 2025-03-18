@@ -21,6 +21,15 @@ of the OS and needs to behave differently on the host than on the device.
 Genuine cases are quite rare, and `__BIONIC__` is often more specific (but
 remember that it is possible -- if unusual -- to use bionic on the host).
 
+## `ANDROID` (rarely useful)
+
+Not to be confused with `__ANDROID__`, the similar-looking but very different
+`ANDROID` is _not_ set by the toolchain or NDK build system. This is set by
+the AOSP build system for both device and host code. For that reason, it's
+not typically very useful except as a signal when patching third-party code ---
+but even then, you'd typically _not_ want this because it's true for both
+device and host.
+
 ## `__ANDROID_API__`
 
 If your code can be built targeting a variety of different OS versions, use

@@ -43,7 +43,7 @@
 
 using DEATHTEST = SilentDeathTest;
 
-#if defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE == 2
+#if defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE >= 2
 struct foo {
   char empty[0];
   char one[1];

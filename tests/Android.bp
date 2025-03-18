@@ -1412,15 +1412,7 @@ cc_test_host {
 
 cc_defaults {
     name: "bionic_compile_time_tests_defaults",
-    enabled: false,
-    target: {
-        linux_x86: {
-            enabled: true,
-        },
-        linux_x86_64: {
-            enabled: true,
-        },
-    },
+    enabled: true,
     clang_verify: true,
     cflags: [
         "-Wall",
@@ -1451,5 +1443,15 @@ cc_library_static {
     ],
     cppflags: [
         "-D_FORTIFY_SOURCE=2",
+    ],
+}
+
+cc_library_static {
+    name: "bionic-compile-time-tests3-clang++",
+    defaults: [
+        "bionic_compile_time_tests_defaults",
+    ],
+    cppflags: [
+        "-D_FORTIFY_SOURCE=3",
     ],
 }
