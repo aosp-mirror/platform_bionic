@@ -60,6 +60,9 @@
 /* Many of the POSIX limits come from the kernel. */
 #include <linux/limits.h>
 
+/** Maximum buffer size for getentropy(). */
+#define GETENTROPY_MAX 256
+
 /** Maximum number of positional arguments in a printf()/scanf() format string. */
 #define NL_ARGMAX 9
 /** Maximum number of bytes in a $LANG name. */

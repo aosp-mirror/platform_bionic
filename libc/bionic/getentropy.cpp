@@ -28,6 +28,7 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <limits.h>
 #include <sys/random.h>
 #include <unistd.h>
 
@@ -50,7 +51,7 @@ static int getentropy_urandom(void* buffer, size_t buffer_size, int saved_errno)
 }
 
 int getentropy(void* buffer, size_t buffer_size) {
-  if (buffer_size > 256) {
+  if (buffer_size > GETENTROPY_MAX) {
     errno = EIO;
     return -1;
   }

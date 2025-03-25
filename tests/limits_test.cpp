@@ -23,6 +23,9 @@ TEST(limits, macros) {
   ASSERT_EQ(8 * static_cast<int>(sizeof(int)), WORD_BIT);
   ASSERT_EQ(2048, LINE_MAX);
   ASSERT_EQ(20, NZERO);
+#if defined(__BIONIC__)
+  ASSERT_GE(GETENTROPY_MAX, 256);
+#endif
 #if !defined(MB_LEN_MAX)
 #error MB_LEN_MAX
 #endif

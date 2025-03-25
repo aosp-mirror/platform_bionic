@@ -194,6 +194,10 @@ static void limits_h() {
   MACRO(USHRT_MAX);
   MACRO(WORD_BIT);
 
+#if defined(__BIONIC__)
+  MACRO(GETENTROPY_MAX);
+#endif
+
   MACRO(NL_ARGMAX);
   MACRO(NL_LANGMAX);
   MACRO(NL_MSGMAX);
