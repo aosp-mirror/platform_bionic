@@ -1973,6 +1973,11 @@ cc_defaults {
 cc_defaults {
     name: "crt_defaults",
     defaults: ["crt_and_memtag_defaults"],
+    header_libs: ["libc_headers"],
+    local_include_dirs: [
+        "bionic", // crtbegin includes bionic/libc_init_common.h
+        "private", // crtbrand depends on private/bionic_asm_note.h
+    ],
     system_shared_libs: [],
 }
 
@@ -1984,9 +1989,7 @@ cc_defaults {
 
 cc_object {
     name: "crtbrand",
-    local_include_dirs: [
-        "private", // crtbrand.S depends on private/bionic_asm_note.h
-    ],
+    defaults: ["crt_so_defaults"],
     // crtbrand.S needs to know the platform SDK version.
     product_variables: {
         platform_sdk_version: {
@@ -1994,18 +1997,14 @@ cc_object {
         },
     },
     srcs: ["arch-common/bionic/crtbrand.S"],
-
-    defaults: ["crt_so_defaults"],
     // crtbrand is an intermediate artifact, not a final CRT object.
     exclude_from_ndk_sysroot: true,
 }
 
 cc_object {
     name: "crtbegin_so",
-    local_include_dirs: ["include"],
-    srcs: ["arch-common/bionic/crtbegin_so.c"],
-
     defaults: ["crt_so_defaults"],
+    srcs: ["arch-common/bionic/crtbegin_so.c"],
     objs: [
         "crtbrand",
     ],
@@ -2013,40 +2012,25 @@ cc_object {
 
 cc_object {
     name: "crtend_so",
-    local_include_dirs: [
-        "private", // crtend_so.S depends on private/bionic_asm_arm64.h
-    ],
-    srcs: ["arch-common/bionic/crtend_so.S"],
-
     defaults: ["crt_so_defaults"],
+    srcs: ["arch-common/bionic/crtend_so.S"],
 }
 
 cc_object {
     name: "crtbegin_static",
-
-    local_include_dirs: [
-        "include",
-        "bionic", // crtbegin.c includes bionic/libc_init_common.h
-    ],
-
+    defaults: ["crt_defaults"],
     cflags: ["-DCRTBEGIN_STATIC"],
-
     srcs: ["arch-common/bionic/crtbegin.c"],
     objs: [
         "crtbrand",
     ],
-    defaults: ["crt_defaults"],
     // When using libc.a, we're using the latest library regardless of target API level.
     min_sdk_version: "current",
 }
 
 cc_object {
     name: "crtbegin_dynamic",
-
-    local_include_dirs: [
-        "include",
-        "bionic", // crtbegin.c includes bionic/libc_init_common.h
-    ],
+    defaults: ["crt_defaults"],
     srcs: ["arch-common/bionic/crtbegin.c"],
     objs: [
         "crtbrand",
@@ -2059,53 +2043,42 @@ cc_object {
             ],
         },
     },
-    defaults: ["crt_defaults"],
 }
 
 cc_object {
     // We rename crtend.o to crtend_android.o to avoid a
     // name clash between gcc and bionic.
     name: "crtend_android",
-    local_include_dirs: [
-        "private", // crtend.S depends on private/bionic_asm_arm64.h
-    ],
-    srcs: ["arch-common/bionic/crtend.S"],
-
     defaults: ["crt_defaults"],
+    srcs: ["arch-common/bionic/crtend.S"],
 }
 
 cc_object {
     name: "crt_pad_segment",
-    local_include_dirs: [
-        "private", // crt_pad_segment.S depends on private/bionic_asm_note.h
-    ],
-    srcs: ["arch-common/bionic/crt_pad_segment.S"],
-
     defaults: ["crt_defaults"],
+    srcs: ["arch-common/bionic/crt_pad_segment.S"],
 }
 
 cc_library_static {
     name: "note_memtag_heap_async",
+    defaults: ["crt_and_memtag_defaults"],
     arch: {
         arm64: {
             srcs: ["arch-arm64/bionic/note_memtag_heap_async.S"],
         },
     },
     sdk_version: "minimum",
-
-    defaults: ["crt_and_memtag_defaults"],
 }
 
 cc_library_static {
     name: "note_memtag_heap_sync",
+    defaults: ["crt_and_memtag_defaults"],
     arch: {
         arm64: {
             srcs: ["arch-arm64/bionic/note_memtag_heap_sync.S"],
         },
     },
     sdk_version: "minimum",
-
-    defaults: ["crt_and_memtag_defaults"],
 }
 
 // ========================================================

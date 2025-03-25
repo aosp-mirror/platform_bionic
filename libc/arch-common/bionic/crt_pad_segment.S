@@ -26,13 +26,10 @@
  * SUCH DAMAGE.
  */
 
-#if defined(__aarch64__)
-#include <private/bionic_asm_arm64.h>
+#include <private/bionic_asm.h>
+#include <private/bionic_asm_note.h>
 
 __bionic_asm_custom_note_gnu_section()
-#endif
-
-#include <private/bionic_asm_note.h>
 
   .section ".note.android.pad_segment", "a", %note
   .balign 4
