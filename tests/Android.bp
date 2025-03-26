@@ -649,6 +649,9 @@ cc_defaults {
     name: "bionic_fortify_tests_defaults",
     cflags: [
         "-U_FORTIFY_SOURCE",
+        // Without this, HWASan will not recognize (i.e. will not detect errors involving)
+        // calls to mem* functions.
+        "-fbuiltin",
     ],
     srcs: ["fortify_test_main.cpp"],
     static_libs: [
@@ -716,6 +719,9 @@ cc_defaults {
     ],
     cflags: [
         "-U_FORTIFY_SOURCE",
+        // Without this, HWASan will not recognize (i.e. will not detect errors involving)
+        // calls to mem* functions.
+        "-fbuiltin",
     ],
     srcs: ["clang_fortify_tests.cpp"],
 }
