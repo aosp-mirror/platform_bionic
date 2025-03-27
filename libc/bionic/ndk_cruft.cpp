@@ -31,6 +31,8 @@
 // LP64 doesn't need to support any legacy cruft.
 #if !defined(__LP64__)
 
+#define __BIONIC_DISABLE_MALLOC_USABLE_SIZE_FORTIFY_WARNINGS
+
 #include <ctype.h>
 #include <dirent.h>
 #include <errno.h>

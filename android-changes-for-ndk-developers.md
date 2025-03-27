@@ -108,7 +108,7 @@ symbols will not be made available to libraries loaded by later calls
 to dlopen(3) (as opposed to being referenced by DT_NEEDED entries).
 
 
-## GNU hashes (Availible in API level >= 23)
+## GNU hashes (Available in API level >= 23)
 
 The GNU hash style available with `--hash-style=gnu` allows faster
 symbol lookup and is supported by Android's dynamic linker in API level 23 and
@@ -437,6 +437,8 @@ app-specific one. For example, to enable logging of all dlopen(3)
 adb shell setprop debug.ld.all dlerror,dlopen
 ```
 
+See also `LD_DEBUG`.
+
 
 ## dlclose interacts badly with thread local variables with non-trivial destructors
 
@@ -544,3 +546,20 @@ This was especially confusing (and hard to debug) because the restriction did
 _not_ apply if your app was debuggable. To be compatible with all API levels,
 always give files that need to be extracted a "lib" prefix and ".so" suffix,
 or avoid using `extractNativeLibs`.
+
+
+## The LD_DEBUG environment variable.
+
+On devices running API level 37 or later you can also use the `LD_DEBUG`
+environment variable when running a stand-alone executable such as a unit test.
+The syntax is broadly similar to glibc, and you can get help for the specific
+version of Android you're on by using `LD_DEBUG=help`.
+You can also enable everything by using `LD_DEBUG=all`.
+
+(Older versions of Android also supported `LD_DEBUG`,
+but used integers instead of strings.
+The meaning of those integers varied by release,
+and some releases compiled support for `LD_DEBUG` out of released builds,
+so the best advice is either "look at the corresponding source" or
+"start with `1` and keep increasing the number until you see what you want,
+or see no change in output from the previous value".)
