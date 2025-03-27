@@ -29,10 +29,18 @@
 
 #include <android-base/silent_death_test.h>
 
+#include "DoNotOptimize.h"
+
 #if defined(__BIONIC__)
 #define ASSERT_FORTIFY(expr) ASSERT_EXIT(expr, testing::KilledBySignal(SIGABRT), "FORTIFY")
 #else
 #define ASSERT_FORTIFY(expr) ASSERT_EXIT(expr, testing::KilledBySignal(SIGABRT), "")
+#endif
+
+#if __has_feature(hwaddress_sanitizer)
+#define ASSERT_FORTIFY_OR_HWASAN(expr) ASSERT_EXIT(expr, testing::KilledBySignal(SIGABRT), "HWAddressSanitizer")
+#else
+#define ASSERT_FORTIFY_OR_HWASAN ASSERT_FORTIFY
 #endif
 
 // Fortify test code needs to run multiple times, so TEST_NAME macro is used to
@@ -415,8 +423,13 @@ TEST_F(DEATHTEST, sprintf_malloc_fortified) {
 }
 
 TEST_F(DEATHTEST, sprintf2_fortified) {
+  // glibc's fortified implementation of sprintf is smart enough to be able to detect this bug at
+  // compile time, but we want to check if it can also be detected at runtime.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-overflow"
   char buf[5];
   ASSERT_FORTIFY(sprintf(buf, "aaaaa"));
+#pragma clang diagnostic pop
 }
 
 static int vsprintf_helper(const char* fmt, ...) {
@@ -480,7 +493,7 @@ TEST_F(DEATHTEST, memmove_fortified) {
   char buf[20];
   strcpy(buf, "0123456789");
   volatile size_t n = 10;
-  ASSERT_FORTIFY(memmove(buf + 11, buf, n));
+  ASSERT_FORTIFY_OR_HWASAN(DoNotOptimize(memmove(buf + 11, buf, n)));
 }
 
 TEST_F(DEATHTEST, memcpy_fortified) {
@@ -488,13 +501,13 @@ TEST_F(DEATHTEST, memcpy_fortified) {
   char bufb[10];
   strcpy(bufa, "012345678");
   volatile size_t n = 11;
-  ASSERT_FORTIFY(memcpy(bufb, bufa, n));
+  ASSERT_FORTIFY_OR_HWASAN(DoNotOptimize(memcpy(bufb, bufa, n)));
 }
 
 TEST_F(DEATHTEST, memset_fortified) {
   char buf[10];
   volatile size_t n = 11;
-  ASSERT_FORTIFY(memset(buf, 0, n));
+  ASSERT_FORTIFY_OR_HWASAN(DoNotOptimize(memset(buf, 0, n)));
 }
 
 TEST_F(DEATHTEST, stpncpy_fortified) {

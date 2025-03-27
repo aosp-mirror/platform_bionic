@@ -125,6 +125,12 @@ __attribute__((noreturn)) static void ExitAfter(Fn&& f) {
 #define EXPECT_FORTIFY_DEATH_STRUCT EXPECT_NO_DEATH
 #endif
 
+#if __has_feature(hwaddress_sanitizer)
+#define EXPECT_FORTIFY_OR_HWASAN_DEATH(expr) DIE_WITH(expr, testing::KilledBySignal(SIGABRT), "HWAddressSanitizer")
+#else
+#define EXPECT_FORTIFY_OR_HWASAN_DEATH EXPECT_FORTIFY_DEATH
+#endif
+
 #define FORTIFY_TEST(test_name) TEST_F(FORTIFY_TEST_NAME, test_name)
 
 #else  // defined(COMPILATION_TESTS)
@@ -132,6 +138,7 @@ __attribute__((noreturn)) static void ExitAfter(Fn&& f) {
 #define EXPECT_NO_DEATH(expr) expr
 #define EXPECT_FORTIFY_DEATH(expr) expr
 #define EXPECT_FORTIFY_DEATH_STRUCT EXPECT_FORTIFY_DEATH
+#define EXPECT_FORTIFY_OR_HWASAN_DEATH EXPECT_FORTIFY_DEATH
 #define FORTIFY_TEST(test_name) void test_name()
 #endif
 
@@ -161,15 +168,15 @@ FORTIFY_TEST(string) {
   {
     char large_buffer[sizeof(small_buffer) + 1] = {};
     // expected-error@+1{{will always overflow}}
-    EXPECT_FORTIFY_DEATH(memcpy(small_buffer, large_buffer, sizeof(large_buffer)));
+    EXPECT_FORTIFY_OR_HWASAN_DEATH(memcpy(small_buffer, large_buffer, sizeof(large_buffer)));
     // expected-error@+1{{will always overflow}}
-    EXPECT_FORTIFY_DEATH(memmove(small_buffer, large_buffer, sizeof(large_buffer)));
+    EXPECT_FORTIFY_OR_HWASAN_DEATH(memmove(small_buffer, large_buffer, sizeof(large_buffer)));
     // FIXME(gbiv): look into removing mempcpy's diagnose_if bits once the b/149839606 roll sticks.
     // expected-error@+2{{will always overflow}}
     // expected-error@+1{{size bigger than buffer}}
     EXPECT_FORTIFY_DEATH(mempcpy(small_buffer, large_buffer, sizeof(large_buffer)));
     // expected-error@+1{{will always overflow}}
-    EXPECT_FORTIFY_DEATH(memset(small_buffer, 0, sizeof(large_buffer)));
+    EXPECT_FORTIFY_OR_HWASAN_DEATH(memset(small_buffer, 0, sizeof(large_buffer)));
     // expected-warning@+1{{arguments got flipped?}}
     EXPECT_NO_DEATH(memset(small_buffer, sizeof(small_buffer), 0));
     // expected-error@+1{{size bigger than buffer}}

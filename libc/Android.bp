@@ -1627,6 +1627,7 @@ cc_library {
         export_headers_as_system: true,
         export_llndk_headers: ["libc_headers"],
     },
+    afdo: true,
 }
 
 cc_library {
